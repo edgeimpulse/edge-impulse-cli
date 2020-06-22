@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "outDir": "./build",
+        "strict": true,
+        "sourceMap": true
+    },
+    "include": [
+        "**/*"
+    ]
+}

@@ -129,7 +129,7 @@ export class Config {
         // no host? ask the user where to connect
         if (!config.host) {
             if (devMode) {
-                let hostRes = await inquirer.prompt([{
+                let hostRes = <{ host: string}>await inquirer.prompt([{
                     type: 'list',
                     choices: [
                         { name: 'edgeimpulse.com (Production)', value: 'edgeimpulse.com' },
@@ -219,7 +219,7 @@ export class Config {
         }
         else {
             if (!config.jwtToken) {
-                let inq = await inquirer.prompt([{
+                let inq = <{ username: string, password: string }>await inquirer.prompt([{
                     type: 'input',
                     name: 'username',
                     message: `What is your user name or e-mail address (${host})?`
@@ -308,7 +308,8 @@ export class Config {
             }
             return c;
         }
-        catch (ex) {
+        catch (ex2) {
+            let ex = <Error>ex2;
             throw new Error('Failed to parse config ' + this._filename + ' ' + (ex.message || ex));
         }
     }

@@ -16,8 +16,8 @@ const SERIAL_PREFIX = '\x1b[33m[ETA]\x1b[0m';
 
 const APP_BAUD_RATE = 115200;
 
-const packageVersion = JSON.parse(fs.readFileSync(
-    Path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')).version;
+const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
+    Path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8'))).version;
 
 program
     .description('Eta Compute ECM3532 AI Sensor flash tool')
@@ -29,8 +29,8 @@ program
     .allowUnknownOption(true)
     .parse(process.argv);
 
-const firmwarePathArgv: string = program.firmwarePath;
-const baudRateArgv: string = program.baudRate;
+const firmwarePathArgv: string = <string>program.firmwarePath;
+const baudRateArgv: string = <string>program.baudRate;
 const serialWritePacing: boolean = !!program.serialWritePacing;
 const debug: boolean = !!program.verbose;
 
@@ -79,7 +79,7 @@ async function connectToSerial(deviceId: string) {
     console.log(SERIAL_PREFIX, 'Connecting to ' + deviceId + '...');
     const serial = new SerialConnector(deviceId, APP_BAUD_RATE);
     const serialProtocol = new EtaSerialProtocol(serial, serialWritePacing, debug);
-    serial.on('error', err => {
+    serial.on('error', (err: Error) => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err.message || err.toString());
         setTimeout(serial_connect, 5000);
     });
@@ -113,7 +113,8 @@ async function connectToSerial(deviceId: string) {
                 await sleep(3000);
                 console.log(SERIAL_PREFIX, 'Restarting into bootloader OK');
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 let msg = ex.message || ex.toString()
                 if (msg.indexOf('Failed to get a valid') > -1 && bootloaderBaudRate !== APP_BAUD_RATE) {
                     console.log(SERIAL_PREFIX, 'Not in bootloader mode yet... ' +
@@ -221,7 +222,8 @@ async function connectToSerial(deviceId: string) {
         try {
             await serial.connect();
         }
-        catch (ex) {
+        catch (ex2) {
+            let ex = <Error>ex2;
             console.error(SERIAL_PREFIX, 'Failed to connect to', deviceId, 'retrying in 5 seconds', ex.message || ex);
             if (ex.message && ex.message.indexOf('Permission denied')) {
                 console.error(SERIAL_PREFIX, 'You might need `sudo` or set up the right udev rules');

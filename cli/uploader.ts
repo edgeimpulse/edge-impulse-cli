@@ -17,7 +17,7 @@ import borc from 'borc';
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
 
-const version = JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8')).version;
+const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const labelArgvIx = process.argv.indexOf('--label');
 const categoryArgvIx = process.argv.indexOf('--category');
@@ -39,6 +39,7 @@ const endIxArgvIx = process.argv.indexOf('--progress-end-ix');
 const endIxArgv = endIxArgvIx !== -1 ? process.argv[endIxArgvIx + 1] : undefined;
 const progressIvArgvIx = process.argv.indexOf('--progress-interval');
 const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx + 1] : undefined;
+const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -78,9 +79,11 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
             config = await configFactory.verifyLogin(devArgv, apiKeyArgv);
         }
     }
-    catch (ex) {
-        if (ex.statusCode) {
-            console.error('Failed to authenticate with Edge Impulse', ex.statusCode, ex.response.body);
+    catch (ex2) {
+        let ex = <Error>ex2;
+        if ((<any>ex).statusCode) {
+            console.error('Failed to authenticate with Edge Impulse',
+                (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {
             console.error('Failed to authenticate with Edge Impulse', ex.message || ex.toString());
@@ -231,7 +234,8 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
                             validExtensions[validExtensions.length - 1] + ' supported)');
                 }
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 let ix = ++fileIx;
                 let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
                 console.error(`[${ixS}/${totalFilesLength}] Failed to process`, name, ex.message || ex.toString());
@@ -250,6 +254,9 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
             if (labelArgv) {
                 headers['x-label'] = labelArgv;
             }
+            if (!allowDuplicatesArgv) {
+                headers['x-disallow-duplicates'] = '1';
+            }
 
             try {
                 let hrstart = Date.now();
@@ -260,9 +267,32 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
                         keepAliveAgentHttps :
                         keepAliveAgentHttp;
 
+                    let category = categoryArgv || 'training';
+
+                    // if category is split we calculate the md5 hash of the buffer
+                    // then look at the first char in the string that's not f
+                    // then split 0..b => training, rest => test for a 80/20 split
+                    if (category === 'split') {
+                        let hash = crypto.createHash('md5').update(buffer).digest('hex');
+                        while (hash.length > 0 && hash[0] === 'f') {
+                            hash = hash.substr(1);
+                        }
+                        if (hash.length === 0) {
+                            return rej('Failed to calculate MD5 hash of buffer');
+                        }
+                        let firstHashChar = hash[0];
+
+                        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b' ].indexOf(firstHashChar) > -1) {
+                            category = 'training';
+                        }
+                        else {
+                            category = 'testing';
+                        }
+                    }
+
                     // now upload the buffer to Edge Impulse
                     request.post(
-                        config.endpoints.internal.ingestion + '/api/' + (categoryArgv || 'training') + '/data', {
+                        config.endpoints.internal.ingestion + '/api/' + category + '/data', {
                             headers: headers,
                             body: (!processed.attachments ? processed.encoded : undefined),
                             formData: (processed.attachments ? {
@@ -297,7 +327,8 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
                 }
                 success++;
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 let ix = ++fileIx;
                 let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
                 console.log(`[${ixS}/${totalFilesLength}] Failed to upload`, name,
@@ -330,7 +361,8 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
                 failed + '.');
         }
     }
-    catch (ex) {
+    catch (ex2) {
+        let ex = <Error>ex2;
         console.error('Failed to upload files', ex.message || ex.toString());
         console.error(ex);
         process.exit(1);
@@ -378,6 +410,7 @@ function makeWav(buffer: Buffer, hmacKey: string | undefined) {
     let freq = fmt.sampleRate;
     // console.log('Frequency', freq);
 
+    // tslint:disable-next-line: no-unsafe-any
     let totalSamples =  (<any>wav.data).samples.length / (fmt.bitsPerSample / 8);
 
     let dataBuffers: number[] = [];

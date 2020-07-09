@@ -39,7 +39,7 @@ export async function findSerial() {
     let deviceId = filteredDevices[0].path;
 
     if (filteredDevices.length > 1) {
-        let deviceRes = await inquirer.prompt([{
+        let deviceRes = <{ device: string }>await inquirer.prompt([{
             type: 'list',
             choices: filteredDevices.map(d => ({
                 value: d.path,

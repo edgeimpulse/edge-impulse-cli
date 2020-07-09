@@ -24,7 +24,7 @@ import crypto from 'crypto';
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
-const version = JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8')).version;
+const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
@@ -173,7 +173,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 }],
             }
         };
-        ws.once('message', async (helloResponse) => {
+        ws.once('message', async (helloResponse: Buffer) => {
             let ret = <MgmtInterfaceHelloResponse>cbor.decode(helloResponse);
             if (!ret.hello) {
                 console.error(TCP_PREFIX, 'Failed to authenticate, API key not correct?', ret.err);
@@ -190,7 +190,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
                     await connectLogic();
                 }
-                catch (ex) {
+                catch (ex2) {
+                    let ex = <Error>ex2;
                     console.error(SERIAL_PREFIX, 'Cannot set API key. Try running this application via:');
                     console.error(SERIAL_PREFIX, '\tedge-impulse-data-forwarder --clean');
                     console.error(SERIAL_PREFIX, 'To reset any state');
@@ -216,7 +217,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         try {
             await serial.connect();
         }
-        catch (ex) {
+        catch (ex2) {
+            let ex = <Error>ex2;
             console.error(SERIAL_PREFIX, 'Failed to connect to', serialPath, 'retrying in 5 seconds', ex.message || ex);
             if (ex.message && ex.message.indexOf('Permission denied')) {
                 console.error(SERIAL_PREFIX, 'You might need `sudo` or set up the right udev rules');
@@ -235,13 +237,13 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             return console.log(TCP_PREFIX, 'attachWsHandlers called without ws instance!');
         }
 
-        ws.on('message', async (data) => {
-            let d = cbor.decode(<Buffer>data);
+        ws.on('message', async (data: Buffer) => {
+            let d = cbor.decode(data);
 
             // hello messages are handled in sendHello()
-            if (typeof d.hello !== 'undefined') return;
+            if (typeof (<any>d).hello !== 'undefined') return;
 
-            if (typeof d.sample !== 'undefined') {
+            if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
                 console.log(TCP_PREFIX, 'Incoming sampling request', s);
@@ -377,7 +379,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
                     console.log(SERIAL_PREFIX, 'Sampling finished');
                 }
-                catch (ex) {
+                catch (ex2) {
+                    let ex = <Error>ex2;
                     console.error(SERIAL_PREFIX, 'Failed to sample data', ex);
                     let res: MgmtInterfaceSampleResponse = {
                         sample: false,
@@ -421,7 +424,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             try {
                 await sendHello();
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 console.error(SERIAL_PREFIX, 'Failed to get information off device', ex.message || ex.toString());
                 setTimeout(sendHello, 5000);
             }
@@ -477,7 +481,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
         projectId = projectList.projects[0].id;
     }
     else {
-        let inqRes = await inquirer.prompt([{
+        let inqRes = <{ project: number }>await inquirer.prompt([{
             type: 'list',
             choices: (projectList.projects || []).map(p => ({ name: p.name, value: p.id })),
             name: 'project',
@@ -499,12 +503,12 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
 
     let axes = '';
     while (axes.split(',').filter(f => !!f).length !== sensorInfo.sensorCount) {
-        axes = (await inquirer.prompt([{
+        axes = (<{ axes: string }>(await inquirer.prompt([{
             type: 'input',
             message: sensorInfo.sensorCount + ' sensor axes detected. What do you want to call them? ' +
                 'Separate the names with \',\':',
             name: 'axes'
-        }])).axes;
+        }]))).axes;
 
         if (axes.split(',').length !== sensorInfo.sensorCount) {
             console.log('Invalid input. Got ' + (axes.split(',').length) + ' axes (' +
@@ -529,7 +533,7 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
         let currName = device ? device.name : deviceId;
         if (currName !== deviceId) return;
 
-        let nameDevice = await inquirer.prompt([{
+        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
             type: 'input',
             message: 'What name do you want to give this device?',
             name: 'nameDevice',
@@ -544,8 +548,9 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
             }
         }
     }
-    catch (ex) {
-        throw new Error(ex.message || ex);
+    catch (ex2) {
+        let ex = <Error>ex2;
+        throw ex.message || ex;
     }
 }
 

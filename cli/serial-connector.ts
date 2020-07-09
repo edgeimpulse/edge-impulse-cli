@@ -1,3 +1,5 @@
+// tslint:disable: no-unsafe-any
+
 // tslint:disable-next-line
 const serialPort = require('serialport');
 import { EventEmitter } from 'tsee';

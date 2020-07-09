@@ -11,7 +11,7 @@ export default async function(config: Config) {
         return;
     }
 
-    const packageJson: { version: string, name: string } = JSON.parse(
+    const packageJson = <{ version: string, name: string }>JSON.parse(
         await util.promisify(fs.readFile)(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'));
 
     let pkg: { versions: { [k: string]: { } } } = <any>await npmFetch.json(`/${packageJson.name}/`, {

@@ -440,7 +440,8 @@ export default class EiSerialProtocol {
                     ee.emit('done', { filename: Path.basename(filename), onDeviceFileName: filename });
                 }
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 ee.emit('error', ex.message || ex.toString());
             }
             finally {

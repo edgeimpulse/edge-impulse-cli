@@ -154,7 +154,8 @@ export default class EtaSerialProtocol {
 
                 return data.toString('ascii').trim();
             }
-            catch (ex) {
+            catch (ex2) {
+                let ex = <Error>ex2;
                 let msg = ex.message || ex.toString();
                 if (retriesLeft === 0) {
                     throw ex;

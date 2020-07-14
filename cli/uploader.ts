@@ -14,6 +14,12 @@ import { WaveFile } from 'wavefile';
 import asyncpool from 'tiny-async-pool';
 import borc from 'borc';
 
+type UploaderFileType = {
+    path: string,
+    category: string,
+    label: string | undefined
+};
+
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
 
@@ -40,6 +46,7 @@ const endIxArgv = endIxArgvIx !== -1 ? process.argv[endIxArgvIx + 1] : undefined
 const progressIvArgvIx = process.argv.indexOf('--progress-interval');
 const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx + 1] : undefined;
 const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
+const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -95,13 +102,19 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 
     if (!silentArgv) {
         console.log('Endpoints:');
-        console.log('    API:      ', config.endpoints.internal.api);
-        console.log('    Ingestion:', config.endpoints.internal.ingestion);
+        console.log('    API:        ', config.endpoints.internal.api);
+        console.log('    Ingestion:  ', config.endpoints.internal.ingestion);
         console.log('');
 
         console.log('Upload configuration:');
-        console.log('    Label:    ', labelArgv || 'Not set, will be infered from file name');
-        console.log('    Category: ', categoryArgv || 'training');
+        if (openmvArgv) {
+            console.log('    Label:      ', 'Will be infered from folder structure');
+            console.log('    Category:   ', 'Will be infered from folder structure');
+        }
+        else {
+            console.log('    Label:      ', labelArgv || 'Not set, will be infered from file name');
+            console.log('    Category:   ', categoryArgv || 'training');
+        }
     }
 
     let argv = 2;
@@ -117,6 +130,8 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
     if (startIxArgv) argv += 2;
     if (endIxArgv) argv += 2;
     if (progressIvArgv) argv += 2;
+    if (allowDuplicatesArgv) argv++;
+    if (openmvArgv) argv++;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -133,25 +148,74 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
             '.jpeg'
         ];
 
-        let files = process.argv.slice(argv);
+        let files: UploaderFileType[];
 
-        if (!files[0]) {
+        let fileArgs = process.argv.slice(argv);
+
+        if (!fileArgs[0]) {
             console.log('Requires at least one argument (a ' +
                 validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
                 validExtensions[validExtensions.length - 1] + ' file)');
             process.exit(1);
         }
 
-        if (validExtensions.indexOf(Path.extname(files[0].toLowerCase())) === -1) {
-            console.log('Cannot handle this file, only ' + validExtensions.join(', ') + ' supported:', files[0]);
-            process.exit(1);
-        }
+        if (openmvArgv) {
+            if (categoryArgv || labelArgv) {
+                console.log('--format-openmv cannot be used in conjunction with --category or --label');
+                process.exit(1);
+            }
 
-        // Windows doesn't do expansion like Mac and Linux...
-        if (Path.basename(files[0], Path.extname(files[0])) === '*') {
-            files = (await util.promisify(fs.readdir)(Path.dirname(files[0]))).filter(v => {
-                return Path.extname(v) === Path.extname(files[0]);
-            }).map(f => Path.join(Path.dirname(files[0]), f));
+            if (fileArgs.length > 1) {
+                console.log('Requires one argument (the OpenMV dataset directory)');
+                process.exit(1);
+            }
+
+            if (!fs.statSync(fileArgs[0]).isDirectory()) {
+                console.log(fileArgs[0] + ' is not a directory (required for --format-openmv)');
+                process.exit(1);
+            }
+
+            let categoryFolders = fs.readdirSync(fileArgs[0]).filter(d => d.endsWith('.class'));
+            if (categoryFolders.length === 0) {
+                console.log(fileArgs[0] + ' does not seem to be an OpenMV dataset directory, no ' +
+                    'subdirectories found that end with .class');
+                process.exit(1);
+            }
+
+            files = [];
+
+            for (let categoryFolder of categoryFolders) {
+                for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
+                    files.push({
+                        path: Path.join(fileArgs[0], categoryFolder, f),
+                        category: 'split',
+                        label: categoryFolder.replace('.class', '')
+                    });
+                }
+            }
+
+            console.log('files', files.length);
+        }
+        else {
+            if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
+                console.log('Cannot handle this file, only ' + validExtensions.join(', ') + ' supported:', fileArgs[0]);
+                process.exit(1);
+            }
+
+            // Windows doesn't do expansion like Mac and Linux...
+            if (Path.basename(fileArgs[0], Path.extname(fileArgs[0])) === '*') {
+                fileArgs = (await util.promisify(fs.readdir)(Path.dirname(fileArgs[0]))).filter(v => {
+                    return Path.extname(v) === Path.extname(fileArgs[0]);
+                }).map(f => Path.join(Path.dirname(fileArgs[0]), f));
+            }
+
+            files = fileArgs.map(f => {
+                return {
+                    path: f,
+                    category: categoryArgv || 'training',
+                    label: labelArgv || undefined
+                }
+            })
         }
 
         let projectId = await configFactory.getUploaderProjectId();
@@ -190,7 +254,9 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
         }
         else {
             if (!silentArgv) {
-                console.log('    Project ID: ', projectId);
+                let project = (await config.api.projects.getProjectInfo(projectId)).body;
+
+                console.log('    Project:    ', project.project.name + ' (ID: ' + projectId + ')');
                 console.log('');
             }
         }
@@ -207,14 +273,14 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
         let failed = 0;
         let totalFilesLength = endIxArgv ? Number(endIxArgv) : files.length;
 
-        const processFile = async (name: string) => {
-            const buffer = await fs.promises.readFile(name);
+        const processFile = async (file: UploaderFileType) => {
+            const buffer = await fs.promises.readFile(file.path);
 
             let processed: { encoded: Buffer, contentType: string,
                 attachments?: { value: Buffer, options: { contentType: string}}[] };
 
             try {
-                switch (Path.extname(name).toLowerCase()) {
+                switch (Path.extname(file.path).toLowerCase()) {
                     case '.wav':
                         processed = makeWav(buffer, hmacKeyArgv || devKeys.hmacKey);
                         break;
@@ -226,7 +292,7 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                         break;
                     case '.jpg':
                     case '.jpeg':
-                        processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(name));
+                        processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
                         break;
                     default:
                         throw new Error('extension not supported (only ' +
@@ -238,12 +304,12 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                 let ex = <Error>ex2;
                 let ix = ++fileIx;
                 let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
-                console.error(`[${ixS}/${totalFilesLength}] Failed to process`, name, ex.message || ex.toString());
+                console.error(`[${ixS}/${totalFilesLength}] Failed to process`, file.path, ex.message || ex.toString());
                 failed++;
                 return;
             }
 
-            let filename = Path.basename(name).split('.')[0];
+            let filename = Path.basename(file.path).split('.')[0];
 
             let headers: { [k: string]: string} = {
                 'x-api-key': apiKeyArgv || devKeys.apiKey || '',
@@ -251,8 +317,8 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                 'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
                 'Connection': 'keep-alive'
             };
-            if (labelArgv) {
-                headers['x-label'] = labelArgv;
+            if (file.label) {
+                headers['x-label'] = file.label;
             }
             if (!allowDuplicatesArgv) {
                 headers['x-disallow-duplicates'] = '1';
@@ -267,7 +333,7 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                         keepAliveAgentHttps :
                         keepAliveAgentHttp;
 
-                    let category = categoryArgv || 'training';
+                    let category = file.category;
 
                     // if category is split we calculate the md5 hash of the buffer
                     // then look at the first char in the string that's not f
@@ -319,7 +385,7 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                 let ix = ++fileIx;
                 let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
                 if (!progressIvArgv) {
-                    console.log(`[${ixS}/${totalFilesLength}] Uploading`, name,
+                    console.log(`[${ixS}/${totalFilesLength}] Uploading`, file.path,
                         'OK (' + (Date.now() - hrstart) + ' ms)');
                 }
                 else if (ix === 1) {
@@ -331,7 +397,7 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
                 let ex = <Error>ex2;
                 let ix = ++fileIx;
                 let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
-                console.log(`[${ixS}/${totalFilesLength}] Failed to upload`, name,
+                console.log(`[${ixS}/${totalFilesLength}] Failed to upload`, file.path,
                     ex.message || ex.toString());
                 failed++;
             }
@@ -439,7 +505,6 @@ function makeWav(buffer: Buffer, hmacKey: string | undefined) {
         protected: {
             ver: "v1",
             alg: "HS256",
-            iat: Math.floor(Date.now() / 1000) // epoch time, seconds since 1970
         },
         signature: emptySignature,
         payload: {
@@ -477,7 +542,6 @@ function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName: string
         protected: {
             ver: "v1",
             alg: "HS256",
-            iat: Math.floor(Date.now() / 1000)
         },
         signature: emptySignature,
         payload: {

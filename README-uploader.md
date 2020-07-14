@@ -5,6 +5,7 @@ The uploader signs local files and uploads them to the [ingestion service](https
 1. `.cbor` - Files in the Edge Impulse Data Acquisition format. The uploader will not resign these files, only upload them.
 2. `.json` - Files in the Edge Impulse Data Acquisition format. The uploader will not resign these files, only upload them.
 3. `.wav` - Lossless audio files. It's recommended to use the same frequency for all files in your data set, as signal processing output might be dependent on the frequency.
+4. `.jpg` - Image files. It's recommended to use the same ratio for all files in your data set.
 
 You upload files via:
 
@@ -27,6 +28,8 @@ Files are automatically uploaded to the `training` category, but you can overrid
 ```
 $ edge-impulse-uploader --category testing path/to/a/file.wav
 ```
+
+Or set the category to `split` to automatically split data between training and testing sets. This is based on the hash of the file, so this is a deterministic process.
 
 ### Labeling
 
@@ -56,6 +59,14 @@ $ edge-impulse-uploader --api-key ei_...
 
 Note that this resets the uploader configuration and automatically configures the uploader's account and project.
 
+### Upload data from OpenMV datasets
+
+The uploader data in the OpenMV dataset format. Pass in the option `--format-openmv` and pass the folder of your dataset in to automatically upload data. Data is automatically split between testing and training sets. E.g.:
+
+```
+$ edge-impulse-uploader --format-openmv path/to/your-openmv-dataset
+```
+
 ### Other options
 
 * `--silent` - omits information on startup. Still prints progress information.
@@ -65,3 +76,4 @@ Note that this resets the uploader configuration and automatically configures th
 * `--progress-start-ix <index>` - when set, the progress index will start at this number. Useful to split up large uploads in multiple commands while the user still sees this as one command.
 * `--progress-end-ix <index>` - when set, the progress index will end at this number. Useful to split up large uploads in multiple commands while the user still sees this as one command.
 * `--progress-interval <interval>` - when set, the uploader will not print an update for every line, but every `interval` period (in ms.).
+* `--allow-duplicates` - to avoid pollution of your dataset with duplicates, the hash of a file is checked before uploading against known files in your dataset. Enable this flag to skip this check.

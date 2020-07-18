@@ -23,6 +23,7 @@ export enum PageType {
     ForgotPasswordSuccessful = 21,
     ResetPassword = 22,
     Export = 23,
+    Upload = 24,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -44,6 +45,8 @@ export interface ClientConnectedDevice {
         maxSampleLengthS: number;
         frequencies: number[];
     }[];
+    deviceType: string;
+    deviceName: string;
 }
 
 export interface ClientStudioWebsocketHello {
@@ -62,6 +65,7 @@ export interface ClientInitStudioOptions {
     sentryDSN?: string;
     sentryEnvironment?: string;
     errorPage: boolean;
+    gitCommitHash: string;
 }
 
 export interface ClientInitOrganizationOptions {

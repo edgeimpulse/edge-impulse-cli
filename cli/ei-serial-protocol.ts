@@ -461,6 +461,34 @@ export default class EiSerialProtocol {
         }
     }
 
+    async stopInference() {
+        await this._serial.write(Buffer.from('b\r', 'ascii'));
+
+        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000);
+    }
+
+    async startInference(mode: 'normal' | 'debug' | 'continuous') {
+        let command = 'AT+RUNIMPULSE';
+        if (mode === 'debug') {
+            command += 'DEBUG';
+        }
+        else if (mode === 'continuous') {
+            command += 'CONT';
+        }
+
+        command += '\r';
+
+        // split it up a bit for pacing
+        for (let ix = 0; ix < command.length; ix += 5) {
+            // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
+            if (ix !== 0) {
+                await this.sleep(20);
+            }
+
+            await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+        }
+    }
+
     private sleep(ms: number) {
         return new Promise((res) => setTimeout(res, ms));
     }

@@ -7,6 +7,7 @@ This package consists of four tools (click to see their respective documentation
 * [edge-impulse-daemon](https://docs.edgeimpulse.com/docs/cli-daemon) - configures devices over serial, and acts as a proxy for devices that do not have an IP connection.
 * [edge-impulse-uploader](https://docs.edgeimpulse.com/docs/cli-uploader) - allows uploading and signing local files.
 * [edge-impulse-data-forwarder](https://docs.edgeimpulse.com/docs/cli-data-forwarder) - a very easy way to collect data from any device over a serial connection, and forward the data to Edge Impulse.
+* [edge-impulse-run-impulse](https://docs.edgeimpulse.com/docs/cli-run-impulse) - show the impulse running on your device.
 * [eta-flash-tool](https://docs.edgeimpulse.com/docs/cli-eta-flash-tool) - to flash the Eta Compute ECM3532 AI Sensor.
 
 ## Installation

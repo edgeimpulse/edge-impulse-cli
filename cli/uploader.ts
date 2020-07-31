@@ -220,6 +220,20 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
 
         let projectId = await configFactory.getUploaderProjectId();
 
+        if (projectId) {
+            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
+            if (projectInfoReq.body.success && projectInfoReq.body.project) {
+                if (!silentArgv) {
+                    console.log('    Project:    ', projectInfoReq.body.project.name + ' (ID: ' + projectId + ')');
+                    console.log('');
+                }
+            }
+            else {
+                console.warn('Cannot read cached project (' + projectInfoReq.body.error + ')');
+                projectId = undefined;
+            }
+        }
+
         if (!projectId) {
             if (!silentArgv) {
                 console.log('');
@@ -251,14 +265,6 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
             }
 
             await configFactory.setUploaderProjectId(projectId);
-        }
-        else {
-            if (!silentArgv) {
-                let project = (await config.api.projects.getProjectInfo(projectId)).body;
-
-                console.log('    Project:    ', project.project.name + ' (ID: ' + projectId + ')');
-                console.log('');
-            }
         }
 
         let devKeys = (await config.api.projects.listDevkeys(projectId)).body;

@@ -24,6 +24,8 @@ export enum PageType {
     ResetPassword = 22,
     Export = 23,
     Upload = 24,
+    Versions = 25,
+    Restore = 26,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

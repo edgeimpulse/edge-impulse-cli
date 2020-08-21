@@ -15,6 +15,7 @@ const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const debugArgv = process.argv.indexOf('--debug') > -1;
 const continuousArgv = process.argv.indexOf('--continuous') > -1;
+const rawArgv = process.argv.indexOf('--raw') > -1;
 
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -27,6 +28,11 @@ const configFactory = new Config();
         }
         catch (ex) {
             /* noop */
+        }
+
+        if (rawArgv && (debugArgv || continuousArgv)) {
+            console.log('Cannot use --raw while also declaring --debug or --continuous');
+            process.exit(1);
         }
 
         if (debugArgv && continuousArgv) {
@@ -89,7 +95,7 @@ async function connectToSerial(deviceId: string) {
     let inferenceStarted = false;
 
     serial.on('data', data => {
-        if (serial.is_connected() && inferenceStarted) {
+        if ((serial.is_connected() && inferenceStarted) || rawArgv) {
             process.stdout.write(data.toString('ascii'));
         }
     });
@@ -98,6 +104,8 @@ async function connectToSerial(deviceId: string) {
             inferenceStarted = false;
             return setTimeout(serial_connect, 5000);
         }
+
+        if (rawArgv) return;
 
         config = undefined;
         console.log(SERIAL_PREFIX, 'Serial is connected, trying to read config...');

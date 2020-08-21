@@ -38,3 +38,4 @@ Finished inferencing, raw data is stored in '/fs/device-classification.4'. Use A
 
 * `--debug` - run the impulse in debug mode, this will print the intermediate DSP results.
 * `--continuous` - run the impulse in continuous mode (not available on all platforms).
+* `--raw` - just acts as a serial passthrough, does not control the device.

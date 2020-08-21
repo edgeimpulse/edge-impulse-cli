@@ -145,7 +145,8 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
             '.cbor',
             '.json',
             '.jpg',
-            '.jpeg'
+            '.jpeg',
+            '.png'
         ];
 
         let files: UploaderFileType[];
@@ -298,6 +299,7 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
                         break;
                     case '.jpg':
                     case '.jpeg':
+                    case '.png':
                         processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
                         break;
                     default:
@@ -543,7 +545,7 @@ function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName: string
     hmacImage.update(buffer);
 
     let emptySignature = Array(64).fill('0').join('');
-
+    let mimeType = fileName.endsWith('.png') ? 'image/png' : 'image/jpeg';
     let data = {
         protected: {
             ver: "v1",
@@ -554,7 +556,7 @@ function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName: string
             device_type: "EDGE_IMPULSE_UPLOADER",
             interval_ms: 0,
             sensors: [{ name: 'image', units: 'rgba' }],
-            values: [`Ref-BINARY-image/jpeg (${buffer.length} bytes) ${hmacImage.digest().toString('hex')}`]
+            values: [`Ref-BINARY-${mimeType} (${buffer.length} bytes) ${hmacImage.digest().toString('hex')}`]
         }
     };
 
@@ -572,7 +574,7 @@ function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName: string
                 value: buffer,
                 options: {
                     filename: fileName,
-                    contentType: 'image/jpeg'
+                    contentType: mimeType
                 }
             }
         ]

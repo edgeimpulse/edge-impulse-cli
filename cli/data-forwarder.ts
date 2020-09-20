@@ -110,7 +110,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
     async function connectLogic() {
         if (!serial.is_connected()) return setTimeout(serial_connect, 5000);
 
-        console.log(SERIAL_PREFIX, 'Serial is connected');
+        let deviceId = await getDeviceId(serial);
+
+        console.log(SERIAL_PREFIX, 'Serial is connected (' + deviceId + ')');
 
         try {
             if (!ws) {
@@ -205,9 +207,13 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 if (!dataForwarderConfig) {
                     throw new Error('No data forwarder config found');
                 }
-                await checkName(eiConfig, dataForwarderConfig.projectId, macAddress);
+                let name = await checkName(eiConfig, dataForwarderConfig.projectId, macAddress);
 
-                console.log(TCP_PREFIX, 'Authenticated');
+                console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
+                    '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '"');
+                console.log(TCP_PREFIX,
+                    `Go to ${eiConfig.endpoints.internal.api.replace('/v1', '')}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
+                    `to build your machine learning model!`);
             }
         });
         ws.send(cbor.encode(req));
@@ -290,7 +296,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
                     let dataBuffer = Buffer.concat(allDataBuffers);
                     let lines = dataBuffer.toString('ascii').split('\n').map(n => n.trim()).map(n => {
-                        return n.split(/[,\t]/).map(x => Number(x.trim()));
+                        return n.split(/[,\t\s]/).map(x => Number(x.trim()));
                     });
                     // skip over the first item
                     let values = lines.slice(1, (dataForwarderConfig.samplingFreq * (s.length / 1000) + 1));
@@ -505,7 +511,9 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
     while (axes.split(',').filter(f => !!f).length !== sensorInfo.sensorCount) {
         axes = (<{ axes: string }>(await inquirer.prompt([{
             type: 'input',
-            message: sensorInfo.sensorCount + ' sensor axes detected. What do you want to call them? ' +
+            message: sensorInfo.sensorCount + ' sensor axes detected (example values: ' +
+                JSON.stringify(sensorInfo.example) + '). ' +
+                'What do you want to call them? ' +
                 'Separate the names with \',\':',
             name: 'axes'
         }]))).axes;
@@ -531,7 +539,7 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
         let device = (await eiConfig.api.devices.getDevice(projectId, deviceId)).body.device;
 
         let currName = device ? device.name : deviceId;
-        if (currName !== deviceId) return;
+        if (currName !== deviceId) return currName;
 
         let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
             type: 'input',
@@ -547,6 +555,22 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
                 throw new Error('Failed to rename device... ' + rename.error);
             }
         }
+        return nameDevice.nameDevice;
+    }
+    catch (ex2) {
+        let ex = <Error>ex2;
+        throw ex.message || ex;
+    }
+}
+
+async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
+    try {
+        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId)).body;
+        if (!projectBody.success) {
+            throw projectBody.error;
+        }
+
+        return projectBody.project.name;
     }
     catch (ex2) {
         let ex = <Error>ex2;
@@ -557,8 +581,11 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
 async function getSensorInfo(serial: SerialConnector) {
     const dataBuffers: Buffer[] = [];
     const onData = (b: Buffer) => dataBuffers.push(b);
+
+    console.log(SERIAL_PREFIX, 'Detecting data frequency...');
+
     serial.on('data', onData);
-    await sleep(500);
+    await sleep(1000);
     serial.off('data', onData);
 
     const data = Buffer.concat(dataBuffers);
@@ -569,11 +596,21 @@ async function getSensorInfo(serial: SerialConnector) {
         throw new Error('No valid sensor readings received from device: ' +
             lines.join('\n'));
     }
-    let sensorCount = l.split(/[,\t]/).length;
+
+    let values = l.split(/[,\t\s]/);
+    if (values.some(v => isNaN(Number(v)))) {
+        throw new Error('Sensor readings from device do not seem to be all numbers, found: ' +
+            JSON.stringify(values));
+    }
+
+    console.log(SERIAL_PREFIX, 'Detected data frequency:', lines.length + 'Hz');
+
+    let sensorCount = values.length;
 
     return {
-        samplingFreq: lines.length * 2,
-        sensorCount: sensorCount
+        samplingFreq: lines.length,
+        sensorCount: sensorCount,
+        example: values.map(n => Number(n))
     };
 }
 

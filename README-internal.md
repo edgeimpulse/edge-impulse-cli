@@ -7,7 +7,7 @@ Build this application via:
 ```
 $ npm install
 $ ./node_modules/.bin/tsc -p .
-$ npm install -g .
+$ npm link
 ```
 
 ## Updating SDKs

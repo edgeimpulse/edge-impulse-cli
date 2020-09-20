@@ -12,7 +12,7 @@ This package consists of four tools (click to see their respective documentation
 
 ## Installation
 
-1. Install [Node.js](https://nodejs.org/en/) v10 or higher on your host computer.
+1. Install [Node.js](https://nodejs.org/en/) v12 or higher on your host computer.
 2. Install the CLI tools via:
 
     ```

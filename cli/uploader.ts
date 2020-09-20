@@ -215,8 +215,8 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
                     path: f,
                     category: categoryArgv || 'training',
                     label: labelArgv || undefined
-                }
-            })
+                };
+            });
         }
 
         let projectId = await configFactory.getUploaderProjectId();

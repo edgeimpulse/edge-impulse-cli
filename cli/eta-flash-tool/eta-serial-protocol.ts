@@ -218,7 +218,7 @@ export default class EtaSerialProtocol {
                         this._serial.off('data', fn);
 
                         if (buffer.slice(buffer.indexOf(seq)).indexOf('\r') > -1) {
-                            let end = buffer.indexOf(seq) + buffer.slice(buffer.indexOf(seq)).indexOf('\r')
+                            let end = buffer.indexOf(seq) + buffer.slice(buffer.indexOf(seq)).indexOf('\r');
                             res(buffer.slice(0, end));
                         }
                         else {

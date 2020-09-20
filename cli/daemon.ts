@@ -24,6 +24,7 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import checkNewVersions from './check-new-version';
+import { ProjectsApiApiKeys, DevicesApiApiKeys } from '../sdk/studio/api';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -235,7 +236,26 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, cl
                 }
             }
             else {
-                console.log(TCP_PREFIX, 'Authenticated');
+                if (!config) {
+                    console.log(TCP_PREFIX, 'Authenticated');
+                }
+                else {
+                    let info = await getProjectAndDeviceInfo(eiConfig, config);
+
+                    // we don't have studio endpoint here, so let's rewrite it
+                    let endpoint = config.management.url;
+                    endpoint = endpoint.replace('ws', 'http');
+                    endpoint = endpoint.replace('remote-mgmt', 'studio');
+                    endpoint = endpoint.replace('4802', '4800');
+                    if (endpoint.indexOf('4800') === -1) {
+                        endpoint = endpoint.replace('http:', 'https:');
+                    }
+
+                    console.log(TCP_PREFIX, `Device "${info.deviceName}" is now connected to project "${info.projectName}"`);
+                    console.log(TCP_PREFIX,
+                        `Go to ${endpoint}/studio/${info.projectId}/acquisition/training ` +
+                        `to build your machine learning model!`);
+                }
             }
         });
         ws.send(cbor.encode(req));
@@ -559,6 +579,8 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig,
     return Number(projectId);
 }
 
+let setupWizardRan = false;
+
 async function setupWizard(eiConfig: EdgeImpulseConfig,
                            serialProtocol: EiSerialProtocol,
                            deviceConfig: EiSerialDeviceConfig)
@@ -621,7 +643,9 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
             ret.didSetMgmt = true;
         }
 
-        if (!deviceConfig.wifi.connected && credentials.askWifi !== false && deviceConfig.wifi.present) {
+        if (!deviceConfig.wifi.connected && credentials.askWifi !== false && deviceConfig.wifi.present &&
+            !setupWizardRan) {
+
             let inqSetup = await inquirer.prompt([{
                 type: 'confirm',
                 message: 'WiFi is not connected, do you want to set up a WiFi network now?',
@@ -661,6 +685,8 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
             }
         }
 
+        setupWizardRan = true;
+
         ret.setupOK = true;
     }
     catch (ex) {
@@ -668,4 +694,36 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
     }
 
     return ret;
+}
+
+async function getProjectAndDeviceInfo(eiConfig: EdgeImpulseConfig, config: EiSerialDeviceConfig) {
+    try {
+        eiConfig.api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, config.upload.apiKey);
+        eiConfig.api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, config.upload.apiKey);
+
+        let projectBody = (await eiConfig.api.projects.listProjects()).body;
+        if (!projectBody.success) {
+            throw projectBody.error;
+        }
+
+        let project = (projectBody.projects || [])[0];
+        if (!project) {
+            throw new Error('Cannot find project, invalid API key?');
+        }
+
+        let devices = (await eiConfig.api.devices.getDevice(project.id, config.info.id)).body;
+        if (!devices.success) {
+            throw devices.error;
+        }
+
+        return {
+            projectId: project.id,
+            projectName: project.name,
+            deviceName: devices.device ? devices.device.name : config.info.id
+        };
+    }
+    catch (ex2) {
+        let ex = <Error>ex2;
+        throw ex.message || ex;
+    }
 }

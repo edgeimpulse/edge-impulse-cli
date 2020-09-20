@@ -115,7 +115,7 @@ async function connectToSerial(deviceId: string) {
             }
             catch (ex2) {
                 let ex = <Error>ex2;
-                let msg = ex.message || ex.toString()
+                let msg = ex.message || ex.toString();
                 if (msg.indexOf('Failed to get a valid') > -1 && bootloaderBaudRate !== APP_BAUD_RATE) {
                     console.log(SERIAL_PREFIX, 'Not in bootloader mode yet... ' +
                         'Restarting into bootloader at baud rate ' + bootloaderBaudRate + '...');
@@ -194,7 +194,7 @@ async function connectToSerial(deviceId: string) {
                 }
             }
             if (!debug) {
-                progressBar.stop()
+                progressBar.stop();
             }
 
             console.log(SERIAL_PREFIX, 'Finalizing update...');

@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { DependencyData } from './dependencyData';
 import { GenericApiResponse } from './genericApiResponse';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasResponseAllOf } from './kerasResponseAllOf';
 import { KerasVisualLayer } from './kerasVisualLayer';
 
@@ -31,6 +33,10 @@ export class KerasResponse {
     'trained': boolean;
     'name': string;
     /**
+    * The type of Keras block (keras or keras-transfer-image). Each behaves differently.
+    */
+    'type'?: KerasResponseTypeEnum;
+    /**
     * The Keras script. This script might be empty if the mode is visual.
     */
     'script': string;
@@ -38,10 +44,11 @@ export class KerasResponse {
     * Minimum confidence rating required for the neural network. Scores below this confidence are tagged as uncertain.
     */
     'minimumConfidenceRating': number;
+    'selectedModelType': KerasModelTypeEnum;
     /**
     * The mode (visual or expert) to use for editing this network.
     */
-    'mode': KerasResponse.ModeEnum;
+    'mode': KerasResponseModeEnum;
     /**
     * The visual layers (if in visual mode) for the neural network. This will be an empty array when in expert mode.
     */
@@ -54,6 +61,7 @@ export class KerasResponse {
     * Learning rate (between 0 and 1). If in expert mode this will be 0.
     */
     'learningRate': number;
+    'augmentationPolicyImage': AugmentationPolicyImageEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -84,6 +92,11 @@ export class KerasResponse {
             "type": "string"
         },
         {
+            "name": "type",
+            "baseName": "type",
+            "type": "KerasResponseTypeEnum"
+        },
+        {
             "name": "script",
             "baseName": "script",
             "type": "string"
@@ -94,9 +107,14 @@ export class KerasResponse {
             "type": "number"
         },
         {
+            "name": "selectedModelType",
+            "baseName": "selectedModelType",
+            "type": "KerasModelTypeEnum"
+        },
+        {
             "name": "mode",
             "baseName": "mode",
-            "type": "KerasResponse.ModeEnum"
+            "type": "KerasResponseModeEnum"
         },
         {
             "name": "visualLayers",
@@ -112,6 +130,11 @@ export class KerasResponse {
             "name": "learningRate",
             "baseName": "learningRate",
             "type": "number"
+        },
+        {
+            "name": "augmentationPolicyImage",
+            "baseName": "augmentationPolicyImage",
+            "type": "AugmentationPolicyImageEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -119,9 +142,9 @@ export class KerasResponse {
     }
 }
 
-export namespace KerasResponse {
-    export enum ModeEnum {
-        Visual = <any> 'visual',
-        Expert = <any> 'expert'
-    }
-}
+
+export type KerasResponseTypeEnum = 'keras' | 'keras-transfer-image';
+export const KerasResponseTypeEnumValues: string[] = ['keras', 'keras-transfer-image'];
+
+export type KerasResponseModeEnum = 'visual' | 'expert';
+export const KerasResponseModeEnumValues: string[] = ['visual', 'expert'];

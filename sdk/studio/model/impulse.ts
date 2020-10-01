@@ -11,9 +11,14 @@
  */
 
 import { ImpulseDspBlock } from './impulseDspBlock';
+import { ImpulseInputBlock } from './impulseInputBlock';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 
 export class Impulse {
+    /**
+    * Input Blocks that are part of this impulse
+    */
+    'inputBlocks': Array<ImpulseInputBlock>;
     /**
     * DSP Blocks that are part of this impulse
     */
@@ -22,18 +27,15 @@ export class Impulse {
     * Learning Blocks that are part of this impulse
     */
     'learnBlocks': Array<ImpulseLearnBlock>;
-    /**
-    * Size of the sliding window in milliseconds
-    */
-    'windowSizeMs': number;
-    /**
-    * We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with during classification for each step.
-    */
-    'windowIncreaseMs': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "inputBlocks",
+            "baseName": "inputBlocks",
+            "type": "Array<ImpulseInputBlock>"
+        },
         {
             "name": "dspBlocks",
             "baseName": "dspBlocks",
@@ -43,16 +45,6 @@ export class Impulse {
             "name": "learnBlocks",
             "baseName": "learnBlocks",
             "type": "Array<ImpulseLearnBlock>"
-        },
-        {
-            "name": "windowSizeMs",
-            "baseName": "windowSizeMs",
-            "type": "number"
-        },
-        {
-            "name": "windowIncreaseMs",
-            "baseName": "windowIncreaseMs",
-            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

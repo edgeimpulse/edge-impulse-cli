@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DeviceSensors } from './deviceSensors';
 
 export class Device {
     'id': number;
@@ -24,7 +25,7 @@ export class Device {
     'lastSeen': Date;
     'name': string;
     'deviceType': string;
-    'sensors': Array<string>;
+    'sensors': Array<DeviceSensors>;
     /**
     * Whether the device is connected to the remote management interface
     */
@@ -70,7 +71,7 @@ export class Device {
         {
             "name": "sensors",
             "baseName": "sensors",
-            "type": "Array<string>"
+            "type": "Array<DeviceSensors>"
         },
         {
             "name": "remoteMgmtConnected",

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DspTrainedFeaturesResponseAllOfSample } from './dspTrainedFeaturesResponseAllOfSample';
 
 export class DspSampleFeaturesResponseAllOfData {
     /**
@@ -24,6 +25,7 @@ export class DspSampleFeaturesResponseAllOfData {
     * Training label string
     */
     'yLabel': string;
+    'sample'?: DspTrainedFeaturesResponseAllOfSample;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +44,11 @@ export class DspSampleFeaturesResponseAllOfData {
             "name": "yLabel",
             "baseName": "yLabel",
             "type": "string"
+        },
+        {
+            "name": "sample",
+            "baseName": "sample",
+            "type": "DspTrainedFeaturesResponseAllOfSample"
         }    ];
 
     static getAttributeTypeMap() {

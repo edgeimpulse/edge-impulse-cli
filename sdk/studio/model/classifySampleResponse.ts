@@ -11,7 +11,7 @@
  */
 
 import { ClassifySampleResponseAllOf } from './classifySampleResponseAllOf';
-import { ClassifySampleResponseAllOfClassifications } from './classifySampleResponseAllOfClassifications';
+import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
 import { GenericApiResponse } from './genericApiResponse';
 import { RawSampleData } from './rawSampleData';
 
@@ -24,7 +24,7 @@ export class ClassifySampleResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'classifications': Array<ClassifySampleResponseAllOfClassifications>;
+    'classifications': Array<ClassifySampleResponseClassification>;
     'sample': RawSampleData;
     /**
     * Size of the sliding window (as set by the impulse) in milliseconds.
@@ -55,7 +55,7 @@ export class ClassifySampleResponse {
         {
             "name": "classifications",
             "baseName": "classifications",
-            "type": "Array<ClassifySampleResponseAllOfClassifications>"
+            "type": "Array<ClassifySampleResponseClassification>"
         },
         {
             "name": "sample",

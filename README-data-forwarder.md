@@ -38,7 +38,15 @@ Endpoints:
 To clear the configuration, run:
 
 ```
-$ edge-impulse-daemon --clean
+$ edge-impulse-data-forwarder --clean
+```
+
+### Overriding the frequency
+
+To override the frequency, use:
+
+```
+$ edge-impulse-data-forwarder --frequency 100
 ```
 
 ## Protocol
@@ -62,6 +70,10 @@ This is an example of a sketch that reads data from an accelerometer (tested on 
 ```
 #include <Arduino_LSM9DS1.h>
 
+#define CONVERT_G_TO_MS2    9.80665f
+#define FREQUENCY_HZ        50
+#define INTERVAL_MS         (1000 / (FREQUENCY_HZ + 1))
+
 void setup() {
     Serial.begin(115200);
     Serial.println("Started");
@@ -73,16 +85,19 @@ void setup() {
 }
 
 void loop() {
+    static unsigned long last_interval_ms = 0;
     float x, y, z;
 
-    if (IMU.accelerationAvailable()) {
+    if (millis() > last_interval_ms + INTERVAL_MS) {
+        last_interval_ms = millis();
+
         IMU.readAcceleration(x, y, z);
 
-        Serial.print(x * 10);
+        Serial.print(x * CONVERT_G_TO_MS2);
         Serial.print('\t');
-        Serial.print(y * 10);
+        Serial.print(y * CONVERT_G_TO_MS2);
         Serial.print('\t');
-        Serial.println(z * 10);
+        Serial.println(z * CONVERT_G_TO_MS2);
     }
 }
 ```
@@ -110,3 +125,5 @@ int main()
     }
 }
 ```
+
+There's also a complete example that samples data from both the accelerometer and the gyroscope here: [edgeimpulse/example-dataforwarder-mbed](https://github.com/edgeimpulse/example-dataforwarder-mbed).

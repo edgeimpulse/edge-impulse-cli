@@ -17,6 +17,7 @@ export class User {
     'name': string;
     'photo'?: string;
     'created': Date;
+    'isEdgeImpulseStaff': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class User {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "isEdgeImpulseStaff",
+            "baseName": "isEdgeImpulseStaff",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -17,8 +17,13 @@ import { GenericApiResponse } from './genericApiResponse';
 import { Project } from './project';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectInfoResponseAllOf } from './projectInfoResponseAllOf';
+import { ProjectInfoResponseAllOfAcquisitionSettings } from './projectInfoResponseAllOfAcquisitionSettings';
 import { ProjectInfoResponseAllOfComputeTime } from './projectInfoResponseAllOfComputeTime';
+import { ProjectInfoResponseAllOfDataSummaryPerCategory } from './projectInfoResponseAllOfDataSummaryPerCategory';
+import { ProjectInfoResponseAllOfDeploySettings } from './projectInfoResponseAllOfDeploySettings';
+import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
+import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { User } from './user';
 
 export class ProjectInfoResponse {
@@ -31,21 +36,18 @@ export class ProjectInfoResponse {
     */
     'error'?: string;
     'project': Project;
-    'collaborators': Array<User>;
     'downloads': Array<Download>;
     'developmentKeys': DevelopmentKeys;
     'impulse': ProjectInfoResponseAllOfImpulse;
     'devices': Array<Device>;
     'dataSummary': ProjectDataSummary;
-    /**
-    * Summary of the amount of data (in ms.) per sensor axis
-    */
-    'dataAxisSummary': { [key: string]: number; };
-    /**
-    * The suggested interval for new sampling data. This is based on the existing data in your training set.
-    */
-    'suggestedSamplingInterval': number;
+    'dataSummaryPerCategory': ProjectInfoResponseAllOfDataSummaryPerCategory;
     'computeTime': ProjectInfoResponseAllOfComputeTime;
+    'acquisitionSettings': ProjectInfoResponseAllOfAcquisitionSettings;
+    'collaborators': Array<User>;
+    'deploySettings': ProjectInfoResponseAllOfDeploySettings;
+    'experiments': ProjectInfoResponseAllOfExperiments;
+    'latencyDevices': Array<ProjectInfoResponseAllOfLatencyDevices>;
 
     static discriminator: string | undefined = undefined;
 
@@ -64,11 +66,6 @@ export class ProjectInfoResponse {
             "name": "project",
             "baseName": "project",
             "type": "Project"
-        },
-        {
-            "name": "collaborators",
-            "baseName": "collaborators",
-            "type": "Array<User>"
         },
         {
             "name": "downloads",
@@ -96,19 +93,39 @@ export class ProjectInfoResponse {
             "type": "ProjectDataSummary"
         },
         {
-            "name": "dataAxisSummary",
-            "baseName": "dataAxisSummary",
-            "type": "{ [key: string]: number; }"
-        },
-        {
-            "name": "suggestedSamplingInterval",
-            "baseName": "suggestedSamplingInterval",
-            "type": "number"
+            "name": "dataSummaryPerCategory",
+            "baseName": "dataSummaryPerCategory",
+            "type": "ProjectInfoResponseAllOfDataSummaryPerCategory"
         },
         {
             "name": "computeTime",
             "baseName": "computeTime",
             "type": "ProjectInfoResponseAllOfComputeTime"
+        },
+        {
+            "name": "acquisitionSettings",
+            "baseName": "acquisitionSettings",
+            "type": "ProjectInfoResponseAllOfAcquisitionSettings"
+        },
+        {
+            "name": "collaborators",
+            "baseName": "collaborators",
+            "type": "Array<User>"
+        },
+        {
+            "name": "deploySettings",
+            "baseName": "deploySettings",
+            "type": "ProjectInfoResponseAllOfDeploySettings"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "ProjectInfoResponseAllOfExperiments"
+        },
+        {
+            "name": "latencyDevices",
+            "baseName": "latencyDevices",
+            "type": "Array<ProjectInfoResponseAllOfLatencyDevices>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,32 +11,29 @@
  */
 
 
-export class KerasModelMetadataAllOfMetrics {
-    /**
-    * Loss after training
-    */
-    'loss': number;
-    /**
-    * Accuracy on the cross-validation set after training
-    */
-    'acc'?: number;
+/**
+* Experiments that the project has access to.
+*/
+export class ProjectInfoResponseAllOfExperiments {
+    'gpu': boolean;
+    'eonCompiler': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "loss",
-            "baseName": "loss",
-            "type": "number"
+            "name": "gpu",
+            "baseName": "gpu",
+            "type": "boolean"
         },
         {
-            "name": "acc",
-            "baseName": "acc",
-            "type": "number"
+            "name": "eonCompiler",
+            "baseName": "eonCompiler",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
-        return KerasModelMetadataAllOfMetrics.attributeTypeMap;
+        return ProjectInfoResponseAllOfExperiments.attributeTypeMap;
     }
 }
 

@@ -13,26 +13,23 @@
 
 export class SampleFeaturesRequest {
     /**
-    * The number of windows to include
-    */
-    'count': number;
-    /**
     * Which feature indices to include (by index)
     */
     'featureIxes': Array<number>;
+    'allowDimensionalityReduction': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "count",
-            "baseName": "count",
-            "type": "number"
-        },
-        {
             "name": "featureIxes",
             "baseName": "featureIxes",
             "type": "Array<number>"
+        },
+        {
+            "name": "allowDimensionalityReduction",
+            "baseName": "allowDimensionalityReduction",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

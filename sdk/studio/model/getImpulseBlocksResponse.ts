@@ -13,6 +13,7 @@
 import { DSPBlock } from './dSPBlock';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetImpulseBlocksResponseAllOf } from './getImpulseBlocksResponseAllOf';
+import { InputBlock } from './inputBlock';
 import { LearnBlock } from './learnBlock';
 
 export class GetImpulseBlocksResponse {
@@ -24,6 +25,7 @@ export class GetImpulseBlocksResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
+    'inputBlocks': Array<InputBlock>;
     'dspBlocks': Array<DSPBlock>;
     'learnBlocks': Array<LearnBlock>;
 
@@ -39,6 +41,11 @@ export class GetImpulseBlocksResponse {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "inputBlocks",
+            "baseName": "inputBlocks",
+            "type": "Array<InputBlock>"
         },
         {
             "name": "dspBlocks",

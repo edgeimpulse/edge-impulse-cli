@@ -26,6 +26,7 @@ export class DSPConfigResponse {
     'error'?: string;
     'dsp'?: DSPInfo;
     'config'?: Array<DSPGroup>;
+    'configError'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,6 +50,11 @@ export class DSPConfigResponse {
             "name": "config",
             "baseName": "config",
             "type": "Array<DSPGroup>"
+        },
+        {
+            "name": "configError",
+            "baseName": "configError",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

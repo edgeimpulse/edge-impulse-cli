@@ -28,6 +28,10 @@ export class DspSampleFeaturesResponse {
     */
     'totalSampleCount': number;
     'data': Array<DspSampleFeaturesResponseAllOfData>;
+    /**
+    * When showing the processed features, skip the first X features. This is used in dimensionality reduction where artificial features are introduced in the response (on the first few positions).
+    */
+    'skipFirstFeatures': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +55,11 @@ export class DspSampleFeaturesResponse {
             "name": "data",
             "baseName": "data",
             "type": "Array<DspSampleFeaturesResponseAllOfData>"
+        },
+        {
+            "name": "skipFirstFeatures",
+            "baseName": "skipFirstFeatures",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

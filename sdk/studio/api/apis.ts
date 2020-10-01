@@ -1,3 +1,5 @@
+export * from './adminApi';
+import { AdminApi } from './adminApi';
 export * from './authApi';
 import { AuthApi } from './authApi';
 export * from './cDNApi';
@@ -10,6 +12,10 @@ export * from './deploymentApi';
 import { DeploymentApi } from './deploymentApi';
 export * from './devicesApi';
 import { DevicesApi } from './devicesApi';
+export * from './exportApi';
+import { ExportApi } from './exportApi';
+export * from './healthApi';
+import { HealthApi } from './healthApi';
 export * from './impulseApi';
 import { ImpulseApi } from './impulseApi';
 export * from './jobsApi';
@@ -18,10 +24,24 @@ export * from './learnApi';
 import { LearnApi } from './learnApi';
 export * from './loginApi';
 import { LoginApi } from './loginApi';
+export * from './organizationCreateProjectApi';
+import { OrganizationCreateProjectApi } from './organizationCreateProjectApi';
+export * from './organizationDataApi';
+import { OrganizationDataApi } from './organizationDataApi';
+export * from './organizationJobsApi';
+import { OrganizationJobsApi } from './organizationJobsApi';
+export * from './organizationRequiresAdminApi';
+import { OrganizationRequiresAdminApi } from './organizationRequiresAdminApi';
+export * from './organizationsApi';
+import { OrganizationsApi } from './organizationsApi';
 export * from './projectsApi';
 import { ProjectsApi } from './projectsApi';
 export * from './rawDataApi';
 import { RawDataApi } from './rawDataApi';
+export * from './requiresSudoApi';
+import { RequiresSudoApi } from './requiresSudoApi';
+export * from './supportsRangeApi';
+import { SupportsRangeApi } from './supportsRangeApi';
 export * from './userApi';
 import { UserApi } from './userApi';
 import * as fs from 'fs';
@@ -44,4 +64,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ImpulseApi, JobsApi, LearnApi, LoginApi, ProjectsApi, RawDataApi, UserApi];
+export const APIS = [AdminApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, SupportsRangeApi, UserApi];

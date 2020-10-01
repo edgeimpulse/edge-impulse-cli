@@ -30,6 +30,8 @@ const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
+const frequencyArgvIx = process.argv.indexOf('--frequency');
+const frequencyArgv = frequencyArgvIx !== -1 ? Number(process.argv[frequencyArgvIx + 1]) : undefined;
 
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -42,6 +44,11 @@ const configFactory = new Config();
 
         if (cleanArgv || apiKeyArgv) {
             await configFactory.clean();
+        }
+
+        if (typeof frequencyArgv === 'number' && isNaN(frequencyArgv)) {
+            console.log('Invalid value for --frequency (should be a number)');
+            process.exit(1);
         }
 
         try {
@@ -152,12 +159,21 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     sensorInfo.sensorCount + '), re-configuring device.');
                 dataForwarderConfig = undefined;
             }
+            else if (sensorInfo.samplingFreq !== dataForwarderConfig.samplingFreq && !frequencyArgv) {
+                console.log(SERIAL_PREFIX, 'Using last stored frequency (' + dataForwarderConfig.samplingFreq + 'Hz) ' +
+                    'for dataset consistency. Run with --clean to reset this.');
+            }
         }
 
         if (!dataForwarderConfig) {
             let a = await getAndConfigureProject(eiConfig, serial);
             dataForwarderConfig = a;
             await configFactory.storeDataForwarderDevice(macAddress, a);
+        }
+
+        if (frequencyArgv) {
+            console.log(SERIAL_PREFIX, 'Overriding frequency to ' + frequencyArgv + 'Hz (via --frequency)');
+            dataForwarderConfig.samplingFreq = frequencyArgv;
         }
 
         let req: MgmtInterfaceHelloV2 = {

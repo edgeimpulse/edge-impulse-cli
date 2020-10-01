@@ -21,6 +21,10 @@ export class DspRunGraph {
     */
     'image'?: string;
     /**
+    * Mime type of the Base64 encoded image, only present if type is \'image\'
+    */
+    'imageMimeType'?: string;
+    /**
     * Values on the x-axis per plot. Key is the name of the raw feature. Present if type is \'logarithmic\' or \'linear\'.
     */
     'X'?: { [key: string]: Array<number>; };
@@ -48,6 +52,10 @@ export class DspRunGraph {
     * Type of graph (either `logarithmic`, `linear` or `image`)
     */
     'type': string;
+    /**
+    * Width of the graph line (if type is `logarithmic` or `linear`). Default 3.
+    */
+    'lineWidth'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -60,6 +68,11 @@ export class DspRunGraph {
         {
             "name": "image",
             "baseName": "image",
+            "type": "string"
+        },
+        {
+            "name": "imageMimeType",
+            "baseName": "imageMimeType",
             "type": "string"
         },
         {
@@ -96,6 +109,11 @@ export class DspRunGraph {
             "name": "type",
             "baseName": "type",
             "type": "string"
+        },
+        {
+            "name": "lineWidth",
+            "baseName": "lineWidth",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

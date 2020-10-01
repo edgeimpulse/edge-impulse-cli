@@ -12,6 +12,8 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
+import { Project } from './project';
 import { User } from './user';
 
 export class GetUserResponse {
@@ -28,8 +30,18 @@ export class GetUserResponse {
     'name': string;
     'photo'?: string;
     'created': Date;
+    'isEdgeImpulseStaff': boolean;
     'email': string;
     'activated': boolean;
+    /**
+    * Organizations that the user is a member of. Only filled when requesting information about yourself.
+    */
+    'organizations': Array<GetUserResponseAllOfOrganizations>;
+    'projects': Array<Project>;
+    /**
+    * Experiments that the user has access to
+    */
+    'experiments': object;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,6 +82,11 @@ export class GetUserResponse {
             "type": "Date"
         },
         {
+            "name": "isEdgeImpulseStaff",
+            "baseName": "isEdgeImpulseStaff",
+            "type": "boolean"
+        },
+        {
             "name": "email",
             "baseName": "email",
             "type": "string"
@@ -78,6 +95,21 @@ export class GetUserResponse {
             "name": "activated",
             "baseName": "activated",
             "type": "boolean"
+        },
+        {
+            "name": "organizations",
+            "baseName": "organizations",
+            "type": "Array<GetUserResponseAllOfOrganizations>"
+        },
+        {
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<Project>"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { User } from './user';
 
 export class Project {
     'id': number;
@@ -19,6 +20,7 @@ export class Project {
     * Custom logo for this project (not available for all projects)
     */
     'logo'?: string;
+    'collaborators': Array<User>;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +44,11 @@ export class Project {
             "name": "logo",
             "baseName": "logo",
             "type": "string"
+        },
+        {
+            "name": "collaborators",
+            "baseName": "collaborators",
+            "type": "Array<User>"
         }    ];
 
     static getAttributeTypeMap() {

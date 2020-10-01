@@ -11,7 +11,8 @@
  */
 
 import { KerasModelLayer } from './kerasModelLayer';
-import { KerasModelMetadataAllOfMetrics } from './kerasModelMetadataAllOfMetrics';
+import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class KerasModelMetadataAllOf {
     /**
@@ -25,13 +26,16 @@ export class KerasModelMetadataAllOf {
     /**
     * Labels for the output layer
     */
-    'classes': Array<string>;
-    'metrics': KerasModelMetadataAllOfMetrics;
-    'confusionMatrix': Array<Array<number>>;
+    'classNames': Array<string>;
     /**
-    * Precision, recall, F1 and support scores
+    * The types of model that are available
     */
-    'report': object;
+    'availableModelTypes': Array<KerasModelTypeEnum>;
+    'recommendedModelType': KerasModelTypeEnum;
+    /**
+    * Metrics for each of the available model types
+    */
+    'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,24 +51,24 @@ export class KerasModelMetadataAllOf {
             "type": "Array<KerasModelLayer>"
         },
         {
-            "name": "classes",
-            "baseName": "classes",
+            "name": "classNames",
+            "baseName": "class_names",
             "type": "Array<string>"
         },
         {
-            "name": "metrics",
-            "baseName": "metrics",
-            "type": "KerasModelMetadataAllOfMetrics"
+            "name": "availableModelTypes",
+            "baseName": "available_model_types",
+            "type": "Array<KerasModelTypeEnum>"
         },
         {
-            "name": "confusionMatrix",
-            "baseName": "confusion_matrix",
-            "type": "Array<Array<number>>"
+            "name": "recommendedModelType",
+            "baseName": "recommended_model_type",
+            "type": "KerasModelTypeEnum"
         },
         {
-            "name": "report",
-            "baseName": "report",
-            "type": "object"
+            "name": "modelValidationMetrics",
+            "baseName": "model_validation_metrics",
+            "type": "Array<KerasModelMetadataMetrics>"
         }    ];
 
     static getAttributeTypeMap() {

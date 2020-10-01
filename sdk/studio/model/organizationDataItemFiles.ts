@@ -10,25 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { Project } from './project';
 
-export class ListProjectsResponseAllOf {
-    /**
-    * Array with projects
-    */
-    'projects'?: Array<Project>;
+export class OrganizationDataItemFiles {
+    'name': string;
+    'bucketPath': string;
+    'size': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projects",
-            "baseName": "projects",
-            "type": "Array<Project>"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "bucketPath",
+            "baseName": "bucketPath",
+            "type": "string"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListProjectsResponseAllOf.attributeTypeMap;
+        return OrganizationDataItemFiles.attributeTypeMap;
     }
 }
 

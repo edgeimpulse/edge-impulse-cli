@@ -12,6 +12,7 @@
 
 
 export class Download {
+    'id'?: string;
     'name'?: string;
     'type'?: string;
     'size'?: string;
@@ -20,6 +21,11 @@ export class Download {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
         {
             "name": "name",
             "baseName": "name",

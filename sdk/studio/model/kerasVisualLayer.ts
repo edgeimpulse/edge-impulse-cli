@@ -12,15 +12,19 @@
 
 
 export class KerasVisualLayer {
-    'type': KerasVisualLayer.TypeEnum;
+    'type': KerasVisualLayerTypeEnum;
     /**
-    * Number of neurons in this layer (only for dense, conv1d)
+    * Number of neurons or filters in this layer (only for dense, conv1d, conv2d) or in the final conv2d layer (only for transfer layers)
     */
     'neurons'?: number;
     /**
-    * Kernel size for the convolutional and pooling layer (only for conv1d)
+    * Kernel size for the convolutional and pooling layers (only for conv1d, conv2d)
     */
     'kernelSize'?: number;
+    /**
+    * Fraction of input units to drop (only for dropout) or in the final layer dropout (only for transfer layers)
+    */
+    'dropoutRate'?: number;
     /**
     * Number of columns for the reshape operation (only for reshape)
     */
@@ -32,7 +36,7 @@ export class KerasVisualLayer {
         {
             "name": "type",
             "baseName": "type",
-            "type": "KerasVisualLayer.TypeEnum"
+            "type": "KerasVisualLayerTypeEnum"
         },
         {
             "name": "neurons",
@@ -42,6 +46,11 @@ export class KerasVisualLayer {
         {
             "name": "kernelSize",
             "baseName": "kernelSize",
+            "type": "number"
+        },
+        {
+            "name": "dropoutRate",
+            "baseName": "dropoutRate",
             "type": "number"
         },
         {
@@ -55,11 +64,6 @@ export class KerasVisualLayer {
     }
 }
 
-export namespace KerasVisualLayer {
-    export enum TypeEnum {
-        Dense = <any> 'dense',
-        Conv1d = <any> 'conv1d',
-        Reshape = <any> 'reshape',
-        Flatten = <any> 'flatten'
-    }
-}
+
+export type KerasVisualLayerTypeEnum = 'dense' | 'conv1d' | 'conv2d' | 'reshape' | 'flatten' | 'dropout' | 'batchNormalization' | 'transfer_mobilenetv2_a35' | 'transfer_mobilenetv2_a1' | 'transfer_mobilenetv2_a05';
+export const KerasVisualLayerTypeEnumValues: string[] = ['dense', 'conv1d', 'conv2d', 'reshape', 'flatten', 'dropout', 'batchNormalization', 'transfer_mobilenetv2_a35', 'transfer_mobilenetv2_a1', 'transfer_mobilenetv2_a05'];

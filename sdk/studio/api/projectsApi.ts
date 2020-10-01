@@ -25,9 +25,14 @@ import { ListApiKeysResponse } from '../model/listApiKeysResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListHmacKeysResponse } from '../model/listHmacKeysResponse';
 import { ListProjectsResponse } from '../model/listProjectsResponse';
+import { ListVersionsResponse } from '../model/listVersionsResponse';
+import { ProjectDataAxesSummaryResponse } from '../model/projectDataAxesSummaryResponse';
 import { ProjectInfoResponse } from '../model/projectInfoResponse';
 import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
+import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
+import { SocketTokenResponse } from '../model/socketTokenResponse';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
+import { UpdateVersionRequest } from '../model/updateVersionRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -89,80 +94,6 @@ export class ProjectsApi {
         (this.authentications as any)[ProjectsApiApiKeys[key]].apiKey = value;
     }
 
-    /**
-     * Add an API key. If you set `developmentKey` to `true` this flag will be removed from the current development API key.
-     * @summary Add API key
-     * @param projectId Project ID
-     * @param addApiKeyRequest 
-     */
-    public async addApiKey (projectId: number, addApiKeyRequest: AddApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/{projectId}/apikeys'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling addApiKey.');
-        }
-
-        // verify required parameter 'addApiKeyRequest' is not null or undefined
-        if (addApiKeyRequest === null || addApiKeyRequest === undefined) {
-            throw new Error('Required parameter addApiKeyRequest was null or undefined when calling addApiKey.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-            body: ObjectSerializer.serialize(addApiKeyRequest, "AddApiKeyRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject(new HttpError(response, body, response.statusCode));
-                        }
-                    }
-                });
-            });
-        });
-    }
     /**
      * Add a collaborator to a project.
      * @summary Add collaborator
@@ -238,12 +169,86 @@ export class ProjectsApi {
         });
     }
     /**
+     * Add an API key. If you set `developmentKey` to `true` this flag will be removed from the current development API key.
+     * @summary Add API key
+     * @param projectId Project ID
+     * @param addApiKeyRequest 
+     */
+    public async addProjectApiKey (projectId: number, addApiKeyRequest: AddApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/apikeys'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling addProjectApiKey.');
+        }
+
+        // verify required parameter 'addApiKeyRequest' is not null or undefined
+        if (addApiKeyRequest === null || addApiKeyRequest === undefined) {
+            throw new Error('Required parameter addApiKeyRequest was null or undefined when calling addProjectApiKey.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(addApiKeyRequest, "AddApiKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Add an HMAC key. If you set `developmentKey` to `true` this flag will be removed from the current development HMAC key.
      * @summary Add HMAC key
      * @param projectId Project ID
      * @param addHmacKeyRequest 
      */
-    public async addHmacKey (projectId: number, addHmacKeyRequest: AddHmacKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async addProjectHmacKey (projectId: number, addHmacKeyRequest: AddHmacKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -259,12 +264,12 @@ export class ProjectsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling addHmacKey.');
+            throw new Error('Required parameter projectId was null or undefined when calling addProjectHmacKey.');
         }
 
         // verify required parameter 'addHmacKeyRequest' is not null or undefined
         if (addHmacKeyRequest === null || addHmacKeyRequest === undefined) {
-            throw new Error('Required parameter addHmacKeyRequest was null or undefined when calling addHmacKey.');
+            throw new Error('Required parameter addHmacKeyRequest was null or undefined when calling addProjectHmacKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -446,6 +451,147 @@ export class ProjectsApi {
         });
     }
     /**
+     * Delete a version. This does not delete the version from cold storage.
+     * @summary Delete versions
+     * @param projectId Project ID
+     * @param versionId Version ID
+     */
+    public async deleteVersion (projectId: number, versionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/versions/{versionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling deleteVersion.');
+        }
+
+        // verify required parameter 'versionId' is not null or undefined
+        if (versionId === null || versionId === undefined) {
+            throw new Error('Required parameter versionId was null or undefined when calling deleteVersion.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Get a list of axes that are present in the training data.
+     * @summary Get data axes summary
+     * @param projectId Project ID
+     */
+    public async getProjectDataAxesSummary (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ProjectDataAxesSummaryResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/data-axes'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getProjectDataAxesSummary.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ProjectDataAxesSummaryResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ProjectDataAxesSummaryResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * List all information about this project.
      * @summary Project information
      * @param projectId Project ID
@@ -513,12 +659,12 @@ export class ProjectsApi {
         });
     }
     /**
-     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes). The development key will be returned in full, as it\'ll be set in devices and is thus not private.
-     * @summary Get API keys
+     * Get a token to authenticate with the web socket interface.
+     * @summary Get socket token
      * @param projectId Project ID
      */
-    public async listApiKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListApiKeysResponse;  }> {
-        const localVarPath = this.basePath + '/api/{projectId}/apikeys'
+    public async getSocketToken (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: SocketTokenResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/socket-token'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -533,7 +679,7 @@ export class ProjectsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling listApiKeys.');
+            throw new Error('Required parameter projectId was null or undefined when calling getSocketToken.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -563,12 +709,12 @@ export class ProjectsApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: ListApiKeysResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: SocketTokenResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "ListApiKeysResponse");
+                        body = ObjectSerializer.deserialize(body, "SocketTokenResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -647,7 +793,7 @@ export class ProjectsApi {
         });
     }
     /**
-     * Get a list of all emails sent by Edge Impulse to this project.
+     * Get a list of all emails sent by Edge Impulse regarding this project.
      * @summary List emails
      * @param projectId Project ID
      */
@@ -714,11 +860,78 @@ export class ProjectsApi {
         });
     }
     /**
+     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes). The development key will be returned in full, as it\'ll be set in devices and is thus not private.
+     * @summary Get API keys
+     * @param projectId Project ID
+     */
+    public async listProjectApiKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListApiKeysResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/apikeys'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listProjectApiKeys.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ListApiKeysResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListApiKeysResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Retrieve all HMAC keys.
      * @summary Get HMAC keys
      * @param projectId Project ID
      */
-    public async listHmacKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListHmacKeysResponse;  }> {
+    public async listProjectHmacKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListHmacKeysResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -734,7 +947,7 @@ export class ProjectsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling listHmacKeys.');
+            throw new Error('Required parameter projectId was null or undefined when calling listProjectHmacKeys.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -841,6 +1054,73 @@ export class ProjectsApi {
         });
     }
     /**
+     * Get all versions for this project.
+     * @summary List versions
+     * @param projectId Project ID
+     */
+    public async listVersions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListVersionsResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/versions'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listVersions.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ListVersionsResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListVersionsResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Remove a collaborator to a project. Note that you cannot invoke this function if only a single collaborator is present.
      * @summary Remove collaborator
      * @param projectId Project ID
@@ -920,7 +1200,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param apiKeyId API key ID
      */
-    public async revokeApiKey (projectId: number, apiKeyId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async revokeProjectApiKey (projectId: number, apiKeyId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys/{apiKeyId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'apiKeyId' + '}', encodeURIComponent(String(apiKeyId)));
@@ -937,12 +1217,12 @@ export class ProjectsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling revokeApiKey.');
+            throw new Error('Required parameter projectId was null or undefined when calling revokeProjectApiKey.');
         }
 
         // verify required parameter 'apiKeyId' is not null or undefined
         if (apiKeyId === null || apiKeyId === undefined) {
-            throw new Error('Required parameter apiKeyId was null or undefined when calling revokeApiKey.');
+            throw new Error('Required parameter apiKeyId was null or undefined when calling revokeProjectApiKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -994,7 +1274,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param hmacId Hmac key ID
      */
-    public async revokeHmacKey (projectId: number, hmacId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async revokeProjectHmacKey (projectId: number, hmacId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys/{hmacId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'hmacId' + '}', encodeURIComponent(String(hmacId)));
@@ -1011,12 +1291,12 @@ export class ProjectsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling revokeHmacKey.');
+            throw new Error('Required parameter projectId was null or undefined when calling revokeProjectHmacKey.');
         }
 
         // verify required parameter 'hmacId' is not null or undefined
         if (hmacId === null || hmacId === undefined) {
-            throw new Error('Required parameter hmacId was null or undefined when calling revokeHmacKey.');
+            throw new Error('Required parameter hmacId was null or undefined when calling revokeProjectHmacKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1030,6 +1310,80 @@ export class ProjectsApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Change the job compute time limit for the project. This function is only available through a JWT token, and is not available to all users.
+     * @summary Set compute time limit
+     * @param projectId Project ID
+     * @param setProjectComputeTimeRequest 
+     */
+    public async setProjectComputeTimeLimit (projectId: number, setProjectComputeTimeRequest: SetProjectComputeTimeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/compute-time-limit'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setProjectComputeTimeLimit.');
+        }
+
+        // verify required parameter 'setProjectComputeTimeRequest' is not null or undefined
+        if (setProjectComputeTimeRequest === null || setProjectComputeTimeRequest === undefined) {
+            throw new Error('Required parameter setProjectComputeTimeRequest was null or undefined when calling setProjectComputeTimeLimit.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(setProjectComputeTimeRequest, "SetProjectComputeTimeRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -1104,6 +1458,87 @@ export class ProjectsApi {
             useQuerystring: this._useQuerystring,
             json: true,
             body: ObjectSerializer.serialize(updateProjectRequest, "UpdateProjectRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Updates a version, this only updates fields that were set in the body.
+     * @summary Update version
+     * @param projectId Project ID
+     * @param versionId Version ID
+     * @param updateVersionRequest 
+     */
+    public async updateVersion (projectId: number, versionId: number, updateVersionRequest: UpdateVersionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/versions/{versionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateVersion.');
+        }
+
+        // verify required parameter 'versionId' is not null or undefined
+        if (versionId === null || versionId === undefined) {
+            throw new Error('Required parameter versionId was null or undefined when calling updateVersion.');
+        }
+
+        // verify required parameter 'updateVersionRequest' is not null or undefined
+        if (updateVersionRequest === null || updateVersionRequest === undefined) {
+            throw new Error('Required parameter updateVersionRequest was null or undefined when calling updateVersion.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(updateVersionRequest, "UpdateVersionRequest")
         };
 
         let authenticationPromise = Promise.resolve();

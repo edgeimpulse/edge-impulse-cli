@@ -254,15 +254,17 @@ export class LearnApi {
         });
     }
     /**
-     * Download the trained model for a learning block. Depending on the block this can be a TensorFlow model, or the cluster centroids.
+     * Download a trained model for a learning block. Depending on the block this can be a TensorFlow model, or the cluster centroids.
      * @summary Download trained model
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param modelDownloadId Model download ID, which can be obtained from the project information
      */
-    public async downloadLearnModel (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
-        const localVarPath = this.basePath + '/api/{projectId}/learn-data/{learnId}'
+    public async downloadLearnModel (projectId: number, learnId: number, modelDownloadId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/learn-data/{learnId}/model/{modelDownloadId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
+            .replace('{' + 'modelDownloadId' + '}', encodeURIComponent(String(modelDownloadId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/octet-stream'];
@@ -282,6 +284,11 @@ export class LearnApi {
         // verify required parameter 'learnId' is not null or undefined
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling downloadLearnModel.');
+        }
+
+        // verify required parameter 'modelDownloadId' is not null or undefined
+        if (modelDownloadId === null || modelDownloadId === undefined) {
+            throw new Error('Required parameter modelDownloadId was null or undefined when calling downloadLearnModel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -975,6 +982,91 @@ export class LearnApi {
             useQuerystring: this._useQuerystring,
             json: true,
             body: ObjectSerializer.serialize(setKerasParameterRequest, "SetKerasParameterRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Replace Keras block files with the contents of a zip. This is an internal API.
+     * @summary Upload Keras files
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param zip 
+     */
+    public async uploadKerasFiles (projectId: number, learnId: number, zip: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/files'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling uploadKerasFiles.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling uploadKerasFiles.');
+        }
+
+        // verify required parameter 'zip' is not null or undefined
+        if (zip === null || zip === undefined) {
+            throw new Error('Required parameter zip was null or undefined when calling uploadKerasFiles.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        if (zip !== undefined) {
+            localVarFormParams['zip'] = zip;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
         };
 
         let authenticationPromise = Promise.resolve();

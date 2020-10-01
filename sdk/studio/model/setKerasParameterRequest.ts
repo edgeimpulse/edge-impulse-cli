@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 
 /**
@@ -19,11 +21,12 @@ export class SetKerasParameterRequest {
     /**
     * Whether to use visual or expert mode.
     */
-    'mode'?: SetKerasParameterRequest.ModeEnum;
+    'mode'?: SetKerasParameterRequestModeEnum;
     /**
     * Minimum confidence score, if the neural network scores a sample below this threshold it will be flagged as uncertain.
     */
     'minimumConfidenceRating'?: number;
+    'selectedModelType'?: KerasModelTypeEnum;
     /**
     * Raw Keras script (only used in expert mode)
     */
@@ -40,6 +43,7 @@ export class SetKerasParameterRequest {
     * Learning rate (between 0 and 1) (only in visual mode).
     */
     'learningRate'?: number;
+    'augmentationPolicyImage'?: AugmentationPolicyImageEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,12 +51,17 @@ export class SetKerasParameterRequest {
         {
             "name": "mode",
             "baseName": "mode",
-            "type": "SetKerasParameterRequest.ModeEnum"
+            "type": "SetKerasParameterRequestModeEnum"
         },
         {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
             "type": "number"
+        },
+        {
+            "name": "selectedModelType",
+            "baseName": "selectedModelType",
+            "type": "KerasModelTypeEnum"
         },
         {
             "name": "script",
@@ -73,6 +82,11 @@ export class SetKerasParameterRequest {
             "name": "learningRate",
             "baseName": "learningRate",
             "type": "number"
+        },
+        {
+            "name": "augmentationPolicyImage",
+            "baseName": "augmentationPolicyImage",
+            "type": "AugmentationPolicyImageEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -80,9 +94,6 @@ export class SetKerasParameterRequest {
     }
 }
 
-export namespace SetKerasParameterRequest {
-    export enum ModeEnum {
-        Expert = <any> 'expert',
-        Visual = <any> 'visual'
-    }
-}
+
+export type SetKerasParameterRequestModeEnum = 'expert' | 'visual';
+export const SetKerasParameterRequestModeEnumValues: string[] = ['expert', 'visual'];

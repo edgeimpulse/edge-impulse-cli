@@ -12,7 +12,7 @@
 
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 
-export class ClassifySampleResponseAllOfClassifications {
+export class ClassifySampleResponseClassification {
     'learnBlock': ImpulseLearnBlock;
     /**
     * Classification result, one item per window.
@@ -43,7 +43,7 @@ export class ClassifySampleResponseAllOfClassifications {
         }    ];
 
     static getAttributeTypeMap() {
-        return ClassifySampleResponseAllOfClassifications.attributeTypeMap;
+        return ClassifySampleResponseClassification.attributeTypeMap;
     }
 }
 

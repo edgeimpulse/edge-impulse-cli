@@ -12,7 +12,7 @@
 
 
 export class MoveRawDataRequest {
-    'newCategory': MoveRawDataRequest.NewCategoryEnum;
+    'newCategory': MoveRawDataRequestNewCategoryEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -20,7 +20,7 @@ export class MoveRawDataRequest {
         {
             "name": "newCategory",
             "baseName": "newCategory",
-            "type": "MoveRawDataRequest.NewCategoryEnum"
+            "type": "MoveRawDataRequestNewCategoryEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -28,10 +28,6 @@ export class MoveRawDataRequest {
     }
 }
 
-export namespace MoveRawDataRequest {
-    export enum NewCategoryEnum {
-        Training = <any> 'training',
-        Classification = <any> 'classification',
-        Anomaly = <any> 'anomaly'
-    }
-}
+
+export type MoveRawDataRequestNewCategoryEnum = 'training' | 'testing' | 'anomaly';
+export const MoveRawDataRequestNewCategoryEnumValues: string[] = ['training', 'testing', 'anomaly'];

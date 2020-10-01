@@ -10,10 +10,21 @@
  * Do not edit the class manually.
  */
 
+import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
+import { Project } from './project';
 
 export class GetUserResponseAllOf {
     'email': string;
     'activated': boolean;
+    /**
+    * Organizations that the user is a member of. Only filled when requesting information about yourself.
+    */
+    'organizations': Array<GetUserResponseAllOfOrganizations>;
+    'projects': Array<Project>;
+    /**
+    * Experiments that the user has access to
+    */
+    'experiments': object;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +38,21 @@ export class GetUserResponseAllOf {
             "name": "activated",
             "baseName": "activated",
             "type": "boolean"
+        },
+        {
+            "name": "organizations",
+            "baseName": "organizations",
+            "type": "Array<GetUserResponseAllOfOrganizations>"
+        },
+        {
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<Project>"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

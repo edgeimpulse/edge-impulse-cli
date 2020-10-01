@@ -11,7 +11,7 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { ListProjectsResponseAllOf } from './listProjectsResponseAllOf';
+import { ListProjects } from './listProjects';
 import { Project } from './project';
 
 export class ListProjectsResponse {

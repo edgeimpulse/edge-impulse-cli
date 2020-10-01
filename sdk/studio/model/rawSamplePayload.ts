@@ -25,9 +25,13 @@ export class RawSamplePayload {
     */
     'deviceType': string;
     /**
-    * The frequency of the data in this file (in milliseconds). E.g. for 100Hz fill in `10` (new data every 10 ms.). You can use a float here if you need the precision.
+    * Interval between two windows (1000 / frequency)
     */
     'intervalMs': number;
+    /**
+    * The frequency of the data in this file.
+    */
+    'frequency': number;
     /**
     * Array with sensor axes
     */
@@ -36,6 +40,14 @@ export class RawSamplePayload {
     * Array of sensor values. One array item per interval, and as many items in this array as there are sensor axes. This type is returned if there are multiple axes. 
     */
     'values': Array<Array<number>>;
+    /**
+    * New start index of the cropped sample
+    */
+    'cropStart'?: number;
+    /**
+    * New end index of the cropped sample
+    */
+    'cropEnd'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,6 +68,11 @@ export class RawSamplePayload {
             "type": "number"
         },
         {
+            "name": "frequency",
+            "baseName": "frequency",
+            "type": "number"
+        },
+        {
             "name": "sensors",
             "baseName": "sensors",
             "type": "Array<Sensor>"
@@ -64,6 +81,16 @@ export class RawSamplePayload {
             "name": "values",
             "baseName": "values",
             "type": "Array<Array<number>>"
+        },
+        {
+            "name": "cropStart",
+            "baseName": "crop_start",
+            "type": "number"
+        },
+        {
+            "name": "cropEnd",
+            "baseName": "crop_end",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,6 +11,7 @@
  */
 
 import { DSPMetadataIncludedSamples } from './dSPMetadataIncludedSamples';
+import { DSPMetadataOutputConfig } from './dSPMetadataOutputConfig';
 
 export class DSPMetadata {
     /**
@@ -43,6 +44,11 @@ export class DSPMetadata {
     * Increase of the sliding window when generating features.
     */
     'windowIncreaseMs': number;
+    /**
+    * Frequency of the original data in Hz.
+    */
+    'frequency': number;
+    'outputConfig': DSPMetadataOutputConfig;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,6 +97,16 @@ export class DSPMetadata {
             "name": "windowIncreaseMs",
             "baseName": "windowIncreaseMs",
             "type": "number"
+        },
+        {
+            "name": "frequency",
+            "baseName": "frequency",
+            "type": "number"
+        },
+        {
+            "name": "outputConfig",
+            "baseName": "outputConfig",
+            "type": "DSPMetadataOutputConfig"
         }    ];
 
     static getAttributeTypeMap() {

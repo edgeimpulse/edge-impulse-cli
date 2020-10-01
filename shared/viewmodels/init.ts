@@ -35,6 +35,7 @@ export enum PageType {
     OrganizationTransformation = 96,
     OrganizationCreateProjectDetails = 97,
     OrganizationCreateProjectList = 98,
+    OrganizationProjects = 99
 }
 
 export type ClientConnectionType = 'ip' | 'daemon';

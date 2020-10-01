@@ -32,6 +32,7 @@ export class Sample {
     'coldstorageFilename': string;
     'label': string;
     'intervalMs': number;
+    'frequency': number;
     'deviceName'?: string;
     'deviceType': string;
     'sensors': Array<Sensor>;
@@ -99,6 +100,11 @@ export class Sample {
         {
             "name": "intervalMs",
             "baseName": "intervalMs",
+            "type": "number"
+        },
+        {
+            "name": "frequency",
+            "baseName": "frequency",
             "type": "number"
         },
         {

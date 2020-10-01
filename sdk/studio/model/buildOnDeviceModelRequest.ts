@@ -15,7 +15,7 @@ export class BuildOnDeviceModelRequest {
     /**
     * Inferencing engine
     */
-    'engine': BuildOnDeviceModelRequest.EngineEnum;
+    'engine': BuildOnDeviceModelRequestEngineEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,7 +23,7 @@ export class BuildOnDeviceModelRequest {
         {
             "name": "engine",
             "baseName": "engine",
-            "type": "BuildOnDeviceModelRequest.EngineEnum"
+            "type": "BuildOnDeviceModelRequestEngineEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -31,9 +31,6 @@ export class BuildOnDeviceModelRequest {
     }
 }
 
-export namespace BuildOnDeviceModelRequest {
-    export enum EngineEnum {
-        Utensor = <any> 'utensor',
-        Tflite = <any> 'tflite'
-    }
-}
+
+export type BuildOnDeviceModelRequestEngineEnum = 'tflite' | 'tflite-eon';
+export const BuildOnDeviceModelRequestEngineEnumValues: string[] = ['tflite', 'tflite-eon'];

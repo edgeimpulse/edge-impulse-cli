@@ -14,6 +14,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
 import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -84,6 +85,443 @@ export class RawDataApi {
         (this.authentications as any)[RawDataApiApiKeys[key]].apiKey = value;
     }
 
+    /**
+     * Deletes samples. Note that this does not delete the data from cold storage.
+     * @summary Remove multiple samples
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async batchDelete (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchDelete.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+        if (category === null || category === undefined) {
+            throw new Error('Required parameter category was null or undefined when calling batchDelete.');
+        }
+
+        if (category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        }
+
+        if (filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        }
+
+        if (maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        }
+
+        if (minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Sets the label (also known as class) of multiple samples.
+     * @summary Edit labels for multiple samples
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param editSampleLabelRequest 
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async batchEditLabels (projectId: number, category: 'training' | 'testing' | 'anomaly', editSampleLabelRequest: EditSampleLabelRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchEditLabels.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+        if (category === null || category === undefined) {
+            throw new Error('Required parameter category was null or undefined when calling batchEditLabels.');
+        }
+
+        // verify required parameter 'editSampleLabelRequest' is not null or undefined
+        if (editSampleLabelRequest === null || editSampleLabelRequest === undefined) {
+            throw new Error('Required parameter editSampleLabelRequest was null or undefined when calling batchEditLabels.');
+        }
+
+        if (category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        }
+
+        if (filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        }
+
+        if (maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        }
+
+        if (minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(editSampleLabelRequest, "EditSampleLabelRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Move multiple samples to another category (e.g. from test to training).
+     * @summary Move multiple samples
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param moveRawDataRequest 
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async batchMove (projectId: number, category: 'training' | 'testing' | 'anomaly', moveRawDataRequest: MoveRawDataRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchMove.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+        if (category === null || category === undefined) {
+            throw new Error('Required parameter category was null or undefined when calling batchMove.');
+        }
+
+        // verify required parameter 'moveRawDataRequest' is not null or undefined
+        if (moveRawDataRequest === null || moveRawDataRequest === undefined) {
+            throw new Error('Required parameter moveRawDataRequest was null or undefined when calling batchMove.');
+        }
+
+        if (category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        }
+
+        if (filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        }
+
+        if (maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        }
+
+        if (minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(moveRawDataRequest, "MoveRawDataRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Count all raw data by category.
+     * @summary Count samples
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     */
+    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling countSamples.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+        if (category === null || category === undefined) {
+            throw new Error('Required parameter category was null or undefined when calling countSamples.');
+        }
+
+        if (category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        }
+
+        if (filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        }
+
+        if (maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        }
+
+        if (minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CountSamplesResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
     /**
      * Crop a sample to within a new range.
      * @summary Crop sample
@@ -963,8 +1401,13 @@ export class RawDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param excludeSensors Whether to exclude sensors in the response (as these can slow down requests when you have large pages).
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param signatureValidity Include samples with either valid or invalid signatures
      */
-    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
+    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1002,6 +1445,26 @@ export class RawDataApi {
 
         if (excludeSensors !== undefined) {
             localVarQueryParameters['excludeSensors'] = ObjectSerializer.serialize(excludeSensors, "boolean");
+        }
+
+        if (labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        }
+
+        if (filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        }
+
+        if (maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        }
+
+        if (minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1096,6 +1559,73 @@ export class RawDataApi {
             useQuerystring: this._useQuerystring,
             json: true,
             body: ObjectSerializer.serialize(moveRawDataRequest, "MoveRawDataRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
+     * @summary Rebalance dataset
+     * @param projectId Project ID
+     */
+    public async rebalanceDataset (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/rebalance'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling rebalanceDataset.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
         };
 
         let authenticationPromise = Promise.resolve();

@@ -4,7 +4,14 @@ import fs from 'fs';
 import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
-import { LoginApi, DevicesApi, ProjectsApi, DevicesApiApiKeys, ProjectsApiApiKeys } from '../sdk/studio/api';
+import {
+    LoginApi,
+    DevicesApi, DevicesApiApiKeys,
+    ProjectsApi, ProjectsApiApiKeys,
+    OrganizationsApi, OrganizationsApiApiKeys,
+    OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
+    OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi, OrganizationBlocksApiApiKeys
+} from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 
@@ -29,6 +36,10 @@ export interface EdgeImpulseAPI {
     login: LoginApi;
     devices: DevicesApi;
     projects: ProjectsApi;
+    organizations: OrganizationsApi;
+    organizationCreateProject: OrganizationCreateProjectApi;
+    organizationBlocks: OrganizationBlocksApi;
+    organizationJobs: OrganizationJobsApi;
 }
 
 export interface EdgeImpulseEndpoints {
@@ -116,7 +127,8 @@ export class Config {
     /**
      * Verify that a user has configured the host and was logged in
      */
-    async verifyLogin(devMode: boolean, apiKey?: string): Promise<EdgeImpulseConfig> {
+    async verifyLogin(devMode: boolean, apiKey?: string, verifyType: 'org' | 'project' = 'project')
+        : Promise<EdgeImpulseConfig> {
         let config = await this.load();
 
         if (process.env.EI_HOST && config.host !== process.env.EI_HOST) {
@@ -195,7 +207,11 @@ export class Config {
         this._api = {
             login: new LoginApi(apiEndpointInternal),
             devices: new DevicesApi(apiEndpointInternal),
-            projects: new ProjectsApi(apiEndpointInternal)
+            projects: new ProjectsApi(apiEndpointInternal),
+            organizations: new OrganizationsApi(apiEndpointInternal),
+            organizationCreateProject: new OrganizationCreateProjectApi(apiEndpointInternal),
+            organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
+            organizationJobs: new OrganizationJobsApi(apiEndpointInternal)
         };
 
         this._endpoints = {
@@ -215,6 +231,11 @@ export class Config {
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.organizations.setApiKey(OrganizationsApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.ApiKeyAuthentication,
+                apiKey);
+            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.ApiKeyAuthentication, apiKey);
             config.apiKey = apiKey;
         }
         else {
@@ -244,11 +265,25 @@ export class Config {
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.projects.setApiKey(ProjectsApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.organizations.setApiKey(OrganizationsApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.JWTAuthentication,
+                config.jwtToken);
+            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.JWTAuthentication,
+                config.jwtToken);
+            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.JWTAuthentication, config.jwtToken);
         }
 
-        let projects = await this._api.projects.listProjects();
-        if (!projects.body.success) {
-            throw new Error('Invalid JWT token, cannot retrieve projects: ' + projects.body.error);
+        if (verifyType === 'project') {
+            let projects = await this._api.projects.listProjects();
+            if (!projects.body.success) {
+                throw new Error('Invalid JWT token, cannot retrieve projects: ' + projects.body.error);
+            }
+        }
+        else {
+            let orgs = await this._api.organizations.listOrganizations();
+            if (!orgs.body.success) {
+                throw new Error('Invalid JWT token, cannot retrieve organizations: ' + orgs.body.error);
+            }
         }
 
         // OK, now we're OK!

@@ -15,6 +15,7 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
+import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
 import { ExportOriginalDataRequest } from '../model/exportOriginalDataRequest';
 import { GenerateFeaturesRequest } from '../model/generateFeaturesRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -95,7 +96,7 @@ export class JobsApi {
      * @param type Output format
      * @param buildOnDeviceModelRequest 
      */
-    public async buildOnDeviceModelJob (projectId: number, type: 'zip' | 'disco-l475vg' | 'wasm' | 'arduino' | 'arduino-nano-33-ble-sense' | 'eta-compute-ecm3532' | 'openmv', buildOnDeviceModelRequest: BuildOnDeviceModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+    public async buildOnDeviceModelJob (projectId: number, type: string, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -125,7 +126,7 @@ export class JobsApi {
         }
 
         if (type !== undefined) {
-            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "'zip' | 'disco-l475vg' | 'wasm' | 'arduino' | 'arduino-nano-33-ble-sense' | 'eta-compute-ecm3532' | 'openmv'");
+            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -140,6 +141,80 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             json: true,
             body: ObjectSerializer.serialize(buildOnDeviceModelRequest, "BuildOnDeviceModelRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Generate code to run the impulse on an embedded device using an organizational deployment block. When this step is complete use `downloadBuild` to download the artefacts.  Updates are streamed over the websocket API.
+     * @summary Build organizational on-device model
+     * @param projectId Project ID
+     * @param buildOrganizationOnDeviceModelRequest 
+     */
+    public async buildOrganizationOnDeviceModelJob (projectId: number, buildOrganizationOnDeviceModelRequest: BuildOrganizationOnDeviceModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model/organization'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling buildOrganizationOnDeviceModelJob.');
+        }
+
+        // verify required parameter 'buildOrganizationOnDeviceModelRequest' is not null or undefined
+        if (buildOrganizationOnDeviceModelRequest === null || buildOrganizationOnDeviceModelRequest === undefined) {
+            throw new Error('Required parameter buildOrganizationOnDeviceModelRequest was null or undefined when calling buildOrganizationOnDeviceModelJob.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(buildOrganizationOnDeviceModelRequest, "BuildOrganizationOnDeviceModelRequest")
         };
 
         let authenticationPromise = Promise.resolve();

@@ -82,7 +82,7 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param type Output format
      */
-    public async downloadBuild (projectId: number, type: 'zip' | 'disco-l475vg' | 'wasm' | 'arduino' | 'arduino-nano-33-ble-sense' | 'eta-compute-ecm3532' | 'openmv', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
+    public async downloadBuild (projectId: number, type: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -107,7 +107,7 @@ export class DeploymentApi {
         }
 
         if (type !== undefined) {
-            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "'zip' | 'disco-l475vg' | 'wasm' | 'arduino' | 'arduino-nano-33-ble-sense' | 'eta-compute-ecm3532' | 'openmv'");
+            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

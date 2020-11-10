@@ -11,7 +11,7 @@
  */
 
 
-export class CreateUserRequest {
+export class ConvertUserRequest {
     /**
     * Your name
     */
@@ -36,14 +36,6 @@ export class CreateUserRequest {
     * Whether the user accepted the privacy policy
     */
     'privacyPolicy': boolean;
-    /**
-    * Whether this is an ephemeral evaluation account.
-    */
-    'evaluation': boolean;
-    /**
-    * Evaluation project type
-    */
-    'evaluationProjectType'?: CreateUserRequestEvaluationProjectTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,23 +69,10 @@ export class CreateUserRequest {
             "name": "privacyPolicy",
             "baseName": "privacyPolicy",
             "type": "boolean"
-        },
-        {
-            "name": "evaluation",
-            "baseName": "evaluation",
-            "type": "boolean"
-        },
-        {
-            "name": "evaluationProjectType",
-            "baseName": "evaluationProjectType",
-            "type": "CreateUserRequestEvaluationProjectTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateUserRequest.attributeTypeMap;
+        return ConvertUserRequest.attributeTypeMap;
     }
 }
 
-
-export type CreateUserRequestEvaluationProjectTypeEnum = 'motion' | 'audio' | 'visual';
-export const CreateUserRequestEvaluationProjectTypeEnumValues: string[] = ['motion', 'audio', 'visual'];

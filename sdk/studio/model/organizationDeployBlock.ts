@@ -11,7 +11,7 @@
  */
 
 
-export class OrganizationTransformationBlock {
+export class OrganizationDeployBlock {
     'id': number;
     'name': string;
     'dockerContainer': string;
@@ -24,11 +24,12 @@ export class OrganizationTransformationBlock {
     * These arguments are passed into the container
     */
     'cliArguments': string;
-    'indMetadata': boolean;
     'requestsCpu'?: number;
     'requestsMemory'?: number;
     'limitsCpu'?: number;
     'limitsMemory'?: number;
+    'photo': string;
+    'integrateUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -79,11 +80,6 @@ export class OrganizationTransformationBlock {
             "type": "string"
         },
         {
-            "name": "indMetadata",
-            "baseName": "indMetadata",
-            "type": "boolean"
-        },
-        {
             "name": "requestsCpu",
             "baseName": "requestsCpu",
             "type": "number"
@@ -102,10 +98,20 @@ export class OrganizationTransformationBlock {
             "name": "limitsMemory",
             "baseName": "limitsMemory",
             "type": "number"
+        },
+        {
+            "name": "photo",
+            "baseName": "photo",
+            "type": "string"
+        },
+        {
+            "name": "integrateUrl",
+            "baseName": "integrateUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationTransformationBlock.attributeTypeMap;
+        return OrganizationDeployBlock.attributeTypeMap;
     }
 }
 

@@ -11,6 +11,7 @@
  */
 
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
+import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 
@@ -44,6 +45,7 @@ export class SetKerasParameterRequest {
     */
     'learningRate'?: number;
     'augmentationPolicyImage'?: AugmentationPolicyImageEnum;
+    'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +89,11 @@ export class SetKerasParameterRequest {
             "name": "augmentationPolicyImage",
             "baseName": "augmentationPolicyImage",
             "type": "AugmentationPolicyImageEnum"
+        },
+        {
+            "name": "augmentationPolicySpectrogram",
+            "baseName": "augmentationPolicySpectrogram",
+            "type": "AugmentationPolicySpectrogram"
         }    ];
 
     static getAttributeTypeMap() {

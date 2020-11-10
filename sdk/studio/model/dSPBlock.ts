@@ -18,6 +18,7 @@ export class DSPBlock {
     'description': string;
     'name': string;
     'recommended'?: boolean;
+    'experimental': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,6 +51,11 @@ export class DSPBlock {
         {
             "name": "recommended",
             "baseName": "recommended",
+            "type": "boolean"
+        },
+        {
+            "name": "experimental",
+            "baseName": "experimental",
             "type": "boolean"
         }    ];
 

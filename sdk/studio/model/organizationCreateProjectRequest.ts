@@ -15,6 +15,7 @@
 * If uploadType is set to \'project\', either projectId, newProjectName or both projectApiKey and projectHmacKey are required. projectId and newProjectName are only available through JWT tokens. If uploadType is set to \'dataset\' then outputDatasetName can be set to \'\' to output in the same dataset, or set to a string to create (or append to) a new dataset.
 */
 export class OrganizationCreateProjectRequest {
+    'name': string;
     'filter': string;
     'uploadType': OrganizationCreateProjectRequestUploadTypeEnum;
     'projectId'?: number;
@@ -29,6 +30,11 @@ export class OrganizationCreateProjectRequest {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
         {
             "name": "filter",
             "baseName": "filter",

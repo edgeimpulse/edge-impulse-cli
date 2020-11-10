@@ -14,15 +14,13 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { ListOrganizationTransformationBlocksResponse } from '../model/listOrganizationTransformationBlocksResponse';
 import { OrganizationCreateProjectRequest } from '../model/organizationCreateProjectRequest';
 import { OrganizationCreateProjectResponse } from '../model/organizationCreateProjectResponse';
 import { OrganizationCreateProjectStatusResponse } from '../model/organizationCreateProjectStatusResponse';
 import { OrganizationGetCreateProjectsResponse } from '../model/organizationGetCreateProjectsResponse';
+import { StartJobResponse } from '../model/startJobResponse';
 import { UpdateOrganizationCreateProjectRequest } from '../model/updateOrganizationCreateProjectRequest';
-import { UpdateOrganizationTransformationBlockRequest } from '../model/updateOrganizationTransformationBlockRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -85,14 +83,15 @@ export class OrganizationCreateProjectApi {
     }
 
     /**
-     * Adds a transformation block.
-     * @summary Add transformation block
+     * Clear all failed transform job from a create project job. Only jobs that have failed will be cleared.
+     * @summary Clear failed transform jobs
      * @param organizationId Organization ID
-     * @param addOrganizationTransformationBlockRequest 
+     * @param createProjectId Create project job ID.
      */
-    public async addOrganizationTransformationBlock (organizationId: number, addOrganizationTransformationBlockRequest: AddOrganizationTransformationBlockRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transformation'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+    public async clearOrganizationTransform (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/transform/clear'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -106,12 +105,12 @@ export class OrganizationCreateProjectApi {
 
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationTransformationBlock.');
+            throw new Error('Required parameter organizationId was null or undefined when calling clearOrganizationTransform.');
         }
 
-        // verify required parameter 'addOrganizationTransformationBlockRequest' is not null or undefined
-        if (addOrganizationTransformationBlockRequest === null || addOrganizationTransformationBlockRequest === undefined) {
-            throw new Error('Required parameter addOrganizationTransformationBlockRequest was null or undefined when calling addOrganizationTransformationBlock.');
+        // verify required parameter 'createProjectId' is not null or undefined
+        if (createProjectId === null || createProjectId === undefined) {
+            throw new Error('Required parameter createProjectId was null or undefined when calling clearOrganizationTransform.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -125,7 +124,6 @@ export class OrganizationCreateProjectApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(addOrganizationTransformationBlockRequest, "AddOrganizationTransformationBlockRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -314,87 +312,13 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Deletes a transformation block.
-     * @summary Delete transformation block
-     * @param organizationId Organization ID
-     * @param transformationId Transformation block ID.
-     */
-    public async deleteOrganizationTransformationBlock (organizationId: number, transformationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transformation/{transformationId}'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
-            .replace('{' + 'transformationId' + '}', encodeURIComponent(String(transformationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationTransformationBlock.');
-        }
-
-        // verify required parameter 'transformationId' is not null or undefined
-        if (transformationId === null || transformationId === undefined) {
-            throw new Error('Required parameter transformationId was null or undefined when calling deleteOrganizationTransformationBlock.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'DELETE',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject(new HttpError(response, body, response.statusCode));
-                        }
-                    }
-                });
-            });
-        });
-    }
-    /**
      * Get the current status of a create project job.
      * @summary Get create project status
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      * @param transformLimit Maximum number of results of transformation jobs
      * @param transformOffset Offset in results of transformation jobs, can be used in conjunction with TransformLimitResultsParameter to implement paging.
-     * @param selection Type of selected rows, either \&#39;all\&#39;, \&#39;in-progress\&#39; or \&#39;failed\&#39; (defaults to \&#39;all\&#39;)
+     * @param selection Type of selected rows, either \&#39;all\&#39;, \&#39;created\&#39;, \&#39;in-progress\&#39; or \&#39;failed\&#39; (defaults to \&#39;all\&#39;)
      */
     public async getOrganizationCreateProjectStatus (organizationId: number, createProjectId: number, transformLimit: number, transformOffset: number, selection?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: OrganizationCreateProjectStatusResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}'
@@ -554,73 +478,6 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Retrieve all transformation blocks.
-     * @summary Get transformation blocks
-     * @param organizationId Organization ID
-     */
-    public async listOrganizationTransformationBlocks (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationTransformationBlocksResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transformation'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationTransformationBlocks.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.IncomingMessage; body: ListOrganizationTransformationBlocksResponse;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "ListOrganizationTransformationBlocksResponse");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject(new HttpError(response, body, response.statusCode));
-                        }
-                    }
-                });
-            });
-        });
-    }
-    /**
      * Take data from a dataset and create a new Edge Impulse project.
      * @summary Create project
      * @param organizationId Organization ID
@@ -730,6 +587,80 @@ export class OrganizationCreateProjectApi {
         // verify required parameter 'createProjectFileId' is not null or undefined
         if (createProjectFileId === null || createProjectFileId === undefined) {
             throw new Error('Required parameter createProjectFileId was null or undefined when calling retryOrganizationCreateProjectFile.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Retry all failed transform job from a create project job. Only jobs that have failed will be retried.
+     * @summary Retry failed transform jobs
+     * @param organizationId Organization ID
+     * @param createProjectId Create project job ID.
+     */
+    public async retryOrganizationTransform (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/transform/retry'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling retryOrganizationTransform.');
+        }
+
+        // verify required parameter 'createProjectId' is not null or undefined
+        if (createProjectId === null || createProjectId === undefined) {
+            throw new Error('Required parameter createProjectId was null or undefined when calling retryOrganizationTransform.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -931,16 +862,16 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Updates a transformation block. Only values in the body will be updated.
-     * @summary Update transformation block
+     * Upload a zip file containing a custom transformation block.
+     * @summary Upload a custom transformation block
      * @param organizationId Organization ID
-     * @param transformationId Transformation block ID.
-     * @param updateOrganizationTransformationBlockRequest 
+     * @param tar 
+     * @param type 
+     * @param blockId 
      */
-    public async updateOrganizationTransformationBlock (organizationId: number, transformationId: number, updateOrganizationTransformationBlockRequest: UpdateOrganizationTransformationBlockRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transformation/{transformationId}'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
-            .replace('{' + 'transformationId' + '}', encodeURIComponent(String(transformationId)));
+    public async uploadCustomTransformation (organizationId: number, tar: RequestFile, type: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-transformation'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -954,22 +885,40 @@ export class OrganizationCreateProjectApi {
 
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationTransformationBlock.');
+            throw new Error('Required parameter organizationId was null or undefined when calling uploadCustomTransformation.');
         }
 
-        // verify required parameter 'transformationId' is not null or undefined
-        if (transformationId === null || transformationId === undefined) {
-            throw new Error('Required parameter transformationId was null or undefined when calling updateOrganizationTransformationBlock.');
+        // verify required parameter 'tar' is not null or undefined
+        if (tar === null || tar === undefined) {
+            throw new Error('Required parameter tar was null or undefined when calling uploadCustomTransformation.');
         }
 
-        // verify required parameter 'updateOrganizationTransformationBlockRequest' is not null or undefined
-        if (updateOrganizationTransformationBlockRequest === null || updateOrganizationTransformationBlockRequest === undefined) {
-            throw new Error('Required parameter updateOrganizationTransformationBlockRequest was null or undefined when calling updateOrganizationTransformationBlock.');
+        // verify required parameter 'type' is not null or undefined
+        if (type === null || type === undefined) {
+            throw new Error('Required parameter type was null or undefined when calling uploadCustomTransformation.');
+        }
+
+        // verify required parameter 'blockId' is not null or undefined
+        if (blockId === null || blockId === undefined) {
+            throw new Error('Required parameter blockId was null or undefined when calling uploadCustomTransformation.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
+
+        if (tar !== undefined) {
+            localVarFormParams['tar'] = tar;
+        }
+        localVarUseFormData = true;
+
+        if (type !== undefined) {
+            localVarFormParams['type'] = ObjectSerializer.serialize(type, "string");
+        }
+
+        if (blockId !== undefined) {
+            localVarFormParams['blockId'] = ObjectSerializer.serialize(blockId, "number");
+        }
 
         let localVarRequestOptions: localVarRequest.Options = {
             method: 'POST',
@@ -978,7 +927,6 @@ export class OrganizationCreateProjectApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(updateOrganizationTransformationBlockRequest, "UpdateOrganizationTransformationBlockRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -995,12 +943,12 @@ export class OrganizationCreateProjectApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

@@ -16,12 +16,13 @@ import { OrganizationCreateProjectTransformationSummary } from './organizationCr
 export class OrganizationCreateProject {
     'id': number;
     'organizationId': number;
+    'name': string;
     'uploadType': OrganizationCreateProjectUploadTypeEnum;
     'transformJobStatus': OrganizationCreateProjectTransformJobStatusEnum;
     'uploadJobId'?: number;
     'uploadJobStatus': OrganizationCreateProjectUploadJobStatusEnum;
     'uploadJobFilesUploaded'?: number;
-    'userName'?: string;
+    'projectOwner'?: string;
     'projectId'?: number;
     'projectName'?: string;
     'transformationBlockId'?: number;
@@ -56,6 +57,11 @@ export class OrganizationCreateProject {
             "type": "number"
         },
         {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
             "name": "uploadType",
             "baseName": "uploadType",
             "type": "OrganizationCreateProjectUploadTypeEnum"
@@ -81,8 +87,8 @@ export class OrganizationCreateProject {
             "type": "number"
         },
         {
-            "name": "userName",
-            "baseName": "userName",
+            "name": "projectOwner",
+            "baseName": "projectOwner",
             "type": "string"
         },
         {

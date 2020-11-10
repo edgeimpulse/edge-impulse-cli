@@ -16,7 +16,7 @@
 */
 export class ProjectInfoResponseAllOfExperiments {
     'gpu': boolean;
-    'eonCompiler': boolean;
+    'customDeploy': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,8 +27,8 @@ export class ProjectInfoResponseAllOfExperiments {
             "type": "boolean"
         },
         {
-            "name": "eonCompiler",
-            "baseName": "eonCompiler",
+            "name": "customDeploy",
+            "baseName": "customDeploy",
             "type": "boolean"
         }    ];
 

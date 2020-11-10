@@ -11,29 +11,20 @@
  */
 
 
-/**
-* Experiments that the project has access to. Enabling experiments can only be done through a JWT token.
-*/
-export class UpdateProjectRequestExperiments {
-    'gpu'?: boolean;
-    'customDeploy'?: boolean;
+export class CountSamplesResponseAllOf {
+    'count': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "gpu",
-            "baseName": "gpu",
-            "type": "boolean"
-        },
-        {
-            "name": "customDeploy",
-            "baseName": "customDeploy",
-            "type": "boolean"
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateProjectRequestExperiments.attributeTypeMap;
+        return CountSamplesResponseAllOf.attributeTypeMap;
     }
 }
 

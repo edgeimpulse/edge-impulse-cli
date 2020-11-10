@@ -24,6 +24,8 @@ export * from './learnApi';
 import { LearnApi } from './learnApi';
 export * from './loginApi';
 import { LoginApi } from './loginApi';
+export * from './organizationBlocksApi';
+import { OrganizationBlocksApi } from './organizationBlocksApi';
 export * from './organizationCreateProjectApi';
 import { OrganizationCreateProjectApi } from './organizationCreateProjectApi';
 export * from './organizationDataApi';
@@ -64,4 +66,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AdminApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, SupportsRangeApi, UserApi];
+export const APIS = [AdminApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, SupportsRangeApi, UserApi];

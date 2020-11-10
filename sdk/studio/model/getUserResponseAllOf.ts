@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { GetUserResponseAllOfAdministrativeOptions } from './getUserResponseAllOfAdministrativeOptions';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
 
@@ -25,6 +26,11 @@ export class GetUserResponseAllOf {
     * Experiments that the user has access to
     */
     'experiments': object;
+    /**
+    * Whether this is an ephemeral evaluation account.
+    */
+    'evaluation'?: boolean;
+    'administrativeOptions': GetUserResponseAllOfAdministrativeOptions;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +59,16 @@ export class GetUserResponseAllOf {
             "name": "experiments",
             "baseName": "experiments",
             "type": "object"
+        },
+        {
+            "name": "evaluation",
+            "baseName": "evaluation",
+            "type": "boolean"
+        },
+        {
+            "name": "administrativeOptions",
+            "baseName": "administrativeOptions",
+            "type": "GetUserResponseAllOfAdministrativeOptions"
         }    ];
 
     static getAttributeTypeMap() {

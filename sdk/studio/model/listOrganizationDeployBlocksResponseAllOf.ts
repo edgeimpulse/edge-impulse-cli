@@ -10,30 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDeployBlock } from './organizationDeployBlock';
 
-/**
-* Experiments that the project has access to. Enabling experiments can only be done through a JWT token.
-*/
-export class UpdateProjectRequestExperiments {
-    'gpu'?: boolean;
-    'customDeploy'?: boolean;
+export class ListOrganizationDeployBlocksResponseAllOf {
+    'deployBlocks'?: Array<OrganizationDeployBlock>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "gpu",
-            "baseName": "gpu",
-            "type": "boolean"
-        },
-        {
-            "name": "customDeploy",
-            "baseName": "customDeploy",
-            "type": "boolean"
+            "name": "deployBlocks",
+            "baseName": "deployBlocks",
+            "type": "Array<OrganizationDeployBlock>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateProjectRequestExperiments.attributeTypeMap;
+        return ListOrganizationDeployBlocksResponseAllOf.attributeTypeMap;
     }
 }
 

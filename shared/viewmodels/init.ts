@@ -26,6 +26,7 @@ export enum PageType {
     Upload = 24,
     Versions = 25,
     Restore = 26,
+    Evaluate = 27,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -35,7 +36,8 @@ export enum PageType {
     OrganizationTransformation = 96,
     OrganizationCreateProjectDetails = 97,
     OrganizationCreateProjectList = 98,
-    OrganizationProjects = 99
+    OrganizationProjects = 99,
+    OrganizationDeploy = 100
 }
 
 export type ClientConnectionType = 'ip' | 'daemon';
@@ -98,4 +100,8 @@ export interface ClientInitPublicOptions {
     staticAssetsPrefix: string;
     sentryDSN?: string;
     sentryEnvironment?: string;
+}
+
+export interface OrganizationWebsocketHello {
+    hello: { version: number };
 }

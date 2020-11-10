@@ -11,33 +11,21 @@
  */
 
 
-export class OrganizationTransformationBlock {
-    'id': number;
-    'name': string;
-    'dockerContainer': string;
-    'dockerContainerManagedByEdgeImpulse': boolean;
-    'created': Date;
-    'userId'?: number;
-    'userName'?: string;
-    'description': string;
-    /**
-    * These arguments are passed into the container
-    */
-    'cliArguments': string;
-    'indMetadata': boolean;
+export class UpdateOrganizationDeployBlockRequest {
+    'name'?: string;
+    'dockerContainer'?: string;
+    'description'?: string;
+    'cliArguments'?: string;
     'requestsCpu'?: number;
     'requestsMemory'?: number;
     'limitsCpu'?: number;
     'limitsMemory'?: number;
+    'photo'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+    'integrateUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
-        },
         {
             "name": "name",
             "baseName": "name",
@@ -49,26 +37,6 @@ export class OrganizationTransformationBlock {
             "type": "string"
         },
         {
-            "name": "dockerContainerManagedByEdgeImpulse",
-            "baseName": "dockerContainerManagedByEdgeImpulse",
-            "type": "boolean"
-        },
-        {
-            "name": "created",
-            "baseName": "created",
-            "type": "Date"
-        },
-        {
-            "name": "userId",
-            "baseName": "userId",
-            "type": "number"
-        },
-        {
-            "name": "userName",
-            "baseName": "userName",
-            "type": "string"
-        },
-        {
             "name": "description",
             "baseName": "description",
             "type": "string"
@@ -77,11 +45,6 @@ export class OrganizationTransformationBlock {
             "name": "cliArguments",
             "baseName": "cliArguments",
             "type": "string"
-        },
-        {
-            "name": "indMetadata",
-            "baseName": "indMetadata",
-            "type": "boolean"
         },
         {
             "name": "requestsCpu",
@@ -102,10 +65,20 @@ export class OrganizationTransformationBlock {
             "name": "limitsMemory",
             "baseName": "limitsMemory",
             "type": "number"
+        },
+        {
+            "name": "photo",
+            "baseName": "photo",
+            "type": "RequestFile"
+        },
+        {
+            "name": "integrateUrl",
+            "baseName": "integrateUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationTransformationBlock.attributeTypeMap;
+        return UpdateOrganizationDeployBlockRequest.attributeTypeMap;
     }
 }
 

@@ -24,6 +24,7 @@ import { ProjectInfoResponseAllOfDeploySettings } from './projectInfoResponseAll
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
 import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
+import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { User } from './user';
 
 export class ProjectInfoResponse {
@@ -48,6 +49,11 @@ export class ProjectInfoResponse {
     'deploySettings': ProjectInfoResponseAllOfDeploySettings;
     'experiments': ProjectInfoResponseAllOfExperiments;
     'latencyDevices': Array<ProjectInfoResponseAllOfLatencyDevices>;
+    /**
+    * Evaluation project type
+    */
+    'evaluationProjectType'?: string;
+    'urls': ProjectInfoResponseAllOfUrls;
 
     static discriminator: string | undefined = undefined;
 
@@ -126,6 +132,16 @@ export class ProjectInfoResponse {
             "name": "latencyDevices",
             "baseName": "latencyDevices",
             "type": "Array<ProjectInfoResponseAllOfLatencyDevices>"
+        },
+        {
+            "name": "evaluationProjectType",
+            "baseName": "evaluationProjectType",
+            "type": "string"
+        },
+        {
+            "name": "urls",
+            "baseName": "urls",
+            "type": "ProjectInfoResponseAllOfUrls"
         }    ];
 
     static getAttributeTypeMap() {

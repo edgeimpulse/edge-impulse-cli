@@ -18,7 +18,7 @@ export class KerasVisualLayer {
     */
     'neurons'?: number;
     /**
-    * Kernel size for the convolutional and pooling layers (only for conv1d, conv2d)
+    * Kernel size for the convolutional layers (only for conv1d, conv2d)
     */
     'kernelSize'?: number;
     /**
@@ -29,6 +29,10 @@ export class KerasVisualLayer {
     * Number of columns for the reshape operation (only for reshape)
     */
     'columns'?: number;
+    /**
+    * Number of convolutional layers before the pooling layer (only for conv1d, conv2d)
+    */
+    'stack'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,6 +60,11 @@ export class KerasVisualLayer {
         {
             "name": "columns",
             "baseName": "columns",
+            "type": "number"
+        },
+        {
+            "name": "stack",
+            "baseName": "stack",
             "type": "number"
         }    ];
 

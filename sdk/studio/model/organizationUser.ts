@@ -21,6 +21,7 @@ export class OrganizationUser {
     'email': string;
     'role': OrganizationUserRoleEnum;
     'isEdgeImpulseStaff': boolean;
+    'projectCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +70,11 @@ export class OrganizationUser {
             "name": "isEdgeImpulseStaff",
             "baseName": "isEdgeImpulseStaff",
             "type": "boolean"
+        },
+        {
+            "name": "projectCount",
+            "baseName": "projectCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

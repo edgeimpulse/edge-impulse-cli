@@ -5,7 +5,17 @@ import util from 'util';
 import { Config } from './config';
 const compareSemver = createCompareVersions();
 
+const minNodeVersion = '12.0.0';
+
 export default async function(config: Config) {
+    // Node.js version check
+    let nodeVersion = process.version.replace(/^v/, '');
+    if (nodeVersion && compareSemver(nodeVersion, minNodeVersion) === -1) {
+        console.log(`\x1b[31mERR:\x1b[0m You're running an outdated version of Node.js,`);
+        console.log(`     you need Node.js ${minNodeVersion} or higher to run this tool.`);
+        process.exit(1);
+    }
+
     let lastCheck = await config.getLastVersionCheck();
     if (lastCheck > Date.now() - (1000 * 60 * 60 * 24)) {
         return;

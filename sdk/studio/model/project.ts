@@ -17,9 +17,15 @@ export class Project {
     'name': string;
     'created': Date;
     /**
+    * User or organization that owns the project
+    */
+    'owner': string;
+    /**
     * Custom logo for this project (not available for all projects)
     */
     'logo'?: string;
+    'ownerUserId'?: number;
+    'ownerOrganizationId'?: number;
     'collaborators': Array<User>;
 
     static discriminator: string | undefined = undefined;
@@ -41,9 +47,24 @@ export class Project {
             "type": "Date"
         },
         {
+            "name": "owner",
+            "baseName": "owner",
+            "type": "string"
+        },
+        {
             "name": "logo",
             "baseName": "logo",
             "type": "string"
+        },
+        {
+            "name": "ownerUserId",
+            "baseName": "ownerUserId",
+            "type": "number"
+        },
+        {
+            "name": "ownerOrganizationId",
+            "baseName": "ownerOrganizationId",
+            "type": "number"
         },
         {
             "name": "collaborators",

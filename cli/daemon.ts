@@ -35,12 +35,20 @@ const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
+const baudRateArgvIx = process.argv.indexOf('--baud-rate');
+const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
 
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
 (async () => {
     try {
         console.log('Edge Impulse serial daemon v' + version);
+
+        let baudRate = baudRateArgv ? Number(baudRateArgv) : 115200;
+        if (isNaN(baudRate)) {
+            console.error('Invalid value for --baud-rate (should be a number)');
+            process.exit(1);
+        }
 
         if (cleanArgv || apiKeyArgv) {
             await configFactory.clean();
@@ -71,7 +79,7 @@ const configFactory = new Config();
         console.log('');
 
         let deviceId = await findSerial();
-        await connectToSerial(config, deviceId, (cleanArgv || apiKeyArgv) ? true : false);
+        await connectToSerial(config, deviceId, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {
         console.error('Failed to set up serial daemon', ex);
@@ -82,13 +90,13 @@ function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
-async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, clean: boolean) {
+async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, baudRate: number, clean: boolean) {
     // if this is set it means we have a connection
     let config: EiSerialDeviceConfig | undefined;
     // if this is set we have a connection to the server
     let ws: WebSocket | undefined;
 
-    const serial = new SerialConnector(deviceId, 115200);
+    const serial = new SerialConnector(deviceId, baudRate);
     const serialProtocol = new EiSerialProtocol(serial);
     serial.on('error', err => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err);

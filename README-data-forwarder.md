@@ -49,6 +49,14 @@ To override the frequency, use:
 $ edge-impulse-data-forwarder --frequency 100
 ```
 
+### Overriding the baud rate
+
+To override the baud rate, use:
+
+```
+$ edge-impulse-data-forwarder --baud-rate 460800
+```
+
 ## Protocol
 
 The protocol is very simple. The device should send data on baud rate 115,200 with one line per reading, and individual sensor data should be split with either a `,` or a `TAB`. For example, this is data from a 3-axis accelerometer:

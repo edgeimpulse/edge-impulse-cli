@@ -61,3 +61,13 @@ $ edge-impulse-daemon --silent
 ```
 
 This is useful in environments where there is no internet connection, as the daemon won't prompt to connect to WiFi.
+
+### Overriding the baud rate
+
+To override the baud rate, use:
+
+```
+$ edge-impulse-daemon --baud-rate 460800
+```
+
+You'll also need to update the firmware on your device to communicate at this frequency.

@@ -32,6 +32,8 @@ const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
 const frequencyArgvIx = process.argv.indexOf('--frequency');
 const frequencyArgv = frequencyArgvIx !== -1 ? Number(process.argv[frequencyArgvIx + 1]) : undefined;
+const baudRateArgvIx = process.argv.indexOf('--baud-rate');
+const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
 
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -48,6 +50,12 @@ const configFactory = new Config();
 
         if (typeof frequencyArgv === 'number' && isNaN(frequencyArgv)) {
             console.log('Invalid value for --frequency (should be a number)');
+            process.exit(1);
+        }
+
+        let baudRate = baudRateArgv ? Number(baudRateArgv) : 115200;
+        if (isNaN(baudRate)) {
+            console.error('Invalid value for --baud-rate (should be a number)');
             process.exit(1);
         }
 
@@ -76,7 +84,7 @@ const configFactory = new Config();
         console.log('');
 
         let serialPath = await findSerial();
-        await connectToSerial(config, serialPath, (cleanArgv || apiKeyArgv) ? true : false);
+        await connectToSerial(config, serialPath, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {
         console.error('Failed to set up serial daemon', ex);
@@ -87,7 +95,7 @@ function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
-async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, clean: boolean) {
+async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, baudRate: number, clean: boolean) {
     // if this is set we have a connection to the server
     let ws: WebSocket | undefined;
     let dataForwarderConfig: {
@@ -98,7 +106,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         sensors: string[]
     } | undefined;
 
-    const serial = new SerialConnector(serialPath, 115200);
+    const serial = new SerialConnector(serialPath, baudRate);
     serial.on('error', err => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err);
         setTimeout(serial_connect, 5000);

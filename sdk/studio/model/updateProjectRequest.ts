@@ -10,7 +10,6 @@
  * Do not edit the class manually.
  */
 
-import { UpdateProjectRequestExperiments } from './updateProjectRequestExperiments';
 
 /**
 * Only fields set in this object will be updated.
@@ -32,7 +31,7 @@ export class UpdateProjectRequest {
     * MCU used for calculating latency
     */
     'latencyDevice'?: UpdateProjectRequestLatencyDeviceEnum;
-    'experiments'?: UpdateProjectRequestExperiments;
+    'experiments'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -60,7 +59,7 @@ export class UpdateProjectRequest {
         {
             "name": "experiments",
             "baseName": "experiments",
-            "type": "UpdateProjectRequestExperiments"
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

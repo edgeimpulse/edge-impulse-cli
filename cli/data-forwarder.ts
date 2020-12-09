@@ -320,7 +320,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
                     let dataBuffer = Buffer.concat(allDataBuffers);
                     let lines = dataBuffer.toString('ascii').split('\n').map(n => n.trim()).map(n => {
-                        return n.split(/[,\t\s]/).map(x => Number(x.trim()));
+                        return n.split(/[,\t\s]/).filter(f => !!f.trim()).map(x => Number(x.trim()));
                     });
                     // skip over the first item
                     let values = lines.slice(1, (dataForwarderConfig.samplingFreq * (s.length / 1000) + 1));
@@ -532,7 +532,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
     let sensorInfo = await getSensorInfo(serial);
 
     let axes = '';
-    while (axes.split(',').filter(f => !!f).length !== sensorInfo.sensorCount) {
+    while (axes.split(',').filter(f => !!f.trim()).length !== sensorInfo.sensorCount) {
         axes = (<{ axes: string }>(await inquirer.prompt([{
             type: 'input',
             message: sensorInfo.sensorCount + ' sensor axes detected (example values: ' +
@@ -621,7 +621,7 @@ async function getSensorInfo(serial: SerialConnector) {
             lines.join('\n'));
     }
 
-    let values = l.split(/[,\t\s]/);
+    let values = l.split(/[,\t\s]/).filter(f => !!f.trim());
     if (values.some(v => isNaN(Number(v)))) {
         throw new Error('Sensor readings from device do not seem to be all numbers, found: ' +
             JSON.stringify(values));

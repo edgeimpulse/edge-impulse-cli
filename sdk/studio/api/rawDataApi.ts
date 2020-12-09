@@ -17,6 +17,8 @@ import http = require('http');
 import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
 import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
+import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
+import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { ListSamplesResponse } from '../model/listSamplesResponse';
@@ -889,6 +891,87 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Find start and end times for all non-noise events in a sample
+     * @summary Find segments
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param findSegmentSampleRequest 
+     */
+    public async findSegmentsInSample (projectId: number, sampleId: number, findSegmentSampleRequest: FindSegmentSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: FindSegmentSampleResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/find-segments'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling findSegmentsInSample.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling findSegmentsInSample.');
+        }
+
+        // verify required parameter 'findSegmentSampleRequest' is not null or undefined
+        if (findSegmentSampleRequest === null || findSegmentSampleRequest === undefined) {
+            throw new Error('Required parameter findSegmentSampleRequest was null or undefined when calling findSegmentsInSample.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(findSegmentSampleRequest, "FindSegmentSampleRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: FindSegmentSampleResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "FindSegmentSampleResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

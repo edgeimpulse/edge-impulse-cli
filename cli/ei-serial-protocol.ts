@@ -1,6 +1,8 @@
 import { SerialConnector } from "./serial-connector";
 import Path from 'path';
 import { EventEmitter } from 'tsee';
+import fs from 'fs';
+import { c } from "tar";
 
 const CON_PREFIX = '\x1b[34m[SER]\x1b[0m';
 
@@ -26,12 +28,20 @@ export interface EiSerialDeviceConfig {
             minor: number;
             patch: number;
         };
+        transferBaudRate: number | undefined;
     };
     sensors: {
         name: string;
         maxSampleLengthS: number;
         frequencies: number[];
     }[];
+    snapshot: {
+        hasSnapshot: boolean;
+        resolutions: {
+            width: number,
+            height: number
+        }[]
+    };
     wifi: {
         present: boolean;
         ssid: string;
@@ -114,8 +124,12 @@ export default class EiSerialProtocol {
         config.sensors = [];
         config.info.atCommandVersion = { major: 1, minor: 0, patch: 0 };
         config.wifi.present = true;
+        config.snapshot = {
+            hasSnapshot: false,
+            resolutions: []
+        };
 
-        let section: 'info' | 'sensors' | 'wifi' | 'sampling' | 'upload' | 'management' | undefined;
+        let section: 'info' | 'sensors' | 'wifi' | 'sampling' | 'upload' | 'management' | 'snapshot' | undefined;
 
         for (let line of data.split('\n').map(l => l.trim()).filter(l => !!l)) {
             if (line.indexOf('= Device info =') > -1) {
@@ -124,6 +138,10 @@ export default class EiSerialProtocol {
             }
             if (line.indexOf('= Sensors =') > -1) {
                 section = 'sensors';
+                continue;
+            }
+            if (line.indexOf('= Snapshot =') > -1) {
+                section = 'snapshot';
                 continue;
             }
             if (line.indexOf('= WIFI =') > -1) {
@@ -162,6 +180,13 @@ export default class EiSerialProtocol {
 
                     config.info.atCommandVersion = { major, minor, patch }; continue;
                 }
+                if (key === 'data transfer baudrate') {
+                    let r = Number(value);
+                    if (!isNaN(r)) {
+                        config.info.transferBaudRate = r;
+                    }
+                    continue;
+                }
             }
             if (section === 'sensors') {
                 // there are two formats here... either the new format:
@@ -197,6 +222,27 @@ export default class EiSerialProtocol {
                     }
                 }
                 continue;
+            }
+            if (section === 'snapshot') {
+                if (key === 'has snapshot') {
+                    config.snapshot.hasSnapshot = value === '1' ? true : false; continue;
+                }
+                if (key === 'resolutions') {
+                    config.snapshot.resolutions = [];
+                    let allR = value.replace('[', '').replace(']', '').split(',').map(x => x.trim());
+                    for (let r of allR) {
+                        let [ width, height ] = r.split('x').map(n => Number(n));
+                        if (!isNaN(width) && !isNaN(height)) {
+                            config.snapshot.resolutions.push({
+                                width, height
+                            });
+                        }
+                        else {
+                            console.warn('Failed to parse snapshot line', value);
+                        }
+                    }
+                    continue;
+                }
             }
             if (section === 'wifi') {
                 if (key === 'present') {
@@ -261,6 +307,14 @@ export default class EiSerialProtocol {
         this._config = config;
 
         return config;
+    }
+
+    async setDeviceID(deviceId: string) {
+        let res = await this.execCommand('AT+DEVICEID=' + deviceId);
+        // console.log(CON_PREFIX, 'upload res', Buffer.from(res, 'utf8').toString('hex'));
+        if (res.indexOf('OK') === -1) {
+            throw new Error('Failed to set device ID: ' + res);
+        }
     }
 
     async setUploadSettings(apiKey: string, url: string) {
@@ -459,6 +513,62 @@ export default class EiSerialProtocol {
         if (res.trim() !== '') {
             throw new Error('Failed to unlink file: ' + res);
         }
+    }
+
+    async takeSnapshot(width: number, height: number) {
+        let command = 'AT+SNAPSHOT=' + width + ',' + height;
+        let timeout = 60000;
+        let logProgress = false;
+        let res: string;
+
+        if (this._config?.info.transferBaudRate) {
+            command = command + '\r';
+
+            // split it up a bit for pacing
+            for (let ix = 0; ix < command.length; ix += 5) {
+                // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
+                if (ix !== 0) {
+                    await this.sleep(20);
+                }
+
+                await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+            }
+
+            await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, logProgress);
+
+            await this._serial.setBaudRate(this._config?.info.transferBaudRate);
+
+            let data1 = await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), timeout, logProgress);
+
+            await this._serial.setBaudRate(115200);
+
+            let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
+
+            let data = this.parseSerialResponse(Buffer.concat([ data1, data2 ]));
+
+            if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
+                throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
+            }
+
+            // console.log(CON_PREFIX, 'response from device', /*data.length, data.toString('hex'),*/
+            //     data.toString('ascii').trim());
+
+            res = data1.toString('ascii').trim() + data.toString('ascii').trim();
+        }
+        else {
+            res = await this.execCommand(command, timeout, logProgress);
+        }
+
+        if (res.startsWith('ERR:')) {
+            throw new Error('Failed to take snapshot: ' + res);
+        }
+        let lines = res.split('\n').map(x => x.trim())
+            .filter(x => !!x)
+            .filter(x => x.toLocaleLowerCase() !== 'ok')
+            .filter(x => x.toLocaleLowerCase() !== 'okok');
+
+        let last = lines[lines.length - 1];
+        return Buffer.from(last, 'base64');
     }
 
     async stopInference() {

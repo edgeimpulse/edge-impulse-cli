@@ -911,11 +911,12 @@ export class OrganizationDataApi {
      * Lists all data items. This can be filtered by the ?filter parameter.
      * @summary List data
      * @param organizationId Organization ID
+     * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationData (organizationId: number, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationDataResponse;  }> {
+    public async listOrganizationData (organizationId: number, dataset?: string, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationDataResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -932,6 +933,10 @@ export class OrganizationDataApi {
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationData.');
+        }
+
+        if (dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
         }
 
         if (filter !== undefined) {
@@ -993,11 +998,12 @@ export class OrganizationDataApi {
      * Lists all files included by the filter.
      * @summary List files
      * @param organizationId Organization ID
+     * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationFiles (organizationId: number, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationFilesResponse;  }> {
+    public async listOrganizationFiles (organizationId: number, dataset?: string, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationFilesResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/files'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1014,6 +1020,10 @@ export class OrganizationDataApi {
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationFiles.');
+        }
+
+        if (dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
         }
 
         if (filter !== undefined) {
@@ -1072,11 +1082,100 @@ export class OrganizationDataApi {
         });
     }
     /**
+     * Bulk update the metadata of many data items in one go. This requires you to submit a CSV file with headers, one of which the columns should be named \'name\'. The other columns are used as metadata keys.
+     * @summary Bulk update metadata
+     * @param organizationId Organization ID
+     * @param dataset 
+     * @param csvFile 
+     */
+    public async organizationBulkUpdateMetadata (organizationId: number, dataset: string, csvFile: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/bulk-metadata'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling organizationBulkUpdateMetadata.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling organizationBulkUpdateMetadata.');
+        }
+
+        // verify required parameter 'csvFile' is not null or undefined
+        if (csvFile === null || csvFile === undefined) {
+            throw new Error('Required parameter csvFile was null or undefined when calling organizationBulkUpdateMetadata.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        if (dataset !== undefined) {
+            localVarFormParams['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        }
+
+        if (csvFile !== undefined) {
+            localVarFormParams['csvFile'] = csvFile;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Update all data items. HEADs all underlying buckets to retrieve the last file information. Use this API after uploading data directly to S3.
      * @summary Refresh data
      * @param organizationId Organization ID
+     * @param dataset Selected dataset
      */
-    public async refreshOrganizationData (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async refreshOrganizationData (organizationId: number, dataset?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/refresh'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1093,6 +1192,10 @@ export class OrganizationDataApi {
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling refreshOrganizationData.');
+        }
+
+        if (dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1122,12 +1225,12 @@ export class OrganizationDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

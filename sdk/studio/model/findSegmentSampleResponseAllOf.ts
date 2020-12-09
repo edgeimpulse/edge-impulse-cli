@@ -12,7 +12,7 @@
 
 import { SegmentSampleRequestSegments } from './segmentSampleRequestSegments';
 
-export class SegmentSampleRequest {
+export class FindSegmentSampleResponseAllOf {
     'segments': Array<SegmentSampleRequestSegments>;
 
     static discriminator: string | undefined = undefined;
@@ -25,7 +25,7 @@ export class SegmentSampleRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return SegmentSampleRequest.attributeTypeMap;
+        return FindSegmentSampleResponseAllOf.attributeTypeMap;
     }
 }
 

@@ -11,29 +11,29 @@
  */
 
 
-/**
-* Experiments that the project has access to. Enabling experiments can only be done through a JWT token.
-*/
-export class UpdateProjectRequestExperiments {
-    'gpu'?: boolean;
-    'customDeploy'?: boolean;
+export class FindSegmentSampleRequest {
+    /**
+    * If set, the segments are automatically shifted randomly, to make the dataset distribution more uniform.
+    */
+    'shiftSegments': boolean;
+    'segmentLengthMs': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "gpu",
-            "baseName": "gpu",
+            "name": "shiftSegments",
+            "baseName": "shiftSegments",
             "type": "boolean"
         },
         {
-            "name": "customDeploy",
-            "baseName": "customDeploy",
-            "type": "boolean"
+            "name": "segmentLengthMs",
+            "baseName": "segmentLengthMs",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateProjectRequestExperiments.attributeTypeMap;
+        return FindSegmentSampleRequest.attributeTypeMap;
     }
 }
 

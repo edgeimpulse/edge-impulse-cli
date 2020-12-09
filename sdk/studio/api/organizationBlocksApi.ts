@@ -14,6 +14,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { AddOrganizationDeployBlockResponse } from '../model/addOrganizationDeployBlockResponse';
 import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from '../model/addOrganizationTransformationBlockResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -96,7 +97,7 @@ export class OrganizationBlocksApi {
      * @param photo 
      * @param integrateUrl 
      */
-    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -203,12 +204,12 @@ export class OrganizationBlocksApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "AddOrganizationDeployBlockResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

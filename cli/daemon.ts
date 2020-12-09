@@ -25,6 +25,8 @@ import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import checkNewVersions from './check-new-version';
 import { ProjectsApiApiKeys, DevicesApiApiKeys } from '../sdk/studio/api';
+import jpegjs from 'jpeg-js';
+import { makeImage } from './make-image';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -135,10 +137,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.3.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 3) {
+            // we support devices with version 1.4.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 4) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.3.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.4.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,
@@ -149,7 +151,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
             let setupRes = silentArgv ?
                 { hasWifi: true, setupOK: true, didSetMgmt: false } :
-                await setupWizard(eiConfig, serialProtocol, config);
+                await setupWizard(eiConfig, serialProtocol, config, serial);
             if (setupRes.setupOK) {
                 if (((!config.management.connected) || setupRes.didSetMgmt) && setupRes.hasWifi && !silentArgv) {
                     console.log(SERIAL_PREFIX, 'Verifying whether device can connect to remote management API...');
@@ -203,6 +205,17 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
     function sendHello() {
         if (!config || !ws || !serial.is_connected()) return;
 
+        let sensors = Array.from(config.sensors); // copy sensors so we don't modify in place
+        if (config.snapshot.hasSnapshot) {
+            for (let s of config.snapshot.resolutions) {
+                sensors.push({
+                    name: 'Camera (' + s.width + 'x' + s.height + ')',
+                    frequencies: [],
+                    maxSampleLengthS: 60000
+                });
+            }
+        }
+
         let req: MgmtInterfaceHelloV2 = {
             hello: {
                 version: 2,
@@ -210,7 +223,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 deviceId: config.info.id,
                 deviceType: config.info.type,
                 connection: 'daemon',
-                sensors: config.sensors
+                sensors: sensors
             }
         };
         ws.once('message', async (helloResponse: Buffer) => {
@@ -249,6 +262,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 }
                 else {
                     let info = await getProjectAndDeviceInfo(eiConfig, config);
+
+                    await configFactory.storeDaemonDevice(config.info.id, { projectId: info.projectId });
 
                     // we don't have studio endpoint here, so let's rewrite it
                     let endpoint = config.management.url;
@@ -309,110 +324,233 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                         throw new Error('Device does not have API key');
                     }
 
-                    await serialProtocol.setSampleSettings(s.label,
-                            s.interval, s.length, s.hmacKey);
+                    if (s.sensor?.startsWith('Camera (')) {
+                        let [ width, height ] = s.sensor.replace('Camera (', '')
+                            .replace(')', '').split('x').map(n => Number(n));
+                        if (isNaN(width) || isNaN(height)) {
+                            throw new Error('Could not parse camera resolution ' + s.sensor);
+                        }
 
-                    await serialProtocol.setUploadSettings(config.upload.apiKey, s.path);
-                    console.log(SERIAL_PREFIX, 'Configured upload settings');
-                    let res: MgmtInterfaceSampleResponse = {
-                        sample: true
-                    };
-                    if (ws) {
-                        ws.send(cbor.encode(res));
-                    }
-
-                    console.log(SERIAL_PREFIX, 'Instructed device...');
-
-                    function waitForSamplingDone(ee: EiStartSamplingResponse): Promise<EiSerialDone> {
-                        return new Promise((resolve, reject) => {
-                            ee.on('done', (ev) => resolve(ev));
-                            ee.on('error', reject);
-                        });
-                    }
-
-                    let sampleReq = serialProtocol.startSampling(s.sensor, s.length + 3000);
-
-                    sampleReq.on('samplingStarted', () => {
-                        let r: MgmtInterfaceSampleStartedResponse = {
-                            sampleStarted: true
+                        let r0: MgmtInterfaceSampleResponse = {
+                            sample: true
                         };
                         if (ws) {
-                            ws.send(cbor.encode(r));
+                            ws.send(cbor.encode(r0));
                         }
-                    });
 
-                    sampleReq.on('processing', () => {
-                        let r: MgmtInterfaceSampleProcessingResponse = {
+                        let snapshotDone = false;
+
+                        setTimeout(() => {
+                            if (snapshotDone) return;
+
+                            let r1: MgmtInterfaceSampleStartedResponse = {
+                                sampleStarted: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r1));
+                            }
+                        }, 100);
+
+                        setTimeout(() => {
+                            if (snapshotDone) return;
+
+                            let r1: MgmtInterfaceSampleReadingResponse = {
+                                sampleReading: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r1));
+                            }
+                        }, 400);
+
+                        console.log(SERIAL_PREFIX, 'Taking snapshot...');
+
+                        let snapshot = await serialProtocol.takeSnapshot(width, height);
+
+                        snapshotDone = true;
+
+                        let r2: MgmtInterfaceSampleProcessingResponse = {
                             sampleProcessing: true
                         };
                         if (ws) {
-                            ws.send(cbor.encode(r));
-                        }
-                    });
-
-                    sampleReq.on('readingFromDevice', () => {
-                        let r: MgmtInterfaceSampleReadingResponse = {
-                            sampleReading: true
-                        };
-                        if (ws) {
-                            ws.send(cbor.encode(r));
-                        }
-                    });
-
-                    sampleReq.on('uploading', () => {
-                        let r: MgmtInterfaceSampleUploadingResponse = {
-                            sampleUploading: true
-                        };
-                        if (ws) {
-                            ws.send(cbor.encode(r));
-                        }
-                    });
-
-                    let deviceResponse = await waitForSamplingDone(sampleReq);
-
-                    if (deviceResponse && deviceResponse.file) {
-                        let res3: MgmtInterfaceSampleUploadingResponse = {
-                            sampleUploading: true
-                        };
-                        if (ws) {
-                            ws.send(cbor.encode(res3));
+                            ws.send(cbor.encode(r2));
                         }
 
-                        let url = eiConfig.endpoints.internal.ingestion + s.path;
-                        try {
-                            console.log(SERIAL_PREFIX, 'Uploading to', url);
-                            if (deviceResponse.file &&
-                                deviceResponse.file.indexOf(Buffer.from('Ref-BINARY-', 'ascii')) > -1) {
+                        let depth = snapshot.length / (width * height);
+                        if (depth !== 1 && depth !== 3) {
+                            throw new Error('Invalid length for snapshot, expected ' +
+                                (width * height) + ' or ' + (width * height * 3) + ' values, but got ' +
+                                snapshot.length);
+                        }
 
-                                let dr = <EiSerialDoneBuffer>deviceResponse;
-                                await request.post(url, {
-                                    headers: {
-                                        'x-api-key': config.upload.apiKey,
-                                        'x-file-name': deviceResponse.filename,
-                                        'x-label': dr.label,
-                                        'Content-Type': 'application/octet-stream'
-                                    },
-                                    body: deviceResponse.file,
-                                    encoding: 'binary'
-                                });
+                        let frameData = Buffer.alloc(width * height * 4);
+                        let frameDataIx = 0;
+                        for (let ix = 0; ix < snapshot.length; ix += depth) {
+                            if (depth === 1) {
+                                frameData[frameDataIx++] = snapshot[ix]; // r
+                                frameData[frameDataIx++] = snapshot[ix]; // g
+                                frameData[frameDataIx++] = snapshot[ix]; // b
+                                frameData[frameDataIx++] = 255;
                             }
                             else {
-                                await request.post(url, {
-                                    headers: {
-                                        'x-api-key': config.upload.apiKey,
-                                        'x-file-name': deviceResponse.filename,
-                                        'Content-Type': 'application/cbor'
-                                    },
-                                    body: deviceResponse.file,
-                                    encoding: 'binary'
-                                });
-                                await serialProtocol.unlink(deviceResponse.onDeviceFileName);
+                                frameData[frameDataIx++] = snapshot[ix + 0]; // r
+                                frameData[frameDataIx++] = snapshot[ix + 1]; // g
+                                frameData[frameDataIx++] = snapshot[ix + 2]; // b
+                                frameData[frameDataIx++] = 255;
                             }
-                            console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
                         }
-                        catch (ex2) {
-                            let ex = <Error>ex2;
-                            console.error(SERIAL_PREFIX, 'Failed to upload to', url, ex);
+
+                        let jpegImageData = jpegjs.encode({
+                            data: frameData,
+                            width: width,
+                            height: height,
+                        }, 100);
+
+                        let filename = s.label + '.jpg';
+                        let processed = makeImage(jpegImageData.data, config.sampling.hmacKey, filename);
+
+                        let headers: { [k: string]: string} = {
+                            'x-api-key': config.upload.apiKey,
+                            'x-file-name': filename,
+                            'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
+                            'Connection': 'keep-alive'
+                        };
+                        headers['x-label'] = s.label;
+
+                        let url = eiConfig.endpoints.internal.ingestion + s.path;
+                        console.log(SERIAL_PREFIX, 'Uploading to', url);
+
+                        let r3: MgmtInterfaceSampleUploadingResponse = {
+                            sampleUploading: true
+                        };
+                        if (ws) {
+                            ws.send(cbor.encode(r3));
+                        }
+
+                        await request.post(
+                            eiConfig.endpoints.internal.ingestion + s.path, {
+                                headers: headers,
+                                body: (!processed.attachments ? processed.encoded : undefined),
+                                formData: (processed.attachments ? {
+                                    body: {
+                                        value: processed.encoded,
+                                        options: {
+                                            filename: filename,
+                                            contentType: processed.contentType
+                                        }
+                                    },
+                                    attachments: processed.attachments
+                                } : undefined),
+                                encoding: null,
+                            });
+
+                            console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
+                    }
+                    else {
+                        await serialProtocol.setSampleSettings(s.label,
+                            s.interval, s.length, s.hmacKey);
+
+                        await serialProtocol.setUploadSettings(config.upload.apiKey, s.path);
+                        console.log(SERIAL_PREFIX, 'Configured upload settings');
+                        let res: MgmtInterfaceSampleResponse = {
+                            sample: true
+                        };
+                        if (ws) {
+                            ws.send(cbor.encode(res));
+                        }
+
+                        console.log(SERIAL_PREFIX, 'Instructed device...');
+
+                        function waitForSamplingDone(ee: EiStartSamplingResponse): Promise<EiSerialDone> {
+                            return new Promise((resolve, reject) => {
+                                ee.on('done', (ev) => resolve(ev));
+                                ee.on('error', reject);
+                            });
+                        }
+
+                        let sampleReq = serialProtocol.startSampling(s.sensor, s.length + 3000);
+
+                        sampleReq.on('samplingStarted', () => {
+                            let r: MgmtInterfaceSampleStartedResponse = {
+                                sampleStarted: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r));
+                            }
+                        });
+
+                        sampleReq.on('processing', () => {
+                            let r: MgmtInterfaceSampleProcessingResponse = {
+                                sampleProcessing: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r));
+                            }
+                        });
+
+                        sampleReq.on('readingFromDevice', () => {
+                            let r: MgmtInterfaceSampleReadingResponse = {
+                                sampleReading: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r));
+                            }
+                        });
+
+                        sampleReq.on('uploading', () => {
+                            let r: MgmtInterfaceSampleUploadingResponse = {
+                                sampleUploading: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(r));
+                            }
+                        });
+
+                        let deviceResponse = await waitForSamplingDone(sampleReq);
+
+                        if (deviceResponse && deviceResponse.file) {
+                            let res3: MgmtInterfaceSampleUploadingResponse = {
+                                sampleUploading: true
+                            };
+                            if (ws) {
+                                ws.send(cbor.encode(res3));
+                            }
+
+                            let url = eiConfig.endpoints.internal.ingestion + s.path;
+                            try {
+                                console.log(SERIAL_PREFIX, 'Uploading to', url);
+                                if (deviceResponse.file &&
+                                    deviceResponse.file.indexOf(Buffer.from('Ref-BINARY-', 'ascii')) > -1) {
+
+                                    let dr = <EiSerialDoneBuffer>deviceResponse;
+                                    await request.post(url, {
+                                        headers: {
+                                            'x-api-key': config.upload.apiKey,
+                                            'x-file-name': deviceResponse.filename,
+                                            'x-label': dr.label,
+                                            'Content-Type': 'application/octet-stream'
+                                        },
+                                        body: deviceResponse.file,
+                                        encoding: 'binary'
+                                    });
+                                }
+                                else {
+                                    await request.post(url, {
+                                        headers: {
+                                            'x-api-key': config.upload.apiKey,
+                                            'x-file-name': deviceResponse.filename,
+                                            'Content-Type': 'application/cbor'
+                                        },
+                                        body: deviceResponse.file,
+                                        encoding: 'binary'
+                                    });
+                                    await serialProtocol.unlink(deviceResponse.onDeviceFileName);
+                                }
+                                console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
+                            }
+                            catch (ex2) {
+                                let ex = <Error>ex2;
+                                console.error(SERIAL_PREFIX, 'Failed to upload to', url, ex);
+                            }
                         }
                     }
 
@@ -534,9 +672,14 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig,
         throw new Error('Failed to retrieve project list... ' + projectList.error);
     }
 
+    let fromConfig = await configFactory.getDaemonDevice(deviceConfig.info.id);
+
     let projectId;
     if (!projectList.projects || projectList.projects.length === 0) {
         throw new Error('User has no projects, create one before continuing');
+    }
+    else if (fromConfig) {
+        projectId = fromConfig.projectId;
     }
     else if (projectList.projects && projectList.projects.length === 1) {
         projectId = projectList.projects[0].id;
@@ -591,7 +734,8 @@ let setupWizardRan = false;
 
 async function setupWizard(eiConfig: EdgeImpulseConfig,
                            serialProtocol: EiSerialProtocol,
-                           deviceConfig: EiSerialDeviceConfig)
+                           deviceConfig: EiSerialDeviceConfig,
+                           serial: SerialConnector)
     : Promise<{ setupOK: boolean, hasWifi: boolean, didSetMgmt: boolean }> {
     let credentials: { token?: string, askWifi?: boolean } = { };
 
@@ -605,6 +749,21 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
     let ret = { setupOK: false, hasWifi: deviceConfig.wifi.connected, didSetMgmt: false };
 
     try {
+        // empty mac address and AT command version >= 1.4?
+        if (deviceConfig.info.id === '00:00:00:00:00:00' &&
+            deviceConfig.info.atCommandVersion.major >= 1 &&
+            deviceConfig.info.atCommandVersion.minor >= 4 &&
+            serial) {
+            let mac = await serial.getMACAddress();
+            if (mac) {
+                process.stdout.write('Setting device ID...');
+                await serialProtocol.setDeviceID(mac);
+                process.stdout.write(' OK\n');
+
+                deviceConfig.info.id = mac;
+            }
+        }
+
         if (!deviceConfig.upload.apiKey) {
             try {
                 let projectId = await getAndConfigureProject(eiConfig, serialProtocol, deviceConfig);
@@ -613,19 +772,21 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
 
                 let currName = device ? device.name : '';
 
-                let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
-                    type: 'input',
-                    message: 'What name do you want to give this device?',
-                    name: 'nameDevice',
-                    default: currName
-                }]);
-                if (nameDevice.nameDevice !== deviceConfig.info.id) {
-                    let rename = (await eiConfig.api.devices.renameDevice(
-                        projectId, deviceConfig.info.id, { name: nameDevice.nameDevice })).body;
+                if (currName === deviceConfig.info.id) {
+                    let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
+                        type: 'input',
+                        message: 'What name do you want to give this device?',
+                        name: 'nameDevice',
+                        default: currName
+                    }]);
+                    if (nameDevice.nameDevice !== deviceConfig.info.id) {
+                        let rename = (await eiConfig.api.devices.renameDevice(
+                            projectId, deviceConfig.info.id, { name: nameDevice.nameDevice })).body;
 
-                    if (!rename.success) {
-                        console.error('Failed to rename device...', rename.error);
-                        return ret;
+                        if (!rename.success) {
+                            console.error('Failed to rename device...', rename.error);
+                            return ret;
+                        }
                     }
                 }
             }

@@ -10,14 +10,34 @@
  * Do not edit the class manually.
  */
 
+import { FindSegmentSampleResponseAllOf } from './findSegmentSampleResponseAllOf';
+import { GenericApiResponse } from './genericApiResponse';
 import { SegmentSampleRequestSegments } from './segmentSampleRequestSegments';
 
-export class SegmentSampleRequest {
+export class FindSegmentSampleResponse {
+    /**
+    * Whether the operation succeeded
+    */
+    'success': boolean;
+    /**
+    * Optional error description (set if \'success\' was false)
+    */
+    'error'?: string;
     'segments': Array<SegmentSampleRequestSegments>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        },
         {
             "name": "segments",
             "baseName": "segments",
@@ -25,7 +45,7 @@ export class SegmentSampleRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return SegmentSampleRequest.attributeTypeMap;
+        return FindSegmentSampleResponse.attributeTypeMap;
     }
 }
 

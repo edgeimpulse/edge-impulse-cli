@@ -862,15 +862,15 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Upload a zip file containing a custom transformation block.
-     * @summary Upload a custom transformation block
+     * Upload a zip file containing a custom transformation or deployment block.
+     * @summary Upload a custom block
      * @param organizationId Organization ID
      * @param tar 
      * @param type 
      * @param blockId 
      */
-    public async uploadCustomTransformation (organizationId: number, tar: RequestFile, type: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-transformation'
+    public async uploadCustomBlock (organizationId: number, tar: RequestFile, type: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -885,22 +885,22 @@ export class OrganizationCreateProjectApi {
 
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling uploadCustomTransformation.');
+            throw new Error('Required parameter organizationId was null or undefined when calling uploadCustomBlock.');
         }
 
         // verify required parameter 'tar' is not null or undefined
         if (tar === null || tar === undefined) {
-            throw new Error('Required parameter tar was null or undefined when calling uploadCustomTransformation.');
+            throw new Error('Required parameter tar was null or undefined when calling uploadCustomBlock.');
         }
 
         // verify required parameter 'type' is not null or undefined
         if (type === null || type === undefined) {
-            throw new Error('Required parameter type was null or undefined when calling uploadCustomTransformation.');
+            throw new Error('Required parameter type was null or undefined when calling uploadCustomBlock.');
         }
 
         // verify required parameter 'blockId' is not null or undefined
         if (blockId === null || blockId === undefined) {
-            throw new Error('Required parameter blockId was null or undefined when calling uploadCustomTransformation.');
+            throw new Error('Required parameter blockId was null or undefined when calling uploadCustomBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

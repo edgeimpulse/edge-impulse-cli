@@ -12,7 +12,6 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
-import { GetUserResponseAllOfAdministrativeOptions } from './getUserResponseAllOfAdministrativeOptions';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
 import { User } from './user';
@@ -47,7 +46,6 @@ export class GetUserResponse {
     * Whether this is an ephemeral evaluation account.
     */
     'evaluation'?: boolean;
-    'administrativeOptions': GetUserResponseAllOfAdministrativeOptions;
 
     static discriminator: string | undefined = undefined;
 
@@ -121,11 +119,6 @@ export class GetUserResponse {
             "name": "evaluation",
             "baseName": "evaluation",
             "type": "boolean"
-        },
-        {
-            "name": "administrativeOptions",
-            "baseName": "administrativeOptions",
-            "type": "GetUserResponseAllOfAdministrativeOptions"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,13 +10,15 @@ import inquirer from 'inquirer';
 import {
     AddOrganizationTransformationBlockRequest,
     OrganizationJobsApi,
-    UploadCustomBlockRequestTypeEnum
+    UploadCustomBlockRequestTypeEnum,
+    UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio/api';
 import request from 'request-promise';
 import unzip from 'unzipper';
 import tar from 'tar';
 import crypto from 'crypto';
 import WebSocket, { OPEN } from 'ws';
+import dockerignore from '@zeit/dockerignore';
 
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 
@@ -54,10 +56,9 @@ type MessageBlock = [
 const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
     Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const configFilePath = '.ei-block-config';
-const pythonSourcePath = 'https://github.com/edgeimpulse/template-transformation-block-python/archive/main.zip';
 
 program
-    .description('Create and publish transformation blocks')
+    .description('Create and publish custom transformation & deployment blocks')
     .version(packageVersion)
     .option('init', 'Initialize the current folder as a new block')
     .option('push', 'Push the current block to Edge Impulse')
@@ -154,14 +155,14 @@ let currentBlockConfig: BlockConfig | undefined;
             organizationId = organizations.body.organizations[0].id;
         }
         else {
-            let inqRes = await inquirer.prompt([{
+            let orgInqRes = await inquirer.prompt([{
                 type: 'list',
                 choices: (organizations.body.organizations || []).map(p => ({ name: p.name, value: p.id })),
                 name: 'organization',
                 message: 'In which organization do you want to create this block?',
                 pageSize: 20
             }]);
-            organizationId = Number(inqRes.organization);
+            organizationId = Number(orgInqRes.organization);
         }
         let organization = organizations.body.organizations.filter(org => org.id === organizationId)[0];
 
@@ -169,29 +170,51 @@ let currentBlockConfig: BlockConfig | undefined;
 
         // Select the type of block
         let blockType: UploadCustomBlockRequestTypeEnum;
-        let inqRes2 = await inquirer.prompt([{
+        let blockTypeInqRes = await inquirer.prompt([{
             type: 'list',
             choices: [
                 {
                     name: 'Transformation block',
                     value: 'transform'
+                },
+                {
+                    name: 'Deployment block',
+                    value: 'deploy'
                 }
             ],
             name: 'type',
             message: 'Choose a type of block',
             pageSize: 20
         }]);
-        blockType = <UploadCustomBlockRequestTypeEnum>inqRes2.type;
+        blockType = <UploadCustomBlockRequestTypeEnum>blockTypeInqRes.type;
 
         let blockId: number | undefined;
         let blockName: string | undefined;
         let blockDescription: string | undefined;
-        // Update an existing block or create a new one?
-        let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
+
+        // Fetch all relevant existing blocks so the user can select an existing block to update
+        let existingBlocks: { name: string, value: number, block: { description: string, name: string } }[] = [];
+        if (blockTypeInqRes.type === 'transform') {
+            let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
+            if (blocks.body && blocks.body.transformationBlocks && blocks.body.transformationBlocks.length > 0) {
+                existingBlocks = blocks.body.transformationBlocks.map(p => (
+                    { name: p.name, value: p.id, block: { description: p.description, name: p.name } }
+                ));
+            }
+        } else if (blockTypeInqRes.type === 'deploy') {
+            let blocks = await config.api.organizationBlocks.listOrganizationDeployBlocks(organizationId);
+            if (blocks.body && blocks.body.deployBlocks && blocks.body.deployBlocks.length > 0) {
+                existingBlocks = blocks.body.deployBlocks.map(p => (
+                    { name: p.name, value: p.id, block: { description: p.description, name: p.name } }
+                ));
+            }
+        } else {
+            console.error(`Invalid block type: ${blockTypeInqRes.type}`);
+            process.exit(1);
+        }
+
         // If no blocks exist, force create
-        let inqRes3 =
-            (blocks.body && blocks.body.transformationBlocks && blocks.body.transformationBlocks.length > 0)
-            ? (await inquirer.prompt([{
+        let createOrUpdateInqRes = existingBlocks.length > 0 ? (await inquirer.prompt([{
             type: 'list',
             choices: [
                 {
@@ -206,21 +229,22 @@ let currentBlockConfig: BlockConfig | undefined;
             message: 'Choose an option',
             pageSize: 20
         }])).option : 'create';
-        if (inqRes3 === 'update' && blocks.body.transformationBlocks) {
+
+        if (createOrUpdateInqRes === 'update') {
             // Update an existing block
             // Choose a block ID
-            let inqRes4 = await inquirer.prompt([{
+            let blockChoiceInqRes = await inquirer.prompt([{
                 type: 'list',
-                choices: blocks.body.transformationBlocks.map(p => ({ name: p.name, value: p.id })),
+                choices: existingBlocks,
                 name: 'id',
                 message: 'Choose a block to update',
                 pageSize: 20
             }]);
-            blockId = Number(inqRes4.id);
-            const selectedBlock = blocks.body.transformationBlocks.filter(block => block.id === blockId)[0];
+            blockId = Number(blockChoiceInqRes.id);
+            const selectedBlock = existingBlocks.filter(block => block.value === blockId)[0];
             if (selectedBlock) {
-                blockDescription = selectedBlock.description;
-                blockName = selectedBlock.name;
+                blockDescription = selectedBlock.block.description;
+                blockName = selectedBlock.block.name;
             }
         }
 
@@ -266,28 +290,50 @@ let currentBlockConfig: BlockConfig | undefined;
 
         const hasDockerFile = (await fs.promises.readdir(process.cwd())).find(x => x === 'Dockerfile');
 
-        if (inqRes3 === 'create' && !hasDockerFile) {
+        if (createOrUpdateInqRes === 'create' && !hasDockerFile) {
             // Fetch the example files
-            let inqRes5 = await inquirer.prompt([{
+            let fetchInqRes = await inquirer.prompt([{
                 type: 'list',
                 choices: ['yes', 'no'],
                 name: 'option',
-                message: 'Would you like to download and load the example repository (Python)?',
+                message: 'Would you like to download and load the example repository?',
                 pageSize: 20
             }]);
-            if (inqRes5.option === 'yes') {
+
+            // Get the correct example repository path
+            let templateSourcePath: string;
+            let directoryRoot: string;
+            if (blockType === 'transform') {
+                templateSourcePath =
+                    'https://github.com/edgeimpulse/template-transformation-block-python/archive/main.zip';
+                directoryRoot = 'template-transformation-block-python-main/';
+            } else if (blockType === 'deploy') {
+                templateSourcePath = 'https://github.com/edgeimpulse/template-deployment-block/archive/main.zip';
+                directoryRoot = 'template-deployment-block-main/';
+            } else {
+                console.error(`Invalid block type: ${blockType}`);
+                process.exit(1);
+            }
+
+            if (fetchInqRes.option === 'yes') {
                 try {
-                    const directoryRoot = 'template-transformation-block-python-main/';
-                    const data = await request(pythonSourcePath)
+                    const data = await request(templateSourcePath)
                         .pipe(unzip.Parse())
                         .on('entry', (entry: ExtractedFile) => {
                             // To unzip in the current directory:
-                            // Ignore the encapsulating folder
-                            if (entry.path === directoryRoot) {
+                            const newFilename = entry.path.replace(directoryRoot, './');
+                            let subdirectories = entry.path.split('/');
+                            // Ignore folders
+                            if (subdirectories[subdirectories.length - 1] === '') {
                                 // tslint:disable-next-line: no-unsafe-any
                                 entry.autodrain();
                             } else {
-                                const newFilename = entry.path.replace(directoryRoot, './');
+                                // Remove the root and filename and create any subdirectories
+                                if (subdirectories.length > 2) {
+                                    subdirectories = subdirectories.slice(1, subdirectories.length - 1);
+                                    const newDirectory = subdirectories.join('/');
+                                    fs.mkdirSync(newDirectory, { recursive: true });
+                                }
                                 // tslint:disable-next-line: no-unsafe-any
                                 entry.pipe(fs.createWriteStream(newFilename));
                             }
@@ -297,15 +343,15 @@ let currentBlockConfig: BlockConfig | undefined;
                 }
                 catch (e) {
                     console.warn('Unable to fetch the repository:', e);
-                    console.log('You can fetch the template later from', pythonSourcePath);
+                    console.log('You can fetch the template later from', templateSourcePath);
                 }
             } else {
-                console.log('You can fetch the template later from', pythonSourcePath);
+                console.log('You can fetch the template later from', templateSourcePath);
             }
         }
         console.log(`Your new block '${blockName}' has been created in '${process.cwd()}'.`);
-        console.log('When you have finished building your transformation block, run "edge-impulse-blocks push" to ' +
-            'update the block in Edge Impulse.');
+        console.log(`When you have finished building your ${blockTypeInqRes.type} block, run 'edge-impulse-blocks ` +
+            `push' to update the block in Edge Impulse.`);
         process.exit(0);
     }
 
@@ -314,6 +360,11 @@ let currentBlockConfig: BlockConfig | undefined;
         // Check if a config file exists
         if (!await checkConfigFile() || !currentBlockConfig) {
             console.error('A config file cannot be found. Run "init" to create a new block.');
+            process.exit(1);
+        }
+
+        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+            console.error(`Unable to upload your block - unknown block type: ${currentBlockConfig.type}`);
             process.exit(1);
         }
 
@@ -333,15 +384,24 @@ let currentBlockConfig: BlockConfig | undefined;
         try {
             if (!currentBlockConfig.id)  {
                 // Create a new block
-                const newBlockObject: AddOrganizationTransformationBlockRequest = {
-                    name: currentBlockConfig.name,
-                    description: currentBlockConfig.description,
-                    dockerContainer: '',
-                    indMetadata: true,
-                    cliArguments: ''
-                };
-                const newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
-                    organizationId, newBlockObject);
+                let newResponse: { body: { success: boolean, id: number, error?: string }};
+                if (currentBlockConfig.type === 'transform') {
+                    const newBlockObject: AddOrganizationTransformationBlockRequest = {
+                        name: currentBlockConfig.name,
+                        description: currentBlockConfig.description,
+                        dockerContainer: '',
+                        indMetadata: true,
+                        cliArguments: ''
+                    };
+                    newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
+                        organizationId, newBlockObject);
+                } else if (currentBlockConfig.type === 'deploy') {
+                    newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
+                        organizationId, currentBlockConfig.name, '', currentBlockConfig.description, '');
+                } else {
+                    console.error(`Unable to upload your block - unknown block type: ${currentBlockConfig.type}`);
+                    process.exit(1);
+                }
                 if (!newResponse.body.success) {
                     console.error('Unable to add the block to your organization: ', newResponse.body.error);
                     process.exit(1);
@@ -352,41 +412,35 @@ let currentBlockConfig: BlockConfig | undefined;
             }
 
             // Tar & compress the file & push to the endpoint
-            const packagePath = Path.join(os.tmpdir(), 'ei-transform-block-' +
+            const packagePath = Path.join(os.tmpdir(), `ei-${currentBlockConfig.type}-block-` +
                 crypto.randomBytes(16).toString("hex") + '.tar.gz');
 
             // Create the new tarfile
             console.log(`Archiving '${cwd}'...`);
+
+            // read dockerignore file
+            const ignore = dockerignore().add([ '.git/', '.hg/' ]);
+
             // Check to see if there is an ignore file
-            let patternsToIgnore: string[] = [];
-            if (fs.existsSync('.ei-ignore')) {
+            if (fs.existsSync('.dockerignore')) {
                 try {
-                    const ignoreFile = fs.readFileSync('.ei-ignore', 'utf-8');
-                    patternsToIgnore = ignoreFile.split('\n');
+                    const ignoreFile = fs.readFileSync('.dockerignore', 'utf-8');
+                    ignore.add(ignoreFile.split('\n').map(x => x.trim()));
                 }
-                catch (e) {
-                    console.warn('Unable to read .ei-ignore file');
+                catch (ex) {
+                    console.warn('Unable to read .dockerignore file', ex);
                 }
             }
             const compressCurrentDirectory = new Promise((resolve, reject) => {
                 tar.c({ gzip: true, filter: (path) => {
-                    const pathSplit = path.split('/');
-                    const filename = pathSplit[pathSplit.length - 1];
-                    for (const pattern of patternsToIgnore) {
-                        // Filter out filename or path matches
-                        if (pattern === filename || pattern === path) return false;
-                        // If pattern ends in *, filter out anything beginning with pattern
-                        if (pattern.endsWith('*') && path.startsWith(pattern.slice(0, pattern.length - 1))) {
-                            return false;
-                        }
-                        // If pattern starts with *, filter out anything ending with pattern
-                        if (pattern.startsWith('*') && path.endsWith(pattern.slice(1, pattern.length))) {
-                            return false;
-                        }
+                    if (ignore.ignores(path)) {
+                        return false;
                     }
+
                     return true;
                 } }, [ '.' ])
                     .pipe(fs.createWriteStream(packagePath))
+                    .on('error', reject)
                     .on('close', resolve);
             });
             await compressCurrentDirectory;
@@ -395,7 +449,7 @@ let currentBlockConfig: BlockConfig | undefined;
             const fileSize = fs.statSync(packagePath).size;
             if (fileSize > 400 * 1000 * 1000) {
                 console.error('Your custom block exceeds the block size limit of 400MB. If your archive includes ' +
-                    ' unwanted files, add a .ei-ignore file to list files that will be ignored when compressing your ' +
+                    ' unwanted files, add a .dockerignore file to list files that will be ignored when compressing your ' +
                     'block.');
                 process.exit(1);
             }
@@ -413,14 +467,16 @@ let currentBlockConfig: BlockConfig | undefined;
                     contentType: 'application/octet-stream'
                 }
             };
-            const uploadResponse = await config.api.organizationCreateProject.uploadCustomTransformation(
+
+            let uploadResponse = await config.api.organizationCreateProject.uploadCustomBlock(
                 currentBlockConfig.organizationId,
                 tarFile,
                 currentBlockConfig.type,
                 currentBlockConfig.id || 0
             );
+
             if (!uploadResponse.body.success || !uploadResponse.body.id) {
-                console.error('Unable to upload your transformation block:', uploadResponse.body.error);
+                console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadResponse.body.error);
                 process.exit(1);
             }
             let jobId = uploadResponse.body.id;
@@ -463,7 +519,7 @@ let currentBlockConfig: BlockConfig | undefined;
                     connectToSocket();
                 };
             }
-            console.log(`Building transformation block '${currentBlockConfig.name}'...`);
+            console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}'...`);
             await connectToSocket();
 
             while (1) {
@@ -489,13 +545,21 @@ let currentBlockConfig: BlockConfig | undefined;
 
             await fs.promises.unlink(packagePath);
 
-            console.log(`Building transformation block '${currentBlockConfig.name}' OK`);
+            console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}' OK`);
             console.log('');
 
-            const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
-                organizationId + '/data';
-
-            console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
+            if (currentBlockConfig.type === 'transform') {
+                const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
+                    organizationId + '/data';
+                console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
+            } else if (currentBlockConfig.type === 'deploy') {
+                const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
+                organizationId + '/deployment';
+                console.log(`Your block has been updated and is now available on the Deployment page ` +
+                    `for every project under ${organizationName}.`);
+                console.log(`You can set the block image or update details at ` +
+                    organizationStudioPath);
+            }
             process.exit(0);
         }
         catch (e) {

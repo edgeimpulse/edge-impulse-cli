@@ -11,41 +11,26 @@
  */
 
 
-export class GetJWTTokenRequest {
-    /**
-    * Username or e-mail address
-    */
-    'username': string;
-    /**
-    * Password
-    */
-    'password': string;
-    /**
-    * Evaluation user UUID
-    */
-    'uuid'?: string;
+export class OrganizationBulkMetadataRequest {
+    'dataset': string;
+    'csvFile':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "username",
-            "baseName": "username",
+            "name": "dataset",
+            "baseName": "dataset",
             "type": "string"
         },
         {
-            "name": "password",
-            "baseName": "password",
-            "type": "string"
-        },
-        {
-            "name": "uuid",
-            "baseName": "uuid",
-            "type": "string"
+            "name": "csvFile",
+            "baseName": "csvFile",
+            "type": "RequestFile"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenRequest.attributeTypeMap;
+        return OrganizationBulkMetadataRequest.attributeTypeMap;
     }
 }
 

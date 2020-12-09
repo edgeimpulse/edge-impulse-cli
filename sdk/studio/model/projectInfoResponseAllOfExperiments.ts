@@ -11,24 +11,33 @@
  */
 
 
-/**
-* Experiments that the project has access to.
-*/
 export class ProjectInfoResponseAllOfExperiments {
-    'gpu': boolean;
-    'customDeploy': boolean;
+    'type': string;
+    'title': string;
+    'help'?: string;
+    'enabled': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "gpu",
-            "baseName": "gpu",
-            "type": "boolean"
+            "name": "type",
+            "baseName": "type",
+            "type": "string"
         },
         {
-            "name": "customDeploy",
-            "baseName": "customDeploy",
+            "name": "title",
+            "baseName": "title",
+            "type": "string"
+        },
+        {
+            "name": "help",
+            "baseName": "help",
+            "type": "string"
+        },
+        {
+            "name": "enabled",
+            "baseName": "enabled",
             "type": "boolean"
         }    ];
 

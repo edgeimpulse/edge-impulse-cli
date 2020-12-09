@@ -37,7 +37,10 @@ export class ProjectInfoResponseAllOf {
     'acquisitionSettings': ProjectInfoResponseAllOfAcquisitionSettings;
     'collaborators': Array<User>;
     'deploySettings': ProjectInfoResponseAllOfDeploySettings;
-    'experiments': ProjectInfoResponseAllOfExperiments;
+    /**
+    * Experiments that the project has access to. Enabling experiments can only be done through a JWT token.
+    */
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     'latencyDevices': Array<ProjectInfoResponseAllOfLatencyDevices>;
     /**
     * Evaluation project type
@@ -106,7 +109,7 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "experiments",
             "baseName": "experiments",
-            "type": "ProjectInfoResponseAllOfExperiments"
+            "type": "Array<ProjectInfoResponseAllOfExperiments>"
         },
         {
             "name": "latencyDevices",

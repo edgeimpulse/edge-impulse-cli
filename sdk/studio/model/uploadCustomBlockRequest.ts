@@ -41,5 +41,5 @@ export class UploadCustomBlockRequest {
 }
 
 
-export type UploadCustomBlockRequestTypeEnum = 'transform';
-export const UploadCustomBlockRequestTypeEnumValues: string[] = ['transform'];
+export type UploadCustomBlockRequestTypeEnum = 'transform' | 'deploy';
+export const UploadCustomBlockRequestTypeEnumValues: string[] = ['transform', 'deploy'];

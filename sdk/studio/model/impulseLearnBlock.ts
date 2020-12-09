@@ -17,7 +17,7 @@ export class ImpulseLearnBlock {
     */
     'id': number;
     /**
-    * Block type (either keras, keras-transfer-image, or anomaly)
+    * Block type (either keras, keras-transfer-image, keras-regression or anomaly)
     */
     'type': string;
     /**

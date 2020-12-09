@@ -11,6 +11,7 @@
  */
 
 import { DSPInfoFeatures } from './dSPInfoFeatures';
+import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 
 export class DSPInfo {
     'id': number;
@@ -27,6 +28,7 @@ export class DSPInfo {
     * Axes that this block depends on.
     */
     'inputAxes': Array<string>;
+    'performance'?: DspRunResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,6 +72,11 @@ export class DSPInfo {
             "name": "inputAxes",
             "baseName": "inputAxes",
             "type": "Array<string>"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "DspRunResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

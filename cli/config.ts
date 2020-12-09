@@ -30,6 +30,11 @@ export interface SerialConfig {
             sensors: string[]
         }
     };
+    daemonDevices: {
+        [deviceId: string]: {
+            projectId: number;
+        }
+    };
 }
 
 export interface EdgeImpulseAPI {
@@ -320,6 +325,25 @@ export class Config {
         await this.store(config);
     }
 
+    async getDaemonDevice(deviceId: string) {
+        let config = await this.load();
+        return config.daemonDevices[deviceId];
+    }
+
+    async storeDaemonDevice(deviceId: string, data: {
+        projectId: number
+    }) {
+        let config = await this.load();
+        config.daemonDevices[deviceId] = data;
+        await this.store(config);
+    }
+
+    async deleteDaemonDevice(deviceId: string) {
+        let config = await this.load();
+        delete config.daemonDevices[deviceId];
+        await this.store(config);
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -328,7 +352,8 @@ export class Config {
                 uploaderProjectId: undefined,
                 lastVersionCheck: Date.now(),
                 apiKey: undefined,
-                dataForwarderDevices: { }
+                dataForwarderDevices: { },
+                daemonDevices: { }
             };
         }
 
@@ -336,6 +361,9 @@ export class Config {
             let c = <SerialConfig>JSON.parse(await util.promisify(fs.readFile)(this._filename, 'utf-8'));
             if (!c.dataForwarderDevices) {
                 c.dataForwarderDevices = { };
+            }
+            if (!c.daemonDevices) {
+                c.daemonDevices = { };
             }
             // in v1.6.2 we did not properly filter the sensors array, so filter it out here
             for (let [ k, d ] of Object.entries(c.dataForwarderDevices)) {

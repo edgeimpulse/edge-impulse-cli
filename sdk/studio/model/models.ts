@@ -6,6 +6,7 @@ export * from './addMemberRequest';
 export * from './addOrganizationApiKeyRequest';
 export * from './addOrganizationBucketRequest';
 export * from './addOrganizationDeployBlockRequest';
+export * from './addOrganizationDeployBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
 export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
@@ -72,6 +73,7 @@ export * from './dspRunRequest';
 export * from './dspRunRequestWithoutFeatures';
 export * from './dspRunResponse';
 export * from './dspRunResponseAllOf';
+export * from './dspRunResponseAllOfPerformance';
 export * from './dspRunResponseWithSample';
 export * from './dspRunResponseWithSampleAllOf';
 export * from './dspSampleFeaturesResponse';
@@ -86,6 +88,9 @@ export * from './evaluateJobResponse';
 export * from './evaluateJobResponseAllOf';
 export * from './evaluateResultValue';
 export * from './exportOriginalDataRequest';
+export * from './findSegmentSampleRequest';
+export * from './findSegmentSampleResponse';
+export * from './findSegmentSampleResponseAllOf';
 export * from './findUserResponse';
 export * from './findUserResponseAllOf';
 export * from './findUserResponseAllOfUsers';
@@ -109,7 +114,6 @@ export * from './getOrganizationDataItemResponseAllOf';
 export * from './getSampleResponse';
 export * from './getUserResponse';
 export * from './getUserResponseAllOf';
-export * from './getUserResponseAllOfAdministrativeOptions';
 export * from './getUserResponseAllOfOrganizations';
 export * from './impulse';
 export * from './impulseDspBlock';
@@ -132,6 +136,7 @@ export * from './kerasModelTypeEnum';
 export * from './kerasResponse';
 export * from './kerasResponseAllOf';
 export * from './kerasVisualLayer';
+export * from './kerasVisualLayerTunableParams';
 export * from './learnBlock';
 export * from './listApiKeysResponse';
 export * from './listApiKeysResponseAllOf';
@@ -189,6 +194,7 @@ export * from './organizationAddDataFolderRequest';
 export * from './organizationAddDataFolderResponse';
 export * from './organizationAddDataFolderResponseAllOf';
 export * from './organizationAddDataItemRequest';
+export * from './organizationBulkMetadataRequest';
 export * from './organizationCreateProject';
 export * from './organizationCreateProjectFiles';
 export * from './organizationCreateProjectRequest';
@@ -259,7 +265,6 @@ export * from './updateOrganizationDeployBlockRequest';
 export * from './updateOrganizationRequest';
 export * from './updateOrganizationTransformationBlockRequest';
 export * from './updateProjectRequest';
-export * from './updateProjectRequestExperiments';
 export * from './updateUserRequest';
 export * from './updateVersionRequest';
 export * from './uploadCustomBlockRequest';
@@ -285,6 +290,7 @@ import { AddMemberRequest } from './addMemberRequest';
 import { AddOrganizationApiKeyRequest } from './addOrganizationApiKeyRequest';
 import { AddOrganizationBucketRequest } from './addOrganizationBucketRequest';
 import { AddOrganizationDeployBlockRequest } from './addOrganizationDeployBlockRequest';
+import { AddOrganizationDeployBlockResponse } from './addOrganizationDeployBlockResponse';
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from './addOrganizationTransformationBlockResponse';
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
@@ -351,6 +357,7 @@ import { DspRunRequest } from './dspRunRequest';
 import { DspRunRequestWithoutFeatures } from './dspRunRequestWithoutFeatures';
 import { DspRunResponse } from './dspRunResponse';
 import { DspRunResponseAllOf } from './dspRunResponseAllOf';
+import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 import { DspRunResponseWithSample } from './dspRunResponseWithSample';
 import { DspRunResponseWithSampleAllOf } from './dspRunResponseWithSampleAllOf';
 import { DspSampleFeaturesResponse } from './dspSampleFeaturesResponse';
@@ -365,6 +372,9 @@ import { EvaluateJobResponse } from './evaluateJobResponse';
 import { EvaluateJobResponseAllOf } from './evaluateJobResponseAllOf';
 import { EvaluateResultValue } from './evaluateResultValue';
 import { ExportOriginalDataRequest } from './exportOriginalDataRequest';
+import { FindSegmentSampleRequest } from './findSegmentSampleRequest';
+import { FindSegmentSampleResponse } from './findSegmentSampleResponse';
+import { FindSegmentSampleResponseAllOf } from './findSegmentSampleResponseAllOf';
 import { FindUserResponse } from './findUserResponse';
 import { FindUserResponseAllOf } from './findUserResponseAllOf';
 import { FindUserResponseAllOfUsers } from './findUserResponseAllOfUsers';
@@ -388,7 +398,6 @@ import { GetOrganizationDataItemResponseAllOf } from './getOrganizationDataItemR
 import { GetSampleResponse } from './getSampleResponse';
 import { GetUserResponse } from './getUserResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
-import { GetUserResponseAllOfAdministrativeOptions } from './getUserResponseAllOfAdministrativeOptions';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Impulse } from './impulse';
 import { ImpulseDspBlock } from './impulseDspBlock';
@@ -411,6 +420,7 @@ import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasResponse } from './kerasResponse';
 import { KerasResponseAllOf } from './kerasResponseAllOf';
 import { KerasVisualLayer } from './kerasVisualLayer';
+import { KerasVisualLayerTunableParams } from './kerasVisualLayerTunableParams';
 import { LearnBlock } from './learnBlock';
 import { ListApiKeysResponse } from './listApiKeysResponse';
 import { ListApiKeysResponseAllOf } from './listApiKeysResponseAllOf';
@@ -468,6 +478,7 @@ import { OrganizationAddDataFolderRequest } from './organizationAddDataFolderReq
 import { OrganizationAddDataFolderResponse } from './organizationAddDataFolderResponse';
 import { OrganizationAddDataFolderResponseAllOf } from './organizationAddDataFolderResponseAllOf';
 import { OrganizationAddDataItemRequest } from './organizationAddDataItemRequest';
+import { OrganizationBulkMetadataRequest } from './organizationBulkMetadataRequest';
 import { OrganizationCreateProject } from './organizationCreateProject';
 import { OrganizationCreateProjectFiles } from './organizationCreateProjectFiles';
 import { OrganizationCreateProjectRequest } from './organizationCreateProjectRequest';
@@ -538,7 +549,6 @@ import { UpdateOrganizationDeployBlockRequest } from './updateOrganizationDeploy
 import { UpdateOrganizationRequest } from './updateOrganizationRequest';
 import { UpdateOrganizationTransformationBlockRequest } from './updateOrganizationTransformationBlockRequest';
 import { UpdateProjectRequest } from './updateProjectRequest';
-import { UpdateProjectRequestExperiments } from './updateProjectRequestExperiments';
 import { UpdateUserRequest } from './updateUserRequest';
 import { UpdateVersionRequest } from './updateVersionRequest';
 import { UploadCustomBlockRequest } from './uploadCustomBlockRequest';
@@ -586,6 +596,7 @@ let enumsMap: {[index: string]: any} = {
     "KerasResponseAllOfTypeEnum": "KerasResponseAllOfTypeEnum",
     "KerasResponseAllOfModeEnum": "KerasResponseAllOfModeEnum",
     "KerasVisualLayerTypeEnum": "KerasVisualLayerTypeEnum",
+    "KerasVisualLayerTunableParamsParamEnum": "KerasVisualLayerTunableParamsParamEnum",
     "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum",
     "MoveRawDataRequestNewCategoryEnum": "MoveRawDataRequestNewCategoryEnum",
     "OrganizationCreateProjectUploadTypeEnum": "OrganizationCreateProjectUploadTypeEnum",
@@ -613,6 +624,7 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationApiKeyRequest": AddOrganizationApiKeyRequest,
     "AddOrganizationBucketRequest": AddOrganizationBucketRequest,
     "AddOrganizationDeployBlockRequest": AddOrganizationDeployBlockRequest,
+    "AddOrganizationDeployBlockResponse": AddOrganizationDeployBlockResponse,
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
     "AddOrganizationTransformationBlockResponse": AddOrganizationTransformationBlockResponse,
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
@@ -678,6 +690,7 @@ let typeMap: {[index: string]: any} = {
     "DspRunRequestWithoutFeatures": DspRunRequestWithoutFeatures,
     "DspRunResponse": DspRunResponse,
     "DspRunResponseAllOf": DspRunResponseAllOf,
+    "DspRunResponseAllOfPerformance": DspRunResponseAllOfPerformance,
     "DspRunResponseWithSample": DspRunResponseWithSample,
     "DspRunResponseWithSampleAllOf": DspRunResponseWithSampleAllOf,
     "DspSampleFeaturesResponse": DspSampleFeaturesResponse,
@@ -692,6 +705,9 @@ let typeMap: {[index: string]: any} = {
     "EvaluateJobResponseAllOf": EvaluateJobResponseAllOf,
     "EvaluateResultValue": EvaluateResultValue,
     "ExportOriginalDataRequest": ExportOriginalDataRequest,
+    "FindSegmentSampleRequest": FindSegmentSampleRequest,
+    "FindSegmentSampleResponse": FindSegmentSampleResponse,
+    "FindSegmentSampleResponseAllOf": FindSegmentSampleResponseAllOf,
     "FindUserResponse": FindUserResponse,
     "FindUserResponseAllOf": FindUserResponseAllOf,
     "FindUserResponseAllOfUsers": FindUserResponseAllOfUsers,
@@ -715,7 +731,6 @@ let typeMap: {[index: string]: any} = {
     "GetSampleResponse": GetSampleResponse,
     "GetUserResponse": GetUserResponse,
     "GetUserResponseAllOf": GetUserResponseAllOf,
-    "GetUserResponseAllOfAdministrativeOptions": GetUserResponseAllOfAdministrativeOptions,
     "GetUserResponseAllOfOrganizations": GetUserResponseAllOfOrganizations,
     "Impulse": Impulse,
     "ImpulseDspBlock": ImpulseDspBlock,
@@ -737,6 +752,7 @@ let typeMap: {[index: string]: any} = {
     "KerasResponse": KerasResponse,
     "KerasResponseAllOf": KerasResponseAllOf,
     "KerasVisualLayer": KerasVisualLayer,
+    "KerasVisualLayerTunableParams": KerasVisualLayerTunableParams,
     "LearnBlock": LearnBlock,
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
@@ -794,6 +810,7 @@ let typeMap: {[index: string]: any} = {
     "OrganizationAddDataFolderResponse": OrganizationAddDataFolderResponse,
     "OrganizationAddDataFolderResponseAllOf": OrganizationAddDataFolderResponseAllOf,
     "OrganizationAddDataItemRequest": OrganizationAddDataItemRequest,
+    "OrganizationBulkMetadataRequest": OrganizationBulkMetadataRequest,
     "OrganizationCreateProject": OrganizationCreateProject,
     "OrganizationCreateProjectFiles": OrganizationCreateProjectFiles,
     "OrganizationCreateProjectRequest": OrganizationCreateProjectRequest,
@@ -864,7 +881,6 @@ let typeMap: {[index: string]: any} = {
     "UpdateOrganizationRequest": UpdateOrganizationRequest,
     "UpdateOrganizationTransformationBlockRequest": UpdateOrganizationTransformationBlockRequest,
     "UpdateProjectRequest": UpdateProjectRequest,
-    "UpdateProjectRequestExperiments": UpdateProjectRequestExperiments,
     "UpdateUserRequest": UpdateUserRequest,
     "UpdateVersionRequest": UpdateVersionRequest,
     "UploadCustomBlockRequest": UploadCustomBlockRequest,

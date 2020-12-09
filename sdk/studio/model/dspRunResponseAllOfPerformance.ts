@@ -11,32 +11,26 @@
  */
 
 
-export class GetUserResponseAllOfAdministrativeOptions {
-    'showWidget': boolean;
-    'gpu': boolean;
-    'customDeploy': boolean;
+export class DspRunResponseAllOfPerformance {
+    'latency': number;
+    'ram': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "showWidget",
-            "baseName": "showWidget",
-            "type": "boolean"
+            "name": "latency",
+            "baseName": "latency",
+            "type": "number"
         },
         {
-            "name": "gpu",
-            "baseName": "gpu",
-            "type": "boolean"
-        },
-        {
-            "name": "customDeploy",
-            "baseName": "customDeploy",
-            "type": "boolean"
+            "name": "ram",
+            "baseName": "ram",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserResponseAllOfAdministrativeOptions.attributeTypeMap;
+        return DspRunResponseAllOfPerformance.attributeTypeMap;
     }
 }
 

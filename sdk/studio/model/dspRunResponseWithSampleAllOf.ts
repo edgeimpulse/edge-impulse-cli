@@ -11,6 +11,7 @@
  */
 
 import { DspRunGraph } from './dspRunGraph';
+import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 import { RawSampleData } from './rawSampleData';
 
 export class DspRunResponseWithSampleAllOf {
@@ -27,6 +28,7 @@ export class DspRunResponseWithSampleAllOf {
     */
     'labels': Array<string>;
     'sample': RawSampleData;
+    'performance'?: DspRunResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,6 +52,11 @@ export class DspRunResponseWithSampleAllOf {
             "name": "sample",
             "baseName": "sample",
             "type": "RawSampleData"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "DspRunResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

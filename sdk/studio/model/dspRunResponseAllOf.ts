@@ -11,6 +11,7 @@
  */
 
 import { DspRunGraph } from './dspRunGraph';
+import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 
 export class DspRunResponseAllOf {
     /**
@@ -25,6 +26,7 @@ export class DspRunResponseAllOf {
     * Labels of the feature axes
     */
     'labels': Array<string>;
+    'performance'?: DspRunResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,6 +45,11 @@ export class DspRunResponseAllOf {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "DspRunResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { KerasVisualLayerTunableParams } from './kerasVisualLayerTunableParams';
 
 export class KerasVisualLayer {
     'type': KerasVisualLayerTypeEnum;
@@ -33,6 +34,7 @@ export class KerasVisualLayer {
     * Number of convolutional layers before the pooling layer (only for conv1d, conv2d)
     */
     'stack'?: number;
+    'tunableParams'?: Array<KerasVisualLayerTunableParams>;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,6 +68,11 @@ export class KerasVisualLayer {
             "name": "stack",
             "baseName": "stack",
             "type": "number"
+        },
+        {
+            "name": "tunableParams",
+            "baseName": "tunableParams",
+            "type": "Array<KerasVisualLayerTunableParams>"
         }    ];
 
     static getAttributeTypeMap() {

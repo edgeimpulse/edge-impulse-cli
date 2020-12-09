@@ -1,6 +1,6 @@
 {
   "name": "edge-impulse-cli",
-  "version": "1.9.1",
+  "version": "1.10.1",
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {
@@ -13,19 +13,23 @@
     "edge-impulse-uploader": "build/cli/uploader.js",
     "edge-impulse-data-forwarder": "build/cli/data-forwarder.js",
     "edge-impulse-run-impulse": "build/cli/run-impulse.js",
-    "eta-flash-tool": "build/cli/eta-flash-tool/flashtool.js"
+    "eta-flash-tool": "build/cli/eta-flash-tool/flashtool.js",
+    "himax-flash-tool": "build/cli/himax-flash-tool/flashtool.js"
   },
   "author": "EdgeImpulse Inc. <hello@edgeimpulse.com>",
   "license": "Apache-2.0",
   "dependencies": {
     "@types/tar": "^4.0.3",
     "@types/unzipper": "^0.10.3",
+    "@zeit/dockerignore": "0.0.5",
     "borc": "^2.1.2",
     "cbor": "^5.0.1",
     "cli-progress": "^3.8.2",
     "commander": "^4.1.1",
+    "crc": "^3.8.0",
     "crc-32": "^1.2.0",
     "inquirer": "^7.0.0",
+    "jpeg-js": "^0.4.2",
     "npm-registry-fetch": "^5.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
@@ -41,6 +45,7 @@
     "@types/cbor": "^2.0.0",
     "@types/cli-progress": "^3.7.0",
     "@types/commander": "^2.12.2",
+    "@types/crc": "^3.4.0",
     "@types/inquirer": "^6.5.0",
     "@types/npm-registry-fetch": "^4.0.1",
     "@types/request": "^2.48.3",

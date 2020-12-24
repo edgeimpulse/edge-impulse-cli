@@ -57,6 +57,7 @@ export interface ClientConnectedDevice {
 export interface ClientStudioWebsocketHello {
     hello: { version: number };
     devices: ClientConnectedDevice[];
+    activeTunerJobId?: number;
 }
 
 export interface ClientInitStudioOptions {
@@ -64,6 +65,7 @@ export interface ClientInitStudioOptions {
     gaId: string;
     userId: number;
     projectId: number;
+    projectName: string;
     socketToken: string;
     connectedDevices: ClientConnectedDevice[];
     staticAssetsPrefix: string;
@@ -71,6 +73,7 @@ export interface ClientInitStudioOptions {
     sentryEnvironment?: string;
     errorPage: boolean;
     gitCommitHash: string;
+    isAdmin: boolean;
 }
 
 export interface ClientInitOrganizationOptions {

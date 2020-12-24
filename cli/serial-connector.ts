@@ -74,7 +74,7 @@ export class SerialConnector extends EventEmitter<{
         }
 
         // otherwise wait for either error or open event
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.serial.once('error', (ex: any) => {
                 this.serial = null;
                 delete serialPorts[this.path];
@@ -93,7 +93,7 @@ export class SerialConnector extends EventEmitter<{
     }
 
     async write(buffer: Buffer) {
-        return new Promise((res, rej) => {
+        return new Promise<void>((res, rej) => {
             if (!this.serial) return rej('Serial is null');
 
             this.serial.write(buffer, (err: any) => {

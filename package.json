@@ -14,7 +14,8 @@
     "edge-impulse-data-forwarder": "build/cli/data-forwarder.js",
     "edge-impulse-run-impulse": "build/cli/run-impulse.js",
     "eta-flash-tool": "build/cli/eta-flash-tool/flashtool.js",
-    "himax-flash-tool": "build/cli/himax-flash-tool/flashtool.js"
+    "himax-flash-tool": "build/cli/himax-flash-tool/flashtool.js",
+    "edge-impulse-framebuffer2jpg": "build/cli/framebuffer-to-jpg.js"
   },
   "author": "EdgeImpulse Inc. <hello@edgeimpulse.com>",
   "license": "Apache-2.0",

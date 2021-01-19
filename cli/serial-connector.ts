@@ -11,7 +11,7 @@ interface SerialPortListItem {
     path: string;
     manufacturer: string;
     serialNumber: string;
-    pnpId: any;
+    pnpId: string;
     locationId: string;
     vendorId: string;
     productId: string;

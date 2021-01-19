@@ -27,6 +27,7 @@ export enum PageType {
     Versions = 25,
     Restore = 26,
     Evaluate = 27,
+    Tuner = 28,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -37,7 +38,9 @@ export enum PageType {
     OrganizationCreateProjectDetails = 97,
     OrganizationCreateProjectList = 98,
     OrganizationProjects = 99,
-    OrganizationDeploy = 100
+    OrganizationDeploy = 100,
+    OrganizationPortals = 101,
+    UploadPortal = 200
 }
 
 export type ClientConnectionType = 'ip' | 'daemon';
@@ -65,6 +68,7 @@ export interface ClientInitStudioOptions {
     gaId: string;
     userId: number;
     projectId: number;
+    baseUrl: string;
     projectName: string;
     socketToken: string;
     connectedDevices: ClientConnectedDevice[];
@@ -86,6 +90,17 @@ export interface ClientInitOrganizationOptions {
     sentryDSN?: string;
     sentryEnvironment?: string;
     errorPage: boolean;
+}
+
+
+export interface ClientInitOrganizationPortalOptions {
+    pageType: PageType;
+    gaId: string;
+    staticAssetsPrefix: string;
+    sentryDSN?: string;
+    sentryEnvironment?: string;
+    errorPage: boolean;
+    authToken: string;
 }
 
 export interface ClientInitFormOptions {

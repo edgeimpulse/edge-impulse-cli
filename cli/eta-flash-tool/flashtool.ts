@@ -106,43 +106,24 @@ async function connectToSerial(deviceId: string) {
         const progressBar = new cliProgress.SingleBar({ }, cliProgress.Presets.shades_classic);
 
         try {
+            let waitForBootloaderTimeout = 60000;
+
+            console.log(SERIAL_PREFIX, 'Connected, detecting firmware...');
             try {
-                console.log(SERIAL_PREFIX, 'Connected, restarting into bootloader...');
                 await serialProtocol.onConnected();
                 await serialProtocol.rebootIntoBootloader();
-                await sleep(3000);
-                console.log(SERIAL_PREFIX, 'Restarting into bootloader OK');
+                waitForBootloaderTimeout = 10000;
             }
             catch (ex2) {
-                let ex = <Error>ex2;
-                let msg = ex.message || ex.toString();
-                if (msg.indexOf('Failed to get a valid') > -1 && bootloaderBaudRate !== APP_BAUD_RATE) {
-                    console.log(SERIAL_PREFIX, 'Not in bootloader mode yet... ' +
-                        'Restarting into bootloader at baud rate ' + bootloaderBaudRate + '...');
-                    try {
-                        await serialProtocol.setBaudRate(bootloaderBaudRate);
-                        await serialProtocol.onConnected();
-                        await serialProtocol.rebootIntoBootloader();
-                    }
-                    catch (ex) {
-                        console.log('');
-                        console.log('Failed to restart into the bootloader. Press the RESET button on your AI Sensor');
-                        console.log('(the LEDs should be blinking) and run this application again.');
-                        process.exit(1);
-                    }
-                    await sleep(3000);
-                    console.log(SERIAL_PREFIX, 'Restarting into bootloader OK');
-                }
-                else {
-                    throw ex;
-                }
+                console.log(SERIAL_PREFIX, 'Press the **RESET** button on your AI Sensor');
             }
 
             await serialProtocol.setBaudRate(bootloaderBaudRate);
+            await serialProtocol.waitForBootloader(waitForBootloaderTimeout);
 
             let version = await serialProtocol.getVersion();
 
-            console.log(SERIAL_PREFIX, 'Restarted into bootloader. Device is running version ' +
+            console.log(SERIAL_PREFIX, 'Restarted into bootloader. Device is running bootloader version ' +
                 version.major + '.' + version.minor + '.' +
                 version.patch);
 
@@ -209,7 +190,8 @@ async function connectToSerial(deviceId: string) {
             process.exit(0);
         }
         catch (ex) {
-            console.error(SERIAL_PREFIX, 'Error during update', ex);
+            console.error(SERIAL_PREFIX, 'Error during update.', ex);
+            console.error(SERIAL_PREFIX, 'Is this device running the Eta Compute bootloader and did you press the **RESET** button?');
             process.exit(1);
         }
         finally {

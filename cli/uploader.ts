@@ -268,11 +268,25 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
             await configFactory.setUploaderProjectId(projectId);
         }
 
-        let devKeys = (await config.api.projects.listDevkeys(projectId)).body;
+        let devKeys: { apiKey: string, hmacKey: string } = { apiKey: apiKeyArgv || '', hmacKey: hmacKeyArgv || '0' };
+        if (!apiKeyArgv) {
+            try {
+                let dk = (await config.api.projects.listDevkeys(projectId)).body;
 
-        if (!apiKeyArgv && !devKeys.apiKey) {
-            throw new Error('No API key set (via --api-key), and no development API keys configured for ' +
-                'this project. Add a development API key from the Edge Impulse dashboard to continue.');
+                if (!dk.apiKey) {
+                    throw new Error('No API key set (via --api-key), and no development API keys configured for ' +
+                        'this project. Add a development API key from the Edge Impulse dashboard to continue.');
+                }
+
+                devKeys.apiKey = dk.apiKey;
+                if (!hmacKeyArgv && dk.hmacKey) {
+                    devKeys.hmacKey = dk.hmacKey;
+                }
+            }
+            catch (ex2) {
+                let ex = <Error>ex2;
+                throw new Error('Failed to load development keys: ' + (ex.message || ex.toString()));
+            }
         }
 
         let fileIx = startIxArgv ? Number(startIxArgv) : 0;

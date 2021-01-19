@@ -23,6 +23,35 @@ export async function findSerial() {
             filteredDevices = allDevices.filter(d => d.manufacturer.indexOf('Standard port types') === -1);
         }
 
+        if (process.platform === 'darwin') {
+            // see if we can find any devices that look like nRF5340 DK...
+            // name should be SEGGER and should have three items
+            let nrf53Serials = [...new Set(filteredDevices.filter(x => x.manufacturer === 'SEGGER')
+                .filter(x => allDevices.filter(y => y.serialNumber === x.serialNumber).length === 3)
+                .map(x => x.serialNumber))];
+            for (let n of nrf53Serials) {
+                let latest = filteredDevices.filter(x => x.serialNumber === n)
+                    .sort((a, b) => b.path.localeCompare(a.path))[0];
+
+                filteredDevices = filteredDevices.filter(x => x.serialNumber !== n);
+                filteredDevices.push(latest);
+            }
+        }
+        else if (process.platform === 'linux' || process.platform === 'win32') {
+            // see if we can find any devices that look like nRF5340 DK...
+            // name should be SEGGER and should have three items
+            let nrf53Serials = [...new Set(filteredDevices.filter(x => x.manufacturer === 'SEGGER')
+                .filter(x => allDevices.filter(y => y.serialNumber === x.serialNumber).length === 3)
+                .map(x => x.serialNumber))];
+            for (let n of nrf53Serials) {
+                let latest = filteredDevices.filter(x => x.serialNumber === n)
+                    .sort((a, b) => b.pnpId.localeCompare(a.pnpId))[0];
+
+                filteredDevices = filteredDevices.filter(x => x.serialNumber !== n);
+                filteredDevices.push(latest);
+            }
+        }
+
         if (filteredDevices.length === 0) {
             console.error(SERIAL_PREFIX,
                 'Could not find any devices connected over serial port');

@@ -23,12 +23,17 @@ export default class EtaSerialProtocol {
     async onConnected() {
         this._serial.write(Buffer.from('b\r', 'ascii')).then(() => { /*noop*/ }).catch(() => { /*noop*/ });
 
-        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000, false, false);
+        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 1000, false, false);
     }
 
     async setBaudRate(baudRate: number) {
         await this._serial.setBaudRate(baudRate);
         await this._serial.write(Buffer.from('\r', 'ascii'));
+    }
+
+    async waitForBootloader(timeout: number) {
+        await this.waitForSerialSequence(Buffer.from('Eta Compute Bootloader', 'ascii'), timeout);
+        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 1000, false, false);
     }
 
     async rebootIntoBootloader() {

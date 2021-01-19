@@ -11,8 +11,8 @@ const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
 program
     .description('Dump framebuffer as JPG file')
     .version(packageVersion)
-    .option('-b --framebuffer <base64>', 'Framebuffer in base64 format')
-    .option('-f --framebuffer-file <file>', 'File with framebuffer in base64 format')
+    .option('-b --framebuffer <base64>', 'Framebuffer in base64 format or as a list of RGB888 values')
+    .option('-f --framebuffer-file <file>', 'File with framebuffer in base64 format or as a list of RGB888 values')
     .option('-w --width <n>', 'Width of the framebuffer')
     .option('-h --height <n>', 'Height of the framebuffer')
     .option('-o --output-file <file>', 'Output file')
@@ -51,10 +51,27 @@ const outputFile = <string | undefined>program.outputFile;
         return process.exit(1);
     }
 
-
     const s = frameBufferFile ? fs.readFileSync(frameBufferFile, 'utf-8') : (frameBuffer || '');
-    console.log('data', s);
-    const snapshot = Buffer.from(s, 'base64');
+
+    let snapshot: Buffer;
+    // first we try to read the framebuffer as a features array (0x383c2b, 0x343827, 0x2b2f1e ...)
+    let features = s.split(',').map(n => Number(n));
+    if (features.length === width * height) {
+        snapshot = Buffer.alloc(width * height * 3);
+        let six = 0;
+        for (let f of features) {
+            // tslint:disable-next-line: no-bitwise
+            snapshot[six++] = f >> 16 & 0xff;
+            // tslint:disable-next-line: no-bitwise
+            snapshot[six++] = f >> 8 & 0xff;
+            // tslint:disable-next-line: no-bitwise
+            snapshot[six++] = f >> 0 & 0xff;
+        }
+    }
+    // if not the same, we try to parse it as base64
+    else {
+        snapshot = Buffer.from(s, 'base64');
+    }
 
     let depth = snapshot.length / (width * height);
     if (depth !== 1 && depth !== 3) {

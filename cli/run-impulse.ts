@@ -95,12 +95,12 @@ async function connectToSerial(deviceId: string) {
     let inferenceStarted = false;
 
     serial.on('data', data => {
-        if ((serial.is_connected() && inferenceStarted) || rawArgv) {
+        if ((serial.isConnected() && inferenceStarted) || rawArgv) {
             process.stdout.write(data.toString('ascii'));
         }
     });
     async function connectLogic() {
-        if (!serial.is_connected()) {
+        if (!serial.isConnected()) {
             inferenceStarted = false;
             return setTimeout(serial_connect, 5000);
         }

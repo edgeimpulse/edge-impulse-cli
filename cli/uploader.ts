@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
-import crypto from 'crypto';
 import Path from 'path';
-import request from 'request';
-import inquirer from 'inquirer';
-import { Config, EdgeImpulseConfig } from './config';
-import checkNewVersions from './check-new-version';
 import util from 'util';
-import http from 'http';
-import https from 'https';
-import { WaveFile } from 'wavefile';
 import asyncpool from 'tiny-async-pool';
-import { makeImage } from './make-image';
+import { makeImage, makeWav, upload } from './make-image';
+import { initCliApp, setupCliApp } from './init-cli-app';
+import { Config } from './config';
 
 type UploaderFileType = {
     path: string,
@@ -20,10 +14,6 @@ type UploaderFileType = {
     label: string | undefined
 };
 
-const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
-const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
-
-const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const labelArgvIx = process.argv.indexOf('--label');
 const categoryArgvIx = process.argv.indexOf('--category');
@@ -48,11 +38,27 @@ const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx +
 const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
 
+let configFactory: Config;
+
+const cliOptions = {
+    appName: 'Edge Impulse uploader',
+    apiKeyArgv: apiKeyArgv,
+    cleanArgv: cleanArgv,
+    devArgv: devArgv,
+    hmacKeyArgv: hmacKeyArgv,
+    silentArgv: silentArgv,
+    connectProjectMsg: 'To which project do you want to upload the data?',
+    getProjectFromConfig: async () => {
+        let projectId = await configFactory.getUploaderProjectId();
+        if (!projectId) {
+            return undefined;
+        }
+        return { projectId: projectId };
+    }
+};
+
 // tslint:disable-next-line:no-floating-promises
 (async () => {
-    if (!silentArgv) {
-        console.log('Edge Impulse uploader v' + version);
-    }
     if (helpArgv) {
         console.log('Usage:');
         console.log('    edge-impulse-uploader --label glass-breaking --category training path/to/file.wav');
@@ -61,42 +67,9 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
         process.exit(1);
     }
 
-    const configFactory = new Config();
-    let config: EdgeImpulseConfig | undefined;
-
-    try {
-        if (cleanArgv || apiKeyArgv) {
-            await configFactory.clean();
-        }
-
-        try {
-            await checkNewVersions(configFactory);
-        }
-        catch (ex) {
-            /* noop */
-        }
-
-        // this verifies host settings and verifies the JWT token
-        try {
-            config = await configFactory.verifyLogin(devArgv, apiKeyArgv);
-        }
-        catch (ex) {
-            console.log('Stored token seems invalid, clearing cache...');
-            await configFactory.clean();
-            config = await configFactory.verifyLogin(devArgv, apiKeyArgv);
-        }
-    }
-    catch (ex2) {
-        let ex = <Error>ex2;
-        if ((<any>ex).statusCode) {
-            console.error('Failed to authenticate with Edge Impulse',
-                (<any>ex).statusCode, (<any>(<any>ex).response).body);
-        }
-        else {
-            console.error('Failed to authenticate with Edge Impulse', ex.message || ex.toString());
-        }
-        process.exit(1);
-    }
+    const init = await initCliApp(cliOptions);
+    const config = init.config;
+    configFactory = init.configFactory;
 
     if (!config) return;
 
@@ -219,75 +192,9 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
             });
         }
 
-        let projectId = await configFactory.getUploaderProjectId();
+        const { projectId, devKeys } = await setupCliApp(configFactory, config, cliOptions, undefined);
 
-        if (projectId) {
-            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
-            if (projectInfoReq.body.success && projectInfoReq.body.project) {
-                if (!silentArgv) {
-                    console.log('    Project:    ', projectInfoReq.body.project.name + ' (ID: ' + projectId + ')');
-                    console.log('');
-                }
-            }
-            else {
-                console.warn('Cannot read cached project (' + projectInfoReq.body.error + ')');
-                projectId = undefined;
-            }
-        }
-
-        if (!projectId) {
-            if (!silentArgv) {
-                console.log('');
-            }
-
-            let projectList = (await config.api.projects.listProjects()).body;
-
-            if (!projectList.success) {
-                console.error('Failed to retrieve project list...', projectList, projectList.error);
-                process.exit(1);
-            }
-
-            if (!projectList.projects || projectList.projects.length === 0) {
-                console.log('This user has no projects, create one before continuing');
-                process.exit(1);
-            }
-            else if (projectList.projects && projectList.projects.length === 1) {
-                projectId = projectList.projects[0].id;
-            }
-            else {
-                let inqRes = await inquirer.prompt([{
-                    type: 'list',
-                    choices: (projectList.projects || []).map(p => ({ name: p.name, value: p.id })),
-                    name: 'project',
-                    message: 'To which project do you want to upload the data?',
-                    pageSize: 20
-                }]);
-                projectId = Number(inqRes.project);
-            }
-
-            await configFactory.setUploaderProjectId(projectId);
-        }
-
-        let devKeys: { apiKey: string, hmacKey: string } = { apiKey: apiKeyArgv || '', hmacKey: hmacKeyArgv || '0' };
-        if (!apiKeyArgv) {
-            try {
-                let dk = (await config.api.projects.listDevkeys(projectId)).body;
-
-                if (!dk.apiKey) {
-                    throw new Error('No API key set (via --api-key), and no development API keys configured for ' +
-                        'this project. Add a development API key from the Edge Impulse dashboard to continue.');
-                }
-
-                devKeys.apiKey = dk.apiKey;
-                if (!hmacKeyArgv && dk.hmacKey) {
-                    devKeys.hmacKey = dk.hmacKey;
-                }
-            }
-            catch (ex2) {
-                let ex = <Error>ex2;
-                throw new Error('Failed to load development keys: ' + (ex.message || ex.toString()));
-            }
-        }
+        await configFactory.setUploaderProjectId(projectId);
 
         let fileIx = startIxArgv ? Number(startIxArgv) : 0;
         let success = 0;
@@ -303,7 +210,7 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
             try {
                 switch (Path.extname(file.path).toLowerCase()) {
                     case '.wav':
-                        processed = makeWav(buffer, hmacKeyArgv || devKeys.hmacKey);
+                        processed = makeWavInternal(buffer, hmacKeyArgv || devKeys.hmacKey);
                         break;
                     case '.cbor':
                         processed = makeCbor(buffer);
@@ -333,75 +240,17 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
 
             let filename = Path.basename(file.path).split('.')[0];
 
-            let headers: { [k: string]: string} = {
-                'x-api-key': apiKeyArgv || devKeys.apiKey || '',
-                'x-file-name': filename,
-                'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
-                'Connection': 'keep-alive'
-            };
-            if (file.label) {
-                headers['x-label'] = file.label;
-            }
-            if (!allowDuplicatesArgv) {
-                headers['x-disallow-duplicates'] = '1';
-            }
-
             try {
                 let hrstart = Date.now();
-                await new Promise((res, rej) => {
-                    if (!config) return rej('No config object');
-
-                    let agent = config.endpoints.internal.ingestion.indexOf('https:') === 0 ?
-                        keepAliveAgentHttps :
-                        keepAliveAgentHttp;
-
-                    let category = file.category;
-
-                    // if category is split we calculate the md5 hash of the buffer
-                    // then look at the first char in the string that's not f
-                    // then split 0..b => training, rest => test for a 80/20 split
-                    if (category === 'split') {
-                        let hash = crypto.createHash('md5').update(buffer).digest('hex');
-                        while (hash.length > 0 && hash[0] === 'f') {
-                            hash = hash.substr(1);
-                        }
-                        if (hash.length === 0) {
-                            return rej('Failed to calculate MD5 hash of buffer');
-                        }
-                        let firstHashChar = hash[0];
-
-                        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b' ].indexOf(firstHashChar) > -1) {
-                            category = 'training';
-                        }
-                        else {
-                            category = 'testing';
-                        }
-                    }
-
-                    // now upload the buffer to Edge Impulse
-                    request.post(
-                        config.endpoints.internal.ingestion + '/api/' + category + '/data', {
-                            headers: headers,
-                            body: (!processed.attachments ? processed.encoded : undefined),
-                            formData: (processed.attachments ? {
-                                body: {
-                                    value: processed.encoded,
-                                    options: {
-                                        filename: filename,
-                                        contentType: processed.contentType
-                                    }
-                                },
-                                attachments: processed.attachments
-                            } : undefined),
-                            encoding: null,
-                            agent: agent
-                        }, (err, response, body) => {
-                            if (err) return rej(err);
-                            if (response.statusCode !== 200) {
-                                return rej(body || response.statusCode.toString());
-                            }
-                            res(body);
-                        });
+                await upload({
+                    apiKey: apiKeyArgv || devKeys.apiKey || '',
+                    filename: filename,
+                    processed: processed,
+                    allowDuplicates: allowDuplicatesArgv,
+                    category: file.category,
+                    config: config,
+                    dataBuffer: buffer,
+                    label: file.label
                 });
 
                 let ix = ++fileIx;
@@ -457,7 +306,7 @@ const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
     }
 })();
 
-function makeWav(buffer: Buffer, hmacKey: string | undefined) {
+function makeWavInternal(buffer: Buffer, hmacKey: string | undefined) {
     if (dontResignArgv) {
         let isJSON = true;
         try {
@@ -473,85 +322,7 @@ function makeWav(buffer: Buffer, hmacKey: string | undefined) {
         };
     }
 
-    if (buffer.slice(0, 4).toString('ascii') !== 'RIFF') {
-        throw new Error('Not a WAV file, first four bytes are not RIFF but ' +
-            buffer.slice(0, 4).toString('ascii'));
-    }
-
-    const wav = new WaveFile(buffer);
-    wav.toBitDepth('16');
-
-    const fmt = (<{
-        chunkId: string,
-        chunkSize: number,
-        audioFormat: number,
-        numChannels: number,
-        sampleRate: number,
-        byteRate: number,
-        blockAlign: number,
-        bitsPerSample: number,
-        cbSize: number,
-        validBitsPerSample: number,
-        dwChannelMask: number,
-    }>wav.fmt);
-
-    let freq = fmt.sampleRate;
-    // console.log('Frequency', freq);
-
-    // tslint:disable-next-line: no-unsafe-any
-    let totalSamples =  (<any>wav.data).samples.length / (fmt.bitsPerSample / 8);
-
-    let dataBuffers: number[] = [];
-
-    for (let sx = 0; sx < totalSamples; sx += fmt.numChannels) {
-        try {
-            let sum = 0;
-
-            for (let channelIx = 0; channelIx < fmt.numChannels; channelIx++) {
-                sum += wav.getSample(sx + channelIx);
-            }
-
-            dataBuffers.push(sum / fmt.numChannels);
-        }
-        catch (ex) {
-            console.error('failed to call getSample() on WAV file', sx, ex);
-            throw ex;
-        }
-    }
-
-    // empty signature (all zeros). HS256 gives 32 byte signature, and we encode in hex,
-    // so we need 64 characters here
-    let emptySignature = Array(64).fill('0').join('');
-
-    let data = {
-        protected: {
-            ver: "v1",
-            alg: "HS256",
-        },
-        signature: emptySignature,
-        payload: {
-            device_type: "EDGE_IMPULSE_UPLOADER",
-            interval_ms: 1000 / freq,
-            sensors: [{ name: 'audio', units: 'wav' }],
-            values: dataBuffers
-        }
-    };
-
-    let encoded = JSON.stringify(data);
-
-    // now calculate the HMAC and fill in the signature
-    let hmac = crypto.createHmac('sha256', hmacKey || '');
-    hmac.update(encoded);
-    let signature = hmac.digest().toString('hex');
-
-    // update the signature in the message and re-encode
-    data.signature = signature;
-    encoded = JSON.stringify(data);
-
-    return {
-        encoded: Buffer.from(encoded, 'utf-8'),
-        contentType: 'application/json'
-    };
+    return makeWav(buffer, hmacKey);
 }
 
 function makeCbor(buffer: Buffer) {

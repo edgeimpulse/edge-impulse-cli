@@ -35,6 +35,8 @@ export interface SerialConfig {
             projectId: number;
         }
     };
+    linuxProjectId: number | undefined;
+    camera: string | undefined;
 }
 
 export interface EdgeImpulseAPI {
@@ -112,6 +114,20 @@ export class Config {
     async setUploaderProjectId(projectId: number) {
         let config = await this.load();
         config.uploaderProjectId = projectId;
+        await this.store(config);
+    }
+
+    async getLinuxProjectId() {
+        let config = await this.load();
+        if (!config) {
+            return undefined;
+        }
+        return config.linuxProjectId;
+    }
+
+    async setLinuxProjectId(projectId: number) {
+        let config = await this.load();
+        config.linuxProjectId = projectId;
         await this.store(config);
     }
 
@@ -344,6 +360,17 @@ export class Config {
         await this.store(config);
     }
 
+    async getCamera() {
+        let config = await this.load();
+        return config.camera;
+    }
+
+    async storeCamera(camera: string) {
+        let config = await this.load();
+        config.camera = camera;
+        await this.store(config);
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -353,7 +380,9 @@ export class Config {
                 lastVersionCheck: Date.now(),
                 apiKey: undefined,
                 dataForwarderDevices: { },
-                daemonDevices: { }
+                daemonDevices: { },
+                camera: undefined,
+                linuxProjectId: undefined
             };
         }
 

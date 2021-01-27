@@ -55,12 +55,19 @@ export interface ClientConnectedDevice {
     }[];
     deviceType: string;
     deviceName: string;
+    supportsSnapshotStreaming: boolean;
 }
 
 export interface ClientStudioWebsocketHello {
     hello: { version: number };
     devices: ClientConnectedDevice[];
     activeTunerJobId?: number;
+}
+
+export interface ClientInitUser {
+    id: number;
+    name: string;
+    photo?: string;
 }
 
 export interface ClientInitStudioOptions {
@@ -78,6 +85,7 @@ export interface ClientInitStudioOptions {
     errorPage: boolean;
     gitCommitHash: string;
     isAdmin: boolean;
+    user: ClientInitUser | undefined;
 }
 
 export interface ClientInitOrganizationOptions {
@@ -90,8 +98,8 @@ export interface ClientInitOrganizationOptions {
     sentryDSN?: string;
     sentryEnvironment?: string;
     errorPage: boolean;
+    user: ClientInitUser | undefined;
 }
-
 
 export interface ClientInitOrganizationPortalOptions {
     pageType: PageType;
@@ -110,6 +118,7 @@ export interface ClientInitFormOptions {
     staticAssetsPrefix: string;
     sentryDSN?: string;
     sentryEnvironment?: string;
+    user: ClientInitUser | undefined;
 }
 
 export interface ClientInitPublicOptions {

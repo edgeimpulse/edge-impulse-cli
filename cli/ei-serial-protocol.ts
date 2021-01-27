@@ -1,8 +1,6 @@
 import { SerialConnector } from "./serial-connector";
 import Path from 'path';
 import { EventEmitter } from 'tsee';
-import fs from 'fs';
-import { c } from "tar";
 
 const CON_PREFIX = '\x1b[34m[SER]\x1b[0m';
 
@@ -37,6 +35,8 @@ export interface EiSerialDeviceConfig {
     }[];
     snapshot: {
         hasSnapshot: boolean;
+        supportsStreaming: boolean;
+        colorDepth: 'RGB' | 'Grayscale';
         resolutions: {
             width: number,
             height: number
@@ -79,8 +79,15 @@ export type EiStartSamplingResponse = EventEmitter<{
     samplingStarted: () => void,
     processing: () => void,
     uploading: () => void,
-    readingFromDevice: () => void,
+    readingFromDevice: (progressPercentage: number) => void,
     done: (ev: EiSerialDone) => void,
+    error: (ex: string) => void
+}>;
+
+export type EiSnapshotResponse = EventEmitter<{
+    started: () => void,
+    readingFromDevice: (progressPercentage: number) => void,
+    done: (data: Buffer) => void,
     error: (ex: string) => void
 }>;
 
@@ -126,6 +133,8 @@ export default class EiSerialProtocol {
         config.wifi.present = true;
         config.snapshot = {
             hasSnapshot: false,
+            supportsStreaming: false,
+            colorDepth: 'Grayscale', // only 1.4.0 devices are Himax which are all grayscale
             resolutions: []
         };
 
@@ -226,6 +235,17 @@ export default class EiSerialProtocol {
             if (section === 'snapshot') {
                 if (key === 'has snapshot') {
                     config.snapshot.hasSnapshot = value === '1' ? true : false; continue;
+                }
+                if (key === 'supports stream') {
+                    config.snapshot.supportsStreaming = value === '1' ? true : false; continue;
+                }
+                if (key === 'color depth') {
+                    if (value !== 'Grayscale' && value !== 'RGB') {
+                        throw new Error('Invalid value for "Color depth" (Snapshot section): ' + value + ', ' +
+                            'should be either "RGB" or "Grayscale"');
+                    }
+                    config.snapshot.colorDepth = value;
+                    continue;
                 }
                 if (key === 'resolutions') {
                     config.snapshot.resolutions = [];
@@ -391,7 +411,7 @@ export default class EiSerialProtocol {
             samplingStarted: () => void,
             processing: () => void,
             uploading: () => void,
-            readingFromDevice: () => void,
+            readingFromDevice: (progressPercentage: number) => void,
             done: (ev: EiSerialDone) => void,
             error: (ex: string) => void
         }>();
@@ -448,12 +468,32 @@ export default class EiSerialProtocol {
                             to,
                         ] = props;
 
-                        ee.emit('readingFromDevice');
+                        let expectedBytes = Math.floor(4 * ((Number(to) - Number(from)) / 3));
+                        let bytesReceived = 0;
+                        let lastSentDate = Date.now();
+
+                        ee.emit('readingFromDevice', Math.floor((bytesReceived / expectedBytes) * 100));
 
                         console.log(CON_PREFIX, 'Device not connected to WiFi directly, reading from buffer (bytes ' +
-                            from + ' - ' + to + ')...');
+                            from + ' - ' + to + ', expecting to read ~' + expectedBytes + ' bytes...');
 
-                        let rfa = await this.execCommand('AT+READBUFFER=' + from + ',' + to, length * 10, true);
+                        const onProgressEv = (data: Buffer) => {
+                            bytesReceived += data.toString('ascii').length;
+
+                            let pct = Math.floor((bytesReceived / expectedBytes) * 100);
+                            // send progress update every 1 second...
+                            if (Date.now() - lastSentDate >= 1000) {
+                                console.log(CON_PREFIX, 'Reading ' + pct + '% complete...');
+                                ee.emit('readingFromDevice', pct);
+                                lastSentDate = Date.now();
+                            }
+                        };
+
+                        this._serial.on('data', onProgressEv);
+
+                        let rfa = await this.execCommand('AT+READBUFFER=' + from + ',' + to, length * 10, false);
+
+                        this._serial.off('data', onProgressEv);
 
                         console.log(CON_PREFIX, 'Reading from buffer OK');
 
@@ -467,15 +507,15 @@ export default class EiSerialProtocol {
                         });
                     }
                     else {
-                        ee.emit('readingFromDevice');
+                        if (!this._config) throw new Error('No last known configuration');
+
+                        ee.emit('readingFromDevice', -1);
 
                         console.log(CON_PREFIX, 'Device not connected to WiFi directly, reading ' + filename + '...');
 
                         let rfa = await this.execCommand('AT+READFILE=' + filename, length * 10, true);
 
                         console.log(CON_PREFIX, 'Reading ' + filename + ' OK');
-
-                        if (!this._config) throw new Error('No last known configuration');
 
                         let rf: Buffer;
 
@@ -515,60 +555,132 @@ export default class EiSerialProtocol {
         }
     }
 
-    async takeSnapshot(width: number, height: number) {
+    async takeSnapshot(width: number, height: number): Promise<EiSnapshotResponse> {
+        if (!this._config) {
+            throw new Error('Config is null');
+        }
         let command = 'AT+SNAPSHOT=' + width + ',' + height;
         let timeout = 60000;
         let logProgress = false;
         let res: string;
+        let totalBytes = width * height * (this._config.snapshot.colorDepth === 'RGB' ? 3 : 1);
+        let expectedBytes = Math.floor(4 * ((totalBytes) / 3));
 
-        if (this._config?.info.transferBaudRate) {
-            command = command + '\r';
+        let ee = new EventEmitter<{
+            started: () => void,
+            readingFromDevice: (progressPercentage: number) => void,
+            done: (data: Buffer) => void,
+            error: (ex: string) => void
+        }>();
 
-            // split it up a bit for pacing
-            for (let ix = 0; ix < command.length; ix += 5) {
-                // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
-                if (ix !== 0) {
-                    await this.sleep(20);
+        // tslint:disable-next-line: no-floating-promises
+        (async () => {
+
+            let bytesReceived = 0;
+            let lastSentDate = Date.now();
+
+            const onProgressEv = (data: Buffer) => {
+                bytesReceived += data.toString('ascii').length;
+
+                let pct = Math.floor((bytesReceived / expectedBytes) * 100);
+                // send progress update every 1 second...
+                if (Date.now() - lastSentDate >= 1000) {
+                    console.log(CON_PREFIX, 'Reading ' + pct + '% complete...');
+                    ee.emit('readingFromDevice', pct);
+                    lastSentDate = Date.now();
+                }
+            };
+
+            try {
+                ee.emit('readingFromDevice', Math.floor((bytesReceived / expectedBytes) * 100));
+
+                this._serial.on('data', onProgressEv);
+
+                if (this._config?.info.transferBaudRate) {
+                    command = command + '\r';
+
+                    // split it up a bit for pacing
+                    for (let ix = 0; ix < command.length; ix += 5) {
+                        // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
+                        if (ix !== 0) {
+                            await this.sleep(20);
+                        }
+
+                        await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+                    }
+
+                    let data;
+
+                    if (this._config.info.transferBaudRate !== 115200) {
+
+                        await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, logProgress);
+
+                        ee.emit('started');
+
+                        await this._serial.setBaudRate(this._config?.info.transferBaudRate);
+
+                        let data1 = await this.waitForSerialSequence(
+                            Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), timeout, logProgress);
+
+                        await this._serial.setBaudRate(115200);
+
+                        let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
+
+                        data = this.parseSerialResponse(Buffer.concat([ data1, data2 ]));
+
+                        if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
+                            throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
+                        }
+
+                        res = data1.toString('ascii').trim() + data.toString('ascii').trim();
+                    }
+                    else {
+                        let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
+                        let allData = this.parseSerialResponse(data2);
+                        data = Buffer.from(
+                            allData.toString('ascii')
+                                .split('\n')
+                                .filter(x => x.trim() !== 'OK')
+                                .map(x => x.trim())
+                                .join('\r\n'),
+                            'ascii');
+
+                        if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
+                            throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
+                        }
+
+                        res = data.toString('ascii').trim();
+                    }
+                }
+                else {
+                    ee.emit('started');
+
+                    res = await this.execCommand(command, timeout, logProgress);
                 }
 
-                await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+                this._serial.off('data', onProgressEv);
+
+                if (res.startsWith('ERR:')) {
+                    throw new Error('Failed to take snapshot: ' + res);
+                }
+                let lines = res.split('\n').map(x => x.trim())
+                    .filter(x => !!x)
+                    .filter(x => x.toLocaleLowerCase() !== 'ok')
+                    .filter(x => x.toLocaleLowerCase() !== 'okok');
+
+                let last = lines[lines.length - 1];
+                ee.emit('done', Buffer.from(last, 'base64'));
             }
-
-            await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, logProgress);
-
-            await this._serial.setBaudRate(this._config?.info.transferBaudRate);
-
-            let data1 = await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), timeout, logProgress);
-
-            await this._serial.setBaudRate(115200);
-
-            let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
-
-            let data = this.parseSerialResponse(Buffer.concat([ data1, data2 ]));
-
-            if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
-                throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
+            catch (ex2) {
+                let ex = <Error>ex2;
+                ee.emit('error', ex.message || ex.toString());
             }
+            finally {
+                this._serial.off('data', onProgressEv);
+            }
+        })();
 
-            // console.log(CON_PREFIX, 'response from device', /*data.length, data.toString('hex'),*/
-            //     data.toString('ascii').trim());
-
-            res = data1.toString('ascii').trim() + data.toString('ascii').trim();
-        }
-        else {
-            res = await this.execCommand(command, timeout, logProgress);
-        }
-
-        if (res.startsWith('ERR:')) {
-            throw new Error('Failed to take snapshot: ' + res);
-        }
-        let lines = res.split('\n').map(x => x.trim())
-            .filter(x => !!x)
-            .filter(x => x.toLocaleLowerCase() !== 'ok')
-            .filter(x => x.toLocaleLowerCase() !== 'okok');
-
-        let last = lines[lines.length - 1];
-        return Buffer.from(last, 'base64');
+        return ee;
     }
 
     async stopInference() {
@@ -597,6 +709,85 @@ export default class EiSerialProtocol {
 
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
         }
+    }
+
+    async startSnapshotStream() {
+        if (!this._config || !this._config.snapshot.supportsStreaming) {
+            throw new Error('Device does not support snapshot streaming');
+        }
+
+        let smallest = Array.from(this._config.snapshot.resolutions)
+            .sort((a, b) => a.width * a.height - b.width * b.height)[0];
+        if (!smallest) {
+            throw new Error('Could not find resolution');
+        }
+
+        let onData: (buffer: Buffer) => void | undefined;
+
+        let ret = {
+            ee: new EventEmitter<{
+                snapshot: (b: Buffer, w: number, h: number) => void,
+                error: (err: string) => void
+            }>(),
+            stop: async () => {
+                if (onData) {
+                    this._serial.off('data', onData);
+                }
+
+                // tslint:disable-next-line:no-floating-promises
+                await this._serial.write(Buffer.from('b\r', 'ascii'));
+
+                await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000);
+            }
+        };
+
+        let command = 'AT+SNAPSHOTSTREAM=' + smallest.width + ',' + smallest.height + '\r';
+
+        // split it up a bit for pacing
+        for (let ix = 0; ix < command.length; ix += 5) {
+            // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
+            if (ix !== 0) {
+                await this.sleep(20);
+            }
+
+            await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+        }
+
+        // tslint:disable-next-line: no-floating-promises
+        (async () => {
+            let currDataLine = '';
+
+            onData = data => {
+                currDataLine += data.toString('ascii');
+
+                let endOfLineIx = currDataLine.indexOf('\r');
+                if (endOfLineIx > -1) {
+                    let line = currDataLine.slice(0, endOfLineIx).trim();
+
+                    if (line.startsWith('ERR:')) {
+                        ret.ee.emit('error', line);
+                        this._serial.off('data', onData);
+                        return;
+                    }
+
+                    currDataLine = currDataLine.slice(endOfLineIx + 1);
+
+                    if (line.startsWith('Image resolution:') || line.startsWith('Starting snapshot')) {
+                        return;
+                    }
+                    else if (line.length < 100) {
+                        // console.log(CON_PREFIX, 'Invalid snapshot line: ' + line);
+                    }
+                    else {
+                        ret.ee.emit('snapshot', Buffer.from(line, 'base64'), smallest.width, smallest.height);
+                    }
+                }
+            };
+
+            this._serial.on('data', onData);
+        })();
+
+        return ret;
     }
 
     private sleep(ms: number) {

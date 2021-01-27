@@ -95,7 +95,7 @@ async function connectToSerial(deviceId: string) {
     //     // client.write(data);
     // });
     async function connectLogic() {
-        if (!serial.is_connected()) return setTimeout(serial_connect, 5000);
+        if (!serial.isConnected()) return setTimeout(serial_connect, 5000);
 
         if (!await serial.hasSerial()) {
             console.log('');

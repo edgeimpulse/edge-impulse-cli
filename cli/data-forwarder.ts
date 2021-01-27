@@ -1,30 +1,25 @@
 #!/usr/bin/env node
 
 import { SerialConnector } from './serial-connector';
-import fs from 'fs';
-import Path from 'path';
 import WebSocket from 'ws';
 import cbor from 'cbor';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import {
-    MgmtInterfaceHelloV2, MgmtInterfaceHelloResponse,
+    MgmtInterfaceHelloV3, MgmtInterfaceHelloResponse,
     MgmtInterfaceSampleRequest, MgmtInterfaceSampleResponse,
     MgmtInterfaceSampleFinishedResponse,
-    MgmtInterfaceSampleReadingResponse,
     MgmtInterfaceSampleUploadingResponse,
     MgmtInterfaceSampleStartedResponse,
-    MgmtInterfaceSampleProcessingResponse
 } from '../shared/MgmtInterfaceTypes';
 import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
-import checkNewVersions from './check-new-version';
 import crypto from 'crypto';
+import { initCliApp, setupCliApp } from './init-cli-app';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
-const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
@@ -35,18 +30,27 @@ const frequencyArgv = frequencyArgvIx !== -1 ? Number(process.argv[frequencyArgv
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
 
-const configFactory = new Config();
+const cliOptions = {
+    appName: 'Edge Impulse data forwarder',
+    apiKeyArgv: apiKeyArgv,
+    cleanArgv: cleanArgv,
+    devArgv: devArgv,
+    hmacKeyArgv: undefined,
+    silentArgv: silentArgv,
+    connectProjectMsg: 'To which project do you want to connect this device?',
+    getProjectFromConfig: async (deviceId: string | undefined) => {
+        if (!deviceId) return undefined;
+        return await configFactory.getDataForwarderDevice(deviceId);
+    }
+};
+
+let configFactory: Config;
 // tslint:disable-next-line:no-floating-promises
 (async () => {
     try {
-        console.log('Edge Impulse data forwarder v' + version);
-        console.log('This is an experimental feature, please let us know if you run into any issues at');
-        console.log('    https://forum.edgeimpulse.com');
-        console.log('');
-
-        if (cleanArgv || apiKeyArgv) {
-            await configFactory.clean();
-        }
+        const initRes = await initCliApp(cliOptions);
+        configFactory = initRes.configFactory;
+        const config = initRes.config;
 
         if (typeof frequencyArgv === 'number' && isNaN(frequencyArgv)) {
             console.log('Invalid value for --frequency (should be a number)');
@@ -57,24 +61,6 @@ const configFactory = new Config();
         if (isNaN(baudRate)) {
             console.error('Invalid value for --baud-rate (should be a number)');
             process.exit(1);
-        }
-
-        try {
-            await checkNewVersions(configFactory);
-        }
-        catch (ex) {
-            /* noop */
-        }
-
-        // this verifies host settings and verifies the JWT token
-        let config: EdgeImpulseConfig;
-        try {
-            config = await configFactory.verifyLogin(devArgv, apiKeyArgv);
-        }
-        catch (ex) {
-            console.log('Stored token seems invalid, clearing cache...');
-            await configFactory.clean();
-            config = await configFactory.verifyLogin(devArgv, apiKeyArgv);
         }
 
         console.log('Endpoints:');
@@ -123,7 +109,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
     //     // client.write(data);
     // });
     async function connectLogic() {
-        if (!serial.is_connected()) return setTimeout(serial_connect, 5000);
+        if (!serial.isConnected()) return setTimeout(serial_connect, 5000);
 
         let deviceId = await getDeviceId(serial);
 
@@ -146,7 +132,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
     serial.on('connected', connectLogic);
 
     async function sendHello() {
-        if (!ws || !serial.is_connected()) return;
+        if (!ws || !serial.isConnected()) return;
 
         let macAddress = await getDeviceId(serial);
 
@@ -184,9 +170,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             dataForwarderConfig.samplingFreq = frequencyArgv;
         }
 
-        let req: MgmtInterfaceHelloV2 = {
+        let req: MgmtInterfaceHelloV3 = {
             hello: {
-                version: 2,
+                version: 3,
                 apiKey: dataForwarderConfig.apiKey,
                 deviceId: macAddress,
                 deviceType: 'DATA_FORWARDER',
@@ -197,6 +183,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     maxSampleLengthS: 5 * 60 * 1000,
                     frequencies: [ dataForwarderConfig.samplingFreq ]
                 }],
+                supportsSnapshotStreaming: false
             }
         };
         ws.once('message', async (helloResponse: Buffer) => {
@@ -497,36 +484,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 }
 
 async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: SerialConnector) {
-    let projectList = (await eiConfig.api.projects.listProjects()).body;
-
-    if (!projectList.success) {
-        throw new Error('Failed to retrieve project list... ' + projectList.error);
-    }
-
-    let projectId;
-    if (!projectList.projects || projectList.projects.length === 0) {
-        throw new Error('User has no projects, create one before continuing');
-    }
-    else if (projectList.projects && projectList.projects.length === 1) {
-        projectId = projectList.projects[0].id;
-    }
-    else {
-        let inqRes = <{ project: number }>await inquirer.prompt([{
-            type: 'list',
-            choices: (projectList.projects || []).map(p => ({ name: p.name, value: p.id })),
-            name: 'project',
-            message: 'To which project do you want to add this device?',
-            pageSize: 20
-        }]);
-        projectId = inqRes.project;
-    }
-
-    let devKeys = (await eiConfig.api.projects.listDevkeys(projectId)).body;
-
-    if (!devKeys.apiKey) {
-        throw new Error('No development API keys configured in your project... ' +
-            'Go to the project dashboard to set one up.');
-    }
+    const { projectId, devKeys } = await setupCliApp(configFactory, eiConfig, cliOptions,
+        (await serial.getMACAddress()) || undefined);
 
     // check what the sampling freq is for this device and how many sensors there are?
     let sensorInfo = await getSensorInfo(serial);

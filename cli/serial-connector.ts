@@ -27,47 +27,51 @@ export class SerialConnector extends EventEmitter<{
         return (await serialPort.list()) as SerialPortListItem[];
     }
 
-    private connected: boolean;
-    private path: string;
-    private baudrate: number;
-    private serial: typeof serialPort;
-    private dataHandler: (a: Buffer) => void;
+    private _connected: boolean;
+    private _path: string;
+    private _baudrate: number;
+    private _serial: typeof serialPort;
+    private _dataHandler: (a: Buffer) => void;
 
     constructor(path: string, baudrate: number) {
         super();
 
-        this.path = path;
-        this.baudrate = baudrate;
-        this.dataHandler = (d: Buffer) => {
+        this._path = path;
+        this._baudrate = baudrate;
+        this._dataHandler = (d: Buffer) => {
             this.emit('data', d);
         };
-        this.connected = false;
+        this._connected = false;
     }
 
-    is_connected() {
-        return this.connected;
+    getPath() {
+        return this._path;
+    }
+
+    isConnected() {
+        return this._connected;
     }
 
     async connect() {
         let alreadyConnected = false;
 
-        if (serialPorts[this.path]) {
+        if (serialPorts[this._path]) {
             alreadyConnected = true;
-            this.serial = serialPorts[this.path];
+            this._serial = serialPorts[this._path];
         }
         else {
-            this.serial = new serialPort(this.path, { baudRate: this.baudrate });
-            serialPorts[this.path] = this.serial;
+            this._serial = new serialPort(this._path, { baudRate: this._baudrate });
+            serialPorts[this._path] = this._serial;
 
-            this.serial.on('close', () => {
-                this.serial = null;
-                delete serialPorts[this.path];
-                this.connected = false;
+            this._serial.on('close', () => {
+                this._serial = null;
+                delete serialPorts[this._path];
+                this._connected = false;
                 this.emit('close');
             });
         }
 
-        this.serial.on('data', this.dataHandler);
+        this._serial.on('data', this._dataHandler);
 
         if (alreadyConnected) {
             return;
@@ -75,17 +79,17 @@ export class SerialConnector extends EventEmitter<{
 
         // otherwise wait for either error or open event
         return new Promise<void>((resolve, reject) => {
-            this.serial.once('error', (ex: any) => {
-                this.serial = null;
-                delete serialPorts[this.path];
+            this._serial.once('error', (ex: any) => {
+                this._serial = null;
+                delete serialPorts[this._path];
                 reject(ex);
             });
-            this.serial.once('open', () => {
-                this.connected = true;
+            this._serial.once('open', () => {
+                this._connected = true;
 
                 this.emit('connected');
 
-                this.serial.on('error', (ex: any) => this.emit('error', ex));
+                this._serial.on('error', (ex: any) => this.emit('error', ex));
 
                 resolve();
             });
@@ -94,9 +98,9 @@ export class SerialConnector extends EventEmitter<{
 
     async write(buffer: Buffer) {
         return new Promise<void>((res, rej) => {
-            if (!this.serial) return rej('Serial is null');
+            if (!this._serial) return rej('Serial is null');
 
-            this.serial.write(buffer, (err: any) => {
+            this._serial.write(buffer, (err: any) => {
                 if (err) return rej(err);
                 res();
             });
@@ -104,23 +108,23 @@ export class SerialConnector extends EventEmitter<{
     }
 
     async setBaudRate(baudRate: number) {
-        await this.serial.update({
+        await this._serial.update({
             baudRate: baudRate
         });
     }
 
     async disconnect() {
-        this.serial.off('data', this.dataHandler);
+        this._serial.off('data', this._dataHandler);
         return true;
     }
 
     async getMACAddress() {
         let list = await SerialConnector.list();
-        let l = list.find(j => j.path === this.path);
+        let l = list.find(j => j.path === this._path);
         return l ? l.serialNumber : null;
     }
 
     async hasSerial() {
-        return !!this.serial;
+        return !!this._serial;
     }
 }

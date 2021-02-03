@@ -33,6 +33,8 @@ export default class EtaSerialProtocol {
 
     async waitForBootloader(timeout: number) {
         await this.waitForSerialSequence(Buffer.from('Eta Compute Bootloader', 'ascii'), timeout);
+        await this.sleep(100);
+        await this._serial.write(Buffer.from('\r', 'ascii'));
         await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 1000, false, false);
     }
 

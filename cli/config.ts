@@ -10,7 +10,9 @@ import {
     ProjectsApi, ProjectsApiApiKeys,
     OrganizationsApi, OrganizationsApiApiKeys,
     OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
-    OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi, OrganizationBlocksApiApiKeys
+    OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi,
+    OrganizationBlocksApiApiKeys, DeploymentApi, ImpulseApi, LearnApi,
+    JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys
 } from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
@@ -43,6 +45,10 @@ export interface EdgeImpulseAPI {
     login: LoginApi;
     devices: DevicesApi;
     projects: ProjectsApi;
+    impulse: ImpulseApi;
+    learn: LearnApi;
+    jobs: JobsApi;
+    deploy: DeploymentApi;
     organizations: OrganizationsApi;
     organizationCreateProject: OrganizationCreateProjectApi;
     organizationBlocks: OrganizationBlocksApi;
@@ -53,6 +59,7 @@ export interface EdgeImpulseEndpoints {
     internal: {
         ws: string;
         api: string;
+        apiWs: string;
         ingestion: string;
     };
     device: {
@@ -212,9 +219,11 @@ export class Config {
         const ingestionEndpointExternal = hostIsIP ? `http://${host}:4810` : `http://ingestion.${host}`;
         // api endpoint is not called from device, so use HTTPS there
         let apiEndpointExternal = hostIsIP ? `${httpProtocol}://${host}:4800` : `${httpProtocol}://studio.${host}`;
+        let apiWspointExternal = hostIsIP ? `${wsProtocol}://${host}:4800` : `${wsProtocol}://studio.${host}`;
 
         // internal endpoints
         let apiEndpointInternal = isLocalhost ? 'http://localhost:4800' : apiEndpointExternal;
+        let apiWsEndpointInternal = isLocalhost ? 'ws://localhost:4800' : apiWspointExternal;
         const wsEndpointInternal = isLocalhost
             ? 'ws://localhost:4802'
             : (hostIsIP ? `${wsProtocol}://${host}:4802` : `${wsProtocol}://remote-mgmt.${host}`);
@@ -229,10 +238,14 @@ export class Config {
             login: new LoginApi(apiEndpointInternal),
             devices: new DevicesApi(apiEndpointInternal),
             projects: new ProjectsApi(apiEndpointInternal),
+            impulse: new ImpulseApi(apiEndpointInternal),
+            learn: new LearnApi(apiEndpointInternal),
+            jobs: new JobsApi(apiEndpointInternal),
+            deploy: new DeploymentApi(apiEndpointInternal),
             organizations: new OrganizationsApi(apiEndpointInternal),
             organizationCreateProject: new OrganizationCreateProjectApi(apiEndpointInternal),
             organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
-            organizationJobs: new OrganizationJobsApi(apiEndpointInternal)
+            organizationJobs: new OrganizationJobsApi(apiEndpointInternal),
         };
 
         this._endpoints = {
@@ -244,6 +257,7 @@ export class Config {
             internal: {
                 ws: wsEndpointInternal,
                 api: apiEndpointInternal,
+                apiWs: apiWsEndpointInternal,
                 ingestion: ingestionEndpointInternal
             }
         };
@@ -252,6 +266,10 @@ export class Config {
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.impulse.setApiKey(ImpulseApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.learn.setApiKey(LearnApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.jobs.setApiKey(JobsApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.deploy.setApiKey(DeploymentApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.organizations.setApiKey(OrganizationsApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.ApiKeyAuthentication,
                 apiKey);
@@ -286,6 +304,10 @@ export class Config {
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.projects.setApiKey(ProjectsApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.impulse.setApiKey(ImpulseApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.learn.setApiKey(LearnApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.jobs.setApiKey(JobsApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.deploy.setApiKey(DeploymentApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.organizations.setApiKey(OrganizationsApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.JWTAuthentication,
                 config.jwtToken);

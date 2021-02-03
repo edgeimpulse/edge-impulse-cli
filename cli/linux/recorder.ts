@@ -38,6 +38,11 @@ interface AudioRecorderOptions {
     device: string | null;
 }
 
+export interface AudioInstance {
+    ee: EventEmitter<{ data: (b: Buffer) => void }>;
+    stop: () => Promise<void>;
+}
+
 export class AudioRecorder {
     private _cp ? : ChildProcess;
     private _options: AudioRecorderOptions;
@@ -164,10 +169,7 @@ export class AudioRecorder {
 
         this._cp.stdout.on('data', (data: Buffer) => ee.emit('data', data));
 
-        return new Promise<{
-            ee: EventEmitter<{ data: (b: Buffer) => void }>,
-            stop: () => Promise<void>
-        }>((resolve, reject) => {
+        return new Promise<AudioInstance>((resolve, reject) => {
             if (!this._cp) {
                 return reject('cp is null');
             }

@@ -28,6 +28,7 @@ export enum PageType {
     Restore = 26,
     Evaluate = 27,
     Tuner = 28,
+    LabelObjectDetection = 29,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -85,6 +86,7 @@ export interface ClientInitStudioOptions {
     errorPage: boolean;
     gitCommitHash: string;
     isAdmin: boolean;
+    isObjectDetection: boolean;
     user: ClientInitUser | undefined;
 }
 

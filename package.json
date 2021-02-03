@@ -1,6 +1,6 @@
 {
   "name": "edge-impulse-cli",
-  "version": "1.11.0",
+  "version": "1.11.2",
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {
@@ -14,6 +14,7 @@
     "edge-impulse-data-forwarder": "build/cli/data-forwarder.js",
     "edge-impulse-run-impulse": "build/cli/run-impulse.js",
     "edge-impulse-linux": "build/cli/linux/linux.js",
+    "edge-impulse-linux-runner": "build/cli/linux/runner.js",
     "eta-flash-tool": "build/cli/eta-flash-tool/flashtool.js",
     "himax-flash-tool": "build/cli/himax-flash-tool/flashtool.js",
     "edge-impulse-framebuffer2jpg": "build/cli/framebuffer-to-jpg.js"

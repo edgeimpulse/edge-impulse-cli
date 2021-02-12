@@ -41,7 +41,7 @@ export enum PageType {
     OrganizationProjects = 99,
     OrganizationDeploy = 100,
     OrganizationPortals = 101,
-    UploadPortal = 200
+    UploadPortal = 200,
 }
 
 export type ClientConnectionType = 'ip' | 'daemon';
@@ -105,6 +105,8 @@ export interface ClientInitOrganizationOptions {
 
 export interface ClientInitOrganizationPortalOptions {
     pageType: PageType;
+    portalId: number;
+    baseUrl: string;
     gaId: string;
     staticAssetsPrefix: string;
     sentryDSN?: string;

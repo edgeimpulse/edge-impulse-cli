@@ -25,6 +25,7 @@ program
     .option('-f --firmware-path <file>', 'Firmware path (required)')
     .option('--baud-rate <n>', 'Bootloader baud rate (default: 460800)')
     .option('--serial-write-pacing', 'Enable write pacing (default: off)')
+    .option('--skip-reset', 'Skip the reset procedure (in case the device is already in bootloader mode)')
     .option('--verbose', 'Enable debug logs')
     .allowUnknownOption(true)
     .parse(process.argv);
@@ -33,6 +34,7 @@ const firmwarePathArgv: string = <string>program.firmwarePath;
 const baudRateArgv: string = <string>program.baudRate;
 const serialWritePacing: boolean = !!program.serialWritePacing;
 const debug: boolean = !!program.verbose;
+const skipReset: boolean = !!program.skipReset;
 
 let configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -106,20 +108,24 @@ async function connectToSerial(deviceId: string) {
         const progressBar = new cliProgress.SingleBar({ }, cliProgress.Presets.shades_classic);
 
         try {
-            let waitForBootloaderTimeout = 60000;
-
-            console.log(SERIAL_PREFIX, 'Connected, detecting firmware...');
-            try {
-                await serialProtocol.onConnected();
-                await serialProtocol.rebootIntoBootloader();
-                waitForBootloaderTimeout = 10000;
+            if (!skipReset) {
+                let waitForBootloaderTimeout = 60000;
+                console.log(SERIAL_PREFIX, 'Connected, detecting firmware...');
+                try {
+                    await serialProtocol.onConnected();
+                    await serialProtocol.rebootIntoBootloader();
+                    waitForBootloaderTimeout = 10000;
+                }
+                catch (ex2) {
+                    console.log(SERIAL_PREFIX, 'Press the **RESET** button on your AI Sensor');
+                }
+                await serialProtocol.setBaudRate(bootloaderBaudRate);
+                await serialProtocol.waitForBootloader(waitForBootloaderTimeout);
             }
-            catch (ex2) {
-                console.log(SERIAL_PREFIX, 'Press the **RESET** button on your AI Sensor');
+            else {
+                console.log(SERIAL_PREFIX, '--skip-reset active, assuming bootloader is loaded');
+                await serialProtocol.setBaudRate(bootloaderBaudRate);
             }
-
-            await serialProtocol.setBaudRate(bootloaderBaudRate);
-            await serialProtocol.waitForBootloader(waitForBootloaderTimeout);
 
             let version = await serialProtocol.getVersion();
 

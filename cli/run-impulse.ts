@@ -120,10 +120,10 @@ async function connectToSerial(deviceId: string) {
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.4.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 4) {
+            // we support devices with version 1.6.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 6) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.4.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.6.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,

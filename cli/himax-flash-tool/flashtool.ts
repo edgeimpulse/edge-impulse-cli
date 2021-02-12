@@ -25,6 +25,7 @@ program
     .version(packageVersion)
     .option('-f --firmware-path <file>', 'Firmware path (required)')
     .option('--baud-rate <n>', 'Bootloader baud rate (default: 115200)')
+    .option('--skip-reset', 'Skip the reset procedure (in case the device is already in bootloader mode)')
     .option('--verbose', 'Enable debug logs')
     .allowUnknownOption(true)
     .parse(process.argv);
@@ -33,6 +34,7 @@ const firmwarePathArgv: string = <string>program.firmwarePath;
 const baudRateArgv: string = <string>program.baudRate;
 const serialWritePacing: boolean = !!program.serialWritePacing;
 const debug: boolean = !!program.verbose;
+const skipReset: boolean = !!program.skipReset;
 
 let configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -126,6 +128,11 @@ async function connectToSerial(deviceId: string) {
                 await serialProtocol.waitForBurnApplicationDone();
 
                 console.log(SERIAL_PREFIX, 'Sent all blocks (NAK count: ' + nak + ')');
+
+                if (skipReset) {
+                    return process.exit(0);
+                }
+
                 console.log(SERIAL_PREFIX, 'Press **RESET** to start the application...');
 
                 try {

@@ -46,6 +46,9 @@ export interface RemoteMgmtDevice extends EventEmitter<{
     beforeConnect: () => Promise<void>;
 }
 
+type RemoteMgmtState = 'snapshot-stream-requested' | 'snapshot-stream-started' |
+                       'snapshot-stream-stopping' | 'sampling' | 'idle';
+
 export class RemoteMgmt extends EventEmitter<{
     authenticationFailed: () => void,
 }> {
@@ -54,7 +57,7 @@ export class RemoteMgmt extends EventEmitter<{
     private _devKeys: { apiKey: string, hmacKey: string };
     private _eiConfig: EdgeImpulseConfig;
     private _device: RemoteMgmtDevice;
-    private _inSnapshotMode = false;
+    private _state: RemoteMgmtState = 'idle';
 
     constructor(projectId: number,
                 devKeys: { apiKey: string, hmacKey: string },
@@ -71,7 +74,7 @@ export class RemoteMgmt extends EventEmitter<{
         this.registerPingPong();
 
         this._device.on('snapshot', buffer => {
-            if (this._inSnapshotMode && this._ws) {
+            if (this._state === 'snapshot-stream-started' && this._ws) {
                 let res: MgmtInterfaceSnapshotResponse = {
                     snapshotFrame: buffer.toString('base64')
                 };
@@ -134,16 +137,16 @@ export class RemoteMgmt extends EventEmitter<{
 
         this._ws.on('message', async (data: Buffer) => {
             let d = cbor.decode(data);
-
             // hello messages are handled in sendHello()
             if (typeof (<any>d).hello !== 'undefined') return;
 
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
-                console.log(TCP_PREFIX, 'Incoming sampling request', s);
+                console.log(TCP_PREFIX, 'Incoming sampling request', this._state, s);
 
                 let sampleHadError = false;
+                let restartSnapshotOnFinished = false;
 
                 try {
                     let ee = new EventEmitter<{
@@ -203,12 +206,26 @@ export class RemoteMgmt extends EventEmitter<{
                         }
                     }, 1);
 
-                    let wasInSnapshotMode = this._inSnapshotMode;
+                    restartSnapshotOnFinished = this._state === 'snapshot-stream-started' ||
+                        this._state === 'snapshot-stream-requested';
 
-                    if (this._inSnapshotMode) {
-                        await this._device.stopSnapshotStreaming();
-                        this._inSnapshotMode = false;
+                    if (restartSnapshotOnFinished) {
+                        // wait until snapshot stream
+                        if (this._state === 'snapshot-stream-requested') {
+                            await this.waitForSnapshotStartedOrIdle();
+                        }
+                        if (this._state === 'snapshot-stream-started') {
+                            this._state = 'snapshot-stream-stopping';
+                            await this._device.stopSnapshotStreaming();
+                            this._state = 'idle';
+                        }
                     }
+
+                    if (this._state === 'snapshot-stream-stopping') {
+                        await this.waitForSnapshotStartedOrIdle();
+                    }
+
+                    this._state = 'sampling';
 
                     await this._device.sampleRequest(s, ee);
 
@@ -219,11 +236,6 @@ export class RemoteMgmt extends EventEmitter<{
                     };
                     if (this._ws) {
                         this._ws.send(cbor.encode(res3));
-                    }
-
-                    if (wasInSnapshotMode) {
-                        await this._device.startSnapshotStreaming();
-                        this._inSnapshotMode = true;
                     }
                 }
                 catch (ex2) {
@@ -237,6 +249,24 @@ export class RemoteMgmt extends EventEmitter<{
                     };
                     if (this._ws) {
                         this._ws.send(cbor.encode(res5));
+                    }
+
+                    restartSnapshotOnFinished = false;
+                }
+                finally {
+                    this._state = 'idle';
+                }
+
+                if (restartSnapshotOnFinished) {
+                    try {
+                        this._state = 'snapshot-stream-requested';
+                        await this._device.startSnapshotStreaming();
+                        this._state = 'snapshot-stream-started';
+                    }
+                    catch (ex2) {
+                        if (<RemoteMgmtState>this._state === 'sampling') {
+                            this._state = 'idle';
+                        }
                     }
                 }
                 return;
@@ -254,7 +284,25 @@ export class RemoteMgmt extends EventEmitter<{
                     return;
                 }
 
-                if (this._inSnapshotMode) {
+                if (this._state === 'sampling') {
+                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                        snapshotFailed: true,
+                        error: 'Device is sampling, cannot start snapshot stream'
+                    };
+                    if (this._ws) {
+                        this._ws.send(cbor.encode(res1));
+                    }
+                    return;
+                }
+
+                // already requested, skip this
+                if (this._state === 'snapshot-stream-requested' ||
+                    this._state === 'snapshot-stream-stopping') {
+                    return;
+                }
+
+                // already started? then send the OK message nonetheless
+                if (this._state === 'snapshot-stream-started') {
                     // already in snapshot mode...
                     let res3: MgmtInterfaceSnapshotStartedResponse = {
                         snapshotStarted: true
@@ -266,8 +314,9 @@ export class RemoteMgmt extends EventEmitter<{
                 }
 
                 try {
+                    this._state = 'snapshot-stream-requested';
                     await this._device.startSnapshotStreaming();
-                    this._inSnapshotMode = true;
+                    this._state = 'snapshot-stream-started';
                     let res2: MgmtInterfaceSnapshotStartedResponse = {
                         snapshotStarted: true
                     };
@@ -283,6 +332,9 @@ export class RemoteMgmt extends EventEmitter<{
                     };
                     if (this._ws) {
                         this._ws.send(cbor.encode(res1));
+                    }
+                    if (<RemoteMgmtState>this._state !== 'sampling') {
+                        this._state = 'idle';
                     }
                 }
 
@@ -301,9 +353,18 @@ export class RemoteMgmt extends EventEmitter<{
                     return;
                 }
 
+                if (this._state === 'snapshot-stream-requested') {
+                    await this.waitForSnapshotStartedOrIdle();
+                }
+
+                if (this._state !== 'snapshot-stream-started') {
+                    return;
+                }
+
                 try {
+                    this._state = 'snapshot-stream-stopping';
                     await this._device.stopSnapshotStreaming();
-                    this._inSnapshotMode = false;
+                    this._state = 'idle';
                     let res2: MgmtInterfaceSnapshotStoppedResponse = {
                         snapshotStopped: true
                     };
@@ -320,6 +381,9 @@ export class RemoteMgmt extends EventEmitter<{
                     if (this._ws) {
                         this._ws.send(cbor.encode(res1));
                     }
+                }
+                finally {
+                    this._state = 'idle';
                 }
 
                 return;
@@ -462,5 +526,22 @@ export class RemoteMgmt extends EventEmitter<{
             let ex = <Error>ex2;
             throw ex.message || ex;
         }
+    }
+
+    private async waitForSnapshotStartedOrIdle() {
+        let max = Date.now() + (5 * 1000);
+        while (1) {
+            if (Date.now() > max) {
+                throw new Error('Timeout when waiting for snapshot to be started or idle');
+            }
+            await this.sleep(200);
+            if (this._state === 'snapshot-stream-started' || this._state === 'idle') {
+                return;
+            }
+        }
+    }
+
+    private sleep(ms: number) {
+        return new Promise<void>((resolve) => setTimeout(resolve, ms));
     }
 }

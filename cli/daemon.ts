@@ -66,6 +66,7 @@ class SerialDevice extends EventEmitter<{
     private _lastSnapshot: Date = new Date(0);
     private _snapshotMutex = new Mutex();
     private _snapshotId = 0;
+    private _waitingForSnapshotToStart = false;
 
     constructor(config: EdgeImpulseConfig, serialConnector: SerialConnector, serialProtocol: EiSerialProtocol,
                 deviceConfig: EiSerialDeviceConfig) {
@@ -104,8 +105,48 @@ class SerialDevice extends EventEmitter<{
         return sensors;
     }
 
+    isSnapshotStreaming() {
+        return !!this._snapshotStream;
+    }
+
     supportsSnapshotStreaming() {
         return this._deviceConfig.snapshot.supportsStreaming;
+    }
+
+    async stopSnapshotStreamFromSignal() {
+        if (!this._waitingForSnapshotToStart && !this._snapshotStream) {
+            return;
+        }
+
+        if (this._waitingForSnapshotToStart) {
+            // max 5 sec
+            let max = Date.now() + 5000;
+            while (1) {
+                if (Date.now() > max) {
+                    return;
+                }
+                await new Promise((resolve) => setTimeout(resolve, 200));
+                if (this._snapshotStream) {
+                    break;
+                }
+            }
+        }
+
+        try {
+            // wait for 1 snapshot to make sure we are fully attached
+            await new Promise((resolve, reject) => {
+                if (!this._snapshotStream) {
+                    throw new Error('No snapshot stream');
+                }
+                this._snapshotStream.ee.once('snapshot', resolve);
+                this._snapshotStream.ee.once('error', reject);
+            });
+
+            await this.stopSnapshotStreaming();
+        }
+        catch (ex2) {
+            console.log(SERIAL_PREFIX, 'stopSnapshotStreamFromSignal failed', ex2);
+        }
     }
 
     async startSnapshotStreaming() {
@@ -115,7 +156,15 @@ class SerialDevice extends EventEmitter<{
 
         console.log(SERIAL_PREFIX, 'Entering snapshot stream mode...');
 
-        this._snapshotStream = await this._serialProtocol.startSnapshotStream();
+        this._waitingForSnapshotToStart = true;
+
+        try {
+            this._snapshotStream = await this._serialProtocol.startSnapshotStream();
+        }
+        finally {
+            this._waitingForSnapshotToStart = false;
+        }
+
         this._snapshotStream.ee.on('error', err => {
             console.warn(SERIAL_PREFIX, 'Snapshot stream error:', err);
             this._snapshotStream = undefined;
@@ -170,17 +219,31 @@ class SerialDevice extends EventEmitter<{
                 release();
             }
         });
+
+        await new Promise((resolve, reject) => {
+            if (!this._snapshotStream) {
+                throw new Error('No snapshot stream');
+            }
+            this._snapshotStream.ee.once('snapshot', resolve);
+            this._snapshotStream.ee.once('error', reject);
+        });
     }
 
     async stopSnapshotStreaming() {
         if (!this._snapshotStream) {
-            throw new Error('Snapshot stream not in progress');
+            return;
         }
 
-        await this._snapshotStream.stop();
-        this._snapshotStream = undefined;
-
-        console.log(SERIAL_PREFIX, 'Stopped snapshot stream mode');
+        console.log(SERIAL_PREFIX, 'Stopping snapshot stream mode...');
+        try {
+            await this._snapshotStream.stop();
+            this._snapshotStream = undefined;
+            console.log(SERIAL_PREFIX, 'Stopped snapshot stream mode');
+        }
+        catch (ex) {
+            console.log(SERIAL_PREFIX, 'Stopped snapshot stream mode failed', ex);
+            throw ex;
+        }
     }
 
     async beforeConnect() {
@@ -214,8 +277,6 @@ class SerialDevice extends EventEmitter<{
     async sampleRequest(data: MgmtInterfaceSampleRequestSample, ee: RemoteMgmtDeviceSampleEmitter) {
 
         let s = data;
-
-        console.log(TCP_PREFIX, 'Incoming sampling request', s);
 
         if (!this._deviceConfig.upload.apiKey) {
             throw new Error('Device does not have API key');
@@ -314,7 +375,7 @@ class SerialDevice extends EventEmitter<{
                     encoding: null,
                 });
 
-                console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
+            console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
         }
         else {
             await this._serialProtocol.setSampleSettings(s.label,
@@ -473,10 +534,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.4.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 5) {
+            // we support devices with version 1.6.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 6) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.5.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.6.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,
@@ -522,6 +583,31 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
             if (!remoteMgmt) {
                 const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
                 remoteMgmt = new RemoteMgmt(projectId, devKeys, eiConfig, device);
+
+                let firstExit = true;
+
+                const onSignal = async () => {
+                    if (!firstExit) {
+                        process.exit(1);
+                    }
+                    else {
+                        console.log(SERIAL_PREFIX, 'Received stop signal, stopping application... ' +
+                            'Press CTRL+C again to force quit.');
+                        firstExit = false;
+                        try {
+                            await device.stopSnapshotStreamFromSignal();
+                            process.exit(0);
+                        }
+                        catch (ex2) {
+                            let ex = <Error>ex2;
+                            console.log(SERIAL_PREFIX, 'Failed to stop snapshot streaming', ex.message);
+                        }
+                        process.exit(1);
+                    }
+                };
+
+                process.on('SIGHUP', onSignal);
+                process.on('SIGINT', onSignal);
             }
 
             await remoteMgmt.connect();

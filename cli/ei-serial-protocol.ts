@@ -117,7 +117,7 @@ export default class EiSerialProtocol {
         // tslint:disable-next-line:no-floating-promises
         this._serial.write(Buffer.from('b\r', 'ascii'));
 
-        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000);
+        await this.waitForSerialSequence('onConnected', Buffer.from([ 0x3e, 0x20 ]), 5000);
     }
 
     async clearConfig() {
@@ -491,7 +491,8 @@ export default class EiSerialProtocol {
 
                         this._serial.on('data', onProgressEv);
 
-                        let rfa = await this.execCommand('AT+READBUFFER=' + from + ',' + to, length * 10, false);
+                        let rfa = await this.execCommandAutoSwitchBaudRate(
+                            'AT+READBUFFER=' + from + ',' + to, length * 10, false);
 
                         this._serial.off('data', onProgressEv);
 
@@ -513,7 +514,8 @@ export default class EiSerialProtocol {
 
                         console.log(CON_PREFIX, 'Device not connected to WiFi directly, reading ' + filename + '...');
 
-                        let rfa = await this.execCommand('AT+READFILE=' + filename, length * 10, true);
+                        let rfa = await this.execCommandAutoSwitchBaudRate('AT+READFILE=' + filename,
+                            length * 10, true);
 
                         console.log(CON_PREFIX, 'Reading ' + filename + ' OK');
 
@@ -562,7 +564,6 @@ export default class EiSerialProtocol {
         let command = 'AT+SNAPSHOT=' + width + ',' + height;
         let timeout = 60000;
         let logProgress = false;
-        let res: string;
         let totalBytes = width * height * (this._config.snapshot.colorDepth === 'RGB' ? 3 : 1);
         let expectedBytes = Math.floor(4 * ((totalBytes) / 3));
 
@@ -596,67 +597,7 @@ export default class EiSerialProtocol {
 
                 this._serial.on('data', onProgressEv);
 
-                if (this._config?.info.transferBaudRate) {
-                    command = command + '\r';
-
-                    // split it up a bit for pacing
-                    for (let ix = 0; ix < command.length; ix += 5) {
-                        // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
-                        if (ix !== 0) {
-                            await this.sleep(20);
-                        }
-
-                        await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
-                    }
-
-                    let data;
-
-                    if (this._config.info.transferBaudRate !== 115200) {
-
-                        await this.waitForSerialSequence(Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, logProgress);
-
-                        ee.emit('started');
-
-                        await this._serial.setBaudRate(this._config?.info.transferBaudRate);
-
-                        let data1 = await this.waitForSerialSequence(
-                            Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), timeout, logProgress);
-
-                        await this._serial.setBaudRate(115200);
-
-                        let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
-
-                        data = this.parseSerialResponse(Buffer.concat([ data1, data2 ]));
-
-                        if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
-                            throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
-                        }
-
-                        res = data1.toString('ascii').trim() + data.toString('ascii').trim();
-                    }
-                    else {
-                        let data2 = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
-                        let allData = this.parseSerialResponse(data2);
-                        data = Buffer.from(
-                            allData.toString('ascii')
-                                .split('\n')
-                                .filter(x => x.trim() !== 'OK')
-                                .map(x => x.trim())
-                                .join('\r\n'),
-                            'ascii');
-
-                        if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
-                            throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
-                        }
-
-                        res = data.toString('ascii').trim();
-                    }
-                }
-                else {
-                    ee.emit('started');
-
-                    res = await this.execCommand(command, timeout, logProgress);
-                }
+                let res = await this.execCommandAutoSwitchBaudRate(command, timeout, logProgress, ee);
 
                 this._serial.off('data', onProgressEv);
 
@@ -686,7 +627,7 @@ export default class EiSerialProtocol {
     async stopInference() {
         await this._serial.write(Buffer.from('b\r', 'ascii'));
 
-        await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000);
+        await this.waitForSerialSequence('Stop inference', Buffer.from([ 0x3e, 0x20 ]), 5000);
     }
 
     async startInference(mode: 'normal' | 'debug' | 'continuous') {
@@ -722,6 +663,11 @@ export default class EiSerialProtocol {
             throw new Error('Could not find resolution');
         }
 
+        let command = 'AT+SNAPSHOTSTREAM=' + smallest.width + ',' + smallest.height;
+        let { useMaxBaudRate, updatedCommand } = this.shouldUseMaxBaudrate(command);
+
+        command = updatedCommand + `\r`;
+
         let onData: (buffer: Buffer) => void | undefined;
 
         let ret = {
@@ -737,11 +683,16 @@ export default class EiSerialProtocol {
                 // tslint:disable-next-line:no-floating-promises
                 await this._serial.write(Buffer.from('b\r', 'ascii'));
 
-                await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 5000);
+                if (useMaxBaudRate) {
+                    await this.waitForSerialSequence(
+                        command, Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 5000, false);
+
+                    await this._serial.setBaudRate(115200);
+                }
+
+                await this.waitForSerialSequence(command, Buffer.from([ 0x3e, 0x20 ]), 5000);
             }
         };
-
-        let command = 'AT+SNAPSHOTSTREAM=' + smallest.width + ',' + smallest.height + '\r';
 
         // split it up a bit for pacing
         for (let ix = 0; ix < command.length; ix += 5) {
@@ -751,6 +702,12 @@ export default class EiSerialProtocol {
             }
 
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+        }
+
+        if (useMaxBaudRate && this._config.info.transferBaudRate) {
+            await this.waitForSerialSequence(command, Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, false);
+
+            await this._serial.setBaudRate(this._config.info.transferBaudRate);
         }
 
         // tslint:disable-next-line: no-floating-promises
@@ -807,7 +764,7 @@ export default class EiSerialProtocol {
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
         }
 
-        let data = await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
+        let data = await this.waitForSerialSequence(command, Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
         data = this.parseSerialResponse(data);
 
         if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
@@ -825,7 +782,8 @@ export default class EiSerialProtocol {
      * @param seq Buffer with the exact sequence
      * @param timeout Timeout in milliseconds
      */
-    private waitForSerialSequence(seq: Buffer, timeout: number, logProgress: boolean = false): Promise<Buffer> {
+    private waitForSerialSequence(originalCommand: string, seq: Buffer, timeout: number,
+                                  logProgress: boolean = false): Promise<Buffer> {
         let total = 0;
         let nextReport = 10000;
 
@@ -834,7 +792,7 @@ export default class EiSerialProtocol {
 
             let to = setTimeout(() => {
                 this._serial.off('data', fn);
-                rej('Timeout');
+                rej('Timeout when waiting for ' + seq + ' (timeout: ' + timeout + ') ' + originalCommand);
             }, timeout);
 
             let fn = (data: Buffer) => {
@@ -921,5 +879,119 @@ export default class EiSerialProtocol {
         else {
             return bdata.slice(first, last);
         }
+    }
+
+    /**
+     * Wait for a command to finish and optionally switch to max baud rate for it
+     * @param ee
+     * @param timeout
+     * @param logProgress
+     */
+    private async execCommandAutoSwitchBaudRate(command: string,
+                                                timeout: number,  logProgress: boolean,
+                                                ee?: EventEmitter<{ started: () => void }>) {
+        if (!this._config) {
+            throw new Error('No config');
+        }
+
+        let { useMaxBaudRate, updatedCommand } = this.shouldUseMaxBaudrate(command);
+        command = updatedCommand;
+
+        let res: string;
+
+        let data;
+
+        if (useMaxBaudRate && this._config.info.transferBaudRate) {
+            command = command + '\r';
+
+            // split it up a bit for pacing
+            for (let ix = 0; ix < command.length; ix += 5) {
+                // console.log(CON_PREFIX, 'writing', command.substr(ix, 5));
+                if (ix !== 0) {
+                    await this.sleep(20);
+                }
+
+                await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+            }
+
+            await this.waitForSerialSequence(command, Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), 1000, logProgress);
+
+            if (ee) {
+                ee.emit('started');
+            }
+
+            await this._serial.setBaudRate(this._config.info.transferBaudRate);
+
+            let data1 = await this.waitForSerialSequence(
+                command, Buffer.from([ 0x0d, 0x0a, 0x4f, 0x4b ]), timeout, logProgress);
+
+            data1 = Buffer.from((data1.toString('ascii').split('\n')
+                .filter(x => x.trim() !== 'OK' && x.trim() !== 'OKOK').join('\n')), 'ascii');
+
+            await this._serial.setBaudRate(115200);
+
+            let data2 = await this.waitForSerialSequence(command, Buffer.from([ 0x3e, 0x20 ]), timeout, logProgress);
+
+            data = this.parseSerialResponse(Buffer.concat([ data1, data2 ]));
+
+            if (data.toString('ascii').trim().indexOf('Not a valid AT command') > -1) {
+                throw new Error('Error when communicating with device: ' + data.toString('ascii').trim());
+            }
+
+            res = data1.toString('ascii').trim() + data.toString('ascii').trim();
+        }
+        else {
+            if (ee) {
+                ee.emit('started');
+            }
+
+            res = await this.execCommand(command, timeout, logProgress);
+        }
+
+        return res;
+    }
+
+    private shouldUseMaxBaudrate(command: string) {
+        if (!this._config) {
+            throw new Error('No config');
+        }
+
+        let useMaxBaudRate: boolean;
+        let hasFasterBaudrate = typeof this._config.info.transferBaudRate === 'number' &&
+            this._config.info.transferBaudRate !== 115200;
+
+        let v = this._config.info.atCommandVersion;
+
+        // fast baud rate is also 115200 or empty? then always skip it
+        if (!hasFasterBaudrate) {
+            useMaxBaudRate = false;
+            // 1.6 or higher? add ,n to the command
+            if (v.major >= 1 && v.minor >= 6) {
+                command += ',n';
+            }
+        }
+        // so... under v1.4 this was not supported, so always false
+        else if (v.major === 1 && v.minor < 4) {
+            useMaxBaudRate = false;
+        }
+        // for v1.4 & v1.5 it's only supported for AT+SNAPSHOT and it's *implicit* (so always enabled)
+        else if (v.major === 1 && (v.minor === 4 || v.minor === 5)) {
+            if (command.startsWith('AT+SNAPSHOT=')) {
+                useMaxBaudRate = true;
+            }
+            else {
+                useMaxBaudRate = false;
+            }
+        }
+        // v1.6 and up have an extra parameter ('y'/'n') at the end indicating whether we should switch
+        else {
+            useMaxBaudRate = true;
+            command += ',y';
+        }
+
+        return {
+            useMaxBaudRate,
+            updatedCommand: command
+        };
     }
 }

@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationCreateProject } from './organizationCreateProject';
+import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
 
 export class OrganizationGetCreateProjectsResponseAllOf {
-    'jobs'?: Array<OrganizationCreateProject>;
+    'jobs'?: Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class OrganizationGetCreateProjectsResponseAllOf {
         {
             "name": "jobs",
             "baseName": "jobs",
-            "type": "Array<OrganizationCreateProject>"
+            "type": "Array<OrganizationGetCreateProjectsResponseAllOfJobs>"
         }    ];
 
     static getAttributeTypeMap() {

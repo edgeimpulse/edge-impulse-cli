@@ -600,7 +600,8 @@ async function getSensorInfo(serial: SerialConnector) {
 async function getDeviceId(serial: SerialConnector) {
     let macAddress = await serial.getMACAddress();
     if (!macAddress) {
-        throw new Error('Could not read serial number for device');
+        console.warn(SERIAL_PREFIX, 'Could not read serial number for device, defaulting to 000000000000');
+        macAddress = '000000000000';
     }
 
     macAddress = macAddress.split(/(..)/).filter(f => !!f).join(':');

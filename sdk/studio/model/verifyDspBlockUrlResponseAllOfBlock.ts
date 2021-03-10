@@ -16,6 +16,7 @@ export class VerifyDspBlockUrlResponseAllOfBlock {
     'author': string;
     'description': string;
     'name': string;
+    'latestImplementationVersion': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +40,11 @@ export class VerifyDspBlockUrlResponseAllOfBlock {
             "name": "name",
             "baseName": "name",
             "type": "string"
+        },
+        {
+            "name": "latestImplementationVersion",
+            "baseName": "latestImplementationVersion",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -19,9 +19,13 @@ export class ClassifySampleResponseClassification {
     */
     'result': Array<{ [key: string]: number; }>;
     /**
-    * The minimum confidence rating for this
+    * The minimum confidence rating for this block
     */
     'minimumConfidenceRating': number;
+    /**
+    * The maximum error for regression models (only set when the learn block is of type \'keras-regression\', otherwise 0)
+    */
+    'maximumRegressionError': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +43,11 @@ export class ClassifySampleResponseClassification {
         {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
+            "type": "number"
+        },
+        {
+            "name": "maximumRegressionError",
+            "baseName": "maximumRegressionError",
             "type": "number"
         }    ];
 

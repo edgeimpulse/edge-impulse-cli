@@ -17,6 +17,10 @@ export class AddMemberRequest {
     */
     'usernameOrEmail': string;
     'role': AddMemberRequestRoleEnum;
+    /**
+    * Only used for \'guest\' users. Limits the datasets the user has access to.
+    */
+    'datasets': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +34,11 @@ export class AddMemberRequest {
             "name": "role",
             "baseName": "role",
             "type": "AddMemberRequestRoleEnum"
+        },
+        {
+            "name": "datasets",
+            "baseName": "datasets",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -38,5 +47,5 @@ export class AddMemberRequest {
 }
 
 
-export type AddMemberRequestRoleEnum = 'admin' | 'member';
-export const AddMemberRequestRoleEnumValues: string[] = ['admin', 'member'];
+export type AddMemberRequestRoleEnum = 'admin' | 'member' | 'guest';
+export const AddMemberRequestRoleEnumValues: string[] = ['admin', 'member', 'guest'];

@@ -17,6 +17,7 @@ export class ListApiKeysResponseAllOfApiKeys {
     'isDevelopmentKey': boolean;
     'name': string;
     'created': Date;
+    'role': ListApiKeysResponseAllOfApiKeysRoleEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class ListApiKeysResponseAllOfApiKeys {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "role",
+            "baseName": "role",
+            "type": "ListApiKeysResponseAllOfApiKeysRoleEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -52,3 +58,6 @@ export class ListApiKeysResponseAllOfApiKeys {
     }
 }
 
+
+export type ListApiKeysResponseAllOfApiKeysRoleEnum = 'admin' | 'readonly' | 'ingestiononly';
+export const ListApiKeysResponseAllOfApiKeysRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly'];

@@ -12,7 +12,7 @@
 
 
 export class ProjectInfoResponseAllOfLatencyDevices {
-    'mcu': ProjectInfoResponseAllOfLatencyDevicesMcuEnum;
+    'mcu': string;
     'name': string;
     'selected': boolean;
     'int8Latency': number;
@@ -26,7 +26,7 @@ export class ProjectInfoResponseAllOfLatencyDevices {
         {
             "name": "mcu",
             "baseName": "mcu",
-            "type": "ProjectInfoResponseAllOfLatencyDevicesMcuEnum"
+            "type": "string"
         },
         {
             "name": "name",
@@ -64,6 +64,3 @@ export class ProjectInfoResponseAllOfLatencyDevices {
     }
 }
 
-
-export type ProjectInfoResponseAllOfLatencyDevicesMcuEnum = 'cortex-m4f-64mhz' | 'cortex-m4f-80mhz' | 'cortex-m7-216mhz';
-export const ProjectInfoResponseAllOfLatencyDevicesMcuEnumValues: string[] = ['cortex-m4f-64mhz', 'cortex-m4f-80mhz', 'cortex-m7-216mhz'];

@@ -34,6 +34,7 @@ export class Device {
     * The remote management host that the device is connected to
     */
     'remoteMgmtHost'?: string;
+    'supportsSnapshotStreaming': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -82,6 +83,11 @@ export class Device {
             "name": "remoteMgmtHost",
             "baseName": "remote_mgmt_host",
             "type": "string"
+        },
+        {
+            "name": "supportsSnapshotStreaming",
+            "baseName": "supportsSnapshotStreaming",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

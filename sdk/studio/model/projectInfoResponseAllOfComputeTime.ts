@@ -32,6 +32,10 @@ export class ProjectInfoResponseAllOfComputeTime {
     * Compute time limit per job in seconds (applies only to DSP and learning jobs).
     */
     'jobLimitS': number;
+    /**
+    * Maximum size for DSP file output
+    */
+    'dspFileSizeMb': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -59,6 +63,11 @@ export class ProjectInfoResponseAllOfComputeTime {
         {
             "name": "jobLimitS",
             "baseName": "jobLimitS",
+            "type": "number"
+        },
+        {
+            "name": "dspFileSizeMb",
+            "baseName": "dspFileSizeMb",
             "type": "number"
         }    ];
 

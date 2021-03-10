@@ -17,11 +17,19 @@ export class ImpulseLearnBlock {
     */
     'id': number;
     /**
+    * Whether this block is the primary version of its base block.
+    */
+    'primaryVersion': boolean;
+    /**
+    * The version number of the original block this version was based on. If this is an original block, will be undefined.
+    */
+    'baseBlockId'?: number;
+    /**
     * Block type (either keras, keras-transfer-image, keras-regression or anomaly)
     */
     'type': string;
     /**
-    * Block name, will be used in menus
+    * Block name, will be used in menus. If a block has a baseBlockId, this field is ignored and the base block\'s name is used instead.
     */
     'name': string;
     /**
@@ -32,6 +40,10 @@ export class ImpulseLearnBlock {
     * Block title, used in the impulse UI
     */
     'title': string;
+    /**
+    * A short description of the block version, displayed in the block versioning UI
+    */
+    'description'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +51,16 @@ export class ImpulseLearnBlock {
         {
             "name": "id",
             "baseName": "id",
+            "type": "number"
+        },
+        {
+            "name": "primaryVersion",
+            "baseName": "primaryVersion",
+            "type": "boolean"
+        },
+        {
+            "name": "baseBlockId",
+            "baseName": "baseBlockId",
             "type": "number"
         },
         {
@@ -59,6 +81,11 @@ export class ImpulseLearnBlock {
         {
             "name": "title",
             "baseName": "title",
+            "type": "string"
+        },
+        {
+            "name": "description",
+            "baseName": "description",
             "type": "string"
         }    ];
 

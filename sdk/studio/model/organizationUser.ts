@@ -22,6 +22,7 @@ export class OrganizationUser {
     'role': OrganizationUserRoleEnum;
     'isEdgeImpulseStaff': boolean;
     'projectCount': number;
+    'datasets': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +76,11 @@ export class OrganizationUser {
             "name": "projectCount",
             "baseName": "projectCount",
             "type": "number"
+        },
+        {
+            "name": "datasets",
+            "baseName": "datasets",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -83,5 +89,5 @@ export class OrganizationUser {
 }
 
 
-export type OrganizationUserRoleEnum = 'admin' | 'member';
-export const OrganizationUserRoleEnumValues: string[] = ['admin', 'member'];
+export type OrganizationUserRoleEnum = 'admin' | 'member' | 'guest';
+export const OrganizationUserRoleEnumValues: string[] = ['admin', 'member', 'guest'];

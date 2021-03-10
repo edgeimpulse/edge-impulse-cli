@@ -605,9 +605,10 @@ export class OrganizationDataApi {
      * @summary Download data
      * @param organizationId Organization ID
      * @param dataIds Data IDs as an Array
+     * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationDataItem (organizationId: number, dataIds: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
+    public async downloadOrganizationDataItem (organizationId: number, dataIds: string, dataset?: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: Buffer;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -629,6 +630,10 @@ export class OrganizationDataApi {
         // verify required parameter 'dataIds' is not null or undefined
         if (dataIds === null || dataIds === undefined) {
             throw new Error('Required parameter dataIds was null or undefined when calling downloadOrganizationDataItem.');
+        }
+
+        if (dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
         }
 
         if (dataIds !== undefined) {

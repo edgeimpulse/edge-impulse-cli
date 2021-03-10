@@ -36,6 +36,10 @@ export class ImpulseDspBlock {
     * Number of features this DSP block outputs per axis. This is only set when the DSP block is configured.
     */
     'valuesPerAxis'?: number;
+    /**
+    * Implementation version of the block
+    */
+    'implementationVersion': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -68,6 +72,11 @@ export class ImpulseDspBlock {
         {
             "name": "valuesPerAxis",
             "baseName": "valuesPerAxis",
+            "type": "number"
+        },
+        {
+            "name": "implementationVersion",
+            "baseName": "implementationVersion",
             "type": "number"
         }    ];
 

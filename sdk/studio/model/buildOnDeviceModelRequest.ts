@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class BuildOnDeviceModelRequest {
     /**
     * Inferencing engine
     */
     'engine': BuildOnDeviceModelRequestEngineEnum;
+    'modelType'?: KerasModelTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +26,11 @@ export class BuildOnDeviceModelRequest {
             "name": "engine",
             "baseName": "engine",
             "type": "BuildOnDeviceModelRequestEngineEnum"
+        },
+        {
+            "name": "modelType",
+            "baseName": "modelType",
+            "type": "KerasModelTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {

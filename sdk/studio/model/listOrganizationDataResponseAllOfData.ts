@@ -17,6 +17,7 @@ export class ListOrganizationDataResponseAllOfData {
     'bucketId': number;
     'bucketName': string;
     'bucketPath': string;
+    'fullBucketPath': string;
     'dataset': string;
     'totalFileCount': number;
     'totalFileSize': number;
@@ -49,6 +50,11 @@ export class ListOrganizationDataResponseAllOfData {
         {
             "name": "bucketPath",
             "baseName": "bucketPath",
+            "type": "string"
+        },
+        {
+            "name": "fullBucketPath",
+            "baseName": "fullBucketPath",
             "type": "string"
         },
         {

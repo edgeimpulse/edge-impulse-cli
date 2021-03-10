@@ -14,7 +14,8 @@ import { DSPGroupItemSelectOptions } from './dSPGroupItemSelectOptions';
 
 export class DSPGroupItem {
     'name': string;
-    'value': string;
+    'value'?: string;
+    'defaultValue': string;
     'type': string;
     'help': string;
     'param': string;
@@ -31,6 +32,11 @@ export class DSPGroupItem {
         {
             "name": "value",
             "baseName": "value",
+            "type": "string"
+        },
+        {
+            "name": "defaultValue",
+            "baseName": "defaultValue",
             "type": "string"
         },
         {

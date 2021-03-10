@@ -16,6 +16,10 @@ export class UpdateOrganizationCreateProjectRequest {
     * Number of transformation jobs that can be ran in parallel
     */
     'transformationParallel'?: number;
+    /**
+    * List of user IDs to notify when a Job succeeds
+    */
+    'emailRecipientUids'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +28,11 @@ export class UpdateOrganizationCreateProjectRequest {
             "name": "transformationParallel",
             "baseName": "transformationParallel",
             "type": "number"
+        },
+        {
+            "name": "emailRecipientUids",
+            "baseName": "emailRecipientUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,8 +11,8 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { OrganizationCreateProject } from './organizationCreateProject';
 import { OrganizationGetCreateProjectsResponseAllOf } from './organizationGetCreateProjectsResponseAllOf';
+import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
 
 export class OrganizationGetCreateProjectsResponse {
     /**
@@ -23,7 +23,7 @@ export class OrganizationGetCreateProjectsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'jobs'?: Array<OrganizationCreateProject>;
+    'jobs'?: Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class OrganizationGetCreateProjectsResponse {
         {
             "name": "jobs",
             "baseName": "jobs",
-            "type": "Array<OrganizationCreateProject>"
+            "type": "Array<OrganizationGetCreateProjectsResponseAllOfJobs>"
         }    ];
 
     static getAttributeTypeMap() {

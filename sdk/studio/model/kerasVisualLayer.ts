@@ -34,6 +34,7 @@ export class KerasVisualLayer {
     * Number of convolutional layers before the pooling layer (only for conv1d, conv2d)
     */
     'stack'?: number;
+    'enabled'?: boolean;
     'tunableParams'?: Array<KerasVisualLayerTunableParams>;
 
     static discriminator: string | undefined = undefined;
@@ -68,6 +69,11 @@ export class KerasVisualLayer {
             "name": "stack",
             "baseName": "stack",
             "type": "number"
+        },
+        {
+            "name": "enabled",
+            "baseName": "enabled",
+            "type": "boolean"
         },
         {
             "name": "tunableParams",

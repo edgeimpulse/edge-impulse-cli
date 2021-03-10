@@ -18,7 +18,7 @@ export class SetProjectComputeTimeRequest {
     /**
     * New job limit in seconds.
     */
-    'jobLimitS'?: number;
+    'jobLimitS': number;
 
     static discriminator: string | undefined = undefined;
 

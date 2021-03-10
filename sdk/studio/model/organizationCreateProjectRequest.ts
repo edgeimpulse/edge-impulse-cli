@@ -26,6 +26,7 @@ export class OrganizationCreateProjectRequest {
     'category'?: OrganizationCreateProjectRequestCategoryEnum;
     'outputDatasetName'?: string;
     'label'?: string;
+    'emailRecipientUids'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -84,6 +85,11 @@ export class OrganizationCreateProjectRequest {
             "name": "label",
             "baseName": "label",
             "type": "string"
+        },
+        {
+            "name": "emailRecipientUids",
+            "baseName": "emailRecipientUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

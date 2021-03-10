@@ -2,6 +2,9 @@ import { spawn, ChildProcess } from 'child_process';
 import fs from 'fs';
 import { EventEmitter } from 'tsee';
 import util from 'util';
+import os from 'os';
+import Path from 'path';
+import net from 'net';
 
 type RunnerErrorResponse = {
     success: false;
@@ -43,19 +46,20 @@ type RunnerClassifyRequest = {
 };
 
 export type RunnerClassifyResponseSuccess = {
-    classification: { [k: string]: number };
+    result: {
+        classification: { [k: string]: number };
+        anomaly?: number;
+    },
     timing: {
         dsp: number;
         classification: number;
         anomaly: number;
-    };
-    anomaly?: number;
+    }
 };
 
-type RunnerClassifyResponse = {
+type RunnerClassifyResponse = ({
     success: true;
-    result: RunnerClassifyResponseSuccess;
-} | RunnerErrorResponse;
+} & RunnerClassifyResponseSuccess) | RunnerErrorResponse;
 
 export class LinuxImpulseRunner {
     private _path: string;
@@ -72,6 +76,7 @@ export class LinuxImpulseRunner {
     }>();
     private _id = 0;
     private _stopped = false;
+    private _socket: net.Socket | undefined;
 
     /**
      * Start a new impulse runner
@@ -90,13 +95,57 @@ export class LinuxImpulseRunner {
             throw new Error('Runner does not exist: ' + this._path);
         }
 
-        this._runner = spawn(this._path);
+        // if we have /dev/shm, use that (RAM backed, instead of SD card backed, better for wear)
+        let osTmpDir = os.tmpdir();
+        if (await this.exists('/dev/shm')) {
+            osTmpDir = '/dev/shm';
+        }
+
+        let tempDir = await fs.promises.mkdtemp(Path.join(osTmpDir, 'edge-impulse-cli'));
+        let socketPath = Path.join(tempDir, 'runner.sock');
+
+        this._runner = spawn(this._path, [ socketPath ]);
+
+        if (!this._runner.stdout) {
+            throw new Error('stdout is null');
+        }
+
+        let stdout = '';
+        this._runner.stdout.on('data', (data: Buffer) => {
+            stdout += data.toString('utf-8');
+        });
+        if (this._runner.stderr) {
+            this._runner.stderr.on('data', (data: Buffer) => {
+                stdout += data.toString('utf-8');
+            });
+        }
+
+        let exitCode: number | undefined | null;
+
+        this._runner.on('exit', code => {
+            exitCode = code;
+            if (typeof code === 'number' && code !== 0) {
+                this._runnerEe.emit('error', 'Runner has exited with code ' + code);
+            }
+            this._runner = undefined;
+            this._helloResponse = undefined;
+            this._runnerEe.removeAllListeners();
+        });
+
+        while (typeof exitCode === 'undefined' && !await this.exists(socketPath)) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        if (typeof exitCode !== 'undefined') {
+            throw new Error('Failed to start runner (code: ' + exitCode + '): ' + stdout);
+        }
 
         let bracesOpen = 0;
         let bracesClosed = 0;
         let line = '';
 
-        this._runner.stdout.on('data', (data: Buffer) => {
+        this._socket = net.connect(socketPath);
+        this._socket.on('data', data => {
             // uncomment this to see raw output
             // console.log('data', data.toString('utf-8'));
             for (let c of data.toString('utf-8').split('')) {
@@ -128,18 +177,25 @@ export class LinuxImpulseRunner {
             }
         });
 
-        this._runner.on('exit', code => {
-            if (typeof code === 'number' && code !== 0) {
-                this._runnerEe.emit('error', 'Runner has exited with code ' + code);
-            }
-            this._runner = undefined;
-            this._helloResponse = undefined;
-            this._runnerEe.removeAllListeners();
+        this._socket.on('error', error => {
+            this._runnerEe.emit('error', error.message || error.toString());
+        });
+
+        await new Promise((resolve, reject) => {
+            this._socket?.once('connect', resolve);
+            this._socket?.once('error', reject);
+
+            setTimeout(() => {
+                reject('Timeout when connecting to ' + socketPath);
+            }, 10000);
         });
 
         return await this.sendHello();
     }
 
+    /**
+     * Stop the classification process
+     */
     async stop() {
         this._stopped = true;
 
@@ -157,15 +213,20 @@ export class LinuxImpulseRunner {
                     if (this._runner) {
                         this._runner.kill('SIGHUP');
                     }
-                }, 500);
+                }, 3000);
             } else {
                 resolve();
             }
         });
     }
 
+    /**
+     * Get information about the model, this is only available
+     * after the runner has been initialized
+     */
     getModel() {
         if (!this._helloResponse) {
+            console.trace('getModel() runner is not initialized');
             throw new Error('Runner is not initialized');
         }
 
@@ -182,7 +243,10 @@ export class LinuxImpulseRunner {
         if (!resp.success) {
             throw new Error(resp.error);
         }
-        return resp.result;
+        return {
+            result: resp.result,
+            timing: resp.timing
+        };
     }
 
     private async sendHello() {
@@ -216,12 +280,13 @@ export class LinuxImpulseRunner {
 
     private send<T, U>(msg: T) {
         return new Promise<U>((resolve, reject) => {
-            if (!this._runner) {
+            if (!this._socket) {
+                console.trace('Runner is not initialized (runner.send)');
                 return reject('Runner is not initialized');
             }
 
             let msgId = ++this._id;
-            this._runner.stdin.write(JSON.stringify(Object.assign(msg, {
+            this._socket.write(JSON.stringify(Object.assign(msg, {
                 id: msgId
             })) + '\n');
 
@@ -245,7 +310,9 @@ export class LinuxImpulseRunner {
                 }
             };
 
-            this._runner.on('exit', onExit);
+            if (this._runner) {
+                this._runner.on('exit', onExit);
+            }
         });
     }
 

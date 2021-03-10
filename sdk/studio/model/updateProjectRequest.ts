@@ -23,6 +23,7 @@ export class UpdateProjectRequest {
     * New project name.
     */
     'name'?: string;
+    'description'?: string;
     /**
     * Call this when clicking the Eon compiler setting
     */
@@ -30,8 +31,12 @@ export class UpdateProjectRequest {
     /**
     * MCU used for calculating latency
     */
-    'latencyDevice'?: UpdateProjectRequestLatencyDeviceEnum;
+    'latencyDevice'?: string;
     'experiments'?: Array<string>;
+    /**
+    * Whether to show the \'Create your first impulse\' section on the dashboard
+    */
+    'showCreateFirstImpulse'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,6 +52,11 @@ export class UpdateProjectRequest {
             "type": "string"
         },
         {
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
+        },
+        {
             "name": "lastDeployEonCompiler",
             "baseName": "lastDeployEonCompiler",
             "type": "boolean"
@@ -54,12 +64,17 @@ export class UpdateProjectRequest {
         {
             "name": "latencyDevice",
             "baseName": "latencyDevice",
-            "type": "UpdateProjectRequestLatencyDeviceEnum"
+            "type": "string"
         },
         {
             "name": "experiments",
             "baseName": "experiments",
             "type": "Array<string>"
+        },
+        {
+            "name": "showCreateFirstImpulse",
+            "baseName": "showCreateFirstImpulse",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -67,6 +82,3 @@ export class UpdateProjectRequest {
     }
 }
 
-
-export type UpdateProjectRequestLatencyDeviceEnum = 'cortex-m4f-64mhz' | 'cortex-m4f-80mhz' | 'cortex-m7-216mhz';
-export const UpdateProjectRequestLatencyDeviceEnumValues: string[] = ['cortex-m4f-64mhz', 'cortex-m4f-80mhz', 'cortex-m7-216mhz'];

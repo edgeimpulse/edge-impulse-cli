@@ -16,6 +16,10 @@ export class CreateProjectRequest {
     * The name of the first project.
     */
     'projectName': string;
+    /**
+    * The ID of the version that was used to restore this project.
+    */
+    'originalProjectVersionId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +28,11 @@ export class CreateProjectRequest {
             "name": "projectName",
             "baseName": "projectName",
             "type": "string"
+        },
+        {
+            "name": "originalProjectVersionId",
+            "baseName": "originalProjectVersionId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

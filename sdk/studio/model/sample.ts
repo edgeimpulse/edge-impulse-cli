@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BoundingBox } from './boundingBox';
 import { Sensor } from './sensor';
 
 export class Sample {
@@ -48,6 +49,7 @@ export class Sample {
     * Timestamp when the sample was added to the current acquisition bucket.
     */
     'added': Date;
+    'boundingBoxes': Array<BoundingBox>;
 
     static discriminator: string | undefined = undefined;
 
@@ -136,6 +138,11 @@ export class Sample {
             "name": "added",
             "baseName": "added",
             "type": "Date"
+        },
+        {
+            "name": "boundingBoxes",
+            "baseName": "boundingBoxes",
+            "type": "Array<BoundingBox>"
         }    ];
 
     static getAttributeTypeMap() {

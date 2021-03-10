@@ -42,6 +42,7 @@ export class OrganizationCreateProject {
     'files': Array<OrganizationCreateProjectFiles>;
     'inProgress': boolean;
     'label'?: string;
+    'emailRecipientUids'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -170,6 +171,11 @@ export class OrganizationCreateProject {
             "name": "label",
             "baseName": "label",
             "type": "string"
+        },
+        {
+            "name": "emailRecipientUids",
+            "baseName": "emailRecipientUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

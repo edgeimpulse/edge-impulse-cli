@@ -143,7 +143,7 @@ export class RemoteMgmt extends EventEmitter<{
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
-                console.log(TCP_PREFIX, 'Incoming sampling request', this._state, s);
+                console.log(TCP_PREFIX, 'Incoming sampling request', s);
 
                 let sampleHadError = false;
                 let restartSnapshotOnFinished = false;

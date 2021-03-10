@@ -14,10 +14,12 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { CreateBlockVersionResponse } from '../model/createBlockVersionResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetImpulseBlocksResponse } from '../model/getImpulseBlocksResponse';
 import { GetImpulseResponse } from '../model/getImpulseResponse';
 import { Impulse } from '../model/impulse';
+import { ImpulseBlockVersion } from '../model/impulseBlockVersion';
 import { VerifyDspBlockUrlRequest } from '../model/verifyDspBlockUrlRequest';
 import { VerifyDspBlockUrlResponse } from '../model/verifyDspBlockUrlResponse';
 
@@ -81,6 +83,87 @@ export class ImpulseApi {
         (this.authentications as any)[ImpulseApiApiKeys[key]].apiKey = value;
     }
 
+    /**
+     * Create a new version of a given block
+     * @summary Create new block version
+     * @param projectId Project ID
+     * @param blockType Type of block
+     * @param blockId Block ID
+     */
+    public async createBlockVersion (projectId: number, blockType: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateBlockVersionResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/block-versions/{blockType}/{blockId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'blockType' + '}', encodeURIComponent(String(blockType)))
+            .replace('{' + 'blockId' + '}', encodeURIComponent(String(blockId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createBlockVersion.');
+        }
+
+        // verify required parameter 'blockType' is not null or undefined
+        if (blockType === null || blockType === undefined) {
+            throw new Error('Required parameter blockType was null or undefined when calling createBlockVersion.');
+        }
+
+        // verify required parameter 'blockId' is not null or undefined
+        if (blockId === null || blockId === undefined) {
+            throw new Error('Required parameter blockId was null or undefined when calling createBlockVersion.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: CreateBlockVersionResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateBlockVersionResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
     /**
      * Sets the impulse for this project.
      * @summary Create impulse
@@ -279,6 +362,94 @@ export class ImpulseApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetImpulseBlocksResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Update the details of a block version
+     * @summary Update block version details
+     * @param projectId Project ID
+     * @param blockType Type of block
+     * @param blockId Block ID
+     * @param impulseBlockVersion 
+     */
+    public async updateBlockVersion (projectId: number, blockType: string, blockId: number, impulseBlockVersion: ImpulseBlockVersion, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/block-versions/{blockType}/{blockId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'blockType' + '}', encodeURIComponent(String(blockType)))
+            .replace('{' + 'blockId' + '}', encodeURIComponent(String(blockId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateBlockVersion.');
+        }
+
+        // verify required parameter 'blockType' is not null or undefined
+        if (blockType === null || blockType === undefined) {
+            throw new Error('Required parameter blockType was null or undefined when calling updateBlockVersion.');
+        }
+
+        // verify required parameter 'blockId' is not null or undefined
+        if (blockId === null || blockId === undefined) {
+            throw new Error('Required parameter blockId was null or undefined when calling updateBlockVersion.');
+        }
+
+        // verify required parameter 'impulseBlockVersion' is not null or undefined
+        if (impulseBlockVersion === null || impulseBlockVersion === undefined) {
+            throw new Error('Required parameter impulseBlockVersion was null or undefined when calling updateBlockVersion.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(impulseBlockVersion, "ImpulseBlockVersion")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

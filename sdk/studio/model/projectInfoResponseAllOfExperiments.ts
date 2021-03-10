@@ -16,6 +16,7 @@ export class ProjectInfoResponseAllOfExperiments {
     'title': string;
     'help'?: string;
     'enabled': boolean;
+    'showToUser': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +39,11 @@ export class ProjectInfoResponseAllOfExperiments {
         {
             "name": "enabled",
             "baseName": "enabled",
+            "type": "boolean"
+        },
+        {
+            "name": "showToUser",
+            "baseName": "showToUser",
             "type": "boolean"
         }    ];
 

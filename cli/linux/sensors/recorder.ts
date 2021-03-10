@@ -146,8 +146,12 @@ export class AudioRecorder {
                 AUDIODEV: this._options.device
             });
         }
+
         this._cp = spawn(cmd, cmdArgs, cmdOptions);
         let rec = this._cp.stdout;
+        if (!rec) {
+            throw new Error('stdout is null');
+        }
 
         if (this._options.verbose) {
             console.log('Recording', this._options.channels, 'channels with sample rate',
@@ -155,7 +159,7 @@ export class AudioRecorder {
             console.time('End Recording');
 
             rec.on('data', (data: Buffer) => {
-                console.log('Recording %d bytes', data.length);
+                console.log('Recording %d bytes', data.length, data);
             });
 
             rec.on('end', () => {
@@ -167,10 +171,10 @@ export class AudioRecorder {
             data: (b: Buffer) => void,
         }>();
 
-        this._cp.stdout.on('data', (data: Buffer) => ee.emit('data', data));
+        rec.on('data', (data: Buffer) => ee.emit('data', data));
 
         return new Promise<AudioInstance>((resolve, reject) => {
-            if (!this._cp) {
+            if (!this._cp || !rec || !this._cp.stderr) {
                 return reject('cp is null');
             }
 
@@ -182,12 +186,16 @@ export class AudioRecorder {
                 return reject(cmd + ' exited with code ' + code + ': ' + err);
             });
             // first data segment will resolve
-            this._cp.stdout.once('data', () => {
+            rec.once('data', () => {
                 resolve({
                     ee: ee,
                     stop: this.stop.bind(this)
                 });
             });
+
+            setTimeout(() => {
+                reject('Timeout when waiting for audio recording to start');
+            }, 10000);
         });
     }
 
@@ -206,7 +214,7 @@ export class AudioRecorder {
                     if (this._cp) {
                         this._cp.kill('SIGHUP');
                     }
-                }, 500);
+                }, 3000);
             } else {
                 resolve();
             }

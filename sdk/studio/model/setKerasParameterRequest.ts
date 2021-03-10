@@ -44,6 +44,22 @@ export class SetKerasParameterRequest {
     * Learning rate (between 0 and 1) (only in visual mode).
     */
     'learningRate'?: number;
+    /**
+    * Tuner learning rates (between 0 and 1) (only in visual mode).
+    */
+    'learningRates'?: Array<number>;
+    /**
+    * Tuning algorithm to use to search hyperparameter space
+    */
+    'tuningAlgorithm'?: SetKerasParameterRequestTuningAlgorithmEnum;
+    /**
+    * Total number of trials (model configurations) to test at most.
+    */
+    'tuningMaxTrials'?: number;
+    /**
+    * Number of parallel workers used for tuning
+    */
+    'tuningWorkers'?: number;
     'augmentationPolicyImage'?: AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
 
@@ -86,6 +102,26 @@ export class SetKerasParameterRequest {
             "type": "number"
         },
         {
+            "name": "learningRates",
+            "baseName": "learningRates",
+            "type": "Array<number>"
+        },
+        {
+            "name": "tuningAlgorithm",
+            "baseName": "tuningAlgorithm",
+            "type": "SetKerasParameterRequestTuningAlgorithmEnum"
+        },
+        {
+            "name": "tuningMaxTrials",
+            "baseName": "tuningMaxTrials",
+            "type": "number"
+        },
+        {
+            "name": "tuningWorkers",
+            "baseName": "tuningWorkers",
+            "type": "number"
+        },
+        {
             "name": "augmentationPolicyImage",
             "baseName": "augmentationPolicyImage",
             "type": "AugmentationPolicyImageEnum"
@@ -104,3 +140,6 @@ export class SetKerasParameterRequest {
 
 export type SetKerasParameterRequestModeEnum = 'expert' | 'visual';
 export const SetKerasParameterRequestModeEnumValues: string[] = ['expert', 'visual'];
+
+export type SetKerasParameterRequestTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
+export const SetKerasParameterRequestTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];

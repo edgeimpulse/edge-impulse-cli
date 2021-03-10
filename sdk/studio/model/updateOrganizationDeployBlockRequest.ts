@@ -22,6 +22,7 @@ export class UpdateOrganizationDeployBlockRequest {
     'limitsMemory'?: number;
     'photo'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
     'integrateUrl'?: string;
+    'privileged'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +76,11 @@ export class UpdateOrganizationDeployBlockRequest {
             "name": "integrateUrl",
             "baseName": "integrateUrl",
             "type": "string"
+        },
+        {
+            "name": "privileged",
+            "baseName": "privileged",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

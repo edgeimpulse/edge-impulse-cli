@@ -96,8 +96,9 @@ export class OrganizationBlocksApi {
      * @param limitsMemory 
      * @param photo 
      * @param integrateUrl 
+     * @param privileged 
      */
-    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }> {
+    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -179,6 +180,10 @@ export class OrganizationBlocksApi {
 
         if (integrateUrl !== undefined) {
             localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(integrateUrl, "string");
+        }
+
+        if (privileged !== undefined) {
+            localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -591,8 +596,9 @@ export class OrganizationBlocksApi {
      * @param limitsMemory 
      * @param photo 
      * @param integrateUrl 
+     * @param privileged 
      */
-    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, name?: string, dockerContainer?: string, description?: string, cliArguments?: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, name?: string, dockerContainer?: string, description?: string, cliArguments?: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy/{deployId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'deployId' + '}', encodeURIComponent(String(deployId)));
@@ -660,6 +666,10 @@ export class OrganizationBlocksApi {
 
         if (integrateUrl !== undefined) {
             localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(integrateUrl, "string");
+        }
+
+        if (privileged !== undefined) {
+            localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

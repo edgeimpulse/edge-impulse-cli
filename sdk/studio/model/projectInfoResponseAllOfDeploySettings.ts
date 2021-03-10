@@ -13,6 +13,7 @@
 
 export class ProjectInfoResponseAllOfDeploySettings {
     'eonCompiler': boolean;
+    'sensor': ProjectInfoResponseAllOfDeploySettingsSensorEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,6 +22,11 @@ export class ProjectInfoResponseAllOfDeploySettings {
             "name": "eonCompiler",
             "baseName": "eonCompiler",
             "type": "boolean"
+        },
+        {
+            "name": "sensor",
+            "baseName": "sensor",
+            "type": "ProjectInfoResponseAllOfDeploySettingsSensorEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -28,3 +34,6 @@ export class ProjectInfoResponseAllOfDeploySettings {
     }
 }
 
+
+export type ProjectInfoResponseAllOfDeploySettingsSensorEnum = 'accelerometer' | 'microphone' | 'camera' | 'unknown';
+export const ProjectInfoResponseAllOfDeploySettingsSensorEnumValues: string[] = ['accelerometer', 'microphone', 'camera', 'unknown'];

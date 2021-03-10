@@ -4,13 +4,16 @@ import Path from 'path';
 import { LinuxImpulseRunner } from './classifier/linux-impulse-runner';
 import { AudioClassifier } from './classifier/audio-classifier';
 import { ImageClassifier } from './classifier/image-classifier';
-import { Imagesnap } from './imagesnap';
+import { Imagesnap } from './sensors/imagesnap';
 import inquirer from 'inquirer';
 import { Config } from '../config';
 import { initCliApp, setupCliApp } from '../init-cli-app';
 import fs from 'fs';
 import os from 'os';
-import { RunnerDownloader } from './classifier/runner-downloader';
+import { RunnerDownloader } from './runner-downloader';
+import { Ffmpeg } from './sensors/ffmpeg';
+import { ICamera } from './sensors/icamera';
+import program from 'commander';
 
 const RUNNER_PREFIX = '\x1b[33m[RUN]\x1b[0m';
 const BUILD_PREFIX = '\x1b[32m[BLD]\x1b[0m';
@@ -19,14 +22,38 @@ let audioClassifier: AudioClassifier | undefined;
 let imageClassifier: ImageClassifier | undefined;
 let configFactory: Config | undefined;
 
-const cleanArgv = process.argv.indexOf('--clean') > -1;
-const silentArgv = process.argv.indexOf('--silent') > -1;
-const devArgv = process.argv.indexOf('--dev') > -1;
-const apiKeyArgvIx = process.argv.indexOf('--api-key');
-const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
-const verboseArgv = process.argv.indexOf('--verbose') > -1;
-const modelFileIx = process.argv.indexOf('--model-file');
-const modelFileArgv = modelFileIx !== -1 ? process.argv[modelFileIx + 1] : undefined;
+const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
+    Path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8'))).version;
+
+program
+    .description('Edge Impulse Linux runner ' + packageVersion)
+    .version(packageVersion)
+    .option('--model-file <file>', 'Specify model file, if not provided the model will be fetched from Edge Impulse')
+    .option('--api-key <key>', 'API key to authenticate with Edge Impulse (overrides current credentials)')
+    .option('--download <file>', 'Just download the model and store it on the file system')
+    .option('--clean', 'Clear credentials')
+    .option('--silent', `Run in silent mode, don't prompt for credentials`)
+    .option('--quantized', 'Download int8 quantized neural networks, rather than the float32 neural networks. ' +
+        'These might run faster on some architectures, but have reduced accuracy.')
+    .option('--enable-camera', 'Always enable the camera. This flag needs to be used to get data from the microphone ' +
+        'on some USB webcams.')
+    .option('--dev', 'List development servers, alternatively you can use the EI_HOST environmental variable ' +
+        'to specify the Edge Impulse instance.')
+    .option('--verbose', 'Enable debug logs')
+    .allowUnknownOption(true)
+    .parse(process.argv);
+
+const devArgv: boolean = !!program.dev;
+const cleanArgv: boolean = !!program.clean;
+const silentArgv: boolean = !!program.silent;
+const quantizedArgv: boolean = !!program.quantized;
+const enableCameraArgv: boolean = !!program.enableCamera;
+const verboseArgv: boolean = !!program.verbose;
+const apiKeyArgv = <string | undefined>program.apiKey;
+const modelFileArgv = <string | undefined>program.modelFile;
+const downloadArgv = <string | undefined>program.download;
+
+process.on('warning', e => console.warn(e.stack));
 
 const cliOptions = {
     appName: 'Edge Impulse Linux runner',
@@ -77,10 +104,15 @@ const onSignal = async () => {
 process.on('SIGHUP', onSignal);
 process.on('SIGINT', onSignal);
 
+function getModelPath(projectId: number, version: number) {
+    return Path.join(os.homedir(), '.ei-linux-runner', 'models', projectId + '',
+        'v' + version + (quantizedArgv ? '-quantized' : ''), 'model.eim');
+}
+
 // tslint:disable-next-line: no-floating-promises
 (async () => {
     try {
-        console.log(`This is a development preview that only runs on macOS.`);
+        console.log(`This is a development preview.`);
         console.log(`Edge Impulse does not offer support on edge-impulse-linux-runner at the moment.`);
         console.log(``);
 
@@ -96,21 +128,40 @@ process.on('SIGINT', onSignal);
 
             await configFactory.setLinuxProjectId(projectId);
 
-            const downloader = new RunnerDownloader(projectId, config);
+            const downloader = new RunnerDownloader(projectId, quantizedArgv ? 'int8' : 'float32', config);
             downloader.on('build-progress', msg => {
                 console.log(BUILD_PREFIX, msg);
             });
 
-            let deployment = await downloader.downloadDeployment();
+            // no new version? and already downloaded? return that model
+            let currVersion = await downloader.getLastDeploymentVersion();
+            if (currVersion && await checkFileExists(getModelPath(projectId, currVersion))) {
+                modelFile = getModelPath(projectId, currVersion);
+                console.log(RUNNER_PREFIX, 'Already have model', modelFile, 'not downloading...');
+            }
+            else {
+                console.log(RUNNER_PREFIX, 'Downloading model...');
 
-            let tmpDir = await fs.promises.mkdtemp('ei-' + Date.now());
-            tmpDir = Path.join(os.tmpdir(), tmpDir);
-            await fs.promises.mkdir(tmpDir, { recursive: true });
-            modelFile = Path.join(tmpDir, downloader.getDownloadType());
-            await fs.promises.writeFile(modelFile, deployment);
-            await fs.promises.chmod(modelFile, 0o755);
+                let deployment = await downloader.downloadDeployment();
+                let tmpDir = await fs.promises.mkdtemp('ei-' + Date.now());
+                tmpDir = Path.join(os.tmpdir(), tmpDir);
+                await fs.promises.mkdir(tmpDir, { recursive: true });
+                modelFile = Path.join(tmpDir, await downloader.getDownloadType());
+                await fs.promises.writeFile(modelFile, deployment);
+                await fs.promises.chmod(modelFile, 0o755);
+
+                console.log(RUNNER_PREFIX, 'Downloading model OK');
+            }
+            if (downloadArgv) {
+                await fs.promises.copyFile(modelFile, downloadArgv);
+                console.log(RUNNER_PREFIX, 'Stored model in', Path.resolve(downloadArgv));
+                return process.exit(0);
+            }
         }
         else {
+            if (downloadArgv) {
+                throw new Error('Cannot combine --model-file and --download');
+            }
             configFactory = new Config();
             modelFile = modelFileArgv;
         }
@@ -120,11 +171,12 @@ process.on('SIGINT', onSignal);
 
         // if downloaded? then store...
         if (!modelFileArgv) {
-            let folder = Path.join(os.homedir(), '.ei-linux-runner', 'models', model.project.id + '',
-                'v' + model.project.deploy_version);
-            await fs.promises.mkdir(folder, { recursive: true });
-            await fs.promises.rename(modelFile, Path.join(folder, Path.basename(modelFile)));
-            console.log(RUNNER_PREFIX, 'Stored model version in', Path.join(folder, Path.basename(modelFile)));
+            let file = getModelPath(model.project.id, model.project.deploy_version);
+            if (file !== modelFile) {
+                await fs.promises.mkdir(Path.dirname(file), { recursive: true });
+                await fs.promises.rename(modelFile, file);
+                console.log(RUNNER_PREFIX, 'Stored model version in', file);
+            }
         }
 
         let param = model.modelParameters;
@@ -136,19 +188,35 @@ process.on('SIGINT', onSignal);
                 'window length', ((param.input_features_count / param.frequency) * 1000) + 'ms.',
                 'classes', param.labels);
 
-            audioClassifier = new AudioClassifier(runner);
+            if (enableCameraArgv) {
+                await connectCamera(configFactory);
+            }
+
+            audioClassifier = new AudioClassifier(runner, verboseArgv);
+
+            audioClassifier.on('noAudioError', async () => {
+                console.log('');
+                console.log(RUNNER_PREFIX, 'ERR: Did not receive any audio.');
+                console.log('ERR: Did not receive any audio. Here are some potential causes:');
+                console.log('* If you are on macOS this might be a permissions issue.');
+                console.log('  Are you running this command from a simulated shell (like in Visual Studio Code)?');
+                console.log('* If you are on Linux and use a microphone in a webcam, you might also want');
+                console.log('  to initialize the camera with --enable-camera');
+                await audioClassifier?.stop();
+                process.exit(1);
+            });
 
             await audioClassifier.start(250);
 
-            audioClassifier.on('result', (result, timeMs) => {
+            audioClassifier.on('result', (ev, timeMs) => {
                 // print the raw predicted values for this frame
                 // (turn into string here so the content does not jump around)
                 // tslint:disable-next-line: no-unsafe-any
-                let c = <{ [k: string]: string | number }>(<any>result.classification);
+                let c = <{ [k: string]: string | number }>(<any>ev.result.classification);
                 for (let k of Object.keys(c)) {
                     c[k] = (<number>c[k]).toFixed(4);
                 }
-                console.log('classifyRes', timeMs + 'ms.', c);
+                console.log('classifyRes', timeMs + 'ms.', c, ev.timing);
             });
         }
         else if (param.sensorType === 'camera') {
@@ -159,60 +227,21 @@ process.on('SIGINT', onSignal);
                     param.image_channel_count + ' channels)',
                 'classes', param.labels);
 
-            const imagesnap = new Imagesnap();
-            await imagesnap.init();
+            let camera = await connectCamera(configFactory);
 
-            let device: string | undefined;
-            const devices = await imagesnap.listDevices();
-            if (devices.length === 0) {
-                throw new Error('Cannot find any webcams');
-            }
-
-            const storedCamera = await configFactory.getCamera();
-            if (storedCamera && devices.indexOf(storedCamera) > -1) {
-                device = storedCamera;
-            }
-            else if (devices.length === 1) {
-                device = devices[0];
-            }
-            else {
-                let inqRes = await inquirer.prompt([{
-                    type: 'list',
-                    choices: (devices || []).map(p => ({ name: p, value: p })),
-                    name: 'camera',
-                    message: 'Select a camera',
-                    pageSize: 20
-                }]);
-                device = <string>inqRes.camera;
-            }
-            await configFactory.storeCamera(device);
-
-            console.log(RUNNER_PREFIX, 'Using camera', device, 'starting...');
-
-            await imagesnap.start({
-                device: device,
-                intervalMs: 200,
-            });
-
-            imagesnap.on('error', error => {
-                console.log(RUNNER_PREFIX, 'imagesnap error', error);
-            });
-
-            console.log(RUNNER_PREFIX, 'Connected to camera');
-
-            imageClassifier = new ImageClassifier(runner, imagesnap);
+            imageClassifier = new ImageClassifier(runner, camera);
 
             await imageClassifier.start();
 
-            imageClassifier.on('result', (result, timeMs) => {
+            imageClassifier.on('result', (ev, timeMs) => {
                 // print the raw predicted values for this frame
                 // (turn into string here so the content does not jump around)
                 // tslint:disable-next-line: no-unsafe-any
-                let c = <{ [k: string]: string | number }>(<any>result.classification);
+                let c = <{ [k: string]: string | number }>(<any>ev.result.classification);
                 for (let k of Object.keys(c)) {
                     c[k] = (<number>c[k]).toFixed(4);
                 }
-                console.log('classifyRes', timeMs + 'ms.', c);
+                console.log('classifyRes', timeMs + 'ms.', c, ev.timing);
             });
         }
         else {
@@ -221,9 +250,69 @@ process.on('SIGINT', onSignal);
     }
     catch (ex) {
         console.warn(RUNNER_PREFIX, 'Failed to run impulse', ex);
+        if (audioClassifier) {
+            await audioClassifier.stop();
+        }
+        if (imageClassifier) {
+            await imageClassifier.stop();
+        }
         process.exit(1);
     }
 })();
+
+async function connectCamera(cf: Config) {
+    let camera: ICamera;
+    if (process.platform === 'darwin') {
+        camera = new Imagesnap();
+    }
+    else if (process.platform === 'linux') {
+        camera = new Ffmpeg(verboseArgv);
+    }
+    else {
+        throw new Error('Unsupported platform "' + process.platform + '"');
+    }
+    await camera.init();
+
+    let device: string | undefined;
+    const devices = await camera.listDevices();
+    if (devices.length === 0) {
+        throw new Error('Cannot find any webcams');
+    }
+
+    const storedCamera = await cf.getCamera();
+    if (storedCamera && devices.find(d => d.id === storedCamera)) {
+        device = storedCamera;
+    }
+    else if (devices.length === 1) {
+        device = devices[0].id;
+    }
+    else {
+        let inqRes = await inquirer.prompt([{
+            type: 'list',
+            choices: (devices || []).map(p => ({ name: p.name, value: p.id })),
+            name: 'camera',
+            message: 'Select a camera',
+            pageSize: 20
+        }]);
+        device = <string>inqRes.camera;
+    }
+    await cf.storeCamera(device);
+
+    console.log(RUNNER_PREFIX, 'Using camera', device, 'starting...');
+
+    await camera.start({
+        deviceId: device,
+        intervalMs: 200,
+    });
+
+    camera.on('error', error => {
+        console.log(RUNNER_PREFIX, 'camera error', error);
+    });
+
+    console.log(RUNNER_PREFIX, 'Connected to camera');
+
+    return camera;
+}
 
 function buildWavFileBuffer(data: Buffer, intervalMs: number) {
     // let's build a WAV file!
@@ -256,4 +345,12 @@ function buildWavFileBuffer(data: Buffer, intervalMs: number) {
     }
 
     return Buffer.concat([ Buffer.from(headerArr), data ]);
+}
+
+function checkFileExists(file: string) {
+    return new Promise(resolve => {
+        return fs.promises.access(file, fs.constants.F_OK)
+            .then(() => resolve(true))
+            .catch(() => resolve(false));
+    });
 }

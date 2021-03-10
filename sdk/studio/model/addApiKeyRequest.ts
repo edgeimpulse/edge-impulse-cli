@@ -24,6 +24,7 @@ export class AddApiKeyRequest {
     * Whether this key should be used as a development key.
     */
     'isDevelopmentKey': boolean;
+    'role': AddApiKeyRequestRoleEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +43,11 @@ export class AddApiKeyRequest {
             "name": "isDevelopmentKey",
             "baseName": "isDevelopmentKey",
             "type": "boolean"
+        },
+        {
+            "name": "role",
+            "baseName": "role",
+            "type": "AddApiKeyRequestRoleEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -49,3 +55,6 @@ export class AddApiKeyRequest {
     }
 }
 
+
+export type AddApiKeyRequestRoleEnum = 'admin' | 'readonly' | 'ingestiononly';
+export const AddApiKeyRequestRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly'];

@@ -49,6 +49,10 @@ export class ImpulseInputBlock {
     */
     'resizeMode'?: ImpulseInputBlockResizeModeEnum;
     /**
+    * Resize method to use when resizing images
+    */
+    'resizeMethod'?: ImpulseInputBlockResizeMethodEnum;
+    /**
     * If images are resized using a crop, choose where to anchor the crop
     */
     'cropAnchor'?: ImpulseInputBlockCropAnchorEnum;
@@ -102,6 +106,11 @@ export class ImpulseInputBlock {
             "type": "ImpulseInputBlockResizeModeEnum"
         },
         {
+            "name": "resizeMethod",
+            "baseName": "resizeMethod",
+            "type": "ImpulseInputBlockResizeMethodEnum"
+        },
+        {
             "name": "cropAnchor",
             "baseName": "cropAnchor",
             "type": "ImpulseInputBlockCropAnchorEnum"
@@ -118,6 +127,9 @@ export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image'
 
 export type ImpulseInputBlockResizeModeEnum = 'squash' | 'fit-short' | 'fit-long' | 'crop';
 export const ImpulseInputBlockResizeModeEnumValues: string[] = ['squash', 'fit-short', 'fit-long', 'crop'];
+
+export type ImpulseInputBlockResizeMethodEnum = 'lanczos3' | 'nearest';
+export const ImpulseInputBlockResizeMethodEnumValues: string[] = ['lanczos3', 'nearest'];
 
 export type ImpulseInputBlockCropAnchorEnum = 'top-left' | 'top-center' | 'top-right' | 'middle-left' | 'middle-center' | 'middle-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 export const ImpulseInputBlockCropAnchorEnumValues: string[] = ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right'];

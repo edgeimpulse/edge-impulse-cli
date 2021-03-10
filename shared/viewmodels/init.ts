@@ -29,6 +29,7 @@ export enum PageType {
     Evaluate = 27,
     Tuner = 28,
     LabelObjectDetection = 29,
+    SelectProjectThirdParty = 30,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

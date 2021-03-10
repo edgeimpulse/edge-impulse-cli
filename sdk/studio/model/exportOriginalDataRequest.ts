@@ -16,6 +16,10 @@ export class ExportOriginalDataRequest {
     * Whether to rename the exported file names to an uploader friendly format (e.g. label.filename.cbor)
     */
     'uploaderFriendlyFilenames': boolean;
+    /**
+    * Whether to retain crops and splits. If this is disabled, then the original files are returned (as they were uploaded).
+    */
+    'retainCrops': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,6 +27,11 @@ export class ExportOriginalDataRequest {
         {
             "name": "uploaderFriendlyFilenames",
             "baseName": "uploaderFriendlyFilenames",
+            "type": "boolean"
+        },
+        {
+            "name": "retainCrops",
+            "baseName": "retainCrops",
             "type": "boolean"
         }    ];
 

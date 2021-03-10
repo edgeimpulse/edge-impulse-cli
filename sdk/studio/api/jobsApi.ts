@@ -17,6 +17,7 @@ import http = require('http');
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
 import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
 import { ExportOriginalDataRequest } from '../model/exportOriginalDataRequest';
+import { ExportWavDataRequest } from '../model/exportWavDataRequest';
 import { GenerateFeaturesRequest } from '../model/generateFeaturesRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetJobResponse } from '../model/getJobResponse';
@@ -24,6 +25,7 @@ import { JobSummaryResponse } from '../model/jobSummaryResponse';
 import { ListJobsResponse } from '../model/listJobsResponse';
 import { LogStdoutResponse } from '../model/logStdoutResponse';
 import { ProjectVersionRequest } from '../model/projectVersionRequest';
+import { RestoreProjectFromPublicRequest } from '../model/restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from '../model/restoreProjectRequest';
 import { SetKerasParameterRequest } from '../model/setKerasParameterRequest';
 import { StartJobResponse } from '../model/startJobResponse';
@@ -785,16 +787,14 @@ export class JobsApi {
         });
     }
     /**
-     * Evaluates optimal model architecture for Keras block
-     * @summary Optimize model (Keras)
+     * Evaluates optimal model architecture
+     * @summary Optimize model
      * @param projectId Project ID
-     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param setKerasParameterRequest 
      */
-    public async optimizeKerasJob (projectId: number, learnId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
-        const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize/keras/{learnId}'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+    public async optimizeJob (projectId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -808,17 +808,12 @@ export class JobsApi {
 
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling optimizeKerasJob.');
-        }
-
-        // verify required parameter 'learnId' is not null or undefined
-        if (learnId === null || learnId === undefined) {
-            throw new Error('Required parameter learnId was null or undefined when calling optimizeKerasJob.');
+            throw new Error('Required parameter projectId was null or undefined when calling optimizeJob.');
         }
 
         // verify required parameter 'setKerasParameterRequest' is not null or undefined
         if (setKerasParameterRequest === null || setKerasParameterRequest === undefined) {
-            throw new Error('Required parameter setKerasParameterRequest was null or undefined when calling optimizeKerasJob.');
+            throw new Error('Required parameter setKerasParameterRequest was null or undefined when calling optimizeJob.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -954,6 +949,80 @@ export class JobsApi {
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling startEvaluateJob.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Make a version of a project public. This makes all data and state available (read-only) on a public URL, and allows users to clone this project.
+     * @summary Make a version public
+     * @param projectId Project ID
+     * @param versionId Version ID
+     */
+    public async startMakeVersionPublicJob (projectId: number, versionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/versions/{versionId}/make-public'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling startMakeVersionPublicJob.');
+        }
+
+        // verify required parameter 'versionId' is not null or undefined
+        if (versionId === null || versionId === undefined) {
+            throw new Error('Required parameter versionId was null or undefined when calling startMakeVersionPublicJob.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1148,6 +1217,80 @@ export class JobsApi {
         });
     }
     /**
+     * Restore a project to a certain public version. This can only applied to a project without data, and will overwrite your impulse and all settings.
+     * @summary Restore project to public version
+     * @param projectId Project ID
+     * @param restoreProjectFromPublicRequest 
+     */
+    public async startRestoreJobFromPublic (projectId: number, restoreProjectFromPublicRequest: RestoreProjectFromPublicRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/restore/from-public'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling startRestoreJobFromPublic.');
+        }
+
+        // verify required parameter 'restoreProjectFromPublicRequest' is not null or undefined
+        if (restoreProjectFromPublicRequest === null || restoreProjectFromPublicRequest === undefined) {
+            throw new Error('Required parameter restoreProjectFromPublicRequest was null or undefined when calling startRestoreJobFromPublic.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(restoreProjectFromPublicRequest, "RestoreProjectFromPublicRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Retrains the current impulse with the last known parameters. Updates are streamed over the websocket API.
      * @summary Retrain
      * @param projectId Project ID
@@ -1292,8 +1435,9 @@ export class JobsApi {
      * Export all the data in the project in WAV format.  Updates are streamed over the websocket API.
      * @summary Export data as WAV
      * @param projectId Project ID
+     * @param exportWavDataRequest 
      */
-    public async startWavExportJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
+    public async startWavExportJob (projectId: number, exportWavDataRequest: ExportWavDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: StartJobResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/export/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1312,6 +1456,11 @@ export class JobsApi {
             throw new Error('Required parameter projectId was null or undefined when calling startWavExportJob.');
         }
 
+        // verify required parameter 'exportWavDataRequest' is not null or undefined
+        if (exportWavDataRequest === null || exportWavDataRequest === undefined) {
+            throw new Error('Required parameter exportWavDataRequest was null or undefined when calling startWavExportJob.');
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -1323,6 +1472,7 @@ export class JobsApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
+            body: ObjectSerializer.serialize(exportWavDataRequest, "ExportWavDataRequest")
         };
 
         let authenticationPromise = Promise.resolve();

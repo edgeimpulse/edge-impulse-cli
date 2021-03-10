@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class BuildOrganizationOnDeviceModelRequest {
     /**
@@ -17,6 +18,7 @@ export class BuildOrganizationOnDeviceModelRequest {
     */
     'engine': BuildOrganizationOnDeviceModelRequestEngineEnum;
     'deployBlockId': number;
+    'modelType'?: KerasModelTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +32,11 @@ export class BuildOrganizationOnDeviceModelRequest {
             "name": "deployBlockId",
             "baseName": "deployBlockId",
             "type": "number"
+        },
+        {
+            "name": "modelType",
+            "baseName": "modelType",
+            "type": "KerasModelTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {

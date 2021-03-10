@@ -19,6 +19,7 @@ export class DSPBlock {
     'name': string;
     'recommended'?: boolean;
     'experimental': boolean;
+    'latestImplementationVersion': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +58,11 @@ export class DSPBlock {
             "name": "experimental",
             "baseName": "experimental",
             "type": "boolean"
+        },
+        {
+            "name": "latestImplementationVersion",
+            "baseName": "latestImplementationVersion",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

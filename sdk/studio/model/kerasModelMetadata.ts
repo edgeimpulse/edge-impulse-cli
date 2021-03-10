@@ -46,6 +46,7 @@ export class KerasModelMetadata {
     * Metrics for each of the available model types
     */
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
+    'hasTrainedModel': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -89,6 +90,11 @@ export class KerasModelMetadata {
             "name": "modelValidationMetrics",
             "baseName": "model_validation_metrics",
             "type": "Array<KerasModelMetadataMetrics>"
+        },
+        {
+            "name": "hasTrainedModel",
+            "baseName": "hasTrainedModel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

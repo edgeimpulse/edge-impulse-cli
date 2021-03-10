@@ -29,6 +29,7 @@ export class KerasModelMetadataMetrics {
     */
     'report': object;
     'onDevicePerformance': Array<KerasModelMetadataMetricsOnDevicePerformance>;
+    'predictions'?: Array<Array<number>>;
 
     static discriminator: string | undefined = undefined;
 
@@ -62,6 +63,11 @@ export class KerasModelMetadataMetrics {
             "name": "onDevicePerformance",
             "baseName": "onDevicePerformance",
             "type": "Array<KerasModelMetadataMetricsOnDevicePerformance>"
+        },
+        {
+            "name": "predictions",
+            "baseName": "predictions",
+            "type": "Array<Array<number>>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -15,6 +15,7 @@ import { User } from './user';
 export class Project {
     'id': number;
     'name': string;
+    'description': string;
     'created': Date;
     /**
     * User or organization that owns the project
@@ -39,6 +40,11 @@ export class Project {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "description",
+            "baseName": "description",
             "type": "string"
         },
         {

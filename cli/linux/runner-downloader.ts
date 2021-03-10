@@ -1,31 +1,46 @@
-import { EdgeImpulseConfig } from "../../config";
+import { EdgeImpulseConfig } from "../config";
 import WebSocket from 'ws';
 import { EventEmitter } from 'tsee';
+import { spawnHelper } from "./sensors/spawn-helper";
 
 export class RunnerDownloader extends EventEmitter<{
     'build-progress': (msg: string) => void
 }> {
     private _projectId: number;
     private _config: EdgeImpulseConfig;
+    private _modelType: 'int8' | 'float32';
 
-    constructor(projectId: number, config: EdgeImpulseConfig) {
+    constructor(projectId: number, modelType: 'int8' | 'float32', config: EdgeImpulseConfig) {
         super();
 
         this._projectId = projectId;
         this._config = config;
+        this._modelType = modelType;
     }
 
-    getDownloadType() {
+    async getDownloadType() {
         let downloadType: string;
-        if (process.arch !== 'x64') {
-            throw new Error('Unsupported architecture "' + process.platform + '", only ' +
-                'x64 supported for now');
-        }
         if (process.platform === 'darwin') {
+            if (process.arch !== 'x64') {
+                throw new Error('Unsupported architecture "' + process.arch + '", only ' +
+                    'x64 supported for now');
+            }
             downloadType = 'runner-mac-x86_64';
         }
         else if (process.platform === 'linux') {
-            downloadType = 'runner-linux-x86_64';
+            if (process.arch === 'arm') {
+                let uname = (await spawnHelper('uname', ['-m'])).trim();
+                if (uname !== 'armv7l') {
+                    throw new Error('Unsupported architecture "' + uname + '", only ' +
+                        'armv7l supported for now');
+                }
+
+                downloadType = 'runner-linux-armv7';
+            }
+            else {
+                throw new Error('Unsupported architecture "' + process.arch + '", only ' +
+                    'arm supported for now');
+            }
         }
         else {
             throw new Error('Unsupported platform "' + process.platform + '"');
@@ -33,43 +48,46 @@ export class RunnerDownloader extends EventEmitter<{
         return downloadType;
     }
 
-    async downloadDeployment() {
-        let downloadType = this.getDownloadType();
+    async getLastDeploymentVersion() {
+        let downloadType = await this.getDownloadType();
 
-        try {
-            let deployment = await this._config.api.deploy.downloadBuild(this._projectId, downloadType);
-            return deployment.body;
+        let deployInfo = await this._config.api.deploy.getDeployment(
+            this._projectId, downloadType, this._modelType);
+
+        if (!deployInfo.body.success) {
+            throw deployInfo.body.error;
         }
-        catch (ex2) {
+
+        return deployInfo.body.hasDeployment && typeof deployInfo.body.version === 'number' ?
+            deployInfo.body.version :
+            null;
+    }
+
+    async downloadDeployment() {
+        let downloadType = await this.getDownloadType();
+
+        let deployInfo = await this._config.api.deploy.getDeployment(
+            this._projectId, downloadType, this._modelType);
+
+        if (!deployInfo.body.success) {
+            throw deployInfo.body.error;
+        }
+
+        if (!deployInfo.body.hasDeployment) {
             let ws = await this.getWebsocket();
 
-            let impulseRes = await this._config.api.impulse.getImpulse(this._projectId);
-            if (!impulseRes.body.success || !impulseRes.body.impulse) {
-                throw new Error(impulseRes.body.error);
-            }
-
-            // switch to f32 models for all learn blocks
-            for (let l of impulseRes.body.impulse.learnBlocks) {
-                if (!l.type.startsWith('keras')) continue;
-
-                let kRes = await this._config.api.learn.setKeras(this._projectId, l.id, {
-                    selectedModelType: 'float32'
-                });
-                if (!kRes.body.success) {
-                    throw new Error(kRes.body.error);
-                }
-            }
-
             await this.buildModel(downloadType, ws);
-
-            let deployment = await this._config.api.deploy.downloadBuild(this._projectId, downloadType);
-            return deployment.body;
         }
+
+        let deployment = await this._config.api.deploy.downloadBuild(
+            this._projectId, downloadType, this._modelType);
+        return deployment.body;
     }
 
     private async buildModel(downloadType: string, ws: WebSocket) {
         let buildRes = await this._config.api.jobs.buildOnDeviceModelJob(this._projectId, downloadType, {
-            engine: 'tflite-eon'
+            engine: 'tflite',
+            modelType: this._modelType
         });
         if (!buildRes.body.success) {
             throw new Error(buildRes.body.error);

@@ -30,6 +30,7 @@ export class OrganizationDeployBlock {
     'limitsMemory'?: number;
     'photo': string;
     'integrateUrl'?: string;
+    'privileged': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -108,6 +109,11 @@ export class OrganizationDeployBlock {
             "name": "integrateUrl",
             "baseName": "integrateUrl",
             "type": "string"
+        },
+        {
+            "name": "privileged",
+            "baseName": "privileged",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

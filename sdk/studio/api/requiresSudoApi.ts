@@ -21,6 +21,7 @@ import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
+import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -522,6 +523,80 @@ export class RequiresSudoApi {
             useQuerystring: this._useQuerystring,
             json: true,
             body: ObjectSerializer.serialize(setProjectComputeTimeRequest, "SetProjectComputeTimeRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Change the DSP file size limit for the project. This function is only available through a JWT token, and is not available to all users.
+     * @summary Set DSP file size limit
+     * @param projectId Project ID
+     * @param setProjectDspFileSizeRequest 
+     */
+    public async setProjectFileSizeLimit (projectId: number, setProjectDspFileSizeRequest: SetProjectDspFileSizeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp-file-size-limit'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setProjectFileSizeLimit.');
+        }
+
+        // verify required parameter 'setProjectDspFileSizeRequest' is not null or undefined
+        if (setProjectDspFileSizeRequest === null || setProjectDspFileSizeRequest === undefined) {
+            throw new Error('Required parameter setProjectDspFileSizeRequest was null or undefined when calling setProjectFileSizeLimit.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(setProjectDspFileSizeRequest, "SetProjectDspFileSizeRequest")
         };
 
         let authenticationPromise = Promise.resolve();

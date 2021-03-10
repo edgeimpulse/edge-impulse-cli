@@ -17,6 +17,10 @@ export class ProjectVersionRequest {
     */
     'bucketId'?: number;
     'description': string;
+    /**
+    * Whether to make this version available on a public URL.
+    */
+    'makePublic': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +34,11 @@ export class ProjectVersionRequest {
             "name": "description",
             "baseName": "description",
             "type": "string"
+        },
+        {
+            "name": "makePublic",
+            "baseName": "makePublic",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

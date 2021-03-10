@@ -29,5 +29,5 @@ export class SetMemberRoleRequest {
 }
 
 
-export type SetMemberRoleRequestRoleEnum = 'admin' | 'member';
-export const SetMemberRoleRequestRoleEnumValues: string[] = ['admin', 'member'];
+export type SetMemberRoleRequestRoleEnum = 'admin' | 'member' | 'guest';
+export const SetMemberRoleRequestRoleEnumValues: string[] = ['admin', 'member', 'guest'];

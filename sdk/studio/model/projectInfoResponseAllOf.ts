@@ -47,6 +47,7 @@ export class ProjectInfoResponseAllOf {
     */
     'evaluationProjectType'?: string;
     'urls': ProjectInfoResponseAllOfUrls;
+    'showCreateFirstImpulse': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -125,6 +126,11 @@ export class ProjectInfoResponseAllOf {
             "name": "urls",
             "baseName": "urls",
             "type": "ProjectInfoResponseAllOfUrls"
+        },
+        {
+            "name": "showCreateFirstImpulse",
+            "baseName": "showCreateFirstImpulse",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

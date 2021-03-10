@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Imagesnap } from "./imagesnap";
+import { Imagesnap } from "./sensors/imagesnap";
 import inquirer from 'inquirer';
 import { initCliApp, setupCliApp } from "../init-cli-app";
 import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from "../remote-mgmt-service";
@@ -10,16 +10,36 @@ import { Config, EdgeImpulseConfig } from "../config";
 import { EventEmitter } from "tsee";
 import { Mutex } from 'async-mutex';
 import sharp from 'sharp';
-import { AudioRecorder } from "./recorder";
+import { AudioRecorder } from "./sensors/recorder";
+import { ICamera } from "./sensors/icamera";
+import { Ffmpeg } from "./sensors/ffmpeg";
+import { ips } from "../get-ips";
+import program from 'commander';
+import Path from 'path';
+import fs from 'fs';
 
-const cleanArgv = process.argv.indexOf('--clean') > -1;
-const silentArgv = process.argv.indexOf('--silent') > -1;
-const devArgv = process.argv.indexOf('--dev') > -1;
-const apiKeyArgvIx = process.argv.indexOf('--api-key');
-const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
-const hmacKeyArgvIx = process.argv.indexOf('--hmac-key');
-const hmacKeyArgv = hmacKeyArgvIx !== -1 ? process.argv[hmacKeyArgvIx + 1] : undefined;
-const verboseArgv = process.argv.indexOf('--verbose') > -1;
+const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
+    Path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8'))).version;
+
+program
+    .description('Edge Impulse Linux client ' + packageVersion)
+    .version(packageVersion)
+    .option('--api-key <key>', 'API key to authenticate with Edge Impulse (overrides current credentials)')
+    .option('--hmac-key <key>', 'HMAC key to sign new data with (overrides current credentials)')
+    .option('--clean', 'Clear credentials')
+    .option('--silent', `Run in silent mode, don't prompt for credentials`)
+    .option('--dev', 'List development servers, alternatively you can use the EI_HOST environmental variable ' +
+        'to specify the Edge Impulse instance.')
+    .option('--verbose', 'Enable debug logs')
+    .allowUnknownOption(true)
+    .parse(process.argv);
+
+const devArgv: boolean = !!program.dev;
+const cleanArgv: boolean = !!program.clean;
+const silentArgv: boolean = !!program.silent;
+const verboseArgv: boolean = !!program.verbose;
+const apiKeyArgv = <string | undefined>program.apiKey;
+const hmacKeyArgv = <string | undefined>program.hmacKey;
 
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
@@ -43,7 +63,7 @@ const cliOptions = {
 class LinuxDevice extends EventEmitter<{
     snapshot: (buffer: Buffer) => void
 }> implements RemoteMgmtDevice  {
-    private _imagesnap: Imagesnap;
+    private _camera: ICamera;
     private _config: EdgeImpulseConfig;
     private _devKeys: { apiKey: string, hmacKey: string };
     private _snapshotStreaming: boolean = false;
@@ -51,14 +71,14 @@ class LinuxDevice extends EventEmitter<{
     private _snapshotMutex = new Mutex();
     private _snapshotId = 0;
 
-    constructor(imagesnapInstance: Imagesnap, config: EdgeImpulseConfig, devKeys: { apiKey: string, hmacKey: string }) {
+    constructor(cameraInstance: ICamera, config: EdgeImpulseConfig, devKeys: { apiKey: string, hmacKey: string }) {
         super();
 
-        this._imagesnap  = imagesnapInstance;
+        this._camera  = cameraInstance;
         this._config = config;
         this._devKeys = devKeys;
 
-        this._imagesnap.on('snapshot', async (buffer) => {
+        this._camera.on('snapshot', async (buffer) => {
             const id = ++this._snapshotId;
             const release = await this._snapshotMutex.acquire();
 
@@ -93,10 +113,16 @@ class LinuxDevice extends EventEmitter<{
     }
 
     async getDeviceId() {
-        return '3c:22:fb:98:72:a7';
+        return ips.length > 0 ? ips[0].mac : '00:00:00:00:00:00';
     }
 
     getDeviceType() {
+        let id = (ips.length > 0 ? ips[0].mac : '00:00:00:00:00:00').toLowerCase();
+
+        if (id.startsWith('dc:a6:32') || id.startsWith('b8:27:eb')) {
+            return 'RASPBERRY_PI';
+        }
+
         return 'EDGE_IMPULSE_LINUX';
     }
 
@@ -136,7 +162,7 @@ class LinuxDevice extends EventEmitter<{
                 setTimeout(() => {
                     reject('Timeout');
                 }, 3000);
-                this._imagesnap.once('snapshot', buffer => {
+                this._camera.once('snapshot', buffer => {
                     resolve(buffer);
                 });
             });
@@ -167,7 +193,9 @@ class LinuxDevice extends EventEmitter<{
             const recorder = new AudioRecorder({
                 sampleRate: Math.round(1000 / data.interval),
                 channels: 1,
-                asRaw: true
+                asRaw: true,
+                recordProgram: 'sox',
+                verbose: verboseArgv
             });
 
             console.log(SERIAL_PREFIX, 'Waiting 2 seconds');
@@ -272,7 +300,7 @@ class LinuxDevice extends EventEmitter<{
     }
 }
 
-let imagesnap: Imagesnap | undefined;
+let camera: ICamera | undefined;
 let configFactory: Config;
 
 // tslint:disable-next-line: no-floating-promises
@@ -282,7 +310,7 @@ let configFactory: Config;
         const config = init.config;
         configFactory = init.configFactory;
 
-        console.log(`This is a development preview that only runs on macOS.`);
+        console.log(`This is a development preview.`);
         console.log(`Edge Impulse does not offer support on edge-impulse-linux at the moment.`);
         console.log(``);
 
@@ -290,10 +318,18 @@ let configFactory: Config;
 
         await configFactory.setLinuxProjectId(projectId);
 
-        imagesnap = new Imagesnap();
-        await imagesnap.init();
+        if (process.platform === 'darwin') {
+            camera = new Imagesnap();
+        }
+        else if (process.platform === 'linux') {
+            camera = new Ffmpeg(verboseArgv);
+        }
+        else {
+            throw new Error('Unsupported platform: "' + process.platform + '"');
+        }
+        await camera.init();
 
-        const linuxDevice = new LinuxDevice(imagesnap, config, devKeys);
+        const linuxDevice = new LinuxDevice(camera, config, devKeys);
         const remoteMgmt = new RemoteMgmt(projectId, devKeys, config, linuxDevice);
 
         let firstExit = true;
@@ -307,8 +343,8 @@ let configFactory: Config;
                     'Press CTRL+C again to force quit.');
                 firstExit = false;
                 try {
-                    if (imagesnap) {
-                        await imagesnap.stop();
+                    if (camera) {
+                        await camera.stop();
                     }
                     process.exit(0);
                 }
@@ -324,22 +360,22 @@ let configFactory: Config;
         process.on('SIGINT', onSignal);
 
         let device: string | undefined;
-        const devices = await imagesnap.listDevices();
+        const devices = await camera.listDevices();
         if (devices.length === 0) {
             throw new Error('Cannot find any webcams');
         }
 
         const storedCamera = await configFactory.getCamera();
-        if (storedCamera && devices.indexOf(storedCamera) > -1) {
+        if (storedCamera && devices.find(d => d.id === storedCamera)) {
             device = storedCamera;
         }
         else if (devices.length === 1) {
-            device = devices[0];
+            device = devices[0].id;
         }
         else {
             let inqRes = await inquirer.prompt([{
                 type: 'list',
-                choices: (devices || []).map(p => ({ name: p, value: p })),
+                choices: (devices || []).map(p => ({ name: p.name, value: p.id })),
                 name: 'camera',
                 message: 'Select a camera',
                 pageSize: 20
@@ -350,12 +386,12 @@ let configFactory: Config;
 
         console.log(SERIAL_PREFIX, 'Using camera', device, 'starting...');
 
-        await imagesnap.start({
-            device: device,
+        await camera.start({
+            deviceId: device,
             intervalMs: 200,
         });
 
-        imagesnap.on('error', error => {
+        camera.on('error', error => {
             console.log('imagesnap error', error);
         });
 
@@ -363,8 +399,8 @@ let configFactory: Config;
 
         remoteMgmt.on('authenticationFailed', async () => {
             console.log(SERIAL_PREFIX, 'Authentication failed');
-            if (imagesnap) {
-                await imagesnap.stop();
+            if (camera) {
+                await camera.stop();
             }
             process.exit(1);
         });
@@ -373,8 +409,8 @@ let configFactory: Config;
     }
     catch (ex) {
         console.error('Failed to initialize linux tool', ex);
-        if (imagesnap) {
-            await imagesnap.stop();
+        if (camera) {
+            await camera.stop();
         }
         process.exit(1);
     }

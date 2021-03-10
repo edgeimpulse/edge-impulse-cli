@@ -11,29 +11,32 @@
  */
 
 
-export class SampleFeaturesRequest {
+export class AddNoteRequest {
     /**
-    * Which feature indices to include (by index)
+    * Text of the note
     */
-    'featureIxes': Array<number>;
-    'allowDimensionalityReduction': boolean;
+    'note': string;
+    /**
+    * if the note is created in response of a previous note, this field holds the ID of that note
+    */
+    'parentId'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "featureIxes",
-            "baseName": "featureIxes",
-            "type": "Array<number>"
+            "name": "note",
+            "baseName": "note",
+            "type": "string"
         },
         {
-            "name": "allowDimensionalityReduction",
-            "baseName": "allowDimensionalityReduction",
-            "type": "boolean"
+            "name": "parentId",
+            "baseName": "parentId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SampleFeaturesRequest.attributeTypeMap;
+        return AddNoteRequest.attributeTypeMap;
     }
 }
 

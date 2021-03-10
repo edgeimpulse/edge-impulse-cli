@@ -4,19 +4,26 @@ import fs from 'fs';
 import Path from 'path';
 import os from 'os';
 import { spawnHelper } from './spawn-helper';
+import { ICamera } from './icamera';
 
 export class Imagesnap extends EventEmitter<{
     snapshot: (buffer: Buffer) => void,
     error: (message: string) => void
-}> {
+}> implements ICamera {
     private _captureProcess?: ChildProcess;
     private _tempDir?: string;
     private _watcher?: fs.FSWatcher;
 
+    /**
+     * Instantiate the imagesnap backend (on macOS)
+     */
     constructor() {
         super();
     }
 
+    /**
+     * Verify that all dependencies are installed
+     */
     async init() {
         try {
             await spawnHelper('which', [ 'imagesnap' ]);
@@ -26,16 +33,28 @@ export class Imagesnap extends EventEmitter<{
         }
     }
 
+    /**
+     * List all available cameras
+     */
     async listDevices() {
         let devices = await spawnHelper('imagesnap', [ '-l' ]);
-        return devices.split('\n').filter(l => l.startsWith('<')).map(l => {
+        let names = devices.split('\n').filter(l => l.startsWith('<')).map(l => {
             let name = l.split('[')[1];
             return name.substr(0, name.length - 1);
         });
+
+        return names.map(n => ({
+            name: n,
+            id: n
+        }));
     }
 
+    /**
+     * Start the capture process
+     * @param options Specify the camera, and the required interval between snapshots
+     */
     async start(options: {
-        device: string,
+        deviceId: string,
         intervalMs: number
     }) {
         if (this._captureProcess) {
@@ -44,12 +63,12 @@ export class Imagesnap extends EventEmitter<{
 
         this._tempDir = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'edge-impulse-cli'));
         const devices = await this.listDevices();
-        if (devices.indexOf(options.device) === -1) {
-            throw new Error('Invalid device ' + options.device);
+        if (!devices.find(d => d.id === options.deviceId)) {
+            throw new Error('Invalid device ' + options.deviceId);
         }
 
         this._captureProcess = spawn('imagesnap', [
-            '-d', options.device,
+            '-d', options.deviceId,
             '-t', (options.intervalMs / 1000).toString()
         ], { env: process.env, cwd: this._tempDir });
 

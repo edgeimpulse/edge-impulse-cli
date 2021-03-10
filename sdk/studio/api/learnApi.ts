@@ -20,7 +20,6 @@ import { AnomalyTrainedFeaturesResponse } from '../model/anomalyTrainedFeaturesR
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { KerasModelMetadata } from '../model/kerasModelMetadata';
 import { KerasResponse } from '../model/kerasResponse';
-import { SampleFeaturesRequest } from '../model/sampleFeaturesRequest';
 import { SetAnomalyParameterRequest } from '../model/setAnomalyParameterRequest';
 import { SetKerasParameterRequest } from '../model/setKerasParameterRequest';
 
@@ -89,9 +88,10 @@ export class LearnApi {
      * @summary Trained features
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
-     * @param sampleFeaturesRequest 
+     * @param featureAx1 Feature axis 1
+     * @param featureAx2 Feature axis 2
      */
-    public async anomalyTrainedFeatures (projectId: number, learnId: number, sampleFeaturesRequest: SampleFeaturesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AnomalyTrainedFeaturesResponse;  }> {
+    public async anomalyTrainedFeatures (projectId: number, learnId: number, featureAx1: number, featureAx2: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AnomalyTrainedFeaturesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/features/get-graph'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -116,9 +116,22 @@ export class LearnApi {
             throw new Error('Required parameter learnId was null or undefined when calling anomalyTrainedFeatures.');
         }
 
-        // verify required parameter 'sampleFeaturesRequest' is not null or undefined
-        if (sampleFeaturesRequest === null || sampleFeaturesRequest === undefined) {
-            throw new Error('Required parameter sampleFeaturesRequest was null or undefined when calling anomalyTrainedFeatures.');
+        // verify required parameter 'featureAx1' is not null or undefined
+        if (featureAx1 === null || featureAx1 === undefined) {
+            throw new Error('Required parameter featureAx1 was null or undefined when calling anomalyTrainedFeatures.');
+        }
+
+        // verify required parameter 'featureAx2' is not null or undefined
+        if (featureAx2 === null || featureAx2 === undefined) {
+            throw new Error('Required parameter featureAx2 was null or undefined when calling anomalyTrainedFeatures.');
+        }
+
+        if (featureAx1 !== undefined) {
+            localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(featureAx1, "number");
+        }
+
+        if (featureAx2 !== undefined) {
+            localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(featureAx2, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -126,13 +139,12 @@ export class LearnApi {
         let localVarUseFormData = false;
 
         let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
+            method: 'GET',
             qs: localVarQueryParameters,
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(sampleFeaturesRequest, "SampleFeaturesRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -171,9 +183,8 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
-     * @param sampleFeaturesRequest 
      */
-    public async anomalyTrainedFeaturesPerSample (projectId: number, learnId: number, sampleId: number, sampleFeaturesRequest: SampleFeaturesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AnomalyTrainedFeaturesResponse;  }> {
+    public async anomalyTrainedFeaturesPerSample (projectId: number, learnId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AnomalyTrainedFeaturesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/features/get-graph/classification/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
@@ -204,23 +215,17 @@ export class LearnApi {
             throw new Error('Required parameter sampleId was null or undefined when calling anomalyTrainedFeaturesPerSample.');
         }
 
-        // verify required parameter 'sampleFeaturesRequest' is not null or undefined
-        if (sampleFeaturesRequest === null || sampleFeaturesRequest === undefined) {
-            throw new Error('Required parameter sampleFeaturesRequest was null or undefined when calling anomalyTrainedFeaturesPerSample.');
-        }
-
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
 
         let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
+            method: 'GET',
             qs: localVarQueryParameters,
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(sampleFeaturesRequest, "SampleFeaturesRequest")
         };
 
         let authenticationPromise = Promise.resolve();

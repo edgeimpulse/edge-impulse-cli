@@ -52,6 +52,22 @@ export class KerasResponseAllOf {
     * Learning rate (between 0 and 1). If in expert mode this will be 0.
     */
     'learningRate': number;
+    /**
+    * Possible learning rates (between 0 and 1).
+    */
+    'learningRates'?: Array<number>;
+    /**
+    * Tuning algorithm to use to search hyperparameter space
+    */
+    'tuningAlgorithm'?: KerasResponseAllOfTuningAlgorithmEnum;
+    /**
+    * Total number of trials (model configurations) to test at most.
+    */
+    'tuningMaxTrials'?: number;
+    /**
+    * Number of parallel workers used for tuning
+    */
+    'tuningWorkers'?: number;
     'augmentationPolicyImage': AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
 
@@ -114,6 +130,26 @@ export class KerasResponseAllOf {
             "type": "number"
         },
         {
+            "name": "learningRates",
+            "baseName": "learningRates",
+            "type": "Array<number>"
+        },
+        {
+            "name": "tuningAlgorithm",
+            "baseName": "tuningAlgorithm",
+            "type": "KerasResponseAllOfTuningAlgorithmEnum"
+        },
+        {
+            "name": "tuningMaxTrials",
+            "baseName": "tuningMaxTrials",
+            "type": "number"
+        },
+        {
+            "name": "tuningWorkers",
+            "baseName": "tuningWorkers",
+            "type": "number"
+        },
+        {
             "name": "augmentationPolicyImage",
             "baseName": "augmentationPolicyImage",
             "type": "AugmentationPolicyImageEnum"
@@ -135,3 +171,6 @@ export const KerasResponseAllOfTypeEnumValues: string[] = ['keras', 'keras-trans
 
 export type KerasResponseAllOfModeEnum = 'visual' | 'expert';
 export const KerasResponseAllOfModeEnumValues: string[] = ['visual', 'expert'];
+
+export type KerasResponseAllOfTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
+export const KerasResponseAllOfTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];

@@ -21,6 +21,8 @@ export class ListVersionsResponseAllOfVersions {
     'userId'?: number;
     'userName'?: string;
     'userPhoto'?: string;
+    'publicProjectId'?: number;
+    'publicProjectUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +65,16 @@ export class ListVersionsResponseAllOfVersions {
         {
             "name": "userPhoto",
             "baseName": "userPhoto",
+            "type": "string"
+        },
+        {
+            "name": "publicProjectId",
+            "baseName": "publicProjectId",
+            "type": "number"
+        },
+        {
+            "name": "publicProjectUrl",
+            "baseName": "publicProjectUrl",
             "type": "string"
         }    ];
 

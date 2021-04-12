@@ -39,6 +39,7 @@ export interface SerialConfig {
     };
     linuxProjectId: number | undefined;
     camera: string | undefined;
+    audio: string | undefined;
 }
 
 export interface EdgeImpulseAPI {
@@ -393,6 +394,17 @@ export class Config {
         await this.store(config);
     }
 
+    async getAudio() {
+        let config = await this.load();
+        return config.audio;
+    }
+
+    async storeAudio(audio: string) {
+        let config = await this.load();
+        config.audio = audio;
+        await this.store(config);
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -404,6 +416,7 @@ export class Config {
                 dataForwarderDevices: { },
                 daemonDevices: { },
                 camera: undefined,
+                audio: undefined,
                 linuxProjectId: undefined
             };
         }

@@ -32,7 +32,7 @@ export default async function(config: Config) {
         let myVersion = packageJson.version;
         if (compareSemver(latestInNpm, myVersion) === 1) {
             console.log(`\x1b[33mWARN:\x1b[0m You're running an outdated version of the Edge Impulse CLI tools`);
-            console.log('      Upgrade via `\x1b[2mnpm update -g edge-impulse-cli\x1b[0m`');
+            console.log('      Upgrade via `\x1b[2mnpm update -g ' + packageJson.name + '\x1b[0m`');
         }
         await config.setLastVersionCheck();
     }

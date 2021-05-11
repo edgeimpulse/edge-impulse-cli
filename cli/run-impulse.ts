@@ -5,7 +5,7 @@ import fs from 'fs';
 import Path from 'path';
 import EiSerialProtocol, {
     EiSerialDeviceConfig
-} from './ei-serial-protocol';
+} from '../shared/daemon/ei-serial-protocol';
 import { Config } from './config';
 import { findSerial } from './find-serial';
 import checkNewVersions from './check-new-version';

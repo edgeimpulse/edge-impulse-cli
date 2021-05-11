@@ -140,7 +140,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         if (!apiKeyArgv && fromConfig) {
             dataForwarderConfig = fromConfig;
 
-            let sensorInfo = await getSensorInfo(serial);
+            let sensorInfo = await getSensorInfo(serial, frequencyArgv);
             if (Math.abs(sensorInfo.samplingFreq - dataForwarderConfig.samplingFreq) > 10) {
                 console.log(SERIAL_PREFIX, 'Sampling frequency seems to have changed (was ' +
                     dataForwarderConfig.samplingFreq + 'Hz, but is now ' +
@@ -444,7 +444,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             catch (ex2) {
                 let ex = <Error>ex2;
                 console.error(SERIAL_PREFIX, 'Failed to get information off device', ex.message || ex.toString());
-                setTimeout(sendHello, 5000);
+                process.exit(1);
             }
         });
     }
@@ -488,7 +488,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
         (await serial.getMACAddress()) || undefined);
 
     // check what the sampling freq is for this device and how many sensors there are?
-    let sensorInfo = await getSensorInfo(serial);
+    let sensorInfo = await getSensorInfo(serial, frequencyArgv);
 
     let axes = '';
     while (axes.split(',').filter(f => !!f.trim()).length !== sensorInfo.sensorCount) {
@@ -561,14 +561,21 @@ async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
     }
 }
 
-async function getSensorInfo(serial: SerialConnector) {
+async function getSensorInfo(serial: SerialConnector, desiredFrequency: number | undefined) {
     const dataBuffers: Buffer[] = [];
     const onData = (b: Buffer) => dataBuffers.push(b);
 
     console.log(SERIAL_PREFIX, 'Detecting data frequency...');
 
+    let sleepTime = typeof desiredFrequency === 'undefined' ?
+        1000 :
+        (1000 / desiredFrequency) * 2.5;
+    if (sleepTime < 1000) {
+        sleepTime = 1000;
+    }
+
     serial.on('data', onData);
-    await sleep(1000);
+    await sleep(sleepTime);
     serial.off('data', onData);
 
     const data = Buffer.concat(dataBuffers);
@@ -576,8 +583,21 @@ async function getSensorInfo(serial: SerialConnector) {
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated
     if (!l) {
-        throw new Error('No valid sensor readings received from device: ' +
-            lines.join('\n'));
+        lines = lines.filter(x => !!x);
+
+        l = lines[0] || '';
+
+        let v = l.split(/[,\t\s]/).filter(f => !!f.trim());
+        if (v.length > 0 && v.every(x => !isNaN(Number(x))) && typeof desiredFrequency === 'undefined') {
+            throw new Error('Could not detect frequency, only a single reading received in 1 second, ' +
+                'the data forwarder can only auto-detect frequencies >2Hz. ' +
+                'You can override the frequency via --frequency.');
+        }
+
+        throw new Error('No valid sensor readings received from device' +
+            (lines.length > 0 ? ': ' + lines.join('\n') : '') + '. ' +
+            'Note that the data forwarder can only auto-detect frequencies >2Hz. ' +
+            'You can override the frequency via --frequency.');
     }
 
     let values = l.split(/[,\t\s]/).filter(f => !!f.trim());
@@ -586,12 +606,14 @@ async function getSensorInfo(serial: SerialConnector) {
             JSON.stringify(values));
     }
 
-    console.log(SERIAL_PREFIX, 'Detected data frequency:', lines.length + 'Hz');
+    let detectedFreq = (lines.length / sleepTime) * 1000;
+
+    console.log(SERIAL_PREFIX, 'Detected data frequency:', detectedFreq + 'Hz');
 
     let sensorCount = values.length;
 
     return {
-        samplingFreq: lines.length,
+        samplingFreq: detectedFreq,
         sensorCount: sensorCount,
         example: values.map(n => Number(n))
     };

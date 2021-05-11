@@ -2,7 +2,9 @@
 
 // tslint:disable-next-line
 const serialPort = require('serialport');
-import { EventEmitter } from 'tsee';
+import { EventEmitter } from 'events';
+import TypedEmitter from 'typed-emitter';
+import { ISerialConnector } from '../shared/daemon/iserialconnector';
 
 // Don't open same port twice
 let serialPorts: { [index: string]: { message: typeof serialPort } } = { };
@@ -17,12 +19,12 @@ interface SerialPortListItem {
     productId: string;
 }
 
-export class SerialConnector extends EventEmitter<{
-    connected: () => void,
-    data: (a: Buffer) => void,
-    error: (e: any) => void,
-    close: () => void
-}> {
+export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
+    connected: () => void;
+    data: (buffer: Buffer) => void;
+    error: (err: any) => void;
+    close: () => void;
+}>) implements ISerialConnector {
     static async list() {
         return (await serialPort.list()) as SerialPortListItem[];
     }
@@ -126,5 +128,9 @@ export class SerialConnector extends EventEmitter<{
 
     async hasSerial() {
         return !!this._serial;
+    }
+
+    canSwitchBaudRate() {
+        return true;
     }
 }

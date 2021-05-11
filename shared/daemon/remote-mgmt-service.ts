@@ -1,8 +1,6 @@
-import { EdgeImpulseConfig } from "./config";
-import { EventEmitter } from 'tsee';
-import WebSocket from 'ws';
-import cbor from 'cbor';
-import inquirer from 'inquirer';
+// tslint:disable: unified-signatures
+
+import TypedEmitter from "typed-emitter";
 import {
     MgmtInterfaceHelloResponse, MgmtInterfaceHelloV3, MgmtInterfaceSampleFinishedResponse,
     MgmtInterfaceSampleProcessingResponse,
@@ -17,27 +15,30 @@ import {
     MgmtInterfaceSnapshotStoppedResponse,
     MgmtInterfaceStartSnapshotRequest,
     MgmtInterfaceStopSnapshotRequest
-} from "../shared/MgmtInterfaceTypes";
+} from "../MgmtInterfaceTypes";
+import { IWebsocket } from "./iwebsocket";
+
+import { EventEmitter } from './events';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 
-export type RemoteMgmtDeviceSampleEmitter = EventEmitter<{
-    started: () => void,
-    uploading: () => void,
-    reading: (progressPercentage: number) => void,
-    processing: () => void,
+export type RemoteMgmtDeviceSampleEmitter = TypedEmitter<{
+    started: () => void;
+    uploading: () => void;
+    reading: (progressPercentage: number) => void;
+    processing: () => void;
 }>;
 
-export interface RemoteMgmtDevice extends EventEmitter<{
-    snapshot: (buffer: Buffer) => void
-}> {
+export interface RemoteMgmtDevice extends TypedEmitter<{
+    snapshot: (buffer: Buffer) => void;
+}>  {
     connected: () => boolean;
     getDeviceId: () => Promise<string>;
     getDeviceType: () => string;
     getSensors: () => {
         name: string;
         maxSampleLengthS: number;
-        frequencies: number[]
+        frequencies: number[];
     }[];
     sampleRequest: (data: MgmtInterfaceSampleRequestSample, ee: RemoteMgmtDeviceSampleEmitter) => Promise<void>;
     supportsSnapshotStreaming: () => boolean;
@@ -46,23 +47,51 @@ export interface RemoteMgmtDevice extends EventEmitter<{
     beforeConnect: () => Promise<void>;
 }
 
+export interface RemoteMgmtConfig {
+    endpoints: {
+        internal: {
+            ws: string;
+            api: string;
+            ingestion: string;
+        };
+    };
+    api: {
+        projects: {
+            // tslint:disable-next-line: max-line-length
+            getProjectInfo(projectId: number): Promise<{ body: { success: boolean, error?: string, project: { name: string } } }>;
+        };
+        devices: {
+            // tslint:disable-next-line: max-line-length
+            renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ body: { success: boolean, error?: string } }>;
+            // tslint:disable-next-line: max-line-length
+            createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ body: { success: boolean, error?: string } }>;
+            // tslint:disable-next-line: max-line-length
+            getDevice(projectId: number, deviceId: string): Promise<{ body: { success: boolean, error?: string, device?: { name: string; } } }>;
+        }
+    };
+}
+
 type RemoteMgmtState = 'snapshot-stream-requested' | 'snapshot-stream-started' |
                        'snapshot-stream-stopping' | 'sampling' | 'idle';
 
-export class RemoteMgmt extends EventEmitter<{
+export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     authenticationFailed: () => void,
-}> {
-    private _ws: WebSocket | undefined;
+}>) {
+    private _ws: IWebsocket | undefined;
     private _projectId: number;
     private _devKeys: { apiKey: string, hmacKey: string };
-    private _eiConfig: EdgeImpulseConfig;
+    private _eiConfig: RemoteMgmtConfig;
     private _device: RemoteMgmtDevice;
     private _state: RemoteMgmtState = 'idle';
+    private _createWebsocket: (url: string) => IWebsocket;
+    private _checkNameCb: (currName: string) => Promise<string>;
 
     constructor(projectId: number,
                 devKeys: { apiKey: string, hmacKey: string },
-                eiConfig: EdgeImpulseConfig,
-                device: RemoteMgmtDevice) {
+                eiConfig: RemoteMgmtConfig,
+                device: RemoteMgmtDevice,
+                createWebsocket: (url: string) => IWebsocket,
+                checkNameCb: (currName: string) => Promise<string>) {
 
         super();
 
@@ -70,6 +99,8 @@ export class RemoteMgmt extends EventEmitter<{
         this._devKeys = devKeys;
         this._eiConfig = eiConfig;
         this._device = device;
+        this._createWebsocket = createWebsocket;
+        this._checkNameCb = checkNameCb;
 
         this.registerPingPong();
 
@@ -79,27 +110,32 @@ export class RemoteMgmt extends EventEmitter<{
                     snapshotFrame: buffer.toString('base64')
                 };
                 if (this._ws) {
-                    this._ws.send(cbor.encode(res));
+                    this._ws.send(JSON.stringify(res));
                 }
             }
         });
     }
 
-    async connect() {
+    async connect(reconnectOnFailure = true) {
         await this._device.beforeConnect();
 
         console.log(TCP_PREFIX, `Connecting to ${this._eiConfig.endpoints.internal.ws}`);
         try {
             // @todo handle reconnect?
-            this._ws = new WebSocket(this._eiConfig.endpoints.internal.ws);
+            this._ws = this._createWebsocket(this._eiConfig.endpoints.internal.ws);
             this.attachWsHandlers();
         }
         catch (ex) {
             console.error(TCP_PREFIX, 'Failed to connect to', this._eiConfig.endpoints.internal.ws, ex);
-            setTimeout(() => {
-                // tslint:disable-next-line: no-floating-promises
-                this.connect();
-            }, 1000);
+            if (reconnectOnFailure) {
+                setTimeout(() => {
+                    // tslint:disable-next-line: no-floating-promises
+                    this.connect();
+                }, 1000);
+            }
+            else {
+                throw ex;
+            }
         }
     }
 
@@ -135,8 +171,19 @@ export class RemoteMgmt extends EventEmitter<{
             return console.log(TCP_PREFIX, 'attachWsHandlers called without ws instance!');
         }
 
-        this._ws.on('message', async (data: Buffer) => {
-            let d = cbor.decode(data);
+        this._ws.on('message', async (data: Buffer | string) => {
+            let d;
+            try {
+                if (typeof data === 'string') {
+                    d = JSON.parse(data);
+                }
+                else {
+                    d = JSON.parse(data.toString('utf-8'));
+                }
+            }
+            catch (ex) {
+                return;
+            }
             // hello messages are handled in sendHello()
             if (typeof (<any>d).hello !== 'undefined') return;
 
@@ -149,19 +196,19 @@ export class RemoteMgmt extends EventEmitter<{
                 let restartSnapshotOnFinished = false;
 
                 try {
-                    let ee = new EventEmitter<{
+                    let ee = new EventEmitter() as TypedEmitter<{
                         started: () => void,
                         reading: (progressPercentage: number) => void,
                         uploading: () => void,
                         processing: () => void,
-                    }>();
+                    }>;
 
                     ee.on('started', () => {
                         let res2: MgmtInterfaceSampleStartedResponse = {
                             sampleStarted: true
                         };
                         if (this._ws) {
-                            this._ws.send(cbor.encode(res2));
+                            this._ws.send(JSON.stringify(res2));
                         }
                     });
 
@@ -171,7 +218,7 @@ export class RemoteMgmt extends EventEmitter<{
                             progressPercentage: progressPercentage
                         };
                         if (this._ws) {
-                            this._ws.send(cbor.encode(res5));
+                            this._ws.send(JSON.stringify(res5));
                         }
                     });
 
@@ -180,7 +227,7 @@ export class RemoteMgmt extends EventEmitter<{
                             sampleUploading: true
                         };
                         if (this._ws) {
-                            this._ws.send(cbor.encode(res5));
+                            this._ws.send(JSON.stringify(res5));
                         }
                     });
 
@@ -189,7 +236,7 @@ export class RemoteMgmt extends EventEmitter<{
                             sampleProcessing: true
                         };
                         if (this._ws) {
-                            this._ws.send(cbor.encode(res5));
+                            this._ws.send(JSON.stringify(res5));
                         }
                     });
 
@@ -201,7 +248,7 @@ export class RemoteMgmt extends EventEmitter<{
                                 sample: true
                             };
                             if (this._ws) {
-                                this._ws.send(cbor.encode(res));
+                                this._ws.send(JSON.stringify(res));
                             }
                         }
                     }, 1);
@@ -227,7 +274,7 @@ export class RemoteMgmt extends EventEmitter<{
 
                     this._state = 'sampling';
 
-                    await this._device.sampleRequest(s, ee);
+                    await this._device.sampleRequest(s, <RemoteMgmtDeviceSampleEmitter><unknown>ee);
 
                     sampleHadError = true; // if finished already stop it early
 
@@ -235,7 +282,7 @@ export class RemoteMgmt extends EventEmitter<{
                         sampleFinished: true
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res3));
+                        this._ws.send(JSON.stringify(res3));
                     }
                 }
                 catch (ex2) {
@@ -248,7 +295,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: ex.message || ex.toString()
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res5));
+                        this._ws.send(JSON.stringify(res5));
                     }
 
                     restartSnapshotOnFinished = false;
@@ -279,7 +326,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: 'Device does not support snapshot streaming'
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res1));
+                        this._ws.send(JSON.stringify(res1));
                     }
                     return;
                 }
@@ -290,7 +337,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: 'Device is sampling, cannot start snapshot stream'
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res1));
+                        this._ws.send(JSON.stringify(res1));
                     }
                     return;
                 }
@@ -308,7 +355,7 @@ export class RemoteMgmt extends EventEmitter<{
                         snapshotStarted: true
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res3));
+                        this._ws.send(JSON.stringify(res3));
                     }
                     return;
                 }
@@ -321,7 +368,7 @@ export class RemoteMgmt extends EventEmitter<{
                         snapshotStarted: true
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res2));
+                        this._ws.send(JSON.stringify(res2));
                     }
                 }
                 catch (ex2) {
@@ -331,7 +378,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: ex.message || ex.toString()
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res1));
+                        this._ws.send(JSON.stringify(res1));
                     }
                     if (<RemoteMgmtState>this._state !== 'sampling') {
                         this._state = 'idle';
@@ -348,7 +395,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: 'Device does not support snapshot streaming'
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res1));
+                        this._ws.send(JSON.stringify(res1));
                     }
                     return;
                 }
@@ -369,7 +416,7 @@ export class RemoteMgmt extends EventEmitter<{
                         snapshotStopped: true
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res2));
+                        this._ws.send(JSON.stringify(res2));
                     }
                 }
                 catch (ex2) {
@@ -379,7 +426,7 @@ export class RemoteMgmt extends EventEmitter<{
                         error: ex.message || ex.toString()
                     };
                     if (this._ws) {
-                        this._ws.send(cbor.encode(res1));
+                        this._ws.send(JSON.stringify(res1));
                     }
                 }
                 finally {
@@ -449,7 +496,7 @@ export class RemoteMgmt extends EventEmitter<{
             }
         };
         this._ws.once('message', async (helloResponse: Buffer) => {
-            let ret = <MgmtInterfaceHelloResponse>cbor.decode(helloResponse);
+            let ret = <MgmtInterfaceHelloResponse>JSON.parse(helloResponse.toString('utf-8'));
             if (!ret.hello) {
                 console.error(TCP_PREFIX, 'Failed to authenticate, API key not correct?', ret.err);
                 this.emit('authenticationFailed');
@@ -472,7 +519,7 @@ export class RemoteMgmt extends EventEmitter<{
                     `to build your machine learning model!`);
             }
         });
-        this._ws.send(cbor.encode(req));
+        this._ws.send(JSON.stringify(req));
     }
 
     private async checkName(deviceId: string) {
@@ -491,21 +538,17 @@ export class RemoteMgmt extends EventEmitter<{
             let currName = device ? device.name : deviceId;
             if (currName !== deviceId) return currName;
 
-            let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
-                type: 'input',
-                message: 'What name do you want to give this device?',
-                name: 'nameDevice',
-                default: currName
-            }]);
-            if (nameDevice.nameDevice !== currName) {
+            let newName = await this._checkNameCb(currName);
+
+            if (newName !== currName) {
                 let rename = (await this._eiConfig.api.devices.renameDevice(
-                    this._projectId, deviceId, { name: nameDevice.nameDevice })).body;
+                    this._projectId, deviceId, { name: newName })).body;
 
                 if (!rename.success) {
                     throw new Error('Failed to rename device... ' + rename.error);
                 }
             }
-            return nameDevice.nameDevice;
+            return newName;
         }
         catch (ex2) {
             let ex = <Error>ex2;

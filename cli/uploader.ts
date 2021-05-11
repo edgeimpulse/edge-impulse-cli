@@ -4,7 +4,7 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { makeImage, makeWav, upload } from './make-image';
+import { ExportInputBoundingBox, makeImage, makeWav, upload } from './make-image';
 import { initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
 
@@ -13,6 +13,13 @@ type UploaderFileType = {
     category: string,
     label: string | undefined
 };
+
+// These types are shared with jobs-container/node/export/shared/jobs/export.ts
+interface ExportBoundingBoxesFile {
+    version: 1;
+    type: 'bounding-box-labels';
+    boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
+}
 
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const labelArgvIx = process.argv.indexOf('--label');
@@ -201,7 +208,46 @@ const cliOptions = {
         let failed = 0;
         let totalFilesLength = endIxArgv ? Number(endIxArgv) : files.length;
 
+        let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFile | undefined } = { };
+
+        let allDirectories = [...new Set(files.map(f => Path.resolve(Path.dirname(f.path))))];
+        const loadBoundingBoxCache = async (directory: string) => {
+            let labelsFile = Path.join(directory, 'bounding_boxes.labels');
+
+            console.log('labelsFile', labelsFile);
+
+            if (!await exists(labelsFile)) {
+                boundingBoxCache[directory] = undefined;
+            }
+            else {
+                try {
+                    let data = <ExportBoundingBoxesFile>JSON.parse(<string>await fs.promises.readFile(labelsFile, 'utf-8'));
+                    if (data.version !== 1) {
+                        throw new Error('Invalid version');
+                    }
+                    if (data.type !== 'bounding-box-labels') {
+                        throw new Error('Invalid type');
+                    }
+                    if (typeof data.boundingBoxes !== 'object') {
+                        throw new Error('boundingBoxes is not an object');
+                    }
+                    boundingBoxCache[directory] = data;
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    console.warn('WARN: Invalid labels file for', labelsFile, ex.message || ex.toString());
+                    boundingBoxCache[directory] = undefined;
+                }
+            }
+        };
+        await asyncpool(10, allDirectories, loadBoundingBoxCache);
+
         const processFile = async (file: UploaderFileType) => {
+            const boundingBoxesFile = boundingBoxCache[Path.resolve(Path.dirname(file.path))];
+            const boundingBoxes = boundingBoxesFile ?
+                (boundingBoxesFile.boundingBoxes[Path.basename(file.path)] || undefined) :
+                undefined;
+
             const buffer = await fs.promises.readFile(file.path);
 
             let processed: { encoded: Buffer, contentType: string,
@@ -250,7 +296,8 @@ const cliOptions = {
                     category: file.category,
                     config: config,
                     dataBuffer: buffer,
-                    label: file.label
+                    label: file.label,
+                    boundingBoxes: boundingBoxes
                 });
 
                 let ix = ++fileIx;
@@ -337,4 +384,16 @@ function makeJson(buffer: Buffer) {
         encoded: buffer,
         contentType: 'application/json'
     };
+}
+
+async function exists(path: string) {
+    let fx = false;
+    try {
+        await util.promisify(fs.stat)(path);
+        fx = true;
+    }
+    catch (ex) {
+        /* noop */
+    }
+    return fx;
 }

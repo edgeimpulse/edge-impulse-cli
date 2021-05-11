@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 import { SerialConnector } from './serial-connector';
+import TypedEmitter from "typed-emitter";
 import EiSerialProtocol, {
     EiSerialDeviceConfig, EiSerialWifiNetwork, EiSerialWifiSecurity, EiStartSamplingResponse, EiSerialDone,
     EiSerialDoneBuffer,
     EiSnapshotResponse
-} from './ei-serial-protocol';
+} from '../shared/daemon/ei-serial-protocol';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import {
@@ -16,10 +17,11 @@ import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import jpegjs from 'jpeg-js';
 import { makeImage } from './make-image';
-import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from './remote-mgmt-service';
+import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../shared/daemon/remote-mgmt-service';
 import { EventEmitter } from "tsee";
 import { initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
+import WebSocket from 'ws';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -49,15 +51,15 @@ const cliOptions = {
     }
 };
 
-class SerialDevice extends EventEmitter<{
+class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
     snapshot: (buffer: Buffer) => void
-}> implements RemoteMgmtDevice  {
+}>) implements RemoteMgmtDevice  {
     private _config: EdgeImpulseConfig;
     private _serial: SerialConnector;
     private _serialProtocol: EiSerialProtocol;
     private _deviceConfig: EiSerialDeviceConfig;
     private _snapshotStream: {
-        ee: EventEmitter<{
+        ee: TypedEmitter<{
             snapshot: (b: Buffer, w: number, h: number) => void,
             error: (err: string) => void
         }>,
@@ -582,7 +584,17 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
             if (!remoteMgmt) {
                 const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
-                remoteMgmt = new RemoteMgmt(projectId, devKeys, eiConfig, device);
+                remoteMgmt = new RemoteMgmt(projectId, devKeys, eiConfig, device,
+                    url => new WebSocket(url),
+                    async (currName) => {
+                        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
+                            type: 'input',
+                            message: 'What name do you want to give this device?',
+                            name: 'nameDevice',
+                            default: currName
+                        }]);
+                        return nameDevice.nameDevice;
+                    });
 
                 let firstExit = true;
 

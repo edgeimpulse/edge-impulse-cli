@@ -9,6 +9,15 @@ import { WaveFile } from 'wavefile';
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
 
+// These types are shared with jobs-container/node/export/shared/jobs/export.ts
+export interface ExportInputBoundingBox {
+    label: string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+}
+
 export function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName: string) {
     let hmacImage = crypto.createHmac('sha256', hmacKey || '');
     hmacImage.update(buffer);
@@ -145,7 +154,8 @@ export function upload(opts: {
     },
     config: EdgeImpulseConfig,
     category: string | undefined,
-    dataBuffer: Buffer
+    dataBuffer: Buffer,
+    boundingBoxes: ExportInputBoundingBox[] | undefined
 }) {
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
@@ -158,6 +168,9 @@ export function upload(opts: {
     }
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
+    }
+    if (opts.boundingBoxes) {
+        headers['x-bounding-boxes'] = JSON.stringify(opts.boundingBoxes);
     }
 
     return new Promise((res, rej) => {

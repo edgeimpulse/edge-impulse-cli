@@ -1,6 +1,6 @@
-import { SerialConnector } from "./serial-connector";
-import Path from 'path';
-import { EventEmitter } from 'tsee';
+import TypedEmitter from 'typed-emitter';
+import { ISerialConnector } from './iserialconnector';
+import { EventEmitter } from './events';
 
 const CON_PREFIX = '\x1b[34m[SER]\x1b[0m';
 
@@ -75,7 +75,7 @@ export interface EiSerialWifiNetwork {
     line: string;
 }
 
-export type EiStartSamplingResponse = EventEmitter<{
+export type EiStartSamplingResponse = TypedEmitter<{
     samplingStarted: () => void,
     processing: () => void,
     uploading: () => void,
@@ -84,7 +84,7 @@ export type EiStartSamplingResponse = EventEmitter<{
     error: (ex: string) => void
 }>;
 
-export type EiSnapshotResponse = EventEmitter<{
+export type EiSnapshotResponse = TypedEmitter<{
     started: () => void,
     readingFromDevice: (progressPercentage: number) => void,
     done: (data: Buffer) => void,
@@ -102,14 +102,14 @@ export interface EiSerialDoneBuffer {
 export type EiSerialDone = EiSerialDoneFs | EiSerialDoneBuffer;
 
 export default class EiSerialProtocol {
-    private _serial: SerialConnector;
+    private _serial: ISerialConnector;
     private _config: EiSerialDeviceConfig | undefined;
 
     /**
      *
      * @param serial An instance of the serial connector
      */
-    constructor(serial: SerialConnector) {
+    constructor(serial: ISerialConnector) {
         this._serial = serial;
     }
 
@@ -192,7 +192,9 @@ export default class EiSerialProtocol {
                 if (key === 'data transfer baudrate') {
                     let r = Number(value);
                     if (!isNaN(r)) {
-                        config.info.transferBaudRate = r;
+                        if (this._serial.canSwitchBaudRate()) {
+                            config.info.transferBaudRate = r;
+                        }
                     }
                     continue;
                 }
@@ -407,14 +409,14 @@ export default class EiSerialProtocol {
     startSampling(sensor: string | undefined, length: number): EiStartSamplingResponse {
         let cmd = sensor ? 'AT+SAMPLESTART=' + sensor : 'AT+SAMPLESTART';
 
-        let ee = new EventEmitter<{
+        let ee = new EventEmitter() as TypedEmitter<{
             samplingStarted: () => void,
             processing: () => void,
             uploading: () => void,
             readingFromDevice: (progressPercentage: number) => void,
             done: (ev: EiSerialDone) => void,
             error: (ex: string) => void
-        }>();
+        }>;
 
         let allListeners = [
             this.getSerialSequenceCallback('Sampling...', length * 3, b => {
@@ -501,7 +503,7 @@ export default class EiSerialProtocol {
                         let rf = Buffer.from(rfa, 'base64');
                         console.log(CON_PREFIX, 'File is', rf.length, 'bytes after decoding');
                         ee.emit('done', {
-                            filename: Path.basename(filename),
+                            filename: this.basename(filename),
                             onDeviceFileName: filename,
                             file: rf,
                             label: this._config.sampling.label,
@@ -529,11 +531,11 @@ export default class EiSerialProtocol {
                             rf = Buffer.from(rfa, 'base64');
                         }
                         console.log(CON_PREFIX, 'File is', rf.length, 'bytes after decoding');
-                        ee.emit('done', { filename: Path.basename(filename), onDeviceFileName: filename, file: rf });
+                        ee.emit('done', { filename: this.basename(filename), onDeviceFileName: filename, file: rf });
                     }
                 }
                 else {
-                    ee.emit('done', { filename: Path.basename(filename), onDeviceFileName: filename });
+                    ee.emit('done', { filename: this.basename(filename), onDeviceFileName: filename });
                 }
             }
             catch (ex2) {
@@ -567,12 +569,12 @@ export default class EiSerialProtocol {
         let totalBytes = width * height * (this._config.snapshot.colorDepth === 'RGB' ? 3 : 1);
         let expectedBytes = Math.floor(4 * ((totalBytes) / 3));
 
-        let ee = new EventEmitter<{
+        let ee = new EventEmitter() as TypedEmitter<{
             started: () => void,
             readingFromDevice: (progressPercentage: number) => void,
             done: (data: Buffer) => void,
             error: (ex: string) => void
-        }>();
+        }>;
 
         // tslint:disable-next-line: no-floating-promises
         (async () => {
@@ -671,10 +673,10 @@ export default class EiSerialProtocol {
         let onData: (buffer: Buffer) => void | undefined;
 
         let ret = {
-            ee: new EventEmitter<{
+            ee: new EventEmitter() as TypedEmitter<{
                 snapshot: (b: Buffer, w: number, h: number) => void,
                 error: (err: string) => void
-            }>(),
+            }>,
             stop: async () => {
                 if (onData) {
                     this._serial.off('data', onData);
@@ -761,6 +763,9 @@ export default class EiSerialProtocol {
                 await this.sleep(20);
             }
 
+            if (!this._serial.isConnected()) {
+                return '';
+            }
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
         }
 
@@ -889,7 +894,12 @@ export default class EiSerialProtocol {
      */
     private async execCommandAutoSwitchBaudRate(command: string,
                                                 timeout: number,  logProgress: boolean,
-                                                ee?: EventEmitter<{ started: () => void }>) {
+                                                ee?: TypedEmitter<{
+                                                    started: () => void,
+                                                    readingFromDevice: (progressPercentage: number) => void,
+                                                    done: (data: Buffer) => void,
+                                                    error: (ex: string) => void
+                                                }>) {
         if (!this._config) {
             throw new Error('No config');
         }
@@ -993,5 +1003,10 @@ export default class EiSerialProtocol {
             useMaxBaudRate,
             updatedCommand: command
         };
+    }
+
+    private basename(path: string) {
+        let parts = path.split('/');
+        return parts[parts.length - 1];
     }
 }

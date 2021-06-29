@@ -5,6 +5,7 @@ import { EdgeImpulseConfig } from './config';
 import http from 'http';
 import https from 'https';
 import { WaveFile } from 'wavefile';
+import encodeLabel from '../shared/encoding';
 
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
@@ -83,7 +84,6 @@ export function makeWav(buffer: Buffer, hmacKey: string | undefined) {
     }>wav.fmt);
 
     let freq = fmt.sampleRate;
-    // console.log('Frequency', freq);
 
     // tslint:disable-next-line: no-unsafe-any
     let totalSamples =  (<any>wav.data).samples.length / (fmt.bitsPerSample / 8);
@@ -159,12 +159,13 @@ export function upload(opts: {
 }) {
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
-        'x-file-name': opts.filename,
+        'x-file-name': encodeLabel(opts.filename),
         'Content-Type': (!opts.processed.attachments ? opts.processed.contentType : 'multipart/form-data'),
         'Connection': 'keep-alive'
     };
+
     if (opts.label) {
-        headers['x-label'] = opts.label;
+        headers['x-label'] = encodeLabel(opts.label);
     }
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
@@ -228,4 +229,126 @@ export function upload(opts: {
                 res(body);
             });
     });
+}
+
+export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
+
+    let csvFile = parseCsvString(buffer.toString('utf-8'));
+
+    if (csvFile.length < 2) {
+        throw new Error('No lines in file, need at least two entries');
+    }
+
+    let columns = [];
+    for (let k of Object.keys(csvFile[0])) {
+        if (k === 'timestamp') continue;
+        columns.push(k);
+    }
+
+    let csvData: number[][] = [];
+
+    for (let ix = 0; ix < csvFile.length; ix++) {
+        let line = csvFile[ix];
+        if (!('timestamp' in line)) {
+            throw new Error('File does not have a timestamp column');
+        }
+
+        let lineData: number[] = [];
+        for (let k of columns) {
+            if (!(k in line)) {
+                throw new Error('Line ' + (ix + 2) + ' is missing column ' + k);
+            }
+            if (line[k] === '') {
+                throw new Error('Line ' + (ix + 2) + ' column ' + k + ' is empty');
+            }
+            if (isNaN(Number(line[k].trim()))) {
+                throw new Error('Line ' + (ix + 2) + ' column ' + k + ' is not numeric');
+            }
+
+            lineData.push(Number(line[k].trim()));
+        }
+
+        csvData.push(lineData);
+    }
+
+    let intervalMs = Number(csvFile[1].timestamp) - Number(csvFile[0].timestamp);
+    if (!intervalMs || isNaN(intervalMs)) {
+        throw new Error('Could not determine frequency, the timestamp column should contain increasing numbers');
+    }
+
+    // empty signature (all zeros). HS256 gives 32 byte signature, and we encode in hex,
+    // so we need 64 characters here
+    let emptySignature = Array(64).fill('0').join('');
+
+    let data = {
+        protected: {
+            ver: "v1",
+            alg: "HS256",
+        },
+        signature: emptySignature,
+        payload: {
+            device_type: "EDGE_IMPULSE_UPLOADER",
+            interval_ms: intervalMs,
+            sensors: columns.map(c => ({ name: c.trim(), units: 'N/A' })),
+            values: csvData
+        }
+    };
+
+    let encoded = JSON.stringify(data);
+
+    // now calculate the HMAC and fill in the signature
+    let hmac = crypto.createHmac('sha256', hmacKey || '');
+    hmac.update(encoded);
+    let signature = hmac.digest().toString('hex');
+
+    // update the signature in the message and re-encode
+    data.signature = signature;
+    encoded = JSON.stringify(data);
+
+    return {
+        encoded: Buffer.from(encoded, 'utf-8'),
+        contentType: 'application/json'
+    };
+}
+
+// From https://gist.github.com/plbowers/7560ae793613ee839151624182133159
+function parseCsvString(data: string) {
+    if (!data) {
+        return [];
+    }
+
+    let hData: string[] | undefined;
+
+    const objPattern = new RegExp(("(\\,|\\r?\\n|\\r|^)(?:\"((?:\\\\.|\"\"|[^\\\\\"])*)\"|([^\\,\"\\r\\n]*))"), "gi");
+    let arrMatches = null;
+    let arrData: string[][] = [[]];
+    // tslint:disable-next-line: no-conditional-assignment
+    while (arrMatches = objPattern.exec(data)) {
+        if (arrMatches[1].length && arrMatches[1] !== ",") arrData.push([]);
+        arrData[arrData.length - 1].push(arrMatches[2] ?
+            arrMatches[2].replace(new RegExp( "[\\\\\"](.)", "g" ), '$1') :
+            arrMatches[3]);
+    }
+    hData = arrData.shift();
+    hData = hData?.map(h => h.trim());
+    // remove empty lines
+    arrData = arrData.filter(x => {
+        if (x.length === 1 && x[0] === '') {
+            return false;
+        }
+        return true;
+    });
+    let hashData = arrData.map(row => {
+        if (!hData) {
+            return { };
+        }
+        let i = 0;
+        return hData.reduce(
+            (acc: { [k: string]: string }, key) => {
+                acc[key] = row[i++];
+                return acc;
+            }, { }
+        );
+    });
+    return hashData;
 }

@@ -4,8 +4,8 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { ExportInputBoundingBox, makeImage, makeWav, upload } from './make-image';
-import { initCliApp, setupCliApp } from './init-cli-app';
+import { ExportInputBoundingBox, makeCsv, makeImage, makeWav, upload } from './make-image';
+import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
 
 type UploaderFileType = {
@@ -21,6 +21,7 @@ interface ExportBoundingBoxesFile {
     boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
 }
 
+const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const labelArgvIx = process.argv.indexOf('--label');
 const categoryArgvIx = process.argv.indexOf('--category');
@@ -66,6 +67,11 @@ const cliOptions = {
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
+    if (versionArgv) {
+        console.log(getCliVersion());
+        process.exit(0);
+    }
+
     if (helpArgv) {
         console.log('Usage:');
         console.log('    edge-impulse-uploader --label glass-breaking --category training path/to/file.wav');
@@ -126,7 +132,8 @@ const cliOptions = {
             '.json',
             '.jpg',
             '.jpeg',
-            '.png'
+            '.png',
+            '.csv'
         ];
 
         let files: UploaderFileType[];
@@ -214,8 +221,6 @@ const cliOptions = {
         const loadBoundingBoxCache = async (directory: string) => {
             let labelsFile = Path.join(directory, 'bounding_boxes.labels');
 
-            console.log('labelsFile', labelsFile);
-
             if (!await exists(labelsFile)) {
                 boundingBoxCache[directory] = undefined;
             }
@@ -268,6 +273,9 @@ const cliOptions = {
                     case '.jpeg':
                     case '.png':
                         processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
+                        break;
+                    case '.csv':
+                        processed = makeCsv(buffer, hmacKeyArgv || devKeys.hmacKey);
                         break;
                     default:
                         throw new Error('extension not supported (only ' +

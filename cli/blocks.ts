@@ -19,6 +19,7 @@ import tar from 'tar';
 import crypto from 'crypto';
 import WebSocket, { OPEN } from 'ws';
 import dockerignore from '@zeit/dockerignore';
+import { getCliVersion } from './init-cli-app';
 
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 

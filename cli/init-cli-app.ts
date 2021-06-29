@@ -6,6 +6,10 @@ import inquirer from 'inquirer';
 
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 
+export function getCliVersion() {
+    return version;
+}
+
 export async function initCliApp(opts: {
     appName: string,
     silentArgv: boolean,

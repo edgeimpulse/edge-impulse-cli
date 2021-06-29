@@ -15,11 +15,13 @@ import {
 import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import crypto from 'crypto';
-import { initCliApp, setupCliApp } from './init-cli-app';
+import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
+import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
+const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
@@ -48,6 +50,11 @@ let configFactory: Config;
 // tslint:disable-next-line:no-floating-promises
 (async () => {
     try {
+        if (versionArgv) {
+            console.log(getCliVersion());
+            process.exit(0);
+        }
+
         const initRes = await initCliApp(cliOptions);
         configFactory = initRes.configFactory;
         const config = initRes.config;
@@ -379,8 +386,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     await request.post(eiConfig.endpoints.internal.ingestion + s.path, {
                         headers: {
                             'x-api-key': dataForwarderConfig.apiKey,
-                            'x-file-name': s.label + '.json',
-                            'x-label': s.label,
+                            'x-file-name': encodeLabel(s.label + '.json'),
+                            'x-label': encodeLabel(s.label),
                             'Content-Type': 'application/json'
                         },
                         body: encoded,

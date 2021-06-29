@@ -125,7 +125,7 @@ export default class EiSerialProtocol {
     }
 
     async getConfig() {
-        let data = await this.execCommand('AT+CONFIG?');
+        let data = await this.execCommand('AT+CONFIG?', 2000);
 
         let config = <EiSerialDeviceConfig>{ info: { }, wifi: { }, sampling: { }, upload: { }, management: { } };
         config.sensors = [];
@@ -436,13 +436,20 @@ export default class EiSerialProtocol {
             this.getSerialSequenceCallback('Uploading...', length * 3, b => {
                 console.log(CON_PREFIX, 'Uploading started');
                 ee.emit('uploading');
-            })
+            }),
         ];
 
         // tslint:disable-next-line: no-floating-promises
         (async () => {
             try {
                 let res = await this.execCommand(cmd, length * 10);
+
+                if (res.indexOf('ERR:') > -1) {
+                    let errLine = res.split('\n').map(l => l.trim()).find(l => l.indexOf('ERR:') > -1);
+
+                    console.log(CON_PREFIX, 'Sampling failed', errLine || res);
+                    throw new Error(errLine || res);
+                }
 
                 // console.log('after upload res is', res);
 
@@ -564,7 +571,7 @@ export default class EiSerialProtocol {
             throw new Error('Config is null');
         }
         let command = 'AT+SNAPSHOT=' + width + ',' + height;
-        let timeout = 60000;
+        let timeout = 70000;
         let logProgress = false;
         let totalBytes = width * height * (this._config.snapshot.colorDepth === 'RGB' ? 3 : 1);
         let expectedBytes = Math.floor(4 * ((totalBytes) / 3));
@@ -793,7 +800,9 @@ export default class EiSerialProtocol {
         let nextReport = 10000;
 
         return new Promise((res, rej) => {
-            let buffer = Buffer.from([]);
+            let allBuffers: Buffer[] = [];
+            // separate buffer for the sequence as its not guaranteed to come in a single frame
+            let checkSeqBuffer = Buffer.from([]);
 
             let to = setTimeout(() => {
                 this._serial.off('data', fn);
@@ -808,12 +817,18 @@ export default class EiSerialProtocol {
                         nextReport += 10000;
                     }
                 }
-                buffer = Buffer.concat([ buffer, data ]);
-                if (buffer.indexOf(seq) !== -1) {
+
+                allBuffers.push(data);
+
+                checkSeqBuffer = Buffer.concat([ checkSeqBuffer, data ]);
+
+                if (checkSeqBuffer.indexOf(seq) !== -1) {
                     clearTimeout(to);
                     this._serial.off('data', fn);
-                    res(buffer);
+                    res(Buffer.concat(allBuffers));
                 }
+                // cut the find sequence buffer
+                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
             };
             this._serial.on('data', fn);
         });
@@ -826,19 +841,25 @@ export default class EiSerialProtocol {
      */
     private getSerialSequenceCallback(seqStr: string, timeout: number, callback: (buffer: Buffer) => void) {
         let seq = Buffer.from(seqStr, 'ascii');
-        let buffer = Buffer.from([]);
+        let allBuffers: Buffer[] = [];
+        let checkSeqBuffer = Buffer.from([]);
 
         let to = setTimeout(() => {
             this._serial.off('data', fn);
         }, timeout);
 
         let fn = (data: Buffer) => {
-            buffer = Buffer.concat([ buffer, data ]);
-            if (buffer.indexOf(seq) !== -1) {
+            allBuffers.push(data);
+
+            checkSeqBuffer = Buffer.concat([ checkSeqBuffer, data ]);
+
+            if (checkSeqBuffer.indexOf(seq) !== -1) {
                 clearTimeout(to);
                 this._serial.off('data', fn);
-                callback(buffer);
+                callback(Buffer.concat(allBuffers));
             }
+
+            checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
         };
         this._serial.on('data', fn);
 

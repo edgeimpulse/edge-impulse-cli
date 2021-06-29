@@ -19,13 +19,15 @@ import jpegjs from 'jpeg-js';
 import { makeImage } from './make-image';
 import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../shared/daemon/remote-mgmt-service';
 import { EventEmitter } from "tsee";
-import { initCliApp, setupCliApp } from './init-cli-app';
+import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
+import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
+const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
@@ -349,11 +351,12 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
             let headers: { [k: string]: string} = {
                 'x-api-key': this._deviceConfig.upload.apiKey,
-                'x-file-name': filename,
+                'x-file-name': encodeLabel(filename),
                 'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
                 'Connection': 'keep-alive'
             };
-            headers['x-label'] = s.label;
+
+            headers['x-label'] = encodeLabel(s.label);
 
             let url = this._config.endpoints.internal.ingestion + s.path;
             console.log(SERIAL_PREFIX, 'Uploading to', url);
@@ -426,8 +429,8 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
-                                'x-label': dr.label,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
+                                'x-label': encodeLabel(dr.label),
                                 'Content-Type': 'application/octet-stream'
                             },
                             body: deviceResponse.file,
@@ -438,7 +441,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
                                 'Content-Type': 'application/cbor'
                             },
                             body: deviceResponse.file,
@@ -460,6 +463,11 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 // tslint:disable-next-line:no-floating-promises
 (async () => {
     try {
+        if (versionArgv) {
+            console.log(getCliVersion());
+            process.exit(0);
+        }
+
         let baudRate = baudRateArgv ? Number(baudRateArgv) : 115200;
         if (isNaN(baudRate)) {
             console.error('Invalid value for --baud-rate (should be a number)');

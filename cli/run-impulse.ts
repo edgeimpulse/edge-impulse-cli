@@ -9,9 +9,11 @@ import EiSerialProtocol, {
 import { Config } from './config';
 import { findSerial } from './find-serial';
 import checkNewVersions from './check-new-version';
+import { getCliVersion } from './init-cli-app';
 
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
+const versionArgv = process.argv.indexOf('--version') > -1;
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const debugArgv = process.argv.indexOf('--debug') > -1;
 const continuousArgv = process.argv.indexOf('--continuous') > -1;
@@ -21,6 +23,11 @@ const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
 (async () => {
     try {
+        if (versionArgv) {
+            console.log(getCliVersion());
+            process.exit(0);
+        }
+
         console.log('Edge Impulse impulse runner v' + version);
 
         try {

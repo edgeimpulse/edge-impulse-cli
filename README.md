@@ -22,6 +22,26 @@ This package consists of four tools (click to see their respective documentation
 
 Afterwards you should have the tools available in your PATH.
 
+## Debugging for nodeJS noobs
+
+ Go to serial-daemon/package.json, change line 7 to look like this
+  "scripts": {
+    "build": "./node_modules/.bin/tsc --watch -p .",
+
+adding --watch there makes it continuously rebuild on any ts file changes
+
+
+Then, in a terminal window you don't mind losing, cd serial-daemon, and issue:
+```
+npm install
+npm link
+npm run build
+```
+
+There's some existing code commented out that will output serial traffic.  Uncomment it:
+- serial-daemon/cli/data-forwarder.ts:107
+- studio/shared/daemon/ei-serial-protocol.ts, uncomment 761 and 778
+
 ## Troubleshooting
 
 ### Tools version "2.0" is unrecognized (Windows)

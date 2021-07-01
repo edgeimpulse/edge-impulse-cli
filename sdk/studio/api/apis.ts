@@ -48,8 +48,12 @@ export * from './rawDataApi';
 import { RawDataApi } from './rawDataApi';
 export * from './requiresSudoApi';
 import { RequiresSudoApi } from './requiresSudoApi';
+export * from './requiresThirdPartyAuthApiKeyApi';
+import { RequiresThirdPartyAuthApiKeyApi } from './requiresThirdPartyAuthApiKeyApi';
 export * from './supportsRangeApi';
 import { SupportsRangeApi } from './supportsRangeApi';
+export * from './thirdPartyAuthApi';
+import { ThirdPartyAuthApi } from './thirdPartyAuthApi';
 export * from './uploadPortalApi';
 import { UploadPortalApi } from './uploadPortalApi';
 export * from './userApi';
@@ -74,4 +78,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, SupportsRangeApi, UploadPortalApi, UserApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThirdPartyAuthApi, UploadPortalApi, UserApi];

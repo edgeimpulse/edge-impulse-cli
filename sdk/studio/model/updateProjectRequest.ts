@@ -37,6 +37,34 @@ export class UpdateProjectRequest {
     * Whether to show the \'Create your first impulse\' section on the dashboard
     */
     'showCreateFirstImpulse'?: boolean;
+    /**
+    * What labeling flow to use
+    */
+    'labelingMethod'?: UpdateProjectRequestLabelingMethodEnum;
+    /**
+    * Whether to show the getting started wizard on the next page load of the dashboard
+    */
+    'showGettingStartedWizard'?: boolean;
+    /**
+    * Whether to use GPU for training
+    */
+    'useGpu'?: boolean;
+    /**
+    * Number of parallel DSP jobs
+    */
+    'parallelDspJobs'?: number;
+    /**
+    * Job limit in minutes
+    */
+    'computeTimeLimitM'?: number;
+    /**
+    * DSP file size in MB
+    */
+    'dspFileSizeMb'?: number;
+    /**
+    * New metadata about the project
+    */
+    'metadata'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +103,41 @@ export class UpdateProjectRequest {
             "name": "showCreateFirstImpulse",
             "baseName": "showCreateFirstImpulse",
             "type": "boolean"
+        },
+        {
+            "name": "labelingMethod",
+            "baseName": "labelingMethod",
+            "type": "UpdateProjectRequestLabelingMethodEnum"
+        },
+        {
+            "name": "showGettingStartedWizard",
+            "baseName": "showGettingStartedWizard",
+            "type": "boolean"
+        },
+        {
+            "name": "useGpu",
+            "baseName": "useGpu",
+            "type": "boolean"
+        },
+        {
+            "name": "parallelDspJobs",
+            "baseName": "parallelDspJobs",
+            "type": "number"
+        },
+        {
+            "name": "computeTimeLimitM",
+            "baseName": "computeTimeLimitM",
+            "type": "number"
+        },
+        {
+            "name": "dspFileSizeMb",
+            "baseName": "dspFileSizeMb",
+            "type": "number"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {
@@ -82,3 +145,6 @@ export class UpdateProjectRequest {
     }
 }
 
+
+export type UpdateProjectRequestLabelingMethodEnum = 'single_label' | 'object_detection';
+export const UpdateProjectRequestLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];

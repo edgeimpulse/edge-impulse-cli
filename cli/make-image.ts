@@ -5,7 +5,6 @@ import { EdgeImpulseConfig } from './config';
 import http from 'http';
 import https from 'https';
 import { WaveFile } from 'wavefile';
-import encodeLabel from '../shared/encoding';
 
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
@@ -159,13 +158,12 @@ export function upload(opts: {
 }) {
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
-        'x-file-name': encodeLabel(opts.filename),
+        'x-file-name': opts.filename,
         'Content-Type': (!opts.processed.attachments ? opts.processed.contentType : 'multipart/form-data'),
         'Connection': 'keep-alive'
     };
-
     if (opts.label) {
-        headers['x-label'] = encodeLabel(opts.label);
+        headers['x-label'] = opts.label;
     }
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';

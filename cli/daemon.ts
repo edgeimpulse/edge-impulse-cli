@@ -22,7 +22,6 @@ import { EventEmitter } from "tsee";
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
-import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -351,12 +350,11 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
             let headers: { [k: string]: string} = {
                 'x-api-key': this._deviceConfig.upload.apiKey,
-                'x-file-name': encodeLabel(filename),
+                'x-file-name': filename,
                 'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
                 'Connection': 'keep-alive'
             };
-
-            headers['x-label'] = encodeLabel(s.label);
+            headers['x-label'] = s.label;
 
             let url = this._config.endpoints.internal.ingestion + s.path;
             console.log(SERIAL_PREFIX, 'Uploading to', url);
@@ -429,8 +427,8 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': encodeLabel(deviceResponse.filename),
-                                'x-label': encodeLabel(dr.label),
+                                'x-file-name': deviceResponse.filename,
+                                'x-label': dr.label,
                                 'Content-Type': 'application/octet-stream'
                             },
                             body: deviceResponse.file,
@@ -441,7 +439,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': encodeLabel(deviceResponse.filename),
+                                'x-file-name': deviceResponse.filename,
                                 'Content-Type': 'application/cbor'
                             },
                             body: deviceResponse.file,

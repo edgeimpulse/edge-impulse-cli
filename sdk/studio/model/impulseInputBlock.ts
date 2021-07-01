@@ -37,6 +37,14 @@ export class ImpulseInputBlock {
     */
     'windowIncreaseMs'?: number;
     /**
+    * We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with for each step in classification mode.
+    */
+    'classificationWindowIncreaseMs'?: number;
+    /**
+    * Whether to zero pad data when a data item is too short
+    */
+    'padZeros'?: boolean;
+    /**
     * Width all images are resized to before training
     */
     'imageWidth'?: number;
@@ -56,6 +64,26 @@ export class ImpulseInputBlock {
     * If images are resized using a crop, choose where to anchor the crop
     */
     'cropAnchor'?: ImpulseInputBlockCropAnchorEnum;
+    /**
+    * Whether this block is the primary version of its base block.
+    */
+    'primaryVersion': boolean;
+    /**
+    * The version number of the original block this version was based on. If this is an original block, will be undefined.
+    */
+    'baseBlockId'?: number;
+    /**
+    * A short description of the block version, displayed in the block versioning UI
+    */
+    'description'?: string;
+    /**
+    * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
+    */
+    'createdBy'?: string;
+    /**
+    * The datetime that the block version was created. Cannot be set via API.
+    */
+    'createdAt'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,6 +119,16 @@ export class ImpulseInputBlock {
             "type": "number"
         },
         {
+            "name": "classificationWindowIncreaseMs",
+            "baseName": "classificationWindowIncreaseMs",
+            "type": "number"
+        },
+        {
+            "name": "padZeros",
+            "baseName": "padZeros",
+            "type": "boolean"
+        },
+        {
             "name": "imageWidth",
             "baseName": "imageWidth",
             "type": "number"
@@ -114,6 +152,31 @@ export class ImpulseInputBlock {
             "name": "cropAnchor",
             "baseName": "cropAnchor",
             "type": "ImpulseInputBlockCropAnchorEnum"
+        },
+        {
+            "name": "primaryVersion",
+            "baseName": "primaryVersion",
+            "type": "boolean"
+        },
+        {
+            "name": "baseBlockId",
+            "baseName": "baseBlockId",
+            "type": "number"
+        },
+        {
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
+        },
+        {
+            "name": "createdBy",
+            "baseName": "createdBy",
+            "type": "string"
+        },
+        {
+            "name": "createdAt",
+            "baseName": "createdAt",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

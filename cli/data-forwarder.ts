@@ -16,7 +16,6 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import crypto from 'crypto';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
-import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -386,8 +385,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     await request.post(eiConfig.endpoints.internal.ingestion + s.path, {
                         headers: {
                             'x-api-key': dataForwarderConfig.apiKey,
-                            'x-file-name': encodeLabel(s.label + '.json'),
-                            'x-label': encodeLabel(s.label),
+                            'x-file-name': s.label + '.json',
+                            'x-label': s.label,
                             'Content-Type': 'application/json'
                         },
                         body: encoded,

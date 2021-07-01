@@ -10,6 +10,7 @@ This package consists of four tools (click to see their respective documentation
 * [edge-impulse-run-impulse](https://docs.edgeimpulse.com/docs/cli-run-impulse) - show the impulse running on your device.
 * [edge-impulse-blocks](https://docs.edgeimpulse.com/docs/cli-blocks) - create organizational transformation blocks.
 * [eta-flash-tool](https://docs.edgeimpulse.com/docs/cli-eta-flash-tool) - to flash the Eta Compute ECM3532 AI Sensor.
+* [himax-flash-tool](https://docs.edgeimpulse.com/docs/cli-himax-flash-tool) - to flash the Himax WE-I Plus development board.
 
 ## Installation
 
@@ -22,25 +23,37 @@ This package consists of four tools (click to see their respective documentation
 
 Afterwards you should have the tools available in your PATH.
 
-## Debugging for nodeJS noobs
+## Building from source
 
- Go to serial-daemon/package.json, change line 7 to look like this
-  "scripts": {
-    "build": "./node_modules/.bin/tsc --watch -p .",
+If you're making changes to the CLI you can build from source.
 
-adding --watch there makes it continuously rebuild on any ts file changes
+1. Clone this repository:
 
+    ```
+    $ git clone https://github.com/edgeimpulse/edge-impulse-cli
+    ```
 
-Then, in a terminal window you don't mind losing, cd serial-daemon, and issue:
-```
-npm install
-npm link
-npm run build
-```
+1. Install the dependencies:
 
-There's some existing code commented out that will output serial traffic.  Uncomment it:
-- serial-daemon/cli/data-forwarder.ts:107
-- studio/shared/daemon/ei-serial-protocol.ts, uncomment 761 and 778
+    ```
+    $ npm install
+    ```
+
+1. Build and link the application:
+
+    ```
+    $ npm run build
+    $ npm link
+    ```
+
+## Debugging the serial daemon
+
+If you're adding support for a new development board, and you want to debug how the serial daemon implements [serial protocol](https://docs.edgeimpulse.com/reference#remote-mgmt-serial-protocol) or what raw data the data forwarder sees, you can enable logging.
+
+* For the data forwarder, uncomment: [1](https://github.com/edgeimpulse/edgeimpulse/blob/d4168023478e7ad6b3808687e7a9c02961ec4be9/serial-daemon/cli/data-forwarder.ts#L113).
+* For the serial daemon, uncomment these lines [1](https://github.com/edgeimpulse/edgeimpulse/blob/d4168023478e7ad6b3808687e7a9c02961ec4be9/studio/shared/daemon/ei-serial-protocol.ts#L768), [2](https://github.com/edgeimpulse/edgeimpulse/blob/d4168023478e7ad6b3808687e7a9c02961ec4be9/studio/shared/daemon/ei-serial-protocol.ts#L786).
+
+Then build from source.
 
 ## Troubleshooting
 

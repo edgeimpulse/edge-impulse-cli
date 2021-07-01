@@ -28,7 +28,8 @@ type BlockConfig = {
     description: string,
     type: UploadCustomBlockRequestTypeEnum,
     id?: number,
-    organizationId: number
+    organizationId: number,
+    operatesOn: 'file' | 'dataitem' | 'standalone' | undefined
 };
 
 interface ExtractedFile {
@@ -192,21 +193,33 @@ let currentBlockConfig: BlockConfig | undefined;
         let blockId: number | undefined;
         let blockName: string | undefined;
         let blockDescription: string | undefined;
+        let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
 
         // Fetch all relevant existing blocks so the user can select an existing block to update
-        let existingBlocks: { name: string, value: number, block: { description: string, name: string } }[] = [];
+        let existingBlocks: {
+            name: string, value: number, block: {
+                description: string, name: string, operatesOn: 'file' | 'dataitem' | 'standalone' | undefined }
+            }[] = [];
         if (blockTypeInqRes.type === 'transform') {
             let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
             if (blocks.body && blocks.body.transformationBlocks && blocks.body.transformationBlocks.length > 0) {
                 existingBlocks = blocks.body.transformationBlocks.map(p => (
-                    { name: p.name, value: p.id, block: { description: p.description, name: p.name } }
+                    {
+                        name: p.name,
+                        value: p.id,
+                        block: { description: p.description, name: p.name, operatesOn: p.operatesOn }
+                    }
                 ));
             }
         } else if (blockTypeInqRes.type === 'deploy') {
             let blocks = await config.api.organizationBlocks.listOrganizationDeployBlocks(organizationId);
             if (blocks.body && blocks.body.deployBlocks && blocks.body.deployBlocks.length > 0) {
                 existingBlocks = blocks.body.deployBlocks.map(p => (
-                    { name: p.name, value: p.id, block: { description: p.description, name: p.name } }
+                    {
+                        name: p.name,
+                        value: p.id,
+                        block: { description: p.description, name: p.name, operatesOn: undefined }
+                    }
                 ));
             }
         } else {
@@ -225,7 +238,8 @@ let currentBlockConfig: BlockConfig | undefined;
                 {
                     name: 'Update an existing block',
                     value: 'update'
-                }],
+                }
+            ],
             name: 'option',
             message: 'Choose an option',
             pageSize: 20
@@ -246,6 +260,7 @@ let currentBlockConfig: BlockConfig | undefined;
             if (selectedBlock) {
                 blockDescription = selectedBlock.block.description;
                 blockName = selectedBlock.block.name;
+                blockOperatesOn = selectedBlock.block.operatesOn;
             }
         }
 
@@ -273,18 +288,43 @@ let currentBlockConfig: BlockConfig | undefined;
             if (blockDescription === '') blockDescription = blockName;
         }
 
+
+        if (createOrUpdateInqRes === 'create' && blockTypeInqRes.type === 'transform') {
+            blockOperatesOn = <'file' | 'dataitem' | 'standalone'>(await inquirer.prompt([{
+                type: 'list',
+                name: 'operatesOn',
+                choices: [
+                    {
+                        name: 'File (--in-file passed into the block)',
+                        value: 'file'
+                    },
+                    {
+                        name: 'Data item (--in-directory passed into the block)',
+                        value: 'dataitem'
+                    },
+                    {
+                        name: 'Standalone (runs the container, but no files / data items passed in)',
+                        value: 'standalone'
+                    }
+                ],
+                message: 'What type of data does this block operate on?',
+            }])).operatesOn;
+        }
+
         // Create & write the config
         currentBlockConfig = blockId ? {
             name: blockName,
             id: blockId,
             type: blockType,
             description: blockDescription,
-            organizationId
+            organizationId,
+            operatesOn: blockOperatesOn,
         } : {
             name: blockName,
             type: blockType,
             description: blockDescription,
-            organizationId
+            organizationId,
+            operatesOn: blockOperatesOn,
         };
         console.log('Creating block with config:', currentBlockConfig);
         await writeConfigFile();
@@ -392,7 +432,9 @@ let currentBlockConfig: BlockConfig | undefined;
                         description: currentBlockConfig.description,
                         dockerContainer: '',
                         indMetadata: true,
-                        cliArguments: ''
+                        cliArguments: '',
+                        operatesOn: currentBlockConfig.operatesOn || 'file',
+                        additionalMountPoints: []
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newBlockObject);

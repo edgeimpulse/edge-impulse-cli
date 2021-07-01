@@ -25,13 +25,57 @@ export class ImpulseBlockVersion {
     */
     'name'?: string;
     /**
-    * DSP dependencies, identified by DSP block ID
-    */
-    'dsp'?: Array<number>;
-    /**
     * A short description of the block version, displayed in the block versioning UI
     */
     'description'?: string;
+    /**
+    * (Learn only) DSP dependencies, identified by DSP block ID
+    */
+    'dsp'?: Array<number>;
+    /**
+    * (DSP only) Input axes, identified by the name in the name of the axis
+    */
+    'axes'?: Array<string>;
+    /**
+    * (DSP only) The ID of the Input block a DSP block is connected to
+    */
+    'input'?: number;
+    /**
+    * (Input only) Size of the sliding window in milliseconds
+    */
+    'windowSizeMs'?: number;
+    /**
+    * (Input only) We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with for each step.
+    */
+    'windowIncreaseMs'?: number;
+    /**
+    * (Input only) We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with for each step in classification mode.
+    */
+    'classificationWindowIncreaseMs'?: number;
+    /**
+    * (Input only) Whether to zero pad data when there is not enough data.
+    */
+    'padZeros'?: boolean;
+    /**
+    * (Input only) Width all images are resized to before training
+    */
+    'imageWidth'?: number;
+    /**
+    * (Input only) Width all images are resized to before training
+    */
+    'imageHeight'?: number;
+    /**
+    * (Input only) How to resize images before training
+    */
+    'resizeMode'?: ImpulseBlockVersionResizeModeEnum;
+    /**
+    * (Input only) Resize method to use when resizing images
+    */
+    'resizeMethod'?: ImpulseBlockVersionResizeMethodEnum;
+    /**
+    * (Input only) If images are resized using a crop, choose where to anchor the crop
+    */
+    'cropAnchor'?: ImpulseBlockVersionCropAnchorEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,14 +96,69 @@ export class ImpulseBlockVersion {
             "type": "string"
         },
         {
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
+        },
+        {
             "name": "dsp",
             "baseName": "dsp",
             "type": "Array<number>"
         },
         {
-            "name": "description",
-            "baseName": "description",
-            "type": "string"
+            "name": "axes",
+            "baseName": "axes",
+            "type": "Array<string>"
+        },
+        {
+            "name": "input",
+            "baseName": "input",
+            "type": "number"
+        },
+        {
+            "name": "windowSizeMs",
+            "baseName": "windowSizeMs",
+            "type": "number"
+        },
+        {
+            "name": "windowIncreaseMs",
+            "baseName": "windowIncreaseMs",
+            "type": "number"
+        },
+        {
+            "name": "classificationWindowIncreaseMs",
+            "baseName": "classificationWindowIncreaseMs",
+            "type": "number"
+        },
+        {
+            "name": "padZeros",
+            "baseName": "padZeros",
+            "type": "boolean"
+        },
+        {
+            "name": "imageWidth",
+            "baseName": "imageWidth",
+            "type": "number"
+        },
+        {
+            "name": "imageHeight",
+            "baseName": "imageHeight",
+            "type": "number"
+        },
+        {
+            "name": "resizeMode",
+            "baseName": "resizeMode",
+            "type": "ImpulseBlockVersionResizeModeEnum"
+        },
+        {
+            "name": "resizeMethod",
+            "baseName": "resizeMethod",
+            "type": "ImpulseBlockVersionResizeMethodEnum"
+        },
+        {
+            "name": "cropAnchor",
+            "baseName": "cropAnchor",
+            "type": "ImpulseBlockVersionCropAnchorEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -67,3 +166,12 @@ export class ImpulseBlockVersion {
     }
 }
 
+
+export type ImpulseBlockVersionResizeModeEnum = 'squash' | 'fit-short' | 'fit-long' | 'crop';
+export const ImpulseBlockVersionResizeModeEnumValues: string[] = ['squash', 'fit-short', 'fit-long', 'crop'];
+
+export type ImpulseBlockVersionResizeMethodEnum = 'lanczos3' | 'nearest';
+export const ImpulseBlockVersionResizeMethodEnumValues: string[] = ['lanczos3', 'nearest'];
+
+export type ImpulseBlockVersionCropAnchorEnum = 'top-left' | 'top-center' | 'top-right' | 'middle-left' | 'middle-center' | 'middle-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+export const ImpulseBlockVersionCropAnchorEnumValues: string[] = ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right'];

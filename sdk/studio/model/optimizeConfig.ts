@@ -14,6 +14,10 @@ import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
 
 export class OptimizeConfig {
     /**
+    * Dataset category
+    */
+    'datasetCategory'?: OptimizeConfigDatasetCategoryEnum;
+    /**
     * Target latency in MS
     */
     'targetLatency'?: number;
@@ -34,10 +38,19 @@ export class OptimizeConfig {
     'tuningWorkers'?: number;
     'minMACCS'?: number;
     'maxMACCS'?: number;
+    /**
+    * Tuning algorithm to use to search hyperparameter space
+    */
+    'tuningAlgorithm'?: OptimizeConfigTuningAlgorithmEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "datasetCategory",
+            "baseName": "datasetCategory",
+            "type": "OptimizeConfigDatasetCategoryEnum"
+        },
         {
             "name": "targetLatency",
             "baseName": "targetLatency",
@@ -82,6 +95,11 @@ export class OptimizeConfig {
             "name": "maxMACCS",
             "baseName": "maxMACCS",
             "type": "number"
+        },
+        {
+            "name": "tuningAlgorithm",
+            "baseName": "tuningAlgorithm",
+            "type": "OptimizeConfigTuningAlgorithmEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -89,3 +107,9 @@ export class OptimizeConfig {
     }
 }
 
+
+export type OptimizeConfigDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous';
+export const OptimizeConfigDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous'];
+
+export type OptimizeConfigTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
+export const OptimizeConfigTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];

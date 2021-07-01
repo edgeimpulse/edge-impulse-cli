@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 
 export class UpdateOrganizationTransformationBlockRequest {
     'name'?: string;
@@ -24,6 +25,8 @@ export class UpdateOrganizationTransformationBlockRequest {
     'requestsMemory'?: number;
     'limitsCpu'?: number;
     'limitsMemory'?: number;
+    'additionalMountPoints'?: Array<TransformationBlockAdditionalMountPoint>;
+    'operatesOn'?: UpdateOrganizationTransformationBlockRequestOperatesOnEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -72,6 +75,16 @@ export class UpdateOrganizationTransformationBlockRequest {
             "name": "limitsMemory",
             "baseName": "limitsMemory",
             "type": "number"
+        },
+        {
+            "name": "additionalMountPoints",
+            "baseName": "additionalMountPoints",
+            "type": "Array<TransformationBlockAdditionalMountPoint>"
+        },
+        {
+            "name": "operatesOn",
+            "baseName": "operatesOn",
+            "type": "UpdateOrganizationTransformationBlockRequestOperatesOnEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -79,3 +92,6 @@ export class UpdateOrganizationTransformationBlockRequest {
     }
 }
 
+
+export type UpdateOrganizationTransformationBlockRequestOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
+export const UpdateOrganizationTransformationBlockRequestOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

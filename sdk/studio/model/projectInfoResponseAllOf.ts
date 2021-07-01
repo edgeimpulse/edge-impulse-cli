@@ -12,7 +12,6 @@
 
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
-import { Download } from './download';
 import { Project } from './project';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectInfoResponseAllOfAcquisitionSettings } from './projectInfoResponseAllOfAcquisitionSettings';
@@ -22,12 +21,12 @@ import { ProjectInfoResponseAllOfDeploySettings } from './projectInfoResponseAll
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
 import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
+import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { User } from './user';
 
 export class ProjectInfoResponseAllOf {
     'project': Project;
-    'downloads': Array<Download>;
     'developmentKeys': DevelopmentKeys;
     'impulse': ProjectInfoResponseAllOfImpulse;
     'devices': Array<Device>;
@@ -48,6 +47,8 @@ export class ProjectInfoResponseAllOf {
     'evaluationProjectType'?: string;
     'urls': ProjectInfoResponseAllOfUrls;
     'showCreateFirstImpulse': boolean;
+    'showGettingStartedWizard': boolean;
+    'performance': ProjectInfoResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,11 +57,6 @@ export class ProjectInfoResponseAllOf {
             "name": "project",
             "baseName": "project",
             "type": "Project"
-        },
-        {
-            "name": "downloads",
-            "baseName": "downloads",
-            "type": "Array<Download>"
         },
         {
             "name": "developmentKeys",
@@ -131,6 +127,16 @@ export class ProjectInfoResponseAllOf {
             "name": "showCreateFirstImpulse",
             "baseName": "showCreateFirstImpulse",
             "type": "boolean"
+        },
+        {
+            "name": "showGettingStartedWizard",
+            "baseName": "showGettingStartedWizard",
+            "type": "boolean"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "ProjectInfoResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

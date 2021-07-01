@@ -16,6 +16,10 @@ export class ProjectInfoResponseAllOfUrls {
     * Base URL for the mobile client. If this is undefined then no development API key is set.
     */
     'mobileClient'?: string;
+    /**
+    * Base URL for collecting data with the mobile client from a computer. If this is undefined then no development API key is set.
+    */
+    'mobileClientComputer'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,6 +27,11 @@ export class ProjectInfoResponseAllOfUrls {
         {
             "name": "mobileClient",
             "baseName": "mobileClient",
+            "type": "string"
+        },
+        {
+            "name": "mobileClientComputer",
+            "baseName": "mobileClientComputer",
             "type": "string"
         }    ];
 

@@ -1,6 +1,6 @@
 {
   "name": "edge-impulse-cli",
-  "version": "1.13.8",
+  "version": "1.13.10",
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {
@@ -19,6 +19,10 @@
   },
   "author": "EdgeImpulse Inc. <hello@edgeimpulse.com>",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edgeimpulse/edge-impulse-cli"
+  },
   "dependencies": {
     "@types/tar": "^4.0.3",
     "@types/unzipper": "^0.10.3",

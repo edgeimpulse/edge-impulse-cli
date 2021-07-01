@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 
+import { ClassifySampleResponseClassificationDetails } from './classifySampleResponseClassificationDetails';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
+import { StructuredClassifyResult } from './structuredClassifyResult';
 
 export class ClassifySampleResponseClassification {
     'learnBlock': ImpulseLearnBlock;
@@ -19,6 +21,10 @@ export class ClassifySampleResponseClassification {
     */
     'result': Array<{ [key: string]: number; }>;
     /**
+    * Results of inferencing that returns structured data, such as object detection
+    */
+    'structuredResult'?: Array<StructuredClassifyResult>;
+    /**
     * The minimum confidence rating for this block
     */
     'minimumConfidenceRating': number;
@@ -26,6 +32,10 @@ export class ClassifySampleResponseClassification {
     * The maximum error for regression models (only set when the learn block is of type \'keras-regression\', otherwise 0)
     */
     'maximumRegressionError': number;
+    /**
+    * Structured outputs and computed metrics for some model types (e.g. object detection), one item per window.
+    */
+    'details'?: Array<ClassifySampleResponseClassificationDetails>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,6 +51,11 @@ export class ClassifySampleResponseClassification {
             "type": "Array<{ [key: string]: number; }>"
         },
         {
+            "name": "structuredResult",
+            "baseName": "structuredResult",
+            "type": "Array<StructuredClassifyResult>"
+        },
+        {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
             "type": "number"
@@ -49,6 +64,11 @@ export class ClassifySampleResponseClassification {
             "name": "maximumRegressionError",
             "baseName": "maximumRegressionError",
             "type": "number"
+        },
+        {
+            "name": "details",
+            "baseName": "details",
+            "type": "Array<ClassifySampleResponseClassificationDetails>"
         }    ];
 
     static getAttributeTypeMap() {

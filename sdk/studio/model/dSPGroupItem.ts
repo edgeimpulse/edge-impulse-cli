@@ -20,6 +20,7 @@ export class DSPGroupItem {
     'help': string;
     'param': string;
     'selectOptions'?: Array<DSPGroupItemSelectOptions>;
+    'readonly': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -58,6 +59,11 @@ export class DSPGroupItem {
             "name": "selectOptions",
             "baseName": "selectOptions",
             "type": "Array<DSPGroupItemSelectOptions>"
+        },
+        {
+            "name": "readonly",
+            "baseName": "readonly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

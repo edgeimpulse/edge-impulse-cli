@@ -74,8 +74,9 @@ export class HealthApi {
     /**
      * Get container health.
      * @summary Get container health
+     * @param requester Health check requester
      */
-    public async health (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async health (requester?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api-health';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -87,6 +88,10 @@ export class HealthApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
+
+        if (requester !== undefined) {
+            localVarQueryParameters['requester'] = ObjectSerializer.serialize(requester, "string");
+        }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
 

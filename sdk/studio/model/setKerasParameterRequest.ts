@@ -45,6 +45,10 @@ export class SetKerasParameterRequest {
     */
     'learningRate'?: number;
     /**
+    * Train/test split (between 0 and 1)
+    */
+    'trainTestSplit'?: number;
+    /**
     * Tuner learning rates (between 0 and 1) (only in visual mode).
     */
     'learningRates'?: Array<number>;
@@ -99,6 +103,11 @@ export class SetKerasParameterRequest {
         {
             "name": "learningRate",
             "baseName": "learningRate",
+            "type": "number"
+        },
+        {
+            "name": "trainTestSplit",
+            "baseName": "trainTestSplit",
             "type": "number"
         },
         {

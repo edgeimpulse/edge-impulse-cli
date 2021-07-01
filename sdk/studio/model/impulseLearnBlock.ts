@@ -17,15 +17,7 @@ export class ImpulseLearnBlock {
     */
     'id': number;
     /**
-    * Whether this block is the primary version of its base block.
-    */
-    'primaryVersion': boolean;
-    /**
-    * The version number of the original block this version was based on. If this is an original block, will be undefined.
-    */
-    'baseBlockId'?: number;
-    /**
-    * Block type (either keras, keras-transfer-image, keras-regression or anomaly)
+    * Block type (either keras, keras-transfer-image, keras-object-detection, keras-regression, or anomaly)
     */
     'type': string;
     /**
@@ -41,9 +33,25 @@ export class ImpulseLearnBlock {
     */
     'title': string;
     /**
+    * Whether this block is the primary version of its base block.
+    */
+    'primaryVersion': boolean;
+    /**
+    * The version number of the original block this version was based on. If this is an original block, will be undefined.
+    */
+    'baseBlockId'?: number;
+    /**
     * A short description of the block version, displayed in the block versioning UI
     */
     'description'?: string;
+    /**
+    * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
+    */
+    'createdBy'?: string;
+    /**
+    * The datetime that the block version was created. Cannot be set via API.
+    */
+    'createdAt'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,16 +59,6 @@ export class ImpulseLearnBlock {
         {
             "name": "id",
             "baseName": "id",
-            "type": "number"
-        },
-        {
-            "name": "primaryVersion",
-            "baseName": "primaryVersion",
-            "type": "boolean"
-        },
-        {
-            "name": "baseBlockId",
-            "baseName": "baseBlockId",
             "type": "number"
         },
         {
@@ -84,9 +82,29 @@ export class ImpulseLearnBlock {
             "type": "string"
         },
         {
+            "name": "primaryVersion",
+            "baseName": "primaryVersion",
+            "type": "boolean"
+        },
+        {
+            "name": "baseBlockId",
+            "baseName": "baseBlockId",
+            "type": "number"
+        },
+        {
             "name": "description",
             "baseName": "description",
             "type": "string"
+        },
+        {
+            "name": "createdBy",
+            "baseName": "createdBy",
+            "type": "string"
+        },
+        {
+            "name": "createdAt",
+            "baseName": "createdAt",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

@@ -28,6 +28,11 @@ export class Project {
     'ownerUserId'?: number;
     'ownerOrganizationId'?: number;
     'collaborators': Array<User>;
+    'labelingMethod': ProjectLabelingMethodEnum;
+    /**
+    * Metadata about the project
+    */
+    'metadata': object;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +81,16 @@ export class Project {
             "name": "collaborators",
             "baseName": "collaborators",
             "type": "Array<User>"
+        },
+        {
+            "name": "labelingMethod",
+            "baseName": "labelingMethod",
+            "type": "ProjectLabelingMethodEnum"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {
@@ -83,3 +98,6 @@ export class Project {
     }
 }
 
+
+export type ProjectLabelingMethodEnum = 'single_label' | 'object_detection';
+export const ProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];

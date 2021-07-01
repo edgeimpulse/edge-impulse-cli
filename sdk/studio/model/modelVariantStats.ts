@@ -20,6 +20,10 @@ export class ModelVariantStats {
     */
     'learnBlockId': number;
     /**
+    * Learn block type
+    */
+    'learnBlockType': ModelVariantStatsLearnBlockTypeEnum;
+    /**
     * A map from actual labels to predicted labels, where actual labels are listed in `trainingLabels` and possible predicted labels are listed in `classificationLabels`.
     */
     'confusionMatrix': { [key: string]: { [key: string]: EvaluateResultValue; }; };
@@ -50,6 +54,11 @@ export class ModelVariantStats {
             "name": "learnBlockId",
             "baseName": "learnBlockId",
             "type": "number"
+        },
+        {
+            "name": "learnBlockType",
+            "baseName": "learnBlockType",
+            "type": "ModelVariantStatsLearnBlockTypeEnum"
         },
         {
             "name": "confusionMatrix",
@@ -87,3 +96,6 @@ export class ModelVariantStats {
     }
 }
 
+
+export type ModelVariantStatsLearnBlockTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-object-detection' | 'keras-regression';
+export const ModelVariantStatsLearnBlockTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-object-detection', 'keras-regression'];

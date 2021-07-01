@@ -23,6 +23,7 @@ export class OrganizationUser {
     'isEdgeImpulseStaff': boolean;
     'projectCount': number;
     'datasets': Array<string>;
+    'pending': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -81,6 +82,11 @@ export class OrganizationUser {
             "name": "datasets",
             "baseName": "datasets",
             "type": "Array<string>"
+        },
+        {
+            "name": "pending",
+            "baseName": "pending",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

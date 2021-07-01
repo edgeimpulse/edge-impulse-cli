@@ -47,6 +47,7 @@ export class KerasModelMetadata {
     */
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
     'hasTrainedModel': boolean;
+    'mode': KerasModelMetadataModeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -95,6 +96,11 @@ export class KerasModelMetadata {
             "name": "hasTrainedModel",
             "baseName": "hasTrainedModel",
             "type": "boolean"
+        },
+        {
+            "name": "mode",
+            "baseName": "mode",
+            "type": "KerasModelMetadataModeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -102,3 +108,6 @@ export class KerasModelMetadata {
     }
 }
 
+
+export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection';
+export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];

@@ -34,7 +34,7 @@ export class KerasResponse {
     'trained': boolean;
     'name': string;
     /**
-    * The type of Keras block (keras, keras-transfer-image, keras-regression). Each behaves differently.
+    * The type of Keras block (keras, keras-transfer-image, keras-object-detection, keras-regression). Each behaves differently.
     */
     'type'?: KerasResponseTypeEnum;
     /**
@@ -62,6 +62,10 @@ export class KerasResponse {
     * Learning rate (between 0 and 1). If in expert mode this will be 0.
     */
     'learningRate': number;
+    /**
+    * Train/test split (between 0 and 1)
+    */
+    'trainTestSplit'?: number;
     /**
     * Possible learning rates (between 0 and 1).
     */
@@ -150,6 +154,11 @@ export class KerasResponse {
             "type": "number"
         },
         {
+            "name": "trainTestSplit",
+            "baseName": "trainTestSplit",
+            "type": "number"
+        },
+        {
             "name": "learningRates",
             "baseName": "learningRates",
             "type": "Array<number>"
@@ -186,8 +195,8 @@ export class KerasResponse {
 }
 
 
-export type KerasResponseTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-regression';
-export const KerasResponseTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-regression'];
+export type KerasResponseTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-object-detection' | 'keras-regression';
+export const KerasResponseTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-object-detection', 'keras-regression'];
 
 export type KerasResponseModeEnum = 'visual' | 'expert';
 export const KerasResponseModeEnumValues: string[] = ['visual', 'expert'];

@@ -28,14 +28,6 @@ export class ProjectInfoResponseAllOfComputeTime {
     * The amount of compute left for the current time period.
     */
     'timeLeftMs': number;
-    /**
-    * Compute time limit per job in seconds (applies only to DSP and learning jobs).
-    */
-    'jobLimitS': number;
-    /**
-    * Maximum size for DSP file output
-    */
-    'dspFileSizeMb': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -58,16 +50,6 @@ export class ProjectInfoResponseAllOfComputeTime {
         {
             "name": "timeLeftMs",
             "baseName": "timeLeftMs",
-            "type": "number"
-        },
-        {
-            "name": "jobLimitS",
-            "baseName": "jobLimitS",
-            "type": "number"
-        },
-        {
-            "name": "dspFileSizeMb",
-            "baseName": "dspFileSizeMb",
             "type": "number"
         }    ];
 

@@ -37,6 +37,30 @@ export class ImpulseDspBlock {
     */
     'valuesPerAxis'?: number;
     /**
+    * The ID of the Input block a DSP block is connected to
+    */
+    'input'?: number;
+    /**
+    * Whether this block is the primary version of its base block.
+    */
+    'primaryVersion': boolean;
+    /**
+    * The version number of the original block this version was based on. If this is an original block, will be undefined.
+    */
+    'baseBlockId'?: number;
+    /**
+    * A short description of the block version, displayed in the block versioning UI
+    */
+    'description'?: string;
+    /**
+    * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
+    */
+    'createdBy'?: string;
+    /**
+    * The datetime that the block version was created. Cannot be set via API.
+    */
+    'createdAt'?: Date;
+    /**
     * Implementation version of the block
     */
     'implementationVersion': number;
@@ -73,6 +97,36 @@ export class ImpulseDspBlock {
             "name": "valuesPerAxis",
             "baseName": "valuesPerAxis",
             "type": "number"
+        },
+        {
+            "name": "input",
+            "baseName": "input",
+            "type": "number"
+        },
+        {
+            "name": "primaryVersion",
+            "baseName": "primaryVersion",
+            "type": "boolean"
+        },
+        {
+            "name": "baseBlockId",
+            "baseName": "baseBlockId",
+            "type": "number"
+        },
+        {
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
+        },
+        {
+            "name": "createdBy",
+            "baseName": "createdBy",
+            "type": "string"
+        },
+        {
+            "name": "createdAt",
+            "baseName": "createdAt",
+            "type": "Date"
         },
         {
             "name": "implementationVersion",

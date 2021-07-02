@@ -585,7 +585,7 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
     serial.off('data', onData);
 
     const data = Buffer.concat(dataBuffers);
-    let lines = data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => d.length);
+    let lines = data.toString('utf-8').split('\n').map(d => d.trim()).slice(0,-1);
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated
     if (!l) {

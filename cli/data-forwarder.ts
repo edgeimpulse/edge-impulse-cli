@@ -568,8 +568,13 @@ async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
 }
 
 async function getSensorInfo(serial: SerialConnector, desiredFrequency: number | undefined) {
-    const dataBuffers: Buffer[] = [];
-    const onData = (b: Buffer) => dataBuffers.push(b);
+    let dataBuffers: { ts: number, buffer: Buffer }[] = [];
+    const onData = (b: Buffer) => {
+        dataBuffers.push({
+            ts: Date.now(),
+            buffer: b
+        });
+    };
 
     console.log(SERIAL_PREFIX, 'Detecting data frequency...');
 
@@ -580,12 +585,19 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
         sleepTime = 1000;
     }
 
+    let validReadings = {
+        start: Date.now(),
+        end: Date.now() + sleepTime
+    };
+
     serial.on('data', onData);
-    await sleep(sleepTime);
+    await sleep(sleepTime + 100);
     serial.off('data', onData);
 
-    const data = Buffer.concat(dataBuffers);
-    let lines = data.toString('utf-8').split('\n').map(d => d.trim());
+    dataBuffers = dataBuffers.filter(d => d.ts >= validReadings.start && d.ts < validReadings.end);
+
+    const data = Buffer.concat(dataBuffers.map(d => d.buffer));
+    let lines = data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => !!d);
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated
     if (!l) {
@@ -612,7 +624,21 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
             JSON.stringify(values));
     }
 
+    // check if the first & last lines might be truncated?
+    if (lines[0].split(/[,\t\s]/).filter(f => !!f.trim()).length !== values.length) {
+        lines = lines.slice(1);
+    }
+    if (lines[lines.length - 1].split(/[,\t\s]/).filter(f => !!f.trim()).length !== values.length) {
+        lines = lines.slice(0, lines.length - 1);
+    }
+
     let detectedFreq = (lines.length / sleepTime) * 1000;
+    if (detectedFreq === 0) {
+        throw new Error('No valid sensor readings received from device' +
+            (lines.length > 0 ? ': ' + lines.join('\n') : '') + '. ' +
+            'Note that the data forwarder can only auto-detect frequencies >2Hz. ' +
+            'You can override the frequency via --frequency.');
+    }
 
     console.log(SERIAL_PREFIX, 'Detected data frequency:', detectedFreq + 'Hz');
 

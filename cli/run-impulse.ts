@@ -19,6 +19,9 @@ const debugArgv = process.argv.indexOf('--debug') > -1;
 const continuousArgv = process.argv.indexOf('--continuous') > -1;
 const rawArgv = process.argv.indexOf('--raw') > -1;
 
+let stdinAttached = false;
+let serial: SerialConnector | undefined;
+
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -59,11 +62,18 @@ function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
+function onStdIn(data: Buffer) {
+    if (!serial) return;
+
+    // tslint:disable-next-line: no-floating-promises
+    serial.write(Buffer.from(data.toString('ascii').trim() + '\r\n', 'ascii'));
+}
+
 async function connectToSerial(deviceId: string) {
     // if this is set it means we have a connection
     let config: EiSerialDeviceConfig | undefined;
 
-    const serial = new SerialConnector(deviceId, 115200);
+    serial = new SerialConnector(deviceId, 115200);
     const serialProtocol = new EiSerialProtocol(serial);
     serial.on('error', err => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err);
@@ -102,17 +112,26 @@ async function connectToSerial(deviceId: string) {
     let inferenceStarted = false;
 
     serial.on('data', data => {
-        if ((serial.isConnected() && inferenceStarted) || rawArgv) {
+        if ((serial && serial.isConnected() && inferenceStarted) || rawArgv) {
             process.stdout.write(data.toString('ascii'));
         }
     });
     async function connectLogic() {
-        if (!serial.isConnected()) {
+        if (serial && !serial.isConnected()) {
             inferenceStarted = false;
             return setTimeout(serial_connect, 5000);
         }
 
-        if (rawArgv) return;
+        if (rawArgv) {
+            process.stdin.resume();
+            if (!stdinAttached) {
+                process.stdin.on('data', onStdIn);
+                stdinAttached = true;
+            }
+
+            console.log(SERIAL_PREFIX, 'Connected to', deviceId);
+            return;
+        }
 
         config = undefined;
         console.log(SERIAL_PREFIX, 'Serial is connected, trying to read config...');
@@ -163,6 +182,8 @@ async function connectToSerial(deviceId: string) {
     serial.on('connected', connectLogic);
 
     async function serial_connect() {
+        if (!serial) return;
+
         try {
             await serial.connect();
         }

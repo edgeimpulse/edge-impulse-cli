@@ -98,6 +98,7 @@ export interface ClientInitOrganizationOptions {
     organizationId: number;
     socketToken: string;
     staticAssetsPrefix: string;
+    baseUrl: string;
     sentryDSN?: string;
     sentryEnvironment?: string;
     errorPage: boolean;

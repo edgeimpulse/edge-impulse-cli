@@ -5,6 +5,7 @@ import { EdgeImpulseConfig } from './config';
 import http from 'http';
 import https from 'https';
 import { WaveFile } from 'wavefile';
+import encodeLabel from '../shared/encoding';
 
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
@@ -35,6 +36,47 @@ export function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName:
             interval_ms: 0,
             sensors: [{ name: 'image', units: 'rgba' }],
             values: [`Ref-BINARY-${mimeType} (${buffer.length} bytes) ${hmacImage.digest().toString('hex')}`]
+        }
+    };
+
+    let encoded = borc.encode(data);
+    let hmac = crypto.createHmac('sha256', hmacKey || '');
+    hmac.update(encoded);
+    let signature = hmac.digest().toString('hex');
+    data.signature = signature;
+
+    return {
+        encoded: borc.encode(data),
+        contentType: 'application/cbor',
+        attachments: [
+            {
+                value: buffer,
+                options: {
+                    filename: fileName,
+                    contentType: mimeType
+                }
+            }
+        ]
+    };
+}
+
+export function makeVideo(buffer: Buffer, hmacKey: string | undefined, fileName: string) {
+    let hmacVideo = crypto.createHmac('sha256', hmacKey || '');
+    hmacVideo.update(buffer);
+
+    let emptySignature = Array(64).fill('0').join('');
+    let mimeType = 'video/mp4';
+    let data = {
+        protected: {
+            ver: "v1",
+            alg: "HS256",
+        },
+        signature: emptySignature,
+        payload: {
+            device_type: "EDGE_IMPULSE_UPLOADER",
+            interval_ms: 1000 / 25, // this is OK, gets figured out by ingestion
+            sensors: [{ name: 'video', units: 'rgba' }],
+            values: [`Ref-BINARY-${mimeType} (${buffer.length} bytes) ${hmacVideo.digest().toString('hex')}`]
         }
     };
 
@@ -158,12 +200,13 @@ export function upload(opts: {
 }) {
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
-        'x-file-name': opts.filename,
+        'x-file-name': encodeLabel(opts.filename),
         'Content-Type': (!opts.processed.attachments ? opts.processed.contentType : 'multipart/form-data'),
         'Connection': 'keep-alive'
     };
+
     if (opts.label) {
-        headers['x-label'] = opts.label;
+        headers['x-label'] = encodeLabel(opts.label);
     }
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
@@ -233,8 +276,32 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
 
     let csvFile = parseCsvString(buffer.toString('utf-8'));
 
-    if (csvFile.length < 2) {
-        throw new Error('No lines in file, need at least two entries');
+    let intervalMs: number;
+    let hasTimestamp = true;
+
+    if (csvFile.length === 0) {
+        throw new Error('No lines in CSV file, need at least two (a header and a line with values)');
+    }
+
+    if (Object.keys(csvFile[0]).indexOf('timestamp') > -1) {
+        if (csvFile.length === 1) {
+            intervalMs = 1000;
+        }
+        else {
+            intervalMs = Number(csvFile[1].timestamp) - Number(csvFile[0].timestamp);
+            if (!intervalMs || isNaN(intervalMs)) {
+                throw new Error('Could not determine frequency, the timestamp column should ' +
+                    'contain increasing numbers');
+            }
+        }
+    }
+    else {
+        hasTimestamp = false;
+        intervalMs = 1000;
+        if (csvFile.length !== 1) {
+            throw new Error('For CSV files without a timestamp column, need exactly one line with values (but found ' +
+                csvFile.length + ')');
+        }
     }
 
     let columns = [];
@@ -247,7 +314,7 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
 
     for (let ix = 0; ix < csvFile.length; ix++) {
         let line = csvFile[ix];
-        if (!('timestamp' in line)) {
+        if (hasTimestamp && !('timestamp' in line)) {
             throw new Error('File does not have a timestamp column');
         }
 
@@ -256,22 +323,14 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
             if (!(k in line)) {
                 throw new Error('Line ' + (ix + 2) + ' is missing column ' + k);
             }
-            if (line[k] === '') {
-                throw new Error('Line ' + (ix + 2) + ' column ' + k + ' is empty');
-            }
-            if (isNaN(Number(line[k].trim()))) {
+            if (isNaN(line[k])) {
                 throw new Error('Line ' + (ix + 2) + ' column ' + k + ' is not numeric');
             }
 
-            lineData.push(Number(line[k].trim()));
+            lineData.push(line[k]);
         }
 
         csvData.push(lineData);
-    }
-
-    let intervalMs = Number(csvFile[1].timestamp) - Number(csvFile[0].timestamp);
-    if (!intervalMs || isNaN(intervalMs)) {
-        throw new Error('Could not determine frequency, the timestamp column should contain increasing numbers');
     }
 
     // empty signature (all zeros). HS256 gives 32 byte signature, and we encode in hex,
@@ -310,43 +369,115 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
 }
 
 // From https://gist.github.com/plbowers/7560ae793613ee839151624182133159
-function parseCsvString(data: string) {
-    if (!data) {
-        return [];
+function parseCsvString(text: string) {
+    // from http://stackoverflow.com/a/1293163/2343
+    function CSVToArray(strData: string, strDelimiter: string) {
+        // Create a regular expression to parse the CSV values.
+        const objPattern = new RegExp(
+            (
+                // Delimiters.
+                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+                // Quoted fields.
+                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+                // Standard fields.
+                "([^\"\\" + strDelimiter + "\\r\\n]*))"
+            ),
+            "gi"
+            );
+
+        // Create an array to hold our data. Give the array
+        // a default empty first row.
+        let arrData: string[][] = [[]];
+
+        // Create an array to hold our individual pattern
+        // matching groups.
+        let arrMatches = null;
+
+        // Keep looping over the regular expression matches
+        // until we can no longer find a match.
+        // tslint:disable-next-line: no-conditional-assignment
+        while (arrMatches = objPattern.exec(strData)) {
+
+            // Get the delimiter that was found.
+            let strMatchedDelimiter = arrMatches[1];
+
+            // Check to see if the given delimiter has a length
+            // (is not the start of string) and if it matches
+            // field delimiter. If id does not, then we know
+            // that this delimiter is a row delimiter.
+            if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter) {
+                // Since we have reached a new row of data,
+                // add an empty row to our data array.
+                arrData.push([]);
+            }
+
+            let strMatchedValue: string;
+
+            // Now that we have our delimiter out of the way,
+            // let's check to see which kind of value we
+            // captured (quoted or unquoted).
+            if (arrMatches[2]) {
+                // We found a quoted value. When we capture
+                // this value, unescape any double quotes.
+                strMatchedValue = arrMatches[ 2 ].replace(
+                    new RegExp( "\"\"", "g" ),
+                    "\""
+                    );
+
+            }
+            else {
+                // We found a non-quoted value.
+                strMatchedValue = arrMatches[ 3 ];
+            }
+
+            // Now that we have our value string, let's add
+            // it to the data array.
+            arrData[ arrData.length - 1 ].push(strMatchedValue);
+        }
+
+        // Return the parsed data.
+        return arrData;
     }
 
-    let hData: string[] | undefined;
+    let firstLine = text.split('\n')[0].trim();
+    let commaCount = firstLine.split(',').length;
+    let semicolonCount = firstLine.split(';').length;
+    let tabCount = firstLine.split('\t').length;
 
-    const objPattern = new RegExp(("(\\,|\\r?\\n|\\r|^)(?:\"((?:\\\\.|\"\"|[^\\\\\"])*)\"|([^\\,\"\\r\\n]*))"), "gi");
-    let arrMatches = null;
-    let arrData: string[][] = [[]];
-    // tslint:disable-next-line: no-conditional-assignment
-    while (arrMatches = objPattern.exec(data)) {
-        if (arrMatches[1].length && arrMatches[1] !== ",") arrData.push([]);
-        arrData[arrData.length - 1].push(arrMatches[2] ?
-            arrMatches[2].replace(new RegExp( "[\\\\\"](.)", "g" ), '$1') :
-            arrMatches[3]);
+    let delimiter = ',';
+    if (semicolonCount > commaCount && semicolonCount > tabCount) {
+        delimiter = ';';
     }
-    hData = arrData.shift();
-    hData = hData?.map(h => h.trim());
-    // remove empty lines
-    arrData = arrData.filter(x => {
-        if (x.length === 1 && x[0] === '') {
-            return false;
-        }
-        return true;
+    else if (tabCount > commaCount && tabCount > semicolonCount) {
+        delimiter = '\t';
+    }
+
+    let lines = CSVToArray(text, delimiter);
+    // console.log('Parsing CSV file, found delimiter', delimiter, 'returned', lines);
+    let header = lines[0];
+    if (header.length === 0) {
+        throw new Error('No column names found in header');
+    }
+
+    lines = lines.filter(l => {
+        return l.length === header.length;
     });
-    let hashData = arrData.map(row => {
-        if (!hData) {
-            return { };
+
+    let ret = [];
+    for (let l of lines.slice(1)) {
+        let obj: { [k: string]: number } = { };
+        for (let ix = 0; ix < header.length; ix++) {
+            let value = l[ix];
+            if (value.indexOf('.') === -1 && value.indexOf(',') > -1) {
+                value = value.replace(/,/g, '.');
+            }
+
+            obj[header[ix]] = value === '' ? NaN : Number(value);
         }
-        let i = 0;
-        return hData.reduce(
-            (acc: { [k: string]: string }, key) => {
-                acc[key] = row[i++];
-                return acc;
-            }, { }
-        );
-    });
-    return hashData;
+        ret.push(obj);
+    }
+
+    return ret;
 }

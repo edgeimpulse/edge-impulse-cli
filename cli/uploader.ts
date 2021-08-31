@@ -4,7 +4,7 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { ExportInputBoundingBox, makeCsv, makeImage, makeWav, upload } from './make-image';
+import { ExportInputBoundingBox, makeCsv, makeImage, makeVideo, makeWav, upload } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
 
@@ -133,7 +133,8 @@ const cliOptions = {
             '.jpg',
             '.jpeg',
             '.png',
-            '.csv'
+            '.csv',
+            '.mp4'
         ];
 
         let files: UploaderFileType[];
@@ -273,6 +274,9 @@ const cliOptions = {
                     case '.jpeg':
                     case '.png':
                         processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
+                        break;
+                    case '.mp4':
+                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
                         break;
                     case '.csv':
                         processed = makeCsv(buffer, hmacKeyArgv || devKeys.hmacKey);

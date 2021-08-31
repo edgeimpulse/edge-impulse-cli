@@ -16,6 +16,7 @@ export class ListOrganizationFilesResponseAllOf {
     'filterParseError'?: string;
     'totalFileSize': number;
     'totalFileCount': number;
+    'totalDataItemCount': number;
     'data': Array<OrganizationDataItem>;
 
     static discriminator: string | undefined = undefined;
@@ -34,6 +35,11 @@ export class ListOrganizationFilesResponseAllOf {
         {
             "name": "totalFileCount",
             "baseName": "totalFileCount",
+            "type": "number"
+        },
+        {
+            "name": "totalDataItemCount",
+            "baseName": "totalDataItemCount",
             "type": "number"
         },
         {

@@ -30,6 +30,8 @@ export class OptimizeStateResponse {
     'status': OptimizeStateResponseAllOfStatus;
     'activeTunerJobId'?: number;
     'trials': Array<TunerTrial>;
+    'projectDataType'?: OptimizeStateResponseProjectDataTypeEnum;
+    'jobError'?: string;
     'workers': Array<OptimizeStateResponseAllOfWorkers>;
 
     static discriminator: string | undefined = undefined;
@@ -66,6 +68,16 @@ export class OptimizeStateResponse {
             "type": "Array<TunerTrial>"
         },
         {
+            "name": "projectDataType",
+            "baseName": "projectDataType",
+            "type": "OptimizeStateResponseProjectDataTypeEnum"
+        },
+        {
+            "name": "jobError",
+            "baseName": "jobError",
+            "type": "string"
+        },
+        {
             "name": "workers",
             "baseName": "workers",
             "type": "Array<OptimizeStateResponseAllOfWorkers>"
@@ -76,3 +88,6 @@ export class OptimizeStateResponse {
     }
 }
 
+
+export type OptimizeStateResponseProjectDataTypeEnum = 'audio' | 'image' | 'motion' | 'other';
+export const OptimizeStateResponseProjectDataTypeEnumValues: string[] = ['audio', 'image', 'motion', 'other'];

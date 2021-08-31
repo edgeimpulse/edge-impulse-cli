@@ -153,6 +153,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -236,6 +237,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -312,6 +314,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -357,8 +360,9 @@ export class AllowsReadOnlyApi {
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
      * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }> {
+    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -406,6 +410,10 @@ export class AllowsReadOnlyApi {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
+        if (includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -416,6 +424,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -500,6 +509,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -583,6 +593,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -666,6 +677,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -749,6 +761,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -832,6 +845,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -945,6 +959,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1021,6 +1036,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1090,6 +1106,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1166,6 +1183,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1254,6 +1272,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1357,6 +1376,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1433,6 +1453,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1502,6 +1523,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1583,6 +1605,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1679,6 +1702,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -1760,6 +1784,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -1836,6 +1861,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             encoding: null,
         };
 
@@ -1932,6 +1958,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -1994,6 +2021,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -2042,8 +2070,9 @@ export class AllowsReadOnlyApi {
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
      * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
+    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2103,6 +2132,10 @@ export class AllowsReadOnlyApi {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
+        if (includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -2113,6 +2146,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 
@@ -2216,6 +2250,7 @@ export class AllowsReadOnlyApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
         };
 

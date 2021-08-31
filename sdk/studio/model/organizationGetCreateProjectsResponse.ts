@@ -23,7 +23,8 @@ export class OrganizationGetCreateProjectsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'jobs'?: Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
+    'totalJobCount': number;
+    'jobs': Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,6 +38,11 @@ export class OrganizationGetCreateProjectsResponse {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "totalJobCount",
+            "baseName": "totalJobCount",
+            "type": "number"
         },
         {
             "name": "jobs",

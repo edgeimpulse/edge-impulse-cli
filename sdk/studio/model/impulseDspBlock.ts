@@ -49,6 +49,34 @@ export class ImpulseDspBlock {
     */
     'baseBlockId'?: number;
     /**
+    * The version number of the original tuner block this version was based on. If this is an original tuner block, will be undefined
+    */
+    'tunerBaseBlockId'?: number;
+    /**
+    * The version number of the original tuner template block this version was based on. If this is an original tuner template block, will be undefined
+    */
+    'tunerTemplateId'?: number;
+    /**
+    * Specifies if this block was copied from a tuner block when a tuner model variant was set as primary model
+    */
+    'tunerPrimary'?: boolean;
+    /**
+    * ID of block this block version was cloned from
+    */
+    'clonedFromBlockId'?: number;
+    /**
+    * Specifies if this block was updated after being cloned/created
+    */
+    'mutated'?: boolean;
+    /**
+    * Whether is block is enabled. A block is assumed to be enabled when unset.
+    */
+    'enabled'?: boolean;
+    /**
+    * Whether block is stored in database.
+    */
+    'db'?: boolean;
+    /**
     * A short description of the block version, displayed in the block versioning UI
     */
     'description'?: string;
@@ -112,6 +140,41 @@ export class ImpulseDspBlock {
             "name": "baseBlockId",
             "baseName": "baseBlockId",
             "type": "number"
+        },
+        {
+            "name": "tunerBaseBlockId",
+            "baseName": "tunerBaseBlockId",
+            "type": "number"
+        },
+        {
+            "name": "tunerTemplateId",
+            "baseName": "tunerTemplateId",
+            "type": "number"
+        },
+        {
+            "name": "tunerPrimary",
+            "baseName": "tunerPrimary",
+            "type": "boolean"
+        },
+        {
+            "name": "clonedFromBlockId",
+            "baseName": "clonedFromBlockId",
+            "type": "number"
+        },
+        {
+            "name": "mutated",
+            "baseName": "mutated",
+            "type": "boolean"
+        },
+        {
+            "name": "enabled",
+            "baseName": "enabled",
+            "type": "boolean"
+        },
+        {
+            "name": "db",
+            "baseName": "db",
+            "type": "boolean"
         },
         {
             "name": "description",

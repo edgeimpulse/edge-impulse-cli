@@ -332,14 +332,18 @@ export * from './trackObjectsResponseAllOf';
 export * from './transferOwnershipOrganizationRequest';
 export * from './transformationBlockAdditionalMountPoint';
 export * from './tunerTrial';
+export * from './tunerTrialBlocks';
 export * from './tunerTrialKerasTunerTrial';
 export * from './tunerTrialKerasTunerTrialHyperparameters';
 export * from './tunerTrialKerasTunerTrialHyperparametersSpace';
 export * from './tunerTrialKerasTunerTrialHyperparametersValues';
 export * from './tunerTrialKerasTunerTrialScore';
+export * from './tunerTrialMetadata';
 export * from './updateNoteRequest';
 export * from './updateNoteResponse';
+export * from './updateOrganizationAddCollaboratorRequest';
 export * from './updateOrganizationBucketRequest';
+export * from './updateOrganizationCreateEmptyProjectRequest';
 export * from './updateOrganizationCreateProjectRequest';
 export * from './updateOrganizationDataItemRequest';
 export * from './updateOrganizationDeployBlockRequest';
@@ -701,14 +705,18 @@ import { TrackObjectsResponseAllOf } from './trackObjectsResponseAllOf';
 import { TransferOwnershipOrganizationRequest } from './transferOwnershipOrganizationRequest';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TunerTrial } from './tunerTrial';
+import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialKerasTunerTrial } from './tunerTrialKerasTunerTrial';
 import { TunerTrialKerasTunerTrialHyperparameters } from './tunerTrialKerasTunerTrialHyperparameters';
 import { TunerTrialKerasTunerTrialHyperparametersSpace } from './tunerTrialKerasTunerTrialHyperparametersSpace';
 import { TunerTrialKerasTunerTrialHyperparametersValues } from './tunerTrialKerasTunerTrialHyperparametersValues';
 import { TunerTrialKerasTunerTrialScore } from './tunerTrialKerasTunerTrialScore';
+import { TunerTrialMetadata } from './tunerTrialMetadata';
 import { UpdateNoteRequest } from './updateNoteRequest';
 import { UpdateNoteResponse } from './updateNoteResponse';
+import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
 import { UpdateOrganizationBucketRequest } from './updateOrganizationBucketRequest';
+import { UpdateOrganizationCreateEmptyProjectRequest } from './updateOrganizationCreateEmptyProjectRequest';
 import { UpdateOrganizationCreateProjectRequest } from './updateOrganizationCreateProjectRequest';
 import { UpdateOrganizationDataItemRequest } from './updateOrganizationDataItemRequest';
 import { UpdateOrganizationDeployBlockRequest } from './updateOrganizationDeployBlockRequest';
@@ -787,6 +795,8 @@ let enumsMap: {[index: string]: any} = {
     "MoveRawDataRequestNewCategoryEnum": "MoveRawDataRequestNewCategoryEnum",
     "OptimizeConfigDatasetCategoryEnum": "OptimizeConfigDatasetCategoryEnum",
     "OptimizeConfigTuningAlgorithmEnum": "OptimizeConfigTuningAlgorithmEnum",
+    "OptimizeStateResponseProjectDataTypeEnum": "OptimizeStateResponseProjectDataTypeEnum",
+    "OptimizeStateResponseAllOfProjectDataTypeEnum": "OptimizeStateResponseAllOfProjectDataTypeEnum",
     "OptimizeStateResponseAllOfStatusStatusEnum": "OptimizeStateResponseAllOfStatusStatusEnum",
     "OptimizeStateResponseAllOfWorkersStatusEnum": "OptimizeStateResponseAllOfWorkersStatusEnum",
     "OrganizationCreateProjectUploadTypeEnum": "OrganizationCreateProjectUploadTypeEnum",
@@ -1146,14 +1156,18 @@ let typeMap: {[index: string]: any} = {
     "TransferOwnershipOrganizationRequest": TransferOwnershipOrganizationRequest,
     "TransformationBlockAdditionalMountPoint": TransformationBlockAdditionalMountPoint,
     "TunerTrial": TunerTrial,
+    "TunerTrialBlocks": TunerTrialBlocks,
     "TunerTrialKerasTunerTrial": TunerTrialKerasTunerTrial,
     "TunerTrialKerasTunerTrialHyperparameters": TunerTrialKerasTunerTrialHyperparameters,
     "TunerTrialKerasTunerTrialHyperparametersSpace": TunerTrialKerasTunerTrialHyperparametersSpace,
     "TunerTrialKerasTunerTrialHyperparametersValues": TunerTrialKerasTunerTrialHyperparametersValues,
     "TunerTrialKerasTunerTrialScore": TunerTrialKerasTunerTrialScore,
+    "TunerTrialMetadata": TunerTrialMetadata,
     "UpdateNoteRequest": UpdateNoteRequest,
     "UpdateNoteResponse": UpdateNoteResponse,
+    "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,
     "UpdateOrganizationBucketRequest": UpdateOrganizationBucketRequest,
+    "UpdateOrganizationCreateEmptyProjectRequest": UpdateOrganizationCreateEmptyProjectRequest,
     "UpdateOrganizationCreateProjectRequest": UpdateOrganizationCreateProjectRequest,
     "UpdateOrganizationDataItemRequest": UpdateOrganizationDataItemRequest,
     "UpdateOrganizationDeployBlockRequest": UpdateOrganizationDeployBlockRequest,

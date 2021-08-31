@@ -34,7 +34,7 @@ export class KerasResponse {
     'trained': boolean;
     'name': string;
     /**
-    * The type of Keras block (keras, keras-transfer-image, keras-object-detection, keras-regression). Each behaves differently.
+    * The type of Keras block (keras, keras-transfer-image, keras-transfer-kws, keras-object-detection, keras-regression). Each behaves differently.
     */
     'type'?: KerasResponseTypeEnum;
     /**
@@ -195,8 +195,8 @@ export class KerasResponse {
 }
 
 
-export type KerasResponseTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-object-detection' | 'keras-regression';
-export const KerasResponseTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-object-detection', 'keras-regression'];
+export type KerasResponseTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression';
+export const KerasResponseTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression'];
 
 export type KerasResponseModeEnum = 'visual' | 'expert';
 export const KerasResponseModeEnumValues: string[] = ['visual', 'expert'];

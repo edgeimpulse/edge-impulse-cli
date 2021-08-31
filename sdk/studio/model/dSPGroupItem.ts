@@ -21,6 +21,7 @@ export class DSPGroupItem {
     'param': string;
     'selectOptions'?: Array<DSPGroupItemSelectOptions>;
     'readonly': boolean;
+    'shouldShow': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +64,11 @@ export class DSPGroupItem {
         {
             "name": "readonly",
             "baseName": "readonly",
+            "type": "boolean"
+        },
+        {
+            "name": "shouldShow",
+            "baseName": "shouldShow",
             "type": "boolean"
         }    ];
 

@@ -1,4 +1,5 @@
 // tslint:disable: unified-signatures
+// tslint:disable: no-console
 
 import TypedEmitter from "typed-emitter";
 import {
@@ -30,7 +31,7 @@ export type RemoteMgmtDeviceSampleEmitter = TypedEmitter<{
 }>;
 
 export interface RemoteMgmtDevice extends TypedEmitter<{
-    snapshot: (buffer: Buffer) => void;
+    snapshot: (buffer: Buffer, filename: string) => void;
 }>  {
     connected: () => boolean;
     getDeviceId: () => Promise<string>;
@@ -42,6 +43,7 @@ export interface RemoteMgmtDevice extends TypedEmitter<{
     }[];
     sampleRequest: (data: MgmtInterfaceSampleRequestSample, ee: RemoteMgmtDeviceSampleEmitter) => Promise<void>;
     supportsSnapshotStreaming: () => boolean;
+    supportsSnapshotStreamingWhileCapturing: () => boolean;
     startSnapshotStreaming: () => Promise<void>;
     stopSnapshotStreaming: () => Promise<void>;
     beforeConnect: () => Promise<void>;
@@ -104,10 +106,14 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
         this.registerPingPong();
 
-        this._device.on('snapshot', buffer => {
-            if (this._state === 'snapshot-stream-started' && this._ws) {
+        this._device.on('snapshot', (buffer, filename) => {
+            if (this._state === 'snapshot-stream-started' ||
+                (this._state === 'sampling' && this._device.supportsSnapshotStreamingWhileCapturing()) &&
+                this._ws) {
+
                 let res: MgmtInterfaceSnapshotResponse = {
-                    snapshotFrame: buffer.toString('base64')
+                    snapshotFrame: buffer.toString('base64'),
+                    fileName: filename,
                 };
                 if (this._ws) {
                     this._ws.send(JSON.stringify(res));
@@ -194,6 +200,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
                 let sampleHadError = false;
                 let restartSnapshotOnFinished = false;
+                let resetStateToSnapshotStreaming = false;
 
                 try {
                     let ee = new EventEmitter() as TypedEmitter<{
@@ -253,8 +260,12 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                         }
                     }, 1);
 
-                    restartSnapshotOnFinished = this._state === 'snapshot-stream-started' ||
-                        this._state === 'snapshot-stream-requested';
+                    restartSnapshotOnFinished = (this._state === 'snapshot-stream-started' ||
+                        this._state === 'snapshot-stream-requested') &&
+                        !this._device.supportsSnapshotStreamingWhileCapturing();
+
+                    resetStateToSnapshotStreaming = (this._state === 'snapshot-stream-started' ||
+                        this._state === 'snapshot-stream-requested');
 
                     if (restartSnapshotOnFinished) {
                         // wait until snapshot stream
@@ -299,6 +310,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                     }
 
                     restartSnapshotOnFinished = false;
+                    resetStateToSnapshotStreaming = false;
                 }
                 finally {
                     this._state = 'idle';
@@ -315,6 +327,9 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                             this._state = 'idle';
                         }
                     }
+                }
+                else if (resetStateToSnapshotStreaming) {
+                    this._state = 'snapshot-stream-started';
                 }
                 return;
             }

@@ -21,6 +21,7 @@ export class Project {
     * User or organization that owns the project
     */
     'owner': string;
+    'lastAccessed'?: Date;
     /**
     * Custom logo for this project (not available for all projects)
     */
@@ -61,6 +62,11 @@ export class Project {
             "name": "owner",
             "baseName": "owner",
             "type": "string"
+        },
+        {
+            "name": "lastAccessed",
+            "baseName": "lastAccessed",
+            "type": "Date"
         },
         {
             "name": "logo",

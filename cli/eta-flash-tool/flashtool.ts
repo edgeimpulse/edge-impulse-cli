@@ -57,7 +57,7 @@ let configFactory = new Config();
             /* noop */
         }
 
-        let deviceId = await findSerial();
+        let deviceId = await findSerial(undefined);
         await connectToSerial(deviceId);
     }
     catch (ex) {

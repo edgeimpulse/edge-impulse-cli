@@ -110,4 +110,5 @@ export interface MgmtInterfaceSnapshotFailedResponse {
 
 export interface MgmtInterfaceSnapshotResponse {
     snapshotFrame: string;
+    fileName: string;
 }

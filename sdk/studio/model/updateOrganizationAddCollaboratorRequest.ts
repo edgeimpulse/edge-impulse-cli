@@ -10,28 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
 
-export class OrganizationGetCreateProjectsResponseAllOf {
-    'totalJobCount': number;
-    'jobs': Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
+export class UpdateOrganizationAddCollaboratorRequest {
+    /**
+    * The ID of the project to add the collaborator to.
+    */
+    'projectId': number;
+    /**
+    * The user ID to add to the project. The user must be an admin of the organization.
+    */
+    'userId': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "totalJobCount",
-            "baseName": "totalJobCount",
+            "name": "projectId",
+            "baseName": "projectId",
             "type": "number"
         },
         {
-            "name": "jobs",
-            "baseName": "jobs",
-            "type": "Array<OrganizationGetCreateProjectsResponseAllOfJobs>"
+            "name": "userId",
+            "baseName": "userId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationGetCreateProjectsResponseAllOf.attributeTypeMap;
+        return UpdateOrganizationAddCollaboratorRequest.attributeTypeMap;
     }
 }
 

@@ -97,5 +97,5 @@ export class ModelVariantStats {
 }
 
 
-export type ModelVariantStatsLearnBlockTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-object-detection' | 'keras-regression';
-export const ModelVariantStatsLearnBlockTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-object-detection', 'keras-regression'];
+export type ModelVariantStatsLearnBlockTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression';
+export const ModelVariantStatsLearnBlockTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression'];

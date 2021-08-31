@@ -50,6 +50,10 @@ export class Sample {
     */
     'added': Date;
     'boundingBoxes': Array<BoundingBox>;
+    /**
+    * True if the current sample is excluded from use
+    */
+    'isDisabled': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -143,6 +147,11 @@ export class Sample {
             "name": "boundingBoxes",
             "baseName": "boundingBoxes",
             "type": "Array<BoundingBox>"
+        },
+        {
+            "name": "isDisabled",
+            "baseName": "isDisabled",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

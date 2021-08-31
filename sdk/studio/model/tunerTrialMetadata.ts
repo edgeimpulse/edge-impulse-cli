@@ -10,28 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
 
-export class OrganizationGetCreateProjectsResponseAllOf {
-    'totalJobCount': number;
-    'jobs': Array<OrganizationGetCreateProjectsResponseAllOfJobs>;
+export class TunerTrialMetadata {
+    'input'?: { [key: string]: object; };
+    'dsp'?: { [key: string]: object; };
+    'learn'?: { [key: string]: object; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "totalJobCount",
-            "baseName": "totalJobCount",
-            "type": "number"
+            "name": "input",
+            "baseName": "input",
+            "type": "{ [key: string]: object; }"
         },
         {
-            "name": "jobs",
-            "baseName": "jobs",
-            "type": "Array<OrganizationGetCreateProjectsResponseAllOfJobs>"
+            "name": "dsp",
+            "baseName": "dsp",
+            "type": "{ [key: string]: object; }"
+        },
+        {
+            "name": "learn",
+            "baseName": "learn",
+            "type": "{ [key: string]: object; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationGetCreateProjectsResponseAllOf.attributeTypeMap;
+        return TunerTrialMetadata.attributeTypeMap;
     }
 }
 

@@ -22,6 +22,7 @@ import { EventEmitter } from "tsee";
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
+import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -34,6 +35,8 @@ const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
+const whichDeviceArgvIx = process.argv.indexOf('--which-device');
+const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
 
 let configFactory: Config;
 let serial: SerialConnector | undefined;
@@ -53,7 +56,7 @@ const cliOptions = {
 };
 
 class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
-    snapshot: (buffer: Buffer) => void
+    snapshot: (buffer: Buffer, filename: string) => void
 }>) implements RemoteMgmtDevice  {
     private _config: EdgeImpulseConfig;
     private _serial: SerialConnector;
@@ -114,6 +117,10 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
     supportsSnapshotStreaming() {
         return this._deviceConfig.snapshot.supportsStreaming;
+    }
+
+    supportsSnapshotStreamingWhileCapturing() {
+        return false;
     }
 
     async stopSnapshotStreamFromSignal() {
@@ -211,7 +218,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         height: height,
                     }, 80);
 
-                    this.emit('snapshot', jpegImageData.data);
+                    this.emit('snapshot', jpegImageData.data, '');
                     this._lastSnapshot = new Date();
                 }
             }
@@ -350,11 +357,12 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
             let headers: { [k: string]: string} = {
                 'x-api-key': this._deviceConfig.upload.apiKey,
-                'x-file-name': filename,
+                'x-file-name': encodeLabel(filename),
                 'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
                 'Connection': 'keep-alive'
             };
-            headers['x-label'] = s.label;
+
+            headers['x-label'] = encodeLabel(s.label);
 
             let url = this._config.endpoints.internal.ingestion + s.path;
             console.log(SERIAL_PREFIX, 'Uploading to', url);
@@ -427,8 +435,8 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
-                                'x-label': dr.label,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
+                                'x-label': encodeLabel(dr.label),
                                 'Content-Type': 'application/octet-stream'
                             },
                             body: deviceResponse.file,
@@ -439,7 +447,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
                                 'Content-Type': 'application/cbor'
                             },
                             body: deviceResponse.file,
@@ -482,7 +490,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         console.log('    Ingestion:', config.endpoints.internal.ingestion);
         console.log('');
 
-        let deviceId = await findSerial();
+        let deviceId = await findSerial(whichDeviceArgv);
         await connectToSerial(config, deviceId, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {

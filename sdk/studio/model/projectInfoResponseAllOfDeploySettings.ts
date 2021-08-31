@@ -14,6 +14,8 @@
 export class ProjectInfoResponseAllOfDeploySettings {
     'eonCompiler': boolean;
     'sensor': ProjectInfoResponseAllOfDeploySettingsSensorEnum;
+    'arduinoLibraryName': string;
+    'tinkergenLibraryName': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +29,16 @@ export class ProjectInfoResponseAllOfDeploySettings {
             "name": "sensor",
             "baseName": "sensor",
             "type": "ProjectInfoResponseAllOfDeploySettingsSensorEnum"
+        },
+        {
+            "name": "arduinoLibraryName",
+            "baseName": "arduinoLibraryName",
+            "type": "string"
+        },
+        {
+            "name": "tinkergenLibraryName",
+            "baseName": "tinkergenLibraryName",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

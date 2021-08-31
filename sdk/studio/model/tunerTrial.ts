@@ -10,14 +10,20 @@
  * Do not edit the class manually.
  */
 
+import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialKerasTunerTrial } from './tunerTrialKerasTunerTrial';
+import { TunerTrialMetadata } from './tunerTrialMetadata';
 
 export class TunerTrial {
     'id': string;
     'status': string;
+    'lastCompletedEpoch'?: Date;
     'lastCompletedTraining'?: Date;
     'retries'?: number;
     'currentEpoch'?: number;
+    'workerId'?: string;
+    'blocks'?: Array<TunerTrialBlocks>;
+    'metadata'?: TunerTrialMetadata;
     'kerasTunerTrial'?: TunerTrialKerasTunerTrial;
 
     static discriminator: string | undefined = undefined;
@@ -34,6 +40,11 @@ export class TunerTrial {
             "type": "string"
         },
         {
+            "name": "lastCompletedEpoch",
+            "baseName": "lastCompletedEpoch",
+            "type": "Date"
+        },
+        {
             "name": "lastCompletedTraining",
             "baseName": "lastCompletedTraining",
             "type": "Date"
@@ -47,6 +58,21 @@ export class TunerTrial {
             "name": "currentEpoch",
             "baseName": "currentEpoch",
             "type": "number"
+        },
+        {
+            "name": "workerId",
+            "baseName": "workerId",
+            "type": "string"
+        },
+        {
+            "name": "blocks",
+            "baseName": "blocks",
+            "type": "Array<TunerTrialBlocks>"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "TunerTrialMetadata"
         },
         {
             "name": "kerasTunerTrial",

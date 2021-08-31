@@ -18,6 +18,8 @@ const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dir
 const debugArgv = process.argv.indexOf('--debug') > -1;
 const continuousArgv = process.argv.indexOf('--continuous') > -1;
 const rawArgv = process.argv.indexOf('--raw') > -1;
+const whichDeviceArgvIx = process.argv.indexOf('--which-device');
+const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
 
 let stdinAttached = false;
 let serial: SerialConnector | undefined;
@@ -50,7 +52,7 @@ const configFactory = new Config();
             process.exit(1);
         }
 
-        let deviceId = await findSerial();
+        let deviceId = await findSerial(whichDeviceArgv);
         await connectToSerial(deviceId);
     }
     catch (ex) {

@@ -1,3 +1,5 @@
+// tslint:disable: no-console
+
 import TypedEmitter from 'typed-emitter';
 import { ISerialConnector } from './iserialconnector';
 import { EventEmitter } from './events';
@@ -828,7 +830,9 @@ export default class EiSerialProtocol {
                     res(Buffer.concat(allBuffers));
                 }
                 // cut the find sequence buffer
-                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+                if (checkSeqBuffer.length > seq.length) {
+                    checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+                }
             };
             this._serial.on('data', fn);
         });

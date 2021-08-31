@@ -16,6 +16,7 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import crypto from 'crypto';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
+import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -30,6 +31,8 @@ const frequencyArgvIx = process.argv.indexOf('--frequency');
 const frequencyArgv = frequencyArgvIx !== -1 ? Number(process.argv[frequencyArgvIx + 1]) : undefined;
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
+const whichDeviceArgvIx = process.argv.indexOf('--which-device');
+const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
 
 const cliOptions = {
     appName: 'Edge Impulse data forwarder',
@@ -75,7 +78,7 @@ let configFactory: Config;
         console.log('    Ingestion:', config.endpoints.internal.ingestion);
         console.log('');
 
-        let serialPath = await findSerial();
+        let serialPath = await findSerial(whichDeviceArgv);
         await connectToSerial(config, serialPath, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {
@@ -385,8 +388,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     await request.post(eiConfig.endpoints.internal.ingestion + s.path, {
                         headers: {
                             'x-api-key': dataForwarderConfig.apiKey,
-                            'x-file-name': s.label + '.json',
-                            'x-label': s.label,
+                            'x-file-name': encodeLabel(s.label + '.json'),
+                            'x-label': encodeLabel(s.label),
                             'Content-Type': 'application/json'
                         },
                         body: encoded,

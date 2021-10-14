@@ -12,7 +12,7 @@
 
 
 export class InputBlock {
-    'type': string;
+    'type': InputBlockTypeEnum;
     'title': string;
     'author': string;
     'description': string;
@@ -25,7 +25,7 @@ export class InputBlock {
         {
             "name": "type",
             "baseName": "type",
-            "type": "string"
+            "type": "InputBlockTypeEnum"
         },
         {
             "name": "title",
@@ -58,3 +58,6 @@ export class InputBlock {
     }
 }
 
+
+export type InputBlockTypeEnum = 'time-series' | 'image' | 'video';
+export const InputBlockTypeEnumValues: string[] = ['time-series', 'image', 'video'];

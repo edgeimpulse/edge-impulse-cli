@@ -25,14 +25,6 @@ export class RawSamplePayload {
     */
     'deviceType': string;
     /**
-    * Interval between two windows (1000 / frequency)
-    */
-    'intervalMs': number;
-    /**
-    * The frequency of the data in this file.
-    */
-    'frequency': number;
-    /**
     * Array with sensor axes
     */
     'sensors': Array<Sensor>;
@@ -61,16 +53,6 @@ export class RawSamplePayload {
             "name": "deviceType",
             "baseName": "device_type",
             "type": "string"
-        },
-        {
-            "name": "intervalMs",
-            "baseName": "interval_ms",
-            "type": "number"
-        },
-        {
-            "name": "frequency",
-            "baseName": "frequency",
-            "type": "number"
         },
         {
             "name": "sensors",

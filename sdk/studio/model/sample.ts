@@ -32,8 +32,22 @@ export class Sample {
     'category': string;
     'coldstorageFilename': string;
     'label': string;
+    /**
+    * Interval between two windows (1000 / frequency). If the data was resampled, then this lists the resampled interval.
+    */
     'intervalMs': number;
+    /**
+    * Frequency of the sample. If the data was resampled, then this lists the resampled frequency.
+    */
     'frequency': number;
+    /**
+    * Interval between two windows (1000 / frequency) in the source data (before resampling).
+    */
+    'originalIntervalMs': number;
+    /**
+    * Frequency of the sample in the source data (before resampling).
+    */
+    'originalFrequency': number;
     'deviceName'?: string;
     'deviceType': string;
     'sensors': Array<Sensor>;
@@ -50,6 +64,9 @@ export class Sample {
     */
     'added': Date;
     'boundingBoxes': Array<BoundingBox>;
+    'chartType': SampleChartTypeEnum;
+    'thumbnailVideo'?: string;
+    'thumbnailVideoFull'?: string;
     /**
     * True if the current sample is excluded from use
     */
@@ -114,6 +131,16 @@ export class Sample {
             "type": "number"
         },
         {
+            "name": "originalIntervalMs",
+            "baseName": "originalIntervalMs",
+            "type": "number"
+        },
+        {
+            "name": "originalFrequency",
+            "baseName": "originalFrequency",
+            "type": "number"
+        },
+        {
             "name": "deviceName",
             "baseName": "deviceName",
             "type": "string"
@@ -149,6 +176,21 @@ export class Sample {
             "type": "Array<BoundingBox>"
         },
         {
+            "name": "chartType",
+            "baseName": "chartType",
+            "type": "SampleChartTypeEnum"
+        },
+        {
+            "name": "thumbnailVideo",
+            "baseName": "thumbnailVideo",
+            "type": "string"
+        },
+        {
+            "name": "thumbnailVideoFull",
+            "baseName": "thumbnailVideoFull",
+            "type": "string"
+        },
+        {
             "name": "isDisabled",
             "baseName": "isDisabled",
             "type": "boolean"
@@ -159,3 +201,6 @@ export class Sample {
     }
 }
 
+
+export type SampleChartTypeEnum = 'chart' | 'image' | 'video';
+export const SampleChartTypeEnumValues: string[] = ['chart', 'image', 'video'];

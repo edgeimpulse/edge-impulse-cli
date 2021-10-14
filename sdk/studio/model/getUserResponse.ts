@@ -46,6 +46,10 @@ export class GetUserResponse {
     * Whether this is an ephemeral evaluation account.
     */
     'evaluation'?: boolean;
+    /**
+    * Whether this user is an ambassador.
+    */
+    'ambassador'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -118,6 +122,11 @@ export class GetUserResponse {
         {
             "name": "evaluation",
             "baseName": "evaluation",
+            "type": "boolean"
+        },
+        {
+            "name": "ambassador",
+            "baseName": "ambassador",
             "type": "boolean"
         }    ];
 

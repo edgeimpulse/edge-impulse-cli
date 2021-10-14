@@ -49,6 +49,10 @@ export class ImpulseBlockVersion {
     */
     'windowIncreaseMs'?: number;
     /**
+    * (Input only) Frequency of the input data in Hz
+    */
+    'frequencyHz'?: number;
+    /**
     * (Input only) We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with for each step in classification mode.
     */
     'classificationWindowIncreaseMs'?: number;
@@ -123,6 +127,11 @@ export class ImpulseBlockVersion {
         {
             "name": "windowIncreaseMs",
             "baseName": "windowIncreaseMs",
+            "type": "number"
+        },
+        {
+            "name": "frequencyHz",
+            "baseName": "frequencyHz",
             "type": "number"
         },
         {

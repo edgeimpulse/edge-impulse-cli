@@ -275,6 +275,8 @@ export * from './portalInfoResponse';
 export * from './project';
 export * from './projectDataAxesSummaryResponse';
 export * from './projectDataAxesSummaryResponseAllOf';
+export * from './projectDataIntervalResponse';
+export * from './projectDataIntervalResponseAllOf';
 export * from './projectDataSummary';
 export * from './projectDownloadsResponse';
 export * from './projectDownloadsResponseAllOf';
@@ -648,6 +650,8 @@ import { PortalInfoResponse } from './portalInfoResponse';
 import { Project } from './project';
 import { ProjectDataAxesSummaryResponse } from './projectDataAxesSummaryResponse';
 import { ProjectDataAxesSummaryResponseAllOf } from './projectDataAxesSummaryResponseAllOf';
+import { ProjectDataIntervalResponse } from './projectDataIntervalResponse';
+import { ProjectDataIntervalResponseAllOf } from './projectDataIntervalResponseAllOf';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectDownloadsResponse } from './projectDownloadsResponse';
 import { ProjectDownloadsResponseAllOf } from './projectDownloadsResponseAllOf';
@@ -777,6 +781,7 @@ let enumsMap: {[index: string]: any} = {
     "ImpulseInputBlockResizeModeEnum": "ImpulseInputBlockResizeModeEnum",
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",
+    "InputBlockTypeEnum": "InputBlockTypeEnum",
     "InviteMemberRequestRoleEnum": "InviteMemberRequestRoleEnum",
     "KerasModelMetadataModeEnum": "KerasModelMetadataModeEnum",
     "KerasModelMetadataAllOfModeEnum": "KerasModelMetadataAllOfModeEnum",
@@ -813,6 +818,7 @@ let enumsMap: {[index: string]: any} = {
     "OrganizationUserRoleEnum": "OrganizationUserRoleEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
+    "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
     "SetKerasParameterRequestTuningAlgorithmEnum": "SetKerasParameterRequestTuningAlgorithmEnum",
     "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
@@ -1099,6 +1105,8 @@ let typeMap: {[index: string]: any} = {
     "Project": Project,
     "ProjectDataAxesSummaryResponse": ProjectDataAxesSummaryResponse,
     "ProjectDataAxesSummaryResponseAllOf": ProjectDataAxesSummaryResponseAllOf,
+    "ProjectDataIntervalResponse": ProjectDataIntervalResponse,
+    "ProjectDataIntervalResponseAllOf": ProjectDataIntervalResponseAllOf,
     "ProjectDataSummary": ProjectDataSummary,
     "ProjectDownloadsResponse": ProjectDownloadsResponse,
     "ProjectDownloadsResponseAllOf": ProjectDownloadsResponseAllOf,

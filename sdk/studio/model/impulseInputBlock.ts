@@ -37,6 +37,10 @@ export class ImpulseInputBlock {
     */
     'windowIncreaseMs'?: number;
     /**
+    * (Input only) Frequency of the input data in Hz
+    */
+    'frequencyHz'?: number;
+    /**
     * We use a sliding window to go over the raw data. How many milliseconds to increase the sliding window with for each step in classification mode.
     */
     'classificationWindowIncreaseMs'?: number;
@@ -147,6 +151,11 @@ export class ImpulseInputBlock {
             "type": "number"
         },
         {
+            "name": "frequencyHz",
+            "baseName": "frequencyHz",
+            "type": "number"
+        },
+        {
             "name": "classificationWindowIncreaseMs",
             "baseName": "classificationWindowIncreaseMs",
             "type": "number"
@@ -248,8 +257,8 @@ export class ImpulseInputBlock {
 }
 
 
-export type ImpulseInputBlockTypeEnum = 'time-series' | 'image';
-export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image'];
+export type ImpulseInputBlockTypeEnum = 'time-series' | 'image' | 'video';
+export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image', 'video'];
 
 export type ImpulseInputBlockResizeModeEnum = 'squash' | 'fit-short' | 'fit-long' | 'crop';
 export const ImpulseInputBlockResizeModeEnumValues: string[] = ['squash', 'fit-short', 'fit-long', 'crop'];

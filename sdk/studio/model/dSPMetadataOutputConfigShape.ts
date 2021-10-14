@@ -27,6 +27,10 @@ export class DSPMetadataOutputConfigShape {
     * Only available for type \'image\'
     */
     'channels'?: number;
+    /**
+    * Number of frames, only available for type \'image\'
+    */
+    'frames'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,6 +48,11 @@ export class DSPMetadataOutputConfigShape {
         {
             "name": "channels",
             "baseName": "channels",
+            "type": "number"
+        },
+        {
+            "name": "frames",
+            "baseName": "frames",
             "type": "number"
         }    ];
 

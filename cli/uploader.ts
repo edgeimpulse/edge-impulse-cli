@@ -141,6 +141,20 @@ const cliOptions = {
 
         let fileArgs = process.argv.slice(argv);
 
+        if (fileArgs.length === 1 && Path.basename(fileArgs[0]) === 'bounding_boxes.labels') {
+            console.log(``);
+            console.log(`You don't need to upload "bounding_boxes.labels". When uploading an image we check whether ` +
+                        `a labels file is present in the same folder, and automatically attach the bounding boxes ` +
+                        `to the image.`);
+            console.log(`So you can just do:`);
+            console.log(`    edge-impulse-uploader yourimage.jpg`);
+            console.log(``);
+            process.exit(1);
+        }
+
+        // exclude 'bounding_boxes.labels'
+        fileArgs = fileArgs.filter(f => Path.basename(f) !== 'bounding_boxes.labels');
+
         if (!fileArgs[0]) {
             console.log('Requires at least one argument (a ' +
                 validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
@@ -182,8 +196,6 @@ const cliOptions = {
                     });
                 }
             }
-
-            console.log('files', files.length);
         }
         else {
             if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {

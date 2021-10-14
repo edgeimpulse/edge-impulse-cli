@@ -74,7 +74,7 @@ export function makeVideo(buffer: Buffer, hmacKey: string | undefined, fileName:
         signature: emptySignature,
         payload: {
             device_type: "EDGE_IMPULSE_UPLOADER",
-            interval_ms: 1000 / 25, // this is OK, gets figured out by ingestion
+            interval_ms: 0, // this is OK, gets figured out by ingestion
             sensors: [{ name: 'video', units: 'rgba' }],
             values: [`Ref-BINARY-${mimeType} (${buffer.length} bytes) ${hmacVideo.digest().toString('hex')}`]
         }

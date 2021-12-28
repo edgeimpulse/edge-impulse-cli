@@ -18,6 +18,7 @@ export class ListOrganizationPortalsResponseAllOfPortals {
     'url': string;
     'bucketName': string;
     'bucketPath': string;
+    'bucketUrl': string;
     'created': Date;
 
     static discriminator: string | undefined = undefined;
@@ -51,6 +52,11 @@ export class ListOrganizationPortalsResponseAllOfPortals {
         {
             "name": "bucketPath",
             "baseName": "bucketPath",
+            "type": "string"
+        },
+        {
+            "name": "bucketUrl",
+            "baseName": "bucketUrl",
             "type": "string"
         },
         {

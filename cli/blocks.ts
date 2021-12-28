@@ -475,7 +475,7 @@ let currentBlockConfig: BlockConfig | undefined;
                 }
             }
             const compressCurrentDirectory = new Promise((resolve, reject) => {
-                tar.c({ gzip: true, filter: (path) => {
+                tar.c({ gzip: true, follow: true, filter: (path) => {
                     if (ignore.ignores(path)) {
                         return false;
                     }

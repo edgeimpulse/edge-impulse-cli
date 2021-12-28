@@ -49,6 +49,10 @@ export class SetKerasParameterRequest {
     */
     'trainTestSplit'?: number;
     /**
+    * Whether to automatically balance class weights, use this for skewed datasets.
+    */
+    'autoClassWeights'?: boolean;
+    /**
     * Tuner learning rates (between 0 and 1) (only in visual mode).
     */
     'learningRates'?: Array<number>;
@@ -109,6 +113,11 @@ export class SetKerasParameterRequest {
             "name": "trainTestSplit",
             "baseName": "trainTestSplit",
             "type": "number"
+        },
+        {
+            "name": "autoClassWeights",
+            "baseName": "autoClassWeights",
+            "type": "boolean"
         },
         {
             "name": "learningRates",

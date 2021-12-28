@@ -44,6 +44,10 @@ export class GetOrganizationPortalResponseAllOf {
     * The S3 bucket path where uploaded data is stored.
     */
     'bucketPath': string;
+    /**
+    * The full S3 bucket path where uploaded data is stored.
+    */
+    'bucketUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -86,6 +90,11 @@ export class GetOrganizationPortalResponseAllOf {
         {
             "name": "bucketPath",
             "baseName": "bucketPath",
+            "type": "string"
+        },
+        {
+            "name": "bucketUrl",
+            "baseName": "bucketUrl",
             "type": "string"
         }    ];
 

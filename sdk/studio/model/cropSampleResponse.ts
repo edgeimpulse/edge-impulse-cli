@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { CropSampleResponseAllOf } from './cropSampleResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
-import { GetJWTTokenResponseAllOf } from './getJWTTokenResponseAllOf';
 
-export class GetJWTTokenResponse {
+export class CropSampleResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,14 +22,7 @@ export class GetJWTTokenResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token'?: string;
-    /**
-    * Redirect URL to follow to complete login
-    */
-    'redirectUrl'?: string;
+    'requiresProcessing': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,18 +38,13 @@ export class GetJWTTokenResponse {
             "type": "string"
         },
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
-        },
-        {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "requiresProcessing",
+            "baseName": "requiresProcessing",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenResponse.attributeTypeMap;
+        return CropSampleResponse.attributeTypeMap;
     }
 }
 

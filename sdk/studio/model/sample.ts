@@ -71,6 +71,18 @@ export class Sample {
     * True if the current sample is excluded from use
     */
     'isDisabled': boolean;
+    /**
+    * True if the current sample is still processing (e.g. for video)
+    */
+    'isProcessing': boolean;
+    /**
+    * Set when sample is processing and a job has picked up the request
+    */
+    'processingJobId'?: number;
+    /**
+    * Set when processing this sample failed
+    */
+    'processingError': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -193,6 +205,21 @@ export class Sample {
         {
             "name": "isDisabled",
             "baseName": "isDisabled",
+            "type": "boolean"
+        },
+        {
+            "name": "isProcessing",
+            "baseName": "isProcessing",
+            "type": "boolean"
+        },
+        {
+            "name": "processingJobId",
+            "baseName": "processingJobId",
+            "type": "number"
+        },
+        {
+            "name": "processingError",
+            "baseName": "processingError",
             "type": "boolean"
         }    ];
 

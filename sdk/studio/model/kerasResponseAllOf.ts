@@ -57,6 +57,10 @@ export class KerasResponseAllOf {
     */
     'trainTestSplit'?: number;
     /**
+    * Whether to automatically balance class weights, use this for skewed datasets.
+    */
+    'autoClassWeights'?: boolean;
+    /**
     * Possible learning rates (between 0 and 1).
     */
     'learningRates'?: Array<number>;
@@ -137,6 +141,11 @@ export class KerasResponseAllOf {
             "name": "trainTestSplit",
             "baseName": "trainTestSplit",
             "type": "number"
+        },
+        {
+            "name": "autoClassWeights",
+            "baseName": "autoClassWeights",
+            "type": "boolean"
         },
         {
             "name": "learningRates",

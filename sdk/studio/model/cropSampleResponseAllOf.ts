@@ -11,32 +11,20 @@
  */
 
 
-export class GetJWTTokenResponseAllOf {
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token'?: string;
-    /**
-    * Redirect URL to follow to complete login
-    */
-    'redirectUrl'?: string;
+export class CropSampleResponseAllOf {
+    'requiresProcessing': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
-        },
-        {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "requiresProcessing",
+            "baseName": "requiresProcessing",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenResponseAllOf.attributeTypeMap;
+        return CropSampleResponseAllOf.attributeTypeMap;
     }
 }
 

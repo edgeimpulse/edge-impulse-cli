@@ -16,6 +16,7 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
+import { CropSampleResponse } from '../model/cropSampleResponse';
 import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
@@ -799,7 +800,7 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param cropSampleRequest 
      */
-    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CropSampleResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/crop'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -860,12 +861,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: CropSampleResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "CropSampleResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -2015,8 +2016,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
+     * @param zoomStart Zoom into the sample, with the focus starting at this index
+     * @param zoomEnd Zoom into the sample, with the focus ending at this index
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, limitPayloadValues?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetSampleResponse;  }> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, limitPayloadValues?: number, zoomStart?: number, zoomEnd?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetSampleResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2043,6 +2046,14 @@ export class RawDataApi {
 
         if (limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(limitPayloadValues, "number");
+        }
+
+        if (zoomStart !== undefined) {
+            localVarQueryParameters['zoomStart'] = ObjectSerializer.serialize(zoomStart, "number");
+        }
+
+        if (zoomEnd !== undefined) {
+            localVarQueryParameters['zoomEnd'] = ObjectSerializer.serialize(zoomEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

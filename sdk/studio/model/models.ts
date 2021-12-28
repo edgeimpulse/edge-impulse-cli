@@ -65,6 +65,8 @@ export * from './createUserThirdPartyRequest';
 export * from './createUserThirdPartyResponse';
 export * from './createUserThirdPartyResponseAllOf';
 export * from './cropSampleRequest';
+export * from './cropSampleResponse';
+export * from './cropSampleResponseAllOf';
 export * from './dSPBlock';
 export * from './dSPConfigRequest';
 export * from './dSPConfigResponse';
@@ -440,6 +442,8 @@ import { CreateUserThirdPartyRequest } from './createUserThirdPartyRequest';
 import { CreateUserThirdPartyResponse } from './createUserThirdPartyResponse';
 import { CreateUserThirdPartyResponseAllOf } from './createUserThirdPartyResponseAllOf';
 import { CropSampleRequest } from './cropSampleRequest';
+import { CropSampleResponse } from './cropSampleResponse';
+import { CropSampleResponseAllOf } from './cropSampleResponseAllOf';
 import { DSPBlock } from './dSPBlock';
 import { DSPConfigRequest } from './dSPConfigRequest';
 import { DSPConfigResponse } from './dSPConfigResponse';
@@ -896,6 +900,8 @@ let typeMap: {[index: string]: any} = {
     "CreateUserThirdPartyResponse": CreateUserThirdPartyResponse,
     "CreateUserThirdPartyResponseAllOf": CreateUserThirdPartyResponseAllOf,
     "CropSampleRequest": CropSampleRequest,
+    "CropSampleResponse": CropSampleResponse,
+    "CropSampleResponseAllOf": CropSampleResponseAllOf,
     "DSPBlock": DSPBlock,
     "DSPConfigRequest": DSPConfigRequest,
     "DSPConfigResponse": DSPConfigResponse,

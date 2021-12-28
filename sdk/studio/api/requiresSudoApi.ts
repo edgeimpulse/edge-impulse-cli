@@ -95,7 +95,7 @@ export class RequiresSudoApi {
      * @param adminProjectId Project ID
      */
     public async adminAddUserToProject (adminProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/admin/projects/:adminProjectId/add'
+        const localVarPath = this.basePath + '/api/admin/projects/{adminProjectId}/add'
             .replace('{' + 'adminProjectId' + '}', encodeURIComponent(String(adminProjectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -238,7 +238,7 @@ export class RequiresSudoApi {
      * @param userId User ID
      */
     public async adminGetUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetUserResponse;  }> {
-        const localVarPath = this.basePath + '/api/admin/users/:userId'
+        const localVarPath = this.basePath + '/api/admin/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);

@@ -53,6 +53,7 @@ export class DSPMetadata {
     */
     'frequency': number;
     'outputConfig': DSPMetadataOutputConfig;
+    'fftUsed'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -116,6 +117,11 @@ export class DSPMetadata {
             "name": "outputConfig",
             "baseName": "outputConfig",
             "type": "DSPMetadataOutputConfig"
+        },
+        {
+            "name": "fftUsed",
+            "baseName": "fftUsed",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

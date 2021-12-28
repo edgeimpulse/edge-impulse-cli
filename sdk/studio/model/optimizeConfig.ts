@@ -108,8 +108,8 @@ export class OptimizeConfig {
 }
 
 
-export type OptimizeConfigDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous';
-export const OptimizeConfigDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous'];
+export type OptimizeConfigDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant';
+export const OptimizeConfigDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant'];
 
 export type OptimizeConfigTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
 export const OptimizeConfigTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];

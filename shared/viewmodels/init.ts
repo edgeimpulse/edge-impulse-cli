@@ -43,6 +43,7 @@ export enum PageType {
     OrganizationProjects = 99,
     OrganizationDeploy = 100,
     OrganizationPortals = 101,
+    OrganizationDataPipelines = 102,
     UploadPortal = 200,
 }
 

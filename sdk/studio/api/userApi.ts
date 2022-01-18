@@ -18,10 +18,10 @@ import { ActivateUserByThirdPartyActivationCodeRequest } from '../model/activate
 import { ActivateUserRequest } from '../model/activateUserRequest';
 import { ChangePasswordRequest } from '../model/changePasswordRequest';
 import { ConvertUserRequest } from '../model/convertUserRequest';
+import { CreateEvaluationUserResponse } from '../model/createEvaluationUserResponse';
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetEvalUserMobileClientUrlResponse } from '../model/getEvalUserMobileClientUrlResponse';
 import { GetJWTTokenResponse } from '../model/getJWTTokenResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
@@ -531,6 +531,63 @@ export class UserApi {
         });
     }
     /**
+     * Creates an evaluation user and a new project, and redirects the user to the new project.
+     * @summary Create evaluation user
+     */
+    public async createEvaluationUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateEvaluationUserResponse;  }> {
+        const localVarPath = this.basePath + '/api-user-create-evaluate';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: CreateEvaluationUserResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateEvaluationUserResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Create a new user and project
      * @summary Create user
      * @param createUserRequest 
@@ -780,70 +837,6 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetUserResponse");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject(new HttpError(response, body, response.statusCode));
-                        }
-                    }
-                });
-            });
-        });
-    }
-    /**
-     * Get redirect URL to mobile application for evaluation user.
-     * @summary Get evaluation user
-     * @param userUUID User UUID
-     */
-    public async getEvalUserMobileClientURLByUUID (userUUID: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetEvalUserMobileClientUrlResponse;  }> {
-        const localVarPath = this.basePath + '/api/users/get-eval-user-mobile-client-url-by-uuid/{userUUID}'
-            .replace('{' + 'userUUID' + '}', encodeURIComponent(String(userUUID)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'userUUID' is not null or undefined
-        if (userUUID === null || userUUID === undefined) {
-            throw new Error('Required parameter userUUID was null or undefined when calling getEvalUserMobileClientURLByUUID.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.IncomingMessage; body: GetEvalUserMobileClientUrlResponse;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GetEvalUserMobileClientUrlResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

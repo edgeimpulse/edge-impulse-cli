@@ -19,6 +19,15 @@ export enum EiSerialWifiSecurity {
     EI_SECURITY_UNKNOWN      = 0xFF,     /*!< unknown/unsupported security in scan results */
 }
 
+export enum EiSerialSensor {
+    EI_CLASSIFIER_SENSOR_UNKNOWN             = -1,
+    EI_CLASSIFIER_SENSOR_MICROPHONE          = 1,
+    EI_CLASSIFIER_SENSOR_ACCELEROMETER       = 2,
+    EI_CLASSIFIER_SENSOR_CAMERA              = 3,
+    EI_CLASSIFIER_SENSOR_9DOF                = 4,
+    EI_CLASSIFIER_SENSOR_ENVIRONMENTAL       = 5,
+}
+
 export interface EiSerialDeviceConfig {
     info: {
         id: string;
@@ -35,6 +44,10 @@ export interface EiSerialDeviceConfig {
         maxSampleLengthS: number;
         frequencies: number[];
     }[];
+    inference: {
+        sensor: EiSerialSensor;
+        modelType: 'classification' | 'constrained_object_detection';
+    };
     snapshot: {
         hasSnapshot: boolean;
         supportsStreaming: boolean;
@@ -133,6 +146,11 @@ export default class EiSerialProtocol {
         config.sensors = [];
         config.info.atCommandVersion = { major: 1, minor: 0, patch: 0 };
         config.wifi.present = true;
+        // new in 1.6.1 (so fall back to unknown for earlier versions)
+        config.inference = {
+            sensor: EiSerialSensor.EI_CLASSIFIER_SENSOR_UNKNOWN,
+            modelType: 'classification',
+        };
         config.snapshot = {
             hasSnapshot: false,
             supportsStreaming: false,
@@ -140,7 +158,8 @@ export default class EiSerialProtocol {
             resolutions: []
         };
 
-        let section: 'info' | 'sensors' | 'wifi' | 'sampling' | 'upload' | 'management' | 'snapshot' | undefined;
+        let section: 'info' | 'sensors' | 'wifi' | 'inference' | 'sampling' | 'upload' |
+                     'management' | 'snapshot' | undefined;
 
         for (let line of data.split('\n').map(l => l.trim()).filter(l => !!l)) {
             if (line.indexOf('= Device info =') > -1) {
@@ -153,6 +172,10 @@ export default class EiSerialProtocol {
             }
             if (line.indexOf('= Snapshot =') > -1) {
                 section = 'snapshot';
+                continue;
+            }
+            if (line.indexOf('= Inference =') > -1) {
+                section = 'inference';
                 continue;
             }
             if (line.indexOf('= WIFI =') > -1) {
@@ -235,6 +258,14 @@ export default class EiSerialProtocol {
                     }
                 }
                 continue;
+            }
+            if (section === 'inference') {
+                if (key === 'sensor') {
+                    config.inference.sensor = <EiSerialSensor>Number(value); continue;
+                }
+                if (key === 'model type') {
+                    config.inference.modelType = <'classification' | 'constrained_object_detection'>value; continue;
+                }
             }
             if (section === 'snapshot') {
                 if (key === 'has snapshot') {

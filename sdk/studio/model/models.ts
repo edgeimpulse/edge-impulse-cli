@@ -9,6 +9,8 @@ export * from './addOrganizationApiKeyRequest';
 export * from './addOrganizationBucketRequest';
 export * from './addOrganizationDeployBlockRequest';
 export * from './addOrganizationDeployBlockResponse';
+export * from './addOrganizationDspBlockRequest';
+export * from './addOrganizationDspBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
 export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
@@ -21,6 +23,14 @@ export * from './anomalyResponseAllOfAxes';
 export * from './anomalyTrainedFeaturesResponse';
 export * from './anomalyTrainedFeaturesResponseAllOf';
 export * from './anomalyTrainedFeaturesResponseAllOfData';
+export * from './applicationTestingDetection';
+export * from './applicationTestingFalsePositive';
+export * from './applicationTestingGroundTruth';
+export * from './applicationTestingGroundTruthSamples';
+export * from './applicationTestingParameterSet';
+export * from './applicationTestingParameterSetAggregateStats';
+export * from './applicationTestingParameterSetStats';
+export * from './applicationTestingRawDetection';
 export * from './augmentationPolicyImageEnum';
 export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
@@ -41,6 +51,8 @@ export * from './countSamplesResponseAllOf';
 export * from './createBlockVersionResponse';
 export * from './createBlockVersionResponseAllOf';
 export * from './createDeviceRequest';
+export * from './createEvaluationUserResponse';
+export * from './createEvaluationUserResponseAllOf';
 export * from './createNoteResponse';
 export * from './createNoteResponseAllOf';
 export * from './createOrganizationPortalRequest';
@@ -49,6 +61,7 @@ export * from './createOrganizationPortalResponseAllOf';
 export * from './createOrganizationRequest';
 export * from './createOrganizationResponse';
 export * from './createOrganizationResponseAllOf';
+export * from './createPipelineResponse';
 export * from './createProjectRequest';
 export * from './createProjectResponse';
 export * from './createProjectResponseAllOf';
@@ -89,6 +102,10 @@ export * from './deviceNameResponse';
 export * from './deviceNameResponseAllOf';
 export * from './deviceSensors';
 export * from './download';
+export * from './dspFeatureImportanceResponse';
+export * from './dspFeatureImportanceResponseAllOf';
+export * from './dspFeatureImportanceResponseAllOfFeatures';
+export * from './dspFeatureImportanceResponseAllOfLabels';
 export * from './dspFeatureLabelsResponse';
 export * from './dspFeatureLabelsResponseAllOf';
 export * from './dspRunGraph';
@@ -124,12 +141,18 @@ export * from './generateFeaturesRequest';
 export * from './genericApiResponse';
 export * from './getAllThirdPartyAuthResponse';
 export * from './getAllThirdPartyAuthResponseAllOf';
+export * from './getApplicationTestingGroundTruthResponse';
+export * from './getApplicationTestingGroundTruthResponseAllOf';
+export * from './getApplicationTestingParameterSetsResponse';
+export * from './getApplicationTestingParameterSetsResponseAllOf';
+export * from './getApplicationTestingRawResultResponse';
+export * from './getApplicationTestingRawResultResponseAllOf';
+export * from './getApplicationTestingStatusResponse';
+export * from './getApplicationTestingStatusResponseAllOf';
 export * from './getDeploymentResponse';
 export * from './getDeploymentResponseAllOf';
 export * from './getDeviceResponse';
 export * from './getDeviceResponseAllOf';
-export * from './getEvalUserMobileClientUrlResponse';
-export * from './getEvalUserMobileClientUrlResponseAllOf';
 export * from './getImpulseBlocksResponse';
 export * from './getImpulseBlocksResponseAllOf';
 export * from './getImpulseResponse';
@@ -143,6 +166,8 @@ export * from './getNotesResponse';
 export * from './getNotesResponseAllOf';
 export * from './getOrganizationDataItemResponse';
 export * from './getOrganizationDataItemResponseAllOf';
+export * from './getOrganizationPipelinesResponse';
+export * from './getOrganizationPipelinesResponseAllOf';
 export * from './getOrganizationPortalResponse';
 export * from './getOrganizationPortalResponseAllOf';
 export * from './getSampleResponse';
@@ -207,8 +232,12 @@ export * from './listOrganizationDataResponseAllOf';
 export * from './listOrganizationDataResponseAllOfData';
 export * from './listOrganizationDeployBlocksResponse';
 export * from './listOrganizationDeployBlocksResponseAllOf';
+export * from './listOrganizationDspBlocksResponse';
+export * from './listOrganizationDspBlocksResponseAllOf';
 export * from './listOrganizationFilesResponse';
 export * from './listOrganizationFilesResponseAllOf';
+export * from './listOrganizationPipelinesResponse';
+export * from './listOrganizationPipelinesResponseAllOf';
 export * from './listOrganizationPortalsResponse';
 export * from './listOrganizationPortalsResponseAllOf';
 export * from './listOrganizationPortalsResponseAllOfPortals';
@@ -223,6 +252,9 @@ export * from './listPortalFilesInFolderResponse';
 export * from './listPortalFilesInFolderResponseAllOf';
 export * from './listProjects';
 export * from './listProjectsResponse';
+export * from './listPublicVersionsResponse';
+export * from './listPublicVersionsResponseAllOf';
+export * from './listPublicVersionsResponseAllOfVersions';
 export * from './listSamplesResponse';
 export * from './listSamplesResponseAllOf';
 export * from './listVersionsResponse';
@@ -263,6 +295,7 @@ export * from './organizationCreateProjectTransformationSummary';
 export * from './organizationDataItem';
 export * from './organizationDataItemFiles';
 export * from './organizationDeployBlock';
+export * from './organizationDspBlock';
 export * from './organizationGetCreateProjectsResponse';
 export * from './organizationGetCreateProjectsResponseAllOf';
 export * from './organizationGetCreateProjectsResponseAllOfJobs';
@@ -270,7 +303,14 @@ export * from './organizationInfoResponse';
 export * from './organizationInfoResponseAllOf';
 export * from './organizationInfoResponseAllOfDatasets';
 export * from './organizationInfoResponseAllOfDefaultComputeLimits';
+export * from './organizationPipeline';
+export * from './organizationPipelineFeedingIntoDataset';
+export * from './organizationPipelineItemCount';
+export * from './organizationPipelineRun';
+export * from './organizationPipelineRunStep';
+export * from './organizationPipelineStep';
 export * from './organizationTransformationBlock';
+export * from './organizationUpdatePipelineBody';
 export * from './organizationUser';
 export * from './portalFile';
 export * from './portalInfoResponse';
@@ -292,6 +332,8 @@ export * from './projectInfoResponseAllOfExperiments';
 export * from './projectInfoResponseAllOfImpulse';
 export * from './projectInfoResponseAllOfLatencyDevices';
 export * from './projectInfoResponseAllOfPerformance';
+export * from './projectInfoResponseAllOfReadme';
+export * from './projectInfoResponseAllOfShowGettingStartedWizard';
 export * from './projectInfoResponseAllOfUrls';
 export * from './projectVersionRequest';
 export * from './rawSampleData';
@@ -304,6 +346,8 @@ export * from './requestResetPasswordRequest';
 export * from './resetPasswordRequest';
 export * from './restoreProjectFromPublicRequest';
 export * from './restoreProjectRequest';
+export * from './runOrganizationPipelineResponse';
+export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
 export * from './scoreTrialResponse';
@@ -315,12 +359,14 @@ export * from './setAnomalyParameterRequest';
 export * from './setKerasParameterRequest';
 export * from './setMemberDatasetsRequest';
 export * from './setMemberRoleRequest';
+export * from './setOrganizationDataDatasetRequest';
 export * from './setProjectComputeTimeRequest';
 export * from './setProjectDspFileSizeRequest';
 export * from './setSyntiantPosteriorRequest';
 export * from './socketTokenResponse';
 export * from './socketTokenResponseAllOf';
 export * from './socketTokenResponseAllOfToken';
+export * from './startApplicationTestingRequest';
 export * from './startJobResponse';
 export * from './startJobResponseAllOf';
 export * from './startSamplingRequest';
@@ -351,6 +397,7 @@ export * from './updateOrganizationCreateEmptyProjectRequest';
 export * from './updateOrganizationCreateProjectRequest';
 export * from './updateOrganizationDataItemRequest';
 export * from './updateOrganizationDeployBlockRequest';
+export * from './updateOrganizationDspBlockRequest';
 export * from './updateOrganizationPortalResponse';
 export * from './updateOrganizationPortalResponseAllOf';
 export * from './updateOrganizationRequest';
@@ -361,6 +408,9 @@ export * from './updateUserRequest';
 export * from './updateVersionRequest';
 export * from './uploadCustomBlockRequest';
 export * from './uploadKerasFilesRequest';
+export * from './uploadLogoRequest';
+export * from './uploadReadmeImageRequest';
+export * from './uploadReadmeImageResponse';
 export * from './uploadUserPhotoRequest';
 export * from './uploadUserPhotoResponse';
 export * from './uploadUserPhotoResponseAllOf';
@@ -386,6 +436,8 @@ import { AddOrganizationApiKeyRequest } from './addOrganizationApiKeyRequest';
 import { AddOrganizationBucketRequest } from './addOrganizationBucketRequest';
 import { AddOrganizationDeployBlockRequest } from './addOrganizationDeployBlockRequest';
 import { AddOrganizationDeployBlockResponse } from './addOrganizationDeployBlockResponse';
+import { AddOrganizationDspBlockRequest } from './addOrganizationDspBlockRequest';
+import { AddOrganizationDspBlockResponse } from './addOrganizationDspBlockResponse';
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from './addOrganizationTransformationBlockResponse';
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
@@ -398,6 +450,14 @@ import { AnomalyResponseAllOfAxes } from './anomalyResponseAllOfAxes';
 import { AnomalyTrainedFeaturesResponse } from './anomalyTrainedFeaturesResponse';
 import { AnomalyTrainedFeaturesResponseAllOf } from './anomalyTrainedFeaturesResponseAllOf';
 import { AnomalyTrainedFeaturesResponseAllOfData } from './anomalyTrainedFeaturesResponseAllOfData';
+import { ApplicationTestingDetection } from './applicationTestingDetection';
+import { ApplicationTestingFalsePositive } from './applicationTestingFalsePositive';
+import { ApplicationTestingGroundTruth } from './applicationTestingGroundTruth';
+import { ApplicationTestingGroundTruthSamples } from './applicationTestingGroundTruthSamples';
+import { ApplicationTestingParameterSet } from './applicationTestingParameterSet';
+import { ApplicationTestingParameterSetAggregateStats } from './applicationTestingParameterSetAggregateStats';
+import { ApplicationTestingParameterSetStats } from './applicationTestingParameterSetStats';
+import { ApplicationTestingRawDetection } from './applicationTestingRawDetection';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
@@ -418,6 +478,8 @@ import { CountSamplesResponseAllOf } from './countSamplesResponseAllOf';
 import { CreateBlockVersionResponse } from './createBlockVersionResponse';
 import { CreateBlockVersionResponseAllOf } from './createBlockVersionResponseAllOf';
 import { CreateDeviceRequest } from './createDeviceRequest';
+import { CreateEvaluationUserResponse } from './createEvaluationUserResponse';
+import { CreateEvaluationUserResponseAllOf } from './createEvaluationUserResponseAllOf';
 import { CreateNoteResponse } from './createNoteResponse';
 import { CreateNoteResponseAllOf } from './createNoteResponseAllOf';
 import { CreateOrganizationPortalRequest } from './createOrganizationPortalRequest';
@@ -426,6 +488,7 @@ import { CreateOrganizationPortalResponseAllOf } from './createOrganizationPorta
 import { CreateOrganizationRequest } from './createOrganizationRequest';
 import { CreateOrganizationResponse } from './createOrganizationResponse';
 import { CreateOrganizationResponseAllOf } from './createOrganizationResponseAllOf';
+import { CreatePipelineResponse } from './createPipelineResponse';
 import { CreateProjectRequest } from './createProjectRequest';
 import { CreateProjectResponse } from './createProjectResponse';
 import { CreateProjectResponseAllOf } from './createProjectResponseAllOf';
@@ -466,6 +529,10 @@ import { DeviceNameResponse } from './deviceNameResponse';
 import { DeviceNameResponseAllOf } from './deviceNameResponseAllOf';
 import { DeviceSensors } from './deviceSensors';
 import { Download } from './download';
+import { DspFeatureImportanceResponse } from './dspFeatureImportanceResponse';
+import { DspFeatureImportanceResponseAllOf } from './dspFeatureImportanceResponseAllOf';
+import { DspFeatureImportanceResponseAllOfFeatures } from './dspFeatureImportanceResponseAllOfFeatures';
+import { DspFeatureImportanceResponseAllOfLabels } from './dspFeatureImportanceResponseAllOfLabels';
 import { DspFeatureLabelsResponse } from './dspFeatureLabelsResponse';
 import { DspFeatureLabelsResponseAllOf } from './dspFeatureLabelsResponseAllOf';
 import { DspRunGraph } from './dspRunGraph';
@@ -501,12 +568,18 @@ import { GenerateFeaturesRequest } from './generateFeaturesRequest';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetAllThirdPartyAuthResponse } from './getAllThirdPartyAuthResponse';
 import { GetAllThirdPartyAuthResponseAllOf } from './getAllThirdPartyAuthResponseAllOf';
+import { GetApplicationTestingGroundTruthResponse } from './getApplicationTestingGroundTruthResponse';
+import { GetApplicationTestingGroundTruthResponseAllOf } from './getApplicationTestingGroundTruthResponseAllOf';
+import { GetApplicationTestingParameterSetsResponse } from './getApplicationTestingParameterSetsResponse';
+import { GetApplicationTestingParameterSetsResponseAllOf } from './getApplicationTestingParameterSetsResponseAllOf';
+import { GetApplicationTestingRawResultResponse } from './getApplicationTestingRawResultResponse';
+import { GetApplicationTestingRawResultResponseAllOf } from './getApplicationTestingRawResultResponseAllOf';
+import { GetApplicationTestingStatusResponse } from './getApplicationTestingStatusResponse';
+import { GetApplicationTestingStatusResponseAllOf } from './getApplicationTestingStatusResponseAllOf';
 import { GetDeploymentResponse } from './getDeploymentResponse';
 import { GetDeploymentResponseAllOf } from './getDeploymentResponseAllOf';
 import { GetDeviceResponse } from './getDeviceResponse';
 import { GetDeviceResponseAllOf } from './getDeviceResponseAllOf';
-import { GetEvalUserMobileClientUrlResponse } from './getEvalUserMobileClientUrlResponse';
-import { GetEvalUserMobileClientUrlResponseAllOf } from './getEvalUserMobileClientUrlResponseAllOf';
 import { GetImpulseBlocksResponse } from './getImpulseBlocksResponse';
 import { GetImpulseBlocksResponseAllOf } from './getImpulseBlocksResponseAllOf';
 import { GetImpulseResponse } from './getImpulseResponse';
@@ -520,6 +593,8 @@ import { GetNotesResponse } from './getNotesResponse';
 import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
 import { GetOrganizationDataItemResponse } from './getOrganizationDataItemResponse';
 import { GetOrganizationDataItemResponseAllOf } from './getOrganizationDataItemResponseAllOf';
+import { GetOrganizationPipelinesResponse } from './getOrganizationPipelinesResponse';
+import { GetOrganizationPipelinesResponseAllOf } from './getOrganizationPipelinesResponseAllOf';
 import { GetOrganizationPortalResponse } from './getOrganizationPortalResponse';
 import { GetOrganizationPortalResponseAllOf } from './getOrganizationPortalResponseAllOf';
 import { GetSampleResponse } from './getSampleResponse';
@@ -584,8 +659,12 @@ import { ListOrganizationDataResponseAllOf } from './listOrganizationDataRespons
 import { ListOrganizationDataResponseAllOfData } from './listOrganizationDataResponseAllOfData';
 import { ListOrganizationDeployBlocksResponse } from './listOrganizationDeployBlocksResponse';
 import { ListOrganizationDeployBlocksResponseAllOf } from './listOrganizationDeployBlocksResponseAllOf';
+import { ListOrganizationDspBlocksResponse } from './listOrganizationDspBlocksResponse';
+import { ListOrganizationDspBlocksResponseAllOf } from './listOrganizationDspBlocksResponseAllOf';
 import { ListOrganizationFilesResponse } from './listOrganizationFilesResponse';
 import { ListOrganizationFilesResponseAllOf } from './listOrganizationFilesResponseAllOf';
+import { ListOrganizationPipelinesResponse } from './listOrganizationPipelinesResponse';
+import { ListOrganizationPipelinesResponseAllOf } from './listOrganizationPipelinesResponseAllOf';
 import { ListOrganizationPortalsResponse } from './listOrganizationPortalsResponse';
 import { ListOrganizationPortalsResponseAllOf } from './listOrganizationPortalsResponseAllOf';
 import { ListOrganizationPortalsResponseAllOfPortals } from './listOrganizationPortalsResponseAllOfPortals';
@@ -600,6 +679,9 @@ import { ListPortalFilesInFolderResponse } from './listPortalFilesInFolderRespon
 import { ListPortalFilesInFolderResponseAllOf } from './listPortalFilesInFolderResponseAllOf';
 import { ListProjects } from './listProjects';
 import { ListProjectsResponse } from './listProjectsResponse';
+import { ListPublicVersionsResponse } from './listPublicVersionsResponse';
+import { ListPublicVersionsResponseAllOf } from './listPublicVersionsResponseAllOf';
+import { ListPublicVersionsResponseAllOfVersions } from './listPublicVersionsResponseAllOfVersions';
 import { ListSamplesResponse } from './listSamplesResponse';
 import { ListSamplesResponseAllOf } from './listSamplesResponseAllOf';
 import { ListVersionsResponse } from './listVersionsResponse';
@@ -640,6 +722,7 @@ import { OrganizationCreateProjectTransformationSummary } from './organizationCr
 import { OrganizationDataItem } from './organizationDataItem';
 import { OrganizationDataItemFiles } from './organizationDataItemFiles';
 import { OrganizationDeployBlock } from './organizationDeployBlock';
+import { OrganizationDspBlock } from './organizationDspBlock';
 import { OrganizationGetCreateProjectsResponse } from './organizationGetCreateProjectsResponse';
 import { OrganizationGetCreateProjectsResponseAllOf } from './organizationGetCreateProjectsResponseAllOf';
 import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
@@ -647,7 +730,14 @@ import { OrganizationInfoResponse } from './organizationInfoResponse';
 import { OrganizationInfoResponseAllOf } from './organizationInfoResponseAllOf';
 import { OrganizationInfoResponseAllOfDatasets } from './organizationInfoResponseAllOfDatasets';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { OrganizationPipeline } from './organizationPipeline';
+import { OrganizationPipelineFeedingIntoDataset } from './organizationPipelineFeedingIntoDataset';
+import { OrganizationPipelineItemCount } from './organizationPipelineItemCount';
+import { OrganizationPipelineRun } from './organizationPipelineRun';
+import { OrganizationPipelineRunStep } from './organizationPipelineRunStep';
+import { OrganizationPipelineStep } from './organizationPipelineStep';
 import { OrganizationTransformationBlock } from './organizationTransformationBlock';
+import { OrganizationUpdatePipelineBody } from './organizationUpdatePipelineBody';
 import { OrganizationUser } from './organizationUser';
 import { PortalFile } from './portalFile';
 import { PortalInfoResponse } from './portalInfoResponse';
@@ -669,6 +759,8 @@ import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfE
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
 import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
+import { ProjectInfoResponseAllOfReadme } from './projectInfoResponseAllOfReadme';
+import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { RawSampleData } from './rawSampleData';
@@ -681,6 +773,8 @@ import { RequestResetPasswordRequest } from './requestResetPasswordRequest';
 import { ResetPasswordRequest } from './resetPasswordRequest';
 import { RestoreProjectFromPublicRequest } from './restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from './restoreProjectRequest';
+import { RunOrganizationPipelineResponse } from './runOrganizationPipelineResponse';
+import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineResponseAllOf';
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
 import { ScoreTrialResponse } from './scoreTrialResponse';
@@ -692,12 +786,14 @@ import { SetAnomalyParameterRequest } from './setAnomalyParameterRequest';
 import { SetKerasParameterRequest } from './setKerasParameterRequest';
 import { SetMemberDatasetsRequest } from './setMemberDatasetsRequest';
 import { SetMemberRoleRequest } from './setMemberRoleRequest';
+import { SetOrganizationDataDatasetRequest } from './setOrganizationDataDatasetRequest';
 import { SetProjectComputeTimeRequest } from './setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from './setProjectDspFileSizeRequest';
 import { SetSyntiantPosteriorRequest } from './setSyntiantPosteriorRequest';
 import { SocketTokenResponse } from './socketTokenResponse';
 import { SocketTokenResponseAllOf } from './socketTokenResponseAllOf';
 import { SocketTokenResponseAllOfToken } from './socketTokenResponseAllOfToken';
+import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
 import { StartJobResponse } from './startJobResponse';
 import { StartJobResponseAllOf } from './startJobResponseAllOf';
 import { StartSamplingRequest } from './startSamplingRequest';
@@ -728,6 +824,7 @@ import { UpdateOrganizationCreateEmptyProjectRequest } from './updateOrganizatio
 import { UpdateOrganizationCreateProjectRequest } from './updateOrganizationCreateProjectRequest';
 import { UpdateOrganizationDataItemRequest } from './updateOrganizationDataItemRequest';
 import { UpdateOrganizationDeployBlockRequest } from './updateOrganizationDeployBlockRequest';
+import { UpdateOrganizationDspBlockRequest } from './updateOrganizationDspBlockRequest';
 import { UpdateOrganizationPortalResponse } from './updateOrganizationPortalResponse';
 import { UpdateOrganizationPortalResponseAllOf } from './updateOrganizationPortalResponseAllOf';
 import { UpdateOrganizationRequest } from './updateOrganizationRequest';
@@ -738,6 +835,9 @@ import { UpdateUserRequest } from './updateUserRequest';
 import { UpdateVersionRequest } from './updateVersionRequest';
 import { UploadCustomBlockRequest } from './uploadCustomBlockRequest';
 import { UploadKerasFilesRequest } from './uploadKerasFilesRequest';
+import { UploadLogoRequest } from './uploadLogoRequest';
+import { UploadReadmeImageRequest } from './uploadReadmeImageRequest';
+import { UploadReadmeImageResponse } from './uploadReadmeImageResponse';
 import { UploadUserPhotoRequest } from './uploadUserPhotoRequest';
 import { UploadUserPhotoResponse } from './uploadUserPhotoResponse';
 import { UploadUserPhotoResponseAllOf } from './uploadUserPhotoResponseAllOf';
@@ -767,13 +867,14 @@ let enumsMap: {[index: string]: any} = {
     "AddMemberRequestRoleEnum": "AddMemberRequestRoleEnum",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
     "AddOrganizationTransformationBlockRequestOperatesOnEnum": "AddOrganizationTransformationBlockRequestOperatesOnEnum",
+    "ApplicationTestingFalsePositiveTypeEnum": "ApplicationTestingFalsePositiveTypeEnum",
+    "ApplicationTestingGroundTruthTypeEnum": "ApplicationTestingGroundTruthTypeEnum",
     "AugmentationPolicyImageEnum": "AugmentationPolicyImageEnum",
     "AugmentationPolicySpectrogramFreqMaskingEnum": "AugmentationPolicySpectrogramFreqMaskingEnum",
     "AugmentationPolicySpectrogramTimeMaskingEnum": "AugmentationPolicySpectrogramTimeMaskingEnum",
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
     "BuildOnDeviceModelRequestEngineEnum": "BuildOnDeviceModelRequestEngineEnum",
     "BuildOrganizationOnDeviceModelRequestEngineEnum": "BuildOrganizationOnDeviceModelRequestEngineEnum",
-    "CreateUserRequestEvaluationProjectTypeEnum": "CreateUserRequestEvaluationProjectTypeEnum",
     "CreateUserThirdPartyResponseStatusEnum": "CreateUserThirdPartyResponseStatusEnum",
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
     "DSPMetadataOutputConfigTypeEnum": "DSPMetadataOutputConfigTypeEnum",
@@ -809,6 +910,7 @@ let enumsMap: {[index: string]: any} = {
     "OptimizeStateResponseAllOfStatusStatusEnum": "OptimizeStateResponseAllOfStatusStatusEnum",
     "OptimizeStateResponseAllOfWorkersStatusEnum": "OptimizeStateResponseAllOfWorkersStatusEnum",
     "OrganizationCreateProjectUploadTypeEnum": "OrganizationCreateProjectUploadTypeEnum",
+    "OrganizationCreateProjectStatusEnum": "OrganizationCreateProjectStatusEnum",
     "OrganizationCreateProjectTransformJobStatusEnum": "OrganizationCreateProjectTransformJobStatusEnum",
     "OrganizationCreateProjectUploadJobStatusEnum": "OrganizationCreateProjectUploadJobStatusEnum",
     "OrganizationCreateProjectCategoryEnum": "OrganizationCreateProjectCategoryEnum",
@@ -818,6 +920,10 @@ let enumsMap: {[index: string]: any} = {
     "OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum": "OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum",
     "OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnum": "OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnum",
     "OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnum": "OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnum",
+    "OrganizationPipelineRunStepUploadTypeEnum": "OrganizationPipelineRunStepUploadTypeEnum",
+    "OrganizationPipelineRunStepCategoryEnum": "OrganizationPipelineRunStepCategoryEnum",
+    "OrganizationPipelineStepUploadTypeEnum": "OrganizationPipelineStepUploadTypeEnum",
+    "OrganizationPipelineStepCategoryEnum": "OrganizationPipelineStepCategoryEnum",
     "OrganizationTransformationBlockOperatesOnEnum": "OrganizationTransformationBlockOperatesOnEnum",
     "OrganizationUserRoleEnum": "OrganizationUserRoleEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
@@ -845,6 +951,8 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationBucketRequest": AddOrganizationBucketRequest,
     "AddOrganizationDeployBlockRequest": AddOrganizationDeployBlockRequest,
     "AddOrganizationDeployBlockResponse": AddOrganizationDeployBlockResponse,
+    "AddOrganizationDspBlockRequest": AddOrganizationDspBlockRequest,
+    "AddOrganizationDspBlockResponse": AddOrganizationDspBlockResponse,
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
     "AddOrganizationTransformationBlockResponse": AddOrganizationTransformationBlockResponse,
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
@@ -857,6 +965,14 @@ let typeMap: {[index: string]: any} = {
     "AnomalyTrainedFeaturesResponse": AnomalyTrainedFeaturesResponse,
     "AnomalyTrainedFeaturesResponseAllOf": AnomalyTrainedFeaturesResponseAllOf,
     "AnomalyTrainedFeaturesResponseAllOfData": AnomalyTrainedFeaturesResponseAllOfData,
+    "ApplicationTestingDetection": ApplicationTestingDetection,
+    "ApplicationTestingFalsePositive": ApplicationTestingFalsePositive,
+    "ApplicationTestingGroundTruth": ApplicationTestingGroundTruth,
+    "ApplicationTestingGroundTruthSamples": ApplicationTestingGroundTruthSamples,
+    "ApplicationTestingParameterSet": ApplicationTestingParameterSet,
+    "ApplicationTestingParameterSetAggregateStats": ApplicationTestingParameterSetAggregateStats,
+    "ApplicationTestingParameterSetStats": ApplicationTestingParameterSetStats,
+    "ApplicationTestingRawDetection": ApplicationTestingRawDetection,
     "AugmentationPolicySpectrogram": AugmentationPolicySpectrogram,
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
     "BoundingBox": BoundingBox,
@@ -876,6 +992,8 @@ let typeMap: {[index: string]: any} = {
     "CreateBlockVersionResponse": CreateBlockVersionResponse,
     "CreateBlockVersionResponseAllOf": CreateBlockVersionResponseAllOf,
     "CreateDeviceRequest": CreateDeviceRequest,
+    "CreateEvaluationUserResponse": CreateEvaluationUserResponse,
+    "CreateEvaluationUserResponseAllOf": CreateEvaluationUserResponseAllOf,
     "CreateNoteResponse": CreateNoteResponse,
     "CreateNoteResponseAllOf": CreateNoteResponseAllOf,
     "CreateOrganizationPortalRequest": CreateOrganizationPortalRequest,
@@ -884,6 +1002,7 @@ let typeMap: {[index: string]: any} = {
     "CreateOrganizationRequest": CreateOrganizationRequest,
     "CreateOrganizationResponse": CreateOrganizationResponse,
     "CreateOrganizationResponseAllOf": CreateOrganizationResponseAllOf,
+    "CreatePipelineResponse": CreatePipelineResponse,
     "CreateProjectRequest": CreateProjectRequest,
     "CreateProjectResponse": CreateProjectResponse,
     "CreateProjectResponseAllOf": CreateProjectResponseAllOf,
@@ -924,6 +1043,10 @@ let typeMap: {[index: string]: any} = {
     "DeviceNameResponseAllOf": DeviceNameResponseAllOf,
     "DeviceSensors": DeviceSensors,
     "Download": Download,
+    "DspFeatureImportanceResponse": DspFeatureImportanceResponse,
+    "DspFeatureImportanceResponseAllOf": DspFeatureImportanceResponseAllOf,
+    "DspFeatureImportanceResponseAllOfFeatures": DspFeatureImportanceResponseAllOfFeatures,
+    "DspFeatureImportanceResponseAllOfLabels": DspFeatureImportanceResponseAllOfLabels,
     "DspFeatureLabelsResponse": DspFeatureLabelsResponse,
     "DspFeatureLabelsResponseAllOf": DspFeatureLabelsResponseAllOf,
     "DspRunGraph": DspRunGraph,
@@ -959,12 +1082,18 @@ let typeMap: {[index: string]: any} = {
     "GenericApiResponse": GenericApiResponse,
     "GetAllThirdPartyAuthResponse": GetAllThirdPartyAuthResponse,
     "GetAllThirdPartyAuthResponseAllOf": GetAllThirdPartyAuthResponseAllOf,
+    "GetApplicationTestingGroundTruthResponse": GetApplicationTestingGroundTruthResponse,
+    "GetApplicationTestingGroundTruthResponseAllOf": GetApplicationTestingGroundTruthResponseAllOf,
+    "GetApplicationTestingParameterSetsResponse": GetApplicationTestingParameterSetsResponse,
+    "GetApplicationTestingParameterSetsResponseAllOf": GetApplicationTestingParameterSetsResponseAllOf,
+    "GetApplicationTestingRawResultResponse": GetApplicationTestingRawResultResponse,
+    "GetApplicationTestingRawResultResponseAllOf": GetApplicationTestingRawResultResponseAllOf,
+    "GetApplicationTestingStatusResponse": GetApplicationTestingStatusResponse,
+    "GetApplicationTestingStatusResponseAllOf": GetApplicationTestingStatusResponseAllOf,
     "GetDeploymentResponse": GetDeploymentResponse,
     "GetDeploymentResponseAllOf": GetDeploymentResponseAllOf,
     "GetDeviceResponse": GetDeviceResponse,
     "GetDeviceResponseAllOf": GetDeviceResponseAllOf,
-    "GetEvalUserMobileClientUrlResponse": GetEvalUserMobileClientUrlResponse,
-    "GetEvalUserMobileClientUrlResponseAllOf": GetEvalUserMobileClientUrlResponseAllOf,
     "GetImpulseBlocksResponse": GetImpulseBlocksResponse,
     "GetImpulseBlocksResponseAllOf": GetImpulseBlocksResponseAllOf,
     "GetImpulseResponse": GetImpulseResponse,
@@ -978,6 +1107,8 @@ let typeMap: {[index: string]: any} = {
     "GetNotesResponseAllOf": GetNotesResponseAllOf,
     "GetOrganizationDataItemResponse": GetOrganizationDataItemResponse,
     "GetOrganizationDataItemResponseAllOf": GetOrganizationDataItemResponseAllOf,
+    "GetOrganizationPipelinesResponse": GetOrganizationPipelinesResponse,
+    "GetOrganizationPipelinesResponseAllOf": GetOrganizationPipelinesResponseAllOf,
     "GetOrganizationPortalResponse": GetOrganizationPortalResponse,
     "GetOrganizationPortalResponseAllOf": GetOrganizationPortalResponseAllOf,
     "GetSampleResponse": GetSampleResponse,
@@ -1041,8 +1172,12 @@ let typeMap: {[index: string]: any} = {
     "ListOrganizationDataResponseAllOfData": ListOrganizationDataResponseAllOfData,
     "ListOrganizationDeployBlocksResponse": ListOrganizationDeployBlocksResponse,
     "ListOrganizationDeployBlocksResponseAllOf": ListOrganizationDeployBlocksResponseAllOf,
+    "ListOrganizationDspBlocksResponse": ListOrganizationDspBlocksResponse,
+    "ListOrganizationDspBlocksResponseAllOf": ListOrganizationDspBlocksResponseAllOf,
     "ListOrganizationFilesResponse": ListOrganizationFilesResponse,
     "ListOrganizationFilesResponseAllOf": ListOrganizationFilesResponseAllOf,
+    "ListOrganizationPipelinesResponse": ListOrganizationPipelinesResponse,
+    "ListOrganizationPipelinesResponseAllOf": ListOrganizationPipelinesResponseAllOf,
     "ListOrganizationPortalsResponse": ListOrganizationPortalsResponse,
     "ListOrganizationPortalsResponseAllOf": ListOrganizationPortalsResponseAllOf,
     "ListOrganizationPortalsResponseAllOfPortals": ListOrganizationPortalsResponseAllOfPortals,
@@ -1057,6 +1192,9 @@ let typeMap: {[index: string]: any} = {
     "ListPortalFilesInFolderResponseAllOf": ListPortalFilesInFolderResponseAllOf,
     "ListProjects": ListProjects,
     "ListProjectsResponse": ListProjectsResponse,
+    "ListPublicVersionsResponse": ListPublicVersionsResponse,
+    "ListPublicVersionsResponseAllOf": ListPublicVersionsResponseAllOf,
+    "ListPublicVersionsResponseAllOfVersions": ListPublicVersionsResponseAllOfVersions,
     "ListSamplesResponse": ListSamplesResponse,
     "ListSamplesResponseAllOf": ListSamplesResponseAllOf,
     "ListVersionsResponse": ListVersionsResponse,
@@ -1097,6 +1235,7 @@ let typeMap: {[index: string]: any} = {
     "OrganizationDataItem": OrganizationDataItem,
     "OrganizationDataItemFiles": OrganizationDataItemFiles,
     "OrganizationDeployBlock": OrganizationDeployBlock,
+    "OrganizationDspBlock": OrganizationDspBlock,
     "OrganizationGetCreateProjectsResponse": OrganizationGetCreateProjectsResponse,
     "OrganizationGetCreateProjectsResponseAllOf": OrganizationGetCreateProjectsResponseAllOf,
     "OrganizationGetCreateProjectsResponseAllOfJobs": OrganizationGetCreateProjectsResponseAllOfJobs,
@@ -1104,7 +1243,14 @@ let typeMap: {[index: string]: any} = {
     "OrganizationInfoResponseAllOf": OrganizationInfoResponseAllOf,
     "OrganizationInfoResponseAllOfDatasets": OrganizationInfoResponseAllOfDatasets,
     "OrganizationInfoResponseAllOfDefaultComputeLimits": OrganizationInfoResponseAllOfDefaultComputeLimits,
+    "OrganizationPipeline": OrganizationPipeline,
+    "OrganizationPipelineFeedingIntoDataset": OrganizationPipelineFeedingIntoDataset,
+    "OrganizationPipelineItemCount": OrganizationPipelineItemCount,
+    "OrganizationPipelineRun": OrganizationPipelineRun,
+    "OrganizationPipelineRunStep": OrganizationPipelineRunStep,
+    "OrganizationPipelineStep": OrganizationPipelineStep,
     "OrganizationTransformationBlock": OrganizationTransformationBlock,
+    "OrganizationUpdatePipelineBody": OrganizationUpdatePipelineBody,
     "OrganizationUser": OrganizationUser,
     "PortalFile": PortalFile,
     "PortalInfoResponse": PortalInfoResponse,
@@ -1126,6 +1272,8 @@ let typeMap: {[index: string]: any} = {
     "ProjectInfoResponseAllOfImpulse": ProjectInfoResponseAllOfImpulse,
     "ProjectInfoResponseAllOfLatencyDevices": ProjectInfoResponseAllOfLatencyDevices,
     "ProjectInfoResponseAllOfPerformance": ProjectInfoResponseAllOfPerformance,
+    "ProjectInfoResponseAllOfReadme": ProjectInfoResponseAllOfReadme,
+    "ProjectInfoResponseAllOfShowGettingStartedWizard": ProjectInfoResponseAllOfShowGettingStartedWizard,
     "ProjectInfoResponseAllOfUrls": ProjectInfoResponseAllOfUrls,
     "ProjectVersionRequest": ProjectVersionRequest,
     "RawSampleData": RawSampleData,
@@ -1138,6 +1286,8 @@ let typeMap: {[index: string]: any} = {
     "ResetPasswordRequest": ResetPasswordRequest,
     "RestoreProjectFromPublicRequest": RestoreProjectFromPublicRequest,
     "RestoreProjectRequest": RestoreProjectRequest,
+    "RunOrganizationPipelineResponse": RunOrganizationPipelineResponse,
+    "RunOrganizationPipelineResponseAllOf": RunOrganizationPipelineResponseAllOf,
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
     "ScoreTrialResponse": ScoreTrialResponse,
@@ -1149,12 +1299,14 @@ let typeMap: {[index: string]: any} = {
     "SetKerasParameterRequest": SetKerasParameterRequest,
     "SetMemberDatasetsRequest": SetMemberDatasetsRequest,
     "SetMemberRoleRequest": SetMemberRoleRequest,
+    "SetOrganizationDataDatasetRequest": SetOrganizationDataDatasetRequest,
     "SetProjectComputeTimeRequest": SetProjectComputeTimeRequest,
     "SetProjectDspFileSizeRequest": SetProjectDspFileSizeRequest,
     "SetSyntiantPosteriorRequest": SetSyntiantPosteriorRequest,
     "SocketTokenResponse": SocketTokenResponse,
     "SocketTokenResponseAllOf": SocketTokenResponseAllOf,
     "SocketTokenResponseAllOfToken": SocketTokenResponseAllOfToken,
+    "StartApplicationTestingRequest": StartApplicationTestingRequest,
     "StartJobResponse": StartJobResponse,
     "StartJobResponseAllOf": StartJobResponseAllOf,
     "StartSamplingRequest": StartSamplingRequest,
@@ -1185,6 +1337,7 @@ let typeMap: {[index: string]: any} = {
     "UpdateOrganizationCreateProjectRequest": UpdateOrganizationCreateProjectRequest,
     "UpdateOrganizationDataItemRequest": UpdateOrganizationDataItemRequest,
     "UpdateOrganizationDeployBlockRequest": UpdateOrganizationDeployBlockRequest,
+    "UpdateOrganizationDspBlockRequest": UpdateOrganizationDspBlockRequest,
     "UpdateOrganizationPortalResponse": UpdateOrganizationPortalResponse,
     "UpdateOrganizationPortalResponseAllOf": UpdateOrganizationPortalResponseAllOf,
     "UpdateOrganizationRequest": UpdateOrganizationRequest,
@@ -1195,6 +1348,9 @@ let typeMap: {[index: string]: any} = {
     "UpdateVersionRequest": UpdateVersionRequest,
     "UploadCustomBlockRequest": UploadCustomBlockRequest,
     "UploadKerasFilesRequest": UploadKerasFilesRequest,
+    "UploadLogoRequest": UploadLogoRequest,
+    "UploadReadmeImageRequest": UploadReadmeImageRequest,
+    "UploadReadmeImageResponse": UploadReadmeImageResponse,
     "UploadUserPhotoRequest": UploadUserPhotoRequest,
     "UploadUserPhotoResponse": UploadUserPhotoResponse,
     "UploadUserPhotoResponseAllOf": UploadUserPhotoResponseAllOf,

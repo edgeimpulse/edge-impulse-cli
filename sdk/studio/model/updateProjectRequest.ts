@@ -44,7 +44,11 @@ export class UpdateProjectRequest {
     /**
     * Whether to show the getting started wizard on the next page load of the dashboard
     */
-    'showGettingStartedWizard'?: boolean;
+    'showProjectTypeWizard'?: boolean;
+    /**
+    * The next step in the getting started wizard, or set to -1 to clear the getting started wizard
+    */
+    'gettingStartedStep'?: number;
     /**
     * Whether to use GPU for training
     */
@@ -65,6 +69,11 @@ export class UpdateProjectRequest {
     * New metadata about the project
     */
     'metadata'?: object;
+    /**
+    * Readme for the project (in Markdown)
+    */
+    'readme'?: string;
+    'lastAcquisitionLabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -110,9 +119,14 @@ export class UpdateProjectRequest {
             "type": "UpdateProjectRequestLabelingMethodEnum"
         },
         {
-            "name": "showGettingStartedWizard",
-            "baseName": "showGettingStartedWizard",
+            "name": "showProjectTypeWizard",
+            "baseName": "showProjectTypeWizard",
             "type": "boolean"
+        },
+        {
+            "name": "gettingStartedStep",
+            "baseName": "gettingStartedStep",
+            "type": "number"
         },
         {
             "name": "useGpu",
@@ -138,6 +152,16 @@ export class UpdateProjectRequest {
             "name": "metadata",
             "baseName": "metadata",
             "type": "object"
+        },
+        {
+            "name": "readme",
+            "baseName": "readme",
+            "type": "string"
+        },
+        {
+            "name": "lastAcquisitionLabel",
+            "baseName": "lastAcquisitionLabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

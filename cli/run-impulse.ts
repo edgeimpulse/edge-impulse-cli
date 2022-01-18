@@ -4,12 +4,16 @@ import { SerialConnector } from './serial-connector';
 import fs from 'fs';
 import Path from 'path';
 import EiSerialProtocol, {
-    EiSerialDeviceConfig
+    EiSerialDeviceConfig, EiSerialSensor
 } from '../shared/daemon/ei-serial-protocol';
 import { Config } from './config';
 import { findSerial } from './find-serial';
 import checkNewVersions from './check-new-version';
 import { getCliVersion } from './init-cli-app';
+import express = require('express');
+import http from 'http';
+import socketIO from 'socket.io';
+import { ips } from './get-ips';
 
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
@@ -23,6 +27,8 @@ const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDevi
 
 let stdinAttached = false;
 let serial: SerialConnector | undefined;
+let startedWebserver = false;
+let inferenceStarted = false;
 
 const configFactory = new Config();
 // tslint:disable-next-line:no-floating-promises
@@ -111,10 +117,10 @@ async function connectToSerial(deviceId: string) {
     process.on('SIGHUP', onSignal);
     process.on('SIGINT', onSignal);
 
-    let inferenceStarted = false;
+    let logMessages = true;
 
     serial.on('data', data => {
-        if ((serial && serial.isConnected() && inferenceStarted) || rawArgv) {
+        if (((serial && serial.isConnected() && inferenceStarted) || rawArgv) && logMessages) {
             process.stdout.write(data.toString('ascii'));
         }
     });
@@ -168,6 +174,23 @@ async function connectToSerial(deviceId: string) {
                 mode = 'debug';
             }
 
+            if (config.inference.sensor === EiSerialSensor.EI_CLASSIFIER_SENSOR_CAMERA) {
+                if (mode !== 'debug') {
+                    console.log('');
+                    console.log(SERIAL_PREFIX,
+                        'To get a live feed of the camera and live classification in your browser, run with --debug');
+                    console.log('');
+                }
+                else {
+                    let webserverPort = await startWebServer(config);
+                    console.log('');
+                    console.log('Want to see a feed of the camera and live classification in your browser? ' +
+                        'Go to http://' + (ips.length > 0 ? ips[0].address : 'localhost') + ':' + webserverPort);
+                    console.log('');
+                    logMessages = false;
+                }
+            }
+
             await serialProtocol.startInference(mode);
 
             console.log(SERIAL_PREFIX, 'Started inferencing, press CTRL+C to stop...');
@@ -203,4 +226,135 @@ async function connectToSerial(deviceId: string) {
 
     // tslint:disable-next-line:no-floating-promises
     serial_connect();
+}
+
+async function startWebServer(config: EiSerialDeviceConfig) {
+    if (!serial) return;
+    if (startedWebserver) return;
+
+    startedWebserver = true;
+
+    const app = express();
+    app.use(express.static(Path.join(__dirname, '..', '..', 'public')));
+
+    const server = new http.Server(app);
+    const io = socketIO(server);
+
+    server.listen(Number(process.env.PORT) || 4915, process.env.HOST || '0.0.0.0', async () => {
+        // noop
+    });
+
+    let currentMsg: string | undefined;
+    serial.on('data', (data: Buffer) => {
+        let s = data.toString('utf-8');
+        if (s.indexOf('End output') > -1) {
+            if (typeof currentMsg === 'string') {
+                currentMsg += s.substr(0, s.indexOf('End output'));
+
+                let lines = currentMsg.split('\n');
+                let fb = lines.find(x => x.startsWith('Framebuffer: '));
+
+                let printMsg = '';
+
+                let classifyTime = 0;
+                let timingLine = lines.find(x => x.startsWith('Predictions'));
+                if (timingLine) {
+                    let m = timingLine.match(/Classification: (\d+)/);
+                    if (m) {
+                        classifyTime = Number(m[1]);
+                    }
+                    printMsg += timingLine + '\n';
+                }
+
+                if (fb) {
+                    fb = fb.replace('Framebuffer: ', '').trim();
+
+                    let snapshot = Buffer.from(fb, 'base64');
+                    io.emit('image', {
+                        img: 'data:image/jpeg;base64,' + snapshot.toString('base64')
+                    });
+                }
+
+                let mode: 'classification' | 'object_detection';
+                let firstClassifyLine = lines.find(x => x.startsWith('    '));
+                if (firstClassifyLine && !isNaN(Number(firstClassifyLine.split(':')[1]))) {
+                    mode = 'classification';
+                }
+                else {
+                    mode = 'object_detection';
+                }
+
+                if (mode === 'object_detection') {
+                    let cubes = [];
+                    // parse object detection
+                    for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
+                        let m = l.trim()
+                            .match(/^(\w+) \(([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
+                        if (!m) continue;
+                        let cube = {
+                            label: m[1],
+                            value: Number(m[2]),
+                            x: Number(m[3]),
+                            y: Number(m[4]),
+                            width: Number(m[5]),
+                            height: Number(m[6]),
+                        };
+                        cubes.push(cube);
+                        printMsg += l + '\n';
+                    }
+
+                    io.emit('classification', {
+                        result: {
+                            bounding_boxes: cubes
+                        },
+                        timeMs: classifyTime,
+                    });
+                }
+                else {
+                    let results: { [k: string]: number } = { };
+                    // parse object detection
+                    for (let l of lines.filter(x => x.startsWith('    '))) {
+                        let m = l.split(':').map(x => x.trim());
+                        if (m.length !== 2) continue;
+                        results[m[0]] = Number(m[1]);
+                        printMsg += l + '\n';
+                    }
+
+                    io.emit('classification', {
+                        result: {
+                            classification: results
+                        },
+                        timeMs: classifyTime,
+                    });
+                }
+
+                if (inferenceStarted) {
+                    console.log(printMsg.trim());
+                }
+            }
+
+            currentMsg = undefined;
+            s = s.substr(s.indexOf('End output'));
+        }
+
+        if (s.indexOf('Begin output') > -1) {
+            s = s.substr(s.indexOf('Begin output') + 'Begin output'.length);
+            currentMsg = s;
+            return;
+        }
+
+        if (currentMsg) {
+            currentMsg += s;
+        }
+
+        // console.log('data', data.toString('utf-8');
+    });
+
+    io.on('connection', socket => {
+        socket.emit('hello', {
+            projectName: 'Live classification on ' + config.info.type
+        });
+    });
+
+    return Number(process.env.PORT) || 4915;
 }

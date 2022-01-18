@@ -2,6 +2,8 @@ export * from './adminApi';
 import { AdminApi } from './adminApi';
 export * from './allowsReadOnlyApi';
 import { AllowsReadOnlyApi } from './allowsReadOnlyApi';
+export * from './applicationTestingApi';
+import { ApplicationTestingApi } from './applicationTestingApi';
 export * from './authApi';
 import { AuthApi } from './authApi';
 export * from './cDNApi';
@@ -36,6 +38,8 @@ export * from './organizationDataApi';
 import { OrganizationDataApi } from './organizationDataApi';
 export * from './organizationJobsApi';
 import { OrganizationJobsApi } from './organizationJobsApi';
+export * from './organizationPipelinesApi';
+import { OrganizationPipelinesApi } from './organizationPipelinesApi';
 export * from './organizationPortalsApi';
 import { OrganizationPortalsApi } from './organizationPortalsApi';
 export * from './organizationRequiresAdminApi';
@@ -78,4 +82,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThirdPartyAuthApi, UploadPortalApi, UserApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, ApplicationTestingApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThirdPartyAuthApi, UploadPortalApi, UserApi];

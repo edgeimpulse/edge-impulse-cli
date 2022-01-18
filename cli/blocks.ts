@@ -20,16 +20,25 @@ import crypto from 'crypto';
 import WebSocket, { OPEN } from 'ws';
 import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
+import util from 'util';
 
-const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
+const version = getCliVersion();
 
-type BlockConfig = {
+type BlockConfigItem = {
     name: string,
     description: string,
     type: UploadCustomBlockRequestTypeEnum,
     id?: number,
+    port?: number,
     organizationId: number,
     operatesOn: 'file' | 'dataitem' | 'standalone' | undefined
+};
+
+type BlockConfigV1 = {
+    version: 1,
+    config: {
+        [host: string]: BlockConfigItem
+    }
 };
 
 interface ExtractedFile {
@@ -67,6 +76,7 @@ program
     .option('-c --clean', 'Reset the current user')
     .option('-d --dev', 'Developer mode')
     .option('--api-key <key>', 'API key')
+    .option('--port <port>', 'Port that the DSP block is listening on')
     .allowUnknownOption(false)
     .parse(process.argv);
 
@@ -75,8 +85,12 @@ const pushCommand: boolean = !!program.push;
 const cleanArgv: boolean = !!program.clean;
 const devArgv: boolean = !!program.dev;
 const apiKeyArgv: string | undefined = program.apiKey ? <string>program.apiKey : undefined;
+const portArgv: string | undefined = program.port ? <string>program.port : undefined;
 
-let currentBlockConfig: BlockConfig | undefined;
+const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
+const dockerignorePath = Path.join(process.cwd(), '.dockerignore');
+
+let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -135,7 +149,7 @@ let currentBlockConfig: BlockConfig | undefined;
         // Initialize the current folder as a new block
 
         // Check if a config file already exists
-        if (await checkConfigFile()) {
+        if (await checkConfigFile(config.host) && globalCurrentBlockConfig?.config[config.host]) {
             console.log('A block already exists in this location. Please delete it or use "push" to push it.');
             process.exit(1);
         }
@@ -182,6 +196,10 @@ let currentBlockConfig: BlockConfig | undefined;
                 {
                     name: 'Deployment block',
                     value: 'deploy'
+                },
+                {
+                    name: 'DSP block',
+                    value: 'dsp'
                 }
             ],
             name: 'type',
@@ -211,7 +229,8 @@ let currentBlockConfig: BlockConfig | undefined;
                     }
                 ));
             }
-        } else if (blockTypeInqRes.type === 'deploy') {
+        }
+        else if (blockTypeInqRes.type === 'deploy') {
             let blocks = await config.api.organizationBlocks.listOrganizationDeployBlocks(organizationId);
             if (blocks.body && blocks.body.deployBlocks && blocks.body.deployBlocks.length > 0) {
                 existingBlocks = blocks.body.deployBlocks.map(p => (
@@ -222,7 +241,20 @@ let currentBlockConfig: BlockConfig | undefined;
                     }
                 ));
             }
-        } else {
+        }
+        else if (blockTypeInqRes.type === 'dsp') {
+            let blocks = await config.api.organizationBlocks.listOrganizationDspBlocks(organizationId);
+            if (blocks.body && blocks.body.dspBlocks && blocks.body.dspBlocks.length > 0) {
+                existingBlocks = blocks.body.dspBlocks.map(p => (
+                    {
+                        name: p.name,
+                        value: p.id,
+                        block: { description: p.description, name: p.name, operatesOn: undefined }
+                    }
+                ));
+            }
+        }
+        else {
             console.error(`Invalid block type: ${blockTypeInqRes.type}`);
             process.exit(1);
         }
@@ -264,13 +296,35 @@ let currentBlockConfig: BlockConfig | undefined;
             }
         }
 
+        let defaultName = 'My new block';
+        let defaultDescription: string | undefined;
+
+        if (blockTypeInqRes.type === 'dsp') {
+            let paramsFile = Path.join(process.cwd(), 'parameters.json');
+            if (paramsFile) {
+                try {
+                    let pf = (await fs.promises.readFile(paramsFile)).toString('utf-8');
+                    let p = <{ info: { name: string, description: string } }>JSON.parse(pf);
+                    if (p.info && p.info.name) {
+                        defaultName = p.info.name;
+                    }
+                    if (p.info && p.info.description) {
+                        defaultDescription = p.info.description;
+                    }
+                }
+                catch (ex) {
+                    // noop
+                }
+            }
+        }
+
         // Enter block name
         if (!blockName || blockName.length < 2) {
             blockName = <string>(await inquirer.prompt([{
                 type: 'input',
                 name: 'name',
                 message: 'Enter the name of your block',
-                default: "My new block"
+                default: defaultName
             }])).name;
             if (blockName.length < 2) {
                 console.error('New block must have a name longer than 2 characters.');
@@ -283,7 +337,8 @@ let currentBlockConfig: BlockConfig | undefined;
             blockDescription = <string>(await inquirer.prompt([{
                 type: 'input',
                 name: 'description',
-                message: 'Enter the description of your block'
+                message: 'Enter the description of your block',
+                default: defaultDescription
             }])).description;
             if (blockDescription === '') blockDescription = blockName;
         }
@@ -312,7 +367,8 @@ let currentBlockConfig: BlockConfig | undefined;
         }
 
         // Create & write the config
-        currentBlockConfig = blockId ? {
+        globalCurrentBlockConfig = globalCurrentBlockConfig || { version: 1, config: { } };
+        globalCurrentBlockConfig.config[config.host] = blockId ? {
             name: blockName,
             id: blockId,
             type: blockType,
@@ -326,12 +382,15 @@ let currentBlockConfig: BlockConfig | undefined;
             organizationId,
             operatesOn: blockOperatesOn,
         };
-        console.log('Creating block with config:', currentBlockConfig);
+
+        console.log('Creating block with config:', globalCurrentBlockConfig);
         await writeConfigFile();
 
-        const hasDockerFile = (await fs.promises.readdir(process.cwd())).find(x => x === 'Dockerfile');
+        const hasDockerFile = await exists(dockerfilePath);
 
-        if (createOrUpdateInqRes === 'create' && !hasDockerFile) {
+        if (createOrUpdateInqRes === 'create' && !hasDockerFile &&
+            (blockType === 'transform' || blockType === 'deploy')) {
+
             // Fetch the example files
             let fetchInqRes = await inquirer.prompt([{
                 type: 'list',
@@ -360,7 +419,7 @@ let currentBlockConfig: BlockConfig | undefined;
                 try {
                     const data = await request(templateSourcePath)
                         .pipe(unzip.Parse())
-                        .on('entry', (entry: ExtractedFile) => {
+                        .on('entry', async (entry: ExtractedFile) => {
                             // To unzip in the current directory:
                             const newFilename = entry.path.replace(directoryRoot, './');
                             let subdirectories = entry.path.split('/');
@@ -368,12 +427,13 @@ let currentBlockConfig: BlockConfig | undefined;
                             if (subdirectories[subdirectories.length - 1] === '') {
                                 // tslint:disable-next-line: no-unsafe-any
                                 entry.autodrain();
-                            } else {
+                            }
+                            else {
                                 // Remove the root and filename and create any subdirectories
                                 if (subdirectories.length > 2) {
                                     subdirectories = subdirectories.slice(1, subdirectories.length - 1);
                                     const newDirectory = subdirectories.join('/');
-                                    fs.mkdirSync(newDirectory, { recursive: true });
+                                    await fs.promises.mkdir(newDirectory, { recursive: true });
                                 }
                                 // tslint:disable-next-line: no-unsafe-any
                                 entry.pipe(fs.createWriteStream(newFilename));
@@ -399,8 +459,15 @@ let currentBlockConfig: BlockConfig | undefined;
     if (pushCommand) {
         // Tar & compress the repository and push to the endpoint
         // Check if a config file exists
-        if (!await checkConfigFile() || !currentBlockConfig) {
-            console.error('A config file cannot be found. Run "init" to create a new block.');
+        if (!await checkConfigFile(config.host) || !globalCurrentBlockConfig) {
+            console.error('A config file cannot be found. Run "edge-impulse-blocks init" to create a new block.');
+            process.exit(1);
+        }
+
+        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        if (!currentBlockConfig) {
+            console.error('A configuration cannot be found for this host (' + config.host + '). ' +
+                'Run "edge-impulse-blocks init" to create a new block.');
             process.exit(1);
         }
 
@@ -438,10 +505,58 @@ let currentBlockConfig: BlockConfig | undefined;
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newBlockObject);
-                } else if (currentBlockConfig.type === 'deploy') {
+                }
+                else if (currentBlockConfig.type === 'deploy') {
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
                         organizationId, currentBlockConfig.name, '', currentBlockConfig.description, '');
-                } else {
+                }
+                else if (currentBlockConfig.type === 'dsp') {
+                    if (currentBlockConfig.type === 'dsp' && typeof currentBlockConfig.port !== 'number') {
+                        let port: number;
+                        if (portArgv) {
+                            port = Number(portArgv);
+                            if (isNaN(port)) {
+                                console.error(`Invalid value for --port, should be a number, but was "${portArgv}"`);
+                                process.exit(1);
+                            }
+                        }
+                        else {
+                            let defaultChoice: number | undefined;
+
+                            if (await exists(dockerfilePath)) {
+                                let dockerfileLines = (await fs.promises.readFile(dockerfilePath))
+                                    .toString('utf-8').split('\n');
+                                let exposeLine = dockerfileLines.find(x => x.toLowerCase().startsWith('expose'));
+                                let exposePort = Number(exposeLine?.toLowerCase().replace('expose ', ''));
+                                defaultChoice = exposePort;
+                            }
+
+                            let portRes = await inquirer.prompt([{
+                                type: 'number',
+                                name: 'port',
+                                message: 'What port is your block listening on?',
+                                default: defaultChoice
+                            }]);
+                            port = Number(portRes.port);
+                            if (isNaN(port)) {
+                                console.error(`Invalid value for port, should be a number, but was "${portRes.port}"`);
+                                process.exit(1);
+                            }
+                        }
+
+                        currentBlockConfig.port = port;
+                        await writeConfigFile();
+                    }
+
+                    newResponse = await config.api.organizationBlocks.addOrganizationDspBlock(
+                        organizationId, {
+                            name: currentBlockConfig.name,
+                            dockerContainer: '',
+                            description: currentBlockConfig.description,
+                            port: currentBlockConfig.port || 80,
+                        });
+                }
+                else {
                     console.error(`Unable to upload your block - unknown block type: ${currentBlockConfig.type}`);
                     process.exit(1);
                 }
@@ -465,9 +580,9 @@ let currentBlockConfig: BlockConfig | undefined;
             const ignore = dockerignore().add([ '.git/', '.hg/' ]);
 
             // Check to see if there is an ignore file
-            if (fs.existsSync('.dockerignore')) {
+            if (await exists(dockerignorePath)) {
                 try {
-                    const ignoreFile = fs.readFileSync('.dockerignore', 'utf-8');
+                    const ignoreFile = (await fs.promises.readFile(dockerignorePath)).toString('utf-8');
                     ignore.add(ignoreFile.split('\n').map(x => x.trim()));
                 }
                 catch (ex) {
@@ -489,7 +604,7 @@ let currentBlockConfig: BlockConfig | undefined;
             await compressCurrentDirectory;
 
             // Check the size of the file
-            const fileSize = fs.statSync(packagePath).size;
+            const fileSize = (await fs.promises.stat(packagePath)).size;
             if (fileSize > 400 * 1000 * 1000) {
                 console.error('Your custom block exceeds the block size limit of 400MB. If your archive includes ' +
                     ' unwanted files, add a .dockerignore file to list files that will be ignored when compressing your ' +
@@ -612,26 +727,47 @@ let currentBlockConfig: BlockConfig | undefined;
     }
 })();
 
-async function checkConfigFile(): Promise<boolean> {
+async function checkConfigFile(host: string): Promise<boolean> {
     // Return true if a config file exists
-    if (currentBlockConfig) return true;
+    if (globalCurrentBlockConfig) return true;
     try {
-        if (!fs.existsSync(configFilePath)) {
+        if (!await exists(configFilePath)) {
             return false;
         }
-        let file = fs.readFileSync('.ei-block-config', 'utf-8');
+        let file = (await fs.promises.readFile('.ei-block-config')).toString('utf-8');
+
+        let config = <BlockConfigV1>JSON.parse(file);
+
+        // old format, no hostnames here?
+        if (typeof config.version === 'undefined' && typeof (<any>config).name === 'string') {
+            let c: BlockConfigV1 = {
+                version: 1,
+                config: { }
+            };
+            c.config[host] = <BlockConfigItem><unknown>config;
+            config = c;
+        }
+
+        if (config.version !== 1) {
+            throw new Error('Invalid version, expected "1" but received "' + config.version + '"');
+        }
+
         // Store the config
-        currentBlockConfig = <BlockConfig>JSON.parse(file);
+        globalCurrentBlockConfig = config;
+
         return true;
     }
-    catch (e) {
-        console.error('Unable to edit block: Config file is invalid. Try deleting the config file and running "init".');
+    catch (ex2) {
+        let ex = <Error>ex2;
+        console.error('Unable to load block: Config file is invalid. Try deleting the config file ' +
+            'and re-running "edge-impulse-blocks init".');
+        console.error(ex.message || ex.toString());
         process.exit(1);
     }
 }
 
 async function writeConfigFile() {
-    fs.writeFileSync(configFilePath, JSON.stringify(currentBlockConfig));
+    await fs.promises.writeFile(configFilePath, JSON.stringify(globalCurrentBlockConfig, null, 4));
 }
 
 async function getWebsocket(organizationId: number, jobsApi: OrganizationJobsApi, apiEndpoint: string):
@@ -691,4 +827,16 @@ function bytesToSize(bytes: number) {
     if (bytes === 0) return '0 Bytes';
     let i = Number(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
+}
+
+async function exists(path: string) {
+    let x = false;
+    try {
+        await util.promisify(fs.stat)(path);
+        x = true;
+    }
+    catch (ex) {
+        /* noop */
+    }
+    return x;
 }

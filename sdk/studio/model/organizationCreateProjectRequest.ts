@@ -16,8 +16,8 @@
 */
 export class OrganizationCreateProjectRequest {
     'name': string;
-    'filter': string;
-    'uploadType': OrganizationCreateProjectRequestUploadTypeEnum;
+    'filter'?: string;
+    'uploadType'?: OrganizationCreateProjectRequestUploadTypeEnum;
     'projectId'?: number;
     'newProjectName'?: string;
     'projectApiKey'?: string;
@@ -27,6 +27,10 @@ export class OrganizationCreateProjectRequest {
     'outputDatasetName'?: string;
     'label'?: string;
     'emailRecipientUids'?: Array<number>;
+    /**
+    * Number of parallel jobs to start
+    */
+    'transformationParallel'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -90,6 +94,11 @@ export class OrganizationCreateProjectRequest {
             "name": "emailRecipientUids",
             "baseName": "emailRecipientUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "transformationParallel",
+            "baseName": "transformationParallel",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -165,8 +165,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Remove a create project job. This will stop all running jobs.
-     * @summary Delete create project job
+     * Remove a transformation job. This will stop all running jobs.
+     * @summary Delete transformation job
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
@@ -326,8 +326,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Get the current status of a create project job.
-     * @summary Get create project status
+     * Get the current status of a transformation job job.
+     * @summary Get transformation job status
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      * @param transformLimit Maximum number of results of transformation jobs
@@ -428,8 +428,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Get list of create project jobs.
-     * @summary List create project jobs
+     * Get list of transformation jobs.
+     * @summary List transformation jobs
      * @param organizationId Organization ID
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
@@ -662,8 +662,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Take data from a dataset and create a new Edge Impulse project.
-     * @summary Create project
+     * Start a transformation job to fetch data from the organization and put it in a project, or transform into new data.
+     * @summary Start transformation job
      * @param organizationId Organization ID
      * @param organizationCreateProjectRequest 
      */
@@ -739,8 +739,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Retry a transformation action on a file from a create project job. Only files that have failed can be retried.
-     * @summary Retry create project file
+     * Retry a transformation action on a file from a transformation job. Only files that have failed can be retried.
+     * @summary Retry transformation file
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      * @param createProjectFileId Create project job file ID.
@@ -823,7 +823,7 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Retry all failed transform job from a create project job. Only jobs that have failed will be retried.
+     * Retry all failed transform job from a transformation job. Only jobs that have failed will be retried.
      * @summary Retry failed transform jobs
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
@@ -900,8 +900,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Retry the upload job from a create project job. Only jobs that have failed can be retried.
-     * @summary Retry organization upload job
+     * Retry the upload job from a transformation job. Only jobs that have failed can be retried.
+     * @summary Retry transformation upload job
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
@@ -977,8 +977,8 @@ export class OrganizationCreateProjectApi {
         });
     }
     /**
-     * Update the properties of a create project job.
-     * @summary Update create project
+     * Update the properties of a transformation job.
+     * @summary Update transformation job
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      * @param updateOrganizationCreateProjectRequest 

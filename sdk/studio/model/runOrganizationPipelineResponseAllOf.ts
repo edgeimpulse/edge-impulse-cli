@@ -10,21 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationPipelineRun } from './organizationPipelineRun';
 
-export class GetEvalUserMobileClientUrlResponseAllOf {
-    'redirectUrl': string;
+export class RunOrganizationPipelineResponseAllOf {
+    'pipelineRun': OrganizationPipelineRun;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "pipelineRun",
+            "baseName": "pipelineRun",
+            "type": "OrganizationPipelineRun"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetEvalUserMobileClientUrlResponseAllOf.attributeTypeMap;
+        return RunOrganizationPipelineResponseAllOf.attributeTypeMap;
     }
 }
 

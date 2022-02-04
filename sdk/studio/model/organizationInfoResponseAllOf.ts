@@ -13,11 +13,18 @@
 import { Organization } from './organization';
 import { OrganizationInfoResponseAllOfDatasets } from './organizationInfoResponseAllOfDatasets';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
+import { ProjectInfoResponseAllOfReadme } from './projectInfoResponseAllOfReadme';
 
 export class OrganizationInfoResponseAllOf {
     'organization': Organization;
     'datasets': Array<OrganizationInfoResponseAllOfDatasets>;
     'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
+    /**
+    * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
+    */
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
+    'readme'?: ProjectInfoResponseAllOfReadme;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +43,16 @@ export class OrganizationInfoResponseAllOf {
             "name": "defaultComputeLimits",
             "baseName": "defaultComputeLimits",
             "type": "OrganizationInfoResponseAllOfDefaultComputeLimits"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "Array<ProjectInfoResponseAllOfExperiments>"
+        },
+        {
+            "name": "readme",
+            "baseName": "readme",
+            "type": "ProjectInfoResponseAllOfReadme"
         }    ];
 
     static getAttributeTypeMap() {

@@ -74,6 +74,7 @@ export interface EdgeImpulseConfig {
     api: EdgeImpulseAPI;
     endpoints: EdgeImpulseEndpoints;
     setDeviceUpload: boolean;
+    host: string;
 }
 
 export class Config {
@@ -338,6 +339,7 @@ export class Config {
             api: this._api,
             endpoints: this._endpoints,
             setDeviceUpload: setDeviceUpload,
+            host: host,
         };
     }
 

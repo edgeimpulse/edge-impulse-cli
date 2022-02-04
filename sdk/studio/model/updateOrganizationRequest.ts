@@ -23,6 +23,11 @@ export class UpdateOrganizationRequest {
     * New organization name.
     */
     'name'?: string;
+    'experiments'?: Array<string>;
+    /**
+    * Readme for the organization (in Markdown)
+    */
+    'readme'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -35,6 +40,16 @@ export class UpdateOrganizationRequest {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "Array<string>"
+        },
+        {
+            "name": "readme",
+            "baseName": "readme",
             "type": "string"
         }    ];
 

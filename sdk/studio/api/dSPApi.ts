@@ -17,6 +17,7 @@ import http = require('http');
 import { DSPConfigRequest } from '../model/dSPConfigRequest';
 import { DSPConfigResponse } from '../model/dSPConfigResponse';
 import { DSPMetadataResponse } from '../model/dSPMetadataResponse';
+import { DspFeatureImportanceResponse } from '../model/dspFeatureImportanceResponse';
 import { DspFeatureLabelsResponse } from '../model/dspFeatureLabelsResponse';
 import { DspRunRequestWithoutFeatures } from '../model/dspRunRequestWithoutFeatures';
 import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
@@ -520,6 +521,83 @@ export class DSPApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "DSPConfigResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Retrieve the feature importance for a DSP block (only available for blocks where dimensionalityReduction is not enabled)
+     * @summary Feature importance
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     */
+    public async getDspFeatureImportance (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: DspFeatureImportanceResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/importance'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDspFeatureImportance.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling getDspFeatureImportance.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: DspFeatureImportanceResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DspFeatureImportanceResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

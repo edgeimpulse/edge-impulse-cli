@@ -44,6 +44,7 @@ export enum PageType {
     OrganizationDeploy = 100,
     OrganizationPortals = 101,
     OrganizationDataPipelines = 102,
+    OrganizationDsp = 103,
     UploadPortal = 200,
 }
 

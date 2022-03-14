@@ -31,6 +31,9 @@ export enum PageType {
     LabelObjectDetection = 29,
     SelectProjectThirdParty = 30,
     ApplicationTesting = 31,
+    Jobs = 32,
+    ActivationRequired = 33,
+    Redirect = 34,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -45,6 +48,8 @@ export enum PageType {
     OrganizationPortals = 101,
     OrganizationDataPipelines = 102,
     OrganizationDsp = 103,
+    OrganizationTransferLearning = 104,
+    OrganizationSettings = 105,
     UploadPortal = 200,
 }
 
@@ -82,6 +87,7 @@ export interface ClientInitStudioOptions {
     projectId: number;
     baseUrl: string;
     projectName: string;
+    projectOwnerOrganizationId: number | undefined;
     socketToken: string;
     connectedDevices: ClientConnectedDevice[];
     staticAssetsPrefix: string;
@@ -106,6 +112,8 @@ export interface ClientInitOrganizationOptions {
     sentryEnvironment?: string;
     errorPage: boolean;
     user: ClientInitUser | undefined;
+    themeId: number;
+    whitelabelId: number | undefined;
 }
 
 export interface ClientInitOrganizationPortalOptions {
@@ -136,6 +144,7 @@ export interface ClientInitPublicOptions {
     staticAssetsPrefix: string;
     sentryDSN?: string;
     sentryEnvironment?: string;
+    ssoWhitelist?: { [domain: string]: string[] };
 }
 
 export interface OrganizationWebsocketHello {

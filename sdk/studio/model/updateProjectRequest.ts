@@ -65,6 +65,11 @@ export class UpdateProjectRequest {
     * DSP file size in MB
     */
     'dspFileSizeMb'?: number;
+    'enterprisePerformance'?: boolean;
+    /**
+    * Amount of RAM allocated to training jobs
+    */
+    'trainJobRamMb'?: number;
     /**
     * New metadata about the project
     */
@@ -74,6 +79,18 @@ export class UpdateProjectRequest {
     */
     'readme'?: string;
     'lastAcquisitionLabel'?: string;
+    /**
+    * The IDs of users who should be notified when a Keras or retrain job is finished.
+    */
+    'trainJobNotificationUids'?: Array<number>;
+    /**
+    * The IDs of users who should be notified when a DSP job is finished.
+    */
+    'dspJobNotificationUids'?: Array<number>;
+    /**
+    * The IDs of users who should be notified when a model testing job is finished.
+    */
+    'modelTestingJobNotificationUids'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -149,6 +166,16 @@ export class UpdateProjectRequest {
             "type": "number"
         },
         {
+            "name": "enterprisePerformance",
+            "baseName": "enterprisePerformance",
+            "type": "boolean"
+        },
+        {
+            "name": "trainJobRamMb",
+            "baseName": "trainJobRamMb",
+            "type": "number"
+        },
+        {
             "name": "metadata",
             "baseName": "metadata",
             "type": "object"
@@ -162,6 +189,21 @@ export class UpdateProjectRequest {
             "name": "lastAcquisitionLabel",
             "baseName": "lastAcquisitionLabel",
             "type": "string"
+        },
+        {
+            "name": "trainJobNotificationUids",
+            "baseName": "trainJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "dspJobNotificationUids",
+            "baseName": "dspJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "modelTestingJobNotificationUids",
+            "baseName": "modelTestingJobNotificationUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

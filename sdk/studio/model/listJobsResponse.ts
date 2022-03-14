@@ -27,6 +27,7 @@ export class ListJobsResponse {
     * Active jobs
     */
     'jobs': Array<Job>;
+    'totalJobCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class ListJobsResponse {
             "name": "jobs",
             "baseName": "jobs",
             "type": "Array<Job>"
+        },
+        {
+            "name": "totalJobCount",
+            "baseName": "totalJobCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

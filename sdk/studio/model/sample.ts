@@ -64,6 +64,7 @@ export class Sample {
     */
     'added': Date;
     'boundingBoxes': Array<BoundingBox>;
+    'boundingBoxesType': SampleBoundingBoxesTypeEnum;
     'chartType': SampleChartTypeEnum;
     'thumbnailVideo'?: string;
     'thumbnailVideoFull'?: string;
@@ -188,6 +189,11 @@ export class Sample {
             "type": "Array<BoundingBox>"
         },
         {
+            "name": "boundingBoxesType",
+            "baseName": "boundingBoxesType",
+            "type": "SampleBoundingBoxesTypeEnum"
+        },
+        {
             "name": "chartType",
             "baseName": "chartType",
             "type": "SampleChartTypeEnum"
@@ -228,6 +234,9 @@ export class Sample {
     }
 }
 
+
+export type SampleBoundingBoxesTypeEnum = 'object_detection' | 'constrained_object_detection';
+export const SampleBoundingBoxesTypeEnumValues: string[] = ['object_detection', 'constrained_object_detection'];
 
 export type SampleChartTypeEnum = 'chart' | 'image' | 'video';
 export const SampleChartTypeEnumValues: string[] = ['chart', 'image', 'video'];

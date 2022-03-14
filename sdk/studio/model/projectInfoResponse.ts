@@ -59,6 +59,18 @@ export class ProjectInfoResponse {
     'showGettingStartedWizard': ProjectInfoResponseAllOfShowGettingStartedWizard;
     'performance': ProjectInfoResponseAllOfPerformance;
     'readme'?: ProjectInfoResponseAllOfReadme;
+    /**
+    * The IDs of users who should be notified when a Keras or retrain job is finished.
+    */
+    'trainJobNotificationUids': Array<number>;
+    /**
+    * The IDs of users who should be notified when a DSP job is finished.
+    */
+    'dspJobNotificationUids': Array<number>;
+    /**
+    * The IDs of users who should be notified when a model testing job is finished.
+    */
+    'modelTestingJobNotificationUids': Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -162,6 +174,21 @@ export class ProjectInfoResponse {
             "name": "readme",
             "baseName": "readme",
             "type": "ProjectInfoResponseAllOfReadme"
+        },
+        {
+            "name": "trainJobNotificationUids",
+            "baseName": "trainJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "dspJobNotificationUids",
+            "baseName": "dspJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "modelTestingJobNotificationUids",
+            "baseName": "modelTestingJobNotificationUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -109,5 +109,5 @@ export class KerasModelMetadata {
 }
 
 
-export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection';
-export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];
+export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection' | 'segmentation';
+export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'segmentation'];

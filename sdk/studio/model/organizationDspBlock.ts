@@ -25,6 +25,8 @@ export class OrganizationDspBlock {
     'limitsCpu'?: number;
     'limitsMemory'?: number;
     'port': number;
+    'isConnected': boolean;
+    'error'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -93,6 +95,16 @@ export class OrganizationDspBlock {
             "name": "port",
             "baseName": "port",
             "type": "number"
+        },
+        {
+            "name": "isConnected",
+            "baseName": "isConnected",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -17,13 +17,17 @@ import http = require('http');
 import { AddOrganizationDeployBlockResponse } from '../model/addOrganizationDeployBlockResponse';
 import { AddOrganizationDspBlockRequest } from '../model/addOrganizationDspBlockRequest';
 import { AddOrganizationDspBlockResponse } from '../model/addOrganizationDspBlockResponse';
+import { AddOrganizationTransferLearningBlockRequest } from '../model/addOrganizationTransferLearningBlockRequest';
+import { AddOrganizationTransferLearningBlockResponse } from '../model/addOrganizationTransferLearningBlockResponse';
 import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from '../model/addOrganizationTransformationBlockResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { ListOrganizationDeployBlocksResponse } from '../model/listOrganizationDeployBlocksResponse';
 import { ListOrganizationDspBlocksResponse } from '../model/listOrganizationDspBlocksResponse';
+import { ListOrganizationTransferLearningBlocksResponse } from '../model/listOrganizationTransferLearningBlocksResponse';
 import { ListOrganizationTransformationBlocksResponse } from '../model/listOrganizationTransformationBlocksResponse';
 import { UpdateOrganizationDspBlockRequest } from '../model/updateOrganizationDspBlockRequest';
+import { UpdateOrganizationTransferLearningBlockRequest } from '../model/updateOrganizationTransferLearningBlockRequest';
 import { UpdateOrganizationTransformationBlockRequest } from '../model/updateOrganizationTransformationBlockRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -103,8 +107,12 @@ export class OrganizationBlocksApi {
      * @param photo 
      * @param integrateUrl 
      * @param privileged 
+     * @param mountLearnBlock 
+     * @param supportsEonCompiler 
+     * @param showOptimizations 
+     * @param category 
      */
-    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }> {
+    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, mountLearnBlock?: boolean, supportsEonCompiler?: boolean, showOptimizations?: boolean, category?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationDeployBlockResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -190,6 +198,22 @@ export class OrganizationBlocksApi {
 
         if (privileged !== undefined) {
             localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
+        }
+
+        if (mountLearnBlock !== undefined) {
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(mountLearnBlock, "boolean");
+        }
+
+        if (supportsEonCompiler !== undefined) {
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(supportsEonCompiler, "boolean");
+        }
+
+        if (showOptimizations !== undefined) {
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(showOptimizations, "boolean");
+        }
+
+        if (category !== undefined) {
+            localVarFormParams['category'] = ObjectSerializer.serialize(category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -301,6 +325,83 @@ export class OrganizationBlocksApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "AddOrganizationDspBlockResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Adds a transfer learning block.
+     * @summary Add transfer learning block
+     * @param organizationId Organization ID
+     * @param addOrganizationTransferLearningBlockRequest 
+     */
+    public async addOrganizationTransferLearningBlock (organizationId: number, addOrganizationTransferLearningBlockRequest: AddOrganizationTransferLearningBlockRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: AddOrganizationTransferLearningBlockResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transfer-learning'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationTransferLearningBlock.');
+        }
+
+        // verify required parameter 'addOrganizationTransferLearningBlockRequest' is not null or undefined
+        if (addOrganizationTransferLearningBlockRequest === null || addOrganizationTransferLearningBlockRequest === undefined) {
+            throw new Error('Required parameter addOrganizationTransferLearningBlockRequest was null or undefined when calling addOrganizationTransferLearningBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(addOrganizationTransferLearningBlockRequest, "AddOrganizationTransferLearningBlockRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: AddOrganizationTransferLearningBlockResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AddOrganizationTransferLearningBlockResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -494,6 +595,83 @@ export class OrganizationBlocksApi {
         // verify required parameter 'dspId' is not null or undefined
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling deleteOrganizationDspBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Deletes a transfer learning block.
+     * @summary Delete transfer learning block
+     * @param organizationId Organization ID
+     * @param transferLearningId Transfer learning ID
+     */
+    public async deleteOrganizationTransferLearningBlock (organizationId: number, transferLearningId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transfer-learning/{transferLearningId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'transferLearningId' + '}', encodeURIComponent(String(transferLearningId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationTransferLearningBlock.');
+        }
+
+        // verify required parameter 'transferLearningId' is not null or undefined
+        if (transferLearningId === null || transferLearningId === undefined) {
+            throw new Error('Required parameter transferLearningId was null or undefined when calling deleteOrganizationTransferLearningBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -760,6 +938,76 @@ export class OrganizationBlocksApi {
         });
     }
     /**
+     * Retrieve all transfer learning blocks.
+     * @summary Get transfer learning blocks
+     * @param organizationId Organization ID
+     */
+    public async listOrganizationTransferLearningBlocks (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListOrganizationTransferLearningBlocksResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transfer-learning'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationTransferLearningBlocks.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ListOrganizationTransferLearningBlocksResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListOrganizationTransferLearningBlocksResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Retrieve all transformation blocks.
      * @summary Get transformation blocks
      * @param organizationId Organization ID
@@ -830,6 +1078,83 @@ export class OrganizationBlocksApi {
         });
     }
     /**
+     * Retry launch a dsp block.
+     * @summary Retry connection to dsp block
+     * @param organizationId Organization ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     */
+    public async retryOrganizationDspBlock (organizationId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dsp/{dspId}/retry'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling retryOrganizationDspBlock.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling retryOrganizationDspBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Updates a deploy block. Only values in the body will be updated.
      * @summary Update deploy block
      * @param organizationId Organization ID
@@ -845,8 +1170,12 @@ export class OrganizationBlocksApi {
      * @param photo 
      * @param integrateUrl 
      * @param privileged 
+     * @param mountLearnBlock 
+     * @param supportsEonCompiler 
+     * @param showOptimizations 
+     * @param category 
      */
-    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, name?: string, dockerContainer?: string, description?: string, cliArguments?: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, name?: string, dockerContainer?: string, description?: string, cliArguments?: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, mountLearnBlock?: boolean, supportsEonCompiler?: boolean, showOptimizations?: boolean, category?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy/{deployId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'deployId' + '}', encodeURIComponent(String(deployId)));
@@ -918,6 +1247,22 @@ export class OrganizationBlocksApi {
 
         if (privileged !== undefined) {
             localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
+        }
+
+        if (mountLearnBlock !== undefined) {
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(mountLearnBlock, "boolean");
+        }
+
+        if (supportsEonCompiler !== undefined) {
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(supportsEonCompiler, "boolean");
+        }
+
+        if (showOptimizations !== undefined) {
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(showOptimizations, "boolean");
+        }
+
+        if (category !== undefined) {
+            localVarFormParams['category'] = ObjectSerializer.serialize(category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -1012,6 +1357,90 @@ export class OrganizationBlocksApi {
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationDspBlockRequest, "UpdateOrganizationDspBlockRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Updates a transfer learning block. Only values in the body will be updated.
+     * @summary Update transfer learning block
+     * @param organizationId Organization ID
+     * @param transferLearningId Transfer learning ID
+     * @param updateOrganizationTransferLearningBlockRequest 
+     */
+    public async updateOrganizationTransferLearningBlock (organizationId: number, transferLearningId: number, updateOrganizationTransferLearningBlockRequest: UpdateOrganizationTransferLearningBlockRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transfer-learning/{transferLearningId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'transferLearningId' + '}', encodeURIComponent(String(transferLearningId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationTransferLearningBlock.');
+        }
+
+        // verify required parameter 'transferLearningId' is not null or undefined
+        if (transferLearningId === null || transferLearningId === undefined) {
+            throw new Error('Required parameter transferLearningId was null or undefined when calling updateOrganizationTransferLearningBlock.');
+        }
+
+        // verify required parameter 'updateOrganizationTransferLearningBlockRequest' is not null or undefined
+        if (updateOrganizationTransferLearningBlockRequest === null || updateOrganizationTransferLearningBlockRequest === undefined) {
+            throw new Error('Required parameter updateOrganizationTransferLearningBlockRequest was null or undefined when calling updateOrganizationTransferLearningBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(updateOrganizationTransferLearningBlockRequest, "UpdateOrganizationTransferLearningBlockRequest")
         };
 
         let authenticationPromise = Promise.resolve();

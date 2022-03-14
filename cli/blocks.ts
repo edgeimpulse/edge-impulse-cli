@@ -8,8 +8,10 @@ import { Config, EdgeImpulseConfig } from './config';
 import checkNewVersions from './check-new-version';
 import inquirer from 'inquirer';
 import {
+    AddOrganizationTransferLearningBlockRequest,
     AddOrganizationTransformationBlockRequest,
     OrganizationJobsApi,
+    OrganizationTransformationBlockOperatesOnEnum,
     UploadCustomBlockRequestTypeEnum,
     UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio/api';
@@ -21,18 +23,37 @@ import WebSocket, { OPEN } from 'ws';
 import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
 import util from 'util';
+import {
+    OrganizationTransferLearningBlockObjectDetectionLastLayerEnum,
+    OrganizationTransferLearningBlockOperatesOnEnum
+} from '../sdk/studio/model/organizationTransferLearningBlock';
 
 const version = getCliVersion();
 
 type BlockConfigItem = {
     name: string,
     description: string,
-    type: UploadCustomBlockRequestTypeEnum,
     id?: number,
-    port?: number,
     organizationId: number,
-    operatesOn: 'file' | 'dataitem' | 'standalone' | undefined
-};
+    type: UploadCustomBlockRequestTypeEnum,
+} & ({
+    type: 'transform',
+    operatesOn: 'file' | 'dataitem' | 'standalone' | undefined,
+    transformMountpoints: {
+        bucketId: number;
+        mountPoint: string;
+    }[] | undefined,
+} | {
+    type: 'transferLearning',
+    tlOperatesOn?: OrganizationTransferLearningBlockOperatesOnEnum,
+    tlObjectDetectionLastLayer?: OrganizationTransferLearningBlockObjectDetectionLastLayerEnum,
+} | {
+    type: 'deploy',
+    deployCategory?: 'library' | 'firmware',
+} | {
+    type: 'dsp',
+    port?: number,
+});
 
 type BlockConfigV1 = {
     version: 1,
@@ -200,6 +221,10 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 {
                     name: 'DSP block',
                     value: 'dsp'
+                },
+                {
+                    name: 'Transfer learning block',
+                    value: 'transferLearning'
                 }
             ],
             name: 'type',
@@ -212,13 +237,21 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         let blockName: string | undefined;
         let blockDescription: string | undefined;
         let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
+        let blockTlOperatesOn: OrganizationTransferLearningBlockOperatesOnEnum | undefined;
+        let blockTlObjectDetectionLastLayer: OrganizationTransferLearningBlockObjectDetectionLastLayerEnum | undefined;
+        let transformMountpoints: {
+            bucketId: number;
+            mountPoint: string;
+        }[] | undefined;
+
+        let deployCategory: 'library' | 'firmware' | undefined;
 
         // Fetch all relevant existing blocks so the user can select an existing block to update
         let existingBlocks: {
             name: string, value: number, block: {
                 description: string, name: string, operatesOn: 'file' | 'dataitem' | 'standalone' | undefined }
             }[] = [];
-        if (blockTypeInqRes.type === 'transform') {
+        if (blockType === 'transform') {
             let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
             if (blocks.body && blocks.body.transformationBlocks && blocks.body.transformationBlocks.length > 0) {
                 existingBlocks = blocks.body.transformationBlocks.map(p => (
@@ -230,7 +263,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 ));
             }
         }
-        else if (blockTypeInqRes.type === 'deploy') {
+        else if (blockType === 'deploy') {
             let blocks = await config.api.organizationBlocks.listOrganizationDeployBlocks(organizationId);
             if (blocks.body && blocks.body.deployBlocks && blocks.body.deployBlocks.length > 0) {
                 existingBlocks = blocks.body.deployBlocks.map(p => (
@@ -242,10 +275,22 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 ));
             }
         }
-        else if (blockTypeInqRes.type === 'dsp') {
+        else if (blockType === 'dsp') {
             let blocks = await config.api.organizationBlocks.listOrganizationDspBlocks(organizationId);
             if (blocks.body && blocks.body.dspBlocks && blocks.body.dspBlocks.length > 0) {
                 existingBlocks = blocks.body.dspBlocks.map(p => (
+                    {
+                        name: p.name,
+                        value: p.id,
+                        block: { description: p.description, name: p.name, operatesOn: undefined }
+                    }
+                ));
+            }
+        }
+        else if (blockType === 'transferLearning') {
+            let blocks = await config.api.organizationBlocks.listOrganizationTransferLearningBlocks(organizationId);
+            if (blocks.body && blocks.body.transferLearningBlocks && blocks.body.transferLearningBlocks.length > 0) {
+                existingBlocks = blocks.body.transferLearningBlocks.map(p => (
                     {
                         name: p.name,
                         value: p.id,
@@ -299,7 +344,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         let defaultName = 'My new block';
         let defaultDescription: string | undefined;
 
-        if (blockTypeInqRes.type === 'dsp') {
+        if (blockType === 'dsp') {
             let paramsFile = Path.join(process.cwd(), 'parameters.json');
             if (paramsFile) {
                 try {
@@ -343,8 +388,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             if (blockDescription === '') blockDescription = blockName;
         }
 
-
-        if (createOrUpdateInqRes === 'create' && blockTypeInqRes.type === 'transform') {
+        if (createOrUpdateInqRes === 'create' && blockType === 'transform') {
             blockOperatesOn = <'file' | 'dataitem' | 'standalone'>(await inquirer.prompt([{
                 type: 'list',
                 name: 'operatesOn',
@@ -364,6 +408,100 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 ],
                 message: 'What type of data does this block operate on?',
             }])).operatesOn;
+
+            let buckets = await config.api.organizationData.listOrganizationBuckets(organizationId);
+            if (buckets.body && buckets.body.buckets && buckets.body.buckets.length > 0) {
+                transformMountpoints = (<string[]>(await inquirer.prompt([{
+                    type: 'checkbox',
+                    name: 'buckets',
+                    choices: buckets.body.buckets.map(x => {
+                        return {
+                            name: x.name,
+                            value: x.id.toString()
+                        };
+                    }),
+                    message: 'Which buckets do you want to mount into this block ' +
+                        '(will be mounted under /mnt/s3fs/BUCKET_NAME, you can change these mount points in the Studio)?',
+                }])).buckets).map(y => {
+                    let b = buckets.body.buckets?.find(z => z.id === Number(y));
+                    return {
+                        bucketId: Number(y),
+                        mountPoint: b ? ('/mnt/s3fs/' + b?.name) : '',
+                    };
+                }).filter(x => !!x.mountPoint && !isNaN(x.bucketId));
+            }
+        }
+
+        if (createOrUpdateInqRes === 'create' && blockType === 'transferLearning') {
+            blockTlOperatesOn = <OrganizationTransferLearningBlockOperatesOnEnum>(await inquirer.prompt([{
+                type: 'list',
+                name: 'operatesOn',
+                choices: [
+                    {
+                        name: 'Object Detection',
+                        value: 'object_detection'
+                    },
+                    {
+                        name: 'Image classification',
+                        value: 'image'
+                    },
+                    {
+                        name: 'Audio classification',
+                        value: 'audio'
+                    },
+                    {
+                        name: 'Other (classification)',
+                        value: 'other'
+                    },
+                    {
+                        name: 'Other (regression)',
+                        value: 'regression'
+                    },
+                ],
+                message: 'What type of data does this model operate on?',
+            }])).operatesOn;
+
+            if (blockTlOperatesOn === 'object_detection') {
+                blockTlObjectDetectionLastLayer = <OrganizationTransferLearningBlockObjectDetectionLastLayerEnum>
+                    (await inquirer.prompt([{
+                        type: 'list',
+                        name: 'lastLayer',
+                        choices: [
+                            {
+                                name: 'MobileNet SSD',
+                                value: 'mobilenet_ssd'
+                            },
+                            {
+                                name: 'Edge Impulse FOMO',
+                                value: 'fomo'
+                            },
+                            {
+                                name: 'YOLOv5',
+                                value: 'yolov5'
+                            },
+                        ],
+                        message: `What's the last layer of this object detection model?`,
+                    }])).lastLayer;
+            }
+        }
+
+
+        if (createOrUpdateInqRes === 'create' && blockType === 'deploy') {
+            deployCategory = <'library' | 'firmware'>(await inquirer.prompt([{
+                type: 'list',
+                name: 'category',
+                choices: [
+                    {
+                        name: 'Library',
+                        value: 'library'
+                    },
+                    {
+                        name: 'Firmware',
+                        value: 'firmware'
+                    }
+                ],
+                message: 'Where to show this deployment block in the UI?',
+            }])).category;
         }
 
         // Create & write the config
@@ -375,15 +513,23 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             description: blockDescription,
             organizationId,
             operatesOn: blockOperatesOn,
+            tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
+            tlOperatesOn: blockTlOperatesOn,
+            deployCategory: deployCategory,
+            transformMountpoints: transformMountpoints,
         } : {
             name: blockName,
             type: blockType,
             description: blockDescription,
             organizationId,
             operatesOn: blockOperatesOn,
+            tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
+            tlOperatesOn: blockTlOperatesOn,
+            deployCategory: deployCategory,
+            transformMountpoints: transformMountpoints,
         };
 
-        console.log('Creating block with config:', globalCurrentBlockConfig);
+        // console.log('Creating block with config:', globalCurrentBlockConfig);
         await writeConfigFile();
 
         const hasDockerFile = await exists(dockerfilePath);
@@ -407,10 +553,12 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 templateSourcePath =
                     'https://github.com/edgeimpulse/template-transformation-block-python/archive/main.zip';
                 directoryRoot = 'template-transformation-block-python-main/';
-            } else if (blockType === 'deploy') {
+            }
+            else if (blockType === 'deploy') {
                 templateSourcePath = 'https://github.com/edgeimpulse/template-deployment-block/archive/main.zip';
                 directoryRoot = 'template-deployment-block-main/';
-            } else {
+            }
+            else {
                 console.error(`Invalid block type: ${blockType}`);
                 process.exit(1);
             }
@@ -501,14 +649,22 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                         indMetadata: true,
                         cliArguments: '',
                         operatesOn: currentBlockConfig.operatesOn || 'file',
-                        additionalMountPoints: []
+                        additionalMountPoints: (currentBlockConfig.transformMountpoints || []).map(x => {
+                            return {
+                                type: 'bucket',
+                                bucketId: x.bucketId,
+                                mountPoint: x.mountPoint,
+                            };
+                        }),
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newBlockObject);
                 }
                 else if (currentBlockConfig.type === 'deploy') {
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
-                        organizationId, currentBlockConfig.name, '', currentBlockConfig.description, '');
+                        organizationId, currentBlockConfig.name, '', currentBlockConfig.description, '',
+                        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+                        undefined, undefined, currentBlockConfig.deployCategory);
                 }
                 else if (currentBlockConfig.type === 'dsp') {
                     if (currentBlockConfig.type === 'dsp' && typeof currentBlockConfig.port !== 'number') {
@@ -556,8 +712,20 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                             port: currentBlockConfig.port || 80,
                         });
                 }
+                else if (currentBlockConfig.type === 'transferLearning') {
+                    const newBlockObject: AddOrganizationTransferLearningBlockRequest = {
+                        name: currentBlockConfig.name,
+                        description: currentBlockConfig.description,
+                        dockerContainer: '',
+                        objectDetectionLastLayer: currentBlockConfig.tlObjectDetectionLastLayer,
+                        operatesOn: currentBlockConfig.tlOperatesOn || 'image',
+                    };
+                    newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
+                        organizationId, newBlockObject);
+                }
                 else {
-                    console.error(`Unable to upload your block - unknown block type: ${currentBlockConfig.type}`);
+                    console.error(`Unable to upload your block - unknown block type: ` +
+                        `${(<any>currentBlockConfig).type}`);
                     process.exit(1);
                 }
                 if (!newResponse.body.success) {

@@ -23,6 +23,10 @@ export class AddOrganizationDeployBlockRequest {
     'photo'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
     'integrateUrl'?: string;
     'privileged'?: boolean;
+    'mountLearnBlock'?: boolean;
+    'supportsEonCompiler'?: boolean;
+    'showOptimizations'?: boolean;
+    'category'?: AddOrganizationDeployBlockRequestCategoryEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -81,6 +85,26 @@ export class AddOrganizationDeployBlockRequest {
             "name": "privileged",
             "baseName": "privileged",
             "type": "boolean"
+        },
+        {
+            "name": "mountLearnBlock",
+            "baseName": "mountLearnBlock",
+            "type": "boolean"
+        },
+        {
+            "name": "supportsEonCompiler",
+            "baseName": "supportsEonCompiler",
+            "type": "boolean"
+        },
+        {
+            "name": "showOptimizations",
+            "baseName": "showOptimizations",
+            "type": "boolean"
+        },
+        {
+            "name": "category",
+            "baseName": "category",
+            "type": "AddOrganizationDeployBlockRequestCategoryEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -88,3 +112,6 @@ export class AddOrganizationDeployBlockRequest {
     }
 }
 
+
+export type AddOrganizationDeployBlockRequestCategoryEnum = 'library' | 'firmware';
+export const AddOrganizationDeployBlockRequestCategoryEnumValues: string[] = ['library', 'firmware'];

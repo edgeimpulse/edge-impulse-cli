@@ -16,6 +16,7 @@ export class Job {
     * Job id, use this to refer back to the job. The web socket API also uses this ID.
     */
     'id': number;
+    'category': string;
     /**
     * External job identifier, this can be used to categorize jobs, and recover job status. E.g. set this to \'keras-192\' for a Keras learning block with ID 192. When a user refreshes the page you can check whether a job is active for this ID and re-attach. 
     */
@@ -36,6 +37,10 @@ export class Job {
     * Whether the job finished successfully.
     */
     'finishedSuccessful'?: boolean;
+    /**
+    * The IDs of users who should be notified when a job is finished.
+    */
+    'jobNotificationUids': Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,6 +49,11 @@ export class Job {
             "name": "id",
             "baseName": "id",
             "type": "number"
+        },
+        {
+            "name": "category",
+            "baseName": "category",
+            "type": "string"
         },
         {
             "name": "key",
@@ -69,6 +79,11 @@ export class Job {
             "name": "finishedSuccessful",
             "baseName": "finishedSuccessful",
             "type": "boolean"
+        },
+        {
+            "name": "jobNotificationUids",
+            "baseName": "jobNotificationUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

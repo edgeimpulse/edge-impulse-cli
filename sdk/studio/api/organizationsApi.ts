@@ -28,6 +28,7 @@ import { RemoveMemberRequest } from '../model/removeMemberRequest';
 import { SetMemberDatasetsRequest } from '../model/setMemberDatasetsRequest';
 import { SetMemberRoleRequest } from '../model/setMemberRoleRequest';
 import { UpdateOrganizationRequest } from '../model/updateOrganizationRequest';
+import { UploadLogoResponse } from '../model/uploadLogoResponse';
 import { UploadReadmeImageResponse } from '../model/uploadReadmeImageResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -1288,7 +1289,7 @@ export class OrganizationsApi {
      * @param organizationId Organization ID
      * @param image 
      */
-    public async uploadOrganizationLogo (organizationId: number, image: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async uploadOrganizationLogo (organizationId: number, image?: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: UploadLogoResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/logo'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1305,11 +1306,6 @@ export class OrganizationsApi {
         // verify required parameter 'organizationId' is not null or undefined
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling uploadOrganizationLogo.');
-        }
-
-        // verify required parameter 'image' is not null or undefined
-        if (image === null || image === undefined) {
-            throw new Error('Required parameter image was null or undefined when calling uploadOrganizationLogo.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1347,12 +1343,12 @@ export class OrganizationsApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: UploadLogoResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "UploadLogoResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

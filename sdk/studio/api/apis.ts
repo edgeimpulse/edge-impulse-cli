@@ -56,12 +56,16 @@ export * from './requiresThirdPartyAuthApiKeyApi';
 import { RequiresThirdPartyAuthApiKeyApi } from './requiresThirdPartyAuthApiKeyApi';
 export * from './supportsRangeApi';
 import { SupportsRangeApi } from './supportsRangeApi';
+export * from './themesApi';
+import { ThemesApi } from './themesApi';
 export * from './thirdPartyAuthApi';
 import { ThirdPartyAuthApi } from './thirdPartyAuthApi';
 export * from './uploadPortalApi';
 import { UploadPortalApi } from './uploadPortalApi';
 export * from './userApi';
 import { UserApi } from './userApi';
+export * from './whitelabelsApi';
+import { WhitelabelsApi } from './whitelabelsApi';
 import * as fs from 'fs';
 import * as http from 'http';
 
@@ -82,4 +86,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, ApplicationTestingApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThirdPartyAuthApi, UploadPortalApi, UserApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, ApplicationTestingApi, AuthApi, CDNApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];

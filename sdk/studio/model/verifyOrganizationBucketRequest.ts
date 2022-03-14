@@ -32,6 +32,10 @@ export class VerifyOrganizationBucketRequest {
     * S3 region
     */
     'region': string;
+    /**
+    * Optional prefix in the bucket. Set this if you don\'t have access to the full bucket for example.
+    */
+    'prefix'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -59,6 +63,11 @@ export class VerifyOrganizationBucketRequest {
         {
             "name": "region",
             "baseName": "region",
+            "type": "string"
+        },
+        {
+            "name": "prefix",
+            "baseName": "prefix",
             "type": "string"
         }    ];
 

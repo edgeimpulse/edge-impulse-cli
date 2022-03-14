@@ -29,6 +29,8 @@ export class DSPInfo {
     */
     'inputAxes': Array<string>;
     'performance'?: DspRunResponseAllOfPerformance;
+    'canCalculateFeatureImportance': boolean;
+    'calculateFeatureImportance': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,6 +79,16 @@ export class DSPInfo {
             "name": "performance",
             "baseName": "performance",
             "type": "DspRunResponseAllOfPerformance"
+        },
+        {
+            "name": "canCalculateFeatureImportance",
+            "baseName": "canCalculateFeatureImportance",
+            "type": "boolean"
+        },
+        {
+            "name": "calculateFeatureImportance",
+            "baseName": "calculateFeatureImportance",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

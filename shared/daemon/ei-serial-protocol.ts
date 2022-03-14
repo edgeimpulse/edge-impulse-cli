@@ -669,16 +669,32 @@ export default class EiSerialProtocol {
     async stopInference() {
         await this._serial.write(Buffer.from('b\r', 'ascii'));
 
+        if (this._serial.getBaudRate() !== 115200) {
+            await this._serial.setBaudRate(115200);
+        }
+
         await this.waitForSerialSequence('Stop inference', Buffer.from([ 0x3e, 0x20 ]), 5000);
     }
 
     async startInference(mode: 'normal' | 'debug' | 'continuous') {
+        if (!this._config) {
+            throw new Error('Does not have config');
+        }
+
         let command = 'AT+RUNIMPULSE';
         if (mode === 'debug') {
             command += 'DEBUG';
         }
         else if (mode === 'continuous') {
             command += 'CONT';
+        }
+
+        let useMaxBaudRate = false;
+        if (mode === 'debug') {
+            let x = this.shouldUseMaxBaudrate(command);
+
+            command = x.updatedCommand;
+            useMaxBaudRate = x.useMaxBaudRate;
         }
 
         command += '\r';
@@ -691,6 +707,10 @@ export default class EiSerialProtocol {
             }
 
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
+        }
+
+        if (useMaxBaudRate && this._config.info.transferBaudRate) {
+            await this._serial.setBaudRate(this._config.info.transferBaudRate);
         }
     }
 
@@ -793,7 +813,7 @@ export default class EiSerialProtocol {
         return new Promise((res) => setTimeout(res, ms));
     }
 
-    private async execCommand(command: string, timeout: number = 1000, logProgress: boolean = false) {
+    private async execCommand(command: string, timeout: number = 2000, logProgress: boolean = false) {
         command = command + '\r';
 
         // split it up a bit for pacing
@@ -1053,6 +1073,14 @@ export default class EiSerialProtocol {
         else {
             useMaxBaudRate = true;
             command += ',y';
+        }
+
+        if (command.indexOf('=') === -1) {
+            command = command.replace(',', '=');
+        }
+
+        if (command.indexOf('=,') > -1) {
+            command = command.replace('=,', '=');
         }
 
         return {

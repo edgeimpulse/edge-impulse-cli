@@ -17,6 +17,7 @@ export class ListOrganizationApiKeysResponseAllOfApiKeys {
     'name': string;
     'created': Date;
     'role': ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum;
+    'isTransformationJobKey': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class ListOrganizationApiKeysResponseAllOfApiKeys {
             "name": "role",
             "baseName": "role",
             "type": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum"
+        },
+        {
+            "name": "isTransformationJobKey",
+            "baseName": "isTransformationJobKey",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

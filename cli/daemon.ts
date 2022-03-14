@@ -31,6 +31,7 @@ const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
+const verboseArgv = process.argv.indexOf('--verbose') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
@@ -48,6 +49,7 @@ const cliOptions = {
     devArgv: devArgv,
     hmacKeyArgv: undefined,
     silentArgv: silentArgv,
+    verboseArgv: verboseArgv,
     connectProjectMsg: 'To which project do you want to connect this device?',
     getProjectFromConfig: async (deviceId: string | undefined) => {
         if (!deviceId) return undefined;
@@ -507,7 +509,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
     let config: EiSerialDeviceConfig | undefined;
     let remoteMgmt: RemoteMgmt | undefined;
 
-    serial = new SerialConnector(deviceId, baudRate);
+    serial = new SerialConnector(deviceId, baudRate, cliOptions.verboseArgv);
     const serialProtocol = new EiSerialProtocol(serial);
 
     serial.on('error', err => {
@@ -550,10 +552,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.6.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 6) {
+            // we support devices with version 1.7.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 7) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.6.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.7.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,

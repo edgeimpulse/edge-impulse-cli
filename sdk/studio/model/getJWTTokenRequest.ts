@@ -24,6 +24,7 @@ export class GetJWTTokenRequest {
     * Evaluation user UUID
     */
     'uuid'?: string;
+    'ssoType'?: GetJWTTokenRequestSsoTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +43,11 @@ export class GetJWTTokenRequest {
             "name": "uuid",
             "baseName": "uuid",
             "type": "string"
+        },
+        {
+            "name": "ssoType",
+            "baseName": "ssoType",
+            "type": "GetJWTTokenRequestSsoTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -49,3 +55,6 @@ export class GetJWTTokenRequest {
     }
 }
 
+
+export type GetJWTTokenRequestSsoTypeEnum = 'browser' | 'cli';
+export const GetJWTTokenRequestSsoTypeEnumValues: string[] = ['browser', 'cli'];

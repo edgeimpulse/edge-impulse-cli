@@ -23,6 +23,7 @@ export class OrganizationPipelineStep {
     'category'?: OrganizationPipelineStepCategoryEnum;
     'outputDatasetName'?: string;
     'label'?: string;
+    'transformationParallel'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -81,6 +82,11 @@ export class OrganizationPipelineStep {
             "name": "label",
             "baseName": "label",
             "type": "string"
+        },
+        {
+            "name": "transformationParallel",
+            "baseName": "transformationParallel",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

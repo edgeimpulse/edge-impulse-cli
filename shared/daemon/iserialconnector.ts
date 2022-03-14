@@ -10,6 +10,7 @@ export interface ISerialConnector extends TypedEmitter<{
     connect(): Promise<void>;
     write(buffer: Buffer): Promise<void>;
     setBaudRate(baudRate: number): Promise<void>;
+    getBaudRate(): number;
     disconnect(): Promise<boolean>;
     getMACAddress(): Promise<string | null>;
     hasSerial(): Promise<boolean>;

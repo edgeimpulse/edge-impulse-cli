@@ -12,7 +12,8 @@ import {
     OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
     OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi,
     OrganizationBlocksApiApiKeys, DeploymentApi, ImpulseApi, LearnApi,
-    JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys
+    JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys,
+    OrganizationDataApi, OrganizationDataApiApiKeys
 } from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
@@ -54,6 +55,7 @@ export interface EdgeImpulseAPI {
     organizationCreateProject: OrganizationCreateProjectApi;
     organizationBlocks: OrganizationBlocksApi;
     organizationJobs: OrganizationJobsApi;
+    organizationData: OrganizationDataApi;
 }
 
 export interface EdgeImpulseEndpoints {
@@ -248,6 +250,7 @@ export class Config {
             organizationCreateProject: new OrganizationCreateProjectApi(apiEndpointInternal),
             organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
             organizationJobs: new OrganizationJobsApi(apiEndpointInternal),
+            organizationData: new OrganizationDataApi(apiEndpointInternal),
         };
 
         this._endpoints = {
@@ -277,6 +280,7 @@ export class Config {
                 apiKey);
             this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.organizationData.setApiKey(OrganizationDataApiApiKeys.ApiKeyAuthentication, apiKey);
             config.apiKey = apiKey;
         }
         else {
@@ -316,6 +320,7 @@ export class Config {
             this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.JWTAuthentication,
                 config.jwtToken);
             this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.organizationData.setApiKey(OrganizationDataApiApiKeys.JWTAuthentication, config.jwtToken);
         }
 
         if (verifyType === 'project') {

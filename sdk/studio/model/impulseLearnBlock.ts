@@ -10,16 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { LearnBlockType } from './learnBlockType';
 
 export class ImpulseLearnBlock {
     /**
     * Identifier for this block. Make sure to up this number when creating a new block, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is.
     */
     'id': number;
-    /**
-    * Block type (either keras, keras-transfer-image, keras-transfer-kws, keras-object-detection, keras-regression, or anomaly)
-    */
-    'type': string;
+    'type': LearnBlockType;
     /**
     * Block name, will be used in menus. If a block has a baseBlockId, this field is ignored and the base block\'s name is used instead.
     */
@@ -92,7 +90,7 @@ export class ImpulseLearnBlock {
         {
             "name": "type",
             "baseName": "type",
-            "type": "string"
+            "type": "LearnBlockType"
         },
         {
             "name": "name",

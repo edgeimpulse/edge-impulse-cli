@@ -19,6 +19,7 @@ export class ProjectInfoResponseAllOfLatencyDevices {
     'int8ConvLatency': number;
     'float32Latency': number;
     'float32ConvLatency': number;
+    'helpText': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +58,11 @@ export class ProjectInfoResponseAllOfLatencyDevices {
             "name": "float32ConvLatency",
             "baseName": "float32ConvLatency",
             "type": "number"
+        },
+        {
+            "name": "helpText",
+            "baseName": "helpText",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

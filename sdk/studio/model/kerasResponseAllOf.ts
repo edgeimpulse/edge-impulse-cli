@@ -14,7 +14,9 @@ import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { DependencyData } from './dependencyData';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { KerasResponseAllOfTransferLearningModels } from './kerasResponseAllOfTransferLearningModels';
 import { KerasVisualLayer } from './kerasVisualLayer';
+import { LearnBlockType } from './learnBlockType';
 
 export class KerasResponseAllOf {
     'dependencies': DependencyData;
@@ -23,10 +25,7 @@ export class KerasResponseAllOf {
     */
     'trained': boolean;
     'name': string;
-    /**
-    * The type of Keras block (keras, keras-transfer-image, keras-transfer-kws, keras-object-detection, keras-regression). Each behaves differently.
-    */
-    'type'?: KerasResponseAllOfTypeEnum;
+    'type'?: LearnBlockType;
     /**
     * The Keras script. This script might be empty if the mode is visual.
     */
@@ -60,24 +59,9 @@ export class KerasResponseAllOf {
     * Whether to automatically balance class weights, use this for skewed datasets.
     */
     'autoClassWeights'?: boolean;
-    /**
-    * Possible learning rates (between 0 and 1).
-    */
-    'learningRates'?: Array<number>;
-    /**
-    * Tuning algorithm to use to search hyperparameter space
-    */
-    'tuningAlgorithm'?: KerasResponseAllOfTuningAlgorithmEnum;
-    /**
-    * Total number of trials (model configurations) to test at most.
-    */
-    'tuningMaxTrials'?: number;
-    /**
-    * Number of parallel workers used for tuning
-    */
-    'tuningWorkers'?: number;
     'augmentationPolicyImage': AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
+    'transferLearningModels': Array<KerasResponseAllOfTransferLearningModels>;
 
     static discriminator: string | undefined = undefined;
 
@@ -100,7 +84,7 @@ export class KerasResponseAllOf {
         {
             "name": "type",
             "baseName": "type",
-            "type": "KerasResponseAllOfTypeEnum"
+            "type": "LearnBlockType"
         },
         {
             "name": "script",
@@ -148,26 +132,6 @@ export class KerasResponseAllOf {
             "type": "boolean"
         },
         {
-            "name": "learningRates",
-            "baseName": "learningRates",
-            "type": "Array<number>"
-        },
-        {
-            "name": "tuningAlgorithm",
-            "baseName": "tuningAlgorithm",
-            "type": "KerasResponseAllOfTuningAlgorithmEnum"
-        },
-        {
-            "name": "tuningMaxTrials",
-            "baseName": "tuningMaxTrials",
-            "type": "number"
-        },
-        {
-            "name": "tuningWorkers",
-            "baseName": "tuningWorkers",
-            "type": "number"
-        },
-        {
             "name": "augmentationPolicyImage",
             "baseName": "augmentationPolicyImage",
             "type": "AugmentationPolicyImageEnum"
@@ -176,6 +140,11 @@ export class KerasResponseAllOf {
             "name": "augmentationPolicySpectrogram",
             "baseName": "augmentationPolicySpectrogram",
             "type": "AugmentationPolicySpectrogram"
+        },
+        {
+            "name": "transferLearningModels",
+            "baseName": "transferLearningModels",
+            "type": "Array<KerasResponseAllOfTransferLearningModels>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -184,11 +153,5 @@ export class KerasResponseAllOf {
 }
 
 
-export type KerasResponseAllOfTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression';
-export const KerasResponseAllOfTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression'];
-
 export type KerasResponseAllOfModeEnum = 'visual' | 'expert';
 export const KerasResponseAllOfModeEnumValues: string[] = ['visual', 'expert'];
-
-export type KerasResponseAllOfTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
-export const KerasResponseAllOfTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];

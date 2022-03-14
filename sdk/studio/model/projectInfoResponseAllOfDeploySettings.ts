@@ -47,5 +47,5 @@ export class ProjectInfoResponseAllOfDeploySettings {
 }
 
 
-export type ProjectInfoResponseAllOfDeploySettingsSensorEnum = 'accelerometer' | 'microphone' | 'camera' | 'positional' | 'environmental' | 'unknown';
-export const ProjectInfoResponseAllOfDeploySettingsSensorEnumValues: string[] = ['accelerometer', 'microphone', 'camera', 'positional', 'environmental', 'unknown'];
+export type ProjectInfoResponseAllOfDeploySettingsSensorEnum = 'accelerometer' | 'microphone' | 'camera' | 'positional' | 'environmental' | 'fusion' | 'unknown';
+export const ProjectInfoResponseAllOfDeploySettingsSensorEnumValues: string[] = ['accelerometer', 'microphone', 'camera', 'positional', 'environmental', 'fusion', 'unknown'];

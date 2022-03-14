@@ -20,6 +20,8 @@ export class DSPBlock {
     'recommended'?: boolean;
     'experimental': boolean;
     'latestImplementationVersion': number;
+    'organizationId'?: number;
+    'organizationDspId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -62,6 +64,16 @@ export class DSPBlock {
         {
             "name": "latestImplementationVersion",
             "baseName": "latestImplementationVersion",
+            "type": "number"
+        },
+        {
+            "name": "organizationId",
+            "baseName": "organizationId",
+            "type": "number"
+        },
+        {
+            "name": "organizationDspId",
+            "baseName": "organizationDspId",
             "type": "number"
         }    ];
 

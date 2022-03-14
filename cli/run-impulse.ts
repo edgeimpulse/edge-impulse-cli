@@ -20,6 +20,7 @@ const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 const versionArgv = process.argv.indexOf('--version') > -1;
 const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const debugArgv = process.argv.indexOf('--debug') > -1;
+const verboseArgv = process.argv.indexOf('--verbose') > -1;
 const continuousArgv = process.argv.indexOf('--continuous') > -1;
 const rawArgv = process.argv.indexOf('--raw') > -1;
 const whichDeviceArgvIx = process.argv.indexOf('--which-device');
@@ -81,7 +82,7 @@ async function connectToSerial(deviceId: string) {
     // if this is set it means we have a connection
     let config: EiSerialDeviceConfig | undefined;
 
-    serial = new SerialConnector(deviceId, 115200);
+    serial = new SerialConnector(deviceId, 115200, verboseArgv);
     const serialProtocol = new EiSerialProtocol(serial);
     serial.on('error', err => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err);
@@ -154,10 +155,10 @@ async function connectToSerial(deviceId: string) {
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.6.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 6) {
+            // we support devices with version 1.7.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 7) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.6.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.7.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,
@@ -289,7 +290,7 @@ async function startWebServer(config: EiSerialDeviceConfig) {
                     // parse object detection
                     for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
                         let m = l.trim()
-                            .match(/^(\w+) \(([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
+                            .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
                         if (!m) continue;
                         let cube = {
                             label: m[1],

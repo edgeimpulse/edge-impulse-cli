@@ -22,6 +22,11 @@ export class ProjectInfoResponseAllOfPerformance {
     * Maximum size for DSP file output
     */
     'dspFileSizeMb': number;
+    'enterprisePerformance': boolean;
+    /**
+    * Amount of RAM allocated to training jobs
+    */
+    'trainJobRamMb': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,6 +49,16 @@ export class ProjectInfoResponseAllOfPerformance {
         {
             "name": "dspFileSizeMb",
             "baseName": "dspFileSizeMb",
+            "type": "number"
+        },
+        {
+            "name": "enterprisePerformance",
+            "baseName": "enterprisePerformance",
+            "type": "boolean"
+        },
+        {
+            "name": "trainJobRamMb",
+            "baseName": "trainJobRamMb",
             "type": "number"
         }    ];
 

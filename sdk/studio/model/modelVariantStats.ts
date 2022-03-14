@@ -12,6 +12,7 @@
 
 import { EvaluateResultValue } from './evaluateResultValue';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { LearnBlockType } from './learnBlockType';
 
 export class ModelVariantStats {
     'modelType': KerasModelTypeEnum;
@@ -19,10 +20,7 @@ export class ModelVariantStats {
     * The learning block this model variant is from
     */
     'learnBlockId': number;
-    /**
-    * Learn block type
-    */
-    'learnBlockType': ModelVariantStatsLearnBlockTypeEnum;
+    'learnBlockType': LearnBlockType;
     /**
     * A map from actual labels to predicted labels, where actual labels are listed in `trainingLabels` and possible predicted labels are listed in `classificationLabels`.
     */
@@ -58,7 +56,7 @@ export class ModelVariantStats {
         {
             "name": "learnBlockType",
             "baseName": "learnBlockType",
-            "type": "ModelVariantStatsLearnBlockTypeEnum"
+            "type": "LearnBlockType"
         },
         {
             "name": "confusionMatrix",
@@ -96,6 +94,3 @@ export class ModelVariantStats {
     }
 }
 
-
-export type ModelVariantStatsLearnBlockTypeEnum = 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression';
-export const ModelVariantStatsLearnBlockTypeEnumValues: string[] = ['keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression'];

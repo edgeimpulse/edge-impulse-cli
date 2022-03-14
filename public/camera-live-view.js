@@ -43,7 +43,16 @@ window.CameraLiveView = async () => {
     });
 
     socket.on('image', (opts) => {
-        els.cameraImg.src = opts.img;
+        // we get corrupt frames sometimes, need to check if the image
+        // is actually valid...
+        let img = new Image();
+        img.onload = () => {
+            els.cameraImg.src = opts.img;
+        };
+        img.onerror = () => {
+            console.warn('Corrupt JPG frame');
+        };
+        img.src = opts.img;
     });
 
     socket.on('classification', (opts) => {

@@ -16,6 +16,10 @@ export class GenerateFeaturesRequest {
     * DSP block ID to generate features for
     */
     'dspId': number;
+    /**
+    * Whether to generate feature importance (only when available)
+    */
+    'calculateFeatureImportance'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +28,11 @@ export class GenerateFeaturesRequest {
             "name": "dspId",
             "baseName": "dspId",
             "type": "number"
+        },
+        {
+            "name": "calculateFeatureImportance",
+            "baseName": "calculateFeatureImportance",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

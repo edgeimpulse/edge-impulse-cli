@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImpulseDspBlockOrganization } from './impulseDspBlockOrganization';
 
 export class ImpulseDspBlock {
     /**
@@ -92,6 +93,7 @@ export class ImpulseDspBlock {
     * Implementation version of the block
     */
     'implementationVersion': number;
+    'organization'?: ImpulseDspBlockOrganization;
 
     static discriminator: string | undefined = undefined;
 
@@ -195,6 +197,11 @@ export class ImpulseDspBlock {
             "name": "implementationVersion",
             "baseName": "implementationVersion",
             "type": "number"
+        },
+        {
+            "name": "organization",
+            "baseName": "organization",
+            "type": "ImpulseDspBlockOrganization"
         }    ];
 
     static getAttributeTypeMap() {

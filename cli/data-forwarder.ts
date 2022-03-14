@@ -315,9 +315,17 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     serial.off('data', onData);
 
                     let dataBuffer = Buffer.concat(allDataBuffers);
-                    let lines = dataBuffer.toString('ascii').split('\n').map(n => n.trim()).map(n => {
+                    let rawLines = dataBuffer.toString('ascii').split('\n').map(n => n.trim());
+
+                    let errLine = rawLines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
+                    if (errLine) {
+                        throw new Error(errLine);
+                    }
+
+                    let lines = rawLines.map(n => {
                         return n.split(/[,\t\s]/).filter(f => !!f.trim()).map(x => Number(x.trim()));
                     });
+
                     // skip over the first item
                     let values = lines.slice(1, (dataForwarderConfig.samplingFreq * (s.length / 1000) + 1));
 
@@ -601,6 +609,11 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
 
     const data = Buffer.concat(dataBuffers.map(d => d.buffer));
     let lines = data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => !!d);
+
+    let errLine = lines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
+    if (errLine) {
+        throw new Error(errLine);
+    }
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated
     if (!l) {

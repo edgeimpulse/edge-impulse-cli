@@ -34,6 +34,7 @@ export enum PageType {
     Jobs = 32,
     ActivationRequired = 33,
     Redirect = 34,
+    DataExplorer = 35,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

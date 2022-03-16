@@ -4,7 +4,7 @@
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {
-    "build": "./node_modules/.bin/tsc -p .",
+    "build": "./node_modules/.bin/tsc -p ./",
     "lint": "./node_modules/tslint/bin/tslint -p tsconfig.json"
   },
   "bin": {

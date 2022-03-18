@@ -171,7 +171,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         this._waitingForSnapshotToStart = true;
 
         try {
-            this._snapshotStream = await this._serialProtocol.startSnapshotStream();
+            this._snapshotStream = await this._serialProtocol.startSnapshotStream('low');
         }
         finally {
             this._waitingForSnapshotToStart = false;

@@ -60,12 +60,11 @@ export function makeImage(buffer: Buffer, hmacKey: string | undefined, fileName:
     };
 }
 
-export function makeVideo(buffer: Buffer, hmacKey: string | undefined, fileName: string) {
+export function makeVideo(buffer: Buffer, hmacKey: string | undefined, fileName: string, mimeType: string) {
     let hmacVideo = crypto.createHmac('sha256', hmacKey || '');
     hmacVideo.update(buffer);
 
     let emptySignature = Array(64).fill('0').join('');
-    let mimeType = 'video/mp4';
     let data = {
         protected: {
             ver: "v1",

@@ -44,7 +44,7 @@ export interface RemoteMgmtDevice extends TypedEmitter<{
     sampleRequest: (data: MgmtInterfaceSampleRequestSample, ee: RemoteMgmtDeviceSampleEmitter) => Promise<void>;
     supportsSnapshotStreaming: () => boolean;
     supportsSnapshotStreamingWhileCapturing: () => boolean;
-    startSnapshotStreaming: () => Promise<void>;
+    startSnapshotStreaming: (resolution: 'high' | 'low') => Promise<void>;
     stopSnapshotStreaming: () => Promise<void>;
     beforeConnect: () => Promise<void>;
 }
@@ -85,6 +85,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     private _eiConfig: RemoteMgmtConfig;
     private _device: RemoteMgmtDevice;
     private _state: RemoteMgmtState = 'idle';
+    private _snapshotStreamResolution: 'low' | 'high' = 'low';
     private _createWebsocket: (url: string) => IWebsocket;
     private _checkNameCb: (currName: string) => Promise<string>;
 
@@ -319,7 +320,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 if (restartSnapshotOnFinished) {
                     try {
                         this._state = 'snapshot-stream-requested';
-                        await this._device.startSnapshotStreaming();
+                        await this._device.startSnapshotStreaming(this._snapshotStreamResolution);
                         this._state = 'snapshot-stream-started';
                     }
                     catch (ex2) {
@@ -335,6 +336,11 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             }
 
             if (typeof (<MgmtInterfaceStartSnapshotRequest>d).startSnapshot !== 'undefined') {
+                let req = <MgmtInterfaceStartSnapshotRequest>d;
+                if (!req.resolution) {
+                    req.resolution = 'low';
+                }
+
                 if (!this._device.supportsSnapshotStreaming()) {
                     let res1: MgmtInterfaceSnapshotFailedResponse = {
                         snapshotFailed: true,
@@ -377,8 +383,9 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
                 try {
                     this._state = 'snapshot-stream-requested';
-                    await this._device.startSnapshotStreaming();
+                    await this._device.startSnapshotStreaming(req.resolution);
                     this._state = 'snapshot-stream-started';
+                    this._snapshotStreamResolution = req.resolution;
                     let res2: MgmtInterfaceSnapshotStartedResponse = {
                         snapshotStarted: true
                     };

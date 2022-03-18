@@ -714,7 +714,7 @@ export default class EiSerialProtocol {
         }
     }
 
-    async startSnapshotStream() {
+    async startSnapshotStream(resolution: 'low' | 'high') {
         if (!this._config || !this._config.snapshot.supportsStreaming) {
             throw new Error('Device does not support snapshot streaming');
         }

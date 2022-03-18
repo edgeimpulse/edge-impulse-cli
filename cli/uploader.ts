@@ -134,7 +134,8 @@ const cliOptions = {
             '.jpeg',
             '.png',
             '.csv',
-            '.mp4'
+            '.mp4',
+            '.avi',
         ];
 
         let files: UploaderFileType[];
@@ -288,7 +289,10 @@ const cliOptions = {
                         processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
                         break;
                     case '.mp4':
-                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
+                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/mp4');
+                        break;
+                    case '.avi':
+                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/avi');
                         break;
                     case '.csv':
                         processed = makeCsv(buffer, hmacKeyArgv || devKeys.hmacKey);

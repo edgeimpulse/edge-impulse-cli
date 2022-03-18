@@ -89,6 +89,7 @@ export interface MgmtInterfaceSampleProcessingResponse {
 
 export interface MgmtInterfaceStartSnapshotRequest {
     startSnapshot: boolean;
+    resolution: 'high' | 'low';
 }
 
 export interface MgmtInterfaceStopSnapshotRequest {

@@ -11,11 +11,7 @@
  */
 
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
-    /**
-    * The name of the project.
-    */
-    'projectName': string;
+export class RequestActivationRequest {
     /**
     * White label domain, if any
     */
@@ -25,18 +21,13 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
-            "type": "string"
-        },
-        {
             "name": "whitelabel",
             "baseName": "whitelabel",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return RequestActivationRequest.attributeTypeMap;
     }
 }
 

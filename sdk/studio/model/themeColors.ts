@@ -12,32 +12,20 @@
 
 
 export class ThemeColors {
-    'projectsPrimary'?: string;
-    'organizationsPrimary'?: string;
-    'projectsPrimaryRgb'?: Array<number>;
-    'organizationsPrimaryRgb'?: Array<number>;
+    'primaryColor'?: string;
+    'primaryColorRgb'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectsPrimary",
-            "baseName": "projectsPrimary",
+            "name": "primaryColor",
+            "baseName": "primaryColor",
             "type": "string"
         },
         {
-            "name": "organizationsPrimary",
-            "baseName": "organizationsPrimary",
-            "type": "string"
-        },
-        {
-            "name": "projectsPrimaryRgb",
-            "baseName": "projectsPrimaryRgb",
-            "type": "Array<number>"
-        },
-        {
-            "name": "organizationsPrimaryRgb",
-            "baseName": "organizationsPrimaryRgb",
+            "name": "primaryColorRgb",
+            "baseName": "primaryColorRgb",
             "type": "Array<number>"
         }    ];
 

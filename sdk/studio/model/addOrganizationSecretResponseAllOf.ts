@@ -11,32 +11,23 @@
  */
 
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
+export class AddOrganizationSecretResponseAllOf {
     /**
-    * The name of the project.
+    * Secret ID
     */
-    'projectName': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
+    'id': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return AddOrganizationSecretResponseAllOf.attributeTypeMap;
     }
 }
 

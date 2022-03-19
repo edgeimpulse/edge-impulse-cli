@@ -31,6 +31,14 @@ export class OrganizationCreateProjectRequest {
     * Number of parallel jobs to start
     */
     'transformationParallel'?: number;
+    /**
+    * Optional extra arguments for this transformation block
+    */
+    'extraCliArguments'?: string;
+    /**
+    * White label domain, if any
+    */
+    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -99,6 +107,16 @@ export class OrganizationCreateProjectRequest {
             "name": "transformationParallel",
             "baseName": "transformationParallel",
             "type": "number"
+        },
+        {
+            "name": "extraCliArguments",
+            "baseName": "extraCliArguments",
+            "type": "string"
+        },
+        {
+            "name": "whitelabel",
+            "baseName": "whitelabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

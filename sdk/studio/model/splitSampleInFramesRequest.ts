@@ -11,32 +11,23 @@
  */
 
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
+export class SplitSampleInFramesRequest {
     /**
-    * The name of the project.
+    * Frames per second to extract from this video.
     */
-    'projectName': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
+    'fps'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
+            "name": "fps",
+            "baseName": "fps",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return SplitSampleInFramesRequest.attributeTypeMap;
     }
 }
 

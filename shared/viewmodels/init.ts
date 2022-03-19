@@ -35,6 +35,7 @@ export enum PageType {
     ActivationRequired = 33,
     Redirect = 34,
     DataExplorer = 35,
+    SetPasswordSuccess = 36,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

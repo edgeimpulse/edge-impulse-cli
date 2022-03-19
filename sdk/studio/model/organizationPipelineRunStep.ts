@@ -25,6 +25,7 @@ export class OrganizationPipelineRunStep {
     'category'?: OrganizationPipelineRunStepCategoryEnum;
     'outputDatasetName'?: string;
     'label'?: string;
+    'extraCliArguments'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +88,11 @@ export class OrganizationPipelineRunStep {
         {
             "name": "label",
             "baseName": "label",
+            "type": "string"
+        },
+        {
+            "name": "extraCliArguments",
+            "baseName": "extraCliArguments",
             "type": "string"
         }    ];
 

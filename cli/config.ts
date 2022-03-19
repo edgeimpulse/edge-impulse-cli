@@ -13,7 +13,7 @@ import {
     OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi,
     OrganizationBlocksApiApiKeys, DeploymentApi, ImpulseApi, LearnApi,
     JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys,
-    OrganizationDataApi, OrganizationDataApiApiKeys
+    OrganizationDataApi, OrganizationDataApiApiKeys, UserApi
 } from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
@@ -56,6 +56,7 @@ export interface EdgeImpulseAPI {
     organizationBlocks: OrganizationBlocksApi;
     organizationJobs: OrganizationJobsApi;
     organizationData: OrganizationDataApi;
+    user: UserApi;
 }
 
 export interface EdgeImpulseEndpoints {
@@ -251,6 +252,7 @@ export class Config {
             organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
             organizationJobs: new OrganizationJobsApi(apiEndpointInternal),
             organizationData: new OrganizationDataApi(apiEndpointInternal),
+            user: new UserApi(apiEndpointInternal),
         };
 
         this._endpoints = {
@@ -285,19 +287,41 @@ export class Config {
         }
         else {
             if (!config.jwtToken) {
-                let inq = <{ username: string, password: string }>await inquirer.prompt([{
+                const username = <{ username: string }>await inquirer.prompt({
                     type: 'input',
                     name: 'username',
                     message: `What is your user name or e-mail address (${host})?`
-                }, {
+                });
+
+                const { needPassword, email, whitelabel } = (
+                    await this._api.user.getUserNeedToSetPassword(
+                        encodeURIComponent(username.username)
+                    )
+                ).body;
+                if (needPassword) {
+                    const protocol = `http${
+                        config.host === 'localhost' ? '' : 's'
+                    }://`;
+                    const port = `${
+                        config.host === 'localhost' ? ':4800' : ''
+                    }`;
+                    const encodedEmail = encodeURIComponent(`${email}`);
+                    const resetUrl =
+                        `${protocol}${whitelabel || config.host}${port}/set-password?email=${encodedEmail}`;
+                    throw new Error(
+                        `To use the CLI you'll need to set an app password. Go to ${resetUrl} to set one.`
+                    );
+                }
+
+                const password = <{ password: string }>await inquirer.prompt({
                     type: 'password',
                     name: 'password',
                     message: `What is your password?`
-                }]);
+                });
 
                 let res = (await this._api.login.login({
-                    username: inq.username,
-                    password: inq.password
+                    username: username.username,
+                    password: password.password,
                 })).body;
 
                 if (!res.success || !res.token) {

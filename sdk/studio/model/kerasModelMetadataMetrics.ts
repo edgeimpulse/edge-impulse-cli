@@ -51,7 +51,7 @@ export class KerasModelMetadataMetrics {
         },
         {
             "name": "confusionMatrix",
-            "baseName": "confusion_matrix",
+            "baseName": "confusionMatrix",
             "type": "Array<Array<number>>"
         },
         {

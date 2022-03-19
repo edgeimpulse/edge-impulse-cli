@@ -136,11 +136,27 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         try {
             config = await configFactory.verifyLogin(devArgv, apiKeyArgv, apiKeyArgv ? 'org' : 'project');
         }
-        catch (ex) {
+        catch (ex2) {
             if (apiKeyArgv) {
-                throw ex;
+                throw ex2;
             }
-            console.log('Stored token seems invalid, clearing cache...', ex);
+            let ex = <Error>ex2;
+            let msg = ex.message || ex.toString();
+            if (msg.indexOf('need to set an app password') > -1) {
+                console.log('');
+                console.log('\x1b[33mWARN\x1b[0m', ex.message);
+                console.log('');
+                process.exit(1);
+            }
+            else if (msg.indexOf('Password is incorrect') > -1 ||
+                     msg.indexOf('User not found') > -1) {
+                console.log('');
+                console.log('\x1b[33mWARN\x1b[0m', ex.message);
+                console.log('');
+            }
+            else {
+                console.log('Stored token seems invalid, clearing cache...', ex);
+            }
             await configFactory.clean();
             config = await configFactory.verifyLogin(devArgv, apiKeyArgv, apiKeyArgv ? 'org' : 'project');
         }

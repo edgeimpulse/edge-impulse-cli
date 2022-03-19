@@ -11,32 +11,32 @@
  */
 
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
-    /**
-    * The name of the project.
-    */
-    'projectName': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
+export class AddOrganizationSecretRequest {
+    'name': string;
+    'description': string;
+    'secret': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         },
         {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
+        },
+        {
+            "name": "secret",
+            "baseName": "secret",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return AddOrganizationSecretRequest.attributeTypeMap;
     }
 }
 

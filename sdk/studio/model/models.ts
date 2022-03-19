@@ -11,6 +11,9 @@ export * from './addOrganizationDeployBlockRequest';
 export * from './addOrganizationDeployBlockResponse';
 export * from './addOrganizationDspBlockRequest';
 export * from './addOrganizationDspBlockResponse';
+export * from './addOrganizationSecretRequest';
+export * from './addOrganizationSecretResponse';
+export * from './addOrganizationSecretResponseAllOf';
 export * from './addOrganizationTransferLearningBlockRequest';
 export * from './addOrganizationTransferLearningBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
@@ -99,6 +102,9 @@ export * from './dSPMetadataIncludedSamples';
 export * from './dSPMetadataOutputConfig';
 export * from './dSPMetadataOutputConfigShape';
 export * from './dSPMetadataResponse';
+export * from './dataExplorerFeaturesResponse';
+export * from './dataExplorerFeaturesResponseAllOf';
+export * from './dataExplorerSettings';
 export * from './dependencyData';
 export * from './deploymentTarget';
 export * from './deploymentTargetBadge';
@@ -160,6 +166,7 @@ export * from './getApplicationTestingRawResultResponse';
 export * from './getApplicationTestingRawResultResponseAllOf';
 export * from './getApplicationTestingStatusResponse';
 export * from './getApplicationTestingStatusResponseAllOf';
+export * from './getDataExplorerSettingsResponse';
 export * from './getDeploymentResponse';
 export * from './getDeploymentResponseAllOf';
 export * from './getDeviceResponse';
@@ -190,6 +197,8 @@ export * from './getThemesResponse';
 export * from './getThemesResponseAllOf';
 export * from './getThirdPartyAuthResponse';
 export * from './getThirdPartyAuthResponseAllOf';
+export * from './getUserNeedToSetPasswordResponse';
+export * from './getUserNeedToSetPasswordResponseAllOf';
 export * from './getUserResponse';
 export * from './getUserResponseAllOf';
 export * from './getUserResponseAllOfOrganizations';
@@ -263,6 +272,9 @@ export * from './listOrganizationPortalsResponseAllOf';
 export * from './listOrganizationPortalsResponseAllOfPortals';
 export * from './listOrganizationProjectsResponse';
 export * from './listOrganizationProjectsResponseAllOf';
+export * from './listOrganizationSecretsResponse';
+export * from './listOrganizationSecretsResponseAllOf';
+export * from './listOrganizationSecretsResponseAllOfSecrets';
 export * from './listOrganizationTransferLearningBlocksResponse';
 export * from './listOrganizationTransferLearningBlocksResponseAllOf';
 export * from './listOrganizationTransformationBlocksResponse';
@@ -369,7 +381,9 @@ export * from './removeCollaboratorRequest';
 export * from './removeMemberRequest';
 export * from './renameDeviceRequest';
 export * from './renameSampleRequest';
+export * from './requestActivationRequest';
 export * from './requestResetPasswordRequest';
+export * from './resendOrganizationMemberInviteRequest';
 export * from './resetPasswordRequest';
 export * from './restoreProjectFromPublicRequest';
 export * from './restoreProjectRequest';
@@ -390,9 +404,11 @@ export * from './setOrganizationDataDatasetRequest';
 export * from './setProjectComputeTimeRequest';
 export * from './setProjectDspFileSizeRequest';
 export * from './setSyntiantPosteriorRequest';
+export * from './setUserPasswordRequest';
 export * from './socketTokenResponse';
 export * from './socketTokenResponseAllOf';
 export * from './socketTokenResponseAllOfToken';
+export * from './splitSampleInFramesRequest';
 export * from './startApplicationTestingRequest';
 export * from './startJobResponse';
 export * from './startJobResponseAllOf';
@@ -478,6 +494,9 @@ import { AddOrganizationDeployBlockRequest } from './addOrganizationDeployBlockR
 import { AddOrganizationDeployBlockResponse } from './addOrganizationDeployBlockResponse';
 import { AddOrganizationDspBlockRequest } from './addOrganizationDspBlockRequest';
 import { AddOrganizationDspBlockResponse } from './addOrganizationDspBlockResponse';
+import { AddOrganizationSecretRequest } from './addOrganizationSecretRequest';
+import { AddOrganizationSecretResponse } from './addOrganizationSecretResponse';
+import { AddOrganizationSecretResponseAllOf } from './addOrganizationSecretResponseAllOf';
 import { AddOrganizationTransferLearningBlockRequest } from './addOrganizationTransferLearningBlockRequest';
 import { AddOrganizationTransferLearningBlockResponse } from './addOrganizationTransferLearningBlockResponse';
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
@@ -566,6 +585,9 @@ import { DSPMetadataIncludedSamples } from './dSPMetadataIncludedSamples';
 import { DSPMetadataOutputConfig } from './dSPMetadataOutputConfig';
 import { DSPMetadataOutputConfigShape } from './dSPMetadataOutputConfigShape';
 import { DSPMetadataResponse } from './dSPMetadataResponse';
+import { DataExplorerFeaturesResponse } from './dataExplorerFeaturesResponse';
+import { DataExplorerFeaturesResponseAllOf } from './dataExplorerFeaturesResponseAllOf';
+import { DataExplorerSettings } from './dataExplorerSettings';
 import { DependencyData } from './dependencyData';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
@@ -627,6 +649,7 @@ import { GetApplicationTestingRawResultResponse } from './getApplicationTestingR
 import { GetApplicationTestingRawResultResponseAllOf } from './getApplicationTestingRawResultResponseAllOf';
 import { GetApplicationTestingStatusResponse } from './getApplicationTestingStatusResponse';
 import { GetApplicationTestingStatusResponseAllOf } from './getApplicationTestingStatusResponseAllOf';
+import { GetDataExplorerSettingsResponse } from './getDataExplorerSettingsResponse';
 import { GetDeploymentResponse } from './getDeploymentResponse';
 import { GetDeploymentResponseAllOf } from './getDeploymentResponseAllOf';
 import { GetDeviceResponse } from './getDeviceResponse';
@@ -657,6 +680,8 @@ import { GetThemesResponse } from './getThemesResponse';
 import { GetThemesResponseAllOf } from './getThemesResponseAllOf';
 import { GetThirdPartyAuthResponse } from './getThirdPartyAuthResponse';
 import { GetThirdPartyAuthResponseAllOf } from './getThirdPartyAuthResponseAllOf';
+import { GetUserNeedToSetPasswordResponse } from './getUserNeedToSetPasswordResponse';
+import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
 import { GetUserResponse } from './getUserResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
@@ -730,6 +755,9 @@ import { ListOrganizationPortalsResponseAllOf } from './listOrganizationPortalsR
 import { ListOrganizationPortalsResponseAllOfPortals } from './listOrganizationPortalsResponseAllOfPortals';
 import { ListOrganizationProjectsResponse } from './listOrganizationProjectsResponse';
 import { ListOrganizationProjectsResponseAllOf } from './listOrganizationProjectsResponseAllOf';
+import { ListOrganizationSecretsResponse } from './listOrganizationSecretsResponse';
+import { ListOrganizationSecretsResponseAllOf } from './listOrganizationSecretsResponseAllOf';
+import { ListOrganizationSecretsResponseAllOfSecrets } from './listOrganizationSecretsResponseAllOfSecrets';
 import { ListOrganizationTransferLearningBlocksResponse } from './listOrganizationTransferLearningBlocksResponse';
 import { ListOrganizationTransferLearningBlocksResponseAllOf } from './listOrganizationTransferLearningBlocksResponseAllOf';
 import { ListOrganizationTransformationBlocksResponse } from './listOrganizationTransformationBlocksResponse';
@@ -836,7 +864,9 @@ import { RemoveCollaboratorRequest } from './removeCollaboratorRequest';
 import { RemoveMemberRequest } from './removeMemberRequest';
 import { RenameDeviceRequest } from './renameDeviceRequest';
 import { RenameSampleRequest } from './renameSampleRequest';
+import { RequestActivationRequest } from './requestActivationRequest';
 import { RequestResetPasswordRequest } from './requestResetPasswordRequest';
+import { ResendOrganizationMemberInviteRequest } from './resendOrganizationMemberInviteRequest';
 import { ResetPasswordRequest } from './resetPasswordRequest';
 import { RestoreProjectFromPublicRequest } from './restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from './restoreProjectRequest';
@@ -857,9 +887,11 @@ import { SetOrganizationDataDatasetRequest } from './setOrganizationDataDatasetR
 import { SetProjectComputeTimeRequest } from './setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from './setProjectDspFileSizeRequest';
 import { SetSyntiantPosteriorRequest } from './setSyntiantPosteriorRequest';
+import { SetUserPasswordRequest } from './setUserPasswordRequest';
 import { SocketTokenResponse } from './socketTokenResponse';
 import { SocketTokenResponseAllOf } from './socketTokenResponseAllOf';
 import { SocketTokenResponseAllOfToken } from './socketTokenResponseAllOfToken';
+import { SplitSampleInFramesRequest } from './splitSampleInFramesRequest';
 import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
 import { StartJobResponse } from './startJobResponse';
 import { StartJobResponseAllOf } from './startJobResponseAllOf';
@@ -961,8 +993,10 @@ let enumsMap: {[index: string]: any} = {
     "CreateUserThirdPartyResponseStatusEnum": "CreateUserThirdPartyResponseStatusEnum",
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
     "DSPMetadataOutputConfigTypeEnum": "DSPMetadataOutputConfigTypeEnum",
+    "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
     "DeploymentTargetUiSectionEnum": "DeploymentTargetUiSectionEnum",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
+    "GetDataExplorerSettingsResponsePresetEnum": "GetDataExplorerSettingsResponsePresetEnum",
     "GetJWTTokenRequestSsoTypeEnum": "GetJWTTokenRequestSsoTypeEnum",
     "ImpulseBlockVersionResizeModeEnum": "ImpulseBlockVersionResizeModeEnum",
     "ImpulseBlockVersionResizeMethodEnum": "ImpulseBlockVersionResizeMethodEnum",
@@ -974,7 +1008,9 @@ let enumsMap: {[index: string]: any} = {
     "InputBlockTypeEnum": "InputBlockTypeEnum",
     "InviteMemberRequestRoleEnum": "InviteMemberRequestRoleEnum",
     "KerasModelMetadataModeEnum": "KerasModelMetadataModeEnum",
+    "KerasModelMetadataObjectDetectionLastLayerEnum": "KerasModelMetadataObjectDetectionLastLayerEnum",
     "KerasModelMetadataAllOfModeEnum": "KerasModelMetadataAllOfModeEnum",
+    "KerasModelMetadataAllOfObjectDetectionLastLayerEnum": "KerasModelMetadataAllOfObjectDetectionLastLayerEnum",
     "KerasModelTypeEnum": "KerasModelTypeEnum",
     "KerasResponseModeEnum": "KerasResponseModeEnum",
     "KerasResponseAllOfModeEnum": "KerasResponseAllOfModeEnum",
@@ -1040,6 +1076,9 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationDeployBlockResponse": AddOrganizationDeployBlockResponse,
     "AddOrganizationDspBlockRequest": AddOrganizationDspBlockRequest,
     "AddOrganizationDspBlockResponse": AddOrganizationDspBlockResponse,
+    "AddOrganizationSecretRequest": AddOrganizationSecretRequest,
+    "AddOrganizationSecretResponse": AddOrganizationSecretResponse,
+    "AddOrganizationSecretResponseAllOf": AddOrganizationSecretResponseAllOf,
     "AddOrganizationTransferLearningBlockRequest": AddOrganizationTransferLearningBlockRequest,
     "AddOrganizationTransferLearningBlockResponse": AddOrganizationTransferLearningBlockResponse,
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
@@ -1127,6 +1166,9 @@ let typeMap: {[index: string]: any} = {
     "DSPMetadataOutputConfig": DSPMetadataOutputConfig,
     "DSPMetadataOutputConfigShape": DSPMetadataOutputConfigShape,
     "DSPMetadataResponse": DSPMetadataResponse,
+    "DataExplorerFeaturesResponse": DataExplorerFeaturesResponse,
+    "DataExplorerFeaturesResponseAllOf": DataExplorerFeaturesResponseAllOf,
+    "DataExplorerSettings": DataExplorerSettings,
     "DependencyData": DependencyData,
     "DeploymentTarget": DeploymentTarget,
     "DeploymentTargetBadge": DeploymentTargetBadge,
@@ -1188,6 +1230,7 @@ let typeMap: {[index: string]: any} = {
     "GetApplicationTestingRawResultResponseAllOf": GetApplicationTestingRawResultResponseAllOf,
     "GetApplicationTestingStatusResponse": GetApplicationTestingStatusResponse,
     "GetApplicationTestingStatusResponseAllOf": GetApplicationTestingStatusResponseAllOf,
+    "GetDataExplorerSettingsResponse": GetDataExplorerSettingsResponse,
     "GetDeploymentResponse": GetDeploymentResponse,
     "GetDeploymentResponseAllOf": GetDeploymentResponseAllOf,
     "GetDeviceResponse": GetDeviceResponse,
@@ -1218,6 +1261,8 @@ let typeMap: {[index: string]: any} = {
     "GetThemesResponseAllOf": GetThemesResponseAllOf,
     "GetThirdPartyAuthResponse": GetThirdPartyAuthResponse,
     "GetThirdPartyAuthResponseAllOf": GetThirdPartyAuthResponseAllOf,
+    "GetUserNeedToSetPasswordResponse": GetUserNeedToSetPasswordResponse,
+    "GetUserNeedToSetPasswordResponseAllOf": GetUserNeedToSetPasswordResponseAllOf,
     "GetUserResponse": GetUserResponse,
     "GetUserResponseAllOf": GetUserResponseAllOf,
     "GetUserResponseAllOfOrganizations": GetUserResponseAllOfOrganizations,
@@ -1288,6 +1333,9 @@ let typeMap: {[index: string]: any} = {
     "ListOrganizationPortalsResponseAllOfPortals": ListOrganizationPortalsResponseAllOfPortals,
     "ListOrganizationProjectsResponse": ListOrganizationProjectsResponse,
     "ListOrganizationProjectsResponseAllOf": ListOrganizationProjectsResponseAllOf,
+    "ListOrganizationSecretsResponse": ListOrganizationSecretsResponse,
+    "ListOrganizationSecretsResponseAllOf": ListOrganizationSecretsResponseAllOf,
+    "ListOrganizationSecretsResponseAllOfSecrets": ListOrganizationSecretsResponseAllOfSecrets,
     "ListOrganizationTransferLearningBlocksResponse": ListOrganizationTransferLearningBlocksResponse,
     "ListOrganizationTransferLearningBlocksResponseAllOf": ListOrganizationTransferLearningBlocksResponseAllOf,
     "ListOrganizationTransformationBlocksResponse": ListOrganizationTransformationBlocksResponse,
@@ -1394,7 +1442,9 @@ let typeMap: {[index: string]: any} = {
     "RemoveMemberRequest": RemoveMemberRequest,
     "RenameDeviceRequest": RenameDeviceRequest,
     "RenameSampleRequest": RenameSampleRequest,
+    "RequestActivationRequest": RequestActivationRequest,
     "RequestResetPasswordRequest": RequestResetPasswordRequest,
+    "ResendOrganizationMemberInviteRequest": ResendOrganizationMemberInviteRequest,
     "ResetPasswordRequest": ResetPasswordRequest,
     "RestoreProjectFromPublicRequest": RestoreProjectFromPublicRequest,
     "RestoreProjectRequest": RestoreProjectRequest,
@@ -1415,9 +1465,11 @@ let typeMap: {[index: string]: any} = {
     "SetProjectComputeTimeRequest": SetProjectComputeTimeRequest,
     "SetProjectDspFileSizeRequest": SetProjectDspFileSizeRequest,
     "SetSyntiantPosteriorRequest": SetSyntiantPosteriorRequest,
+    "SetUserPasswordRequest": SetUserPasswordRequest,
     "SocketTokenResponse": SocketTokenResponse,
     "SocketTokenResponseAllOf": SocketTokenResponseAllOf,
     "SocketTokenResponseAllOfToken": SocketTokenResponseAllOfToken,
+    "SplitSampleInFramesRequest": SplitSampleInFramesRequest,
     "StartApplicationTestingRequest": StartApplicationTestingRequest,
     "StartJobResponse": StartJobResponse,
     "StartJobResponseAllOf": StartJobResponseAllOf,

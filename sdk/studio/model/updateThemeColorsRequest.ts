@@ -16,25 +16,16 @@
 */
 export class UpdateThemeColorsRequest {
     /**
-    * Primary color for projects in hex
+    * Primary color in hex format
     */
-    'projectsPrimary'?: string;
-    /**
-    * Primary color for organizations in hex
-    */
-    'organizationsPrimary'?: string;
+    'primaryColor'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectsPrimary",
-            "baseName": "projectsPrimary",
-            "type": "string"
-        },
-        {
-            "name": "organizationsPrimary",
-            "baseName": "organizationsPrimary",
+            "name": "primaryColor",
+            "baseName": "primaryColor",
             "type": "string"
         }    ];
 

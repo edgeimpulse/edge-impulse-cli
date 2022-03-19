@@ -17,6 +17,8 @@ export class Whitelabel {
     'domain': string;
     'ownerOrganizationId'?: number;
     'themeId': number;
+    'identityProviders': Array<string>;
+    'allowPasswordAuth': boolean;
     'deploymentTargets': Array<string>;
 
     static discriminator: string | undefined = undefined;
@@ -46,6 +48,16 @@ export class Whitelabel {
             "name": "themeId",
             "baseName": "themeId",
             "type": "number"
+        },
+        {
+            "name": "identityProviders",
+            "baseName": "identityProviders",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allowPasswordAuth",
+            "baseName": "allowPasswordAuth",
+            "type": "boolean"
         },
         {
             "name": "deploymentTargets",

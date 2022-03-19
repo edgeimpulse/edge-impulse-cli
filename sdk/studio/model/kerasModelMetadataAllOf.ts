@@ -38,6 +38,10 @@ export class KerasModelMetadataAllOf {
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
     'hasTrainedModel': boolean;
     'mode': KerasModelMetadataAllOfModeEnum;
+    /**
+    * Last layer of the object detection model, only set when \"mode\" is \"object-detection\"
+    */
+    'objectDetectionLastLayer'?: KerasModelMetadataAllOfObjectDetectionLastLayerEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -54,22 +58,22 @@ export class KerasModelMetadataAllOf {
         },
         {
             "name": "classNames",
-            "baseName": "class_names",
+            "baseName": "classNames",
             "type": "Array<string>"
         },
         {
             "name": "availableModelTypes",
-            "baseName": "available_model_types",
+            "baseName": "availableModelTypes",
             "type": "Array<KerasModelTypeEnum>"
         },
         {
             "name": "recommendedModelType",
-            "baseName": "recommended_model_type",
+            "baseName": "recommendedModelType",
             "type": "KerasModelTypeEnum"
         },
         {
             "name": "modelValidationMetrics",
-            "baseName": "model_validation_metrics",
+            "baseName": "modelValidationMetrics",
             "type": "Array<KerasModelMetadataMetrics>"
         },
         {
@@ -81,6 +85,11 @@ export class KerasModelMetadataAllOf {
             "name": "mode",
             "baseName": "mode",
             "type": "KerasModelMetadataAllOfModeEnum"
+        },
+        {
+            "name": "objectDetectionLastLayer",
+            "baseName": "objectDetectionLastLayer",
+            "type": "KerasModelMetadataAllOfObjectDetectionLastLayerEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -89,5 +98,8 @@ export class KerasModelMetadataAllOf {
 }
 
 
-export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection' | 'segmentation';
-export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'segmentation'];
+export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection';
+export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];
+
+export type KerasModelMetadataAllOfObjectDetectionLastLayerEnum = 'mobilenet-ssd' | 'fomo' | 'yolov5';
+export const KerasModelMetadataAllOfObjectDetectionLastLayerEnumValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5'];

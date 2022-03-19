@@ -1141,7 +1141,7 @@ export class RequiresSudoApi {
         });
     }
     /**
-     * Update some or all of the deployment targets enabled for this whitelabel.
+     * Update some or all of the deployment targets enabled for this white label.
      * @summary Update deployment targets
      * @param whitelabelId Whitelabel ID
      * @param updateWhitelabelDeploymentTargetsRequest 

@@ -20,6 +20,10 @@ export class CreateProjectRequest {
     * The ID of the version that was used to restore this project.
     */
     'originalProjectVersionId'?: number;
+    /**
+    * White label domain, if any
+    */
+    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +37,11 @@ export class CreateProjectRequest {
             "name": "originalProjectVersionId",
             "baseName": "originalProjectVersionId",
             "type": "number"
+        },
+        {
+            "name": "whitelabel",
+            "baseName": "whitelabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

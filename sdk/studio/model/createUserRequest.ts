@@ -27,7 +27,7 @@ export class CreateUserRequest {
     /**
     * Password, minimum length 8 characters.
     */
-    'password': string;
+    'password'?: string;
     /**
     * A project will automatically be created. Sets the name of the first project. If not set, this will be derived from the username.
     */
@@ -36,6 +36,18 @@ export class CreateUserRequest {
     * Whether the user accepted the privacy policy
     */
     'privacyPolicy': boolean;
+    /**
+    * Activation token for users created via SSO
+    */
+    'activationToken'?: string;
+    /**
+    * Unique identifier of the identity provider asserting the identity of this user
+    */
+    'identityProvider'?: string;
+    /**
+    * White label domain, if any
+    */
+    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +81,21 @@ export class CreateUserRequest {
             "name": "privacyPolicy",
             "baseName": "privacyPolicy",
             "type": "boolean"
+        },
+        {
+            "name": "activationToken",
+            "baseName": "activationToken",
+            "type": "string"
+        },
+        {
+            "name": "identityProvider",
+            "baseName": "identityProvider",
+            "type": "string"
+        },
+        {
+            "name": "whitelabel",
+            "baseName": "whitelabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

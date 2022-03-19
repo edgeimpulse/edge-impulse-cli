@@ -27,6 +27,7 @@ export class UpdateOrganizationTransformationBlockRequest {
     'limitsMemory'?: number;
     'additionalMountPoints'?: Array<TransformationBlockAdditionalMountPoint>;
     'operatesOn'?: UpdateOrganizationTransformationBlockRequestOperatesOnEnum;
+    'allowExtraCliArguments'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -85,6 +86,11 @@ export class UpdateOrganizationTransformationBlockRequest {
             "name": "operatesOn",
             "baseName": "operatesOn",
             "type": "UpdateOrganizationTransformationBlockRequestOperatesOnEnum"
+        },
+        {
+            "name": "allowExtraCliArguments",
+            "baseName": "allowExtraCliArguments",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

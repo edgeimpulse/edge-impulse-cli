@@ -22,6 +22,14 @@ export class CreateWhitelabelRequest {
     'domain': string;
     'ownerOrganizationId': number;
     /**
+    * The list of allowed identity providers.
+    */
+    'identityProviders': Array<string>;
+    /**
+    * Whether this white label accepts password based authentication.
+    */
+    'allowPasswordAuth': boolean;
+    /**
     * The list of deployment targets to show on the UI
     */
     'deploymentTargets': Array<string>;
@@ -43,6 +51,16 @@ export class CreateWhitelabelRequest {
             "name": "ownerOrganizationId",
             "baseName": "ownerOrganizationId",
             "type": "number"
+        },
+        {
+            "name": "identityProviders",
+            "baseName": "identityProviders",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allowPasswordAuth",
+            "baseName": "allowPasswordAuth",
+            "type": "boolean"
         },
         {
             "name": "deploymentTargets",

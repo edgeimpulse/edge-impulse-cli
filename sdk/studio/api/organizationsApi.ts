@@ -25,6 +25,7 @@ import { ListOrganizationProjectsResponse } from '../model/listOrganizationProje
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
 import { OrganizationInfoResponse } from '../model/organizationInfoResponse';
 import { RemoveMemberRequest } from '../model/removeMemberRequest';
+import { ResendOrganizationMemberInviteRequest } from '../model/resendOrganizationMemberInviteRequest';
 import { SetMemberDatasetsRequest } from '../model/setMemberDatasetsRequest';
 import { SetMemberRoleRequest } from '../model/setMemberRoleRequest';
 import { UpdateOrganizationRequest } from '../model/updateOrganizationRequest';
@@ -819,8 +820,9 @@ export class OrganizationsApi {
      * @summary Resend invitation
      * @param organizationId Organization ID
      * @param memberId Member ID
+     * @param resendOrganizationMemberInviteRequest 
      */
-    public async resendOrganizationMemberInvite (organizationId: number, memberId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async resendOrganizationMemberInvite (organizationId: number, memberId: number, resendOrganizationMemberInviteRequest: ResendOrganizationMemberInviteRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/members/{memberId}/resend-invite'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'memberId' + '}', encodeURIComponent(String(memberId)));
@@ -845,6 +847,11 @@ export class OrganizationsApi {
             throw new Error('Required parameter memberId was null or undefined when calling resendOrganizationMemberInvite.');
         }
 
+        // verify required parameter 'resendOrganizationMemberInviteRequest' is not null or undefined
+        if (resendOrganizationMemberInviteRequest === null || resendOrganizationMemberInviteRequest === undefined) {
+            throw new Error('Required parameter resendOrganizationMemberInviteRequest was null or undefined when calling resendOrganizationMemberInvite.');
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -857,6 +864,7 @@ export class OrganizationsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
+            body: ObjectSerializer.serialize(resendOrganizationMemberInviteRequest, "ResendOrganizationMemberInviteRequest")
         };
 
         let authenticationPromise = Promise.resolve();

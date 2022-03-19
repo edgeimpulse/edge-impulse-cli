@@ -31,7 +31,7 @@ export class AnomalyModelMetadataClusters {
         },
         {
             "name": "maxError",
-            "baseName": "max_error",
+            "baseName": "maxError",
             "type": "number"
         }    ];
 

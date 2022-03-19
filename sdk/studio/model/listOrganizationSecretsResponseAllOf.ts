@@ -10,33 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { ListOrganizationSecretsResponseAllOfSecrets } from './listOrganizationSecretsResponseAllOfSecrets';
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
-    /**
-    * The name of the project.
-    */
-    'projectName': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
+export class ListOrganizationSecretsResponseAllOf {
+    'secrets': Array<ListOrganizationSecretsResponseAllOfSecrets>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
+            "name": "secrets",
+            "baseName": "secrets",
+            "type": "Array<ListOrganizationSecretsResponseAllOfSecrets>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return ListOrganizationSecretsResponseAllOf.attributeTypeMap;
     }
 }
 

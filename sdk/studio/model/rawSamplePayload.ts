@@ -66,12 +66,12 @@ export class RawSamplePayload {
         },
         {
             "name": "cropStart",
-            "baseName": "crop_start",
+            "baseName": "cropStart",
             "type": "number"
         },
         {
             "name": "cropEnd",
-            "baseName": "crop_end",
+            "baseName": "cropEnd",
             "type": "number"
         }    ];
 

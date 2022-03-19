@@ -24,6 +24,7 @@ export class OrganizationPipelineStep {
     'outputDatasetName'?: string;
     'label'?: string;
     'transformationParallel'?: number;
+    'extraCliArguments'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +88,11 @@ export class OrganizationPipelineStep {
             "name": "transformationParallel",
             "baseName": "transformationParallel",
             "type": "number"
+        },
+        {
+            "name": "extraCliArguments",
+            "baseName": "extraCliArguments",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

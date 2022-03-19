@@ -11,13 +11,17 @@
  */
 
 
-export class UpdateOrganizationCreateEmptyProjectRequest {
+export class GetUserNeedToSetPasswordResponseAllOf {
     /**
-    * The name of the project.
+    * User email
     */
-    'projectName': string;
+    'email'?: string;
     /**
-    * White label domain, if any
+    * Whether the user needs to set its password or not
+    */
+    'needPassword'?: boolean;
+    /**
+    * White label domain the user belongs to, if any
     */
     'whitelabel'?: string;
 
@@ -25,9 +29,14 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
+            "name": "email",
+            "baseName": "email",
             "type": "string"
+        },
+        {
+            "name": "needPassword",
+            "baseName": "needPassword",
+            "type": "boolean"
         },
         {
             "name": "whitelabel",
@@ -36,7 +45,7 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateOrganizationCreateEmptyProjectRequest.attributeTypeMap;
+        return GetUserNeedToSetPasswordResponseAllOf.attributeTypeMap;
     }
 }
 

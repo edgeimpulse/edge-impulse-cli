@@ -83,6 +83,9 @@ export interface ClientInitUser {
 }
 
 export interface ClientInitStudioOptions {
+    studioHost: string;
+    ingestionHost: string;
+    remoteMgmtHost: string;
     pageType: PageType;
     gaId: string;
     userId: number;
@@ -103,6 +106,9 @@ export interface ClientInitStudioOptions {
 }
 
 export interface ClientInitOrganizationOptions {
+    studioHost: string;
+    ingestionHost: string;
+    remoteMgmtHost: string;
     pageType: PageType;
     gaId: string;
     userId: number;
@@ -119,6 +125,9 @@ export interface ClientInitOrganizationOptions {
 }
 
 export interface ClientInitOrganizationPortalOptions {
+    studioHost: string;
+    ingestionHost: string;
+    remoteMgmtHost: string;
     pageType: PageType;
     portalId: number;
     baseUrl: string;
@@ -131,6 +140,9 @@ export interface ClientInitOrganizationPortalOptions {
 }
 
 export interface ClientInitFormOptions {
+    studioHost: string;
+    ingestionHost: string;
+    remoteMgmtHost: string;
     pageType: PageType;
     gaId: string;
     userId: number;
@@ -141,6 +153,9 @@ export interface ClientInitFormOptions {
 }
 
 export interface ClientInitPublicOptions {
+    studioHost: string;
+    ingestionHost: string;
+    remoteMgmtHost: string;
     pageType: PageType;
     gaId: string;
     staticAssetsPrefix: string;

@@ -368,7 +368,15 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                             device_type: 'DATA_FORWARDER',
                             interval_ms: 1000 / dataForwarderConfig.samplingFreq,
                             sensors: dataForwarderConfig.sensors.map(z => {
-                                return { name: z, units: z.startsWith('acc') ? 'm/s2' : 'N/A' };
+                                let units = 'N/A';
+                                if (z.startsWith('acc')) {
+                                    units = 'm/s2';
+                                }
+                                else if (z === 'audio') {
+                                    units = 'wav';
+                                }
+
+                                return { name: z, units: units };
                             }),
                             values: values
                         }

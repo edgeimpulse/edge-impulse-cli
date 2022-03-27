@@ -52,6 +52,7 @@ export enum PageType {
     OrganizationDsp = 103,
     OrganizationTransferLearning = 104,
     OrganizationSettings = 105,
+    OrganizationDatasets = 106,
     UploadPortal = 200,
 }
 

@@ -36,6 +36,7 @@ export enum PageType {
     Redirect = 34,
     DataExplorer = 35,
     SetPasswordSuccess = 36,
+    DataSources = 37,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -95,6 +96,7 @@ export interface ClientInitStudioOptions {
     projectName: string;
     projectOwnerOrganizationId: number | undefined;
     socketToken: string;
+    orgSocketToken: string | undefined;
     connectedDevices: ClientConnectedDevice[];
     staticAssetsPrefix: string;
     sentryDSN?: string;

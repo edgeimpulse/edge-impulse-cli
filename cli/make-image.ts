@@ -184,7 +184,7 @@ export function makeWav(buffer: Buffer, hmacKey: string | undefined) {
 
 export function upload(opts: {
     filename: string,
-    label: string | undefined,
+    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
     allowDuplicates: boolean,
     apiKey: string,
     processed: {
@@ -204,9 +204,14 @@ export function upload(opts: {
         'Connection': 'keep-alive'
     };
 
-    if (opts.label) {
-        headers['x-label'] = encodeLabel(opts.label);
+    if (opts.label.type === 'label') {
+        headers['x-label'] = encodeLabel(opts.label.label);
     }
+    else if (opts.label.type === 'unlabeled') {
+        headers['x-label'] = encodeLabel('');
+        headers['x-no-label'] = '1';
+    }
+
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
     }

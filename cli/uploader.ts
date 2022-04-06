@@ -11,7 +11,7 @@ import { Config } from './config';
 type UploaderFileType = {
     path: string,
     category: string,
-    label: string | undefined
+    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string }
 };
 
 // These types are shared with jobs-container/node/export/shared/jobs/export.ts
@@ -19,6 +19,15 @@ interface ExportBoundingBoxesFile {
     version: 1;
     type: 'bounding-box-labels';
     boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
+}
+
+interface InfoFileV1 {
+    version: 1;
+    files: {
+        path: string,
+        category: string,
+        label: { type: 'unlabeled' } | { type: 'label', label: string },
+    }[];
 }
 
 const versionArgv = process.argv.indexOf('--version') > -1;
@@ -45,6 +54,8 @@ const progressIvArgvIx = process.argv.indexOf('--progress-interval');
 const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx + 1] : undefined;
 const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
+const infoFileArgvIx = process.argv.indexOf('--info-file');
+const infoFileArgv = infoFileArgvIx !== -1 ? process.argv[infoFileArgvIx + 1] : undefined;
 
 let configFactory: Config;
 
@@ -118,6 +129,7 @@ const cliOptions = {
     if (progressIvArgv) argv += 2;
     if (allowDuplicatesArgv) argv++;
     if (openmvArgv) argv++;
+    if (infoFileArgv) argv += 2;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -140,84 +152,116 @@ const cliOptions = {
 
         let files: UploaderFileType[];
 
-        let fileArgs = process.argv.slice(argv);
+        if (infoFileArgv) {
+            try {
+                let infoFile = <InfoFileV1>JSON.parse(<string>await fs.promises.readFile(infoFileArgv, 'utf-8'));
+                if (infoFile.version !== 1) {
+                    throw new Error('Invalid version, expected "1"');
+                }
+                if (!Array.isArray(infoFile.files)) {
+                    throw new Error('Invalid files, expected an array');
+                }
 
-        if (fileArgs.length === 1 && Path.basename(fileArgs[0]) === 'bounding_boxes.labels') {
-            console.log(``);
-            console.log(`You don't need to upload "bounding_boxes.labels". When uploading an image we check whether ` +
-                        `a labels file is present in the same folder, and automatically attach the bounding boxes ` +
-                        `to the image.`);
-            console.log(`So you can just do:`);
-            console.log(`    edge-impulse-uploader yourimage.jpg`);
-            console.log(``);
-            process.exit(1);
-        }
-
-        // exclude 'bounding_boxes.labels'
-        fileArgs = fileArgs.filter(f => Path.basename(f) !== 'bounding_boxes.labels');
-
-        if (!fileArgs[0]) {
-            console.log('Requires at least one argument (a ' +
-                validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
-                validExtensions[validExtensions.length - 1] + ' file)');
-            process.exit(1);
-        }
-
-        if (openmvArgv) {
-            if (categoryArgv || labelArgv) {
-                console.log('--format-openmv cannot be used in conjunction with --category or --label');
-                process.exit(1);
-            }
-
-            if (fileArgs.length > 1) {
-                console.log('Requires one argument (the OpenMV dataset directory)');
-                process.exit(1);
-            }
-
-            if (!fs.statSync(fileArgs[0]).isDirectory()) {
-                console.log(fileArgs[0] + ' is not a directory (required for --format-openmv)');
-                process.exit(1);
-            }
-
-            let categoryFolders = fs.readdirSync(fileArgs[0]).filter(d => d.endsWith('.class'));
-            if (categoryFolders.length === 0) {
-                console.log(fileArgs[0] + ' does not seem to be an OpenMV dataset directory, no ' +
-                    'subdirectories found that end with .class');
-                process.exit(1);
-            }
-
-            files = [];
-
-            for (let categoryFolder of categoryFolders) {
-                for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
+                files = [];
+                for (let f of infoFile.files) {
                     files.push({
-                        path: Path.join(fileArgs[0], categoryFolder, f),
-                        category: 'split',
-                        label: categoryFolder.replace('.class', '')
+                        category: f.category,
+                        label: f.label,
+                        path: f.path
                     });
                 }
             }
+            catch (ex2) {
+                console.error('Failed to parse --info-file', ex2);
+                process.exit(1);
+            }
         }
         else {
-            if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
-                console.log('Cannot handle this file, only ' + validExtensions.join(', ') + ' supported:', fileArgs[0]);
+
+            let fileArgs = process.argv.slice(argv);
+
+            if (fileArgs.length === 1 && Path.basename(fileArgs[0]) === 'bounding_boxes.labels') {
+                console.log(``);
+                console.log(`You don't need to upload "bounding_boxes.labels". When uploading an image we check ` +
+                            `whether ` +
+                            `a labels file is present in the same folder, and automatically attach the bounding ` +
+                            `boxes to the image.`);
+                console.log(`So you can just do:`);
+                console.log(`    edge-impulse-uploader yourimage.jpg`);
+                console.log(``);
                 process.exit(1);
             }
 
-            // Windows doesn't do expansion like Mac and Linux...
-            if (Path.basename(fileArgs[0], Path.extname(fileArgs[0])) === '*') {
-                fileArgs = (await util.promisify(fs.readdir)(Path.dirname(fileArgs[0]))).filter(v => {
-                    return Path.extname(v) === Path.extname(fileArgs[0]);
-                }).map(f => Path.join(Path.dirname(fileArgs[0]), f));
+            // exclude 'bounding_boxes.labels'
+            fileArgs = fileArgs.filter(f => Path.basename(f) !== 'bounding_boxes.labels');
+
+            if (!fileArgs[0]) {
+                console.log('Requires at least one argument (a ' +
+                    validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
+                    validExtensions[validExtensions.length - 1] + ' file)');
+                process.exit(1);
             }
 
-            files = fileArgs.map(f => {
-                return {
-                    path: f,
-                    category: categoryArgv || 'training',
-                    label: labelArgv || undefined
-                };
-            });
+            if (openmvArgv) {
+                if (categoryArgv || labelArgv) {
+                    console.log('--format-openmv cannot be used in conjunction with --category or --label');
+                    process.exit(1);
+                }
+
+                if (fileArgs.length > 1) {
+                    console.log('Requires one argument (the OpenMV dataset directory)');
+                    process.exit(1);
+                }
+
+                if (!fs.statSync(fileArgs[0]).isDirectory()) {
+                    console.log(fileArgs[0] + ' is not a directory (required for --format-openmv)');
+                    process.exit(1);
+                }
+
+                let categoryFolders = fs.readdirSync(fileArgs[0]).filter(d => d.endsWith('.class'));
+                if (categoryFolders.length === 0) {
+                    console.log(fileArgs[0] + ' does not seem to be an OpenMV dataset directory, no ' +
+                        'subdirectories found that end with .class');
+                    process.exit(1);
+                }
+
+                files = [];
+
+                for (let categoryFolder of categoryFolders) {
+                    for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
+                        files.push({
+                            path: Path.join(fileArgs[0], categoryFolder, f),
+                            category: 'split',
+                            label: { type: 'label', label: categoryFolder.replace('.class', '') }
+                        });
+                    }
+                }
+            }
+            else {
+                if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
+                    console.log('Cannot handle this file, only ' +
+                        validExtensions.join(', ') + ' supported:', fileArgs[0]);
+                    process.exit(1);
+                }
+
+                // Windows doesn't do expansion like Mac and Linux...
+                if (Path.basename(fileArgs[0], Path.extname(fileArgs[0])) === '*') {
+                    fileArgs = (await util.promisify(fs.readdir)(Path.dirname(fileArgs[0]))).filter(v => {
+                        return Path.extname(v) === Path.extname(fileArgs[0]);
+                    }).map(f => Path.join(Path.dirname(fileArgs[0]), f));
+                }
+
+                files = fileArgs.map(f => {
+                    return {
+                        path: f,
+                        category: categoryArgv || 'training',
+                        label: labelArgv ? {
+                            type: 'label',
+                            label: labelArgv
+                        } : { type: 'infer' }
+                    };
+                });
+            }
         }
 
         const { projectId, devKeys } = await setupCliApp(configFactory, config, cliOptions, undefined);

@@ -68,6 +68,12 @@ interface ExtractedFile {
     pipe: any;
 }
 
+type DSPChangedMsg = [string, {
+    dspId: number;
+    status: 'success' | 'error' | 'in-progress';
+    error?: string;
+}];
+
 interface RequestDetailedFile {
     value: Buffer;
     options?: {
@@ -839,7 +845,6 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 }, 5000);
 
                 socket.onmessage = (msg: WebSocket.MessageEvent) => {
-                    // console.log('socket.onmessage', msg);
                     try {
                         let m = <MessageBlock>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
                         if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) return;
@@ -861,6 +866,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                     connectToSocket();
                 };
             }
+
             console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}'...`);
             await connectToSocket();
 
@@ -894,7 +900,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
                     organizationId + '/data';
                 console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
-            } else if (currentBlockConfig.type === 'deploy') {
+            }
+            else if (currentBlockConfig.type === 'deploy') {
                 const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
                 organizationId + '/deployment';
                 console.log(`Your block has been updated and is now available on the Deployment page ` +
@@ -902,6 +909,49 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 console.log(`You can set the block image or update details at ` +
                     organizationStudioPath);
             }
+            else if (currentBlockConfig.type === 'dsp') {
+                process.stdout.write(`Wait a moment, we're spinning up a container for this DSP block...  `);
+
+                let spinIv = spinner();
+
+                while (1) {
+                    let dspStatusRes = await config.api.organizationBlocks.listOrganizationDspBlocks(
+                        currentBlockConfig.organizationId);
+                    if (!dspStatusRes.body.success || !dspStatusRes.body.dspBlocks) {
+                        process.stdout.write('\n');
+                        console.log('Failed to retrieve DSP block status',
+                            dspStatusRes.body.error || dspStatusRes.response);
+                        process.exit(1);
+                    }
+
+                    let block = dspStatusRes.body.dspBlocks.find(d => d.id === currentBlockConfig.id);
+                    if (!block) {
+                        process.stdout.write('\n');
+                        console.log('Failed to find DSP block with ID ' + currentBlockConfig.id + ' in response:',
+                            dspStatusRes.body);
+                        process.exit(1);
+                    }
+                    if (block.isConnected) {
+                        break;
+                    }
+                    else if (block.error) {
+                        process.stdout.write('\n');
+                        console.log('Failed to start container for DSP block:');
+                        console.log(block.error);
+                        process.exit(1);
+                    }
+
+                    // else... not ready yet
+                    await sleep(5000);
+                }
+
+                clearInterval(spinIv);
+            }
+
+            process.stdout.write('\n');
+            console.log(`Done... DSP Block "${currentBlockConfig.name}" is now available for all projects in your organization!`);
+            console.log(`Just head to **Create impulse** and click 'Add processing block' to use this block.`);
+
             process.exit(0);
         }
         catch (e) {
@@ -1023,4 +1073,20 @@ async function exists(path: string) {
         /* noop */
     }
     return x;
+}
+
+/**
+ * Spinner on the terminal
+ * @returns Interval (just call clearInterval to stop the spinner)
+ */
+function spinner() {
+    const spinChars = ['-', '\\', '|', '/'];
+    let spinIx = -1;
+
+    return setInterval(() => {
+        spinIx++;
+        spinIx = spinIx % (spinChars.length);
+
+        process.stdout.write('\b' + (spinChars[spinIx]));
+    }, 250);
 }

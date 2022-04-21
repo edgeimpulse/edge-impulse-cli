@@ -3,4 +3,3 @@ node_modules/
 credentials.json
 *.tgz
 out/
-.DS_Store

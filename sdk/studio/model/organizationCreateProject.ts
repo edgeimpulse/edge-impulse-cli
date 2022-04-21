@@ -27,6 +27,7 @@ export class OrganizationCreateProject {
     'projectId'?: number;
     'projectName'?: string;
     'transformationBlockId'?: number;
+    'builtinTransformationBlock'?: object;
     'transformationBlockName'?: string;
     'category': OrganizationCreateProjectCategoryEnum;
     'created': Date;
@@ -49,6 +50,7 @@ export class OrganizationCreateProject {
     'pipelineName'?: string;
     'pipelineRunId'?: number;
     'pipelineStep'?: number;
+    'operatesOn': OrganizationCreateProjectOperatesOnEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -117,6 +119,11 @@ export class OrganizationCreateProject {
             "name": "transformationBlockId",
             "baseName": "transformationBlockId",
             "type": "number"
+        },
+        {
+            "name": "builtinTransformationBlock",
+            "baseName": "builtinTransformationBlock",
+            "type": "object"
         },
         {
             "name": "transformationBlockName",
@@ -212,6 +219,11 @@ export class OrganizationCreateProject {
             "name": "pipelineStep",
             "baseName": "pipelineStep",
             "type": "number"
+        },
+        {
+            "name": "operatesOn",
+            "baseName": "operatesOn",
+            "type": "OrganizationCreateProjectOperatesOnEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -234,3 +246,6 @@ export const OrganizationCreateProjectUploadJobStatusEnumValues: string[] = ['wa
 
 export type OrganizationCreateProjectCategoryEnum = 'training' | 'testing' | 'split';
 export const OrganizationCreateProjectCategoryEnumValues: string[] = ['training', 'testing', 'split'];
+
+export type OrganizationCreateProjectOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
+export const OrganizationCreateProjectOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

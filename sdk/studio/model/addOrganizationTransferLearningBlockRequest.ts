@@ -10,13 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
 export class AddOrganizationTransferLearningBlockRequest {
     'name': string;
     'dockerContainer': string;
     'description': string;
     'operatesOn': AddOrganizationTransferLearningBlockRequestOperatesOnEnum;
-    'objectDetectionLastLayer'?: AddOrganizationTransferLearningBlockRequestObjectDetectionLastLayerEnum;
+    'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,7 +45,7 @@ export class AddOrganizationTransferLearningBlockRequest {
         {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
-            "type": "AddOrganizationTransferLearningBlockRequestObjectDetectionLastLayerEnum"
+            "type": "ObjectDetectionLastLayer"
         }    ];
 
     static getAttributeTypeMap() {
@@ -55,6 +56,3 @@ export class AddOrganizationTransferLearningBlockRequest {
 
 export type AddOrganizationTransferLearningBlockRequestOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
 export const AddOrganizationTransferLearningBlockRequestOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];
-
-export type AddOrganizationTransferLearningBlockRequestObjectDetectionLastLayerEnum = 'mobilenet-ssd' | 'fomo' | 'yolov5';
-export const AddOrganizationTransferLearningBlockRequestObjectDetectionLastLayerEnumValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5'];

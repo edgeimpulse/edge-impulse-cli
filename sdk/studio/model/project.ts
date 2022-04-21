@@ -34,6 +34,7 @@ export class Project {
     * Metadata about the project
     */
     'metadata': object;
+    'dataExplorerScreenshot'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -97,6 +98,11 @@ export class Project {
             "name": "metadata",
             "baseName": "metadata",
             "type": "object"
+        },
+        {
+            "name": "dataExplorerScreenshot",
+            "baseName": "dataExplorerScreenshot",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

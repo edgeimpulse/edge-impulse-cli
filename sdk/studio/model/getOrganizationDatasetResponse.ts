@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { DataExplorerSettings } from './dataExplorerSettings';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetOrganizationDatasetResponseAllOf } from './getOrganizationDatasetResponseAllOf';
+import { OrganizationDataset } from './organizationDataset';
 
-export class GetDataExplorerSettingsResponse {
+export class GetOrganizationDatasetResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,10 +23,7 @@ export class GetDataExplorerSettingsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * Preset to use for the data explorer. If you set this to \'custom\' you also need to set the input / dsp blocks. The \"keywords\" and \"images\" preset use an embedding model after the DSP which will yield significantly better results.
-    */
-    'preset'?: GetDataExplorerSettingsResponsePresetEnum;
+    'dataset': OrganizationDataset;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,16 +39,13 @@ export class GetDataExplorerSettingsResponse {
             "type": "string"
         },
         {
-            "name": "preset",
-            "baseName": "preset",
-            "type": "GetDataExplorerSettingsResponsePresetEnum"
+            "name": "dataset",
+            "baseName": "dataset",
+            "type": "OrganizationDataset"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetDataExplorerSettingsResponse.attributeTypeMap;
+        return GetOrganizationDatasetResponse.attributeTypeMap;
     }
 }
 
-
-export type GetDataExplorerSettingsResponsePresetEnum = 'keywords' | 'images' | 'current-impulse' | 'current-impulse-embeddings';
-export const GetDataExplorerSettingsResponsePresetEnumValues: string[] = ['keywords', 'images', 'current-impulse', 'current-impulse-embeddings'];

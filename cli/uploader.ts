@@ -7,6 +7,7 @@ import asyncpool from 'tiny-async-pool';
 import { ExportInputBoundingBox, makeCsv, makeImage, makeVideo, makeWav, upload } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
+import { FSHelpers } from './fs-helpers';
 
 type UploaderFileType = {
     path: string,
@@ -279,7 +280,7 @@ const cliOptions = {
         const loadBoundingBoxCache = async (directory: string) => {
             let labelsFile = Path.join(directory, 'bounding_boxes.labels');
 
-            if (!await exists(labelsFile)) {
+            if (!await FSHelpers.exists(labelsFile)) {
                 boundingBoxCache[directory] = undefined;
             }
             else {
@@ -356,13 +357,11 @@ const cliOptions = {
                 return;
             }
 
-            let filename = Path.basename(file.path).split('.')[0];
-
             try {
                 let hrstart = Date.now();
                 await upload({
                     apiKey: apiKeyArgv || devKeys.apiKey || '',
-                    filename: filename,
+                    filename: Path.basename(file.path),
                     processed: processed,
                     allowDuplicates: allowDuplicatesArgv,
                     category: file.category,
@@ -456,16 +455,4 @@ function makeJson(buffer: Buffer) {
         encoded: buffer,
         contentType: 'application/json'
     };
-}
-
-async function exists(path: string) {
-    let fx = false;
-    try {
-        await util.promisify(fs.stat)(path);
-        fx = true;
-    }
-    catch (ex) {
-        /* noop */
-    }
-    return fx;
 }

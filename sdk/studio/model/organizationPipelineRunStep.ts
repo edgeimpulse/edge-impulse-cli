@@ -22,6 +22,7 @@ export class OrganizationPipelineRunStep {
     'projectApiKey'?: string;
     'projectHmacKey'?: string;
     'transformationBlockId'?: number;
+    'builtinTransformationBlock'?: object;
     'category'?: OrganizationPipelineRunStepCategoryEnum;
     'outputDatasetName'?: string;
     'label'?: string;
@@ -74,6 +75,11 @@ export class OrganizationPipelineRunStep {
             "name": "transformationBlockId",
             "baseName": "transformationBlockId",
             "type": "number"
+        },
+        {
+            "name": "builtinTransformationBlock",
+            "baseName": "builtinTransformationBlock",
+            "type": "object"
         },
         {
             "name": "category",

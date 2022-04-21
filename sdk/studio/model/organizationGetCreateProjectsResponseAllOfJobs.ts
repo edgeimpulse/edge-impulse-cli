@@ -23,6 +23,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'projectId'?: number;
     'projectName'?: string;
     'transformationBlockId'?: number;
+    'builtinTransformationBlock'?: object;
     'transformationBlockName'?: string;
     'created': Date;
     'outputDatasetName'?: string;
@@ -88,6 +89,11 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
             "name": "transformationBlockId",
             "baseName": "transformationBlockId",
             "type": "number"
+        },
+        {
+            "name": "builtinTransformationBlock",
+            "baseName": "builtinTransformationBlock",
+            "type": "object"
         },
         {
             "name": "transformationBlockName",

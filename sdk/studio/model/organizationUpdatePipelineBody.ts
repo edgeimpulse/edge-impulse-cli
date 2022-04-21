@@ -21,7 +21,10 @@ export class OrganizationUpdatePipelineBody {
     'intervalStr': string;
     'steps': Array<OrganizationPipelineStep>;
     'dataset'?: string;
+    'projectId'?: number;
     'emailRecipientUids': Array<number>;
+    'notificationWebhook'?: string;
+    'whenToEmail': OrganizationUpdatePipelineBodyWhenToEmailEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,9 +55,24 @@ export class OrganizationUpdatePipelineBody {
             "type": "string"
         },
         {
+            "name": "projectId",
+            "baseName": "projectId",
+            "type": "number"
+        },
+        {
             "name": "emailRecipientUids",
             "baseName": "emailRecipientUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "notificationWebhook",
+            "baseName": "notificationWebhook",
+            "type": "string"
+        },
+        {
+            "name": "whenToEmail",
+            "baseName": "whenToEmail",
+            "type": "OrganizationUpdatePipelineBodyWhenToEmailEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -62,3 +80,6 @@ export class OrganizationUpdatePipelineBody {
     }
 }
 
+
+export type OrganizationUpdatePipelineBodyWhenToEmailEnum = 'always' | 'on_new_data';
+export const OrganizationUpdatePipelineBodyWhenToEmailEnumValues: string[] = ['always', 'on_new_data'];

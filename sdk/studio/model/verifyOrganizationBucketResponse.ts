@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { DataExplorerSettings } from './dataExplorerSettings';
 import { GenericApiResponse } from './genericApiResponse';
+import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucketResponseAllOf';
+import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 
-export class GetDataExplorerSettingsResponse {
+export class VerifyOrganizationBucketResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,9 +24,9 @@ export class GetDataExplorerSettingsResponse {
     */
     'error'?: string;
     /**
-    * Preset to use for the data explorer. If you set this to \'custom\' you also need to set the input / dsp blocks. The \"keywords\" and \"images\" preset use an embedding model after the DSP which will yield significantly better results.
+    * 20 random files from the bucket.
     */
-    'preset'?: GetDataExplorerSettingsResponsePresetEnum;
+    'files': Array<VerifyOrganizationBucketResponseAllOfFiles>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,16 +42,13 @@ export class GetDataExplorerSettingsResponse {
             "type": "string"
         },
         {
-            "name": "preset",
-            "baseName": "preset",
-            "type": "GetDataExplorerSettingsResponsePresetEnum"
+            "name": "files",
+            "baseName": "files",
+            "type": "Array<VerifyOrganizationBucketResponseAllOfFiles>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetDataExplorerSettingsResponse.attributeTypeMap;
+        return VerifyOrganizationBucketResponse.attributeTypeMap;
     }
 }
 
-
-export type GetDataExplorerSettingsResponsePresetEnum = 'keywords' | 'images' | 'current-impulse' | 'current-impulse-embeddings';
-export const GetDataExplorerSettingsResponsePresetEnumValues: string[] = ['keywords', 'images', 'current-impulse', 'current-impulse-embeddings'];

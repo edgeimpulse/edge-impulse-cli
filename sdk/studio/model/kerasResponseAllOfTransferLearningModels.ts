@@ -20,6 +20,8 @@ export class KerasResponseAllOfTransferLearningModels {
     'hasDropout': boolean;
     'defaultNeurons'?: number;
     'defaultDropout'?: number;
+    'defaultLearningRate'?: number;
+    'defaultTrainingCycles'?: number;
     'type': KerasVisualLayerType;
     'organizationModelId'?: number;
 
@@ -59,6 +61,16 @@ export class KerasResponseAllOfTransferLearningModels {
         {
             "name": "defaultDropout",
             "baseName": "defaultDropout",
+            "type": "number"
+        },
+        {
+            "name": "defaultLearningRate",
+            "baseName": "defaultLearningRate",
+            "type": "number"
+        },
+        {
+            "name": "defaultTrainingCycles",
+            "baseName": "defaultTrainingCycles",
             "type": "number"
         },
         {

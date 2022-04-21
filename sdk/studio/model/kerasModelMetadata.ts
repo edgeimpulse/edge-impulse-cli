@@ -15,6 +15,7 @@ import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadataAllOf } from './kerasModelMetadataAllOf';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
 export class KerasModelMetadata {
     /**
@@ -48,10 +49,7 @@ export class KerasModelMetadata {
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
     'hasTrainedModel': boolean;
     'mode': KerasModelMetadataModeEnum;
-    /**
-    * Last layer of the object detection model, only set when \"mode\" is \"object-detection\"
-    */
-    'objectDetectionLastLayer'?: KerasModelMetadataObjectDetectionLastLayerEnum;
+    'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
 
     static discriminator: string | undefined = undefined;
 
@@ -109,7 +107,7 @@ export class KerasModelMetadata {
         {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
-            "type": "KerasModelMetadataObjectDetectionLastLayerEnum"
+            "type": "ObjectDetectionLastLayer"
         }    ];
 
     static getAttributeTypeMap() {
@@ -120,6 +118,3 @@ export class KerasModelMetadata {
 
 export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection';
 export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];
-
-export type KerasModelMetadataObjectDetectionLastLayerEnum = 'mobilenet-ssd' | 'fomo' | 'yolov5';
-export const KerasModelMetadataObjectDetectionLastLayerEnumValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5'];

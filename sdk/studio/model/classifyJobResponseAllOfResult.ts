@@ -11,9 +11,11 @@
  */
 
 import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
+import { Sample } from './sample';
 
 export class ClassifyJobResponseAllOfResult {
     'sampleId': number;
+    'sample': Sample;
     'classifications': Array<ClassifySampleResponseClassification>;
 
     static discriminator: string | undefined = undefined;
@@ -23,6 +25,11 @@ export class ClassifyJobResponseAllOfResult {
             "name": "sampleId",
             "baseName": "sampleId",
             "type": "number"
+        },
+        {
+            "name": "sample",
+            "baseName": "sample",
+            "type": "Sample"
         },
         {
             "name": "classifications",

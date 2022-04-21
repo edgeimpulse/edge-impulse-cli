@@ -83,7 +83,7 @@ export class UploadPortalApi {
     }
 
     /**
-     * Creates a signed link to securelly upload data to s3 bucket directly from the client.
+     * Creates a signed link to securely upload data to s3 bucket directly from the client.
      * @summary Create pre-signed S3 upload link
      * @param portalId Portal ID
      * @param createSignedUploadLinkRequest 

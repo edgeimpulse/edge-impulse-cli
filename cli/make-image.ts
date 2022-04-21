@@ -201,6 +201,7 @@ export function upload(opts: {
         'x-api-key': opts.apiKey,
         'x-file-name': encodeLabel(opts.filename),
         'Content-Type': (!opts.processed.attachments ? opts.processed.contentType : 'multipart/form-data'),
+        'x-no-date-id': '1',
         'Connection': 'keep-alive'
     };
 

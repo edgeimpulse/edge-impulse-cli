@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
 export class OrganizationTransferLearningBlock {
     'id': number;
@@ -21,7 +22,7 @@ export class OrganizationTransferLearningBlock {
     'userId'?: number;
     'userName'?: string;
     'operatesOn': OrganizationTransferLearningBlockOperatesOnEnum;
-    'objectDetectionLastLayer'?: OrganizationTransferLearningBlockObjectDetectionLastLayerEnum;
+    'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,7 +75,7 @@ export class OrganizationTransferLearningBlock {
         {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
-            "type": "OrganizationTransferLearningBlockObjectDetectionLastLayerEnum"
+            "type": "ObjectDetectionLastLayer"
         }    ];
 
     static getAttributeTypeMap() {
@@ -85,6 +86,3 @@ export class OrganizationTransferLearningBlock {
 
 export type OrganizationTransferLearningBlockOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
 export const OrganizationTransferLearningBlockOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];
-
-export type OrganizationTransferLearningBlockObjectDetectionLastLayerEnum = 'mobilenet-ssd' | 'fomo' | 'yolov5';
-export const OrganizationTransferLearningBlockObjectDetectionLastLayerEnumValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5'];

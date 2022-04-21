@@ -10,28 +10,27 @@
  * Do not edit the class manually.
  */
 
-import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
 
-export class GetApplicationTestingStatusResponseAllOf {
-    'available': boolean;
-    'options'?: StartApplicationTestingRequest;
+export class LastModificationDateResponseAllOf {
+    'lastModificationDate'?: Date;
+    'lastVersionDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "available",
-            "baseName": "available",
-            "type": "boolean"
+            "name": "lastModificationDate",
+            "baseName": "lastModificationDate",
+            "type": "Date"
         },
         {
-            "name": "options",
-            "baseName": "options",
-            "type": "StartApplicationTestingRequest"
+            "name": "lastVersionDate",
+            "baseName": "lastVersionDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetApplicationTestingStatusResponseAllOf.attributeTypeMap;
+        return LastModificationDateResponseAllOf.attributeTypeMap;
     }
 }
 

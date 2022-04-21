@@ -11,20 +11,32 @@
  */
 
 
-export class UploadReadmeImageRequest {
-    'image':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+export class VerifyOrganizationBucketResponseAllOfFiles {
+    'name': string;
+    'size': number;
+    'folderName': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "image",
-            "baseName": "image",
-            "type": "RequestFile"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
+        },
+        {
+            "name": "folderName",
+            "baseName": "folderName",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UploadReadmeImageRequest.attributeTypeMap;
+        return VerifyOrganizationBucketResponseAllOfFiles.attributeTypeMap;
     }
 }
 

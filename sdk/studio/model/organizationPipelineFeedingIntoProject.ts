@@ -11,38 +11,38 @@
  */
 
 
-export class OrganizationInfoResponseAllOfDatasets {
-    'dataset': string;
-    'lastFileCreated': Date;
-    'totalFileSize': number;
-    'totalFileCount': number;
+export class OrganizationPipelineFeedingIntoProject {
+    'id': number;
+    'name': string;
+    'projectLink': string;
+    'itemCount': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "dataset",
-            "baseName": "dataset",
-            "type": "string"
-        },
-        {
-            "name": "lastFileCreated",
-            "baseName": "lastFileCreated",
-            "type": "Date"
-        },
-        {
-            "name": "totalFileSize",
-            "baseName": "totalFileSize",
+            "name": "id",
+            "baseName": "id",
             "type": "number"
         },
         {
-            "name": "totalFileCount",
-            "baseName": "totalFileCount",
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "projectLink",
+            "baseName": "projectLink",
+            "type": "string"
+        },
+        {
+            "name": "itemCount",
+            "baseName": "itemCount",
             "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationInfoResponseAllOfDatasets.attributeTypeMap;
+        return OrganizationPipelineFeedingIntoProject.attributeTypeMap;
     }
 }
 

@@ -11,6 +11,7 @@
  */
 
 import { OrganizationPipelineFeedingIntoDataset } from './organizationPipelineFeedingIntoDataset';
+import { OrganizationPipelineFeedingIntoProject } from './organizationPipelineFeedingIntoProject';
 import { OrganizationPipelineRun } from './organizationPipelineRun';
 import { OrganizationPipelineStep } from './organizationPipelineStep';
 
@@ -28,8 +29,11 @@ export class OrganizationPipeline {
     'currentRun'?: OrganizationPipelineRun;
     'lastRun'?: OrganizationPipelineRun;
     'feedingIntoDataset'?: OrganizationPipelineFeedingIntoDataset;
+    'feedingIntoProject'?: OrganizationPipelineFeedingIntoProject;
     'emailRecipientUids': Array<number>;
     'lastRunStartError'?: string;
+    'notificationWebhook'?: string;
+    'whenToEmail': OrganizationPipelineWhenToEmailEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -85,6 +89,11 @@ export class OrganizationPipeline {
             "type": "OrganizationPipelineFeedingIntoDataset"
         },
         {
+            "name": "feedingIntoProject",
+            "baseName": "feedingIntoProject",
+            "type": "OrganizationPipelineFeedingIntoProject"
+        },
+        {
             "name": "emailRecipientUids",
             "baseName": "emailRecipientUids",
             "type": "Array<number>"
@@ -93,6 +102,16 @@ export class OrganizationPipeline {
             "name": "lastRunStartError",
             "baseName": "lastRunStartError",
             "type": "string"
+        },
+        {
+            "name": "notificationWebhook",
+            "baseName": "notificationWebhook",
+            "type": "string"
+        },
+        {
+            "name": "whenToEmail",
+            "baseName": "whenToEmail",
+            "type": "OrganizationPipelineWhenToEmailEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -100,3 +119,6 @@ export class OrganizationPipeline {
     }
 }
 
+
+export type OrganizationPipelineWhenToEmailEnum = 'always' | 'on_new_data';
+export const OrganizationPipelineWhenToEmailEnumValues: string[] = ['always', 'on_new_data'];

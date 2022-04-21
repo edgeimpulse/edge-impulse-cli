@@ -12,6 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { GetApplicationTestingStatusResponseAllOf } from './getApplicationTestingStatusResponseAllOf';
+import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
 
 export class GetApplicationTestingStatusResponse {
     /**
@@ -23,6 +24,7 @@ export class GetApplicationTestingStatusResponse {
     */
     'error'?: string;
     'available': boolean;
+    'options'?: StartApplicationTestingRequest;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,6 +43,11 @@ export class GetApplicationTestingStatusResponse {
             "name": "available",
             "baseName": "available",
             "type": "boolean"
+        },
+        {
+            "name": "options",
+            "baseName": "options",
+            "type": "StartApplicationTestingRequest"
         }    ];
 
     static getAttributeTypeMap() {

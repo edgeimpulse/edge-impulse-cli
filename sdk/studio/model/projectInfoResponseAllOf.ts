@@ -61,6 +61,7 @@ export class ProjectInfoResponseAllOf {
     * The IDs of users who should be notified when a model testing job is finished.
     */
     'modelTestingJobNotificationUids': Array<number>;
+    'hasNewTrainingData': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -169,6 +170,11 @@ export class ProjectInfoResponseAllOf {
             "name": "modelTestingJobNotificationUids",
             "baseName": "modelTestingJobNotificationUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "hasNewTrainingData",
+            "baseName": "hasNewTrainingData",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

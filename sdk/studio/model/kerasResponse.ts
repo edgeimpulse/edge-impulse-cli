@@ -62,6 +62,10 @@ export class KerasResponse {
     */
     'learningRate': number;
     /**
+    * Python-formatted tuple of input axes
+    */
+    'shape': string;
+    /**
     * Train/test split (between 0 and 1)
     */
     'trainTestSplit'?: number;
@@ -140,6 +144,11 @@ export class KerasResponse {
             "name": "learningRate",
             "baseName": "learningRate",
             "type": "number"
+        },
+        {
+            "name": "shape",
+            "baseName": "shape",
+            "type": "string"
         },
         {
             "name": "trainTestSplit",

@@ -11,7 +11,6 @@ import {
     AddOrganizationTransferLearningBlockRequest,
     AddOrganizationTransformationBlockRequest,
     OrganizationJobsApi,
-    OrganizationTransformationBlockOperatesOnEnum,
     UploadCustomBlockRequestTypeEnum,
     UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio/api';
@@ -24,13 +23,14 @@ import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
 import util from 'util';
 import {
-    OrganizationTransferLearningBlockObjectDetectionLastLayerEnum,
+    ObjectDetectionLastLayer,
     OrganizationTransferLearningBlockOperatesOnEnum
-} from '../sdk/studio/model/organizationTransferLearningBlock';
+} from '../sdk/studio/model/models';
+import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
 
 const version = getCliVersion();
 
-type BlockConfigItem = {
+export type BlockConfigItem = {
     name: string,
     description: string,
     id?: number,
@@ -46,7 +46,7 @@ type BlockConfigItem = {
 } | {
     type: 'transferLearning',
     tlOperatesOn?: OrganizationTransferLearningBlockOperatesOnEnum,
-    tlObjectDetectionLastLayer?: OrganizationTransferLearningBlockObjectDetectionLastLayerEnum,
+    tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
 } | {
     type: 'deploy',
     deployCategory?: 'library' | 'firmware',
@@ -82,7 +82,7 @@ interface RequestDetailedFile {
     };
 }
 
-type MessageBlock = [
+export type MessageBlock = [
     string,
     {
         data?: string,
@@ -91,28 +91,68 @@ type MessageBlock = [
     }
 ];
 
+type DSPBlockOutput = {
+    projectId: number;
+    dspId: number;
+};
+
 const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
     Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 const configFilePath = '.ei-block-config';
 
+let dockerContainerName: string | undefined;
+
 program
-    .description('Create and publish custom transformation & deployment blocks')
+    .description('Create, run, and publish custom blocks')
     .version(packageVersion)
-    .option('init', 'Initialize the current folder as a new block')
-    .option('push', 'Push the current block to Edge Impulse')
     .option('-c --clean', 'Reset the current user')
     .option('-d --dev', 'Developer mode')
     .option('--api-key <key>', 'API key')
-    .option('--port <port>', 'Port that the DSP block is listening on')
-    .allowUnknownOption(false)
-    .parse(process.argv);
+    .allowUnknownOption(false);
 
-const initCommand: boolean = !!program.init;
-const pushCommand: boolean = !!program.push;
-const cleanArgv: boolean = !!program.clean;
-const devArgv: boolean = !!program.dev;
-const apiKeyArgv: string | undefined = program.apiKey ? <string>program.apiKey : undefined;
-const portArgv: string | undefined = program.port ? <string>program.port : undefined;
+const init = program.command('init')
+            .description('Initialize the current folder as a new block');
+
+const info = program.command('info', { isDefault: true })
+            .description('Output information about the local block');
+
+const push = program.command('push')
+            .description('Push the current block to Edge Impulse')
+            .option('--port <number>', 'Port that the DSP block is listening on', '4446');
+
+const runner = program.command('runner')
+               .description('Run the current block locally')
+               .option('--dataset <dataset>', 'Tranformation block: Name of dataset')
+               .option('--data-item <dataItem>', 'Tranformation block: Name of data item')
+               .option('--file <filename>', 'File tranformation block: Name of file in data item')
+               .option('--epochs <number>', 'Transfer learning: # of epochs to train')
+               .option('--learning-rate <learningRate>', 'Transfer learning: Learning rate while training')
+               .option('--validation-set-size <size>', 'Transfer learning: Size of validation set')
+               .option('--input-shape <shape>', 'Transfer learning: List of axis dimensions. Example: "(1, 4, 2)"')
+               .option('--download-data', 'Transfer learning or deploy: Only download data and don\'t run the block')
+               .option('--port <number>', 'DSP: Port to host DSP block on')
+               .option('--extra-args <args>', 'Pass extra arguments/options to the Docker container');
+
+program.parse(process.argv);
+
+const initCommand = program.args[0] === 'init';
+const infoCommand = program.args[0] === 'info';
+const pushCommand = program.args[0] === 'push';
+const runnerCommand = program.args[0] === 'runner';
+
+const cleanArgv = !!program.clean;
+const devArgv = !!program.dev;
+const apiKeyArgv = program.apiKey ? <string>program.apiKey : undefined;
+let portArgv: string | undefined;
+
+const runnerOpts = runner.opts();
+if (runnerCommand) {
+    portArgv = runnerOpts.port ? <string>runnerOpts.port : undefined;
+}
+else if (pushCommand) {
+    const pushOpts = push.opts();
+    portArgv = pushOpts.port ? <string>pushOpts.port : undefined;
+}
 
 const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
 const dockerignorePath = Path.join(process.cwd(), '.dockerignore');
@@ -179,10 +219,12 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         process.exit(1);
     }
 
-    if (!initCommand && !pushCommand) {
+    if (!initCommand && !pushCommand && !runnerCommand && !infoCommand) {
         console.log('Specify a command:');
-        console.log('   init: Initialize the current folder as a new block');
-        console.log('   push: Push the current folder to the server');
+        console.log('\tinit: Initialize the current folder as a new block');
+        console.log('\tinfo: Print information about current block');
+        console.log('\tpush: Push the current folder to the server');
+        console.log('\trunner: Run the current block locally');
         return;
     }
 
@@ -260,7 +302,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         let blockDescription: string | undefined;
         let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
         let blockTlOperatesOn: OrganizationTransferLearningBlockOperatesOnEnum | undefined;
-        let blockTlObjectDetectionLastLayer: OrganizationTransferLearningBlockObjectDetectionLastLayerEnum | undefined;
+        let blockTlObjectDetectionLastLayer: ObjectDetectionLastLayer | undefined;
         let transformMountpoints: {
             bucketId: number;
             mountPoint: string;
@@ -484,7 +526,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             }])).operatesOn;
 
             if (blockTlOperatesOn === 'object_detection') {
-                blockTlObjectDetectionLastLayer = <OrganizationTransferLearningBlockObjectDetectionLastLayerEnum>
+                blockTlObjectDetectionLastLayer = <ObjectDetectionLastLayer>
                     (await inquirer.prompt([{
                         type: 'list',
                         name: 'lastLayer',
@@ -959,11 +1001,134 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             process.exit(1);
         }
     }
+
+    if (runnerCommand) {
+        // Check if a config file exists
+        if (!await checkConfigFile(config.host) || !globalCurrentBlockConfig) {
+            console.error('A config file cannot be found. Run "edge-impulse-blocks init" to create a new block.');
+            process.exit(1);
+        }
+
+        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        if (!currentBlockConfig) {
+            console.error('A configuration cannot be found for this host (' + config.host + '). ' +
+                'Run "edge-impulse-blocks init" to create a new block.');
+            process.exit(1);
+        }
+
+        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+            console.error(`Unable to run your block - unknown block type: ${currentBlockConfig.type}`);
+            process.exit(1);
+        }
+
+        // Get the cwd name
+        const cwd = Path.basename(process.cwd());
+
+        // Get the organization id
+        const organizationId = currentBlockConfig.organizationId;
+        // Get the organization name
+        const organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
+        if (!organizationNameResponse.body.success || !organizationNameResponse.body.organization.name) {
+            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`);
+            process.exit(1);
+        }
+        const blockType = currentBlockConfig.type;
+
+        try {
+            dockerContainerName = `ei-block-${(currentBlockConfig.id ? currentBlockConfig.id : cwd)}`;
+
+            let options: RunnerOptions = {
+                ...runnerOpts,
+                container: dockerContainerName,
+                type: blockType
+            };
+
+            let blockRunner: BlockRunner = await BlockRunnerFactory.getRunner(
+                blockType, configFactory, config, currentBlockConfig, options);
+            await blockRunner.run();
+        }
+        catch (ex) {
+            let ex2 = <Error>ex;
+
+            console.error('Error while running block: ' + ex2.stack || ex2.toString());
+            process.exit(1);
+        }
+    }
+
+    if (infoCommand) {
+        // Check if a config file exists
+        if (!await checkConfigFile(config.host) || !globalCurrentBlockConfig) {
+            console.error('A config file cannot be found. Run "edge-impulse-blocks init" to create a new block.');
+            process.exit(1);
+        }
+
+        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        if (!currentBlockConfig) {
+            console.error('A configuration cannot be found for this host (' + config.host + '). ' +
+                'Run "edge-impulse-blocks init" to create a new block.');
+            process.exit(1);
+        }
+
+        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+            console.error(`Unable to parse your block - unknown block type: ${currentBlockConfig.type}`);
+            process.exit(1);
+        }
+
+        try {
+            console.log(`Name: ${currentBlockConfig.name}\nDescription: ${currentBlockConfig.description}\n` +
+                        `Organization ID: ${currentBlockConfig.organizationId}\n${(currentBlockConfig.id ? `ID: ${currentBlockConfig.id}` : 'Not pushed')}\n` +
+                        `Block type: ${currentBlockConfig.type}`);
+            switch (currentBlockConfig.type) {
+                case 'transform':
+                    console.log(`Operates on: ${currentBlockConfig.operatesOn}\nBucket mount points:`);
+                    if (currentBlockConfig.transformMountpoints) {
+                        currentBlockConfig.transformMountpoints.forEach((mount) => {
+                            console.log(`\t- ID: ${mount.bucketId}, Mount point: ${mount.mountPoint}`);
+                        });
+                    }
+                    else {
+                        console.log('None');
+                    }
+                break;
+
+                case 'transferLearning':
+                    if (currentBlockConfig.tlOperatesOn) {
+                        console.log(`Operates on: ${currentBlockConfig.tlOperatesOn}`);
+                    }
+
+                    if (currentBlockConfig.tlObjectDetectionLastLayer) {
+                        console.log(`Object detection type: ${currentBlockConfig.tlObjectDetectionLastLayer}`);
+                    }
+                break;
+
+                case 'deploy':
+                    if (currentBlockConfig.deployCategory) {
+                        console.log(`Deployment category: ${currentBlockConfig.deployCategory}`);
+                    }
+                break;
+
+                case 'dsp':
+                    if (currentBlockConfig.port) {
+                        console.log(`Port: ${currentBlockConfig.port}`);
+                    }
+                break;
+            }
+        }
+        catch (ex) {
+            let ex2 = <Error>ex;
+
+            console.error('Error while printing block: ' + ex2.stack || ex2.toString());
+            process.exit(1);
+        }
+    }
 })();
 
 async function checkConfigFile(host: string): Promise<boolean> {
     // Return true if a config file exists
-    if (globalCurrentBlockConfig) return true;
+    if (globalCurrentBlockConfig) {
+        return true;
+    }
+
     try {
         if (!await exists(configFilePath)) {
             return false;
@@ -1063,7 +1228,7 @@ function bytesToSize(bytes: number) {
     return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
 }
 
-async function exists(path: string) {
+export async function exists(path: string) {
     let x = false;
     try {
         await util.promisify(fs.stat)(path);

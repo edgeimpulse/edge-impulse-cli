@@ -7,6 +7,7 @@ import { ips } from './get-ips';
 import {
     LoginApi,
     DevicesApi, DevicesApiApiKeys,
+    DSPApi, DSPApiApiKeys,
     ProjectsApi, ProjectsApiApiKeys,
     OrganizationsApi, OrganizationsApiApiKeys,
     OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
@@ -17,6 +18,11 @@ import {
 } from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
+
+export interface RunnerConfig {
+    projectId: number | undefined;
+    blockId: number | undefined;
+}
 
 export interface SerialConfig {
     host: string;
@@ -41,11 +47,13 @@ export interface SerialConfig {
     linuxProjectId: number | undefined;
     camera: string | undefined;
     audio: string | undefined;
+    runner: RunnerConfig;
 }
 
 export interface EdgeImpulseAPI {
     login: LoginApi;
     devices: DevicesApi;
+    dsp: DSPApi;
     projects: ProjectsApi;
     impulse: ImpulseApi;
     learn: LearnApi;
@@ -242,6 +250,7 @@ export class Config {
         this._api = {
             login: new LoginApi(apiEndpointInternal),
             devices: new DevicesApi(apiEndpointInternal),
+            dsp: new DSPApi(apiEndpointInternal),
             projects: new ProjectsApi(apiEndpointInternal),
             impulse: new ImpulseApi(apiEndpointInternal),
             learn: new LearnApi(apiEndpointInternal),
@@ -272,6 +281,7 @@ export class Config {
         if (apiKey) {
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, apiKey);
+            this._api.dsp.setApiKey(DSPApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.impulse.setApiKey(ImpulseApiApiKeys.ApiKeyAuthentication, apiKey);
             this._api.learn.setApiKey(LearnApiApiKeys.ApiKeyAuthentication, apiKey);
@@ -333,6 +343,7 @@ export class Config {
 
             // try and authenticate...
             this._api.devices.setApiKey(DevicesApiApiKeys.JWTAuthentication, config.jwtToken);
+            this._api.dsp.setApiKey(DSPApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.projects.setApiKey(ProjectsApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.impulse.setApiKey(ImpulseApiApiKeys.JWTAuthentication, config.jwtToken);
             this._api.learn.setApiKey(LearnApiApiKeys.JWTAuthentication, config.jwtToken);
@@ -436,6 +447,23 @@ export class Config {
         await this.store(config);
     }
 
+    async getRunner(): Promise<RunnerConfig> {
+        let config = await this.load();
+        return config.runner;
+    }
+
+    async storeProjectId(projectId: number) {
+        let config = await this.load();
+        config.runner.projectId = projectId;
+        await this.store(config);
+    }
+
+    async storeBlockId(blockId: number) {
+        let config = await this.load();
+        config.runner.blockId = blockId;
+        await this.store(config);
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -448,7 +476,11 @@ export class Config {
                 daemonDevices: { },
                 camera: undefined,
                 audio: undefined,
-                linuxProjectId: undefined
+                linuxProjectId: undefined,
+                runner: {
+                    projectId: undefined,
+                    blockId: undefined
+                }
             };
         }
 

@@ -23,6 +23,7 @@ export class OrganizationCreateProjectRequest {
     'projectApiKey'?: string;
     'projectHmacKey'?: string;
     'transformationBlockId'?: number;
+    'builtinTransformationBlock'?: object;
     'category'?: OrganizationCreateProjectRequestCategoryEnum;
     'outputDatasetName'?: string;
     'label'?: string;
@@ -82,6 +83,11 @@ export class OrganizationCreateProjectRequest {
             "name": "transformationBlockId",
             "baseName": "transformationBlockId",
             "type": "number"
+        },
+        {
+            "name": "builtinTransformationBlock",
+            "baseName": "builtinTransformationBlock",
+            "type": "object"
         },
         {
             "name": "category",

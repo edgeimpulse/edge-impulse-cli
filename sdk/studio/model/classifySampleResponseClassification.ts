@@ -12,6 +12,7 @@
 
 import { ClassifySampleResponseClassificationDetails } from './classifySampleResponseClassificationDetails';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
+import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { StructuredClassifyResult } from './structuredClassifyResult';
 
 export class ClassifySampleResponseClassification {
@@ -36,6 +37,7 @@ export class ClassifySampleResponseClassification {
     * Structured outputs and computed metrics for some model types (e.g. object detection), one item per window.
     */
     'details'?: Array<ClassifySampleResponseClassificationDetails>;
+    'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +71,11 @@ export class ClassifySampleResponseClassification {
             "name": "details",
             "baseName": "details",
             "type": "Array<ClassifySampleResponseClassificationDetails>"
+        },
+        {
+            "name": "objectDetectionLastLayer",
+            "baseName": "objectDetectionLastLayer",
+            "type": "ObjectDetectionLastLayer"
         }    ];
 
     static getAttributeTypeMap() {

@@ -14,6 +14,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { ApplicationTestingUploadLabeledAudioResponse } from '../model/applicationTestingUploadLabeledAudioResponse';
 import { GetApplicationTestingGroundTruthResponse } from '../model/getApplicationTestingGroundTruthResponse';
 import { GetApplicationTestingParameterSetsResponse } from '../model/getApplicationTestingParameterSetsResponse';
 import { GetApplicationTestingRawResultResponse } from '../model/getApplicationTestingRawResultResponse';
@@ -82,7 +83,7 @@ export class ApplicationTestingApi {
     }
 
     /**
-     * Get application testing ground truth data
+     * Get performance calibration ground truth data
      * @summary Get ground truth
      * @param projectId Project ID
      */
@@ -152,7 +153,7 @@ export class ApplicationTestingApi {
         });
     }
     /**
-     * Get application testing parameter sets
+     * Get performance calibration parameter sets
      * @summary Get parameter sets
      * @param projectId Project ID
      */
@@ -222,7 +223,7 @@ export class ApplicationTestingApi {
         });
     }
     /**
-     * Get application testing raw result
+     * Get performance calibration raw result
      * @summary Get raw result
      * @param projectId Project ID
      */
@@ -292,7 +293,7 @@ export class ApplicationTestingApi {
         });
     }
     /**
-     * Get application testing status
+     * Get performance calibration status
      * @summary Get status
      * @param projectId Project ID
      */
@@ -421,6 +422,87 @@ export class ApplicationTestingApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Upload a zip files with a wav file and its Label metadata to run performance calibration on it.
+     * @summary Upload Performance Calibration Audio files
+     * @param projectId Project ID
+     * @param zip 
+     */
+    public async uploadLabeledAudio (projectId: number, zip: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ApplicationTestingUploadLabeledAudioResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/application-testing/files'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling uploadLabeledAudio.');
+        }
+
+        // verify required parameter 'zip' is not null or undefined
+        if (zip === null || zip === undefined) {
+            throw new Error('Required parameter zip was null or undefined when calling uploadLabeledAudio.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        if (zip !== undefined) {
+            localVarFormParams['zip'] = zip;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ApplicationTestingUploadLabeledAudioResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ApplicationTestingUploadLabeledAudioResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

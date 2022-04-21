@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { DataExplorerSettings } from './dataExplorerSettings';
 import { GenericApiResponse } from './genericApiResponse';
+import { LastModificationDateResponseAllOf } from './lastModificationDateResponseAllOf';
 
-export class GetDataExplorerSettingsResponse {
+export class LastModificationDateResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,10 +22,8 @@ export class GetDataExplorerSettingsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * Preset to use for the data explorer. If you set this to \'custom\' you also need to set the input / dsp blocks. The \"keywords\" and \"images\" preset use an embedding model after the DSP which will yield significantly better results.
-    */
-    'preset'?: GetDataExplorerSettingsResponsePresetEnum;
+    'lastModificationDate'?: Date;
+    'lastVersionDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,16 +39,18 @@ export class GetDataExplorerSettingsResponse {
             "type": "string"
         },
         {
-            "name": "preset",
-            "baseName": "preset",
-            "type": "GetDataExplorerSettingsResponsePresetEnum"
+            "name": "lastModificationDate",
+            "baseName": "lastModificationDate",
+            "type": "Date"
+        },
+        {
+            "name": "lastVersionDate",
+            "baseName": "lastVersionDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetDataExplorerSettingsResponse.attributeTypeMap;
+        return LastModificationDateResponse.attributeTypeMap;
     }
 }
 
-
-export type GetDataExplorerSettingsResponsePresetEnum = 'keywords' | 'images' | 'current-impulse' | 'current-impulse-embeddings';
-export const GetDataExplorerSettingsResponsePresetEnumValues: string[] = ['keywords', 'images', 'current-impulse', 'current-impulse-embeddings'];

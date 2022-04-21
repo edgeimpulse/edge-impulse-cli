@@ -10,21 +10,25 @@
  * Do not edit the class manually.
  */
 
+import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 
-export class UpdateThemeFaviconRequest {
-    'image':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+export class VerifyOrganizationBucketResponseAllOf {
+    /**
+    * 20 random files from the bucket.
+    */
+    'files': Array<VerifyOrganizationBucketResponseAllOfFiles>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "image",
-            "baseName": "image",
-            "type": "RequestFile"
+            "name": "files",
+            "baseName": "files",
+            "type": "Array<VerifyOrganizationBucketResponseAllOfFiles>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateThemeFaviconRequest.attributeTypeMap;
+        return VerifyOrganizationBucketResponseAllOf.attributeTypeMap;
     }
 }
 

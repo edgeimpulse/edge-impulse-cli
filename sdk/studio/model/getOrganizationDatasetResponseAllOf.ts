@@ -10,28 +10,22 @@
  * Do not edit the class manually.
  */
 
-import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
+import { OrganizationDataset } from './organizationDataset';
 
-export class GetApplicationTestingStatusResponseAllOf {
-    'available': boolean;
-    'options'?: StartApplicationTestingRequest;
+export class GetOrganizationDatasetResponseAllOf {
+    'dataset': OrganizationDataset;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "available",
-            "baseName": "available",
-            "type": "boolean"
-        },
-        {
-            "name": "options",
-            "baseName": "options",
-            "type": "StartApplicationTestingRequest"
+            "name": "dataset",
+            "baseName": "dataset",
+            "type": "OrganizationDataset"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetApplicationTestingStatusResponseAllOf.attributeTypeMap;
+        return GetOrganizationDatasetResponseAllOf.attributeTypeMap;
     }
 }
 

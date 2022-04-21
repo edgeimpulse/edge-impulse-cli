@@ -20,6 +20,10 @@ export class OrganizationPipelineRun {
     'finished'?: Date;
     'itemCountBefore'?: OrganizationPipelineItemCount;
     'itemCountAfter'?: OrganizationPipelineItemCount;
+    /**
+    * Number of data items that failed to import into a project (through the s3-to-project or portal-to-project) transform blocks
+    */
+    'itemCountImportIntoProjectFailed'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +57,11 @@ export class OrganizationPipelineRun {
             "name": "itemCountAfter",
             "baseName": "itemCountAfter",
             "type": "OrganizationPipelineItemCount"
+        },
+        {
+            "name": "itemCountImportIntoProjectFailed",
+            "baseName": "itemCountImportIntoProjectFailed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

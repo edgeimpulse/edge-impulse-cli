@@ -23,6 +23,9 @@ export class ListVersionsResponseAllOfVersions {
     'userPhoto'?: string;
     'publicProjectId'?: number;
     'publicProjectUrl'?: string;
+    'trainingAccuracy'?: number;
+    'testAccuracy'?: number;
+    'totalSamplesCount'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +78,21 @@ export class ListVersionsResponseAllOfVersions {
         {
             "name": "publicProjectUrl",
             "baseName": "publicProjectUrl",
+            "type": "string"
+        },
+        {
+            "name": "trainingAccuracy",
+            "baseName": "trainingAccuracy",
+            "type": "number"
+        },
+        {
+            "name": "testAccuracy",
+            "baseName": "testAccuracy",
+            "type": "number"
+        },
+        {
+            "name": "totalSamplesCount",
+            "baseName": "totalSamplesCount",
             "type": "string"
         }    ];
 

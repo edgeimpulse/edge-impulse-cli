@@ -10,28 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { StartApplicationTestingRequest } from './startApplicationTestingRequest';
 
-export class GetApplicationTestingStatusResponseAllOf {
-    'available': boolean;
-    'options'?: StartApplicationTestingRequest;
+export class UploadImageRequest {
+    'image':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "available",
-            "baseName": "available",
-            "type": "boolean"
-        },
-        {
-            "name": "options",
-            "baseName": "options",
-            "type": "StartApplicationTestingRequest"
+            "name": "image",
+            "baseName": "image",
+            "type": "RequestFile"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetApplicationTestingStatusResponseAllOf.attributeTypeMap;
+        return UploadImageRequest.attributeTypeMap;
     }
 }
 

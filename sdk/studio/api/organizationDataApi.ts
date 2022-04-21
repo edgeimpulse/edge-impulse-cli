@@ -17,6 +17,7 @@ import http = require('http');
 import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDataItemResponse } from '../model/getOrganizationDataItemResponse';
+import { GetOrganizationDatasetResponse } from '../model/getOrganizationDatasetResponse';
 import { ListOrganizationBucketsResponse } from '../model/listOrganizationBucketsResponse';
 import { ListOrganizationDataResponse } from '../model/listOrganizationDataResponse';
 import { ListOrganizationFilesResponse } from '../model/listOrganizationFilesResponse';
@@ -25,7 +26,9 @@ import { SetOrganizationDataDatasetRequest } from '../model/setOrganizationDataD
 import { StartJobResponse } from '../model/startJobResponse';
 import { UpdateOrganizationBucketRequest } from '../model/updateOrganizationBucketRequest';
 import { UpdateOrganizationDataItemRequest } from '../model/updateOrganizationDataItemRequest';
+import { UpdateOrganizationDatasetRequest } from '../model/updateOrganizationDatasetRequest';
 import { VerifyOrganizationBucketRequest } from '../model/verifyOrganizationBucketRequest';
+import { VerifyOrganizationBucketResponse } from '../model/verifyOrganizationBucketResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -1240,6 +1243,160 @@ export class OrganizationDataApi {
         });
     }
     /**
+     * Get information about a dataset
+     * @summary Get dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     */
+    public async getOrganizationDataset (organizationId: number, dataset: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetOrganizationDatasetResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationDataset.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getOrganizationDataset.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GetOrganizationDatasetResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDatasetResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Hide a dataset (does not remove underlying data)
+     * @summary Hide dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     */
+    public async hideOrganizationDataset (organizationId: number, dataset: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/hide'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling hideOrganizationDataset.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling hideOrganizationDataset.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Retrieve all configured storage buckets. This does not list the secret key.
      * @summary List storage buckets
      * @param organizationId Organization ID
@@ -1901,12 +2058,96 @@ export class OrganizationDataApi {
         });
     }
     /**
+     * Set information about a dataset
+     * @summary Update dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     * @param updateOrganizationDatasetRequest 
+     */
+    public async updateOrganizationDataset (organizationId: number, dataset: string, updateOrganizationDatasetRequest: UpdateOrganizationDatasetRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationDataset.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling updateOrganizationDataset.');
+        }
+
+        // verify required parameter 'updateOrganizationDatasetRequest' is not null or undefined
+        if (updateOrganizationDatasetRequest === null || updateOrganizationDatasetRequest === undefined) {
+            throw new Error('Required parameter updateOrganizationDatasetRequest was null or undefined when calling updateOrganizationDataset.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(updateOrganizationDatasetRequest, "UpdateOrganizationDatasetRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Verify whether we can reach a bucket before adding it.
      * @summary Verify bucket connectivity
      * @param organizationId Organization ID
      * @param verifyOrganizationBucketRequest 
      */
-    public async verifyOrganizationBucket (organizationId: number, verifyOrganizationBucketRequest: VerifyOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async verifyOrganizationBucket (organizationId: number, verifyOrganizationBucketRequest: VerifyOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: VerifyOrganizationBucketResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/verify'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1961,12 +2202,12 @@ export class OrganizationDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: VerifyOrganizationBucketResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "VerifyOrganizationBucketResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

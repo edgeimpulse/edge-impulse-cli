@@ -20,6 +20,14 @@ export class StartApplicationTestingRequest {
     * Any other labels that should be considered equivalent to background noise
     */
     'otherNoiseLabels'?: Array<string>;
+    /**
+    * The key of an uploaded sample. If not present, a synthetic sample will be created.
+    */
+    'uploadKey'?: string;
+    /**
+    * The length of sample to create (required for synthetic samples)
+    */
+    'sampleLengthMinutes'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +41,16 @@ export class StartApplicationTestingRequest {
             "name": "otherNoiseLabels",
             "baseName": "otherNoiseLabels",
             "type": "Array<string>"
+        },
+        {
+            "name": "uploadKey",
+            "baseName": "uploadKey",
+            "type": "string"
+        },
+        {
+            "name": "sampleLengthMinutes",
+            "baseName": "sampleLengthMinutes",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -1228,7 +1228,7 @@ export class JobsApi {
     }
     /**
      * Simulates real world usage and returns performance metrics.
-     * @summary Application testing
+     * @summary Performance Calibration
      * @param projectId Project ID
      * @param startApplicationTestingRequest 
      */

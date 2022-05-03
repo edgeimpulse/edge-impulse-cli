@@ -781,7 +781,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                         name: currentBlockConfig.name,
                         description: currentBlockConfig.description,
                         dockerContainer: '',
-                        objectDetectionLastLayer: currentBlockConfig.tlObjectDetectionLastLayer,
+                        objectDetectionLastLayer:
+                            <ObjectDetectionLastLayer>currentBlockConfig.tlObjectDetectionLastLayer,
                         operatesOn: currentBlockConfig.tlOperatesOn || 'image',
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(

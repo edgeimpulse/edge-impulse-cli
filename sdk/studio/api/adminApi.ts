@@ -14,6 +14,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
 import { FindUserResponse } from '../model/findUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetUserResponse } from '../model/getUserResponse';
@@ -283,6 +284,83 @@ export class AdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetUserResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Admin-only API to update user properties.
+     * @summary Get user
+     * @param userId User ID
+     * @param adminUpdateUserRequest 
+     */
+    public async adminUpdateUser (userId: number, adminUpdateUserRequest: AdminUpdateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/admin/users/{userId}'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling adminUpdateUser.');
+        }
+
+        // verify required parameter 'adminUpdateUserRequest' is not null or undefined
+        if (adminUpdateUserRequest === null || adminUpdateUserRequest === undefined) {
+            throw new Error('Required parameter adminUpdateUserRequest was null or undefined when calling adminUpdateUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(adminUpdateUserRequest, "AdminUpdateUserRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

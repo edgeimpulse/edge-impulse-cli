@@ -19,6 +19,7 @@ export * from './addOrganizationTransferLearningBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
 export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
+export * from './adminUpdateUserRequest';
 export * from './anomalyModelMetadata';
 export * from './anomalyModelMetadataClusters';
 export * from './anomalyModelMetadataResponse';
@@ -514,6 +515,7 @@ import { AddOrganizationTransferLearningBlockResponse } from './addOrganizationT
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from './addOrganizationTransformationBlockResponse';
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { AdminUpdateUserRequest } from './adminUpdateUserRequest';
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
 import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
 import { AnomalyModelMetadataResponse } from './anomalyModelMetadataResponse';
@@ -1107,6 +1109,7 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
     "AddOrganizationTransformationBlockResponse": AddOrganizationTransformationBlockResponse,
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
+    "AdminUpdateUserRequest": AdminUpdateUserRequest,
     "AnomalyModelMetadata": AnomalyModelMetadata,
     "AnomalyModelMetadataClusters": AnomalyModelMetadataClusters,
     "AnomalyModelMetadataResponse": AnomalyModelMetadataResponse,

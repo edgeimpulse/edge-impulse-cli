@@ -95,6 +95,7 @@ export interface ClientInitStudioOptions {
     baseUrl: string;
     projectName: string;
     projectOwnerOrganizationId: number | undefined;
+    projectOwnerOrganizationName: string | undefined;
     socketToken: string;
     orgSocketToken: string | undefined;
     connectedDevices: ClientConnectedDevice[];
@@ -116,6 +117,7 @@ export interface ClientInitOrganizationOptions {
     gaId: string;
     userId: number;
     organizationId: number;
+    organizationName: string;
     socketToken: string;
     staticAssetsPrefix: string;
     baseUrl: string;

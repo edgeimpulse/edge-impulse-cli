@@ -287,7 +287,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                     value: 'dsp'
                 },
                 {
-                    name: 'Transfer learning block',
+                    name: 'Machine learning block',
                     value: 'transferLearning'
                 }
             ],

@@ -81,6 +81,7 @@ export type RunnerOptions = {
           dataset?: string;
           dataItem?: string;
           file?: string;
+          skipDownload?: boolean;
       }
     | {
           type: "transferLearning";
@@ -587,6 +588,7 @@ export class BlockRunnerTransform extends BlockRunner {
 
     private async downloadAndExtractFiles(path: string) {
         if (!this._dataItem) throw new Error("No data item specified");
+        if (this._runnerOpts.type === 'transform' && this._runnerOpts.skipDownload) return;
 
         let currentFolderSize = 0;
         let extractFolder = Path.join(path, this._dataItem.bucketPath);
@@ -663,6 +665,10 @@ export class BlockRunnerTransform extends BlockRunner {
         }
 
         let filename = this._runnerOpts.file ? this._runnerOpts.file : "";
+
+        if (this._runnerOpts.type === 'transform' && this._runnerOpts.skipDownload) {
+            return { fileDir: fileDir, filename: filename };
+        }
 
         await fs.promises.mkdir(fileDir, { recursive: true });
 

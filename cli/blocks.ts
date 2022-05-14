@@ -131,7 +131,8 @@ const runner = program.command('runner')
                .option('--input-shape <shape>', 'Transfer learning: List of axis dimensions. Example: "(1, 4, 2)"')
                .option('--download-data', 'Transfer learning or deploy: Only download data and don\'t run the block')
                .option('--port <number>', 'DSP: Port to host DSP block on')
-               .option('--extra-args <args>', 'Pass extra arguments/options to the Docker container');
+               .option('--extra-args <args>', 'Pass extra arguments/options to the Docker container')
+               .option('--skip-download', `Tranformation block: Don't download data`);
 
 program.parse(process.argv);
 

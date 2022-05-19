@@ -16,13 +16,13 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import jpegjs from 'jpeg-js';
-import { makeImage } from './make-image';
 import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../shared/daemon/remote-mgmt-service';
 import { EventEmitter } from "tsee";
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
 import encodeLabel from '../shared/encoding';
+import { upload } from './make-image';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -354,39 +354,21 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 height: height,
             }, 100);
 
-            let filename = s.label + '.jpg';
-            let processed = makeImage(jpegImageData.data, this._deviceConfig.sampling.hmacKey, filename);
-
-            let headers: { [k: string]: string} = {
-                'x-api-key': this._deviceConfig.upload.apiKey,
-                'x-file-name': encodeLabel(filename),
-                'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
-                'Connection': 'keep-alive'
-            };
-
-            headers['x-label'] = encodeLabel(s.label);
-
             let url = this._config.endpoints.internal.ingestion + s.path;
             console.log(SERIAL_PREFIX, 'Uploading to', url);
 
             ee.emit('uploading');
 
-            await request.post(
-                this._config.endpoints.internal.ingestion + s.path, {
-                    headers: headers,
-                    body: (!processed.attachments ? processed.encoded : undefined),
-                    formData: (processed.attachments ? {
-                        body: {
-                            value: processed.encoded,
-                            options: {
-                                filename: filename,
-                                contentType: processed.contentType
-                            }
-                        },
-                        attachments: processed.attachments
-                    } : undefined),
-                    encoding: null,
-                });
+            await upload({
+                filename: s.label + '.jpg',
+                allowDuplicates: false,
+                apiKey: this._deviceConfig.upload.apiKey,
+                buffer: jpegImageData.data,
+                category: s.path.indexOf('training') ? 'training' : 'testing',
+                config: this._config,
+                label: { label: s.label, type: 'label' },
+                boundingBoxes: [],
+            });
 
             console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
         }

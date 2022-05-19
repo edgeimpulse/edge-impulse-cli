@@ -4,9 +4,10 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { ExportInputBoundingBox, makeCsv, makeImage, makeVideo, makeWav, upload } from './make-image';
+import { upload, validExtensions } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
+import { ExportBoundingBoxesFile, parseBoundingBoxLabels } from '../shared/bounding-box-file-types';
 import { FSHelpers } from './fs-helpers';
 
 type UploaderFileType = {
@@ -14,13 +15,6 @@ type UploaderFileType = {
     category: string,
     label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string }
 };
-
-// These types are shared with jobs-container/node/export/shared/jobs/export.ts
-interface ExportBoundingBoxesFile {
-    version: 1;
-    type: 'bounding-box-labels';
-    boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
-}
 
 interface InfoFileV1 {
     version: 1;
@@ -138,18 +132,6 @@ const cliOptions = {
             console.log('--concurrency should have a number, but was ' + concurrency);
             process.exit(1);
         }
-
-        const validExtensions = [
-            '.wav',
-            '.cbor',
-            '.json',
-            '.jpg',
-            '.jpeg',
-            '.png',
-            '.csv',
-            '.mp4',
-            '.avi',
-        ];
 
         let files: UploaderFileType[];
 
@@ -285,17 +267,8 @@ const cliOptions = {
             }
             else {
                 try {
-                    let data = <ExportBoundingBoxesFile>JSON.parse(<string>await fs.promises.readFile(labelsFile, 'utf-8'));
-                    if (data.version !== 1) {
-                        throw new Error('Invalid version');
-                    }
-                    if (data.type !== 'bounding-box-labels') {
-                        throw new Error('Invalid type');
-                    }
-                    if (typeof data.boundingBoxes !== 'object') {
-                        throw new Error('boundingBoxes is not an object');
-                    }
-                    boundingBoxCache[directory] = data;
+                    boundingBoxCache[directory] = parseBoundingBoxLabels(
+                        <string>await fs.promises.readFile(labelsFile, 'utf-8'));
                 }
                 catch (ex2) {
                     let ex = <Error>ex2;
@@ -312,61 +285,15 @@ const cliOptions = {
                 (boundingBoxesFile.boundingBoxes[Path.basename(file.path)] || undefined) :
                 undefined;
 
-            const buffer = await fs.promises.readFile(file.path);
-
-            let processed: { encoded: Buffer, contentType: string,
-                attachments?: { value: Buffer, options: { contentType: string}}[] };
-
-            try {
-                switch (Path.extname(file.path).toLowerCase()) {
-                    case '.wav':
-                        processed = makeWavInternal(buffer, hmacKeyArgv || devKeys.hmacKey);
-                        break;
-                    case '.cbor':
-                        processed = makeCbor(buffer);
-                        break;
-                    case '.json':
-                        processed = makeJson(buffer);
-                        break;
-                    case '.jpg':
-                    case '.jpeg':
-                    case '.png':
-                        processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
-                        break;
-                    case '.mp4':
-                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/mp4');
-                        break;
-                    case '.avi':
-                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/avi');
-                        break;
-                    case '.csv':
-                        processed = makeCsv(buffer, hmacKeyArgv || devKeys.hmacKey);
-                        break;
-                    default:
-                        throw new Error('extension not supported (only ' +
-                            validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' and ' +
-                            validExtensions[validExtensions.length - 1] + ' supported)');
-                }
-            }
-            catch (ex2) {
-                let ex = <Error>ex2;
-                let ix = ++fileIx;
-                let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
-                console.error(`[${ixS}/${totalFilesLength}] Failed to process`, file.path, ex.message || ex.toString());
-                failed++;
-                return;
-            }
-
             try {
                 let hrstart = Date.now();
                 await upload({
-                    apiKey: apiKeyArgv || devKeys.apiKey || '',
                     filename: Path.basename(file.path),
-                    processed: processed,
+                    buffer: await fs.promises.readFile(file.path),
+                    apiKey: apiKeyArgv || devKeys.apiKey || '',
                     allowDuplicates: allowDuplicatesArgv,
                     category: file.category,
                     config: config,
-                    dataBuffer: buffer,
                     label: file.label,
                     boundingBoxes: boundingBoxes
                 });
@@ -424,35 +351,14 @@ const cliOptions = {
     }
 })();
 
-function makeWavInternal(buffer: Buffer, hmacKey: string | undefined) {
-    if (dontResignArgv) {
-        let isJSON = true;
-        try {
-            JSON.parse(buffer.toString('utf-8'));
-        }
-        catch (ex) {
-            isJSON = false;
-        }
-
-        return {
-            encoded: buffer,
-            contentType: isJSON ? 'application/json' : 'application/cbor'
-        };
+async function exists(path: string) {
+    let fx = false;
+    try {
+        await util.promisify(fs.stat)(path);
+        fx = true;
     }
-
-    return makeWav(buffer, hmacKey);
-}
-
-function makeCbor(buffer: Buffer) {
-    return {
-        encoded: buffer,
-        contentType: 'application/cbor',
-    };
-}
-
-function makeJson(buffer: Buffer) {
-    return {
-        encoded: buffer,
-        contentType: 'application/json'
-    };
+    catch (ex) {
+        /* noop */
+    }
+    return fx;
 }

@@ -260,7 +260,7 @@ async function startWebServer(config: EiSerialDeviceConfig) {
                 let classifyTime = 0;
                 let timingLine = lines.find(x => x.startsWith('Predictions'));
                 if (timingLine) {
-                    let m = timingLine.match(/Classification: (\d+)/);
+                    let m = timingLine.match(/Classification: ([\d\.]+)/);
                     if (m) {
                         classifyTime = Number(m[1]);
                     }

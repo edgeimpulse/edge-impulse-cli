@@ -37,6 +37,7 @@ export enum PageType {
     DataExplorer = 35,
     SetPasswordSuccess = 36,
     DataSources = 37,
+    CreateDeveloperProfile = 38,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

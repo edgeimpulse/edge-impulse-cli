@@ -4,7 +4,7 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { upload, validExtensions } from './make-image';
+import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
 import { ExportBoundingBoxesFile, parseBoundingBoxLabels } from '../shared/bounding-box-file-types';
@@ -180,8 +180,8 @@ const cliOptions = {
 
             if (!fileArgs[0]) {
                 console.log('Requires at least one argument (a ' +
-                    validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
-                    validExtensions[validExtensions.length - 1] + ' file)');
+                    VALID_EXTENSIONS.slice(0, VALID_EXTENSIONS.length - 1).join(', ') + ' or ' +
+                    VALID_EXTENSIONS[VALID_EXTENSIONS.length - 1] + ' file)');
                 process.exit(1);
             }
 
@@ -221,9 +221,9 @@ const cliOptions = {
                 }
             }
             else {
-                if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
+                if (VALID_EXTENSIONS.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
                     console.log('Cannot handle this file, only ' +
-                        validExtensions.join(', ') + ' supported:', fileArgs[0]);
+                        VALID_EXTENSIONS.join(', ') + ' supported:', fileArgs[0]);
                     process.exit(1);
                 }
 

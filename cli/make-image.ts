@@ -23,7 +23,7 @@ export const EXTENSION_MAPPING: { [k: string]: string } = {
     '.avi': 'video/avi',
 };
 
-export const validExtensions = Object.keys(EXTENSION_MAPPING);
+export const VALID_EXTENSIONS = Object.keys(EXTENSION_MAPPING);
 
 export async function upload(opts: {
     filename: string,

@@ -143,6 +143,7 @@ export interface ClientInitOrganizationPortalOptions {
     sentryEnvironment?: string;
     errorPage: boolean;
     authToken: string;
+    isAdmin: boolean;
 }
 
 export interface ClientInitFormOptions {

@@ -534,7 +534,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                         choices: [
                             {
                                 name: 'MobileNet SSD',
-                                value: 'mobilenet_ssd'
+                                value: 'mobilenet-ssd'
                             },
                             {
                                 name: 'Edge Impulse FOMO',

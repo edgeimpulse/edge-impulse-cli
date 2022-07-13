@@ -44,10 +44,6 @@ export class CreateUserRequest {
     * Unique identifier of the identity provider asserting the identity of this user
     */
     'identityProvider'?: string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -90,11 +86,6 @@ export class CreateUserRequest {
         {
             "name": "identityProvider",
             "baseName": "identityProvider",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
             "type": "string"
         }    ];
 

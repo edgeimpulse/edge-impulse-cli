@@ -18,6 +18,7 @@ import { ActivateUserByThirdPartyActivationCodeRequest } from '../model/activate
 import { ActivateUserRequest } from '../model/activateUserRequest';
 import { ChangePasswordRequest } from '../model/changePasswordRequest';
 import { ConvertUserRequest } from '../model/convertUserRequest';
+import { CreateDeveloperProfileResponse } from '../model/createDeveloperProfileResponse';
 import { CreateEvaluationUserResponse } from '../model/createEvaluationUserResponse';
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
@@ -28,7 +29,6 @@ import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListOrganizationBucketsUserResponse } from '../model/listOrganizationBucketsUserResponse';
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
-import { RequestActivationRequest } from '../model/requestActivationRequest';
 import { RequestResetPasswordRequest } from '../model/requestResetPasswordRequest';
 import { ResetPasswordRequest } from '../model/resetPasswordRequest';
 import { SetUserPasswordRequest } from '../model/setUserPasswordRequest';
@@ -523,6 +523,69 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Create a developer profile for the current active user.
+     * @summary Create developer profile
+     */
+    public async createDeveloperProfile (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateDeveloperProfileResponse;  }> {
+        const localVarPath = this.basePath + '/api/user/create-developer-profile';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: CreateDeveloperProfileResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateDeveloperProfileResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -1456,9 +1519,8 @@ export class UserApi {
     /**
      * Request a new activation code for the current user. This function is only available through a JWT token.
      * @summary Request activation code
-     * @param requestActivationRequest 
      */
-    public async requestActivationCodeCurrentUser (requestActivationRequest?: RequestActivationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async requestActivationCodeCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/user/request-activation';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1483,7 +1545,6 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
-            body: ObjectSerializer.serialize(requestActivationRequest, "RequestActivationRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -1522,9 +1583,8 @@ export class UserApi {
      * Request a new activation code. This function is only available through a JWT token.
      * @summary Request activation code
      * @param userId User ID
-     * @param requestActivationRequest 
      */
-    public async requestActivationCodeUser (userId: number, requestActivationRequest: RequestActivationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async requestActivationCodeUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/users/{userId}/request-activation'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
@@ -1543,11 +1603,6 @@ export class UserApi {
             throw new Error('Required parameter userId was null or undefined when calling requestActivationCodeUser.');
         }
 
-        // verify required parameter 'requestActivationRequest' is not null or undefined
-        if (requestActivationRequest === null || requestActivationRequest === undefined) {
-            throw new Error('Required parameter requestActivationRequest was null or undefined when calling requestActivationCodeUser.');
-        }
-
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -1560,7 +1615,6 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
-            body: ObjectSerializer.serialize(requestActivationRequest, "RequestActivationRequest")
         };
 
         let authenticationPromise = Promise.resolve();

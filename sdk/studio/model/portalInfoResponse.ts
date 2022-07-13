@@ -14,6 +14,7 @@
 export class PortalInfoResponse {
     'name': string;
     'description': string;
+    'organizationId': number;
     'organizationName': string;
     'organizationLogo'?: string;
 
@@ -29,6 +30,11 @@ export class PortalInfoResponse {
             "name": "description",
             "baseName": "description",
             "type": "string"
+        },
+        {
+            "name": "organizationId",
+            "baseName": "organizationId",
+            "type": "number"
         },
         {
             "name": "organizationName",

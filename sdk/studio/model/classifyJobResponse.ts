@@ -13,6 +13,7 @@
 import { ClassifyJobResponseAllOf } from './classifyJobResponseAllOf';
 import { ClassifyJobResponseAllOfResult } from './classifyJobResponseAllOfResult';
 import { GenericApiResponse } from './genericApiResponse';
+import { ModelPrediction } from './modelPrediction';
 
 export class ClassifyJobResponse {
     /**
@@ -24,6 +25,7 @@ export class ClassifyJobResponse {
     */
     'error'?: string;
     'result': Array<ClassifyJobResponseAllOfResult>;
+    'predictions': Array<ModelPrediction>;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +44,11 @@ export class ClassifyJobResponse {
             "name": "result",
             "baseName": "result",
             "type": "Array<ClassifyJobResponseAllOfResult>"
+        },
+        {
+            "name": "predictions",
+            "baseName": "predictions",
+            "type": "Array<ModelPrediction>"
         }    ];
 
     static getAttributeTypeMap() {

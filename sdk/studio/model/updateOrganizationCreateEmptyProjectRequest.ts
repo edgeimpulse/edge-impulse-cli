@@ -16,10 +16,6 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
     * The name of the project.
     */
     'projectName': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,11 +23,6 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
         {
             "name": "projectName",
             "baseName": "projectName",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
             "type": "string"
         }    ];
 

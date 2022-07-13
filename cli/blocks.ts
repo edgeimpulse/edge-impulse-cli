@@ -990,11 +990,11 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 }
 
                 clearInterval(spinIv);
-            }
 
-            process.stdout.write('\n');
-            console.log(`Done... DSP Block "${currentBlockConfig.name}" is now available for all projects in your organization!`);
-            console.log(`Just head to **Create impulse** and click 'Add processing block' to use this block.`);
+                process.stdout.write('\n');
+                console.log(`Done... DSP Block "${currentBlockConfig.name}" is now available for all projects in your organization!`);
+                console.log(`Just head to **Create impulse** and click 'Add processing block' to use this block.`);
+            }
 
             process.exit(0);
         }

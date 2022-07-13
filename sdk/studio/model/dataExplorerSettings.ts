@@ -13,9 +13,10 @@
 
 export class DataExplorerSettings {
     /**
-    * Preset to use for the data explorer. If you set this to \'custom\' you also need to set the input / dsp blocks. The \"keywords\" and \"images\" preset use an embedding model after the DSP which will yield significantly better results.
+    * Preset to use for the data explorer.
     */
     'preset'?: DataExplorerSettingsPresetEnum;
+    'dimensionalityReductionTechnique'?: DataExplorerSettingsDimensionalityReductionTechniqueEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +25,11 @@ export class DataExplorerSettings {
             "name": "preset",
             "baseName": "preset",
             "type": "DataExplorerSettingsPresetEnum"
+        },
+        {
+            "name": "dimensionalityReductionTechnique",
+            "baseName": "dimensionalityReductionTechnique",
+            "type": "DataExplorerSettingsDimensionalityReductionTechniqueEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -34,3 +40,6 @@ export class DataExplorerSettings {
 
 export type DataExplorerSettingsPresetEnum = 'keywords' | 'images' | 'current-impulse' | 'current-impulse-embeddings';
 export const DataExplorerSettingsPresetEnumValues: string[] = ['keywords', 'images', 'current-impulse', 'current-impulse-embeddings'];
+
+export type DataExplorerSettingsDimensionalityReductionTechniqueEnum = 'tsne' | 'pca';
+export const DataExplorerSettingsDimensionalityReductionTechniqueEnumValues: string[] = ['tsne', 'pca'];

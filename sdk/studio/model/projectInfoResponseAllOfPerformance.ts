@@ -13,7 +13,6 @@
 
 export class ProjectInfoResponseAllOfPerformance {
     'gpu': boolean;
-    'parallelDspJobs': number;
     /**
     * Compute time limit per job in minutes (applies only to DSP and learning jobs).
     */
@@ -35,11 +34,6 @@ export class ProjectInfoResponseAllOfPerformance {
             "name": "gpu",
             "baseName": "gpu",
             "type": "boolean"
-        },
-        {
-            "name": "parallelDspJobs",
-            "baseName": "parallelDspJobs",
-            "type": "number"
         },
         {
             "name": "jobLimitM",

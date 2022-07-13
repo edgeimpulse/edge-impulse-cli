@@ -16,7 +16,7 @@
 */
 export class AdminUpdateUserRequest {
     /**
-    * New email. This will also update the forum’s email address but the user may need to logout/login back
+    * New email. This will also update the forum\'s email address but the user may need to logout/login back
     */
     'email'?: string;
 

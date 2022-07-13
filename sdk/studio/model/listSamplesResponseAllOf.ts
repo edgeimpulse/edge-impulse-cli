@@ -14,6 +14,7 @@ import { Sample } from './sample';
 
 export class ListSamplesResponseAllOf {
     'samples': Array<Sample>;
+    'totalCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -22,6 +23,11 @@ export class ListSamplesResponseAllOf {
             "name": "samples",
             "baseName": "samples",
             "type": "Array<Sample>"
+        },
+        {
+            "name": "totalCount",
+            "baseName": "totalCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

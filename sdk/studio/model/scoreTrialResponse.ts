@@ -12,6 +12,8 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ScoreTrialResponseAllOf } from './scoreTrialResponseAllOf';
+import { ScoreTrialResponseAllOfLatency } from './scoreTrialResponseAllOfLatency';
+import { ScoreTrialResponseAllOfRam } from './scoreTrialResponseAllOfRam';
 
 export class ScoreTrialResponse {
     /**
@@ -22,13 +24,10 @@ export class ScoreTrialResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'dspMips': number;
-    'dspRam': number;
-    'dspRom': number;
-    'learnMaccs': number;
-    'learnRam': number;
-    'learnRom': number;
     'score': number;
+    'latency': ScoreTrialResponseAllOfLatency;
+    'ram': ScoreTrialResponseAllOfRam;
+    'rom': ScoreTrialResponseAllOfRam;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,39 +43,24 @@ export class ScoreTrialResponse {
             "type": "string"
         },
         {
-            "name": "dspMips",
-            "baseName": "dspMips",
-            "type": "number"
-        },
-        {
-            "name": "dspRam",
-            "baseName": "dspRam",
-            "type": "number"
-        },
-        {
-            "name": "dspRom",
-            "baseName": "dspRom",
-            "type": "number"
-        },
-        {
-            "name": "learnMaccs",
-            "baseName": "learnMaccs",
-            "type": "number"
-        },
-        {
-            "name": "learnRam",
-            "baseName": "learnRam",
-            "type": "number"
-        },
-        {
-            "name": "learnRom",
-            "baseName": "learnRom",
-            "type": "number"
-        },
-        {
             "name": "score",
             "baseName": "score",
             "type": "number"
+        },
+        {
+            "name": "latency",
+            "baseName": "latency",
+            "type": "ScoreTrialResponseAllOfLatency"
+        },
+        {
+            "name": "ram",
+            "baseName": "ram",
+            "type": "ScoreTrialResponseAllOfRam"
+        },
+        {
+            "name": "rom",
+            "baseName": "rom",
+            "type": "ScoreTrialResponseAllOfRam"
         }    ];
 
     static getAttributeTypeMap() {

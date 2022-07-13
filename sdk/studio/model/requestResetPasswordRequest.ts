@@ -13,10 +13,6 @@
 
 export class RequestResetPasswordRequest {
     'email': string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,11 +20,6 @@ export class RequestResetPasswordRequest {
         {
             "name": "email",
             "baseName": "email",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
             "type": "string"
         }    ];
 

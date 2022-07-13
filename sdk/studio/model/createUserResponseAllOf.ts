@@ -16,6 +16,10 @@ export class CreateUserResponseAllOf {
     * URL to redirect user to.
     */
     'redirectUrl'?: string;
+    /**
+    * User unique identifier
+    */
+    'id'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +28,11 @@ export class CreateUserResponseAllOf {
             "name": "redirectUrl",
             "baseName": "redirectUrl",
             "type": "string"
+        },
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -20,6 +20,10 @@ export class UpdateOrganizationRequest {
     */
     'logo'?: string;
     /**
+    * New leader image URL, or set to `null` to remove the leader.
+    */
+    'headerImg'?: string;
+    /**
     * New organization name.
     */
     'name'?: string;
@@ -35,6 +39,11 @@ export class UpdateOrganizationRequest {
         {
             "name": "logo",
             "baseName": "logo",
+            "type": "string"
+        },
+        {
+            "name": "headerImg",
+            "baseName": "headerImg",
             "type": "string"
         },
         {

@@ -33,6 +33,22 @@ export class CreateWhitelabelRequest {
     * The list of deployment targets to show on the UI
     */
     'deploymentTargets': Array<string>;
+    /**
+    * Custom documentation URL
+    */
+    'documentationUrl'?: string;
+    /**
+    * Whether this white label allow sign ups or not.
+    */
+    'allowSignup': boolean;
+    /**
+    * Whether this white label allows the creation of free projects.
+    */
+    'allowFreeProjects': boolean;
+    /**
+    * Whether this white label should work in sandboxed mode or not.
+    */
+    'sandboxed'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,6 +82,26 @@ export class CreateWhitelabelRequest {
             "name": "deploymentTargets",
             "baseName": "deploymentTargets",
             "type": "Array<string>"
+        },
+        {
+            "name": "documentationUrl",
+            "baseName": "documentationUrl",
+            "type": "string"
+        },
+        {
+            "name": "allowSignup",
+            "baseName": "allowSignup",
+            "type": "boolean"
+        },
+        {
+            "name": "allowFreeProjects",
+            "baseName": "allowFreeProjects",
+            "type": "boolean"
+        },
+        {
+            "name": "sandboxed",
+            "baseName": "sandboxed",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

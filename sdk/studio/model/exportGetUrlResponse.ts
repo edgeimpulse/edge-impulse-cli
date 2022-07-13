@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { ExportGetUrlResponseAllOf } from './exportGetUrlResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
-import { UploadUserPhotoResponseAllOf } from './uploadUserPhotoResponseAllOf';
 
 export class ExportGetUrlResponse {
     /**
@@ -22,7 +22,15 @@ export class ExportGetUrlResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'url': string;
+    'hasExport': boolean;
+    /**
+    * Set if hasExport is true
+    */
+    'created'?: Date;
+    /**
+    * Set if hasExport is true
+    */
+    'url'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +44,16 @@ export class ExportGetUrlResponse {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "hasExport",
+            "baseName": "hasExport",
+            "type": "boolean"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
         },
         {
             "name": "url",

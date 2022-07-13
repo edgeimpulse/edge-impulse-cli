@@ -20,10 +20,6 @@ export class UpdateOrganizationCreateProjectRequest {
     * List of user IDs to notify when a Job succeeds
     */
     'emailRecipientUids'?: Array<number>;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,11 +33,6 @@ export class UpdateOrganizationCreateProjectRequest {
             "name": "emailRecipientUids",
             "baseName": "emailRecipientUids",
             "type": "Array<number>"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -34,9 +34,9 @@ export class DSPMetadataResponse {
     */
     'labels': Array<string>;
     /**
-    * Names of the generated features
+    * Names of the generated features. Only set if axes have explicit labels.
     */
-    'featureLabels': Array<string>;
+    'featureLabels'?: Array<string>;
     'windowCount': number;
     /**
     * Number of features for this DSP block

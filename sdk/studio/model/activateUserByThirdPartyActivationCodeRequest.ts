@@ -14,6 +14,7 @@
 export class ActivateUserByThirdPartyActivationCodeRequest {
     'activationCode': string;
     'password': string;
+    'username': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -26,6 +27,11 @@ export class ActivateUserByThirdPartyActivationCodeRequest {
         {
             "name": "password",
             "baseName": "password",
+            "type": "string"
+        },
+        {
+            "name": "username",
+            "baseName": "username",
             "type": "string"
         }    ];
 

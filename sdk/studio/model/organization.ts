@@ -19,7 +19,13 @@ export class Organization {
     */
     'name': string;
     'logo'?: string;
+    'headerImg'?: string;
     'users': Array<OrganizationUser>;
+    'isDeveloperProfile': boolean;
+    /**
+    * Unique identifier of the white label this project belongs to, if any.
+    */
+    'whitelabelId': number | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,9 +46,24 @@ export class Organization {
             "type": "string"
         },
         {
+            "name": "headerImg",
+            "baseName": "headerImg",
+            "type": "string"
+        },
+        {
             "name": "users",
             "baseName": "users",
             "type": "Array<OrganizationUser>"
+        },
+        {
+            "name": "isDeveloperProfile",
+            "baseName": "isDeveloperProfile",
+            "type": "boolean"
+        },
+        {
+            "name": "whitelabelId",
+            "baseName": "whitelabelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

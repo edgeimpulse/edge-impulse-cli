@@ -30,7 +30,7 @@ export enum PageType {
     Tuner = 28,
     LabelObjectDetection = 29,
     SelectProjectThirdParty = 30,
-    ApplicationTesting = 31,
+    PerformanceCalibration = 31,
     Jobs = 32,
     ActivationRequired = 33,
     Redirect = 34,
@@ -55,6 +55,7 @@ export enum PageType {
     OrganizationTransferLearning = 104,
     OrganizationSettings = 105,
     OrganizationDatasets = 106,
+    OrganizationJobs = 107,
     UploadPortal = 200,
 }
 

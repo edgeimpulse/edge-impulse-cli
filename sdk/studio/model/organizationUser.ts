@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { UserStaffInfo } from './userStaffInfo';
 
 export class OrganizationUser {
     'id': number;
@@ -20,7 +21,7 @@ export class OrganizationUser {
     'added': Date;
     'email': string;
     'role': OrganizationUserRoleEnum;
-    'isEdgeImpulseStaff': boolean;
+    'staffInfo': UserStaffInfo;
     'projectCount': number;
     'datasets': Array<string>;
     'pending': boolean;
@@ -69,9 +70,9 @@ export class OrganizationUser {
             "type": "OrganizationUserRoleEnum"
         },
         {
-            "name": "isEdgeImpulseStaff",
-            "baseName": "isEdgeImpulseStaff",
-            "type": "boolean"
+            "name": "staffInfo",
+            "baseName": "staffInfo",
+            "type": "UserStaffInfo"
         },
         {
             "name": "projectCount",

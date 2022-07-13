@@ -15,6 +15,11 @@ export class GetUserResponseAllOfOrganizations {
     'id': number;
     'name': string;
     'logo'?: string;
+    'isDeveloperProfile': boolean;
+    /**
+    * Unique identifier of the white label this project belongs to, if any.
+    */
+    'whitelabelId': number | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +38,16 @@ export class GetUserResponseAllOfOrganizations {
             "name": "logo",
             "baseName": "logo",
             "type": "string"
+        },
+        {
+            "name": "isDeveloperProfile",
+            "baseName": "isDeveloperProfile",
+            "type": "boolean"
+        },
+        {
+            "name": "whitelabelId",
+            "baseName": "whitelabelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

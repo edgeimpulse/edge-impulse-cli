@@ -15,6 +15,7 @@ import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
 import { User } from './user';
+import { UserStaffInfo } from './userStaffInfo';
 
 export class GetUserResponse {
     /**
@@ -30,7 +31,8 @@ export class GetUserResponse {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'isEdgeImpulseStaff': boolean;
+    'staffInfo': UserStaffInfo;
+    'pending': boolean;
     'email': string;
     'activated': boolean;
     /**
@@ -90,8 +92,13 @@ export class GetUserResponse {
             "type": "Date"
         },
         {
-            "name": "isEdgeImpulseStaff",
-            "baseName": "isEdgeImpulseStaff",
+            "name": "staffInfo",
+            "baseName": "staffInfo",
+            "type": "UserStaffInfo"
+        },
+        {
+            "name": "pending",
+            "baseName": "pending",
             "type": "boolean"
         },
         {

@@ -32,10 +32,6 @@ export class CreateUserThirdPartyRequest {
     * Whether the user accepted the privacy policy
     */
     'privacyPolicy': boolean;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -64,11 +60,6 @@ export class CreateUserThirdPartyRequest {
             "name": "privacyPolicy",
             "baseName": "privacyPolicy",
             "type": "boolean"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

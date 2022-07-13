@@ -21,10 +21,6 @@ export class AddMemberRequest {
     * Only used for \'guest\' users. Limits the datasets the user has access to.
     */
     'datasets': Array<string>;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,11 +39,6 @@ export class AddMemberRequest {
             "name": "datasets",
             "baseName": "datasets",
             "type": "Array<string>"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { User } from './user';
+import { ProjectCollaborator } from './projectCollaborator';
 
 export class Project {
     'id': number;
@@ -28,13 +28,21 @@ export class Project {
     'logo'?: string;
     'ownerUserId'?: number;
     'ownerOrganizationId'?: number;
-    'collaborators': Array<User>;
+    'collaborators': Array<ProjectCollaborator>;
     'labelingMethod': ProjectLabelingMethodEnum;
     /**
     * Metadata about the project
     */
     'metadata': object;
     'dataExplorerScreenshot'?: string;
+    /**
+    * Whether this is an enterprise project
+    */
+    'isEnterpriseProject': boolean;
+    /**
+    * Unique identifier of the white label this project belongs to, if any.
+    */
+    'whitelabelId': number | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,7 +95,7 @@ export class Project {
         {
             "name": "collaborators",
             "baseName": "collaborators",
-            "type": "Array<User>"
+            "type": "Array<ProjectCollaborator>"
         },
         {
             "name": "labelingMethod",
@@ -103,6 +111,16 @@ export class Project {
             "name": "dataExplorerScreenshot",
             "baseName": "dataExplorerScreenshot",
             "type": "string"
+        },
+        {
+            "name": "isEnterpriseProject",
+            "baseName": "isEnterpriseProject",
+            "type": "boolean"
+        },
+        {
+            "name": "whitelabelId",
+            "baseName": "whitelabelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

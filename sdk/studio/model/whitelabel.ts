@@ -20,6 +20,8 @@ export class Whitelabel {
     'identityProviders': Array<string>;
     'allowPasswordAuth': boolean;
     'deploymentTargets': Array<string>;
+    'allowSignup': boolean;
+    'allowFreeProjects': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +65,16 @@ export class Whitelabel {
             "name": "deploymentTargets",
             "baseName": "deploymentTargets",
             "type": "Array<string>"
+        },
+        {
+            "name": "allowSignup",
+            "baseName": "allowSignup",
+            "type": "boolean"
+        },
+        {
+            "name": "allowFreeProjects",
+            "baseName": "allowFreeProjects",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

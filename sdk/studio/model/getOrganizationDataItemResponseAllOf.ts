@@ -13,7 +13,7 @@
 import { OrganizationDataItem } from './organizationDataItem';
 
 export class GetOrganizationDataItemResponseAllOf {
-    'data'?: OrganizationDataItem;
+    'data': OrganizationDataItem;
 
     static discriminator: string | undefined = undefined;
 

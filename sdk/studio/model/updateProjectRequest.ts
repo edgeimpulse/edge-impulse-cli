@@ -46,6 +46,10 @@ export class UpdateProjectRequest {
     */
     'showProjectTypeWizard'?: boolean;
     /**
+    * Which option was selected in the project type wizard
+    */
+    'selectedProjectTypeInWizard'?: UpdateProjectRequestSelectedProjectTypeInWizardEnum;
+    /**
     * The next step in the getting started wizard, or set to -1 to clear the getting started wizard
     */
     'gettingStartedStep'?: number;
@@ -53,10 +57,6 @@ export class UpdateProjectRequest {
     * Whether to use GPU for training
     */
     'useGpu'?: boolean;
-    /**
-    * Number of parallel DSP jobs
-    */
-    'parallelDspJobs'?: number;
     /**
     * Job limit in minutes
     */
@@ -91,6 +91,10 @@ export class UpdateProjectRequest {
     * The IDs of users who should be notified when a model testing job is finished.
     */
     'modelTestingJobNotificationUids'?: Array<number>;
+    /**
+    * The IDs of users who should be notified when an export job is finished.
+    */
+    'exportJobNotificationUids'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -141,6 +145,11 @@ export class UpdateProjectRequest {
             "type": "boolean"
         },
         {
+            "name": "selectedProjectTypeInWizard",
+            "baseName": "selectedProjectTypeInWizard",
+            "type": "UpdateProjectRequestSelectedProjectTypeInWizardEnum"
+        },
+        {
             "name": "gettingStartedStep",
             "baseName": "gettingStartedStep",
             "type": "number"
@@ -149,11 +158,6 @@ export class UpdateProjectRequest {
             "name": "useGpu",
             "baseName": "useGpu",
             "type": "boolean"
-        },
-        {
-            "name": "parallelDspJobs",
-            "baseName": "parallelDspJobs",
-            "type": "number"
         },
         {
             "name": "computeTimeLimitM",
@@ -204,6 +208,11 @@ export class UpdateProjectRequest {
             "name": "modelTestingJobNotificationUids",
             "baseName": "modelTestingJobNotificationUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "exportJobNotificationUids",
+            "baseName": "exportJobNotificationUids",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -214,3 +223,6 @@ export class UpdateProjectRequest {
 
 export type UpdateProjectRequestLabelingMethodEnum = 'single_label' | 'object_detection';
 export const UpdateProjectRequestLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
+
+export type UpdateProjectRequestSelectedProjectTypeInWizardEnum = 'accelerometer' | 'audio' | 'image_classification' | 'object_detection' | 'something_else';
+export const UpdateProjectRequestSelectedProjectTypeInWizardEnumValues: string[] = ['accelerometer', 'audio', 'image_classification', 'object_detection', 'something_else'];

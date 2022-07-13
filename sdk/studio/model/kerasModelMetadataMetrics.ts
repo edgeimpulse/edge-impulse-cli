@@ -12,6 +12,7 @@
 
 import { KerasModelMetadataMetricsOnDevicePerformance } from './kerasModelMetadataMetricsOnDevicePerformance';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { ModelPrediction } from './modelPrediction';
 
 export class KerasModelMetadataMetrics {
     'type': KerasModelTypeEnum;
@@ -29,7 +30,8 @@ export class KerasModelMetadataMetrics {
     */
     'report': object;
     'onDevicePerformance': Array<KerasModelMetadataMetricsOnDevicePerformance>;
-    'predictions'?: Array<Array<number>>;
+    'predictions'?: Array<ModelPrediction>;
+    'visualization': KerasModelMetadataMetricsVisualizationEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -67,7 +69,12 @@ export class KerasModelMetadataMetrics {
         {
             "name": "predictions",
             "baseName": "predictions",
-            "type": "Array<Array<number>>"
+            "type": "Array<ModelPrediction>"
+        },
+        {
+            "name": "visualization",
+            "baseName": "visualization",
+            "type": "KerasModelMetadataMetricsVisualizationEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -75,3 +82,6 @@ export class KerasModelMetadataMetrics {
     }
 }
 
+
+export type KerasModelMetadataMetricsVisualizationEnum = 'featureExplorer' | 'dataExplorer' | 'none';
+export const KerasModelMetadataMetricsVisualizationEnumValues: string[] = ['featureExplorer', 'dataExplorer', 'none'];

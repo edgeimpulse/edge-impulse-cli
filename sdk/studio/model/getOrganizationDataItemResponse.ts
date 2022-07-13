@@ -23,7 +23,7 @@ export class GetOrganizationDataItemResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'data'?: OrganizationDataItem;
+    'data': OrganizationDataItem;
 
     static discriminator: string | undefined = undefined;
 

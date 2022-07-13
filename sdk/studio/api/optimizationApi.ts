@@ -17,9 +17,13 @@ import http = require('http');
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { LogStdoutResponse } from '../model/logStdoutResponse';
 import { OptimizeConfig } from '../model/optimizeConfig';
+import { OptimizeConfigResponse } from '../model/optimizeConfigResponse';
+import { OptimizeSpaceResponse } from '../model/optimizeSpaceResponse';
 import { OptimizeStateResponse } from '../model/optimizeStateResponse';
 import { ScoreTrialResponse } from '../model/scoreTrialResponse';
-import { TunerTrial } from '../model/tunerTrial';
+import { SetOptimizeSpaceRequest } from '../model/setOptimizeSpaceRequest';
+import { SetOptimizeSpaceRequestAllOf } from '../model/setOptimizeSpaceRequestAllOf';
+import { TunerCreateTrialImpulse } from '../model/tunerCreateTrialImpulse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -87,11 +91,13 @@ export class OptimizationApi {
      * Create trial
      * @summary Create trial
      * @param projectId Project ID
-     * @param tunerTrial 
+     * @param jobId Job ID
+     * @param tunerCreateTrialImpulse 
      */
-    public async createTrial (projectId: number, tunerTrial: TunerTrial, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/{projectId}/optimize/create-trial'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+    public async createTrial (projectId: number, jobId: number, tunerCreateTrialImpulse: TunerCreateTrialImpulse, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/{jobId}/create-trial'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -108,9 +114,14 @@ export class OptimizationApi {
             throw new Error('Required parameter projectId was null or undefined when calling createTrial.');
         }
 
-        // verify required parameter 'tunerTrial' is not null or undefined
-        if (tunerTrial === null || tunerTrial === undefined) {
-            throw new Error('Required parameter tunerTrial was null or undefined when calling createTrial.');
+        // verify required parameter 'jobId' is not null or undefined
+        if (jobId === null || jobId === undefined) {
+            throw new Error('Required parameter jobId was null or undefined when calling createTrial.');
+        }
+
+        // verify required parameter 'tunerCreateTrialImpulse' is not null or undefined
+        if (tunerCreateTrialImpulse === null || tunerCreateTrialImpulse === undefined) {
+            throw new Error('Required parameter tunerCreateTrialImpulse was null or undefined when calling createTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -125,7 +136,7 @@ export class OptimizationApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
-            body: ObjectSerializer.serialize(tunerTrial, "TunerTrial")
+            body: ObjectSerializer.serialize(tunerCreateTrialImpulse, "TunerCreateTrialImpulse")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -150,6 +161,146 @@ export class OptimizationApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Get config
+     * @summary Get config
+     * @param projectId Project ID
+     */
+    public async getConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: OptimizeConfigResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/config'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getConfig.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: OptimizeConfigResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OptimizeConfigResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Search space
+     * @summary Search space
+     * @param projectId Project ID
+     */
+    public async getSpace (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: OptimizeSpaceResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/space'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getSpace.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: OptimizeSpaceResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OptimizeSpaceResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -316,9 +467,9 @@ export class OptimizationApi {
      * Score trial
      * @summary Score trial
      * @param projectId Project ID
-     * @param tunerTrial 
+     * @param tunerCreateTrialImpulse 
      */
-    public async scoreTrial (projectId: number, tunerTrial: TunerTrial, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ScoreTrialResponse;  }> {
+    public async scoreTrial (projectId: number, tunerCreateTrialImpulse: TunerCreateTrialImpulse, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ScoreTrialResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/score-trial'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -337,9 +488,9 @@ export class OptimizationApi {
             throw new Error('Required parameter projectId was null or undefined when calling scoreTrial.');
         }
 
-        // verify required parameter 'tunerTrial' is not null or undefined
-        if (tunerTrial === null || tunerTrial === undefined) {
-            throw new Error('Required parameter tunerTrial was null or undefined when calling scoreTrial.');
+        // verify required parameter 'tunerCreateTrialImpulse' is not null or undefined
+        if (tunerCreateTrialImpulse === null || tunerCreateTrialImpulse === undefined) {
+            throw new Error('Required parameter tunerCreateTrialImpulse was null or undefined when calling scoreTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -354,7 +505,7 @@ export class OptimizationApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
-            body: ObjectSerializer.serialize(tunerTrial, "TunerTrial")
+            body: ObjectSerializer.serialize(tunerCreateTrialImpulse, "TunerCreateTrialImpulse")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -432,6 +583,83 @@ export class OptimizationApi {
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
             body: ObjectSerializer.serialize(optimizeConfig, "OptimizeConfig")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Update search space
+     * @summary Update search space
+     * @param projectId Project ID
+     * @param setOptimizeSpaceRequest 
+     */
+    public async updateSpace (projectId: number, setOptimizeSpaceRequest: SetOptimizeSpaceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/space'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateSpace.');
+        }
+
+        // verify required parameter 'setOptimizeSpaceRequest' is not null or undefined
+        if (setOptimizeSpaceRequest === null || setOptimizeSpaceRequest === undefined) {
+            throw new Error('Required parameter setOptimizeSpaceRequest was null or undefined when calling updateSpace.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(setOptimizeSpaceRequest, "SetOptimizeSpaceRequest")
         };
 
         let authenticationPromise = Promise.resolve();

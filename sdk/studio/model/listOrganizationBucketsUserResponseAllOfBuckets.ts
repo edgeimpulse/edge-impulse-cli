@@ -31,6 +31,10 @@ export class ListOrganizationBucketsUserResponseAllOfBuckets {
     * S3 region
     */
     'region': string;
+    /**
+    * The unique identifier of the white label this bucket belongs to, if any
+    */
+    'whitelabelId': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +73,11 @@ export class ListOrganizationBucketsUserResponseAllOfBuckets {
             "name": "region",
             "baseName": "region",
             "type": "string"
+        },
+        {
+            "name": "whitelabelId",
+            "baseName": "whitelabelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

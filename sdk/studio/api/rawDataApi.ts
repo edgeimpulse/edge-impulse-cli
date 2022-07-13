@@ -17,18 +17,21 @@ import http = require('http');
 import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
 import { CropSampleResponse } from '../model/cropSampleResponse';
-import { DataExplorerFeaturesResponse } from '../model/dataExplorerFeaturesResponse';
+import { DataExplorerPredictionsResponse } from '../model/dataExplorerPredictionsResponse';
 import { DataExplorerSettings } from '../model/dataExplorerSettings';
 import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
+import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
 import { ListSamplesResponse } from '../model/listSamplesResponse';
 import { MoveRawDataRequest } from '../model/moveRawDataRequest';
 import { ObjectDetectionAutoLabelRequest } from '../model/objectDetectionAutoLabelRequest';
 import { ObjectDetectionAutoLabelResponse } from '../model/objectDetectionAutoLabelResponse';
+import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetectionLabelQueueCountResponse';
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
@@ -109,11 +112,13 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchDelete (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async batchDelete (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -155,6 +160,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -224,11 +237,13 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchDisable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async batchDisable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -270,6 +285,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -340,11 +363,13 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchEditLabels (projectId: number, category: 'training' | 'testing' | 'anomaly', editSampleLabelRequest: EditSampleLabelRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async batchEditLabels (projectId: number, category: 'training' | 'testing' | 'anomaly', editSampleLabelRequest: EditSampleLabelRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -391,6 +416,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -461,11 +494,13 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchEnable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async batchEnable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -507,6 +542,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -577,11 +620,13 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchMove (projectId: number, category: 'training' | 'testing' | 'anomaly', moveRawDataRequest: MoveRawDataRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async batchMove (projectId: number, category: 'training' | 'testing' | 'anomaly', moveRawDataRequest: MoveRawDataRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -628,6 +673,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -852,10 +905,12 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }> {
+    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CountSamplesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -897,6 +952,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {
@@ -1588,7 +1651,7 @@ export class RawDataApi {
      * @summary Get data explorer features
      * @param projectId Project ID
      */
-    public async getDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: DataExplorerFeaturesResponse;  }> {
+    public async getDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GetDataExplorerFeaturesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1637,12 +1700,82 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.IncomingMessage; body: DataExplorerFeaturesResponse;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: GetDataExplorerFeaturesResponse;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "DataExplorerFeaturesResponse");
+                        body = ObjectSerializer.deserialize(body, "GetDataExplorerFeaturesResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Predictions for every data explorer point (only available when using current impulse to populate data explorer)
+     * @summary Get data explorer predictions
+     * @param projectId Project ID
+     */
+    public async getDataExplorerPredictions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: DataExplorerPredictionsResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/predictions'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDataExplorerPredictions.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: DataExplorerPredictionsResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DataExplorerPredictionsResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -1783,6 +1916,76 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ObjectDetectionLabelQueueResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Get count for unlabeled items from the object detection queue.
+     * @summary Object detection label queue count
+     * @param projectId Project ID
+     */
+    public async getObjectDetectionLabelQueueCount (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ObjectDetectionLabelQueueCountResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/label-object-detection-queue/count'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getObjectDetectionLabelQueueCount.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: ObjectDetectionLabelQueueCountResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ObjectDetectionLabelQueueCountResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
@@ -2403,6 +2606,76 @@ export class RawDataApi {
         });
     }
     /**
+     * t-SNE2 output of the raw dataset
+     * @summary Check data explorer features
+     * @param projectId Project ID
+     */
+    public async hasDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: HasDataExplorerFeaturesResponse;  }> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/has-features'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling hasDataExplorerFeatures.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: HasDataExplorerFeaturesResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Retrieve all raw data by category.
      * @summary List samples
      * @param projectId Project ID
@@ -2414,10 +2687,12 @@ export class RawDataApi {
      * @param filename Only include samples whose filename includes the given filename
      * @param maxLength Only include samples shorter than the given length, in milliseconds
      * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
+    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ListSamplesResponse;  }> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2471,6 +2746,14 @@ export class RawDataApi {
 
         if (minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        }
+
+        if (minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        }
+
+        if (maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
         }
 
         if (signatureValidity !== undefined) {

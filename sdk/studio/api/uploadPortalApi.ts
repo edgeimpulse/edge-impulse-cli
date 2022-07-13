@@ -16,9 +16,14 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { CreateSignedUploadLinkRequest } from '../model/createSignedUploadLinkRequest';
 import { CreateSignedUploadLinkResponse } from '../model/createSignedUploadLinkResponse';
+import { DeletePortalFileRequest } from '../model/deletePortalFileRequest';
+import { DownloadPortalFileRequest } from '../model/downloadPortalFileRequest';
+import { DownloadPortalFileResponse } from '../model/downloadPortalFileResponse';
+import { GenericApiResponse } from '../model/genericApiResponse';
 import { ListPortalFilesInFolderRequest } from '../model/listPortalFilesInFolderRequest';
 import { ListPortalFilesInFolderResponse } from '../model/listPortalFilesInFolderResponse';
 import { PortalInfoResponse } from '../model/portalInfoResponse';
+import { RenamePortalFileRequest } from '../model/renamePortalFileRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -160,6 +165,160 @@ export class UploadPortalApi {
         });
     }
     /**
+     * Delete a file from an upload portal (requires JWT auth).
+     * @summary Delete file from portal
+     * @param portalId Portal ID
+     * @param deletePortalFileRequest 
+     */
+    public async deletePortalFile (portalId: number, deletePortalFileRequest: DeletePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/portals/{portalId}/files/delete'
+            .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'portalId' is not null or undefined
+        if (portalId === null || portalId === undefined) {
+            throw new Error('Required parameter portalId was null or undefined when calling deletePortalFile.');
+        }
+
+        // verify required parameter 'deletePortalFileRequest' is not null or undefined
+        if (deletePortalFileRequest === null || deletePortalFileRequest === undefined) {
+            throw new Error('Required parameter deletePortalFileRequest was null or undefined when calling deletePortalFile.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(deletePortalFileRequest, "DeletePortalFileRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Download a file from an upload portal (requires JWT auth). Will return a signed URL to the bucket.
+     * @summary Download file from portal
+     * @param portalId Portal ID
+     * @param downloadPortalFileRequest 
+     */
+    public async downloadPortalFile (portalId: number, downloadPortalFileRequest: DownloadPortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: DownloadPortalFileResponse;  }> {
+        const localVarPath = this.basePath + '/api/portals/{portalId}/files/download'
+            .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'portalId' is not null or undefined
+        if (portalId === null || portalId === undefined) {
+            throw new Error('Required parameter portalId was null or undefined when calling downloadPortalFile.');
+        }
+
+        // verify required parameter 'downloadPortalFileRequest' is not null or undefined
+        if (downloadPortalFileRequest === null || downloadPortalFileRequest === undefined) {
+            throw new Error('Required parameter downloadPortalFileRequest was null or undefined when calling downloadPortalFile.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(downloadPortalFileRequest, "DownloadPortalFileRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: DownloadPortalFileResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DownloadPortalFileResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Get information about a portal
      * @summary Portal info
      * @param portalId Portal ID
@@ -231,7 +390,7 @@ export class UploadPortalApi {
     }
     /**
      * List all files and directories in specified prefix.
-     * @summary List files in portal folder
+     * @summary List files in portal
      * @param portalId Portal ID
      * @param listPortalFilesInFolderRequest 
      */
@@ -296,6 +455,83 @@ export class UploadPortalApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListPortalFilesInFolderResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Rename a file on an upload portal (requires JWT auth).
+     * @summary Rename file from portal
+     * @param portalId Portal ID
+     * @param renamePortalFileRequest 
+     */
+    public async renamePortalFile (portalId: number, renamePortalFileRequest: RenamePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+        const localVarPath = this.basePath + '/api/portals/{portalId}/files/rename'
+            .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'portalId' is not null or undefined
+        if (portalId === null || portalId === undefined) {
+            throw new Error('Required parameter portalId was null or undefined when calling renamePortalFile.');
+        }
+
+        // verify required parameter 'renamePortalFileRequest' is not null or undefined
+        if (renamePortalFileRequest === null || renamePortalFileRequest === undefined) {
+            throw new Error('Required parameter renamePortalFileRequest was null or undefined when calling renamePortalFile.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+            body: ObjectSerializer.serialize(renamePortalFileRequest, "RenamePortalFileRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

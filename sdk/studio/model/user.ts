@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { UserStaffInfo } from './userStaffInfo';
 
 export class User {
     'id': number;
@@ -17,7 +18,8 @@ export class User {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'isEdgeImpulseStaff': boolean;
+    'staffInfo': UserStaffInfo;
+    'pending': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -48,8 +50,13 @@ export class User {
             "type": "Date"
         },
         {
-            "name": "isEdgeImpulseStaff",
-            "baseName": "isEdgeImpulseStaff",
+            "name": "staffInfo",
+            "baseName": "staffInfo",
+            "type": "UserStaffInfo"
+        },
+        {
+            "name": "pending",
+            "baseName": "pending",
             "type": "boolean"
         }    ];
 

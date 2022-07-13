@@ -71,6 +71,10 @@ export class ProjectInfoResponse {
     * The IDs of users who should be notified when a model testing job is finished.
     */
     'modelTestingJobNotificationUids': Array<number>;
+    /**
+    * The IDs of users who should be notified when an export job is finished.
+    */
+    'exportJobNotificationUids': Array<number>;
     'hasNewTrainingData': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -189,6 +193,11 @@ export class ProjectInfoResponse {
         {
             "name": "modelTestingJobNotificationUids",
             "baseName": "modelTestingJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "exportJobNotificationUids",
+            "baseName": "exportJobNotificationUids",
             "type": "Array<number>"
         },
         {

@@ -11,8 +11,6 @@
  */
 
 import { TunerTrialBlocks } from './tunerTrialBlocks';
-import { TunerTrialKerasTunerTrial } from './tunerTrialKerasTunerTrial';
-import { TunerTrialMetadata } from './tunerTrialMetadata';
 
 export class TunerTrial {
     'id': string;
@@ -23,8 +21,7 @@ export class TunerTrial {
     'currentEpoch'?: number;
     'workerId'?: string;
     'blocks'?: Array<TunerTrialBlocks>;
-    'metadata'?: TunerTrialMetadata;
-    'kerasTunerTrial'?: TunerTrialKerasTunerTrial;
+    'impulse'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,14 +67,9 @@ export class TunerTrial {
             "type": "Array<TunerTrialBlocks>"
         },
         {
-            "name": "metadata",
-            "baseName": "metadata",
-            "type": "TunerTrialMetadata"
-        },
-        {
-            "name": "kerasTunerTrial",
-            "baseName": "kerasTunerTrial",
-            "type": "TunerTrialKerasTunerTrial"
+            "name": "impulse",
+            "baseName": "impulse",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

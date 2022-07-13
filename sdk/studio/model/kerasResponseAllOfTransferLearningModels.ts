@@ -22,6 +22,7 @@ export class KerasResponseAllOfTransferLearningModels {
     'defaultDropout'?: number;
     'defaultLearningRate'?: number;
     'defaultTrainingCycles'?: number;
+    'hasImageAugmentation'?: boolean;
     'type': KerasVisualLayerType;
     'organizationModelId'?: number;
 
@@ -72,6 +73,11 @@ export class KerasResponseAllOfTransferLearningModels {
             "name": "defaultTrainingCycles",
             "baseName": "defaultTrainingCycles",
             "type": "number"
+        },
+        {
+            "name": "hasImageAugmentation",
+            "baseName": "hasImageAugmentation",
+            "type": "boolean"
         },
         {
             "name": "type",

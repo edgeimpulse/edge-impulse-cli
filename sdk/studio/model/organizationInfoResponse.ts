@@ -35,6 +35,7 @@ export class OrganizationInfoResponse {
     */
     'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     'readme'?: ProjectInfoResponseAllOfReadme;
+    'whitelabelId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -73,6 +74,11 @@ export class OrganizationInfoResponse {
             "name": "readme",
             "baseName": "readme",
             "type": "ProjectInfoResponseAllOfReadme"
+        },
+        {
+            "name": "whitelabelId",
+            "baseName": "whitelabelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

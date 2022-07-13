@@ -15,15 +15,15 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { AddMemberRequest } from '../model/addMemberRequest';
-import { AddOrganizationApiKeyRequest } from '../model/addOrganizationApiKeyRequest';
 import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { InviteMemberRequest } from '../model/inviteMemberRequest';
+import { InviteOrganizationMemberRequest } from '../model/inviteOrganizationMemberRequest';
 import { RemoveMemberRequest } from '../model/removeMemberRequest';
 import { SetMemberDatasetsRequest } from '../model/setMemberDatasetsRequest';
 import { SetMemberRoleRequest } from '../model/setMemberRoleRequest';
 import { UpdateOrganizationBucketRequest } from '../model/updateOrganizationBucketRequest';
 import { UpdateOrganizationRequest } from '../model/updateOrganizationRequest';
+import { UploadAssetResponse } from '../model/uploadAssetResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -87,83 +87,6 @@ export class OrganizationRequiresAdminApi {
         (this.authentications as any)[OrganizationRequiresAdminApiApiKeys[key]].apiKey = value;
     }
 
-    /**
-     * Add an API key.
-     * @summary Add API key
-     * @param organizationId Organization ID
-     * @param addOrganizationApiKeyRequest 
-     */
-    public async addOrganizationApiKey (organizationId: number, addOrganizationApiKeyRequest: AddOrganizationApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/apikeys'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationApiKey.');
-        }
-
-        // verify required parameter 'addOrganizationApiKeyRequest' is not null or undefined
-        if (addOrganizationApiKeyRequest === null || addOrganizationApiKeyRequest === undefined) {
-            throw new Error('Required parameter addOrganizationApiKeyRequest was null or undefined when calling addOrganizationApiKey.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
-            json: true,
-            body: ObjectSerializer.serialize(addOrganizationApiKeyRequest, "AddOrganizationApiKeyRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject(new HttpError(response, body, response.statusCode));
-                        }
-                    }
-                });
-            });
-        });
-    }
     /**
      * Add a storage bucket.
      * @summary Add a storage bucket
@@ -392,9 +315,9 @@ export class OrganizationRequiresAdminApi {
      * Invite a member to an organization.
      * @summary Invite member
      * @param organizationId Organization ID
-     * @param inviteMemberRequest 
+     * @param inviteOrganizationMemberRequest 
      */
-    public async inviteOrganizationMember (organizationId: number, inviteMemberRequest: InviteMemberRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
+    public async inviteOrganizationMember (organizationId: number, inviteOrganizationMemberRequest: InviteOrganizationMemberRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: GenericApiResponse;  }> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/members/invite'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -413,9 +336,9 @@ export class OrganizationRequiresAdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling inviteOrganizationMember.');
         }
 
-        // verify required parameter 'inviteMemberRequest' is not null or undefined
-        if (inviteMemberRequest === null || inviteMemberRequest === undefined) {
-            throw new Error('Required parameter inviteMemberRequest was null or undefined when calling inviteOrganizationMember.');
+        // verify required parameter 'inviteOrganizationMemberRequest' is not null or undefined
+        if (inviteOrganizationMemberRequest === null || inviteOrganizationMemberRequest === undefined) {
+            throw new Error('Required parameter inviteOrganizationMemberRequest was null or undefined when calling inviteOrganizationMember.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -430,7 +353,7 @@ export class OrganizationRequiresAdminApi {
             useQuerystring: this._useQuerystring,
             agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
             json: true,
-            body: ObjectSerializer.serialize(inviteMemberRequest, "InviteMemberRequest")
+            body: ObjectSerializer.serialize(inviteOrganizationMemberRequest, "InviteOrganizationMemberRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -1085,6 +1008,158 @@ export class OrganizationRequiresAdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Uploads and updates the organization header image
+     * @summary Upload organization header image
+     * @param organizationId Organization ID
+     * @param image 
+     */
+    public async uploadOrganizationHeader (organizationId: number, image?: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: UploadAssetResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/header'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling uploadOrganizationHeader.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        if (image !== undefined) {
+            localVarFormParams['image'] = image;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: UploadAssetResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UploadAssetResponse");
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Uploads and updates the organization logo
+     * @summary Upload organization logo
+     * @param organizationId Organization ID
+     * @param image 
+     */
+    public async uploadOrganizationLogo (organizationId: number, image?: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: UploadAssetResponse;  }> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/logo'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling uploadOrganizationLogo.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        if (image !== undefined) {
+            localVarFormParams['image'] = image;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body: UploadAssetResponse;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UploadAssetResponse");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

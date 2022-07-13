@@ -36,10 +36,6 @@ export class OrganizationCreateProjectRequest {
     * Optional extra arguments for this transformation block
     */
     'extraCliArguments'?: string;
-    /**
-    * White label domain, if any
-    */
-    'whitelabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -117,11 +113,6 @@ export class OrganizationCreateProjectRequest {
         {
             "name": "extraCliArguments",
             "baseName": "extraCliArguments",
-            "type": "string"
-        },
-        {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
             "type": "string"
         }    ];
 

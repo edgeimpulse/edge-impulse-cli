@@ -18,6 +18,10 @@ export class OptimizeConfig {
     */
     'datasetCategory'?: OptimizeConfigDatasetCategoryEnum;
     /**
+    * Classification type
+    */
+    'classificationType'?: OptimizeConfigClassificationTypeEnum;
+    /**
     * Target latency in MS
     */
     'targetLatency'?: number;
@@ -42,6 +46,7 @@ export class OptimizeConfig {
     * Tuning algorithm to use to search hyperparameter space
     */
     'tuningAlgorithm'?: OptimizeConfigTuningAlgorithmEnum;
+    'notificationOnCompletion'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,6 +55,11 @@ export class OptimizeConfig {
             "name": "datasetCategory",
             "baseName": "datasetCategory",
             "type": "OptimizeConfigDatasetCategoryEnum"
+        },
+        {
+            "name": "classificationType",
+            "baseName": "classificationType",
+            "type": "OptimizeConfigClassificationTypeEnum"
         },
         {
             "name": "targetLatency",
@@ -100,6 +110,11 @@ export class OptimizeConfig {
             "name": "tuningAlgorithm",
             "baseName": "tuningAlgorithm",
             "type": "OptimizeConfigTuningAlgorithmEnum"
+        },
+        {
+            "name": "notificationOnCompletion",
+            "baseName": "notificationOnCompletion",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -108,8 +123,11 @@ export class OptimizeConfig {
 }
 
 
-export type OptimizeConfigDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant';
-export const OptimizeConfigDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant'];
+export type OptimizeConfigDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection';
+export const OptimizeConfigDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection'];
 
-export type OptimizeConfigTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian';
-export const OptimizeConfigTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian'];
+export type OptimizeConfigClassificationTypeEnum = 'classification' | 'regression';
+export const OptimizeConfigClassificationTypeEnumValues: string[] = ['classification', 'regression'];
+
+export type OptimizeConfigTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian' | 'custom';
+export const OptimizeConfigTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian', 'custom'];

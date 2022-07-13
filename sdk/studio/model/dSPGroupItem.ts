@@ -11,6 +11,7 @@
  */
 
 import { DSPGroupItemSelectOptions } from './dSPGroupItemSelectOptions';
+import { DSPGroupItemShowIf } from './dSPGroupItemShowIf';
 
 export class DSPGroupItem {
     'name': string;
@@ -22,6 +23,7 @@ export class DSPGroupItem {
     'selectOptions'?: Array<DSPGroupItemSelectOptions>;
     'readonly': boolean;
     'shouldShow': boolean;
+    'showIf'?: DSPGroupItemShowIf;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,6 +72,11 @@ export class DSPGroupItem {
             "name": "shouldShow",
             "baseName": "shouldShow",
             "type": "boolean"
+        },
+        {
+            "name": "showIf",
+            "baseName": "showIf",
+            "type": "DSPGroupItemShowIf"
         }    ];
 
     static getAttributeTypeMap() {

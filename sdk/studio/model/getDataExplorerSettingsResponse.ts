@@ -12,6 +12,7 @@
 
 import { DataExplorerSettings } from './dataExplorerSettings';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetDataExplorerSettingsResponseAllOf } from './getDataExplorerSettingsResponseAllOf';
 
 export class GetDataExplorerSettingsResponse {
     /**
@@ -23,9 +24,11 @@ export class GetDataExplorerSettingsResponse {
     */
     'error'?: string;
     /**
-    * Preset to use for the data explorer. If you set this to \'custom\' you also need to set the input / dsp blocks. The \"keywords\" and \"images\" preset use an embedding model after the DSP which will yield significantly better results.
+    * Preset to use for the data explorer.
     */
     'preset'?: GetDataExplorerSettingsResponsePresetEnum;
+    'dimensionalityReductionTechnique'?: GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum;
+    'dimensionalityReductionRecommendation': GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,6 +47,16 @@ export class GetDataExplorerSettingsResponse {
             "name": "preset",
             "baseName": "preset",
             "type": "GetDataExplorerSettingsResponsePresetEnum"
+        },
+        {
+            "name": "dimensionalityReductionTechnique",
+            "baseName": "dimensionalityReductionTechnique",
+            "type": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum"
+        },
+        {
+            "name": "dimensionalityReductionRecommendation",
+            "baseName": "dimensionalityReductionRecommendation",
+            "type": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -54,3 +67,9 @@ export class GetDataExplorerSettingsResponse {
 
 export type GetDataExplorerSettingsResponsePresetEnum = 'keywords' | 'images' | 'current-impulse' | 'current-impulse-embeddings';
 export const GetDataExplorerSettingsResponsePresetEnumValues: string[] = ['keywords', 'images', 'current-impulse', 'current-impulse-embeddings'];
+
+export type GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum = 'tsne' | 'pca';
+export const GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnumValues: string[] = ['tsne', 'pca'];
+
+export type GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum = 'tsne' | 'pca';
+export const GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnumValues: string[] = ['tsne', 'pca'];

@@ -38,6 +38,8 @@ const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
 const whichDeviceArgvIx = process.argv.indexOf('--which-device');
 const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
+const serialPortArgvIx = process.argv.indexOf('--port');
+const serialPortArgv = serialPortArgvIx !== -1 ? process.argv[serialPortArgvIx + 1] : undefined;
 
 let configFactory: Config;
 let serial: SerialConnector | undefined;
@@ -474,7 +476,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         console.log('    Ingestion:', config.endpoints.internal.ingestion);
         console.log('');
 
-        let deviceId = await findSerial(whichDeviceArgv);
+        let deviceId = serialPortArgv || await findSerial(whichDeviceArgv);
         await connectToSerial(config, deviceId, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {

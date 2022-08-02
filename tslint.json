@@ -2,7 +2,8 @@
     "extends": "../tslint.json",
     "linterOptions": {
         "exclude": [
-            "./sdk/**"
+            "./sdk/**",
+            "./sdk/studio/**"
         ]
     }
 }

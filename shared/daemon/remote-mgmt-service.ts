@@ -60,15 +60,15 @@ export interface RemoteMgmtConfig {
     api: {
         projects: {
             // tslint:disable-next-line: max-line-length
-            getProjectInfo(projectId: number): Promise<{ body: { success: boolean, error?: string, project: { name: string } } }>;
+            getProjectInfo(projectId: number): Promise<{ success: boolean, error?: string, project: { name: string } }>;
         };
         devices: {
             // tslint:disable-next-line: max-line-length
-            renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ body: { success: boolean, error?: string } }>;
+            renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ success: boolean, error?: string }>;
             // tslint:disable-next-line: max-line-length
-            createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ body: { success: boolean, error?: string } }>;
+            createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ success: boolean, error?: string }>;
             // tslint:disable-next-line: max-line-length
-            getDevice(projectId: number, deviceId: string): Promise<{ body: { success: boolean, error?: string, device?: { name: string; } } }>;
+            getDevice(projectId: number, deviceId: string): Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
         }
     };
 }
@@ -550,12 +550,9 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 deviceId: await this._device.getDeviceId(),
                 deviceType: this._device.getDeviceType(),
                 ifNotExists: true
-            })).body;
-            if (!create.success) {
-                throw new Error('Failed to create device... ' + create.error);
-            }
+            }));
 
-            let device = (await this._eiConfig.api.devices.getDevice(this._projectId, deviceId)).body.device;
+            let device = (await this._eiConfig.api.devices.getDevice(this._projectId, deviceId)).device;
 
             let currName = device ? device.name : deviceId;
             if (currName !== deviceId) return currName;
@@ -563,12 +560,8 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             let newName = await this._checkNameCb(currName);
 
             if (newName !== currName) {
-                let rename = (await this._eiConfig.api.devices.renameDevice(
-                    this._projectId, deviceId, { name: newName })).body;
-
-                if (!rename.success) {
-                    throw new Error('Failed to rename device... ' + rename.error);
-                }
+                (await this._eiConfig.api.devices.renameDevice(
+                    this._projectId, deviceId, { name: newName }));
             }
             return newName;
         }
@@ -580,11 +573,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
     private async getProjectName() {
         try {
-            let projectBody = (await this._eiConfig.api.projects.getProjectInfo(this._projectId)).body;
-            if (!projectBody.success) {
-                throw projectBody.error;
-            }
-
+            let projectBody = (await this._eiConfig.api.projects.getProjectInfo(this._projectId));
             return projectBody.project.name;
         }
         catch (ex2) {

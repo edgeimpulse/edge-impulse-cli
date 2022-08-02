@@ -84,6 +84,7 @@ export interface ClientInitUser {
     id: number;
     name: string;
     photo?: string;
+    isEvalUser: boolean;
 }
 
 export interface ClientInitStudioOptions {

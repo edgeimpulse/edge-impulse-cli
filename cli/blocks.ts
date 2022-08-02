@@ -7,26 +7,22 @@ import os from 'os';
 import { Config, EdgeImpulseConfig } from './config';
 import checkNewVersions from './check-new-version';
 import inquirer from 'inquirer';
-import {
-    AddOrganizationTransferLearningBlockRequest,
-    AddOrganizationTransformationBlockRequest,
-    OrganizationJobsApi,
-    UploadCustomBlockRequestTypeEnum,
-    UploadCustomBlockRequestTypeEnumValues
-} from '../sdk/studio/api';
 import request from 'request-promise';
 import unzip from 'unzipper';
 import tar from 'tar';
 import crypto from 'crypto';
-import WebSocket, { OPEN } from 'ws';
 import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
 import util from 'util';
-import {
-    ObjectDetectionLastLayer,
-    OrganizationTransferLearningBlockOperatesOnEnum
-} from '../sdk/studio/model/models';
 import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
+import {
+    AddOrganizationTransferLearningBlockRequest,
+    AddOrganizationTransformationBlockRequest,
+    ListOrganizationDspBlocksResponse,
+    ObjectDetectionLastLayer, OrganizationInfoResponse, OrganizationTransferLearningBlockOperatesOnEnum,
+    UploadCustomBlockRequestTypeEnum,
+    UploadCustomBlockRequestTypeEnumValues
+} from '../sdk/studio';
 
 const version = getCliVersion();
 
@@ -243,30 +239,30 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         // Select the organization
         let organizations = await config.api.organizations.listOrganizations();
         let organizationId: number;
-        if (!organizations.body.success) {
-            console.error('Cannot retrieve organizations:', organizations.body.error);
+        if (!organizations.success) {
+            console.error('Cannot retrieve organizations:', organizations.error);
             process.exit(1);
         }
-        if (!organizations.body.organizations || organizations.body.organizations.length === 0) {
+        if (!organizations.organizations || organizations.organizations.length === 0) {
             console.error('User is not part of any Edge Impulse organizations. You can only use custom blocks if ' +
                 'you have access to the enterprise version of Edge Impulse. You can log in with a new account via ' +
                 '`edge-impulse-blocks --clean`.');
             process.exit(1);
         }
-        else if (organizations.body.organizations && organizations.body.organizations.length === 1) {
-            organizationId = organizations.body.organizations[0].id;
+        else if (organizations.organizations && organizations.organizations.length === 1) {
+            organizationId = organizations.organizations[0].id;
         }
         else {
             let orgInqRes = await inquirer.prompt([{
                 type: 'list',
-                choices: (organizations.body.organizations || []).map(p => ({ name: p.name, value: p.id })),
+                choices: (organizations.organizations || []).map(p => ({ name: p.name, value: p.id })),
                 name: 'organization',
                 message: 'In which organization do you want to create this block?',
                 pageSize: 20
             }]);
             organizationId = Number(orgInqRes.organization);
         }
-        let organization = organizations.body.organizations.filter(org => org.id === organizationId)[0];
+        let organization = organizations.organizations.filter(org => org.id === organizationId)[0];
 
         console.log(`Attaching block to organization '${organization.name}'`);
 
@@ -318,8 +314,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             }[] = [];
         if (blockType === 'transform') {
             let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
-            if (blocks.body && blocks.body.transformationBlocks && blocks.body.transformationBlocks.length > 0) {
-                existingBlocks = blocks.body.transformationBlocks.map(p => (
+            if (blocks.transformationBlocks && blocks.transformationBlocks.length > 0) {
+                existingBlocks = blocks.transformationBlocks.map(p => (
                     {
                         name: p.name,
                         value: p.id,
@@ -330,8 +326,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         }
         else if (blockType === 'deploy') {
             let blocks = await config.api.organizationBlocks.listOrganizationDeployBlocks(organizationId);
-            if (blocks.body && blocks.body.deployBlocks && blocks.body.deployBlocks.length > 0) {
-                existingBlocks = blocks.body.deployBlocks.map(p => (
+            if (blocks.deployBlocks && blocks.deployBlocks.length > 0) {
+                existingBlocks = blocks.deployBlocks.map(p => (
                     {
                         name: p.name,
                         value: p.id,
@@ -342,8 +338,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         }
         else if (blockType === 'dsp') {
             let blocks = await config.api.organizationBlocks.listOrganizationDspBlocks(organizationId);
-            if (blocks.body && blocks.body.dspBlocks && blocks.body.dspBlocks.length > 0) {
-                existingBlocks = blocks.body.dspBlocks.map(p => (
+            if (blocks.dspBlocks && blocks.dspBlocks.length > 0) {
+                existingBlocks = blocks.dspBlocks.map(p => (
                     {
                         name: p.name,
                         value: p.id,
@@ -354,8 +350,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         }
         else if (blockType === 'transferLearning') {
             let blocks = await config.api.organizationBlocks.listOrganizationTransferLearningBlocks(organizationId);
-            if (blocks.body && blocks.body.transferLearningBlocks && blocks.body.transferLearningBlocks.length > 0) {
-                existingBlocks = blocks.body.transferLearningBlocks.map(p => (
+            if (blocks.transferLearningBlocks && blocks.transferLearningBlocks.length > 0) {
+                existingBlocks = blocks.transferLearningBlocks.map(p => (
                     {
                         name: p.name,
                         value: p.id,
@@ -475,11 +471,11 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             }])).operatesOn;
 
             let buckets = await config.api.organizationData.listOrganizationBuckets(organizationId);
-            if (buckets.body && buckets.body.buckets && buckets.body.buckets.length > 0) {
+            if (buckets.buckets && buckets.buckets.length > 0) {
                 transformMountpoints = (<string[]>(await inquirer.prompt([{
                     type: 'checkbox',
                     name: 'buckets',
-                    choices: buckets.body.buckets.map(x => {
+                    choices: buckets.buckets.map(x => {
                         return {
                             name: x.name,
                             value: x.id.toString()
@@ -488,7 +484,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                     message: 'Which buckets do you want to mount into this block ' +
                         '(will be mounted under /mnt/s3fs/BUCKET_NAME, you can change these mount points in the Studio)?',
                 }])).buckets).map(y => {
-                    let b = buckets.body.buckets?.find(z => z.id === Number(y));
+                    let b = buckets.buckets?.find(z => z.id === Number(y));
                     return {
                         bucketId: Number(y),
                         mountPoint: b ? ('/mnt/s3fs/' + b?.name) : '',
@@ -694,18 +690,25 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
         // Get the organization id
         const organizationId = currentBlockConfig.organizationId;
+
         // Get the organization name
-        const organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
-        if (!organizationNameResponse.body.success || !organizationNameResponse.body.organization.name) {
-            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`);
+        let organizationNameResponse: OrganizationInfoResponse;
+        try {
+            organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
+        }
+        catch (ex2) {
+            let ex = <Error>ex2;
+            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`,
+                ex.message || ex.toString());
             process.exit(1);
         }
-        const organizationName = organizationNameResponse.body.organization.name;
+
+        const organizationName = organizationNameResponse.organization.name;
 
         try {
             if (!currentBlockConfig.id)  {
                 // Create a new block
-                let newResponse: { body: { success: boolean, id: number, error?: string }};
+                let newResponse: { success: boolean, id: number, error?: string };
                 if (currentBlockConfig.type === 'transform') {
                     const newBlockObject: AddOrganizationTransformationBlockRequest = {
                         name: currentBlockConfig.name,
@@ -794,12 +797,12 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                         `${(<any>currentBlockConfig).type}`);
                     process.exit(1);
                 }
-                if (!newResponse.body.success) {
-                    console.error('Unable to add the block to your organization: ', newResponse.body.error);
+                if (!newResponse.success) {
+                    console.error('Unable to add the block to your organization: ', newResponse.error);
                     process.exit(1);
                 }
 
-                currentBlockConfig.id = newResponse.body.id;
+                currentBlockConfig.id = newResponse.id;
                 await writeConfigFile();
             }
 
@@ -867,73 +870,23 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 currentBlockConfig.id || 0
             );
 
-            if (!uploadResponse.body.success || !uploadResponse.body.id) {
-                console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadResponse.body.error);
+            if (!uploadResponse.success || !uploadResponse.id) {
+                console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadResponse.error);
                 process.exit(1);
             }
-            let jobId = uploadResponse.body.id;
+            let jobId = uploadResponse.id;
             console.log(`Uploading block '${currentBlockConfig.name}' to organization '${organizationName}' OK`);
             console.log('');
 
-            async function connectToSocket() {
-                if (!config) return;
-
-                // Get a websocket
-                const socket: WebSocket = await getWebsocket(organizationId, config.api.organizationJobs,
-                    config.endpoints.internal.api);
-
-                let pingIv = setInterval(() => {
-                    if (socket && socket.readyState === OPEN) {
-                        socket.ping();
-                    }
-                }, 5000);
-
-                socket.onmessage = (msg: WebSocket.MessageEvent) => {
-                    try {
-                        let m = <MessageBlock>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                        if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) return;
-                        if (m[1].data) {
-                            process.stdout.write(m[1].data);
-                        }
-                    }
-                    catch (e) {
-                        /* noop */
-                    }
-                };
-
-                socket.onclose = () => {
-                    clearInterval(pingIv);
-
-                    // console.log('Socket closed... connecting to new socket...');
-
-                    // tslint:disable-next-line: no-floating-promises
-                    connectToSocket();
-                };
-            }
-
             console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}'...`);
-            await connectToSocket();
 
-            while (1) {
-                await sleep(5000);
-
-                let jobInfoRes = await config.api.organizationJobs.getOrganizationJobStatus(
-                    currentBlockConfig.organizationId, jobId);
-
-                if (!jobInfoRes.body.success || !jobInfoRes.body.job) {
-                    console.log('Failed to retrieve job status', jobInfoRes.body.error || jobInfoRes.response);
-                    continue;
-                }
-
-                let job = jobInfoRes.body.job;
-                if (job.finishedSuccessful === true) {
-                    break;
-                }
-                else if (job.finishedSuccessful === false) {
-                    console.log('Job failed, see above');
-                    process.exit(1);
-                }
-            }
+            await config.api.runJobUntilCompletion({
+                type: 'organization',
+                organizationId: organizationId,
+                jobId: jobId
+            }, d => {
+                process.stdout.write(d);
+            });
 
             await fs.promises.unlink(packagePath);
 
@@ -959,20 +912,23 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 let spinIv = spinner();
 
                 while (1) {
-                    let dspStatusRes = await config.api.organizationBlocks.listOrganizationDspBlocks(
-                        currentBlockConfig.organizationId);
-                    if (!dspStatusRes.body.success || !dspStatusRes.body.dspBlocks) {
+                    let dspStatusRes: ListOrganizationDspBlocksResponse;
+                    try {
+                        dspStatusRes = await config.api.organizationBlocks.listOrganizationDspBlocks(
+                            currentBlockConfig.organizationId);
+                    }
+                    catch (ex2) {
+                        let ex = <Error>ex2;
                         process.stdout.write('\n');
                         console.log('Failed to retrieve DSP block status',
-                            dspStatusRes.body.error || dspStatusRes.response);
-                        process.exit(1);
+                            ex.message || ex.toString());
+                        return process.exit(1);
                     }
 
-                    let block = dspStatusRes.body.dspBlocks.find(d => d.id === currentBlockConfig.id);
+                    let block = dspStatusRes.dspBlocks.find(d => d.id === currentBlockConfig.id);
                     if (!block) {
                         process.stdout.write('\n');
-                        console.log('Failed to find DSP block with ID ' + currentBlockConfig.id + ' in response:',
-                            dspStatusRes.body);
+                        console.log('Failed to find DSP block with ID ' + currentBlockConfig.id);
                         process.exit(1);
                     }
                     if (block.isConnected) {
@@ -1028,12 +984,19 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
         // Get the organization id
         const organizationId = currentBlockConfig.organizationId;
+
         // Get the organization name
-        const organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
-        if (!organizationNameResponse.body.success || !organizationNameResponse.body.organization.name) {
-            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`);
+        let organizationNameResponse: OrganizationInfoResponse;
+        try {
+            organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
+        }
+        catch (ex2) {
+            let ex = <Error>ex2;
+            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`,
+                ex.message || ex.toString());
             process.exit(1);
         }
+
         const blockType = currentBlockConfig.type;
 
         try {
@@ -1169,54 +1132,6 @@ async function checkConfigFile(host: string): Promise<boolean> {
 
 async function writeConfigFile() {
     await fs.promises.writeFile(configFilePath, JSON.stringify(globalCurrentBlockConfig, null, 4));
-}
-
-async function getWebsocket(organizationId: number, jobsApi: OrganizationJobsApi, apiEndpoint: string):
-    Promise<WebSocket> {
-    const tokenRes = await jobsApi.getOrganizationSocketToken(organizationId);
-    const wsHost = apiEndpoint.replace('/v1', '').replace('http', 'ws');
-    if (!tokenRes.body.success || !tokenRes.body.token) {
-        throw new Error('Failed to acquire socket token: ' + (tokenRes.body.error || tokenRes.response));
-    }
-
-    let tokenData = {
-        success: true,
-        token: tokenRes.body.token
-    };
-
-    let ws = new WebSocket(wsHost + '/socket.io/?token=' +
-        tokenData.token.socketToken + '&EIO=3&transport=websocket');
-
-    return new Promise((resolve, reject) => {
-        ws.onclose = () => {
-            reject('websocket was closed');
-        };
-        ws.onerror = err => {
-            reject('websocket error: ' + err);
-        };
-        ws.onmessage = msg => {
-            try {
-                let m = <MessageBlock>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                if (m[0] === 'hello') {
-                    if (m[1].hello && m[1].hello.version === 1) {
-                        clearTimeout(rejectTimeout);
-                        // console.log('Connected to job websocket');
-                        resolve(ws);
-                    }
-                    else {
-                        reject(JSON.stringify(m[1]));
-                    }
-                }
-            }
-            catch (ex) {
-                /* noop */
-            }
-        };
-
-        let rejectTimeout = setTimeout(() => {
-            reject('Did not authenticate with the websocket API within 10 seconds');
-        }, 10000);
-    });
 }
 
 function sleep(ms: number) {

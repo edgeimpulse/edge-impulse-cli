@@ -544,7 +544,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
 
 async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceId: string) {
     try {
-        let device = (await eiConfig.api.devices.getDevice(projectId, deviceId)).body.device;
+        let device = (await eiConfig.api.devices.getDevice(projectId, deviceId)).device;
 
         let currName = device ? device.name : deviceId;
         if (currName !== deviceId) return currName;
@@ -556,12 +556,8 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
             default: currName
         }]);
         if (nameDevice.nameDevice !== currName) {
-            let rename = (await eiConfig.api.devices.renameDevice(
-                projectId, deviceId, { name: nameDevice.nameDevice })).body;
-
-            if (!rename.success) {
-                throw new Error('Failed to rename device... ' + rename.error);
-            }
+            (await eiConfig.api.devices.renameDevice(
+                projectId, deviceId, { name: nameDevice.nameDevice }));
         }
         return nameDevice.nameDevice;
     }
@@ -573,11 +569,7 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
 
 async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
     try {
-        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId)).body;
-        if (!projectBody.success) {
-            throw projectBody.error;
-        }
-
+        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId));
         return projectBody.project.name;
     }
     catch (ex2) {

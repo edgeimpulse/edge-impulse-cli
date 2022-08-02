@@ -95,15 +95,16 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
     let projectId = await configFactory.getUploaderProjectId();
 
     if (projectId) {
-        let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
-        if (projectInfoReq.body.success && projectInfoReq.body.project) {
+        try {
+            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
             if (!opts.silentArgv) {
-                console.log('    Project:    ', projectInfoReq.body.project.name + ' (ID: ' + projectId + ')');
+                console.log('    Project:    ', projectInfoReq.project.name + ' (ID: ' + projectId + ')');
                 console.log('');
             }
         }
-        else {
-            console.warn('Cannot read cached project (' + projectInfoReq.body.error + ')');
+        catch (ex2) {
+            let ex = <Error>ex2;
+            console.warn('Cannot read cached project (' + (ex.message || ex.toString()) + ')');
             projectId = undefined;
         }
     }
@@ -117,12 +118,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
             await opts.getProjectFromConfig(deviceId) :
             undefined;
 
-        let projectList = (await config.api.projects.listProjects()).body;
-
-        if (!projectList.success) {
-            console.error('Failed to retrieve project list...', projectList, projectList.error);
-            process.exit(1);
-        }
+        let projectList = (await config.api.projects.listProjects());
 
         if (!projectList.projects || projectList.projects.length === 0) {
             console.log('This user has no projects, create one before continuing');
@@ -152,7 +148,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
     };
     if (!opts.apiKeyArgv) {
         try {
-            let dk = (await config.api.projects.listDevkeys(projectId)).body;
+            let dk = (await config.api.projects.listDevkeys(projectId));
 
             if (!dk.apiKey) {
                 throw new Error('No API key set (via --api-key), and no development API keys configured for ' +

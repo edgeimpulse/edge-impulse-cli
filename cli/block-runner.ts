@@ -3,22 +3,18 @@ import Path from "path";
 import os from "os";
 import tar from "tar";
 import yauzl, { Entry } from "yauzl";
-import WebSocket, { OPEN } from "ws";
 import { spawn, SpawnOptions } from "child_process";
 import { Config, EdgeImpulseConfig } from "./config";
-import { BlockConfigItem, exists, MessageBlock } from "./blocks";
+import { BlockConfigItem, exists } from "./blocks";
 import inquirer from "inquirer";
-import {
-    ListOrganizationDataResponseAllOfData,
-    OrganizationDataItemFiles,
-    OrganizationJobsApi,
-    OrganizationTransformationBlock,
-    UpdateProjectRequest,
-    UploadCustomBlockRequestTypeEnum
-} from "../sdk/studio/api";
 import { FSHelpers } from "./fs-helpers";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
+import {
+    ListOrganizationDataResponseAllOfData, OrganizationDataItemFiles,
+    OrganizationTransformationBlock, UpdateProjectRequest,
+    UploadCustomBlockRequestTypeEnum
+} from "../sdk/studio";
 
 const CON_PREFIX = '\x1b[34m[BLK]\x1b[0m';
 
@@ -362,15 +358,7 @@ export class BlockRunnerTransform extends BlockRunner {
                 await this._eiConfig.api.organizationBlocks.listOrganizationTransformationBlocks(
                     this._blockConfig.organizationId
                 )
-            ).body;
-
-            if (
-                !transformBlocksRes.success ||
-                !transformBlocksRes.transformationBlocks ||
-                transformBlocksRes.transformationBlocks.length === 0
-            ) {
-                throw new Error("Unable to retrieve blocks from server");
-            }
+            );
 
             if (!this._blockConfig.id) {
                 throw new Error(
@@ -621,10 +609,6 @@ export class BlockRunnerTransform extends BlockRunner {
                 this._dataItem.id
             );
 
-        if (!fileRes.body) {
-            throw new Error("Unable to download file");
-        }
-
         if (await fileExists(path)) {
             await FSHelpers.rmDir(path);
         }
@@ -636,7 +620,7 @@ export class BlockRunnerTransform extends BlockRunner {
             `data-item-${this._dataItem.name}.tar`
         );
 
-        let rawBuffer = fileRes.body;
+        let rawBuffer = fileRes;
         await fs.promises.writeFile(targetFilePath, rawBuffer);
 
         // extract and save files
@@ -678,7 +662,7 @@ export class BlockRunnerTransform extends BlockRunner {
                 this._blockConfig.organizationId,
                 this._dataItem.id
             )
-        ).body;
+        );
         if (!fileListRes.success || fileListRes.data === undefined) {
             throw new Error(
                 "Unable to retrieve list of files " + fileListRes.error
@@ -735,7 +719,7 @@ export class BlockRunnerTransform extends BlockRunner {
                 this._dataItem.id,
                 filename
             )
-        ).body;
+        );
 
         await fs.promises.writeFile(filePath, file);
 
@@ -762,7 +746,7 @@ export class BlockRunnerTransform extends BlockRunner {
                 queryFilter,
                 1
             )
-        ).body;
+        );
 
         if (!res.success) {
             throw new Error("Unable to retrieve data item: " + res.error);
@@ -798,8 +782,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         if (!runner.projectId) {
             // Select a project
-            let projectList = (await this._eiConfig.api.projects.listProjects())
-                .body;
+            let projectList = (await this._eiConfig.api.projects.listProjects());
 
             if (!projectList.success) {
                 throw new Error(
@@ -839,7 +822,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let impulseRes = (
             await this._eiConfig.api.impulse.getImpulse(this._projectId)
-        ).body;
+        );
 
         if (!impulseRes.success) {
             console.error(CON_PREFIX,
@@ -884,7 +867,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             learnBlockId = runner.blockId;
         }
 
-        let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, learnBlockId)).body;
+        let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, learnBlockId));
 
         if (!learnBlockRes.success) {
             console.error(CON_PREFIX, 'Unable to retrieve learning block data', learnBlockRes.error);
@@ -1031,13 +1014,13 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         await fs.promises.mkdir(targetDir, { recursive: true });
 
-        let trainXRes = (await this._eiConfig.api.learn.getLearnXData(projectId, learnId)).body;
+        let trainXRes = (await this._eiConfig.api.learn.getLearnXData(projectId, learnId));
         await fs.promises.writeFile(
             Path.join(targetDir, "X_train_features.npy"),
             trainXRes
         );
 
-        let trainYRes = (await this._eiConfig.api.learn.getLearnYData(projectId, learnId)).body;
+        let trainYRes = (await this._eiConfig.api.learn.getLearnYData(projectId, learnId));
         await fs.promises.writeFile(
             Path.join(targetDir, "y_train.npy"),
             trainYRes
@@ -1063,8 +1046,7 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         if (!runner.projectId) {
             // select the project
-            let projectList = (await this._eiConfig.api.projects.listProjects())
-                .body;
+            let projectList = (await this._eiConfig.api.projects.listProjects());
 
             if (!projectList.success) {
                 throw new Error(
@@ -1105,7 +1087,7 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         let projectInfo = (
             await this._eiConfig.api.projects.getProjectInfo(this._projectId)
-        ).body;
+        );
 
         if (!projectInfo.success) {
             throw new Error(`Failed to retrieve impulse: ${projectInfo.error}`);
@@ -1117,14 +1099,10 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         // TODO: Might download learning block artifacts here too...
         let deployCheckRes = (
-            await this._eiConfig.api.deploy.getDeployment(this._projectId, "custom")
-        ).body;
+            await this._eiConfig.api.deployment.getDeployment(this._projectId, "custom")
+        );
 
-        if (!deployCheckRes.success) {
-            throw new Error(
-                "Unable to retrieve deployment data... " + deployCheckRes.error
-            );
-        } else if (!deployCheckRes.hasDeployment) {
+        if (!deployCheckRes.hasDeployment) {
             let projectReq: UpdateProjectRequest = {
                 experiments: ["custom_deploy"]
             };
@@ -1134,7 +1112,7 @@ export class BlockRunnerDeploy extends BlockRunner {
                     this._projectId,
                     projectReq
                 )
-            ).body;
+            );
 
             if (!updateProjectRes.success) {
                 throw new Error(
@@ -1194,115 +1172,6 @@ export class BlockRunnerDeploy extends BlockRunner {
         return ret;
     }
 
-    private async connectToSocket(jobId: number): Promise<void> {
-        if (!this._eiConfig) return;
-
-        // Get a websocket
-        const socket: WebSocket = await this.getWebsocket(
-            this._blockConfig.organizationId,
-            this._eiConfig.api.organizationJobs,
-            this._eiConfig.endpoints.internal.api
-        );
-
-        let pingIv = setInterval(() => {
-            if (socket && socket.readyState === OPEN) {
-                socket.ping();
-            }
-        }, 5000);
-
-        socket.onmessage = (msg: WebSocket.MessageEvent) => {
-            // console.log('socket.onmessage', msg);
-            try {
-                let m = <MessageBlock>(
-                    JSON.parse(msg.data.toString().replace(/^[0-9]+/, ""))
-                );
-                if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) {
-                    return;
-                }
-                if (m[1].data) {
-                    process.stdout.write(m[1].data);
-                }
-            } catch (e) {
-                /* noop */
-            }
-        };
-
-        socket.onclose = () => {
-            clearInterval(pingIv);
-
-            // console.log('Socket closed... connecting to new socket...');
-
-            // tslint:disable-next-line: no-floating-promises
-            this.connectToSocket(jobId);
-        };
-    }
-
-    private async sleep(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    private async getWebsocket(
-        organizationId: number,
-        jobsApi: OrganizationJobsApi,
-        apiEndpoint: string
-    ): Promise<WebSocket> {
-        const tokenRes = await jobsApi.getOrganizationSocketToken(
-            organizationId
-        );
-        const wsHost = apiEndpoint.replace("/v1", "").replace("http", "ws");
-        if (!tokenRes.body.success || !tokenRes.body.token) {
-            throw new Error(
-                "Failed to acquire socket token: " +
-                    (tokenRes.body.error || tokenRes.response)
-            );
-        }
-
-        let tokenData = {
-            success: true,
-            token: tokenRes.body.token
-        };
-
-        let ws = new WebSocket(
-            wsHost +
-                "/socket.io/?token=" +
-                tokenData.token.socketToken +
-                "&EIO=3&transport=websocket"
-        );
-
-        return new Promise((resolve, reject) => {
-            ws.onclose = () => {
-                reject("websocket was closed");
-            };
-            ws.onerror = (err) => {
-                reject("websocket error: " + err);
-            };
-            ws.onmessage = (msg) => {
-                try {
-                    let m = <MessageBlock>(
-                        JSON.parse(msg.data.toString().replace(/^[0-9]+/, ""))
-                    );
-                    if (m[0] === "hello") {
-                        if (m[1].hello && m[1].hello.version === 1) {
-                            clearTimeout(rejectTimeout);
-                            // console.log('Connected to job websocket');
-                            resolve(ws);
-                        } else {
-                            reject(JSON.stringify(m[1]));
-                        }
-                    }
-                } catch (ex) {
-                    /* noop */
-                }
-            };
-
-            let rejectTimeout = setTimeout(() => {
-                reject(
-                    "Did not authenticate with the websocket API within 10 seconds"
-                );
-            }, 10000);
-        });
-    }
-
     private async buildBlock(projectId: number): Promise<void> {
         let jobStartRes = (
             await this._eiConfig.api.jobs.buildOnDeviceModelJob(
@@ -1310,7 +1179,7 @@ export class BlockRunnerDeploy extends BlockRunner {
                 "custom",
                 { engine: "tflite" }
             )
-        ).body;
+        );
 
         if (!jobStartRes.success) {
             throw new Error(`Error while starting job: ${jobStartRes.error}`);
@@ -1320,34 +1189,13 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         console.log(CON_PREFIX, `Started job with ID: ${jobId}`);
 
-        await this.connectToSocket(jobId);
-
-        while (1) {
-            await this.sleep(5000);
-
-            let jobInfoRes =
-                await this._eiConfig.api.jobs.getJobStatus(
-                    projectId,
-                    jobId
-                );
-
-            if (!jobInfoRes.body.success || !jobInfoRes.body.job) {
-                console.log(
-                    CON_PREFIX,
-                    "Failed to retrieve job status",
-                    jobInfoRes.body.error || jobInfoRes.response
-                );
-                continue;
-            }
-
-            let job = jobInfoRes.body.job;
-            if (job.finishedSuccessful === true) {
-                break;
-            } else if (job.finishedSuccessful === false) {
-                console.log(CON_PREFIX, "Job failed, see above");
-                process.exit(1);
-            }
-        }
+        await this._eiConfig.api.runJobUntilCompletion({
+            type: 'project',
+            projectId: projectId,
+            jobId: jobId,
+        }, data => {
+            process.stdout.write(data);
+        });
     }
 
     private async downloadFile(
@@ -1357,8 +1205,8 @@ export class BlockRunnerDeploy extends BlockRunner {
     ): Promise<void> {
         // download custom block deployment
         let buildArtifacts = (
-            await this._eiConfig.api.deploy.downloadBuild(projectId, "custom")
-        ).body;
+            await this._eiConfig.api.deployment.downloadBuild(projectId, "custom")
+        );
         let downloadPath = Path.join(zipFileDir, zipFileName);
 
         if (!(await fileExists(zipFileDir))) {

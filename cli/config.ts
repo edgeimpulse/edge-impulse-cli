@@ -4,18 +4,7 @@ import fs from 'fs';
 import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
-import {
-    LoginApi,
-    DevicesApi, DevicesApiApiKeys,
-    DSPApi, DSPApiApiKeys,
-    ProjectsApi, ProjectsApiApiKeys,
-    OrganizationsApi, OrganizationsApiApiKeys,
-    OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
-    OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi,
-    OrganizationBlocksApiApiKeys, DeploymentApi, ImpulseApi, LearnApi,
-    JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys,
-    OrganizationDataApi, OrganizationDataApiApiKeys, UserApi
-} from '../sdk/studio/api';
+import { EdgeImpulseApi } from '../sdk/studio/api';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 
@@ -50,23 +39,6 @@ export interface SerialConfig {
     runner: RunnerConfig;
 }
 
-export interface EdgeImpulseAPI {
-    login: LoginApi;
-    devices: DevicesApi;
-    dsp: DSPApi;
-    projects: ProjectsApi;
-    impulse: ImpulseApi;
-    learn: LearnApi;
-    jobs: JobsApi;
-    deploy: DeploymentApi;
-    organizations: OrganizationsApi;
-    organizationCreateProject: OrganizationCreateProjectApi;
-    organizationBlocks: OrganizationBlocksApi;
-    organizationJobs: OrganizationJobsApi;
-    organizationData: OrganizationDataApi;
-    user: UserApi;
-}
-
 export interface EdgeImpulseEndpoints {
     internal: {
         ws: string;
@@ -82,7 +54,7 @@ export interface EdgeImpulseEndpoints {
 }
 
 export interface EdgeImpulseConfig {
-    api: EdgeImpulseAPI;
+    api: EdgeImpulseApi;
     endpoints: EdgeImpulseEndpoints;
     setDeviceUpload: boolean;
     host: string;
@@ -106,7 +78,7 @@ export class Config {
     }
 
     private _filename: string;
-    private _api: EdgeImpulseAPI | undefined;
+    private _api: EdgeImpulseApi | undefined;
     private _endpoints: EdgeImpulseEndpoints | undefined;
     private _configured = false;
 
@@ -244,25 +216,9 @@ export class Config {
             'http://localhost:4810'
             : hostIsIP ? `${httpProtocol}://${host}:4810` : `${httpProtocol}://ingestion.${host}`;
 
-        apiEndpointInternal += '/v1';
-        apiEndpointExternal += '/v1';
-
-        this._api = {
-            login: new LoginApi(apiEndpointInternal),
-            devices: new DevicesApi(apiEndpointInternal),
-            dsp: new DSPApi(apiEndpointInternal),
-            projects: new ProjectsApi(apiEndpointInternal),
-            impulse: new ImpulseApi(apiEndpointInternal),
-            learn: new LearnApi(apiEndpointInternal),
-            jobs: new JobsApi(apiEndpointInternal),
-            deploy: new DeploymentApi(apiEndpointInternal),
-            organizations: new OrganizationsApi(apiEndpointInternal),
-            organizationCreateProject: new OrganizationCreateProjectApi(apiEndpointInternal),
-            organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
-            organizationJobs: new OrganizationJobsApi(apiEndpointInternal),
-            organizationData: new OrganizationDataApi(apiEndpointInternal),
-            user: new UserApi(apiEndpointInternal),
-        };
+        this._api = new EdgeImpulseApi({
+            endpoint: apiEndpointInternal,
+        });
 
         this._endpoints = {
             device: {
@@ -280,19 +236,11 @@ export class Config {
 
         if (apiKey) {
             // try and authenticate...
-            this._api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.dsp.setApiKey(DSPApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.impulse.setApiKey(ImpulseApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.learn.setApiKey(LearnApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.jobs.setApiKey(JobsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.deploy.setApiKey(DeploymentApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizations.setApiKey(OrganizationsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.ApiKeyAuthentication,
-                apiKey);
-            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizationData.setApiKey(OrganizationDataApiApiKeys.ApiKeyAuthentication, apiKey);
+            await this._api.authenticate({
+                method: 'apiKey',
+                apiKey: apiKey
+            });
+
             config.apiKey = apiKey;
         }
         else {
@@ -303,11 +251,9 @@ export class Config {
                     message: `What is your user name or e-mail address (${host})?`
                 });
 
-                const { needPassword, email, whitelabel } = (
-                    await this._api.user.getUserNeedToSetPassword(
-                        encodeURIComponent(username.username)
-                    )
-                ).body;
+                const { needPassword, email, whitelabel } =
+                    await this._api.user.getUserNeedToSetPassword(username.username);
+
                 if (needPassword) {
                     const protocol = `http${
                         config.host === 'localhost' ? '' : 's'
@@ -332,43 +278,26 @@ export class Config {
                 let res = (await this._api.login.login({
                     username: username.username,
                     password: password.password,
-                })).body;
+                }));
 
-                if (!res.success || !res.token) {
-                    throw new Error('Failed to login: ' + res.error);
+                if (!res.token) {
+                    throw new Error('Authentication did not return a token');
                 }
 
                 config.jwtToken = res.token;
             }
 
-            // try and authenticate...
-            this._api.devices.setApiKey(DevicesApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.dsp.setApiKey(DSPApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.projects.setApiKey(ProjectsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.impulse.setApiKey(ImpulseApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.learn.setApiKey(LearnApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.jobs.setApiKey(JobsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.deploy.setApiKey(DeploymentApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.organizations.setApiKey(OrganizationsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.JWTAuthentication,
-                config.jwtToken);
-            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.JWTAuthentication,
-                config.jwtToken);
-            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.organizationData.setApiKey(OrganizationDataApiApiKeys.JWTAuthentication, config.jwtToken);
+            await this._api.authenticate({
+                method: 'jwtToken',
+                jwtToken: config.jwtToken,
+            });
         }
 
         if (verifyType === 'project') {
-            let projects = await this._api.projects.listProjects();
-            if (!projects.body.success) {
-                throw new Error('Invalid JWT token, cannot retrieve projects: ' + projects.body.error);
-            }
+            await this._api.projects.listProjects();
         }
         else {
-            let orgs = await this._api.organizations.listOrganizations();
-            if (!orgs.body.success) {
-                throw new Error('Invalid JWT token, cannot retrieve organizations: ' + orgs.body.error);
-            }
+            await this._api.organizations.listOrganizations();
         }
 
         // OK, now we're OK!

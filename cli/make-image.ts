@@ -33,7 +33,8 @@ export async function upload(opts: {
     apiKey: string,
     config: EdgeImpulseConfig,
     category: string | undefined,
-    boundingBoxes: ExportInputBoundingBox[] | undefined
+    boundingBoxes: ExportInputBoundingBox[] | undefined,
+    metadata: { [k: string]: string } | undefined,
 }) {
     if (opts.buffer.length > 100 * 1024 * 1024) {
         throw new Error('File too large, max. size is 100MB');
@@ -59,6 +60,9 @@ export async function upload(opts: {
     }
     if (opts.boundingBoxes) {
         headers['x-bounding-boxes'] = JSON.stringify(opts.boundingBoxes);
+    }
+    if (opts.metadata) {
+        headers['x-metadata'] = JSON.stringify(opts.metadata);
     }
 
     let agent = opts.config.endpoints.internal.ingestion.indexOf('https:') === 0 ?

@@ -368,6 +368,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 config: this._config,
                 label: { label: s.label, type: 'label' },
                 boundingBoxes: [],
+                metadata: undefined,
             });
 
             console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');

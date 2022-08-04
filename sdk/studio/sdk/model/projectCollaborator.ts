@@ -22,6 +22,7 @@ export class ProjectCollaborator {
     'created': Date;
     'staffInfo': UserStaffInfo;
     'pending': boolean;
+    'lastTosAcceptanceDate'?: Date;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -61,6 +62,11 @@ export class ProjectCollaborator {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
+        },
+        {
+            "name": "lastTosAcceptanceDate",
+            "baseName": "lastTosAcceptanceDate",
+            "type": "Date"
         },
         {
             "name": "isOwner",

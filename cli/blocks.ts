@@ -487,7 +487,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                     let b = buckets.buckets?.find(z => z.id === Number(y));
                     return {
                         bucketId: Number(y),
-                        mountPoint: b ? ('/mnt/s3fs/' + b?.name) : '',
+                        mountPoint: b ? ('/mnt/s3fs/' + b?.bucket) : '',
                     };
                 }).filter(x => !!x.mountPoint && !isNaN(x.bucketId));
             }

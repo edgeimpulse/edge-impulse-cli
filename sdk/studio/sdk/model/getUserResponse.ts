@@ -33,6 +33,7 @@ export class GetUserResponse {
     'created': Date;
     'staffInfo': UserStaffInfo;
     'pending': boolean;
+    'lastTosAcceptanceDate'?: Date;
     'email': string;
     'activated': boolean;
     /**
@@ -100,6 +101,11 @@ export class GetUserResponse {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
+        },
+        {
+            "name": "lastTosAcceptanceDate",
+            "baseName": "lastTosAcceptanceDate",
+            "type": "Date"
         },
         {
             "name": "email",

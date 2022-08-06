@@ -304,6 +304,8 @@ export * from './listPortalFilesInFolderResponse';
 export * from './listPortalFilesInFolderResponseAllOf';
 export * from './listProjects';
 export * from './listProjectsResponse';
+export * from './listPublicProjects';
+export * from './listPublicProjectsResponse';
 export * from './listPublicVersionsResponse';
 export * from './listPublicVersionsResponseAllOf';
 export * from './listPublicVersionsResponseAllOfVersions';
@@ -413,9 +415,11 @@ export * from './projectInfoResponseAllOfExperiments';
 export * from './projectInfoResponseAllOfImpulse';
 export * from './projectInfoResponseAllOfLatencyDevices';
 export * from './projectInfoResponseAllOfPerformance';
-export * from './projectInfoResponseAllOfReadme';
 export * from './projectInfoResponseAllOfShowGettingStartedWizard';
 export * from './projectInfoResponseAllOfUrls';
+export * from './projectPrivateData';
+export * from './projectPublicData';
+export * from './projectPublicDataReadme';
 export * from './projectVersionRequest';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
@@ -449,12 +453,14 @@ export * from './setOptimizeSpaceRequestAllOfSpace';
 export * from './setOrganizationDataDatasetRequest';
 export * from './setProjectComputeTimeRequest';
 export * from './setProjectDspFileSizeRequest';
+export * from './setSampleMetadataRequest';
 export * from './setSyntiantPosteriorRequest';
 export * from './setUserPasswordRequest';
 export * from './socketTokenResponse';
 export * from './socketTokenResponseAllOf';
 export * from './socketTokenResponseAllOfToken';
 export * from './splitSampleInFramesRequest';
+export * from './staffInfo';
 export * from './startJobResponse';
 export * from './startJobResponseAllOf';
 export * from './startPerformanceCalibrationRequest';
@@ -520,7 +526,6 @@ export * from './uploadUserPhotoResponse';
 export * from './uploadUserPhotoResponseAllOf';
 export * from './user';
 export * from './userByThirdPartyActivationRequest';
-export * from './userStaffInfo';
 export * from './verifyDspBlockUrlRequest';
 export * from './verifyDspBlockUrlResponse';
 export * from './verifyDspBlockUrlResponseAllOf';
@@ -840,6 +845,8 @@ import { ListPortalFilesInFolderResponse } from './listPortalFilesInFolderRespon
 import { ListPortalFilesInFolderResponseAllOf } from './listPortalFilesInFolderResponseAllOf';
 import { ListProjects } from './listProjects';
 import { ListProjectsResponse } from './listProjectsResponse';
+import { ListPublicProjects } from './listPublicProjects';
+import { ListPublicProjectsResponse } from './listPublicProjectsResponse';
 import { ListPublicVersionsResponse } from './listPublicVersionsResponse';
 import { ListPublicVersionsResponseAllOf } from './listPublicVersionsResponseAllOf';
 import { ListPublicVersionsResponseAllOfVersions } from './listPublicVersionsResponseAllOfVersions';
@@ -949,9 +956,11 @@ import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfE
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
 import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
-import { ProjectInfoResponseAllOfReadme } from './projectInfoResponseAllOfReadme';
 import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
+import { ProjectPrivateData } from './projectPrivateData';
+import { ProjectPublicData } from './projectPublicData';
+import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
@@ -985,12 +994,14 @@ import { SetOptimizeSpaceRequestAllOfSpace } from './setOptimizeSpaceRequestAllO
 import { SetOrganizationDataDatasetRequest } from './setOrganizationDataDatasetRequest';
 import { SetProjectComputeTimeRequest } from './setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from './setProjectDspFileSizeRequest';
+import { SetSampleMetadataRequest } from './setSampleMetadataRequest';
 import { SetSyntiantPosteriorRequest } from './setSyntiantPosteriorRequest';
 import { SetUserPasswordRequest } from './setUserPasswordRequest';
 import { SocketTokenResponse } from './socketTokenResponse';
 import { SocketTokenResponseAllOf } from './socketTokenResponseAllOf';
 import { SocketTokenResponseAllOfToken } from './socketTokenResponseAllOfToken';
 import { SplitSampleInFramesRequest } from './splitSampleInFramesRequest';
+import { StaffInfo } from './staffInfo';
 import { StartJobResponse } from './startJobResponse';
 import { StartJobResponseAllOf } from './startJobResponseAllOf';
 import { StartPerformanceCalibrationRequest } from './startPerformanceCalibrationRequest';
@@ -1056,7 +1067,6 @@ import { UploadUserPhotoResponse } from './uploadUserPhotoResponse';
 import { UploadUserPhotoResponseAllOf } from './uploadUserPhotoResponseAllOf';
 import { User } from './user';
 import { UserByThirdPartyActivationRequest } from './userByThirdPartyActivationRequest';
-import { UserStaffInfo } from './userStaffInfo';
 import { VerifyDspBlockUrlRequest } from './verifyDspBlockUrlRequest';
 import { VerifyDspBlockUrlResponse } from './verifyDspBlockUrlResponse';
 import { VerifyDspBlockUrlResponseAllOf } from './verifyDspBlockUrlResponseAllOf';
@@ -1167,6 +1177,7 @@ let enumsMap: {[index: string]: any} = {
     "PerformanceCalibrationParametersTypeEnum": "PerformanceCalibrationParametersTypeEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
+    "ProjectPublicDataProjectTypeEnum": "ProjectPublicDataProjectTypeEnum",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
@@ -1489,6 +1500,8 @@ let typeMap: {[index: string]: any} = {
     "ListPortalFilesInFolderResponseAllOf": ListPortalFilesInFolderResponseAllOf,
     "ListProjects": ListProjects,
     "ListProjectsResponse": ListProjectsResponse,
+    "ListPublicProjects": ListPublicProjects,
+    "ListPublicProjectsResponse": ListPublicProjectsResponse,
     "ListPublicVersionsResponse": ListPublicVersionsResponse,
     "ListPublicVersionsResponseAllOf": ListPublicVersionsResponseAllOf,
     "ListPublicVersionsResponseAllOfVersions": ListPublicVersionsResponseAllOfVersions,
@@ -1597,9 +1610,11 @@ let typeMap: {[index: string]: any} = {
     "ProjectInfoResponseAllOfImpulse": ProjectInfoResponseAllOfImpulse,
     "ProjectInfoResponseAllOfLatencyDevices": ProjectInfoResponseAllOfLatencyDevices,
     "ProjectInfoResponseAllOfPerformance": ProjectInfoResponseAllOfPerformance,
-    "ProjectInfoResponseAllOfReadme": ProjectInfoResponseAllOfReadme,
     "ProjectInfoResponseAllOfShowGettingStartedWizard": ProjectInfoResponseAllOfShowGettingStartedWizard,
     "ProjectInfoResponseAllOfUrls": ProjectInfoResponseAllOfUrls,
+    "ProjectPrivateData": ProjectPrivateData,
+    "ProjectPublicData": ProjectPublicData,
+    "ProjectPublicDataReadme": ProjectPublicDataReadme,
     "ProjectVersionRequest": ProjectVersionRequest,
     "RawSampleData": RawSampleData,
     "RawSamplePayload": RawSamplePayload,
@@ -1633,12 +1648,14 @@ let typeMap: {[index: string]: any} = {
     "SetOrganizationDataDatasetRequest": SetOrganizationDataDatasetRequest,
     "SetProjectComputeTimeRequest": SetProjectComputeTimeRequest,
     "SetProjectDspFileSizeRequest": SetProjectDspFileSizeRequest,
+    "SetSampleMetadataRequest": SetSampleMetadataRequest,
     "SetSyntiantPosteriorRequest": SetSyntiantPosteriorRequest,
     "SetUserPasswordRequest": SetUserPasswordRequest,
     "SocketTokenResponse": SocketTokenResponse,
     "SocketTokenResponseAllOf": SocketTokenResponseAllOf,
     "SocketTokenResponseAllOfToken": SocketTokenResponseAllOfToken,
     "SplitSampleInFramesRequest": SplitSampleInFramesRequest,
+    "StaffInfo": StaffInfo,
     "StartJobResponse": StartJobResponse,
     "StartJobResponseAllOf": StartJobResponseAllOf,
     "StartPerformanceCalibrationRequest": StartPerformanceCalibrationRequest,
@@ -1704,7 +1721,6 @@ let typeMap: {[index: string]: any} = {
     "UploadUserPhotoResponseAllOf": UploadUserPhotoResponseAllOf,
     "User": User,
     "UserByThirdPartyActivationRequest": UserByThirdPartyActivationRequest,
-    "UserStaffInfo": UserStaffInfo,
     "VerifyDspBlockUrlRequest": VerifyDspBlockUrlRequest,
     "VerifyDspBlockUrlResponse": VerifyDspBlockUrlResponse,
     "VerifyDspBlockUrlResponseAllOf": VerifyDspBlockUrlResponseAllOf,

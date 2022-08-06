@@ -11,32 +11,29 @@
  */
 
 
-export class UserStaffInfo {
-    'isStaff': boolean;
-    'hasSudoRights': boolean;
-    'companyName'?: string;
+/**
+* Present if a readme is set for this project
+*/
+export class ProjectPublicDataReadme {
+    'markdown': string;
+    'html': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "isStaff",
-            "baseName": "isStaff",
-            "type": "boolean"
+            "name": "markdown",
+            "baseName": "markdown",
+            "type": "string"
         },
         {
-            "name": "hasSudoRights",
-            "baseName": "hasSudoRights",
-            "type": "boolean"
-        },
-        {
-            "name": "companyName",
-            "baseName": "companyName",
+            "name": "html",
+            "baseName": "html",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UserStaffInfo.attributeTypeMap;
+        return ProjectPublicDataReadme.attributeTypeMap;
     }
 }
 

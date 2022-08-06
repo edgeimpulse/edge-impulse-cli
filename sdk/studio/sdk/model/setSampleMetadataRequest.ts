@@ -11,29 +11,20 @@
  */
 
 
-/**
-* Present if a readme is set for this project
-*/
-export class ProjectInfoResponseAllOfReadme {
-    'markdown': string;
-    'html': string;
+export class SetSampleMetadataRequest {
+    'metadata'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "markdown",
-            "baseName": "markdown",
-            "type": "string"
-        },
-        {
-            "name": "html",
-            "baseName": "html",
-            "type": "string"
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProjectInfoResponseAllOfReadme.attributeTypeMap;
+        return SetSampleMetadataRequest.attributeTypeMap;
     }
 }
 

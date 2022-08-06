@@ -11,8 +11,8 @@
  */
 
 import { ProjectCollaboratorAllOf } from './projectCollaboratorAllOf';
+import { StaffInfo } from './staffInfo';
 import { User } from './user';
-import { UserStaffInfo } from './userStaffInfo';
 
 export class ProjectCollaborator {
     'id': number;
@@ -20,7 +20,7 @@ export class ProjectCollaborator {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
     'isOwner': boolean;
@@ -56,7 +56,7 @@ export class ProjectCollaborator {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "pending",

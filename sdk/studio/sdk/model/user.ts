@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { UserStaffInfo } from './userStaffInfo';
+import { StaffInfo } from './staffInfo';
 
 export class User {
     'id': number;
@@ -18,7 +18,7 @@ export class User {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
 
@@ -53,7 +53,7 @@ export class User {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "pending",

@@ -14,8 +14,8 @@ import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
+import { StaffInfo } from './staffInfo';
 import { User } from './user';
-import { UserStaffInfo } from './userStaffInfo';
 
 export class GetUserResponse {
     /**
@@ -31,7 +31,7 @@ export class GetUserResponse {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
     'email': string;
@@ -95,7 +95,7 @@ export class GetUserResponse {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "pending",

@@ -38,6 +38,7 @@ import { ObjectDetectionAutoLabelRequest } from '../model/objectDetectionAutoLab
 import { ObjectDetectionAutoLabelResponse } from '../model/objectDetectionAutoLabelResponse';
 import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetectionLabelQueueCountResponse';
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
+import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
@@ -3122,7 +3123,7 @@ export class RawDataApi {
      * @summary Rebalance dataset
      * @param projectId Project ID
      */
-    public async rebalanceDataset (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async rebalanceDataset (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RebalanceDatasetResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/rebalance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -3171,12 +3172,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<RebalanceDatasetResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "RebalanceDatasetResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

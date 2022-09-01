@@ -21,9 +21,9 @@ export class GetUserNeedToSetPasswordResponseAllOf {
     */
     'needPassword'?: boolean;
     /**
-    * White label domain the user belongs to, if any
+    * White label domains the user belongs to, if any
     */
-    'whitelabel'?: string;
+    'whitelabels'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,9 +39,9 @@ export class GetUserNeedToSetPasswordResponseAllOf {
             "type": "boolean"
         },
         {
-            "name": "whitelabel",
-            "baseName": "whitelabel",
-            "type": "string"
+            "name": "whitelabels",
+            "baseName": "whitelabels",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

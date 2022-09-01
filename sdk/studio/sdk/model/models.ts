@@ -105,6 +105,8 @@ export * from './dSPMetadataResponse';
 export * from './dataExplorerPredictionsResponse';
 export * from './dataExplorerPredictionsResponseAllOf';
 export * from './dataExplorerSettings';
+export * from './datasetRatioData';
+export * from './datasetRatioDataRatio';
 export * from './deletePortalFileRequest';
 export * from './dependencyData';
 export * from './deploymentTarget';
@@ -395,6 +397,11 @@ export * from './performanceCalibrationUploadLabeledAudioResponse';
 export * from './performanceCalibrationUploadLabeledAudioResponseAllOf';
 export * from './portalFile';
 export * from './portalInfoResponse';
+export * from './profileTfLiteRequest';
+export * from './profileTfLiteResponse';
+export * from './profileTfLiteResponseAllOf';
+export * from './profileTfLiteResponseAllOfMemory';
+export * from './profileTfLiteResponseAllOfMemoryTflite';
 export * from './project';
 export * from './projectCollaborator';
 export * from './projectCollaboratorAllOf';
@@ -423,6 +430,7 @@ export * from './projectPublicDataReadme';
 export * from './projectVersionRequest';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
+export * from './rebalanceDatasetResponse';
 export * from './removeCollaboratorRequest';
 export * from './removeMemberRequest';
 export * from './renameDeviceRequest';
@@ -508,6 +516,7 @@ export * from './updateOrganizationRequest';
 export * from './updateOrganizationTransferLearningBlockRequest';
 export * from './updateOrganizationTransformationBlockRequest';
 export * from './updateProjectRequest';
+export * from './updateProjectTagsRequest';
 export * from './updateThemeColorsRequest';
 export * from './updateThemeLogosRequest';
 export * from './updateThirdPartyAuthRequest';
@@ -646,6 +655,8 @@ import { DSPMetadataResponse } from './dSPMetadataResponse';
 import { DataExplorerPredictionsResponse } from './dataExplorerPredictionsResponse';
 import { DataExplorerPredictionsResponseAllOf } from './dataExplorerPredictionsResponseAllOf';
 import { DataExplorerSettings } from './dataExplorerSettings';
+import { DatasetRatioData } from './datasetRatioData';
+import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DependencyData } from './dependencyData';
 import { DeploymentTarget } from './deploymentTarget';
@@ -936,6 +947,11 @@ import { PerformanceCalibrationUploadLabeledAudioResponse } from './performanceC
 import { PerformanceCalibrationUploadLabeledAudioResponseAllOf } from './performanceCalibrationUploadLabeledAudioResponseAllOf';
 import { PortalFile } from './portalFile';
 import { PortalInfoResponse } from './portalInfoResponse';
+import { ProfileTfLiteRequest } from './profileTfLiteRequest';
+import { ProfileTfLiteResponse } from './profileTfLiteResponse';
+import { ProfileTfLiteResponseAllOf } from './profileTfLiteResponseAllOf';
+import { ProfileTfLiteResponseAllOfMemory } from './profileTfLiteResponseAllOfMemory';
+import { ProfileTfLiteResponseAllOfMemoryTflite } from './profileTfLiteResponseAllOfMemoryTflite';
 import { Project } from './project';
 import { ProjectCollaborator } from './projectCollaborator';
 import { ProjectCollaboratorAllOf } from './projectCollaboratorAllOf';
@@ -964,6 +980,7 @@ import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
+import { RebalanceDatasetResponse } from './rebalanceDatasetResponse';
 import { RemoveCollaboratorRequest } from './removeCollaboratorRequest';
 import { RemoveMemberRequest } from './removeMemberRequest';
 import { RenameDeviceRequest } from './renameDeviceRequest';
@@ -1049,6 +1066,7 @@ import { UpdateOrganizationRequest } from './updateOrganizationRequest';
 import { UpdateOrganizationTransferLearningBlockRequest } from './updateOrganizationTransferLearningBlockRequest';
 import { UpdateOrganizationTransformationBlockRequest } from './updateOrganizationTransformationBlockRequest';
 import { UpdateProjectRequest } from './updateProjectRequest';
+import { UpdateProjectTagsRequest } from './updateProjectTagsRequest';
 import { UpdateThemeColorsRequest } from './updateThemeColorsRequest';
 import { UpdateThemeLogosRequest } from './updateThemeLogosRequest';
 import { UpdateThirdPartyAuthRequest } from './updateThirdPartyAuthRequest';
@@ -1175,6 +1193,7 @@ let enumsMap: {[index: string]: any} = {
     "PerformanceCalibrationFalsePositiveTypeEnum": "PerformanceCalibrationFalsePositiveTypeEnum",
     "PerformanceCalibrationGroundTruthTypeEnum": "PerformanceCalibrationGroundTruthTypeEnum",
     "PerformanceCalibrationParametersTypeEnum": "PerformanceCalibrationParametersTypeEnum",
+    "ProfileTfLiteRequestReferenceModelEnum": "ProfileTfLiteRequestReferenceModelEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
     "ProjectPublicDataProjectTypeEnum": "ProjectPublicDataProjectTypeEnum",
@@ -1304,6 +1323,8 @@ let typeMap: {[index: string]: any} = {
     "DataExplorerPredictionsResponse": DataExplorerPredictionsResponse,
     "DataExplorerPredictionsResponseAllOf": DataExplorerPredictionsResponseAllOf,
     "DataExplorerSettings": DataExplorerSettings,
+    "DatasetRatioData": DatasetRatioData,
+    "DatasetRatioDataRatio": DatasetRatioDataRatio,
     "DeletePortalFileRequest": DeletePortalFileRequest,
     "DependencyData": DependencyData,
     "DeploymentTarget": DeploymentTarget,
@@ -1590,6 +1611,11 @@ let typeMap: {[index: string]: any} = {
     "PerformanceCalibrationUploadLabeledAudioResponseAllOf": PerformanceCalibrationUploadLabeledAudioResponseAllOf,
     "PortalFile": PortalFile,
     "PortalInfoResponse": PortalInfoResponse,
+    "ProfileTfLiteRequest": ProfileTfLiteRequest,
+    "ProfileTfLiteResponse": ProfileTfLiteResponse,
+    "ProfileTfLiteResponseAllOf": ProfileTfLiteResponseAllOf,
+    "ProfileTfLiteResponseAllOfMemory": ProfileTfLiteResponseAllOfMemory,
+    "ProfileTfLiteResponseAllOfMemoryTflite": ProfileTfLiteResponseAllOfMemoryTflite,
     "Project": Project,
     "ProjectCollaborator": ProjectCollaborator,
     "ProjectCollaboratorAllOf": ProjectCollaboratorAllOf,
@@ -1618,6 +1644,7 @@ let typeMap: {[index: string]: any} = {
     "ProjectVersionRequest": ProjectVersionRequest,
     "RawSampleData": RawSampleData,
     "RawSamplePayload": RawSamplePayload,
+    "RebalanceDatasetResponse": RebalanceDatasetResponse,
     "RemoveCollaboratorRequest": RemoveCollaboratorRequest,
     "RemoveMemberRequest": RemoveMemberRequest,
     "RenameDeviceRequest": RenameDeviceRequest,
@@ -1703,6 +1730,7 @@ let typeMap: {[index: string]: any} = {
     "UpdateOrganizationTransferLearningBlockRequest": UpdateOrganizationTransferLearningBlockRequest,
     "UpdateOrganizationTransformationBlockRequest": UpdateOrganizationTransformationBlockRequest,
     "UpdateProjectRequest": UpdateProjectRequest,
+    "UpdateProjectTagsRequest": UpdateProjectTagsRequest,
     "UpdateThemeColorsRequest": UpdateThemeColorsRequest,
     "UpdateThemeLogosRequest": UpdateThemeLogosRequest,
     "UpdateThirdPartyAuthRequest": UpdateThirdPartyAuthRequest,

@@ -251,7 +251,7 @@ export class Config {
                     message: `What is your user name or e-mail address (${host})?`
                 });
 
-                const { needPassword, email, whitelabel } =
+                const { needPassword, email, whitelabels } =
                     await this._api.user.getUserNeedToSetPassword(username.username);
 
                 if (needPassword) {
@@ -262,10 +262,18 @@ export class Config {
                         config.host === 'localhost' ? ':4800' : ''
                     }`;
                     const encodedEmail = encodeURIComponent(`${email}`);
-                    const resetUrl =
-                        `${protocol}${whitelabel || config.host}${port}/set-password?email=${encodedEmail}`;
+                    let resetUrl;
+                    if (whitelabels && whitelabels.length === 1) {
+                        resetUrl =
+                            `${protocol}${whitelabels[0] || config.host}${port}/set-password?email=${encodedEmail}`;
+                    }
+                    // Some users may be part of different white labels. In these cases, we cannot provide an
+                    // URL for them to set the password, so we invite them to visit their user profile.
                     throw new Error(
-                        `To use the CLI you'll need to set an app password. Go to ${resetUrl} to set one.`
+                        `To use the CLI you'll need to set an app password. ` +
+                        resetUrl ?
+                        `Go to ${resetUrl} to set one.` :
+                        `Go to your user profile settings in Studio to set one.`
                     );
                 }
 

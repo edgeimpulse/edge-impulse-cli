@@ -11,9 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
+import { ProfileTfLiteResponseAllOf } from './profileTfLiteResponseAllOf';
+import { ProfileTfLiteResponseAllOfMemory } from './profileTfLiteResponseAllOfMemory';
 
-export class GetUserNeedToSetPasswordResponse {
+export class ProfileTfLiteResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,18 +23,8 @@ export class GetUserNeedToSetPasswordResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * User email
-    */
-    'email'?: string;
-    /**
-    * Whether the user needs to set its password or not
-    */
-    'needPassword'?: boolean;
-    /**
-    * White label domains the user belongs to, if any
-    */
-    'whitelabels'?: Array<string>;
+    'memory'?: ProfileTfLiteResponseAllOfMemory;
+    'timePerInferenceMs'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,23 +40,18 @@ export class GetUserNeedToSetPasswordResponse {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
-            "type": "string"
+            "name": "memory",
+            "baseName": "memory",
+            "type": "ProfileTfLiteResponseAllOfMemory"
         },
         {
-            "name": "needPassword",
-            "baseName": "needPassword",
-            "type": "boolean"
-        },
-        {
-            "name": "whitelabels",
-            "baseName": "whitelabels",
-            "type": "Array<string>"
+            "name": "timePerInferenceMs",
+            "baseName": "timePerInferenceMs",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserNeedToSetPasswordResponse.attributeTypeMap;
+        return ProfileTfLiteResponse.attributeTypeMap;
     }
 }
 

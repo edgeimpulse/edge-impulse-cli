@@ -43,6 +43,14 @@ export class Project {
     * Unique identifier of the white label this project belongs to, if any.
     */
     'whitelabelId': number | null;
+    /**
+    * List of project tags
+    */
+    'tags'?: Array<string>;
+    /**
+    * Project category
+    */
+    'category'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -121,6 +129,16 @@ export class Project {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "tags",
+            "baseName": "tags",
+            "type": "Array<string>"
+        },
+        {
+            "name": "category",
+            "baseName": "category",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

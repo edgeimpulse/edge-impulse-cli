@@ -22,6 +22,10 @@ export class ProjectPublicData {
     */
     'owner': string;
     /**
+    * URL to the project owner avatar, if any
+    */
+    'ownerAvatar'?: string;
+    /**
     * URL of the latest public version of the project, if any
     */
     'publicUrl': string;
@@ -32,6 +36,10 @@ export class ProjectPublicData {
     'trainingAccuracy'?: number;
     'testAccuracy'?: number;
     'readme'?: ProjectPublicDataReadme;
+    /**
+    * List of project tags
+    */
+    'tags': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -59,6 +67,11 @@ export class ProjectPublicData {
         {
             "name": "owner",
             "baseName": "owner",
+            "type": "string"
+        },
+        {
+            "name": "ownerAvatar",
+            "baseName": "ownerAvatar",
             "type": "string"
         },
         {
@@ -100,6 +113,11 @@ export class ProjectPublicData {
             "name": "readme",
             "baseName": "readme",
             "type": "ProjectPublicDataReadme"
+        },
+        {
+            "name": "tags",
+            "baseName": "tags",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

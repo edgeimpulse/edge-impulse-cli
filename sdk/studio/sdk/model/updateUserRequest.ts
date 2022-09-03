@@ -19,6 +19,10 @@ export class UpdateUserRequest {
     * New full name
     */
     'name'?: string;
+    /**
+    * Whether to show the Imagine 2022 banner
+    */
+    'showImagine2022'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +31,11 @@ export class UpdateUserRequest {
             "name": "name",
             "baseName": "name",
             "type": "string"
+        },
+        {
+            "name": "showImagine2022",
+            "baseName": "showImagine2022",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

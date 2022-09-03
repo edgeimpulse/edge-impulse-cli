@@ -53,6 +53,10 @@ export class GetUserResponse {
     * Whether this user is an ambassador.
     */
     'ambassador'?: boolean;
+    /**
+    * Whether to show the Imagine 2022 banner.
+    */
+    'showImagine2022': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -140,6 +144,11 @@ export class GetUserResponse {
         {
             "name": "ambassador",
             "baseName": "ambassador",
+            "type": "boolean"
+        },
+        {
+            "name": "showImagine2022",
+            "baseName": "showImagine2022",
             "type": "boolean"
         }    ];
 

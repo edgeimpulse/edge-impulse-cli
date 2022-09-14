@@ -339,7 +339,10 @@ export * from './optimizeConfig';
 export * from './optimizeConfigResponse';
 export * from './optimizeConfigResponseAllOf';
 export * from './optimizeConfigTargetDevice';
+export * from './optimizeDSPParametersResponse';
+export * from './optimizeDSPParametersResponseAllOf';
 export * from './optimizeSpaceResponse';
+export * from './optimizeSpaceResponseAllOf';
 export * from './optimizeStateResponse';
 export * from './optimizeStateResponseAllOf';
 export * from './optimizeStateResponseAllOfStatus';
@@ -457,7 +460,6 @@ export * from './setMemberDatasetsRequest';
 export * from './setMemberRoleRequest';
 export * from './setOptimizeSpaceRequest';
 export * from './setOptimizeSpaceRequestAllOf';
-export * from './setOptimizeSpaceRequestAllOfSpace';
 export * from './setOrganizationDataDatasetRequest';
 export * from './setProjectComputeTimeRequest';
 export * from './setProjectDspFileSizeRequest';
@@ -488,11 +490,9 @@ export * from './trackObjectsResponse';
 export * from './trackObjectsResponseAllOf';
 export * from './transferOwnershipOrganizationRequest';
 export * from './transformationBlockAdditionalMountPoint';
-export * from './tunerCreateTrialDSPBlock';
 export * from './tunerCreateTrialImpulse';
 export * from './tunerCreateTrialInputBlock';
 export * from './tunerCreateTrialLearnBlock';
-export * from './tunerSpaceDSPBlock';
 export * from './tunerSpaceImpulse';
 export * from './tunerSpaceInputBlock';
 export * from './tunerSpaceInputBlockWindow';
@@ -545,6 +545,9 @@ export * from './verifyOrganizationBucketResponseAllOf';
 export * from './verifyOrganizationBucketResponseAllOfFiles';
 export * from './verifyResetPasswordRequest';
 export * from './whitelabel';
+export * from './windowSettingsResponse';
+export * from './windowSettingsResponseAllOf';
+export * from './windowSettingsResponseAllOfWindowSettings';
 
 import localVarRequest = require('request');
 
@@ -889,7 +892,10 @@ import { OptimizeConfig } from './optimizeConfig';
 import { OptimizeConfigResponse } from './optimizeConfigResponse';
 import { OptimizeConfigResponseAllOf } from './optimizeConfigResponseAllOf';
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
+import { OptimizeDSPParametersResponse } from './optimizeDSPParametersResponse';
+import { OptimizeDSPParametersResponseAllOf } from './optimizeDSPParametersResponseAllOf';
 import { OptimizeSpaceResponse } from './optimizeSpaceResponse';
+import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 import { OptimizeStateResponse } from './optimizeStateResponse';
 import { OptimizeStateResponseAllOf } from './optimizeStateResponseAllOf';
 import { OptimizeStateResponseAllOfStatus } from './optimizeStateResponseAllOfStatus';
@@ -1007,7 +1013,6 @@ import { SetMemberDatasetsRequest } from './setMemberDatasetsRequest';
 import { SetMemberRoleRequest } from './setMemberRoleRequest';
 import { SetOptimizeSpaceRequest } from './setOptimizeSpaceRequest';
 import { SetOptimizeSpaceRequestAllOf } from './setOptimizeSpaceRequestAllOf';
-import { SetOptimizeSpaceRequestAllOfSpace } from './setOptimizeSpaceRequestAllOfSpace';
 import { SetOrganizationDataDatasetRequest } from './setOrganizationDataDatasetRequest';
 import { SetProjectComputeTimeRequest } from './setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from './setProjectDspFileSizeRequest';
@@ -1038,11 +1043,9 @@ import { TrackObjectsResponse } from './trackObjectsResponse';
 import { TrackObjectsResponseAllOf } from './trackObjectsResponseAllOf';
 import { TransferOwnershipOrganizationRequest } from './transferOwnershipOrganizationRequest';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
-import { TunerCreateTrialDSPBlock } from './tunerCreateTrialDSPBlock';
 import { TunerCreateTrialImpulse } from './tunerCreateTrialImpulse';
 import { TunerCreateTrialInputBlock } from './tunerCreateTrialInputBlock';
 import { TunerCreateTrialLearnBlock } from './tunerCreateTrialLearnBlock';
-import { TunerSpaceDSPBlock } from './tunerSpaceDSPBlock';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 import { TunerSpaceInputBlock } from './tunerSpaceInputBlock';
 import { TunerSpaceInputBlockWindow } from './tunerSpaceInputBlockWindow';
@@ -1095,6 +1098,9 @@ import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucke
 import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 import { VerifyResetPasswordRequest } from './verifyResetPasswordRequest';
 import { Whitelabel } from './whitelabel';
+import { WindowSettingsResponse } from './windowSettingsResponse';
+import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
+import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -1203,7 +1209,6 @@ let enumsMap: {[index: string]: any} = {
     "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
-    "TunerCreateTrialDSPBlockChannelsEnum": "TunerCreateTrialDSPBlockChannelsEnum",
     "TunerCreateTrialInputBlockTypeEnum": "TunerCreateTrialInputBlockTypeEnum",
     "TunerCreateTrialLearnBlockAugmentationPolicyImageEnum": "TunerCreateTrialLearnBlockAugmentationPolicyImageEnum",
     "TunerCreateTrialLearnBlockModelEnum": "TunerCreateTrialLearnBlockModelEnum",
@@ -1553,7 +1558,10 @@ let typeMap: {[index: string]: any} = {
     "OptimizeConfigResponse": OptimizeConfigResponse,
     "OptimizeConfigResponseAllOf": OptimizeConfigResponseAllOf,
     "OptimizeConfigTargetDevice": OptimizeConfigTargetDevice,
+    "OptimizeDSPParametersResponse": OptimizeDSPParametersResponse,
+    "OptimizeDSPParametersResponseAllOf": OptimizeDSPParametersResponseAllOf,
     "OptimizeSpaceResponse": OptimizeSpaceResponse,
+    "OptimizeSpaceResponseAllOf": OptimizeSpaceResponseAllOf,
     "OptimizeStateResponse": OptimizeStateResponse,
     "OptimizeStateResponseAllOf": OptimizeStateResponseAllOf,
     "OptimizeStateResponseAllOfStatus": OptimizeStateResponseAllOfStatus,
@@ -1671,7 +1679,6 @@ let typeMap: {[index: string]: any} = {
     "SetMemberRoleRequest": SetMemberRoleRequest,
     "SetOptimizeSpaceRequest": SetOptimizeSpaceRequest,
     "SetOptimizeSpaceRequestAllOf": SetOptimizeSpaceRequestAllOf,
-    "SetOptimizeSpaceRequestAllOfSpace": SetOptimizeSpaceRequestAllOfSpace,
     "SetOrganizationDataDatasetRequest": SetOrganizationDataDatasetRequest,
     "SetProjectComputeTimeRequest": SetProjectComputeTimeRequest,
     "SetProjectDspFileSizeRequest": SetProjectDspFileSizeRequest,
@@ -1702,11 +1709,9 @@ let typeMap: {[index: string]: any} = {
     "TrackObjectsResponseAllOf": TrackObjectsResponseAllOf,
     "TransferOwnershipOrganizationRequest": TransferOwnershipOrganizationRequest,
     "TransformationBlockAdditionalMountPoint": TransformationBlockAdditionalMountPoint,
-    "TunerCreateTrialDSPBlock": TunerCreateTrialDSPBlock,
     "TunerCreateTrialImpulse": TunerCreateTrialImpulse,
     "TunerCreateTrialInputBlock": TunerCreateTrialInputBlock,
     "TunerCreateTrialLearnBlock": TunerCreateTrialLearnBlock,
-    "TunerSpaceDSPBlock": TunerSpaceDSPBlock,
     "TunerSpaceImpulse": TunerSpaceImpulse,
     "TunerSpaceInputBlock": TunerSpaceInputBlock,
     "TunerSpaceInputBlockWindow": TunerSpaceInputBlockWindow,
@@ -1759,6 +1764,9 @@ let typeMap: {[index: string]: any} = {
     "VerifyOrganizationBucketResponseAllOfFiles": VerifyOrganizationBucketResponseAllOfFiles,
     "VerifyResetPasswordRequest": VerifyResetPasswordRequest,
     "Whitelabel": Whitelabel,
+    "WindowSettingsResponse": WindowSettingsResponse,
+    "WindowSettingsResponseAllOf": WindowSettingsResponseAllOf,
+    "WindowSettingsResponseAllOfWindowSettings": WindowSettingsResponseAllOfWindowSettings,
 }
 
 export class ObjectSerializer {

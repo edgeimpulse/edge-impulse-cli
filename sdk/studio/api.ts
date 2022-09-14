@@ -298,6 +298,7 @@ export class EdgeImpulseApi {
             let pingIv = setInterval(() => {
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     socket.ping();
+                    socket.send('2');
                 }
             }, 5000);
 
@@ -426,6 +427,7 @@ export class EdgeImpulseApi {
 
             let pingIv = setInterval(() => {
                 if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send('2');
                     socket.ping();
                 }
             }, 5000);

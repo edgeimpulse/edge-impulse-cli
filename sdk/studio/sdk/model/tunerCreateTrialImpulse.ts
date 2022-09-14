@@ -10,7 +10,6 @@
  * Do not edit the class manually.
  */
 
-import { TunerCreateTrialDSPBlock } from './tunerCreateTrialDSPBlock';
 import { TunerCreateTrialInputBlock } from './tunerCreateTrialInputBlock';
 import { TunerCreateTrialLearnBlock } from './tunerCreateTrialLearnBlock';
 
@@ -19,7 +18,7 @@ export class TunerCreateTrialImpulse {
     'experiment'?: string;
     'originalTrialId'?: string;
     'inputBlock': TunerCreateTrialInputBlock;
-    'dspBlock': TunerCreateTrialDSPBlock;
+    'dspBlock': { [key: string]: object; };
     'learnBlock': TunerCreateTrialLearnBlock;
 
     static discriminator: string | undefined = undefined;
@@ -48,7 +47,7 @@ export class TunerCreateTrialImpulse {
         {
             "name": "dspBlock",
             "baseName": "dspBlock",
-            "type": "TunerCreateTrialDSPBlock"
+            "type": "{ [key: string]: object; }"
         },
         {
             "name": "learnBlock",

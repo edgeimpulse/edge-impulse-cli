@@ -11,10 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
-import { TunerSpaceImpulse } from './tunerSpaceImpulse';
+import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
+import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
 
-export class OptimizeSpaceResponse {
+export class WindowSettingsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,10 +23,7 @@ export class OptimizeSpaceResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * List of impulses specifying the EON Tuner search space
-    */
-    'impulse': Array<TunerSpaceImpulse>;
+    'windowSettings': Array<WindowSettingsResponseAllOfWindowSettings>;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,13 +39,13 @@ export class OptimizeSpaceResponse {
             "type": "string"
         },
         {
-            "name": "impulse",
-            "baseName": "impulse",
-            "type": "Array<TunerSpaceImpulse>"
+            "name": "windowSettings",
+            "baseName": "windowSettings",
+            "type": "Array<WindowSettingsResponseAllOfWindowSettings>"
         }    ];
 
     static getAttributeTypeMap() {
-        return OptimizeSpaceResponse.attributeTypeMap;
+        return WindowSettingsResponse.attributeTypeMap;
     }
 }
 

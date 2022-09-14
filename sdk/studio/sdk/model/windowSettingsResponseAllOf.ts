@@ -10,22 +10,22 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
+import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class WindowSettingsResponseAllOf {
+    'windowSettings': Array<WindowSettingsResponseAllOfWindowSettings>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "windowSettings",
+            "baseName": "windowSettings",
+            "type": "Array<WindowSettingsResponseAllOfWindowSettings>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return WindowSettingsResponseAllOf.attributeTypeMap;
     }
 }
 

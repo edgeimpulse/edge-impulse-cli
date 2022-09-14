@@ -23,6 +23,7 @@ import {
     UploadCustomBlockRequestTypeEnum,
     UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio';
+import { ips } from './get-ips';
 
 const version = getCliVersion();
 
@@ -125,7 +126,7 @@ const runner = program.command('runner')
                .option('--learning-rate <learningRate>', 'Transfer learning: Learning rate while training')
                .option('--validation-set-size <size>', 'Transfer learning: Size of validation set')
                .option('--input-shape <shape>', 'Transfer learning: List of axis dimensions. Example: "(1, 4, 2)"')
-               .option('--download-data', 'Transfer learning or deploy: Only download data and don\'t run the block')
+               .option('--download-data [directory]', 'Transfer learning or deploy: Only download data and don\'t run the block')
                .option('--port <number>', 'DSP: Port to host DSP block on')
                .option('--extra-args <args>', 'Pass extra arguments/options to the Docker container')
                .option('--skip-download', `Tranformation block: Don't download data`);
@@ -155,6 +156,8 @@ const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
 const dockerignorePath = Path.join(process.cwd(), '.dockerignore');
 
 let globalCurrentBlockConfig: BlockConfigV1 | undefined;
+
+let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
 // tslint:disable-next-line:no-floating-promises
 (async () => {
@@ -225,6 +228,37 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         return;
     }
 
+    let firstExit = true;
+
+    const onSignal = async () => {
+        if (!pushingBlockJobId || !config) {
+            process.exit(0);
+        }
+        if (!firstExit) {
+            process.exit(1);
+        }
+        else {
+            console.log('Received stop signal, canceling build... ' +
+                'Press CTRL+C again to force quit.');
+            firstExit = false;
+            try {
+                await config.api.organizationJobs.cancelOrganizationJob(
+                    pushingBlockJobId.organizationId,
+                    pushingBlockJobId.jobId
+                );
+                process.exit(0);
+            }
+            catch (ex2) {
+                let ex = <Error>ex2;
+                console.log('Failed to stop cancel job', ex.message);
+            }
+            process.exit(1);
+        }
+    };
+
+    process.on('SIGHUP', onSignal);
+    process.on('SIGINT', onSignal);
+
     if (!config) return;
 
     if (initCommand) {
@@ -255,7 +289,17 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
         else {
             let orgInqRes = await inquirer.prompt([{
                 type: 'list',
-                choices: (organizations.organizations || []).map(p => ({ name: p.name, value: p.id })),
+                choices: (organizations.organizations || []).map(p => {
+                    let name = p.name;
+                    if (p.isDeveloperProfile) {
+                        name += ' (personal account)';
+                    }
+
+                    return {
+                        name: name,
+                        value: p.id,
+                    };
+                }),
                 name: 'organization',
                 message: 'In which organization do you want to create this block?',
                 pageSize: 20
@@ -266,11 +310,14 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
         console.log(`Attaching block to organization '${organization.name}'`);
 
-        // Select the type of block
-        let blockType: UploadCustomBlockRequestTypeEnum;
-        let blockTypeInqRes = await inquirer.prompt([{
-            type: 'list',
-            choices: [
+        let blockList = organization.isDeveloperProfile ?
+            [
+                {
+                    name: 'Machine learning block',
+                    value: 'transferLearning'
+                }
+            ] :
+            [
                 {
                     name: 'Transformation block',
                     value: 'transform'
@@ -287,9 +334,19 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                     name: 'Machine learning block',
                     value: 'transferLearning'
                 }
-            ],
+            ];
+
+        // Select the type of block
+        let blockType: UploadCustomBlockRequestTypeEnum;
+        let blockTypeInqRes = await inquirer.prompt([{
+            type: 'list',
+            choices: blockList,
             name: 'type',
-            message: 'Choose a type of block',
+            message: 'Choose a type of block' +
+                (organization.isDeveloperProfile ?
+                    ' (transform, DSP and deploy block types are hidden because you are ' +
+                        'pushing to a personal profile)' :
+                    ''),
             pageSize: 20
         }]);
         blockType = <UploadCustomBlockRequestTypeEnum>blockTypeInqRes.type;
@@ -673,7 +730,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             process.exit(1);
         }
 
-        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        let currentBlockConfig = getConfigForHost(globalCurrentBlockConfig, config.host);
         if (!currentBlockConfig) {
             console.error('A configuration cannot be found for this host (' + config.host + '). ' +
                 'Run "edge-impulse-blocks init" to create a new block.');
@@ -707,15 +764,46 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
         try {
             if (!currentBlockConfig.id)  {
+
+                let blockName = currentBlockConfig.name;
+                let blockDescription = currentBlockConfig.description;
+
+                // Enter block name
+                if (!blockName || blockName.length < 2) {
+                    blockName = <string>(await inquirer.prompt([{
+                        type: 'input',
+                        name: 'name',
+                        message: 'Enter the name of your block',
+                    }])).name;
+                    if (blockName.length < 2) {
+                        console.error('New block must have a name longer than 2 characters.');
+                        process.exit(1);
+                    }
+                }
+
+                // Enter block description
+                if (!blockDescription || blockDescription.length < 2) {
+                    blockDescription = <string>(await inquirer.prompt([{
+                        type: 'input',
+                        name: 'description',
+                        message: 'Enter the description of your block',
+                    }])).description;
+                    if (blockDescription === '') blockDescription = blockName;
+                }
+
+                currentBlockConfig.name = blockName;
+                currentBlockConfig.description = blockDescription;
+
                 // Create a new block
                 let newResponse: { success: boolean, id: number, error?: string };
                 if (currentBlockConfig.type === 'transform') {
                     const newBlockObject: AddOrganizationTransformationBlockRequest = {
-                        name: currentBlockConfig.name,
-                        description: currentBlockConfig.description,
+                        name: blockName,
+                        description: blockDescription,
                         dockerContainer: '',
                         indMetadata: true,
                         cliArguments: '',
+                        allowExtraCliArguments: true,
                         operatesOn: currentBlockConfig.operatesOn || 'file',
                         additionalMountPoints: (currentBlockConfig.transformMountpoints || []).map(x => {
                             return {
@@ -730,7 +818,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 }
                 else if (currentBlockConfig.type === 'deploy') {
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
-                        organizationId, currentBlockConfig.name, '', currentBlockConfig.description, '',
+                        organizationId, blockName, '', blockDescription, '',
                         undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
                         undefined, undefined, currentBlockConfig.deployCategory);
                 }
@@ -774,23 +862,53 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
                     newResponse = await config.api.organizationBlocks.addOrganizationDspBlock(
                         organizationId, {
-                            name: currentBlockConfig.name,
+                            name: blockName,
                             dockerContainer: '',
-                            description: currentBlockConfig.description,
+                            description: blockDescription,
                             port: currentBlockConfig.port || 80,
                         });
                 }
                 else if (currentBlockConfig.type === 'transferLearning') {
+                    let implementationVersion = 2;
+                    let trainPath = Path.join(Path.dirname(dockerfilePath), 'train.py');
+                    if (await exists(trainPath)) {
+                        let trainFile = await fs.promises.readFile(trainPath, 'utf-8');
+                        if (trainFile.indexOf('--validation-set-size') > -1) {
+                            implementationVersion = 1;
+                        }
+                    }
+
                     const newBlockObject: AddOrganizationTransferLearningBlockRequest = {
-                        name: currentBlockConfig.name,
-                        description: currentBlockConfig.description,
+                        name: blockName,
+                        description: blockDescription,
                         dockerContainer: '',
                         objectDetectionLastLayer:
                             <ObjectDetectionLastLayer>currentBlockConfig.tlObjectDetectionLastLayer,
                         operatesOn: currentBlockConfig.tlOperatesOn || 'image',
+                        implementationVersion,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newBlockObject);
+
+                    if (implementationVersion === 1) {
+                        console.log('');
+                        console.log('\x1b[33mWARN:\x1b[0m This block seems to use --x-file, --y-file and --validation-set-size parameters.');
+                        console.log('      These have been replaced by a --data-directory parameter, which already contains');
+                        console.log('      pre-splitted data. We recommend you update this training script, see');
+                        console.log('');
+                        console.log('      https://docs.edgeimpulse.com/docs/edge-impulse-studio/learning-blocks/adding-custom-learning-blocks');
+                        console.log('');
+                        console.log('      After updating your script, make sure to set "implementation version" to "2" for this block on:');
+
+                        let link = organizationNameResponse.organization.isDeveloperProfile ?
+                            `/studio/profile/machine-learning-blocks` :
+                            `/organization/${organizationId}/machine-learning-blocks`;
+                        link = config.endpoints.internal.api.replace('/v1', '') + link;
+
+                        console.log('');
+                        console.log('      ' + link);
+                        console.log('');
+                    }
                 }
                 else {
                     console.error(`Unable to upload your block - unknown block type: ` +
@@ -875,6 +993,12 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                 process.exit(1);
             }
             let jobId = uploadResponse.id;
+
+            pushingBlockJobId = {
+                organizationId: currentBlockConfig.organizationId,
+                jobId
+            };
+
             console.log(`Uploading block '${currentBlockConfig.name}' to organization '${organizationName}' OK`);
             console.log('');
 
@@ -889,6 +1013,8 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             });
 
             await fs.promises.unlink(packagePath);
+
+            pushingBlockJobId = undefined;
 
             console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}' OK`);
             console.log('');
@@ -925,7 +1051,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
                         return process.exit(1);
                     }
 
-                    let block = dspStatusRes.dspBlocks.find(d => d.id === currentBlockConfig.id);
+                    let block = dspStatusRes.dspBlocks.find(d => d.id === currentBlockConfig?.id);
                     if (!block) {
                         process.stdout.write('\n');
                         console.log('Failed to find DSP block with ID ' + currentBlockConfig.id);
@@ -967,7 +1093,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             process.exit(1);
         }
 
-        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        let currentBlockConfig = getConfigForHost(globalCurrentBlockConfig, config.host);
         if (!currentBlockConfig) {
             console.error('A configuration cannot be found for this host (' + config.host + '). ' +
                 'Run "edge-impulse-blocks init" to create a new block.');
@@ -1027,7 +1153,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
             process.exit(1);
         }
 
-        let currentBlockConfig = globalCurrentBlockConfig.config[config.host];
+        let currentBlockConfig = getConfigForHost(globalCurrentBlockConfig, config.host);
         if (!currentBlockConfig) {
             console.error('A configuration cannot be found for this host (' + config.host + '). ' +
                 'Run "edge-impulse-blocks init" to create a new block.');
@@ -1171,4 +1297,21 @@ function spinner() {
 
         process.stdout.write('\b' + (spinChars[spinIx]));
     }, 250);
+}
+
+function getConfigForHost(config: BlockConfigV1, host: string) {
+    let currentBlockConfig = config.config[host];
+    if (currentBlockConfig) {
+        return currentBlockConfig;
+    }
+
+    let localhostConfig = config.config.localhost;
+
+    for (let ip of ips) {
+        if (ip.address === host) {
+            return localhostConfig;
+        }
+    }
+
+    return undefined;
 }

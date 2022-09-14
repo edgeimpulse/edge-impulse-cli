@@ -11,10 +11,9 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
-import { TunerSpaceImpulse } from './tunerSpaceImpulse';
+import { OptimizeDSPParametersResponseAllOf } from './optimizeDSPParametersResponseAllOf';
 
-export class OptimizeSpaceResponse {
+export class OptimizeDSPParametersResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,10 +22,7 @@ export class OptimizeSpaceResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * List of impulses specifying the EON Tuner search space
-    */
-    'impulse': Array<TunerSpaceImpulse>;
+    'parameters': object;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,13 +38,13 @@ export class OptimizeSpaceResponse {
             "type": "string"
         },
         {
-            "name": "impulse",
-            "baseName": "impulse",
-            "type": "Array<TunerSpaceImpulse>"
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {
-        return OptimizeSpaceResponse.attributeTypeMap;
+        return OptimizeDSPParametersResponse.attributeTypeMap;
     }
 }
 

@@ -7,7 +7,6 @@ import { spawn, SpawnOptions } from "child_process";
 import { Config, EdgeImpulseConfig } from "./config";
 import { BlockConfigItem, exists } from "./blocks";
 import inquirer from "inquirer";
-import { FSHelpers } from "./fs-helpers";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
 import {
@@ -85,7 +84,7 @@ export type RunnerOptions = {
           learningRate?: string;
           validationSetSize?: string;
           inputShape?: string;
-          downloadData?: boolean;
+          downloadData?: string | boolean;
       }
     | {
           type: "dsp";
@@ -93,7 +92,7 @@ export type RunnerOptions = {
       }
     | {
           type: "deploy";
-          downloadData?: boolean;
+          downloadData?: string | boolean;
       }
 );
 
@@ -609,10 +608,6 @@ export class BlockRunnerTransform extends BlockRunner {
                 this._dataItem.id
             );
 
-        if (await fileExists(path)) {
-            await FSHelpers.rmDir(path);
-        }
-
         await fs.promises.mkdir(path);
 
         let targetFilePath = Path.join(
@@ -843,13 +838,15 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         let learnBlockId = -1;
 
         if (!runner.blockId) {
-            if (impulseRes.impulse.learnBlocks.length === 1) {
-                learnBlockId = impulseRes.impulse.learnBlocks[0].id;
+            let learnBlocks = impulseRes.impulse.learnBlocks.filter(x => x.primaryVersion);
+
+            if (learnBlocks.length === 1) {
+                learnBlockId = learnBlocks[0].id;
             } else {
                 let learnInq = await inquirer.prompt([
                     {
                         type: "list",
-                        choices: (impulseRes.impulse.learnBlocks || []).map((b) => ({
+                        choices: (learnBlocks || []).map((b) => ({
                             name: b.title,
                             value: b.id
                         })),
@@ -879,9 +876,13 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                     "if you want to fetch new data run edge-impulse-blocks runner --download-data");
             }
             else {
+                let targetDir = typeof this._runnerOpts.downloadData === 'string' ?
+                    this._runnerOpts.downloadData :
+                    Path.join(process.cwd(), 'ei-block-data', this._projectId.toString());
+
                 console.log(CON_PREFIX, "Downloading files...");
-                await this.downloadFiles(this._projectId, learnBlockId);
-                console.log(CON_PREFIX, `Training files downloaded to ./ei-block-data/${this._projectId}`);
+                await this.downloadFiles(this._projectId, learnBlockId, targetDir);
+                console.log(CON_PREFIX, `Training files downloaded to`, targetDir);
 
                 if (this._runnerOpts.downloadData) {
                     process.exit(0);
@@ -1003,28 +1004,34 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
     private async downloadFiles(
         projectId: number,
-        learnId: number
+        learnId: number,
+        targetDir: string,
     ): Promise<void> {
-
-        let targetDir = Path.join(process.cwd(), 'ei-block-data', projectId.toString());
-
-        if (await fileExists(targetDir)) {
-            await FSHelpers.rmDir(Path.join(targetDir));
-        }
 
         await fs.promises.mkdir(targetDir, { recursive: true });
 
-        let trainXRes = (await this._eiConfig.api.learn.getLearnXData(projectId, learnId));
+        console.log(CON_PREFIX, 'Creating download job...');
+        let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId);
+        console.log(CON_PREFIX, 'Creating download job OK', job.id);
+        await this._eiConfig.api.runJobUntilCompletion({
+            type: 'project',
+            projectId: projectId,
+            jobId: job.id,
+        }, x => {
+            process.stdout.write(x);
+        });
+        console.log(CON_PREFIX, 'Download job completed, downloading data...');
+
+        let zipFile = Path.join(targetDir, "data.zip");
+        let data = await this._eiConfig.api.learn.downloadKerasData(projectId, learnId);
         await fs.promises.writeFile(
-            Path.join(targetDir, "X_train_features.npy"),
-            trainXRes
+            zipFile,
+            data
         );
 
-        let trainYRes = (await this._eiConfig.api.learn.getLearnYData(projectId, learnId));
-        await fs.promises.writeFile(
-            Path.join(targetDir, "y_train.npy"),
-            trainYRes
-        );
+        console.log(CON_PREFIX, 'Download completed, unzipping...');
+        await extractFiles(zipFile, targetDir);
+        await fs.promises.unlink(zipFile);
     }
 
     private async checkFilesPresent(projectId: number): Promise<boolean> {
@@ -1125,7 +1132,9 @@ export class BlockRunnerDeploy extends BlockRunner {
             console.log(CON_PREFIX, "Finished building");
         }
 
-        let targetDir = Path.join(process.cwd(), "ei-block-data", this._projectId.toString(), "input");
+        let targetDir = (this._runnerOpts.type === 'deploy' && typeof this._runnerOpts.downloadData === 'string') ?
+            this._runnerOpts.downloadData :
+            Path.join(process.cwd(), 'ei-block-data', this._projectId.toString(), 'input');
         let zipDir = Path.join(process.cwd(), "ei-block-data", "download");
 
         console.log(CON_PREFIX, `Downloading build artifacts ZIP into ${zipDir}...`);
@@ -1133,7 +1142,7 @@ export class BlockRunnerDeploy extends BlockRunner {
         console.log(CON_PREFIX, "Downloaded file");
 
         console.log(CON_PREFIX, `Unzipping into ${targetDir}...`);
-        await this.extractFiles(Path.join(zipDir, "build-data.zip"), targetDir);
+        await extractFiles(Path.join(zipDir, "build-data.zip"), targetDir);
         console.log(CON_PREFIX, `Extracted into ${targetDir}`);
 
         if (this._runnerOpts.type === 'deploy' && this._runnerOpts.downloadData) {
@@ -1219,107 +1228,6 @@ export class BlockRunnerDeploy extends BlockRunner {
         }
 
         await fs.promises.writeFile(downloadPath, buildArtifacts);
-    }
-
-    private async extractFiles(
-        zipFileName: string,
-        targetFolder: string
-    ): Promise<void> {
-        if (!(await fileExists(zipFileName))) {
-            throw new Error(`Unable to find file ${zipFileName} for unzipping`);
-        }
-
-        if (await fileExists(targetFolder)) {
-            await FSHelpers.rmDir(targetFolder);
-        }
-
-        await fs.promises.mkdir(targetFolder, { recursive: true });
-
-        return new Promise<void>((resolve, reject) => {
-
-
-            yauzl.open(zipFileName, { lazyEntries: true }, (err, zipFile) => {
-                if (err) reject(new Error(err.toString()));
-                if (!zipFile) reject(new Error("File to unzip is undefined"));
-
-                if (zipFile) {
-                    zipFile.readEntry();
-
-                    zipFile.on("entry", async (entry: Entry) => {
-                        try {
-                            if (/\/$/.test(entry.fileName)) {
-                                // A directory
-                                await fs.promises.mkdir(
-                                    Path.join(targetFolder, entry.fileName)
-                                );
-                                zipFile.readEntry();
-                            }
-                            else {
-                                zipFile.openReadStream(
-                                    entry,
-                                    (error2, readStream) => {
-                                        if (error2) {
-                                            reject(error2);
-                                        }
-                                        if (!readStream) {
-                                            reject(
-                                                new Error(
-                                                    "Unable to open file stream"
-                                                )
-                                            );
-                                        }
-
-                                        let writeStream = fs.createWriteStream(
-                                            Path.join(
-                                                targetFolder,
-                                                entry.fileName
-                                            ),
-                                            { flags: "w" }
-                                        );
-
-                                        if (readStream) {
-                                            readStream.pipe(writeStream);
-                                        }
-
-                                        writeStream.on("finish", () => {
-                                            // @ts-ignore
-                                            writeStream.close(() => {
-                                                zipFile.readEntry();
-                                            });
-
-                                            writeStream.on("error", (error) => {
-                                                zipFile.close();
-                                                reject(
-                                                    new Error(
-                                                        "Error reading ZIP entry: " + error
-                                                    )
-                                                );
-                                            });
-                                        });
-                                    }
-                                );
-                            }
-                        } catch (ex) {
-                            zipFile.close();
-                            reject(new Error("Unable to read ZIP file"));
-                        }
-                    });
-
-                    zipFile.on("end", () => {
-                        resolve();
-                    });
-
-                    zipFile.on("error", (error) => {
-                        zipFile.close();
-                        reject(
-                            new Error(
-                                "Error reading ZIP file: " + error
-                            )
-                        );
-                    });
-                }
-            });
-        });
     }
 }
 
@@ -1525,4 +1433,99 @@ export class BlockRunnerDSP extends BlockRunner {
             reject2('Failed to start ngrok within 5 seconds');
         });
     }
+}
+
+async function extractFiles(
+    zipFileName: string,
+    targetFolder: string
+): Promise<void> {
+    if (!(await fileExists(zipFileName))) {
+        throw new Error(`Unable to find file ${zipFileName} for unzipping`);
+    }
+
+    await fs.promises.mkdir(targetFolder, { recursive: true });
+
+    return new Promise<void>((resolve, reject) => {
+        yauzl.open(zipFileName, { lazyEntries: true }, (err, zipFile) => {
+            if (err) reject(new Error(err.toString()));
+            if (!zipFile) reject(new Error("File to unzip is undefined"));
+
+            if (zipFile) {
+                zipFile.readEntry();
+
+                zipFile.on("entry", async (entry: Entry) => {
+                    try {
+                        if (/\/$/.test(entry.fileName)) {
+                            // A directory
+                            await fs.promises.mkdir(
+                                Path.join(targetFolder, entry.fileName)
+                            );
+                            zipFile.readEntry();
+                        }
+                        else {
+                            zipFile.openReadStream(
+                                entry,
+                                (error2, readStream) => {
+                                    if (error2) {
+                                        reject(error2);
+                                    }
+                                    if (!readStream) {
+                                        reject(
+                                            new Error(
+                                                "Unable to open file stream"
+                                            )
+                                        );
+                                    }
+
+                                    let writeStream = fs.createWriteStream(
+                                        Path.join(
+                                            targetFolder,
+                                            entry.fileName
+                                        ),
+                                        { flags: "w" }
+                                    );
+
+                                    if (readStream) {
+                                        readStream.pipe(writeStream);
+                                    }
+
+                                    writeStream.on("finish", () => {
+                                        // @ts-ignore
+                                        writeStream.close(() => {
+                                            zipFile.readEntry();
+                                        });
+
+                                        writeStream.on("error", (error) => {
+                                            zipFile.close();
+                                            reject(
+                                                new Error(
+                                                    "Error reading ZIP entry: " + error
+                                                )
+                                            );
+                                        });
+                                    });
+                                }
+                            );
+                        }
+                    } catch (ex) {
+                        zipFile.close();
+                        reject(new Error("Unable to read ZIP file"));
+                    }
+                });
+
+                zipFile.on("end", () => {
+                    resolve();
+                });
+
+                zipFile.on("error", (error) => {
+                    zipFile.close();
+                    reject(
+                        new Error(
+                            "Error reading ZIP file: " + error
+                        )
+                    );
+                });
+            }
+        });
+    });
 }

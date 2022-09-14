@@ -308,6 +308,17 @@ export class Config {
             await this._api.organizations.listOrganizations();
         }
 
+        // fetch user...
+        if (config.jwtToken) {
+            let user = await this._api.user.getCurrentUser();
+            // check if has developer profile...
+            if (!user.organizations.find(x => x.isDeveloperProfile)) {
+                console.log(PREFIX, 'Creating developer profile...');
+                await this._api.user.createDeveloperProfile();
+                console.log(PREFIX, 'Creating developer profile OK');
+            }
+        }
+
         // OK, now we're OK!
         await this.store(config);
         this._configured = true;

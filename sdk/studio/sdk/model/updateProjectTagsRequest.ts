@@ -10,22 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class UpdateProjectTagsRequest {
+    'tags': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "tags",
+            "baseName": "tags",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return UpdateProjectTagsRequest.attributeTypeMap;
     }
 }
 

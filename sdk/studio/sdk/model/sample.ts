@@ -84,6 +84,10 @@ export class Sample {
     * Set when processing this sample failed
     */
     'processingError': boolean;
+    /**
+    * Sample free form associated metadata
+    */
+    'metadata'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -227,6 +231,11 @@ export class Sample {
             "name": "processingError",
             "baseName": "processingError",
             "type": "boolean"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

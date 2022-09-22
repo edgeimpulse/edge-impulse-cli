@@ -18,6 +18,7 @@ export class AddOrganizationTransferLearningBlockRequest {
     'description': string;
     'operatesOn': AddOrganizationTransferLearningBlockRequestOperatesOnEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
+    'implementationVersion': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -46,6 +47,11 @@ export class AddOrganizationTransferLearningBlockRequest {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
             "type": "ObjectDetectionLastLayer"
+        },
+        {
+            "name": "implementationVersion",
+            "baseName": "implementationVersion",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

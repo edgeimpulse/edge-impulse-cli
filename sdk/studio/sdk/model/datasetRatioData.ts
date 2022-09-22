@@ -10,30 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 
-/**
-* Present if a readme is set for this project
-*/
-export class ProjectInfoResponseAllOfReadme {
-    'markdown': string;
-    'html': string;
+export class DatasetRatioData {
+    'ratio'?: DatasetRatioDataRatio;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "markdown",
-            "baseName": "markdown",
-            "type": "string"
-        },
-        {
-            "name": "html",
-            "baseName": "html",
-            "type": "string"
+            "name": "ratio",
+            "baseName": "ratio",
+            "type": "DatasetRatioDataRatio"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProjectInfoResponseAllOfReadme.attributeTypeMap;
+        return DatasetRatioData.attributeTypeMap;
     }
 }
 

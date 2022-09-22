@@ -13,7 +13,8 @@ import { FSHelpers } from './fs-helpers';
 type UploaderFileType = {
     path: string,
     category: string,
-    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string }
+    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
+    metadata: { [k: string]: string } | undefined,
 };
 
 interface InfoFileV1 {
@@ -22,6 +23,7 @@ interface InfoFileV1 {
         path: string,
         category: string,
         label: { type: 'unlabeled' } | { type: 'label', label: string },
+        metadata: { [k: string]: string } | undefined,
     }[];
 }
 
@@ -51,6 +53,8 @@ const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
 const infoFileArgvIx = process.argv.indexOf('--info-file');
 const infoFileArgv = infoFileArgvIx !== -1 ? process.argv[infoFileArgvIx + 1] : undefined;
+const metadataArgvIx = process.argv.indexOf('--metadata');
+const metadataArgv = metadataArgvIx !== -1 ? process.argv[metadataArgvIx + 1] : undefined;
 
 let configFactory: Config;
 
@@ -125,6 +129,7 @@ const cliOptions = {
     if (allowDuplicatesArgv) argv++;
     if (openmvArgv) argv++;
     if (infoFileArgv) argv += 2;
+    if (metadataArgv) argv += 2;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -150,7 +155,8 @@ const cliOptions = {
                     files.push({
                         category: f.category,
                         label: f.label,
-                        path: f.path
+                        path: f.path,
+                        metadata: f.metadata,
                     });
                 }
             }
@@ -185,6 +191,17 @@ const cliOptions = {
                 process.exit(1);
             }
 
+            let metadata: { [k: string] : string } | undefined;
+            if (metadataArgv) {
+                try {
+                    metadata = <{ [k: string] : string }>JSON.parse(metadataArgv);
+                }
+                catch (ex) {
+                    console.log('--metadata is not valid JSON');
+                    process.exit(1);
+                }
+            }
+
             if (openmvArgv) {
                 if (categoryArgv || labelArgv) {
                     console.log('--format-openmv cannot be used in conjunction with --category or --label');
@@ -215,7 +232,8 @@ const cliOptions = {
                         files.push({
                             path: Path.join(fileArgs[0], categoryFolder, f),
                             category: 'split',
-                            label: { type: 'label', label: categoryFolder.replace('.class', '') }
+                            label: { type: 'label', label: categoryFolder.replace('.class', '') },
+                            metadata: metadata,
                         });
                     }
                 }
@@ -241,7 +259,8 @@ const cliOptions = {
                         label: labelArgv ? {
                             type: 'label',
                             label: labelArgv
-                        } : { type: 'infer' }
+                        } : { type: 'infer' },
+                        metadata: metadata,
                     };
                 });
             }
@@ -295,7 +314,8 @@ const cliOptions = {
                     category: file.category,
                     config: config,
                     label: file.label,
-                    boundingBoxes: boundingBoxes
+                    boundingBoxes: boundingBoxes,
+                    metadata: file.metadata,
                 });
 
                 let ix = ++fileIx;

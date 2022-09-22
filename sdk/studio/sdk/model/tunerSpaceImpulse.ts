@@ -10,7 +10,6 @@
  * Do not edit the class manually.
  */
 
-import { TunerSpaceDSPBlock } from './tunerSpaceDSPBlock';
 import { TunerSpaceInputBlock } from './tunerSpaceInputBlock';
 import { TunerSpaceLearnBlock } from './tunerSpaceLearnBlock';
 
@@ -22,7 +21,7 @@ export class TunerSpaceImpulse {
     /**
     * DSP Blocks that are part of this impulse
     */
-    'dspBlocks': Array<TunerSpaceDSPBlock>;
+    'dspBlocks': Array<any>;
     /**
     * Learning Blocks that are part of this impulse
     */
@@ -39,7 +38,7 @@ export class TunerSpaceImpulse {
         {
             "name": "dspBlocks",
             "baseName": "dspBlocks",
-            "type": "Array<TunerSpaceDSPBlock>"
+            "type": "Array<any>"
         },
         {
             "name": "learnBlocks",

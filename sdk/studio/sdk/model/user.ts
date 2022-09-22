@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { UserStaffInfo } from './userStaffInfo';
+import { StaffInfo } from './staffInfo';
 
 export class User {
     'id': number;
@@ -18,8 +18,9 @@ export class User {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'pending': boolean;
+    'lastTosAcceptanceDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,12 +53,17 @@ export class User {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
+        },
+        {
+            "name": "lastTosAcceptanceDate",
+            "baseName": "lastTosAcceptanceDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

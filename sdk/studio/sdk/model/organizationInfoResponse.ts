@@ -16,7 +16,7 @@ import { OrganizationDataset } from './organizationDataset';
 import { OrganizationInfoResponseAllOf } from './organizationInfoResponseAllOf';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
-import { ProjectInfoResponseAllOfReadme } from './projectInfoResponseAllOfReadme';
+import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
 export class OrganizationInfoResponse {
     /**
@@ -34,7 +34,7 @@ export class OrganizationInfoResponse {
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
     'experiments': Array<ProjectInfoResponseAllOfExperiments>;
-    'readme'?: ProjectInfoResponseAllOfReadme;
+    'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
 
     static discriminator: string | undefined = undefined;
@@ -73,7 +73,7 @@ export class OrganizationInfoResponse {
         {
             "name": "readme",
             "baseName": "readme",
-            "type": "ProjectInfoResponseAllOfReadme"
+            "type": "ProjectPublicDataReadme"
         },
         {
             "name": "whitelabelId",

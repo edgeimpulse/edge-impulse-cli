@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { UserStaffInfo } from './userStaffInfo';
+import { StaffInfo } from './staffInfo';
 
 export class OrganizationUser {
     'id': number;
@@ -21,7 +21,7 @@ export class OrganizationUser {
     'added': Date;
     'email': string;
     'role': OrganizationUserRoleEnum;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'projectCount': number;
     'datasets': Array<string>;
     'pending': boolean;
@@ -72,7 +72,7 @@ export class OrganizationUser {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "projectCount",

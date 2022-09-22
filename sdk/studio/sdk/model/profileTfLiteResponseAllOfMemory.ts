@@ -10,36 +10,28 @@
  * Do not edit the class manually.
  */
 
+import { ProfileTfLiteResponseAllOfMemoryTflite } from './profileTfLiteResponseAllOfMemoryTflite';
 
-/**
-* Only fields set in this object will be updated.
-*/
-export class UpdateUserRequest {
-    /**
-    * New full name
-    */
-    'name'?: string;
-    /**
-    * Whether to show the Imagine 2022 banner
-    */
-    'showImagine2022'?: boolean;
+export class ProfileTfLiteResponseAllOfMemory {
+    'tflite': ProfileTfLiteResponseAllOfMemoryTflite;
+    'eon': ProfileTfLiteResponseAllOfMemoryTflite;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
+            "name": "tflite",
+            "baseName": "tflite",
+            "type": "ProfileTfLiteResponseAllOfMemoryTflite"
         },
         {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
-            "type": "boolean"
+            "name": "eon",
+            "baseName": "eon",
+            "type": "ProfileTfLiteResponseAllOfMemoryTflite"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateUserRequest.attributeTypeMap;
+        return ProfileTfLiteResponseAllOfMemory.attributeTypeMap;
     }
 }
 

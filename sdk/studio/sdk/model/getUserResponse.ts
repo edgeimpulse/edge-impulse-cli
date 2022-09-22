@@ -14,8 +14,8 @@ import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
+import { StaffInfo } from './staffInfo';
 import { User } from './user';
-import { UserStaffInfo } from './userStaffInfo';
 
 export class GetUserResponse {
     /**
@@ -31,8 +31,9 @@ export class GetUserResponse {
     'name': string;
     'photo'?: string;
     'created': Date;
-    'staffInfo': UserStaffInfo;
+    'staffInfo': StaffInfo;
     'pending': boolean;
+    'lastTosAcceptanceDate'?: Date;
     'email': string;
     'activated': boolean;
     /**
@@ -52,6 +53,10 @@ export class GetUserResponse {
     * Whether this user is an ambassador.
     */
     'ambassador'?: boolean;
+    /**
+    * Whether to show the Imagine 2022 banner.
+    */
+    'showImagine2022': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -94,12 +99,17 @@ export class GetUserResponse {
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
-            "type": "UserStaffInfo"
+            "type": "StaffInfo"
         },
         {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
+        },
+        {
+            "name": "lastTosAcceptanceDate",
+            "baseName": "lastTosAcceptanceDate",
+            "type": "Date"
         },
         {
             "name": "email",
@@ -134,6 +144,11 @@ export class GetUserResponse {
         {
             "name": "ambassador",
             "baseName": "ambassador",
+            "type": "boolean"
+        },
+        {
+            "name": "showImagine2022",
+            "baseName": "showImagine2022",
             "type": "boolean"
         }    ];
 

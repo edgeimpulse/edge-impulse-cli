@@ -34,6 +34,8 @@ export * from './optimizationApi';
 import { OptimizationApi } from './optimizationApi';
 export * from './organizationAllowDeveloperProfileApi';
 import { OrganizationAllowDeveloperProfileApi } from './organizationAllowDeveloperProfileApi';
+export * from './organizationAllowGuestAccessApi';
+import { OrganizationAllowGuestAccessApi } from './organizationAllowGuestAccessApi';
 export * from './organizationBlocksApi';
 import { OrganizationBlocksApi } from './organizationBlocksApi';
 export * from './organizationCreateProjectApi';
@@ -92,4 +94,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationAllowGuestAccessApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];

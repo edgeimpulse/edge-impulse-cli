@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 import { SetOptimizeSpaceRequestAllOf } from './setOptimizeSpaceRequestAllOf';
-import { SetOptimizeSpaceRequestAllOfSpace } from './setOptimizeSpaceRequestAllOfSpace';
 
 export class SetOptimizeSpaceRequest extends SetOptimizeSpaceRequestAllOf {
 

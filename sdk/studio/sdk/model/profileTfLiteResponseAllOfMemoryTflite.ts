@@ -10,22 +10,27 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class ProfileTfLiteResponseAllOfMemoryTflite {
+    'ram': number;
+    'rom': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "ram",
+            "baseName": "ram",
+            "type": "number"
+        },
+        {
+            "name": "rom",
+            "baseName": "rom",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return ProfileTfLiteResponseAllOfMemoryTflite.attributeTypeMap;
     }
 }
 

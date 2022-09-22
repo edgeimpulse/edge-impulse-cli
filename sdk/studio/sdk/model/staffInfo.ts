@@ -10,22 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class StaffInfo {
+    'isStaff': boolean;
+    'hasSudoRights': boolean;
+    'companyName'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "isStaff",
+            "baseName": "isStaff",
+            "type": "boolean"
+        },
+        {
+            "name": "hasSudoRights",
+            "baseName": "hasSudoRights",
+            "type": "boolean"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return StaffInfo.attributeTypeMap;
     }
 }
 

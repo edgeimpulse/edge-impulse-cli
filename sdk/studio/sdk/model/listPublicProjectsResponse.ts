@@ -11,9 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
+import { ListPublicProjects } from './listPublicProjects';
+import { ProjectPublicData } from './projectPublicData';
 
-export class GetUserNeedToSetPasswordResponse {
+export class ListPublicProjectsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,17 +24,10 @@ export class GetUserNeedToSetPasswordResponse {
     */
     'error'?: string;
     /**
-    * User email
+    * Array with public projects
     */
-    'email'?: string;
-    /**
-    * Whether the user needs to set its password or not
-    */
-    'needPassword'?: boolean;
-    /**
-    * White label domains the user belongs to, if any
-    */
-    'whitelabels'?: Array<string>;
+    'projects': Array<ProjectPublicData>;
+    'totalProjectCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,23 +43,18 @@ export class GetUserNeedToSetPasswordResponse {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
-            "type": "string"
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<ProjectPublicData>"
         },
         {
-            "name": "needPassword",
-            "baseName": "needPassword",
-            "type": "boolean"
-        },
-        {
-            "name": "whitelabels",
-            "baseName": "whitelabels",
-            "type": "Array<string>"
+            "name": "totalProjectCount",
+            "baseName": "totalProjectCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserNeedToSetPasswordResponse.attributeTypeMap;
+        return ListPublicProjectsResponse.attributeTypeMap;
     }
 }
 

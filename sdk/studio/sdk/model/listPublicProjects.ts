@@ -10,22 +10,31 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
+import { ProjectPublicData } from './projectPublicData';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class ListPublicProjects {
+    /**
+    * Array with public projects
+    */
+    'projects': Array<ProjectPublicData>;
+    'totalProjectCount': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<ProjectPublicData>"
+        },
+        {
+            "name": "totalProjectCount",
+            "baseName": "totalProjectCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return ListPublicProjects.attributeTypeMap;
     }
 }
 

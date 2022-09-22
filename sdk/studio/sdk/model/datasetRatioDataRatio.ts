@@ -10,22 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+export class DatasetRatioDataRatio {
+    /**
+    * number of training samples after rebalance
+    */
+    'training'?: number;
+    /**
+    * number of testing samples after rebalance
+    */
+    'testing'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "training",
+            "baseName": "training",
+            "type": "number"
+        },
+        {
+            "name": "testing",
+            "baseName": "testing",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return DatasetRatioDataRatio.attributeTypeMap;
     }
 }
 

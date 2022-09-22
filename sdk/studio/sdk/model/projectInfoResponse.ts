@@ -24,9 +24,9 @@ import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfE
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
 import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
-import { ProjectInfoResponseAllOfReadme } from './projectInfoResponseAllOfReadme';
 import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
+import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 import { User } from './user';
 
 export class ProjectInfoResponse {
@@ -58,7 +58,7 @@ export class ProjectInfoResponse {
     'showProjectTypeWizard': boolean;
     'showGettingStartedWizard': ProjectInfoResponseAllOfShowGettingStartedWizard;
     'performance': ProjectInfoResponseAllOfPerformance;
-    'readme'?: ProjectInfoResponseAllOfReadme;
+    'readme'?: ProjectPublicDataReadme;
     /**
     * The IDs of users who should be notified when a Keras or retrain job is finished.
     */
@@ -178,7 +178,7 @@ export class ProjectInfoResponse {
         {
             "name": "readme",
             "baseName": "readme",
-            "type": "ProjectInfoResponseAllOfReadme"
+            "type": "ProjectPublicDataReadme"
         },
         {
             "name": "trainJobNotificationUids",

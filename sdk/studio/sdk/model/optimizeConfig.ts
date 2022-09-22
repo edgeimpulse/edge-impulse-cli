@@ -11,6 +11,7 @@
  */
 
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
+import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 
 export class OptimizeConfig {
     /**
@@ -48,6 +49,10 @@ export class OptimizeConfig {
     'tuningAlgorithm'?: OptimizeConfigTuningAlgorithmEnum;
     'notificationOnCompletion'?: boolean;
     'tunerSpaceOptions'?: object;
+    /**
+    * List of impulses specifying the EON Tuner search space
+    */
+    'space'?: Array<TunerSpaceImpulse>;
 
     static discriminator: string | undefined = undefined;
 
@@ -121,6 +126,11 @@ export class OptimizeConfig {
             "name": "tunerSpaceOptions",
             "baseName": "tunerSpaceOptions",
             "type": "object"
+        },
+        {
+            "name": "space",
+            "baseName": "space",
+            "type": "Array<TunerSpaceImpulse>"
         }    ];
 
     static getAttributeTypeMap() {

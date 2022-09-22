@@ -10,22 +10,30 @@
  * Do not edit the class manually.
  */
 
-import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 
-export class SetOptimizeSpaceRequestAllOf {
-    'space'?: OptimizeSpaceResponseAllOf;
+/**
+* Present if a readme is set for this project
+*/
+export class ProjectPublicDataReadme {
+    'markdown': string;
+    'html': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "space",
-            "baseName": "space",
-            "type": "OptimizeSpaceResponseAllOf"
+            "name": "markdown",
+            "baseName": "markdown",
+            "type": "string"
+        },
+        {
+            "name": "html",
+            "baseName": "html",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOf.attributeTypeMap;
+        return ProjectPublicDataReadme.attributeTypeMap;
     }
 }
 

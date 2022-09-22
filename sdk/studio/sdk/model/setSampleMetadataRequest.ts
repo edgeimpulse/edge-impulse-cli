@@ -11,32 +11,20 @@
  */
 
 
-export class UserStaffInfo {
-    'isStaff': boolean;
-    'hasSudoRights': boolean;
-    'companyName'?: string;
+export class SetSampleMetadataRequest {
+    'metadata'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "isStaff",
-            "baseName": "isStaff",
-            "type": "boolean"
-        },
-        {
-            "name": "hasSudoRights",
-            "baseName": "hasSudoRights",
-            "type": "boolean"
-        },
-        {
-            "name": "companyName",
-            "baseName": "companyName",
-            "type": "string"
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return UserStaffInfo.attributeTypeMap;
+        return SetSampleMetadataRequest.attributeTypeMap;
     }
 }
 

@@ -11,9 +11,9 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
+import { OptimizeDSPParametersResponseAllOf } from './optimizeDSPParametersResponseAllOf';
 
-export class GetUserNeedToSetPasswordResponse {
+export class OptimizeDSPParametersResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,18 +22,7 @@ export class GetUserNeedToSetPasswordResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * User email
-    */
-    'email'?: string;
-    /**
-    * Whether the user needs to set its password or not
-    */
-    'needPassword'?: boolean;
-    /**
-    * White label domains the user belongs to, if any
-    */
-    'whitelabels'?: Array<string>;
+    'parameters': object;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,23 +38,13 @@ export class GetUserNeedToSetPasswordResponse {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
-            "type": "string"
-        },
-        {
-            "name": "needPassword",
-            "baseName": "needPassword",
-            "type": "boolean"
-        },
-        {
-            "name": "whitelabels",
-            "baseName": "whitelabels",
-            "type": "Array<string>"
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserNeedToSetPasswordResponse.attributeTypeMap;
+        return OptimizeDSPParametersResponse.attributeTypeMap;
     }
 }
 

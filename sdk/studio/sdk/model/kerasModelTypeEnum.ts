@@ -12,5 +12,5 @@
 
 
 
-export type KerasModelTypeEnum = 'int8' | 'float32' | 'requiresRetrain';
-export const KerasModelTypeEnumValues: string[] = ['int8', 'float32', 'requiresRetrain'];
+export type KerasModelTypeEnum = 'int8' | 'float32' | 'akida' | 'requiresRetrain';
+export const KerasModelTypeEnumValues: string[] = ['int8', 'float32', 'akida', 'requiresRetrain'];

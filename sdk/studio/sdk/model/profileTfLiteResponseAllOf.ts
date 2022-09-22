@@ -10,25 +10,28 @@
  * Do not edit the class manually.
  */
 
-import { TunerSpaceImpulse } from './tunerSpaceImpulse';
+import { ProfileTfLiteResponseAllOfMemory } from './profileTfLiteResponseAllOfMemory';
 
-export class SetOptimizeSpaceRequestAllOfSpace {
-    /**
-    * List of impulses specifying the EON Tuner search space
-    */
-    'impulse': Array<TunerSpaceImpulse>;
+export class ProfileTfLiteResponseAllOf {
+    'memory'?: ProfileTfLiteResponseAllOfMemory;
+    'timePerInferenceMs'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "impulse",
-            "baseName": "impulse",
-            "type": "Array<TunerSpaceImpulse>"
+            "name": "memory",
+            "baseName": "memory",
+            "type": "ProfileTfLiteResponseAllOfMemory"
+        },
+        {
+            "name": "timePerInferenceMs",
+            "baseName": "timePerInferenceMs",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetOptimizeSpaceRequestAllOfSpace.attributeTypeMap;
+        return ProfileTfLiteResponseAllOf.attributeTypeMap;
     }
 }
 

@@ -11,7 +11,7 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { SetOptimizeSpaceRequestAllOfSpace } from './setOptimizeSpaceRequestAllOfSpace';
+import { OptimizeSpaceResponseAllOf } from './optimizeSpaceResponseAllOf';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 
 export class OptimizeSpaceResponse {

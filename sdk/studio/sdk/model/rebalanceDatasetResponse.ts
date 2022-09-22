@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { DatasetRatioData } from './datasetRatioData';
+import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 import { GenericApiResponse } from './genericApiResponse';
-import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
 
-export class GetUserNeedToSetPasswordResponse {
+export class RebalanceDatasetResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,18 +23,7 @@ export class GetUserNeedToSetPasswordResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * User email
-    */
-    'email'?: string;
-    /**
-    * Whether the user needs to set its password or not
-    */
-    'needPassword'?: boolean;
-    /**
-    * White label domains the user belongs to, if any
-    */
-    'whitelabels'?: Array<string>;
+    'ratio'?: DatasetRatioDataRatio;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,23 +39,13 @@ export class GetUserNeedToSetPasswordResponse {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
-            "type": "string"
-        },
-        {
-            "name": "needPassword",
-            "baseName": "needPassword",
-            "type": "boolean"
-        },
-        {
-            "name": "whitelabels",
-            "baseName": "whitelabels",
-            "type": "Array<string>"
+            "name": "ratio",
+            "baseName": "ratio",
+            "type": "DatasetRatioDataRatio"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserNeedToSetPasswordResponse.attributeTypeMap;
+        return RebalanceDatasetResponse.attributeTypeMap;
     }
 }
 

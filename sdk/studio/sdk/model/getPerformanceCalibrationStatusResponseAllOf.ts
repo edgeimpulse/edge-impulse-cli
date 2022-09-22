@@ -14,6 +14,10 @@ import { StartPerformanceCalibrationRequest } from './startPerformanceCalibratio
 
 export class GetPerformanceCalibrationStatusResponseAllOf {
     'available': boolean;
+    /**
+    * If the current project is unsupported by performance calibration, this field explains the reason why. Otherwise, it is undefined.
+    */
+    'unsupportedProjectError'?: string;
     'options'?: StartPerformanceCalibrationRequest;
 
     static discriminator: string | undefined = undefined;
@@ -23,6 +27,11 @@ export class GetPerformanceCalibrationStatusResponseAllOf {
             "name": "available",
             "baseName": "available",
             "type": "boolean"
+        },
+        {
+            "name": "unsupportedProjectError",
+            "baseName": "unsupportedProjectError",
+            "type": "string"
         },
         {
             "name": "options",

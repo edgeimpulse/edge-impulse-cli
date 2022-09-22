@@ -23,6 +23,7 @@ export class DeploymentTarget {
     'hasTensorRT': boolean;
     'hasTensaiFlow': boolean;
     'hasDRPAI': boolean;
+    'hasTIDL': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
@@ -80,6 +81,11 @@ export class DeploymentTarget {
         {
             "name": "hasDRPAI",
             "baseName": "hasDRPAI",
+            "type": "boolean"
+        },
+        {
+            "name": "hasTIDL",
+            "baseName": "hasTIDL",
             "type": "boolean"
         },
         {

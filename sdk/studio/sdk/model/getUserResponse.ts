@@ -14,6 +14,7 @@ import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
+import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
 
@@ -42,9 +43,9 @@ export class GetUserResponse {
     'organizations': Array<GetUserResponseAllOfOrganizations>;
     'projects': Array<Project>;
     /**
-    * Experiments that the user has access to
+    * Experiments the user has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments': object;
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     /**
     * Whether this is an ephemeral evaluation account.
     */
@@ -57,6 +58,10 @@ export class GetUserResponse {
     * Whether to show the Imagine 2022 banner.
     */
     'showImagine2022': boolean;
+    /**
+    * The user account tier.
+    */
+    'tier': GetUserResponseTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -134,7 +139,7 @@ export class GetUserResponse {
         {
             "name": "experiments",
             "baseName": "experiments",
-            "type": "object"
+            "type": "Array<ProjectInfoResponseAllOfExperiments>"
         },
         {
             "name": "evaluation",
@@ -150,6 +155,11 @@ export class GetUserResponse {
             "name": "showImagine2022",
             "baseName": "showImagine2022",
             "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "GetUserResponseTierEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -157,3 +167,6 @@ export class GetUserResponse {
     }
 }
 
+
+export type GetUserResponseTierEnum = 'free' | 'pro';
+export const GetUserResponseTierEnumValues: string[] = ['free', 'pro'];

@@ -245,7 +245,6 @@ export * from './kerasModelMetadataMetricsTflite';
 export * from './kerasModelTypeEnum';
 export * from './kerasResponse';
 export * from './kerasResponseAllOf';
-export * from './kerasResponseAllOfTransferLearningModels';
 export * from './kerasVisualLayer';
 export * from './kerasVisualLayerType';
 export * from './lastModificationDateResponse';
@@ -347,6 +346,9 @@ export * from './optimizeStateResponse';
 export * from './optimizeStateResponseAllOf';
 export * from './optimizeStateResponseAllOfStatus';
 export * from './optimizeStateResponseAllOfWorkers';
+export * from './optimizeTransferLearningModelsResponse';
+export * from './optimizeTransferLearningModelsResponseAllOf';
+export * from './optimizeTransferLearningModelsResponseAllOfModels';
 export * from './organization';
 export * from './organizationAddDataFileRequest';
 export * from './organizationAddDataFolderRequest';
@@ -488,15 +490,11 @@ export * from './thirdPartyAuth';
 export * from './trackObjectsRequest';
 export * from './trackObjectsResponse';
 export * from './trackObjectsResponseAllOf';
+export * from './transferLearningModel';
 export * from './transferOwnershipOrganizationRequest';
 export * from './transformationBlockAdditionalMountPoint';
 export * from './tunerCreateTrialImpulse';
-export * from './tunerCreateTrialInputBlock';
-export * from './tunerCreateTrialLearnBlock';
 export * from './tunerSpaceImpulse';
-export * from './tunerSpaceInputBlock';
-export * from './tunerSpaceInputBlockWindow';
-export * from './tunerSpaceLearnBlock';
 export * from './tunerTrial';
 export * from './tunerTrialBlocks';
 export * from './updateJobRequest';
@@ -798,7 +796,6 @@ import { KerasModelMetadataMetricsTflite } from './kerasModelMetadataMetricsTfli
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasResponse } from './kerasResponse';
 import { KerasResponseAllOf } from './kerasResponseAllOf';
-import { KerasResponseAllOfTransferLearningModels } from './kerasResponseAllOfTransferLearningModels';
 import { KerasVisualLayer } from './kerasVisualLayer';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LastModificationDateResponse } from './lastModificationDateResponse';
@@ -900,6 +897,9 @@ import { OptimizeStateResponse } from './optimizeStateResponse';
 import { OptimizeStateResponseAllOf } from './optimizeStateResponseAllOf';
 import { OptimizeStateResponseAllOfStatus } from './optimizeStateResponseAllOfStatus';
 import { OptimizeStateResponseAllOfWorkers } from './optimizeStateResponseAllOfWorkers';
+import { OptimizeTransferLearningModelsResponse } from './optimizeTransferLearningModelsResponse';
+import { OptimizeTransferLearningModelsResponseAllOf } from './optimizeTransferLearningModelsResponseAllOf';
+import { OptimizeTransferLearningModelsResponseAllOfModels } from './optimizeTransferLearningModelsResponseAllOfModels';
 import { Organization } from './organization';
 import { OrganizationAddDataFileRequest } from './organizationAddDataFileRequest';
 import { OrganizationAddDataFolderRequest } from './organizationAddDataFolderRequest';
@@ -1041,15 +1041,11 @@ import { ThirdPartyAuth } from './thirdPartyAuth';
 import { TrackObjectsRequest } from './trackObjectsRequest';
 import { TrackObjectsResponse } from './trackObjectsResponse';
 import { TrackObjectsResponseAllOf } from './trackObjectsResponseAllOf';
+import { TransferLearningModel } from './transferLearningModel';
 import { TransferOwnershipOrganizationRequest } from './transferOwnershipOrganizationRequest';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TunerCreateTrialImpulse } from './tunerCreateTrialImpulse';
-import { TunerCreateTrialInputBlock } from './tunerCreateTrialInputBlock';
-import { TunerCreateTrialLearnBlock } from './tunerCreateTrialLearnBlock';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
-import { TunerSpaceInputBlock } from './tunerSpaceInputBlock';
-import { TunerSpaceInputBlockWindow } from './tunerSpaceInputBlockWindow';
-import { TunerSpaceLearnBlock } from './tunerSpaceLearnBlock';
 import { TunerTrial } from './tunerTrial';
 import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { UpdateJobRequest } from './updateJobRequest';
@@ -1142,6 +1138,8 @@ let enumsMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum",
     "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum",
     "GetJWTTokenRequestSsoTypeEnum": "GetJWTTokenRequestSsoTypeEnum",
+    "GetUserResponseTierEnum": "GetUserResponseTierEnum",
+    "GetUserResponseAllOfTierEnum": "GetUserResponseAllOfTierEnum",
     "ImpulseBlockVersionResizeModeEnum": "ImpulseBlockVersionResizeModeEnum",
     "ImpulseBlockVersionResizeMethodEnum": "ImpulseBlockVersionResizeMethodEnum",
     "ImpulseBlockVersionCropAnchorEnum": "ImpulseBlockVersionCropAnchorEnum",
@@ -1209,10 +1207,6 @@ let enumsMap: {[index: string]: any} = {
     "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
-    "TunerCreateTrialInputBlockTypeEnum": "TunerCreateTrialInputBlockTypeEnum",
-    "TunerCreateTrialLearnBlockAugmentationPolicyImageEnum": "TunerCreateTrialLearnBlockAugmentationPolicyImageEnum",
-    "TunerCreateTrialLearnBlockModelEnum": "TunerCreateTrialLearnBlockModelEnum",
-    "TunerSpaceInputBlockTypeEnum": "TunerSpaceInputBlockTypeEnum",
     "UpdateOrganizationDeployBlockRequestCategoryEnum": "UpdateOrganizationDeployBlockRequestCategoryEnum",
     "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum": "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum",
     "UpdateOrganizationTransformationBlockRequestOperatesOnEnum": "UpdateOrganizationTransformationBlockRequestOperatesOnEnum",
@@ -1467,7 +1461,6 @@ let typeMap: {[index: string]: any} = {
     "KerasModelMetadataMetricsTflite": KerasModelMetadataMetricsTflite,
     "KerasResponse": KerasResponse,
     "KerasResponseAllOf": KerasResponseAllOf,
-    "KerasResponseAllOfTransferLearningModels": KerasResponseAllOfTransferLearningModels,
     "KerasVisualLayer": KerasVisualLayer,
     "LastModificationDateResponse": LastModificationDateResponse,
     "LastModificationDateResponseAllOf": LastModificationDateResponseAllOf,
@@ -1566,6 +1559,9 @@ let typeMap: {[index: string]: any} = {
     "OptimizeStateResponseAllOf": OptimizeStateResponseAllOf,
     "OptimizeStateResponseAllOfStatus": OptimizeStateResponseAllOfStatus,
     "OptimizeStateResponseAllOfWorkers": OptimizeStateResponseAllOfWorkers,
+    "OptimizeTransferLearningModelsResponse": OptimizeTransferLearningModelsResponse,
+    "OptimizeTransferLearningModelsResponseAllOf": OptimizeTransferLearningModelsResponseAllOf,
+    "OptimizeTransferLearningModelsResponseAllOfModels": OptimizeTransferLearningModelsResponseAllOfModels,
     "Organization": Organization,
     "OrganizationAddDataFileRequest": OrganizationAddDataFileRequest,
     "OrganizationAddDataFolderRequest": OrganizationAddDataFolderRequest,
@@ -1707,15 +1703,11 @@ let typeMap: {[index: string]: any} = {
     "TrackObjectsRequest": TrackObjectsRequest,
     "TrackObjectsResponse": TrackObjectsResponse,
     "TrackObjectsResponseAllOf": TrackObjectsResponseAllOf,
+    "TransferLearningModel": TransferLearningModel,
     "TransferOwnershipOrganizationRequest": TransferOwnershipOrganizationRequest,
     "TransformationBlockAdditionalMountPoint": TransformationBlockAdditionalMountPoint,
     "TunerCreateTrialImpulse": TunerCreateTrialImpulse,
-    "TunerCreateTrialInputBlock": TunerCreateTrialInputBlock,
-    "TunerCreateTrialLearnBlock": TunerCreateTrialLearnBlock,
     "TunerSpaceImpulse": TunerSpaceImpulse,
-    "TunerSpaceInputBlock": TunerSpaceInputBlock,
-    "TunerSpaceInputBlockWindow": TunerSpaceInputBlockWindow,
-    "TunerSpaceLearnBlock": TunerSpaceLearnBlock,
     "TunerTrial": TunerTrial,
     "TunerTrialBlocks": TunerTrialBlocks,
     "UpdateJobRequest": UpdateJobRequest,

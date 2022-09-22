@@ -10,16 +10,14 @@
  * Do not edit the class manually.
  */
 
-import { TunerCreateTrialInputBlock } from './tunerCreateTrialInputBlock';
-import { TunerCreateTrialLearnBlock } from './tunerCreateTrialLearnBlock';
 
 export class TunerCreateTrialImpulse {
     'id'?: string;
     'experiment'?: string;
     'originalTrialId'?: string;
-    'inputBlock': TunerCreateTrialInputBlock;
-    'dspBlock': { [key: string]: object; };
-    'learnBlock': TunerCreateTrialLearnBlock;
+    'inputBlocks'?: Array<any>;
+    'dspBlocks'?: Array<any>;
+    'learnBlocks'?: Array<any>;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,19 +38,19 @@ export class TunerCreateTrialImpulse {
             "type": "string"
         },
         {
-            "name": "inputBlock",
-            "baseName": "inputBlock",
-            "type": "TunerCreateTrialInputBlock"
+            "name": "inputBlocks",
+            "baseName": "inputBlocks",
+            "type": "Array<any>"
         },
         {
-            "name": "dspBlock",
-            "baseName": "dspBlock",
-            "type": "{ [key: string]: object; }"
+            "name": "dspBlocks",
+            "baseName": "dspBlocks",
+            "type": "Array<any>"
         },
         {
-            "name": "learnBlock",
-            "baseName": "learnBlock",
-            "type": "TunerCreateTrialLearnBlock"
+            "name": "learnBlocks",
+            "baseName": "learnBlocks",
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

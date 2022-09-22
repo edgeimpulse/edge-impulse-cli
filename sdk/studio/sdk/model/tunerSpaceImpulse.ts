@@ -10,14 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { TunerSpaceInputBlock } from './tunerSpaceInputBlock';
-import { TunerSpaceLearnBlock } from './tunerSpaceLearnBlock';
 
 export class TunerSpaceImpulse {
     /**
     * Input Blocks that are part of this impulse
     */
-    'inputBlocks': Array<TunerSpaceInputBlock>;
+    'inputBlocks': Array<any>;
     /**
     * DSP Blocks that are part of this impulse
     */
@@ -25,7 +23,7 @@ export class TunerSpaceImpulse {
     /**
     * Learning Blocks that are part of this impulse
     */
-    'learnBlocks': Array<TunerSpaceLearnBlock>;
+    'learnBlocks': Array<any>;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,7 +31,7 @@ export class TunerSpaceImpulse {
         {
             "name": "inputBlocks",
             "baseName": "inputBlocks",
-            "type": "Array<TunerSpaceInputBlock>"
+            "type": "Array<any>"
         },
         {
             "name": "dspBlocks",
@@ -43,7 +41,7 @@ export class TunerSpaceImpulse {
         {
             "name": "learnBlocks",
             "baseName": "learnBlocks",
-            "type": "Array<TunerSpaceLearnBlock>"
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

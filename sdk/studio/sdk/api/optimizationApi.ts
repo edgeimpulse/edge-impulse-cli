@@ -26,6 +26,7 @@ import { OptimizeConfigResponse } from '../model/optimizeConfigResponse';
 import { OptimizeDSPParametersResponse } from '../model/optimizeDSPParametersResponse';
 import { OptimizeSpaceResponse } from '../model/optimizeSpaceResponse';
 import { OptimizeStateResponse } from '../model/optimizeStateResponse';
+import { OptimizeTransferLearningModelsResponse } from '../model/optimizeTransferLearningModelsResponse';
 import { ScoreTrialResponse } from '../model/scoreTrialResponse';
 import { TunerCreateTrialImpulse } from '../model/tunerCreateTrialImpulse';
 import { WindowSettingsResponse } from '../model/windowSettingsResponse';
@@ -571,6 +572,83 @@ export class OptimizationApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeStateResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Retrieves available transfer learning models
+     * @summary Retrieves available transfer learning models
+     * @param projectId Project ID
+     */
+    public async getTransferLearningModels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeTransferLearningModelsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/transfer-learning-models'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getTransferLearningModels.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<OptimizeTransferLearningModelsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OptimizeTransferLearningModelsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

@@ -10,27 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { OptimizeTransferLearningModelsResponseAllOfModels } from './optimizeTransferLearningModelsResponseAllOfModels';
 
-export class TunerSpaceInputBlockWindow {
-    'windowSizeMs'?: number;
-    'windowIncreaseMs'?: number;
+export class OptimizeTransferLearningModelsResponseAllOf {
+    'models'?: OptimizeTransferLearningModelsResponseAllOfModels;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "windowSizeMs",
-            "baseName": "windowSizeMs",
-            "type": "number"
-        },
-        {
-            "name": "windowIncreaseMs",
-            "baseName": "windowIncreaseMs",
-            "type": "number"
+            "name": "models",
+            "baseName": "models",
+            "type": "OptimizeTransferLearningModelsResponseAllOfModels"
         }    ];
 
     static getAttributeTypeMap() {
-        return TunerSpaceInputBlockWindow.attributeTypeMap;
+        return OptimizeTransferLearningModelsResponseAllOf.attributeTypeMap;
     }
 }
 

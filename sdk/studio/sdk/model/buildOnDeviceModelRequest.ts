@@ -39,5 +39,5 @@ export class BuildOnDeviceModelRequest {
 }
 
 
-export type BuildOnDeviceModelRequestEngineEnum = 'tflite' | 'tflite-eon' | 'tensorrt' | 'tensaiflow' | 'drp-ai';
-export const BuildOnDeviceModelRequestEngineEnumValues: string[] = ['tflite', 'tflite-eon', 'tensorrt', 'tensaiflow', 'drp-ai'];
+export type BuildOnDeviceModelRequestEngineEnum = 'tflite' | 'tflite-eon' | 'tensorrt' | 'tensaiflow' | 'drp-ai' | 'tidl';
+export const BuildOnDeviceModelRequestEngineEnumValues: string[] = ['tflite', 'tflite-eon', 'tensorrt', 'tensaiflow', 'drp-ai', 'tidl'];

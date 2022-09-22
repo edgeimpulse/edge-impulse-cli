@@ -12,6 +12,7 @@
 
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
 import { Project } from './project';
+import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 
 export class GetUserResponseAllOf {
     'email': string;
@@ -22,9 +23,9 @@ export class GetUserResponseAllOf {
     'organizations': Array<GetUserResponseAllOfOrganizations>;
     'projects': Array<Project>;
     /**
-    * Experiments that the user has access to
+    * Experiments the user has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments': object;
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     /**
     * Whether this is an ephemeral evaluation account.
     */
@@ -37,6 +38,10 @@ export class GetUserResponseAllOf {
     * Whether to show the Imagine 2022 banner.
     */
     'showImagine2022': boolean;
+    /**
+    * The user account tier.
+    */
+    'tier': GetUserResponseAllOfTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -64,7 +69,7 @@ export class GetUserResponseAllOf {
         {
             "name": "experiments",
             "baseName": "experiments",
-            "type": "object"
+            "type": "Array<ProjectInfoResponseAllOfExperiments>"
         },
         {
             "name": "evaluation",
@@ -80,6 +85,11 @@ export class GetUserResponseAllOf {
             "name": "showImagine2022",
             "baseName": "showImagine2022",
             "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "GetUserResponseAllOfTierEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -87,3 +97,6 @@ export class GetUserResponseAllOf {
     }
 }
 
+
+export type GetUserResponseAllOfTierEnum = 'free' | 'pro';
+export const GetUserResponseAllOfTierEnumValues: string[] = ['free', 'pro'];

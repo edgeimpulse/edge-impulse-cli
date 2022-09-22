@@ -16,9 +16,9 @@ import { DependencyData } from './dependencyData';
 import { GenericApiResponse } from './genericApiResponse';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasResponseAllOf } from './kerasResponseAllOf';
-import { KerasResponseAllOfTransferLearningModels } from './kerasResponseAllOfTransferLearningModels';
 import { KerasVisualLayer } from './kerasVisualLayer';
 import { LearnBlockType } from './learnBlockType';
+import { TransferLearningModel } from './transferLearningModel';
 
 export class KerasResponse {
     /**
@@ -79,7 +79,7 @@ export class KerasResponse {
     'findLearningRate'?: boolean;
     'augmentationPolicyImage': AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
-    'transferLearningModels': Array<KerasResponseAllOfTransferLearningModels>;
+    'transferLearningModels': Array<TransferLearningModel>;
 
     static discriminator: string | undefined = undefined;
 
@@ -182,7 +182,7 @@ export class KerasResponse {
         {
             "name": "transferLearningModels",
             "baseName": "transferLearningModels",
-            "type": "Array<KerasResponseAllOfTransferLearningModels>"
+            "type": "Array<TransferLearningModel>"
         }    ];
 
     static getAttributeTypeMap() {

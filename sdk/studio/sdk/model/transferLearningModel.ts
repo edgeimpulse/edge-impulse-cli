@@ -11,8 +11,9 @@
  */
 
 import { KerasVisualLayerType } from './kerasVisualLayerType';
+import { LearnBlockType } from './learnBlockType';
 
-export class KerasResponseAllOfTransferLearningModels {
+export class TransferLearningModel {
     'name': string;
     'shortName': string;
     'description': string;
@@ -24,7 +25,9 @@ export class KerasResponseAllOfTransferLearningModels {
     'defaultTrainingCycles'?: number;
     'hasImageAugmentation'?: boolean;
     'type': KerasVisualLayerType;
+    'learnBlockType'?: LearnBlockType;
     'organizationModelId'?: number;
+    'implementationVersion'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -85,13 +88,23 @@ export class KerasResponseAllOfTransferLearningModels {
             "type": "KerasVisualLayerType"
         },
         {
+            "name": "learnBlockType",
+            "baseName": "learnBlockType",
+            "type": "LearnBlockType"
+        },
+        {
             "name": "organizationModelId",
             "baseName": "organizationModelId",
+            "type": "number"
+        },
+        {
+            "name": "implementationVersion",
+            "baseName": "implementationVersion",
             "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return KerasResponseAllOfTransferLearningModels.attributeTypeMap;
+        return TransferLearningModel.attributeTypeMap;
     }
 }
 

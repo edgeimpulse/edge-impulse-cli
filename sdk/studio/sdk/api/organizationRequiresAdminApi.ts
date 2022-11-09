@@ -132,7 +132,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addOrganizationBucketRequest, "AddOrganizationBucketRequest")
         };
@@ -216,7 +216,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addMemberRequest, "AddMemberRequest")
         };
@@ -294,7 +294,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -377,7 +377,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(inviteOrganizationMemberRequest, "InviteOrganizationMemberRequest")
         };
@@ -462,7 +462,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -545,7 +545,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(removeMemberRequest, "RemoveMemberRequest")
         };
@@ -630,7 +630,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -720,7 +720,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(setMemberDatasetsRequest, "SetMemberDatasetsRequest")
         };
@@ -811,7 +811,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(setMemberRoleRequest, "SetMemberRoleRequest")
         };
@@ -889,7 +889,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -972,7 +972,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationRequest, "UpdateOrganizationRequest")
         };
@@ -1063,7 +1063,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationBucketRequest, "UpdateOrganizationBucketRequest")
         };
@@ -1147,7 +1147,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1230,7 +1230,7 @@ export class OrganizationRequiresAdminApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 

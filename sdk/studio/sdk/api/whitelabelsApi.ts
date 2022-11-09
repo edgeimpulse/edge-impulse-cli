@@ -24,6 +24,7 @@ import { CreateWhitelabelResponse } from '../model/createWhitelabelResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAllWhitelabelsResponse } from '../model/getAllWhitelabelsResponse';
 import { GetImpulseBlocksResponse } from '../model/getImpulseBlocksResponse';
+import { GetWhitelabelDomainResponse } from '../model/getWhitelabelDomainResponse';
 import { GetWhitelabelResponse } from '../model/getWhitelabelResponse';
 import { UpdateWhitelabelDeploymentTargetsRequest } from '../model/updateWhitelabelDeploymentTargetsRequest';
 
@@ -122,7 +123,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(createWhitelabelRequest, "CreateWhitelabelRequest")
         };
@@ -169,11 +170,11 @@ export class WhitelabelsApi {
     /**
      * Deletes the white label with the given id.
      * @summary Deletes a white label
-     * @param whitelabelId Whitelabel ID
+     * @param whitelabelIdentifier Whitelabel ID
      */
-    public async deleteWhitelabel (whitelabelId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelId}'
-            .replace('{' + 'whitelabelId' + '}', encodeURIComponent(String(whitelabelId)));
+    public async deleteWhitelabel (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -185,9 +186,9 @@ export class WhitelabelsApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'whitelabelId' is not null or undefined
-        if (whitelabelId === null || whitelabelId === undefined) {
-            throw new Error('Required parameter whitelabelId was null or undefined when calling deleteWhitelabel.');
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling deleteWhitelabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -200,7 +201,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -246,11 +247,11 @@ export class WhitelabelsApi {
     /**
      * Lists all possible DSP and ML blocks available for this white label.
      * @summary Get impulse blocks
-     * @param whitelabelId Whitelabel ID
+     * @param whitelabelIdentifier Whitelabel ID
      */
-    public async getAllImpulseBlocks (whitelabelId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseBlocksResponse> {
-        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelId}/impulse/blocks'
-            .replace('{' + 'whitelabelId' + '}', encodeURIComponent(String(whitelabelId)));
+    public async getAllImpulseBlocks (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseBlocksResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/impulse/blocks'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -262,9 +263,9 @@ export class WhitelabelsApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'whitelabelId' is not null or undefined
-        if (whitelabelId === null || whitelabelId === undefined) {
-            throw new Error('Required parameter whitelabelId was null or undefined when calling getAllImpulseBlocks.');
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getAllImpulseBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -277,7 +278,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -347,7 +348,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -393,11 +394,11 @@ export class WhitelabelsApi {
     /**
      * Retrieve all the information about this white label.
      * @summary White label information
-     * @param whitelabelId Whitelabel ID
+     * @param whitelabelIdentifier Whitelabel ID
      */
-    public async getWhitelabel (whitelabelId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWhitelabelResponse> {
-        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelId}'
-            .replace('{' + 'whitelabelId' + '}', encodeURIComponent(String(whitelabelId)));
+    public async getWhitelabel (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWhitelabelResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -409,9 +410,9 @@ export class WhitelabelsApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'whitelabelId' is not null or undefined
-        if (whitelabelId === null || whitelabelId === undefined) {
-            throw new Error('Required parameter whitelabelId was null or undefined when calling getWhitelabel.');
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getWhitelabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -424,7 +425,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -468,14 +469,13 @@ export class WhitelabelsApi {
         });
     }
     /**
-     * Update some or all of the deployment targets enabled for this white label.
-     * @summary Update deployment targets
-     * @param whitelabelId Whitelabel ID
-     * @param updateWhitelabelDeploymentTargetsRequest 
+     * Get a white label domain given its unique identifier.
+     * @summary Get white label domain
+     * @param whitelabelIdentifier Whitelabel ID
      */
-    public async updateDeploymentTargets (whitelabelId: number, updateWhitelabelDeploymentTargetsRequest: UpdateWhitelabelDeploymentTargetsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelId}/deploymentTargets'
-            .replace('{' + 'whitelabelId' + '}', encodeURIComponent(String(whitelabelId)));
+    public async getWhitelabelDomain (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWhitelabelDomainResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/domain'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         const produces = ['application/json'];
@@ -487,9 +487,81 @@ export class WhitelabelsApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'whitelabelId' is not null or undefined
-        if (whitelabelId === null || whitelabelId === undefined) {
-            throw new Error('Required parameter whitelabelId was null or undefined when calling updateDeploymentTargets.');
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getWhitelabelDomain.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetWhitelabelDomainResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetWhitelabelDomainResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Update some or all of the deployment targets enabled for this white label.
+     * @summary Update deployment targets
+     * @param whitelabelIdentifier Whitelabel ID
+     * @param updateWhitelabelDeploymentTargetsRequest 
+     */
+    public async updateDeploymentTargets (whitelabelIdentifier: number, updateWhitelabelDeploymentTargetsRequest: UpdateWhitelabelDeploymentTargetsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/deploymentTargets'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling updateDeploymentTargets.');
         }
 
         // verify required parameter 'updateWhitelabelDeploymentTargetsRequest' is not null or undefined
@@ -507,7 +579,7 @@ export class WhitelabelsApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateWhitelabelDeploymentTargetsRequest, "UpdateWhitelabelDeploymentTargetsRequest")
         };

@@ -10,36 +10,41 @@
  * Do not edit the class manually.
  */
 
+import { GenericApiResponse } from './genericApiResponse';
+import { GetWhitelabelDomainResponseAllOf } from './getWhitelabelDomainResponseAllOf';
 
-/**
-* Only fields set in this object will be updated.
-*/
-export class UpdateThemeColorsRequest {
+export class GetWhitelabelDomainResponse {
     /**
-    * Primary color in hex format
+    * Whether the operation succeeded
     */
-    'primaryColor'?: string;
+    'success': boolean;
     /**
-    * Primary color gradient end in hex format
+    * Optional error description (set if \'success\' was false)
     */
-    'primaryColorGradientEnd'?: string;
+    'error'?: string;
+    'domain'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "primaryColor",
-            "baseName": "primaryColor",
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
             "type": "string"
         },
         {
-            "name": "primaryColorGradientEnd",
-            "baseName": "primaryColorGradientEnd",
+            "name": "domain",
+            "baseName": "domain",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateThemeColorsRequest.attributeTypeMap;
+        return GetWhitelabelDomainResponse.attributeTypeMap;
     }
 }
 

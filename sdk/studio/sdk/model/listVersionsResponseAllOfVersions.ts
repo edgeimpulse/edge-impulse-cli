@@ -26,6 +26,7 @@ export class ListVersionsResponseAllOfVersions {
     'trainingAccuracy'?: number;
     'testAccuracy'?: number;
     'totalSamplesCount'?: string;
+    'license'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -93,6 +94,11 @@ export class ListVersionsResponseAllOfVersions {
         {
             "name": "totalSamplesCount",
             "baseName": "totalSamplesCount",
+            "type": "string"
+        },
+        {
+            "name": "license",
+            "baseName": "license",
             "type": "string"
         }    ];
 

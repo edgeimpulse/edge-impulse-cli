@@ -26,13 +26,9 @@ export class ClassifySampleResponseClassification {
     */
     'structuredResult'?: Array<StructuredClassifyResult>;
     /**
-    * The minimum confidence rating for this block
+    * The minimum confidence rating for this block. For regression, this is the absolute error (which can be larger than 1).
     */
     'minimumConfidenceRating': number;
-    /**
-    * The maximum error for regression models (only set when the learn block is of type \'keras-regression\', otherwise 0)
-    */
-    'maximumRegressionError': number;
     /**
     * Structured outputs and computed metrics for some model types (e.g. object detection), one item per window.
     */
@@ -60,11 +56,6 @@ export class ClassifySampleResponseClassification {
         {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
-            "type": "number"
-        },
-        {
-            "name": "maximumRegressionError",
-            "baseName": "maximumRegressionError",
             "type": "number"
         },
         {

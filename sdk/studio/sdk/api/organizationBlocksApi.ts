@@ -230,7 +230,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -313,7 +313,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addOrganizationDspBlockRequest, "AddOrganizationDspBlockRequest")
         };
@@ -397,7 +397,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addOrganizationSecretRequest, "AddOrganizationSecretRequest")
         };
@@ -481,7 +481,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addOrganizationTransferLearningBlockRequest, "AddOrganizationTransferLearningBlockRequest")
         };
@@ -565,7 +565,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(addOrganizationTransformationBlockRequest, "AddOrganizationTransformationBlockRequest")
         };
@@ -650,7 +650,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -734,7 +734,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -818,7 +818,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -902,7 +902,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -986,7 +986,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1063,7 +1063,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1140,7 +1140,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1217,7 +1217,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1294,7 +1294,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1371,7 +1371,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1455,7 +1455,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1615,7 +1615,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1705,7 +1705,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationDspBlockRequest, "UpdateOrganizationDspBlockRequest")
         };
@@ -1796,7 +1796,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationTransferLearningBlockRequest, "UpdateOrganizationTransferLearningBlockRequest")
         };
@@ -1887,7 +1887,7 @@ export class OrganizationBlocksApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationTransformationBlockRequest, "UpdateOrganizationTransformationBlockRequest")
         };

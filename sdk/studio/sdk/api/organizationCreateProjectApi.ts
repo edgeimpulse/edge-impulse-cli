@@ -133,7 +133,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -217,7 +217,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -308,7 +308,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -417,7 +417,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -504,7 +504,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -587,7 +587,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationAddCollaboratorRequest, "UpdateOrganizationAddCollaboratorRequest")
         };
@@ -671,7 +671,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationCreateEmptyProjectRequest, "UpdateOrganizationCreateEmptyProjectRequest")
         };
@@ -755,7 +755,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(organizationCreateProjectRequest, "OrganizationCreateProjectRequest")
         };
@@ -847,7 +847,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -931,7 +931,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1015,7 +1015,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -1105,7 +1105,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateOrganizationCreateProjectRequest, "UpdateOrganizationCreateProjectRequest")
         };
@@ -1214,7 +1214,7 @@ export class OrganizationCreateProjectApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 

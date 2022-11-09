@@ -23,6 +23,10 @@ export class UpdateUserRequest {
     * Whether to show the Imagine 2022 banner
     */
     'showImagine2022'?: boolean;
+    /**
+    * List of user experiments
+    */
+    'experiments'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +40,11 @@ export class UpdateUserRequest {
             "name": "showImagine2022",
             "baseName": "showImagine2022",
             "type": "boolean"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

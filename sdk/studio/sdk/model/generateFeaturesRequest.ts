@@ -20,6 +20,10 @@ export class GenerateFeaturesRequest {
     * Whether to generate feature importance (only when available)
     */
     'calculateFeatureImportance'?: boolean;
+    /**
+    * If set, skips feature explorer (used in tests)
+    */
+    'skipFeatureExplorer'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -32,6 +36,11 @@ export class GenerateFeaturesRequest {
         {
             "name": "calculateFeatureImportance",
             "baseName": "calculateFeatureImportance",
+            "type": "boolean"
+        },
+        {
+            "name": "skipFeatureExplorer",
+            "baseName": "skipFeatureExplorer",
             "type": "boolean"
         }    ];
 

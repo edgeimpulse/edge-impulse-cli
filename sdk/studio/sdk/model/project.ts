@@ -51,6 +51,11 @@ export class Project {
     * Project category
     */
     'category'?: string;
+    /**
+    * Public project license, if any.
+    */
+    'license'?: string;
+    'tier': ProjectTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -139,6 +144,16 @@ export class Project {
             "name": "category",
             "baseName": "category",
             "type": "string"
+        },
+        {
+            "name": "license",
+            "baseName": "license",
+            "type": "string"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "ProjectTierEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -149,3 +164,6 @@ export class Project {
 
 export type ProjectLabelingMethodEnum = 'single_label' | 'object_detection';
 export const ProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
+
+export type ProjectTierEnum = 'free' | 'pro' | 'enterprise';
+export const ProjectTierEnumValues: string[] = ['free', 'pro', 'enterprise'];

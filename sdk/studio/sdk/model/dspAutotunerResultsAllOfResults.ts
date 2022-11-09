@@ -11,32 +11,26 @@
  */
 
 
-export class ThemeColors {
-    'primaryColor'?: string;
-    'primaryColorRgb'?: Array<number>;
-    'primaryColorGradientEnd'?: string;
+export class DspAutotunerResultsAllOfResults {
+    'key': string;
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "primaryColor",
-            "baseName": "primaryColor",
+            "name": "key",
+            "baseName": "key",
             "type": "string"
         },
         {
-            "name": "primaryColorRgb",
-            "baseName": "primaryColorRgb",
-            "type": "Array<number>"
-        },
-        {
-            "name": "primaryColorGradientEnd",
-            "baseName": "primaryColorGradientEnd",
+            "name": "value",
+            "baseName": "value",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return ThemeColors.attributeTypeMap;
+        return DspAutotunerResultsAllOfResults.attributeTypeMap;
     }
 }
 

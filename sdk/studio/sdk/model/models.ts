@@ -36,6 +36,7 @@ export * from './anomalyTrainedFeaturesResponseAllOfData';
 export * from './augmentationPolicyImageEnum';
 export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
+export * from './autotuneDspRequest';
 export * from './boundingBox';
 export * from './buildOnDeviceModelRequest';
 export * from './buildOrganizationOnDeviceModelRequest';
@@ -111,6 +112,7 @@ export * from './deletePortalFileRequest';
 export * from './dependencyData';
 export * from './deploymentTarget';
 export * from './deploymentTargetBadge';
+export * from './deploymentTargetEngine';
 export * from './deploymentTargetsResponse';
 export * from './deploymentTargetsResponseAllOf';
 export * from './developmentKeys';
@@ -123,6 +125,9 @@ export * from './download';
 export * from './downloadPortalFileRequest';
 export * from './downloadPortalFileResponse';
 export * from './downloadPortalFileResponseAllOf';
+export * from './dspAutotunerResults';
+export * from './dspAutotunerResultsAllOf';
+export * from './dspAutotunerResultsAllOfResults';
 export * from './dspFeatureImportanceResponse';
 export * from './dspFeatureImportanceResponseAllOf';
 export * from './dspFeatureImportanceResponseAllOfFeatures';
@@ -218,6 +223,8 @@ export * from './getUserNeedToSetPasswordResponseAllOf';
 export * from './getUserResponse';
 export * from './getUserResponseAllOf';
 export * from './getUserResponseAllOfOrganizations';
+export * from './getWhitelabelDomainResponse';
+export * from './getWhitelabelDomainResponseAllOf';
 export * from './getWhitelabelResponse';
 export * from './getWhitelabelResponseAllOf';
 export * from './hasDataExplorerFeaturesResponse';
@@ -587,6 +594,7 @@ import { AnomalyTrainedFeaturesResponseAllOfData } from './anomalyTrainedFeature
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
+import { AutotuneDspRequest } from './autotuneDspRequest';
 import { BoundingBox } from './boundingBox';
 import { BuildOnDeviceModelRequest } from './buildOnDeviceModelRequest';
 import { BuildOrganizationOnDeviceModelRequest } from './buildOrganizationOnDeviceModelRequest';
@@ -662,6 +670,7 @@ import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DependencyData } from './dependencyData';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
+import { DeploymentTargetEngine } from './deploymentTargetEngine';
 import { DeploymentTargetsResponse } from './deploymentTargetsResponse';
 import { DeploymentTargetsResponseAllOf } from './deploymentTargetsResponseAllOf';
 import { DevelopmentKeys } from './developmentKeys';
@@ -674,6 +683,9 @@ import { Download } from './download';
 import { DownloadPortalFileRequest } from './downloadPortalFileRequest';
 import { DownloadPortalFileResponse } from './downloadPortalFileResponse';
 import { DownloadPortalFileResponseAllOf } from './downloadPortalFileResponseAllOf';
+import { DspAutotunerResults } from './dspAutotunerResults';
+import { DspAutotunerResultsAllOf } from './dspAutotunerResultsAllOf';
+import { DspAutotunerResultsAllOfResults } from './dspAutotunerResultsAllOfResults';
 import { DspFeatureImportanceResponse } from './dspFeatureImportanceResponse';
 import { DspFeatureImportanceResponseAllOf } from './dspFeatureImportanceResponseAllOf';
 import { DspFeatureImportanceResponseAllOfFeatures } from './dspFeatureImportanceResponseAllOfFeatures';
@@ -769,6 +781,8 @@ import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswor
 import { GetUserResponse } from './getUserResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfOrganizations } from './getUserResponseAllOfOrganizations';
+import { GetWhitelabelDomainResponse } from './getWhitelabelDomainResponse';
+import { GetWhitelabelDomainResponseAllOf } from './getWhitelabelDomainResponseAllOf';
 import { GetWhitelabelResponse } from './getWhitelabelResponse';
 import { GetWhitelabelResponseAllOf } from './getWhitelabelResponseAllOf';
 import { HasDataExplorerFeaturesResponse } from './hasDataExplorerFeaturesResponse';
@@ -1121,8 +1135,6 @@ let enumsMap: {[index: string]: any} = {
     "AugmentationPolicySpectrogramFreqMaskingEnum": "AugmentationPolicySpectrogramFreqMaskingEnum",
     "AugmentationPolicySpectrogramTimeMaskingEnum": "AugmentationPolicySpectrogramTimeMaskingEnum",
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
-    "BuildOnDeviceModelRequestEngineEnum": "BuildOnDeviceModelRequestEngineEnum",
-    "BuildOrganizationOnDeviceModelRequestEngineEnum": "BuildOrganizationOnDeviceModelRequestEngineEnum",
     "CreateUserThirdPartyResponseStatusEnum": "CreateUserThirdPartyResponseStatusEnum",
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
     "DSPGroupItemShowIfOperatorEnum": "DSPGroupItemShowIfOperatorEnum",
@@ -1132,6 +1144,7 @@ let enumsMap: {[index: string]: any} = {
     "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
     "DataExplorerSettingsDimensionalityReductionTechniqueEnum": "DataExplorerSettingsDimensionalityReductionTechniqueEnum",
     "DeploymentTargetUiSectionEnum": "DeploymentTargetUiSectionEnum",
+    "DeploymentTargetEngine": "DeploymentTargetEngine",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
     "GetDataExplorerSettingsResponsePresetEnum": "GetDataExplorerSettingsResponsePresetEnum",
     "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum",
@@ -1199,6 +1212,7 @@ let enumsMap: {[index: string]: any} = {
     "PerformanceCalibrationParametersTypeEnum": "PerformanceCalibrationParametersTypeEnum",
     "ProfileTfLiteRequestReferenceModelEnum": "ProfileTfLiteRequestReferenceModelEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
+    "ProjectTierEnum": "ProjectTierEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
     "ProjectPublicDataProjectTypeEnum": "ProjectPublicDataProjectTypeEnum",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
@@ -1253,6 +1267,7 @@ let typeMap: {[index: string]: any} = {
     "AnomalyTrainedFeaturesResponseAllOfData": AnomalyTrainedFeaturesResponseAllOfData,
     "AugmentationPolicySpectrogram": AugmentationPolicySpectrogram,
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
+    "AutotuneDspRequest": AutotuneDspRequest,
     "BoundingBox": BoundingBox,
     "BuildOnDeviceModelRequest": BuildOnDeviceModelRequest,
     "BuildOrganizationOnDeviceModelRequest": BuildOrganizationOnDeviceModelRequest,
@@ -1340,6 +1355,9 @@ let typeMap: {[index: string]: any} = {
     "DownloadPortalFileRequest": DownloadPortalFileRequest,
     "DownloadPortalFileResponse": DownloadPortalFileResponse,
     "DownloadPortalFileResponseAllOf": DownloadPortalFileResponseAllOf,
+    "DspAutotunerResults": DspAutotunerResults,
+    "DspAutotunerResultsAllOf": DspAutotunerResultsAllOf,
+    "DspAutotunerResultsAllOfResults": DspAutotunerResultsAllOfResults,
     "DspFeatureImportanceResponse": DspFeatureImportanceResponse,
     "DspFeatureImportanceResponseAllOf": DspFeatureImportanceResponseAllOf,
     "DspFeatureImportanceResponseAllOfFeatures": DspFeatureImportanceResponseAllOfFeatures,
@@ -1435,6 +1453,8 @@ let typeMap: {[index: string]: any} = {
     "GetUserResponse": GetUserResponse,
     "GetUserResponseAllOf": GetUserResponseAllOf,
     "GetUserResponseAllOfOrganizations": GetUserResponseAllOfOrganizations,
+    "GetWhitelabelDomainResponse": GetWhitelabelDomainResponse,
+    "GetWhitelabelDomainResponseAllOf": GetWhitelabelDomainResponseAllOf,
     "GetWhitelabelResponse": GetWhitelabelResponse,
     "GetWhitelabelResponseAllOf": GetWhitelabelResponseAllOf,
     "HasDataExplorerFeaturesResponse": HasDataExplorerFeaturesResponse,

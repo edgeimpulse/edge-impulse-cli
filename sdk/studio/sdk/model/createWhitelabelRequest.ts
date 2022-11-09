@@ -24,15 +24,15 @@ export class CreateWhitelabelRequest {
     /**
     * The list of allowed identity providers.
     */
-    'identityProviders': Array<string>;
+    'identityProviders'?: Array<string>;
     /**
     * Whether this white label accepts password based authentication.
     */
-    'allowPasswordAuth': boolean;
+    'allowPasswordAuth'?: boolean;
     /**
     * The list of deployment targets to show on the UI
     */
-    'deploymentTargets': Array<string>;
+    'deploymentTargets'?: Array<string>;
     /**
     * Custom documentation URL
     */
@@ -40,15 +40,19 @@ export class CreateWhitelabelRequest {
     /**
     * Whether this white label allow sign ups or not.
     */
-    'allowSignup': boolean;
+    'allowSignup'?: boolean;
     /**
     * Whether this white label allows the creation of free projects.
     */
-    'allowFreeProjects': boolean;
+    'allowFreeProjects'?: boolean;
     /**
     * Whether this white label should work in sandboxed mode or not.
     */
     'sandboxed'?: boolean;
+    /**
+    * Whether public projects created in this white label scope should be exposed through the Public Projects API or not.
+    */
+    'exposePublicProjects'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -101,6 +105,11 @@ export class CreateWhitelabelRequest {
         {
             "name": "sandboxed",
             "baseName": "sandboxed",
+            "type": "boolean"
+        },
+        {
+            "name": "exposePublicProjects",
+            "baseName": "exposePublicProjects",
             "type": "boolean"
         }    ];
 

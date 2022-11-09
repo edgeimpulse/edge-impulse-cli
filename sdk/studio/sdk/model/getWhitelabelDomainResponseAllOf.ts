@@ -11,32 +11,20 @@
  */
 
 
-export class ThemeColors {
-    'primaryColor'?: string;
-    'primaryColorRgb'?: Array<number>;
-    'primaryColorGradientEnd'?: string;
+export class GetWhitelabelDomainResponseAllOf {
+    'domain'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "primaryColor",
-            "baseName": "primaryColor",
-            "type": "string"
-        },
-        {
-            "name": "primaryColorRgb",
-            "baseName": "primaryColorRgb",
-            "type": "Array<number>"
-        },
-        {
-            "name": "primaryColorGradientEnd",
-            "baseName": "primaryColorGradientEnd",
+            "name": "domain",
+            "baseName": "domain",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return ThemeColors.attributeTypeMap;
+        return GetWhitelabelDomainResponseAllOf.attributeTypeMap;
     }
 }
 

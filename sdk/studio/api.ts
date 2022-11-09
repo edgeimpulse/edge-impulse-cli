@@ -16,11 +16,16 @@ import {
     AdminApi,
     PerformanceCalibrationApi,
     MetricsApi,
+    GetJobResponse,
+    SocketTokenResponse,
 } from './sdk/api';
 import WebSocket from 'ws';
 
+const JOB_CONNECTION_TIMEOUT = 60000;
+
 export type EdgeImpulseApiOpts = {
     endpoint?: string;
+    debug?: boolean;
 };
 
 export type EdgeImpulseApiAuthOpts = {
@@ -31,8 +36,10 @@ export type EdgeImpulseApiAuthOpts = {
     jwtToken: string;
 };
 
+const DEBUG_PREFIX = '\x1b[33m[API]\x1b[0m';
+
 export class EdgeImpulseApi {
-    private _opts: { endpoint: string };
+    private _opts: { endpoint: string, debug: boolean };
 
     admin: AdminApi;
     auth: AuthApi;
@@ -77,7 +84,10 @@ export class EdgeImpulseApi {
             endpoint = endpoint.slice(0, endpoint.length - 3);
         }
 
-        this._opts = { endpoint };
+        this._opts = {
+            endpoint,
+            debug: opts?.debug || false,
+        };
 
         this.admin = new AdminApi(this._opts.endpoint + '/v1');
         this.auth = new AuthApi(this._opts.endpoint + '/v1');
@@ -289,116 +299,25 @@ export class EdgeImpulseApi {
 
         const { projectId, jobId } = opts;
 
-        let terminated = false;
-
-        // Get a websocket
-        const socket = await this.getProjectWebsocket(projectId);
-
-        const connectToSocket = async () => {
-            let pingIv = setInterval(() => {
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.ping();
-                    socket.send('2');
+        return this.waitForJobImpl(
+            jobId,
+            dataCallback,
+            () => this.getProjectWebsocket(projectId),
+            async () => {
+                const d = await this.jobs.getJobStatus(projectId, jobId);
+                if (this._opts.debug) {
+                    console.log(DEBUG_PREFIX, 'runJobUntilCompletion', 'projectId', projectId, 'jobId', jobId,
+                        'status', d);
                 }
-            }, 5000);
-
-            socket.onmessage = (msg) => {
-                try {
-                    let m = JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                    // tslint:disable-next-line: no-unsafe-any
-                    if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) return;
-                    // tslint:disable-next-line: no-unsafe-any
-                    if (m[1].data) {
-                        if (dataCallback) {
-                            // tslint:disable-next-line: no-unsafe-any
-                            dataCallback(m[1].data);
-                        }
-                    }
-                }
-                catch (e) {
-                    /* noop */
-                }
-            };
-
-            socket.onclose = () => {
-                clearInterval(pingIv);
-
-                if (terminated) return;
-
-                // console.log('Socket closed... connecting to new socket...');
-
-                // tslint:disable-next-line: no-floating-promises
-                connectToSocket();
-            };
-
-            return socket;
-        };
-
-        let s = await connectToSocket();
-
-        while (1) {
-            await this.sleep(5000);
-
-            const d = await this.jobs.getJobStatus(projectId, jobId);
-
-            let job = d.job || { finishedSuccessful: undefined };
-            if (job.finishedSuccessful === true) {
-                break;
+                return d;
             }
-            else if (job.finishedSuccessful === false) {
-                throw new Error('Job failed');
-            }
-        }
-
-        terminated = true;
-
-        s.terminate();
+        );
     }
 
     private async getProjectWebsocket(projectId: number) {
         const tokenRes = await this.projects.getSocketToken(projectId);
 
-        const wsHost = this._opts.endpoint.replace('http', 'ws');
-
-        let tokenData = {
-            success: true,
-            token: tokenRes.token || { socketToken: '' },
-        };
-
-        let ws = new WebSocket(wsHost + '/socket.io/?token=' +
-            tokenData.token.socketToken + '&EIO=3&transport=websocket');
-
-        return new Promise<WebSocket>((resolve, reject) => {
-            ws.onclose = () => {
-                reject('websocket was closed');
-            };
-            ws.onerror = err => {
-                reject('websocket error: ' + JSON.stringify(err));
-            };
-            ws.onmessage = msg => {
-                try {
-                    let m = <any[]>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                    if (m[0] === 'hello') {
-                        // tslint:disable-next-line: no-unsafe-any
-                        if (m[1].hello && m[1].hello.version === 1) {
-                            clearTimeout(rejectTimeout);
-                            // console.log('Connected to job websocket');
-                            resolve(ws);
-                        }
-                        else {
-                            reject(JSON.stringify(m[1]));
-                        }
-                    }
-                }
-                catch (ex) {
-                    /* noop */
-                }
-            };
-
-            let rejectTimeout = setTimeout(() => {
-                reject('Did not authenticate with the websocket API within 10 seconds');
-            }, 10000);
-        });
+        return this.getWebsocketImpl(tokenRes);
     }
 
     private async runOrgJobUntilCompletion(opts: {
@@ -418,17 +337,70 @@ export class EdgeImpulseApi {
 
         const { organizationId, jobId } = opts;
 
+        return this.waitForJobImpl(
+            jobId,
+            dataCallback,
+            () => this.getOrgWebsocket(organizationId),
+            async () => {
+                const d = await this.organizationJobs.getOrganizationJobStatus(organizationId, jobId);
+                if (this._opts.debug) {
+                    console.log(DEBUG_PREFIX, 'runJobUntilCompletion', 'organizationId', organizationId,
+                        'jobId', jobId,
+                        'status', d);
+                }
+                return d;
+            }
+        );
+    }
+
+    private async getOrgWebsocket(organizationId: number) {
+        const tokenRes = await this.organizationJobs.getOrganizationSocketToken(organizationId);
+        return this.getWebsocketImpl(tokenRes);
+    }
+
+    private async sleep(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    private async waitForJobImpl(jobId: number,
+                                 dataCallback: ((ev: string) => void) | undefined,
+                                 getWebsocketFn: () => Promise<WebSocket>,
+                                 getJobStatusFn: () => Promise<GetJobResponse>) {
         let terminated = false;
 
-        // Get a websocket
-        const socket = await this.getOrgWebsocket(organizationId);
-
         const connectToSocket = async () => {
+            let socket!: WebSocket;
+
+            // Get a websocket (max 60 sec timeout)
+            let getWebsocketTimeout = Date.now() + JOB_CONNECTION_TIMEOUT;
+            while (1) {
+                try {
+                    socket = await getWebsocketFn();
+                    if (dataCallback) {
+                        dataCallback('Connected to job\n');
+                    }
+                    break;
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    if (Date.now() > getWebsocketTimeout) {
+                        throw ex;
+                    }
+
+                    if (this._opts.debug) {
+                        console.log(DEBUG_PREFIX, 'Failed to get socket token, retrying in 5 seconds...');
+                    }
+                    if (dataCallback) {
+                        dataCallback(`Failed to connect to job (${ex.message || ex.toString()}), retrying in 5 seconds...\n`);
+                    }
+                    await this.sleep(5000);
+                }
+            }
 
             let pingIv = setInterval(() => {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.send('2');
                     socket.ping();
+                    socket.send('2');
                 }
             }, 5000);
 
@@ -450,15 +422,24 @@ export class EdgeImpulseApi {
                 }
             };
 
-            socket.onclose = () => {
+            socket.onclose = async () => {
                 clearInterval(pingIv);
 
                 if (terminated) return;
 
-                // console.log('Socket closed... connecting to new socket...');
+                if (dataCallback) {
+                    dataCallback('Lost connection to job, retrying to connect...\n');
+                }
 
-                // tslint:disable-next-line: no-floating-promises
-                connectToSocket();
+                try {
+                    await connectToSocket();
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    if (dataCallback) {
+                        dataCallback(`Failed to open new socket (${ex.message || ex.toString()}\n`);
+                    }
+                }
             };
 
             return socket;
@@ -466,16 +447,39 @@ export class EdgeImpulseApi {
 
         let s = await connectToSocket();
 
+        let lastJobStatusReqSucceeded = Date.now();
+
         while (1) {
             await this.sleep(5000);
 
-            const d = await this.organizationJobs.getOrganizationJobStatus(organizationId, jobId);
+            let jobHasFailed = false;
 
-            let job = d.job || { finishedSuccessful: undefined };
-            if (job.finishedSuccessful === true) {
-                break;
+            try {
+                const d = await getJobStatusFn();
+                lastJobStatusReqSucceeded = Date.now();
+
+                let job = d.job || { finishedSuccessful: undefined };
+                if (job.finishedSuccessful === true) {
+                    break;
+                }
+                else if (job.finishedSuccessful === false) {
+                    jobHasFailed = true;
+                }
             }
-            else if (job.finishedSuccessful === false) {
+            catch (ex2) {
+                let ex = <Error>ex2;
+
+                if (this._opts.debug) {
+                    console.log(DEBUG_PREFIX, 'Failed to check job status', ex.message || ex.toString());
+                }
+
+                if (Date.now() - lastJobStatusReqSucceeded > JOB_CONNECTION_TIMEOUT) {
+                    throw new Error('Failed to check job status for 60 seconds: ' +
+                        (ex.message || ex.toString()));
+                }
+            }
+
+            if (jobHasFailed) {
                 throw new Error('Job failed');
             }
         }
@@ -485,9 +489,7 @@ export class EdgeImpulseApi {
         s.terminate();
     }
 
-    private async getOrgWebsocket(organizationId: number) {
-        const tokenRes = await this.organizationJobs.getOrganizationSocketToken(organizationId);
-
+    private async getWebsocketImpl(tokenRes: SocketTokenResponse) {
         const wsHost = this._opts.endpoint.replace('http', 'ws');
 
         let tokenData = {
@@ -503,7 +505,7 @@ export class EdgeImpulseApi {
                 reject('websocket was closed');
             };
             ws.onerror = err => {
-                reject('websocket error: ' + JSON.stringify(err));
+                reject('websocket error: ' + err);
             };
             ws.onmessage = msg => {
                 try {
@@ -529,9 +531,5 @@ export class EdgeImpulseApi {
                 reject('Did not authenticate with the websocket API within 10 seconds');
             }, 10000);
         });
-    }
-
-    private async sleep(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 }

@@ -11,6 +11,7 @@
  */
 
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
+import { DeploymentTargetEngine } from './deploymentTargetEngine';
 
 export class DeploymentTarget {
     'name': string;
@@ -19,16 +20,38 @@ export class DeploymentTarget {
     'imageClasses': string;
     'format': string;
     'latencyDevice'?: string;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     'hasEonCompiler': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     'hasTensorRT': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     'hasTensaiFlow': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     'hasDRPAI': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     'hasTIDL': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasAkida': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
     'customDeployId'?: number;
     'integrateUrl'?: string;
+    'supportedEngines': Array<DeploymentTargetEngine>;
+    'preferredEngine': DeploymentTargetEngine;
+    'url'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -89,6 +112,11 @@ export class DeploymentTarget {
             "type": "boolean"
         },
         {
+            "name": "hasAkida",
+            "baseName": "hasAkida",
+            "type": "boolean"
+        },
+        {
             "name": "hideOptimizations",
             "baseName": "hideOptimizations",
             "type": "boolean"
@@ -111,6 +139,21 @@ export class DeploymentTarget {
         {
             "name": "integrateUrl",
             "baseName": "integrateUrl",
+            "type": "string"
+        },
+        {
+            "name": "supportedEngines",
+            "baseName": "supportedEngines",
+            "type": "Array<DeploymentTargetEngine>"
+        },
+        {
+            "name": "preferredEngine",
+            "baseName": "preferredEngine",
+            "type": "DeploymentTargetEngine"
+        },
+        {
+            "name": "url",
+            "baseName": "url",
             "type": "string"
         }    ];
 

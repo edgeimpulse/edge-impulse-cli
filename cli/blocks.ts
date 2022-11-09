@@ -597,6 +597,14 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 name: 'YOLOv5',
                                 value: 'yolov5'
                             },
+                            {
+                                name: 'YOLOv5 for Renesas DRP-AI',
+                                value: 'yolov5v5-drpai'
+                            },
+                            {
+                                name: 'YOLOX',
+                                value: 'yolox'
+                            },
                         ],
                         message: `What's the last layer of this object detection model?`,
                     }])).lastLayer;
@@ -717,7 +725,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }
         }
         console.log(`Your new block '${blockName}' has been created in '${process.cwd()}'.`);
-        console.log(`When you have finished building your ${blockTypeInqRes.type} block, run 'edge-impulse-blocks ` +
+        console.log(`When you have finished building your ${blockTypeToString(blockType)} block, run 'edge-impulse-blocks ` +
             `push' to update the block in Edge Impulse.`);
         process.exit(0);
     }
@@ -761,6 +769,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         const organizationName = organizationNameResponse.organization.name;
+        const organizationWhitelabelId = organizationNameResponse.organization.whitelabelId;
+        const studioUrl = await configFactory.getStudioUrl(organizationWhitelabelId);
 
         try {
             if (!currentBlockConfig.id)  {
@@ -903,7 +913,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         let link = organizationNameResponse.organization.isDeveloperProfile ?
                             `/studio/profile/machine-learning-blocks` :
                             `/organization/${organizationId}/machine-learning-blocks`;
-                        link = config.endpoints.internal.api.replace('/v1', '') + link;
+                        link = `${studioUrl}${link}`;
 
                         console.log('');
                         console.log('      ' + link);
@@ -1020,13 +1030,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             console.log('');
 
             if (currentBlockConfig.type === 'transform') {
-                const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
-                    organizationId + '/data';
+                const organizationStudioPath = studioUrl + '/organization/' + organizationId + '/data';
                 console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
             }
             else if (currentBlockConfig.type === 'deploy') {
-                const organizationStudioPath = config.endpoints.internal.api.replace('/v1', '') + '/organization/' +
-                organizationId + '/deployment';
+                const organizationStudioPath = studioUrl + '/organization/' + organizationId + '/deployment';
                 console.log(`Your block has been updated and is now available on the Deployment page ` +
                     `for every project under ${organizationName}.`);
                 console.log(`You can set the block image or update details at ` +
@@ -1297,6 +1305,14 @@ function spinner() {
 
         process.stdout.write('\b' + (spinChars[spinIx]));
     }, 250);
+}
+
+function blockTypeToString(blockType: UploadCustomBlockRequestTypeEnum): string {
+    if (blockType === 'transferLearning') {
+        return 'learning';
+    }
+
+    return blockType;
 }
 
 function getConfigForHost(config: BlockConfigV1, host: string) {

@@ -58,6 +58,14 @@ export class SetKerasParameterRequest {
     'findLearningRate'?: boolean;
     'augmentationPolicyImage'?: AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
+    /**
+    * Whether to profile the i8 model (might take a very long time)
+    */
+    'profileInt8'?: boolean;
+    /**
+    * If set, skips creating embeddings and measuring memory (used in tests)
+    */
+    'skipEmbeddingsAndMemory'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -121,6 +129,16 @@ export class SetKerasParameterRequest {
             "name": "augmentationPolicySpectrogram",
             "baseName": "augmentationPolicySpectrogram",
             "type": "AugmentationPolicySpectrogram"
+        },
+        {
+            "name": "profileInt8",
+            "baseName": "profileInt8",
+            "type": "boolean"
+        },
+        {
+            "name": "skipEmbeddingsAndMemory",
+            "baseName": "skipEmbeddingsAndMemory",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

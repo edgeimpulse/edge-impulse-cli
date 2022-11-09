@@ -60,7 +60,7 @@ export interface RemoteMgmtConfig {
     api: {
         projects: {
             // tslint:disable-next-line: max-line-length
-            getProjectInfo(projectId: number): Promise<{ success: boolean, error?: string, project: { name: string } }>;
+            getProjectInfo(projectId: number): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
         };
         devices: {
             // tslint:disable-next-line: max-line-length
@@ -69,6 +69,9 @@ export interface RemoteMgmtConfig {
             createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ success: boolean, error?: string }>;
             // tslint:disable-next-line: max-line-length
             getDevice(projectId: number, deviceId: string): Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
+        };
+        whitelabels: {
+            getWhitelabel(whitelabelId: number | null): Promise<{ success: boolean, whitelabel?: { domain: string } }>;
         }
     };
 }
@@ -157,11 +160,9 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             let myws = this._ws;
             if (myws) {
                 let received = false;
-                // console.log(TCP_PREFIX, 'Ping');
                 myws.ping();
                 myws.once('pong', () => {
                     received = true;
-                    // console.log(TCP_PREFIX, 'Pong');
                 });
                 setTimeout(() => {
                     if (!received && this._ws && this._ws === myws) {
@@ -534,10 +535,22 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 }
                 let name = await this.checkName(deviceId);
 
+                const projectInfo = await this.getProjectInfo();
+                let studioUrl = this._eiConfig.endpoints.internal.api.replace('/v1', '');
+                if (projectInfo.whitelabelId) {
+                    const whitelabelRequest = await this._eiConfig.api.whitelabels.getWhitelabel(
+                        projectInfo.whitelabelId
+                    );
+                    if (whitelabelRequest && whitelabelRequest.success && whitelabelRequest.whitelabel) {
+                        const protocol = this._eiConfig.endpoints.internal.api.startsWith('https') ? 'https' : 'http';
+                        studioUrl = `${protocol}://${whitelabelRequest.whitelabel.domain}`;
+                    }
+                }
+
                 console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
-                    '"' + (await this.getProjectName()) + '"');
+                    '"' + projectInfo.name + '"');
                 console.log(TCP_PREFIX,
-                    `Go to ${this._eiConfig.endpoints.internal.api.replace('/v1', '')}/studio/${this._projectId}/acquisition/training ` +
+                    `Go to ${studioUrl}/studio/${this._projectId}/acquisition/training ` +
                     `to build your machine learning model!`);
             }
         });
@@ -571,10 +584,10 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         }
     }
 
-    private async getProjectName() {
+    private async getProjectInfo() {
         try {
             let projectBody = (await this._eiConfig.api.projects.getProjectInfo(this._projectId));
-            return projectBody.project.name;
+            return projectBody.project;
         }
         catch (ex2) {
             let ex = <Error>ex2;

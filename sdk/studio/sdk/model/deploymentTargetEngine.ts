@@ -12,5 +12,5 @@
 
 
 
-export type ObjectDetectionLastLayer = 'mobilenet-ssd' | 'fomo' | 'yolov5' | 'yolov5v5-drpai' | 'yolox';
-export const ObjectDetectionLastLayerValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5', 'yolov5v5-drpai', 'yolox'];
+export type DeploymentTargetEngine = 'tflite' | 'tflite-eon' | 'tensorrt' | 'tensaiflow' | 'drp-ai' | 'tidl' | 'akida';
+export const DeploymentTargetEngineValues: string[] = ['tflite', 'tflite-eon', 'tensorrt', 'tensaiflow', 'drp-ai', 'tidl', 'akida'];

@@ -19,6 +19,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { DeploymentTargetEngine } from '../model/deploymentTargetEngine';
 import { DeploymentTargetsResponse } from '../model/deploymentTargetsResponse';
 import { EvaluateJobResponse } from '../model/evaluateJobResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -96,8 +97,9 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param type Output format
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
+     * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      */
-    public async downloadBuild (projectId: number, type: string, modelType?: KerasModelTypeEnum, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadBuild (projectId: number, type: string, modelType?: KerasModelTypeEnum, engine?: DeploymentTargetEngine, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -129,6 +131,10 @@ export class DeploymentApi {
             localVarQueryParameters['modelType'] = ObjectSerializer.serialize(modelType, "KerasModelTypeEnum");
         }
 
+        if (engine !== undefined) {
+            localVarQueryParameters['engine'] = ObjectSerializer.serialize(engine, "DeploymentTargetEngine");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -139,7 +145,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             encoding: null,
         };
 
@@ -248,7 +254,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -297,8 +303,9 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param type Output format
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
+     * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      */
-    public async getDeployment (projectId: number, type: string, modelType?: KerasModelTypeEnum, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
+    public async getDeployment (projectId: number, type: string, modelType?: KerasModelTypeEnum, engine?: DeploymentTargetEngine, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -330,6 +337,10 @@ export class DeploymentApi {
             localVarQueryParameters['modelType'] = ObjectSerializer.serialize(modelType, "KerasModelTypeEnum");
         }
 
+        if (engine !== undefined) {
+            localVarQueryParameters['engine'] = ObjectSerializer.serialize(engine, "DeploymentTargetEngine");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
 
         let localVarUseFormData = false;
@@ -340,7 +351,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -417,7 +428,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -494,7 +505,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -571,7 +582,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -641,7 +652,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -718,7 +729,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -795,7 +806,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
         };
 
@@ -878,7 +889,7 @@ export class DeploymentApi {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            agentOptions: (process.env.EI_HOST && process.env.EI_HOST !== "edgeimpulse.com") ? {keepAlive: true} : undefined,
+            agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(setSyntiantPosteriorRequest, "SetSyntiantPosteriorRequest")
         };

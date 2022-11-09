@@ -25,10 +25,6 @@ export class PerformanceCalibrationParameterSet {
     */
     'isBest': boolean;
     /**
-    * Whether this is Studio\'s default parameter set
-    */
-    'isDefault': boolean;
-    /**
     * All of the possible labels in the detections array
     */
     'labels': Array<string>;
@@ -51,11 +47,6 @@ export class PerformanceCalibrationParameterSet {
         {
             "name": "isBest",
             "baseName": "isBest",
-            "type": "boolean"
-        },
-        {
-            "name": "isDefault",
-            "baseName": "isDefault",
             "type": "boolean"
         },
         {

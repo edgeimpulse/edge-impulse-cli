@@ -412,6 +412,17 @@ export class Config {
         await this.store(config);
     }
 
+    async getStudioUrl(whitelabelId: number | null) {
+        if (whitelabelId !== null) {
+            const whitelabelRequest = await this._api?.whitelabels.getWhitelabelDomain(whitelabelId);
+            if (whitelabelRequest && whitelabelRequest.success && whitelabelRequest.domain) {
+                const protocol = this._endpoints?.internal.api.startsWith('https') ? 'https' : 'http';
+                return `${protocol}://${whitelabelRequest.domain}`;
+            }
+        }
+        return this._endpoints?.internal.api.replace('/v1', '');
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {

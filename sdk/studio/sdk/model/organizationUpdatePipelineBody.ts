@@ -25,6 +25,7 @@ export class OrganizationUpdatePipelineBody {
     'emailRecipientUids': Array<number>;
     'notificationWebhook'?: string;
     'whenToEmail': OrganizationUpdatePipelineBodyWhenToEmailEnum;
+    'archived'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -73,6 +74,11 @@ export class OrganizationUpdatePipelineBody {
             "name": "whenToEmail",
             "baseName": "whenToEmail",
             "type": "OrganizationUpdatePipelineBodyWhenToEmailEnum"
+        },
+        {
+            "name": "archived",
+            "baseName": "archived",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

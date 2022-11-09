@@ -229,10 +229,17 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 }
                 let name = await checkName(eiConfig, dataForwarderConfig.projectId, macAddress);
 
+                let whitelabelId = null;
+                const projectResponse = await eiConfig.api.projects.getProjectInfo(dataForwarderConfig.projectId);
+                if (projectResponse?.success && projectResponse?.project) {
+                    whitelabelId = projectResponse.project.whitelabelId;
+                }
+                const studioUrl = await configFactory.getStudioUrl(whitelabelId);
+
                 console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
                     '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '"');
                 console.log(TCP_PREFIX,
-                    `Go to ${eiConfig.endpoints.internal.api.replace('/v1', '')}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
+                    `Go to ${studioUrl}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
                     `to build your machine learning model!`);
             }
         });

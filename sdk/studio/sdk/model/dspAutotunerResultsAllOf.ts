@@ -10,33 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { DspAutotunerResultsAllOfResults } from './dspAutotunerResultsAllOfResults';
 
-export class ThemeColors {
-    'primaryColor'?: string;
-    'primaryColorRgb'?: Array<number>;
-    'primaryColorGradientEnd'?: string;
+export class DspAutotunerResultsAllOf {
+    'results': Array<DspAutotunerResultsAllOfResults>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "primaryColor",
-            "baseName": "primaryColor",
-            "type": "string"
-        },
-        {
-            "name": "primaryColorRgb",
-            "baseName": "primaryColorRgb",
-            "type": "Array<number>"
-        },
-        {
-            "name": "primaryColorGradientEnd",
-            "baseName": "primaryColorGradientEnd",
-            "type": "string"
+            "name": "results",
+            "baseName": "results",
+            "type": "Array<DspAutotunerResultsAllOfResults>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ThemeColors.attributeTypeMap;
+        return DspAutotunerResultsAllOf.attributeTypeMap;
     }
 }
 

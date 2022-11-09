@@ -11,32 +11,23 @@
  */
 
 
-export class ThemeColors {
-    'primaryColor'?: string;
-    'primaryColorRgb'?: Array<number>;
-    'primaryColorGradientEnd'?: string;
+export class AutotuneDspRequest {
+    /**
+    * DSP block ID to autotune parameters of
+    */
+    'dspId': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "primaryColor",
-            "baseName": "primaryColor",
-            "type": "string"
-        },
-        {
-            "name": "primaryColorRgb",
-            "baseName": "primaryColorRgb",
-            "type": "Array<number>"
-        },
-        {
-            "name": "primaryColorGradientEnd",
-            "baseName": "primaryColorGradientEnd",
-            "type": "string"
+            "name": "dspId",
+            "baseName": "dspId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ThemeColors.attributeTypeMap;
+        return AutotuneDspRequest.attributeTypeMap;
     }
 }
 

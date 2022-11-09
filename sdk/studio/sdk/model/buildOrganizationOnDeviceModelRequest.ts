@@ -10,13 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { DeploymentTargetEngine } from './deploymentTargetEngine';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class BuildOrganizationOnDeviceModelRequest {
-    /**
-    * Inferencing engine
-    */
-    'engine': BuildOrganizationOnDeviceModelRequestEngineEnum;
+    'engine': DeploymentTargetEngine;
     'deployBlockId': number;
     'modelType'?: KerasModelTypeEnum;
 
@@ -26,7 +24,7 @@ export class BuildOrganizationOnDeviceModelRequest {
         {
             "name": "engine",
             "baseName": "engine",
-            "type": "BuildOrganizationOnDeviceModelRequestEngineEnum"
+            "type": "DeploymentTargetEngine"
         },
         {
             "name": "deployBlockId",
@@ -44,6 +42,3 @@ export class BuildOrganizationOnDeviceModelRequest {
     }
 }
 
-
-export type BuildOrganizationOnDeviceModelRequestEngineEnum = 'tflite' | 'tflite-eon' | 'tensorrt' | 'tensaiflow' | 'drp-ai' | 'tidl';
-export const BuildOrganizationOnDeviceModelRequestEngineEnumValues: string[] = ['tflite', 'tflite-eon', 'tensorrt', 'tensaiflow', 'drp-ai', 'tidl'];

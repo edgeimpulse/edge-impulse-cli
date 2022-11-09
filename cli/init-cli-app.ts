@@ -58,7 +58,8 @@ export async function initCliApp(opts: {
                 console.log('');
             }
             else {
-                console.log('Stored token seems invalid, clearing cache...', ex);
+                console.log('Stored token seems invalid, clearing cache...');
+                console.log(ex.message);
             }
             await configFactory.clean();
             config = await configFactory.verifyLogin(opts.devArgv, opts.apiKeyArgv);

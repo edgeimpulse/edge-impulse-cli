@@ -22,6 +22,7 @@ export class Whitelabel {
     'deploymentTargets': Array<string>;
     'allowSignup': boolean;
     'allowFreeProjects': boolean;
+    'exposePublicProjects'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,6 +75,11 @@ export class Whitelabel {
         {
             "name": "allowFreeProjects",
             "baseName": "allowFreeProjects",
+            "type": "boolean"
+        },
+        {
+            "name": "exposePublicProjects",
+            "baseName": "exposePublicProjects",
             "type": "boolean"
         }    ];
 

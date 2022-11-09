@@ -31,6 +31,7 @@ export class DSPInfo {
     'performance'?: DspRunResponseAllOfPerformance;
     'canCalculateFeatureImportance': boolean;
     'calculateFeatureImportance': boolean;
+    'hasAutoTune'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -88,6 +89,11 @@ export class DSPInfo {
         {
             "name": "calculateFeatureImportance",
             "baseName": "calculateFeatureImportance",
+            "type": "boolean"
+        },
+        {
+            "name": "hasAutoTune",
+            "baseName": "hasAutoTune",
             "type": "boolean"
         }    ];
 

@@ -460,8 +460,9 @@ export class JobsApi {
      * @param projectId Project ID
      * @param jobId Job ID
      * @param limit Maximum number of results
+     * @param logLevel Log level (error, warn, info, debug)
      */
-    public async downloadJobsLogs (projectId: number, jobId: number, limit?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async downloadJobsLogs (projectId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/stdout/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -488,6 +489,10 @@ export class JobsApi {
 
         if (limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -962,8 +967,9 @@ export class JobsApi {
      * @param projectId Project ID
      * @param jobId Job ID
      * @param limit Maximum number of results
+     * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getJobsLogs (projectId: number, jobId: number, limit?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getJobsLogs (projectId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -990,6 +996,10 @@ export class JobsApi {
 
         if (limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

@@ -310,9 +310,6 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                     if (this._ws) {
                         this._ws.send(JSON.stringify(res5));
                     }
-
-                    restartSnapshotOnFinished = false;
-                    resetStateToSnapshotStreaming = false;
                 }
                 finally {
                     this._state = 'idle';

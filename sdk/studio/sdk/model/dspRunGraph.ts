@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DspRunGraphAxisLabels } from './dspRunGraphAxisLabels';
 
 export class DspRunGraph {
     /**
@@ -56,6 +57,15 @@ export class DspRunGraph {
     * Width of the graph line (if type is `logarithmic` or `linear`). Default 3.
     */
     'lineWidth'?: number;
+    /**
+    * Whether to apply smoothing to the graph.
+    */
+    'smoothing'?: boolean;
+    'axisLabels'?: DspRunGraphAxisLabels;
+    /**
+    * Indices of points to highlight, per axis.
+    */
+    'highlights'?: { [key: string]: Array<number>; };
 
     static discriminator: string | undefined = undefined;
 
@@ -114,6 +124,21 @@ export class DspRunGraph {
             "name": "lineWidth",
             "baseName": "lineWidth",
             "type": "number"
+        },
+        {
+            "name": "smoothing",
+            "baseName": "smoothing",
+            "type": "boolean"
+        },
+        {
+            "name": "axisLabels",
+            "baseName": "axisLabels",
+            "type": "DspRunGraphAxisLabels"
+        },
+        {
+            "name": "highlights",
+            "baseName": "highlights",
+            "type": "{ [key: string]: Array<number>; }"
         }    ];
 
     static getAttributeTypeMap() {

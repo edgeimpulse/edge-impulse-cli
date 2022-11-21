@@ -10,11 +10,16 @@
  * Do not edit the class manually.
  */
 
+import { ListVersionsResponseAllOfCustomLearnBlocks } from './listVersionsResponseAllOfCustomLearnBlocks';
 import { ListVersionsResponseAllOfVersions } from './listVersionsResponseAllOfVersions';
 
 export class ListVersionsResponseAllOf {
-    'nextVersion'?: number;
-    'versions'?: Array<ListVersionsResponseAllOfVersions>;
+    'nextVersion': number;
+    'versions': Array<ListVersionsResponseAllOfVersions>;
+    /**
+    * If you have any custom learn blocks (e.g. blocks you pushed through Bring Your Own Model), then these are listed here. We use these to show a warning in the UI that these blocks will also be available in a public version.
+    */
+    'customLearnBlocks': Array<ListVersionsResponseAllOfCustomLearnBlocks>;
 
     static discriminator: string | undefined = undefined;
 
@@ -28,6 +33,11 @@ export class ListVersionsResponseAllOf {
             "name": "versions",
             "baseName": "versions",
             "type": "Array<ListVersionsResponseAllOfVersions>"
+        },
+        {
+            "name": "customLearnBlocks",
+            "baseName": "customLearnBlocks",
+            "type": "Array<ListVersionsResponseAllOfCustomLearnBlocks>"
         }    ];
 
     static getAttributeTypeMap() {

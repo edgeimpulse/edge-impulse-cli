@@ -14,6 +14,7 @@
 export class LogStdoutResponseAllOfStdout {
     'created': Date;
     'data': string;
+    'logLevel'?: LogStdoutResponseAllOfStdoutLogLevelEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +28,11 @@ export class LogStdoutResponseAllOfStdout {
             "name": "data",
             "baseName": "data",
             "type": "string"
+        },
+        {
+            "name": "logLevel",
+            "baseName": "logLevel",
+            "type": "LogStdoutResponseAllOfStdoutLogLevelEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -34,3 +40,6 @@ export class LogStdoutResponseAllOfStdout {
     }
 }
 
+
+export type LogStdoutResponseAllOfStdoutLogLevelEnum = 'error' | 'warn' | 'info' | 'debug';
+export const LogStdoutResponseAllOfStdoutLogLevelEnumValues: string[] = ['error', 'warn', 'info', 'debug'];

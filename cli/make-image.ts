@@ -35,6 +35,7 @@ export async function upload(opts: {
     category: string | undefined,
     boundingBoxes: ExportInputBoundingBox[] | undefined,
     metadata: { [k: string]: string } | undefined,
+    addDateId: boolean,
 }) {
     if (opts.buffer.length > 100 * 1024 * 1024) {
         throw new Error('File too large, max. size is 100MB');
@@ -63,6 +64,9 @@ export async function upload(opts: {
     }
     if (opts.metadata) {
         headers['x-metadata'] = JSON.stringify(opts.metadata);
+    }
+    if (opts.addDateId) {
+        headers['x-add-date-id'] = '1';
     }
 
     let agent = opts.config.endpoints.internal.ingestion.indexOf('https:') === 0 ?

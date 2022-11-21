@@ -135,6 +135,7 @@ export * from './dspFeatureImportanceResponseAllOfLabels';
 export * from './dspFeatureLabelsResponse';
 export * from './dspFeatureLabelsResponseAllOf';
 export * from './dspRunGraph';
+export * from './dspRunGraphAxisLabels';
 export * from './dspRunRequestWithoutFeatures';
 export * from './dspRunRequestWithoutFeaturesReadOnly';
 export * from './dspRunResponse';
@@ -322,6 +323,7 @@ export * from './listSamplesResponseAllOf';
 export * from './listVersionsResponse';
 export * from './listVersionsResponseAllOf';
 export * from './listVersionsResponseAllOfBucket';
+export * from './listVersionsResponseAllOfCustomLearnBlocks';
 export * from './listVersionsResponseAllOfVersions';
 export * from './logStdoutResponse';
 export * from './logStdoutResponseAllOf';
@@ -693,6 +695,7 @@ import { DspFeatureImportanceResponseAllOfLabels } from './dspFeatureImportanceR
 import { DspFeatureLabelsResponse } from './dspFeatureLabelsResponse';
 import { DspFeatureLabelsResponseAllOf } from './dspFeatureLabelsResponseAllOf';
 import { DspRunGraph } from './dspRunGraph';
+import { DspRunGraphAxisLabels } from './dspRunGraphAxisLabels';
 import { DspRunRequestWithoutFeatures } from './dspRunRequestWithoutFeatures';
 import { DspRunRequestWithoutFeaturesReadOnly } from './dspRunRequestWithoutFeaturesReadOnly';
 import { DspRunResponse } from './dspRunResponse';
@@ -880,6 +883,7 @@ import { ListSamplesResponseAllOf } from './listSamplesResponseAllOf';
 import { ListVersionsResponse } from './listVersionsResponse';
 import { ListVersionsResponseAllOf } from './listVersionsResponseAllOf';
 import { ListVersionsResponseAllOfBucket } from './listVersionsResponseAllOfBucket';
+import { ListVersionsResponseAllOfCustomLearnBlocks } from './listVersionsResponseAllOfCustomLearnBlocks';
 import { ListVersionsResponseAllOfVersions } from './listVersionsResponseAllOfVersions';
 import { LogStdoutResponse } from './logStdoutResponse';
 import { LogStdoutResponseAllOf } from './logStdoutResponseAllOf';
@@ -1172,6 +1176,7 @@ let enumsMap: {[index: string]: any} = {
     "LearnBlockType": "LearnBlockType",
     "ListApiKeysResponseAllOfApiKeysRoleEnum": "ListApiKeysResponseAllOfApiKeysRoleEnum",
     "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum",
+    "LogStdoutResponseAllOfStdoutLogLevelEnum": "LogStdoutResponseAllOfStdoutLogLevelEnum",
     "MoveRawDataRequestNewCategoryEnum": "MoveRawDataRequestNewCategoryEnum",
     "ObjectDetectionAutoLabelRequestNeuralNetworkEnum": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum",
     "ObjectDetectionLastLayer": "ObjectDetectionLastLayer",
@@ -1220,6 +1225,7 @@ let enumsMap: {[index: string]: any} = {
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
     "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
+    "TransferLearningModelBlockTypeEnum": "TransferLearningModelBlockTypeEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
     "UpdateOrganizationDeployBlockRequestCategoryEnum": "UpdateOrganizationDeployBlockRequestCategoryEnum",
     "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum": "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum",
@@ -1365,6 +1371,7 @@ let typeMap: {[index: string]: any} = {
     "DspFeatureLabelsResponse": DspFeatureLabelsResponse,
     "DspFeatureLabelsResponseAllOf": DspFeatureLabelsResponseAllOf,
     "DspRunGraph": DspRunGraph,
+    "DspRunGraphAxisLabels": DspRunGraphAxisLabels,
     "DspRunRequestWithoutFeatures": DspRunRequestWithoutFeatures,
     "DspRunRequestWithoutFeaturesReadOnly": DspRunRequestWithoutFeaturesReadOnly,
     "DspRunResponse": DspRunResponse,
@@ -1549,6 +1556,7 @@ let typeMap: {[index: string]: any} = {
     "ListVersionsResponse": ListVersionsResponse,
     "ListVersionsResponseAllOf": ListVersionsResponseAllOf,
     "ListVersionsResponseAllOfBucket": ListVersionsResponseAllOfBucket,
+    "ListVersionsResponseAllOfCustomLearnBlocks": ListVersionsResponseAllOfCustomLearnBlocks,
     "ListVersionsResponseAllOfVersions": ListVersionsResponseAllOfVersions,
     "LogStdoutResponse": LogStdoutResponse,
     "LogStdoutResponseAllOf": LogStdoutResponseAllOf,

@@ -24,6 +24,7 @@ import {
     UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio';
 import { ips } from './get-ips';
+import { spawnHelper } from './spawn-helper';
 
 const version = getCliVersion();
 
@@ -44,6 +45,7 @@ export type BlockConfigItem = {
     type: 'transferLearning',
     tlOperatesOn?: OrganizationTransferLearningBlockOperatesOnEnum,
     tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
+    repositoryUrl?: string;
 } | {
     type: 'deploy',
     deployCategory?: 'library' | 'firmware',
@@ -568,11 +570,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         value: 'audio'
                     },
                     {
-                        name: 'Other (classification)',
+                        name: 'Classification',
                         value: 'other'
                     },
                     {
-                        name: 'Other (regression)',
+                        name: 'Regression',
                         value: 'regression'
                     },
                 ],
@@ -888,6 +890,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         }
                     }
 
+                    let repoUrl = await guessRepoUrl();
+
                     const newBlockObject: AddOrganizationTransferLearningBlockRequest = {
                         name: blockName,
                         description: blockDescription,
@@ -895,6 +899,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         objectDetectionLastLayer:
                             <ObjectDetectionLastLayer>currentBlockConfig.tlObjectDetectionLastLayer,
                         operatesOn: currentBlockConfig.tlOperatesOn || 'image',
+                        repositoryUrl: repoUrl,
                         implementationVersion,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
@@ -1012,7 +1017,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             console.log(`Uploading block '${currentBlockConfig.name}' to organization '${organizationName}' OK`);
             console.log('');
 
-            console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}'...`);
+            console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${currentBlockConfig.name}'...`);
 
             await config.api.runJobUntilCompletion({
                 type: 'organization',
@@ -1026,7 +1031,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
             pushingBlockJobId = undefined;
 
-            console.log(`Building ${currentBlockConfig.type} block '${currentBlockConfig.name}' OK`);
+            console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${currentBlockConfig.name}' OK`);
             console.log('');
 
             if (currentBlockConfig.type === 'transform') {
@@ -1309,7 +1314,7 @@ function spinner() {
 
 function blockTypeToString(blockType: UploadCustomBlockRequestTypeEnum): string {
     if (blockType === 'transferLearning') {
-        return 'learning';
+        return 'machine learning';
     }
 
     return blockType;
@@ -1330,4 +1335,32 @@ function getConfigForHost(config: BlockConfigV1, host: string) {
     }
 
     return undefined;
+}
+
+async function guessRepoUrl() {
+    // try and
+    try {
+        let gitOutput = await spawnHelper('git', [ 'remote', '-v' ], {
+            cwd: process.cwd(),
+            ignoreErrors: false,
+        });
+
+        let line = gitOutput.split('\n').find(x => x.startsWith('origin') && x.indexOf('fetch') > -1);
+        if (line) {
+            let urlPart = line.split(/\s+/)[1];
+            if (urlPart.startsWith('git@')) {
+                urlPart = urlPart.replace(':', '/');
+                urlPart = urlPart.replace('git@', 'https://');
+            }
+            if (urlPart.endsWith('.git')) {
+                urlPart = urlPart.slice(0, urlPart.length - 4);
+            }
+            return urlPart;
+        }
+
+        return undefined;
+    }
+    catch (ex) {
+        return undefined;
+    }
 }

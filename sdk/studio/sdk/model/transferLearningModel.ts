@@ -28,6 +28,9 @@ export class TransferLearningModel {
     'learnBlockType'?: LearnBlockType;
     'organizationModelId'?: number;
     'implementationVersion'?: number;
+    'repositoryUrl'?: string;
+    'author': string;
+    'blockType': TransferLearningModelBlockTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -101,6 +104,21 @@ export class TransferLearningModel {
             "name": "implementationVersion",
             "baseName": "implementationVersion",
             "type": "number"
+        },
+        {
+            "name": "repositoryUrl",
+            "baseName": "repositoryUrl",
+            "type": "string"
+        },
+        {
+            "name": "author",
+            "baseName": "author",
+            "type": "string"
+        },
+        {
+            "name": "blockType",
+            "baseName": "blockType",
+            "type": "TransferLearningModelBlockTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -108,3 +126,6 @@ export class TransferLearningModel {
     }
 }
 
+
+export type TransferLearningModelBlockTypeEnum = 'official' | 'personal' | 'enterprise' | 'community';
+export const TransferLearningModelBlockTypeEnumValues: string[] = ['official', 'personal', 'enterprise', 'community'];

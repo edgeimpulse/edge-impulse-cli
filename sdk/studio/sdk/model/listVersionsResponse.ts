@@ -12,6 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ListVersionsResponseAllOf } from './listVersionsResponseAllOf';
+import { ListVersionsResponseAllOfCustomLearnBlocks } from './listVersionsResponseAllOfCustomLearnBlocks';
 import { ListVersionsResponseAllOfVersions } from './listVersionsResponseAllOfVersions';
 
 export class ListVersionsResponse {
@@ -23,8 +24,12 @@ export class ListVersionsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'nextVersion'?: number;
-    'versions'?: Array<ListVersionsResponseAllOfVersions>;
+    'nextVersion': number;
+    'versions': Array<ListVersionsResponseAllOfVersions>;
+    /**
+    * If you have any custom learn blocks (e.g. blocks you pushed through Bring Your Own Model), then these are listed here. We use these to show a warning in the UI that these blocks will also be available in a public version.
+    */
+    'customLearnBlocks': Array<ListVersionsResponseAllOfCustomLearnBlocks>;
 
     static discriminator: string | undefined = undefined;
 
@@ -48,6 +53,11 @@ export class ListVersionsResponse {
             "name": "versions",
             "baseName": "versions",
             "type": "Array<ListVersionsResponseAllOfVersions>"
+        },
+        {
+            "name": "customLearnBlocks",
+            "baseName": "customLearnBlocks",
+            "type": "Array<ListVersionsResponseAllOfCustomLearnBlocks>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -16,7 +16,8 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
     'image': Array<TransferLearningModel>;
     'objectDetection': Array<TransferLearningModel>;
     'kws': Array<TransferLearningModel>;
-    'other': Array<TransferLearningModel>;
+    'regression': Array<TransferLearningModel>;
+    'classification': Array<TransferLearningModel>;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,8 +38,13 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
             "type": "Array<TransferLearningModel>"
         },
         {
-            "name": "other",
-            "baseName": "other",
+            "name": "regression",
+            "baseName": "regression",
+            "type": "Array<TransferLearningModel>"
+        },
+        {
+            "name": "classification",
+            "baseName": "classification",
             "type": "Array<TransferLearningModel>"
         }    ];
 

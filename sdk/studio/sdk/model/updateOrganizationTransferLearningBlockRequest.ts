@@ -19,6 +19,18 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     'operatesOn'?: UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'implementationVersion'?: number;
+    /**
+    * Whether this block is publicly available to Edge Impulse users (if false, then only for members of the owning organization)
+    */
+    'isPublic'?: boolean;
+    /**
+    * If `isPublic` is true, the list of devices (from latencyDevices) for which this model can be shown.
+    */
+    'isPublicForDevices'?: Array<string>;
+    /**
+    * URL to the source code of this custom learn block.
+    */
+    'repositoryUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,6 +64,21 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "name": "implementationVersion",
             "baseName": "implementationVersion",
             "type": "number"
+        },
+        {
+            "name": "isPublic",
+            "baseName": "isPublic",
+            "type": "boolean"
+        },
+        {
+            "name": "isPublicForDevices",
+            "baseName": "isPublicForDevices",
+            "type": "Array<string>"
+        },
+        {
+            "name": "repositoryUrl",
+            "baseName": "repositoryUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

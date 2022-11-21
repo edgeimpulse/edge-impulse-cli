@@ -316,6 +316,7 @@ const cliOptions = {
                     label: file.label,
                     boundingBoxes: boundingBoxes,
                     metadata: file.metadata,
+                    addDateId: false,
                 });
 
                 let ix = ++fileIx;

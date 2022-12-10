@@ -589,4 +589,83 @@ export class UploadPortalApi {
             });
         });
     }
+    /**
+     * View a file that\'s located in an upload portal (requires JWT auth). Will return a signed URL to the bucket.
+     * @summary View file from portal
+     * @param portalId Portal ID
+     * @param path Path to file in portal
+     */
+    public async viewPortalFile (portalId: number, path: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+        const localVarPath = this.basePath + '/api/portals/{portalId}/files/view'
+            .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'portalId' is not null or undefined
+        if (portalId === null || portalId === undefined) {
+            throw new Error('Required parameter portalId was null or undefined when calling viewPortalFile.');
+        }
+
+        // verify required parameter 'path' is not null or undefined
+        if (path === null || path === undefined) {
+            throw new Error('Required parameter path was null or undefined when calling viewPortalFile.');
+        }
+
+        if (path !== undefined) {
+            localVarQueryParameters['path'] = ObjectSerializer.serialize(path, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<any>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
 }

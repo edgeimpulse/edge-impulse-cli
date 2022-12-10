@@ -14,6 +14,10 @@ import { LogStdoutResponseAllOfStdout } from './logStdoutResponseAllOfStdout';
 
 export class LogStdoutResponseAllOf {
     'stdout': Array<LogStdoutResponseAllOfStdout>;
+    /**
+    * Total number of logs (only the last 1000 lines are returned)
+    */
+    'totalCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -22,6 +26,11 @@ export class LogStdoutResponseAllOf {
             "name": "stdout",
             "baseName": "stdout",
             "type": "Array<LogStdoutResponseAllOfStdout>"
+        },
+        {
+            "name": "totalCount",
+            "baseName": "totalCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

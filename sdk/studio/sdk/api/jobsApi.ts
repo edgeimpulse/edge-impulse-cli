@@ -191,7 +191,7 @@ export class JobsApi {
      * Generate code to run the impulse on an embedded device. When this step is complete use `downloadBuild` to download the artefacts.  Updates are streamed over the websocket API.
      * @summary Build on-device model
      * @param projectId Project ID
-     * @param type Output format
+     * @param type The name of the built target. You can find this by listing all deployment targets through &#x60;listDeploymentTargetsForProject&#x60; (via &#x60;GET /v1/api/{projectId}/deployment/targets&#x60;) and see the &#x60;format&#x60; type.
      * @param buildOnDeviceModelRequest 
      */
     public async buildOnDeviceModelJob (projectId: number, type: string, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {

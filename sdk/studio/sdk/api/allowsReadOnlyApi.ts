@@ -517,7 +517,7 @@ export class AllowsReadOnlyApi {
      * Download the build artefacts for a project
      * @summary Download
      * @param projectId Project ID
-     * @param type Output format
+     * @param type The name of the built target. You can find this by listing all deployment targets through &#x60;listDeploymentTargetsForProject&#x60; (via &#x60;GET /v1/api/{projectId}/deployment/targets&#x60;) and see the &#x60;format&#x60; type.
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      */

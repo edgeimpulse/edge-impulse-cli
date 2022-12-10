@@ -23,6 +23,10 @@ export class ListOrganizationDataResponseAllOfData {
     'totalFileSize': number;
     'created': Date;
     'metadata': { [key: string]: string; };
+    /**
+    * String that\'s passed in to a transformation block in `--metadata` (the metadata + a `dataItemInfo` object)
+    */
+    'metadataStringForCLI': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -81,6 +85,11 @@ export class ListOrganizationDataResponseAllOfData {
             "name": "metadata",
             "baseName": "metadata",
             "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "metadataStringForCLI",
+            "baseName": "metadataStringForCLI",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

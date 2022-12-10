@@ -364,7 +364,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 allowDuplicates: false,
                 apiKey: this._deviceConfig.upload.apiKey,
                 buffer: jpegImageData.data,
-                category: s.path.indexOf('training') ? 'training' : 'testing',
+                category: s.path.indexOf('training') > -1 ? 'training' : 'testing',
                 config: this._config,
                 label: { label: s.label, type: 'label' },
                 boundingBoxes: undefined,
@@ -660,7 +660,7 @@ async function serial_connect() {
         let ex = <Error>ex2;
         console.error(SERIAL_PREFIX, 'Failed to connect to', serial.getPath(),
             'retrying in 5 seconds', ex.message || ex);
-        if (ex.message && ex.message.indexOf('Permission denied')) {
+        if (ex.message && ex.message.indexOf('Permission denied') > -1) {
             console.error(SERIAL_PREFIX, 'You might need `sudo` or set up the right udev rules');
         }
         setTimeout(serial_connect, 5000);

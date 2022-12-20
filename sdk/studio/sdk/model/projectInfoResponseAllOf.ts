@@ -66,6 +66,10 @@ export class ProjectInfoResponseAllOf {
     */
     'exportJobNotificationUids': Array<number>;
     'hasNewTrainingData': boolean;
+    /**
+    * Config file specifying how to process CSV files.
+    */
+    'csvImportConfig'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -184,6 +188,11 @@ export class ProjectInfoResponseAllOf {
             "name": "hasNewTrainingData",
             "baseName": "hasNewTrainingData",
             "type": "boolean"
+        },
+        {
+            "name": "csvImportConfig",
+            "baseName": "csvImportConfig",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

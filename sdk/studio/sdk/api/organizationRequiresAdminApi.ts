@@ -21,6 +21,7 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { AddMemberRequest } from '../model/addMemberRequest';
 import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequest';
+import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { InviteOrganizationMemberRequest } from '../model/inviteOrganizationMemberRequest';
 import { RemoveMemberRequest } from '../model/removeMemberRequest';
@@ -29,6 +30,7 @@ import { SetMemberRoleRequest } from '../model/setMemberRoleRequest';
 import { UpdateOrganizationBucketRequest } from '../model/updateOrganizationBucketRequest';
 import { UpdateOrganizationRequest } from '../model/updateOrganizationRequest';
 import { UploadAssetResponse } from '../model/uploadAssetResponse';
+import { WhitelabelAdminCreateOrganizationRequest } from '../model/whitelabelAdminCreateOrganizationRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -1256,6 +1258,90 @@ export class OrganizationRequiresAdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "UploadAssetResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Create a new organization. This is an internal API only available to white label admins
+     * @summary Create new organization within white label context
+     * @param organizationId Organization ID
+     * @param whitelabelAdminCreateOrganizationRequest 
+     */
+    public async whitelabelAdminCreateOrganization (organizationId: number, whitelabelAdminCreateOrganizationRequest: WhitelabelAdminCreateOrganizationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateOrganizationResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminCreateOrganization.');
+        }
+
+        // verify required parameter 'whitelabelAdminCreateOrganizationRequest' is not null or undefined
+        if (whitelabelAdminCreateOrganizationRequest === null || whitelabelAdminCreateOrganizationRequest === undefined) {
+            throw new Error('Required parameter whitelabelAdminCreateOrganizationRequest was null or undefined when calling whitelabelAdminCreateOrganization.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(whitelabelAdminCreateOrganizationRequest, "WhitelabelAdminCreateOrganizationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateOrganizationResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateOrganizationResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

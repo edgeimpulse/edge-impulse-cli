@@ -15,5 +15,5 @@
 * The type of learning block (anomaly, keras, keras-transfer-image, keras-transfer-kws, keras-object-detection, keras-regression). Each behaves differently.
 */
 
-export type LearnBlockType = 'anomaly' | 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression' | 'keras-akida' | 'keras-akida-transfer-image';
-export const LearnBlockTypeValues: string[] = ['anomaly', 'keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression', 'keras-akida', 'keras-akida-transfer-image'];
+export type LearnBlockType = 'anomaly' | 'keras' | 'keras-transfer-image' | 'keras-transfer-kws' | 'keras-object-detection' | 'keras-regression' | 'keras-akida' | 'keras-akida-transfer-image' | 'keras-akida-object-detection';
+export const LearnBlockTypeValues: string[] = ['anomaly', 'keras', 'keras-transfer-image', 'keras-transfer-kws', 'keras-object-detection', 'keras-regression', 'keras-akida', 'keras-akida-transfer-image', 'keras-akida-object-detection'];

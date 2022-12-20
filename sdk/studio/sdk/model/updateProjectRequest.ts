@@ -95,6 +95,10 @@ export class UpdateProjectRequest {
     * The IDs of users who should be notified when an export job is finished.
     */
     'exportJobNotificationUids'?: Array<number>;
+    /**
+    * Config file specifying how to process CSV files.
+    */
+    'csvImportConfig'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -213,6 +217,11 @@ export class UpdateProjectRequest {
             "name": "exportJobNotificationUids",
             "baseName": "exportJobNotificationUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "csvImportConfig",
+            "baseName": "csvImportConfig",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

@@ -3216,8 +3216,9 @@ export class OrganizationAllowDeveloperProfileApi {
      * @summary Run pipelines
      * @param organizationId Organization ID
      * @param pipelineId Pipeline ID
+     * @param ignoreLastSuccessfulRun If set then &#x60;EI_LAST_SUCCESSFUL_RUN&#x60; is not set. You can use this to re-run a pipeline from scratch.
      */
-    public async runOrganizationPipeline (organizationId: number, pipelineId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
+    public async runOrganizationPipeline (organizationId: number, pipelineId: number, ignoreLastSuccessfulRun?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}/run'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -3240,6 +3241,10 @@ export class OrganizationAllowDeveloperProfileApi {
         // verify required parameter 'pipelineId' is not null or undefined
         if (pipelineId === null || pipelineId === undefined) {
             throw new Error('Required parameter pipelineId was null or undefined when calling runOrganizationPipeline.');
+        }
+
+        if (ignoreLastSuccessfulRun !== undefined) {
+            localVarQueryParameters['ignoreLastSuccessfulRun'] = ObjectSerializer.serialize(ignoreLastSuccessfulRun, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

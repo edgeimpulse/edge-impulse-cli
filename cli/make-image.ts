@@ -19,6 +19,7 @@ export const EXTENSION_MAPPING: { [k: string]: string } = {
     '.jpeg': 'image/jpeg',
     '.png': 'image/png',
     '.csv': 'text/csv',
+    '.txt': 'text/plain',
     '.mp4': 'video/mp4',
     '.avi': 'video/avi',
 };

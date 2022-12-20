@@ -552,6 +552,7 @@ export * from './verifyOrganizationBucketResponseAllOf';
 export * from './verifyOrganizationBucketResponseAllOfFiles';
 export * from './verifyResetPasswordRequest';
 export * from './whitelabel';
+export * from './whitelabelAdminCreateOrganizationRequest';
 export * from './windowSettingsResponse';
 export * from './windowSettingsResponseAllOf';
 export * from './windowSettingsResponseAllOfWindowSettings';
@@ -1112,6 +1113,7 @@ import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucke
 import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 import { VerifyResetPasswordRequest } from './verifyResetPasswordRequest';
 import { Whitelabel } from './whitelabel';
+import { WhitelabelAdminCreateOrganizationRequest } from './whitelabelAdminCreateOrganizationRequest';
 import { WindowSettingsResponse } from './windowSettingsResponse';
 import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
 import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
@@ -1784,6 +1786,7 @@ let typeMap: {[index: string]: any} = {
     "VerifyOrganizationBucketResponseAllOfFiles": VerifyOrganizationBucketResponseAllOfFiles,
     "VerifyResetPasswordRequest": VerifyResetPasswordRequest,
     "Whitelabel": Whitelabel,
+    "WhitelabelAdminCreateOrganizationRequest": WhitelabelAdminCreateOrganizationRequest,
     "WindowSettingsResponse": WindowSettingsResponse,
     "WindowSettingsResponseAllOf": WindowSettingsResponseAllOf,
     "WindowSettingsResponseAllOfWindowSettings": WindowSettingsResponseAllOfWindowSettings,

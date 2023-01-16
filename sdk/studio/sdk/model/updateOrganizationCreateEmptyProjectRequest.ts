@@ -16,6 +16,10 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
     * The name of the project.
     */
     'projectName': string;
+    /**
+    * The username or email of the owner of the project. This field is mandatory when authenticating via API key. If no email is provided when authenticating via JWT, the user ID attached to the JWT will be user as project owner.
+    */
+    'projectOwnerUsernameOrEmail'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,6 +27,11 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
         {
             "name": "projectName",
             "baseName": "projectName",
+            "type": "string"
+        },
+        {
+            "name": "projectOwnerUsernameOrEmail",
+            "baseName": "projectOwnerUsernameOrEmail",
             "type": "string"
         }    ];
 

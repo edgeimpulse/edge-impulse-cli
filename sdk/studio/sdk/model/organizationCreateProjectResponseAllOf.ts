@@ -12,7 +12,14 @@
 
 
 export class OrganizationCreateProjectResponseAllOf {
-    'createProjectId'?: number;
+    /**
+    * Project ID for the new project
+    */
+    'createProjectId': number;
+    /**
+    * API key for the new project
+    */
+    'apiKey': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,6 +28,11 @@ export class OrganizationCreateProjectResponseAllOf {
             "name": "createProjectId",
             "baseName": "createProjectId",
             "type": "number"
+        },
+        {
+            "name": "apiKey",
+            "baseName": "apiKey",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

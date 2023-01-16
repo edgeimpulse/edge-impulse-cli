@@ -7,7 +7,7 @@ import asyncpool from 'tiny-async-pool';
 import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
-import { ExportBoundingBoxesFile, parseBoundingBoxLabels } from '../shared/bounding-box-file-types';
+import { ExportBoundingBoxesFile, ExportInputBoundingBox, parseBoundingBoxLabels, parseUploaderInfo } from '../shared/bounding-box-file-types';
 import { FSHelpers } from './fs-helpers';
 
 type UploaderFileType = {
@@ -15,17 +15,8 @@ type UploaderFileType = {
     category: string,
     label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
     metadata: { [k: string]: string } | undefined,
+    boundingBoxes: ExportInputBoundingBox[] | undefined,
 };
-
-interface InfoFileV1 {
-    version: 1;
-    files: {
-        path: string,
-        category: string,
-        label: { type: 'unlabeled' } | { type: 'label', label: string },
-        metadata: { [k: string]: string } | undefined,
-    }[];
-}
 
 const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
@@ -55,6 +46,8 @@ const infoFileArgvIx = process.argv.indexOf('--info-file');
 const infoFileArgv = infoFileArgvIx !== -1 ? process.argv[infoFileArgvIx + 1] : undefined;
 const metadataArgvIx = process.argv.indexOf('--metadata');
 const metadataArgv = metadataArgvIx !== -1 ? process.argv[metadataArgvIx + 1] : undefined;
+const directoryArgvIx = process.argv.indexOf('--directory');
+const directoryArgv = directoryArgvIx !== -1 ? process.argv[directoryArgvIx + 1] : undefined;
 
 let configFactory: Config;
 
@@ -142,27 +135,53 @@ const cliOptions = {
 
         if (infoFileArgv) {
             try {
-                let infoFile = <InfoFileV1>JSON.parse(<string>await fs.promises.readFile(infoFileArgv, 'utf-8'));
-                if (infoFile.version !== 1) {
-                    throw new Error('Invalid version, expected "1"');
-                }
-                if (!Array.isArray(infoFile.files)) {
-                    throw new Error('Invalid files, expected an array');
-                }
-
+                let infoFile = parseUploaderInfo(<string>await fs.promises.readFile(infoFileArgv, 'utf-8'));
                 files = [];
                 for (let f of infoFile.files) {
+                    if (!Path.isAbsolute(f.path)) {
+                        f.path = Path.join(Path.dirname(infoFileArgv), f.path);
+                    }
+
                     files.push({
                         category: f.category,
                         label: f.label,
                         path: f.path,
                         metadata: f.metadata,
+                        boundingBoxes: f.boundingBoxes,
                     });
                 }
             }
             catch (ex2) {
                 console.error('Failed to parse --info-file', ex2);
                 process.exit(1);
+            }
+        }
+        else if (directoryArgv) {
+            const dir = await fs.promises.realpath(directoryArgv);
+            let dirs = await fs.promises.readdir(dir);
+            if (!dirs.find(x => x === 'training')) {
+                throw new Error(`Cannot find a "training" directory in ${dir} (via --directory)`);
+            }
+            if (!dirs.find(x => x === 'testing')) {
+                throw new Error(`Cannot find a "testing" directory in ${dir} (via --directory)`);
+            }
+
+            files = [];
+
+            for (let c of [ 'training', 'testing' ]) {
+                for (let f of await fs.promises.readdir(Path.join(dir, c))) {
+                    let fullPath = Path.join(dir, c, f);
+
+                    if (f.startsWith('.')) continue;
+
+                    files.push({
+                        category: c,
+                        label: { type: 'infer' },
+                        path: fullPath,
+                        metadata: { },
+                        boundingBoxes: [],
+                    });
+                }
             }
         }
         else {
@@ -234,6 +253,7 @@ const cliOptions = {
                             category: 'split',
                             label: { type: 'label', label: categoryFolder.replace('.class', '') },
                             metadata: metadata,
+                            boundingBoxes: undefined,
                         });
                     }
                 }
@@ -261,6 +281,7 @@ const cliOptions = {
                             label: labelArgv
                         } : { type: 'infer' },
                         metadata: metadata,
+                        boundingBoxes: undefined,
                     };
                 });
             }
@@ -300,9 +321,12 @@ const cliOptions = {
 
         const processFile = async (file: UploaderFileType) => {
             const boundingBoxesFile = boundingBoxCache[Path.resolve(Path.dirname(file.path))];
-            const boundingBoxes = boundingBoxesFile ?
+            let boundingBoxes = boundingBoxesFile ?
                 (boundingBoxesFile.boundingBoxes[Path.basename(file.path)] || undefined) :
                 undefined;
+            if (!boundingBoxes && file.boundingBoxes) {
+                boundingBoxes = file.boundingBoxes;
+            }
 
             try {
                 let hrstart = Date.now();

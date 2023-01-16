@@ -22,6 +22,7 @@ import http = require('http');
 import { AutotuneDspRequest } from '../model/autotuneDspRequest';
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
 import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
+import { DeployPretrainedModelRequest } from '../model/deployPretrainedModelRequest';
 import { ExportOriginalDataRequest } from '../model/exportOriginalDataRequest';
 import { ExportWavDataRequest } from '../model/exportWavDataRequest';
 import { GenerateFeaturesRequest } from '../model/generateFeaturesRequest';
@@ -1729,6 +1730,90 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Takes in a TFLite file and builds the model and SDK. Updates are streamed over the websocket API (or can be retrieved through the /stdout endpoint). Use getProfileTfliteJobResult to get the results when the job is completed.
+     * @summary Deploy pretrained model
+     * @param projectId Project ID
+     * @param deployPretrainedModelRequest 
+     */
+    public async startDeployPretrainedModelJob (projectId: number, deployPretrainedModelRequest: DeployPretrainedModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/deploy-pretrained-model'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling startDeployPretrainedModelJob.');
+        }
+
+        // verify required parameter 'deployPretrainedModelRequest' is not null or undefined
+        if (deployPretrainedModelRequest === null || deployPretrainedModelRequest === undefined) {
+            throw new Error('Required parameter deployPretrainedModelRequest was null or undefined when calling startDeployPretrainedModelJob.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(deployPretrainedModelRequest, "DeployPretrainedModelRequest")
         };
 
         let authenticationPromise = Promise.resolve();

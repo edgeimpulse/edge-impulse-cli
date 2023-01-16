@@ -110,6 +110,14 @@ export * from './datasetRatioData';
 export * from './datasetRatioDataRatio';
 export * from './deletePortalFileRequest';
 export * from './dependencyData';
+export * from './deployPretrainedModelInputImage';
+export * from './deployPretrainedModelInputNone';
+export * from './deployPretrainedModelInputTimeSeries';
+export * from './deployPretrainedModelModelClassification';
+export * from './deployPretrainedModelModelObjectDetection';
+export * from './deployPretrainedModelModelRegression';
+export * from './deployPretrainedModelRequest';
+export * from './deployPretrainedModelRequestModelInfo';
 export * from './deploymentTarget';
 export * from './deploymentTargetBadge';
 export * from './deploymentTargetEngine';
@@ -671,6 +679,14 @@ import { DatasetRatioData } from './datasetRatioData';
 import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DependencyData } from './dependencyData';
+import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputImage';
+import { DeployPretrainedModelInputNone } from './deployPretrainedModelInputNone';
+import { DeployPretrainedModelInputTimeSeries } from './deployPretrainedModelInputTimeSeries';
+import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
+import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
+import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
+import { DeployPretrainedModelRequest } from './deployPretrainedModelRequest';
+import { DeployPretrainedModelRequestModelInfo } from './deployPretrainedModelRequestModelInfo';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
@@ -1149,6 +1165,13 @@ let enumsMap: {[index: string]: any} = {
     "DataExplorerPredictionsResponseAllOfClassificationTypeEnum": "DataExplorerPredictionsResponseAllOfClassificationTypeEnum",
     "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
     "DataExplorerSettingsDimensionalityReductionTechniqueEnum": "DataExplorerSettingsDimensionalityReductionTechniqueEnum",
+    "DeployPretrainedModelInputImageInputTypeEnum": "DeployPretrainedModelInputImageInputTypeEnum",
+    "DeployPretrainedModelInputNoneInputTypeEnum": "DeployPretrainedModelInputNoneInputTypeEnum",
+    "DeployPretrainedModelInputTimeSeriesInputTypeEnum": "DeployPretrainedModelInputTimeSeriesInputTypeEnum",
+    "DeployPretrainedModelModelClassificationModelTypeEnum": "DeployPretrainedModelModelClassificationModelTypeEnum",
+    "DeployPretrainedModelModelObjectDetectionModelTypeEnum": "DeployPretrainedModelModelObjectDetectionModelTypeEnum",
+    "DeployPretrainedModelModelRegressionModelTypeEnum": "DeployPretrainedModelModelRegressionModelTypeEnum",
+    "DeployPretrainedModelRequestModelFileTypeEnum": "DeployPretrainedModelRequestModelFileTypeEnum",
     "DeploymentTargetUiSectionEnum": "DeploymentTargetUiSectionEnum",
     "DeploymentTargetEngine": "DeploymentTargetEngine",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
@@ -1349,6 +1372,14 @@ let typeMap: {[index: string]: any} = {
     "DatasetRatioDataRatio": DatasetRatioDataRatio,
     "DeletePortalFileRequest": DeletePortalFileRequest,
     "DependencyData": DependencyData,
+    "DeployPretrainedModelInputImage": DeployPretrainedModelInputImage,
+    "DeployPretrainedModelInputNone": DeployPretrainedModelInputNone,
+    "DeployPretrainedModelInputTimeSeries": DeployPretrainedModelInputTimeSeries,
+    "DeployPretrainedModelModelClassification": DeployPretrainedModelModelClassification,
+    "DeployPretrainedModelModelObjectDetection": DeployPretrainedModelModelObjectDetection,
+    "DeployPretrainedModelModelRegression": DeployPretrainedModelModelRegression,
+    "DeployPretrainedModelRequest": DeployPretrainedModelRequest,
+    "DeployPretrainedModelRequestModelInfo": DeployPretrainedModelRequestModelInfo,
     "DeploymentTarget": DeploymentTarget,
     "DeploymentTargetBadge": DeploymentTargetBadge,
     "DeploymentTargetsResponse": DeploymentTargetsResponse,

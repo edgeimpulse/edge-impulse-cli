@@ -770,8 +770,10 @@ export class ProjectsApi {
      * Get a list of axes that are present in the training data.
      * @summary Get data axes summary
      * @param projectId Project ID
+     * @param includeDisabled Whether to include disabled samples. Defaults to true
+     * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
      */
-    public async getProjectDataAxesSummary (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataAxesSummaryResponse> {
+    public async getProjectDataAxesSummary (projectId: number, includeDisabled?: boolean, includeNotProcessed?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataAxesSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-axes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -788,6 +790,14 @@ export class ProjectsApi {
         // verify required parameter 'projectId' is not null or undefined
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getProjectDataAxesSummary.');
+        }
+
+        if (includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "boolean");
+        }
+
+        if (includeNotProcessed !== undefined) {
+            localVarQueryParameters['includeNotProcessed'] = ObjectSerializer.serialize(includeNotProcessed, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

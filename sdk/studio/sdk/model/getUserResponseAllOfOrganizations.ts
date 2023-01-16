@@ -20,6 +20,10 @@ export class GetUserResponseAllOfOrganizations {
     * Unique identifier of the white label this project belongs to, if any.
     */
     'whitelabelId': number | null;
+    /**
+    * Whether the user is admin of this organization or not.
+    */
+    'isAdmin': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -48,6 +52,11 @@ export class GetUserResponseAllOfOrganizations {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "isAdmin",
+            "baseName": "isAdmin",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -43,6 +43,7 @@ export class ProjectInfoResponse {
     'impulse': ProjectInfoResponseAllOfImpulse;
     'devices': Array<Device>;
     'dataSummary': ProjectDataSummary;
+    'dataSummaryFiltered': ProjectDataSummary;
     'dataSummaryPerCategory': ProjectInfoResponseAllOfDataSummaryPerCategory;
     'computeTime': ProjectInfoResponseAllOfComputeTime;
     'acquisitionSettings': ProjectInfoResponseAllOfAcquisitionSettings;
@@ -117,6 +118,11 @@ export class ProjectInfoResponse {
         {
             "name": "dataSummary",
             "baseName": "dataSummary",
+            "type": "ProjectDataSummary"
+        },
+        {
+            "name": "dataSummaryFiltered",
+            "baseName": "dataSummaryFiltered",
             "type": "ProjectDataSummary"
         },
         {

@@ -28,6 +28,11 @@ export class Project {
     'logo'?: string;
     'ownerUserId'?: number;
     'ownerOrganizationId'?: number;
+    /**
+    * URL of the project owner avatar, if any.
+    */
+    'ownerAvatar'?: string;
+    'ownerIsDeveloperProfile': boolean;
     'collaborators': Array<ProjectCollaborator>;
     'labelingMethod': ProjectLabelingMethodEnum;
     /**
@@ -56,6 +61,10 @@ export class Project {
     */
     'license'?: string;
     'tier': ProjectTierEnum;
+    /**
+    * Whether this project has been published or not.
+    */
+    'hasPublicVersion': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -106,6 +115,16 @@ export class Project {
             "type": "number"
         },
         {
+            "name": "ownerAvatar",
+            "baseName": "ownerAvatar",
+            "type": "string"
+        },
+        {
+            "name": "ownerIsDeveloperProfile",
+            "baseName": "ownerIsDeveloperProfile",
+            "type": "boolean"
+        },
+        {
             "name": "collaborators",
             "baseName": "collaborators",
             "type": "Array<ProjectCollaborator>"
@@ -154,6 +173,11 @@ export class Project {
             "name": "tier",
             "baseName": "tier",
             "type": "ProjectTierEnum"
+        },
+        {
+            "name": "hasPublicVersion",
+            "baseName": "hasPublicVersion",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

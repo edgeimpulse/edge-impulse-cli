@@ -11,32 +11,23 @@
  */
 
 
-export class CreateProjectResponseAllOf {
-    /**
-    * Project ID for the new project
-    */
-    'id': number;
-    /**
-    * API key for the new project
-    */
-    'apiKey': string;
+export class DeployPretrainedModelModelRegression {
+    'modelType': DeployPretrainedModelModelRegressionModelTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
-        },
-        {
-            "name": "apiKey",
-            "baseName": "apiKey",
-            "type": "string"
+            "name": "modelType",
+            "baseName": "modelType",
+            "type": "DeployPretrainedModelModelRegressionModelTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateProjectResponseAllOf.attributeTypeMap;
+        return DeployPretrainedModelModelRegression.attributeTypeMap;
     }
 }
 
+
+export type DeployPretrainedModelModelRegressionModelTypeEnum = 'regression';
+export const DeployPretrainedModelModelRegressionModelTypeEnumValues: string[] = ['regression'];

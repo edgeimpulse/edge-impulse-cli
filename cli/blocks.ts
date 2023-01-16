@@ -25,6 +25,7 @@ import {
 } from '../sdk/studio';
 import { ips } from './get-ips';
 import { spawnHelper } from './spawn-helper';
+import { RequestDetailedFile } from '../sdk/studio/sdk/api';
 
 const version = getCliVersion();
 
@@ -72,14 +73,6 @@ type DSPChangedMsg = [string, {
     status: 'success' | 'error' | 'in-progress';
     error?: string;
 }];
-
-interface RequestDetailedFile {
-    value: Buffer;
-    options?: {
-        filename?: string;
-        contentType?: string;
-    };
-}
 
 export type MessageBlock = [
     string,

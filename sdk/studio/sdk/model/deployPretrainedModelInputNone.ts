@@ -11,32 +11,23 @@
  */
 
 
-export class CreateProjectResponseAllOf {
-    /**
-    * Project ID for the new project
-    */
-    'id': number;
-    /**
-    * API key for the new project
-    */
-    'apiKey': string;
+export class DeployPretrainedModelInputNone {
+    'inputType': DeployPretrainedModelInputNoneInputTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
-        },
-        {
-            "name": "apiKey",
-            "baseName": "apiKey",
-            "type": "string"
+            "name": "inputType",
+            "baseName": "inputType",
+            "type": "DeployPretrainedModelInputNoneInputTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateProjectResponseAllOf.attributeTypeMap;
+        return DeployPretrainedModelInputNone.attributeTypeMap;
     }
 }
 
+
+export type DeployPretrainedModelInputNoneInputTypeEnum = 'none';
+export const DeployPretrainedModelInputNoneInputTypeEnumValues: string[] = ['none'];

@@ -1,6 +1,6 @@
 {
   "name": "edge-impulse-cli",
-  "version": "1.16.4",
+  "version": "1.17.0",
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {

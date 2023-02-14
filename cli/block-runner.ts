@@ -605,7 +605,8 @@ export class BlockRunnerTransform extends BlockRunner {
         let fileRes =
             await this._eiConfig.api.organizationData.downloadOrganizationSingleDataItem(
                 this._blockConfig.organizationId,
-                this._dataItem.id
+                this._dataItem.id,
+                { }
             );
 
         await fs.promises.mkdir(path);
@@ -655,7 +656,8 @@ export class BlockRunnerTransform extends BlockRunner {
         let fileListRes = (
             await this._eiConfig.api.organizationData.getOrganizationDataItem(
                 this._blockConfig.organizationId,
-                this._dataItem.id
+                this._dataItem.id,
+                { }
             )
         );
         if (!fileListRes.success || fileListRes.data === undefined) {
@@ -712,7 +714,9 @@ export class BlockRunnerTransform extends BlockRunner {
             await this._eiConfig.api.organizationData.downloadOrganizationDataFile(
                 this._blockConfig.organizationId,
                 this._dataItem.id,
-                filename
+                {
+                    fileName: filename
+                }
             )
         );
 
@@ -735,12 +739,12 @@ export class BlockRunnerTransform extends BlockRunner {
             `name='${dataItemName}'`;
 
         let res = (
-            await config.api.organizationData.listOrganizationData(
-                organizationId,
-                undefined,
-                queryFilter,
-                1
-            )
+            await config.api.organizationData.listOrganizationData(organizationId, {
+                dataset: undefined,
+                filter: queryFilter,
+                limit: 1,
+                offset: 0
+            })
         );
 
         if (!res.success) {
@@ -1106,7 +1110,7 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         // TODO: Might download learning block artifacts here too...
         let deployCheckRes = (
-            await this._eiConfig.api.deployment.getDeployment(this._projectId, "custom")
+            await this._eiConfig.api.deployment.getDeployment(this._projectId, { type: "custom" })
         );
 
         if (!deployCheckRes.hasDeployment) {
@@ -1185,8 +1189,8 @@ export class BlockRunnerDeploy extends BlockRunner {
         let jobStartRes = (
             await this._eiConfig.api.jobs.buildOnDeviceModelJob(
                 projectId,
-                "custom",
-                { engine: "tflite" }
+                { engine: "tflite" },
+                { type: "custom" },
             )
         );
 
@@ -1214,7 +1218,7 @@ export class BlockRunnerDeploy extends BlockRunner {
     ): Promise<void> {
         // download custom block deployment
         let buildArtifacts = (
-            await this._eiConfig.api.deployment.downloadBuild(projectId, "custom")
+            await this._eiConfig.api.deployment.downloadBuild(projectId, { type: "custom" })
         );
         let downloadPath = Path.join(zipFileDir, zipFileName);
 

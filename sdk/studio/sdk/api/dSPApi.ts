@@ -26,11 +26,13 @@ import { DspAutotunerResults } from '../model/dspAutotunerResults';
 import { DspFeatureImportanceResponse } from '../model/dspFeatureImportanceResponse';
 import { DspFeatureLabelsResponse } from '../model/dspFeatureLabelsResponse';
 import { DspRunRequestWithoutFeatures } from '../model/dspRunRequestWithoutFeatures';
+import { DspRunRequestWithoutFeaturesReadOnly } from '../model/dspRunRequestWithoutFeaturesReadOnly';
 import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
 import { DspSampleFeaturesResponse } from '../model/dspSampleFeaturesResponse';
 import { DspTrainedFeaturesResponse } from '../model/dspTrainedFeaturesResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
+import { StartJobResponse } from '../model/startJobResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -49,10 +51,47 @@ export enum DSPApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type downloadDspDataQueryParams = {
+    raw?: boolean,
+};
+
+type dspSampleTrainedFeaturesQueryParams = {
+    featureAx1: number,
+    featureAx2: number,
+    featureAx3: number,
+};
+
+type getDspRawSampleQueryParams = {
+    limitPayloadValues?: number,
+};
+
+type getDspSampleSliceQueryParams = {
+    sliceStart: number,
+    sliceEnd: number,
+};
+
+type runDspSampleSliceQueryParams = {
+    sliceStart: number,
+    sliceEnd: number,
+};
+
+type runDspSampleSliceReadOnlyQueryParams = {
+    sliceStart: number,
+    sliceEnd: number,
+};
+
+
+export type DSPApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class DSPApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : DSPApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -61,8 +100,8 @@ export class DSPApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: DSPApiOpts);
+    constructor(basePathOrUsername: string, opts?: DSPApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -72,6 +111,8 @@ export class DSPApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -86,6 +127,14 @@ export class DSPApi {
         return this._basePath;
     }
 
+    set opts(opts: DSPApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -93,6 +142,7 @@ export class DSPApi {
     public setApiKey(key: DSPApiApiKeys, value: string | undefined) {
         (this.authentications as any)[DSPApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Clear generated features for a DSP block (used in tests).
@@ -116,16 +166,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling clearDspBlock.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling clearDspBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -178,6 +233,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Download output from a DSP block over all data in the training set, already sliced in windows. In Numpy binary format.
      * @summary Download DSP data
@@ -186,7 +242,7 @@ export class DSPApi {
      * @param category Which of the three acquisition categories to download data from
      * @param raw Whether to download raw data or processed data. Processed data is the default.
      */
-    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', raw?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/x/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -203,25 +259,32 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadDspData.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling downloadDspData.');
         }
 
         // verify required parameter 'category' is not null or undefined
+
+
         if (category === null || category === undefined) {
             throw new Error('Required parameter category was null or undefined when calling downloadDspData.');
         }
 
-        if (raw !== undefined) {
-            localVarQueryParameters['raw'] = ObjectSerializer.serialize(raw, "boolean");
+        if (queryParams.raw !== undefined) {
+            localVarQueryParameters['raw'] = ObjectSerializer.serialize(queryParams.raw, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -274,6 +337,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Download labels for a DSP block over all data in the training set, already sliced in windows.
      * @summary Download DSP labels
@@ -298,21 +362,28 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadDspLabels.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling downloadDspLabels.');
         }
 
         // verify required parameter 'category' is not null or undefined
+
+
         if (category === null || category === undefined) {
             throw new Error('Required parameter category was null or undefined when calling downloadDspLabels.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -365,6 +436,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Runs the DSP block against a sample. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and run the DSP function for every window that is extracted.
      * @summary Features for sample
@@ -389,21 +461,28 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling dspGetFeaturesForSample.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling dspGetFeaturesForSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling dspGetFeaturesForSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -456,6 +535,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get a sample of trained features, this extracts a number of samples and their labels. Used to visualize the current training set.
      * @summary Sample of trained features
@@ -466,7 +546,7 @@ export class DSPApi {
      * @param featureAx3 Feature axis 3
      * @param category Which of the three acquisition categories to download data from
      */
-    public async dspSampleTrainedFeatures (projectId: number, dspId: number, featureAx1: number, featureAx2: number, featureAx3: number, category: 'training' | 'testing' | 'anomaly', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspTrainedFeaturesResponse> {
+    public async dspSampleTrainedFeatures (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams: dspSampleTrainedFeaturesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspTrainedFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/get-graph/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -483,48 +563,61 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
         // verify required parameter 'featureAx1' is not null or undefined
-        if (featureAx1 === null || featureAx1 === undefined) {
-            throw new Error('Required parameter featureAx1 was null or undefined when calling dspSampleTrainedFeatures.');
+
+        if (queryParams.featureAx1 === null || queryParams.featureAx1 === undefined) {
+            throw new Error('Required parameter queryParams.featureAx1 was null or undefined when calling dspSampleTrainedFeatures.');
         }
+
 
         // verify required parameter 'featureAx2' is not null or undefined
-        if (featureAx2 === null || featureAx2 === undefined) {
-            throw new Error('Required parameter featureAx2 was null or undefined when calling dspSampleTrainedFeatures.');
+
+        if (queryParams.featureAx2 === null || queryParams.featureAx2 === undefined) {
+            throw new Error('Required parameter queryParams.featureAx2 was null or undefined when calling dspSampleTrainedFeatures.');
         }
+
 
         // verify required parameter 'featureAx3' is not null or undefined
-        if (featureAx3 === null || featureAx3 === undefined) {
-            throw new Error('Required parameter featureAx3 was null or undefined when calling dspSampleTrainedFeatures.');
+
+        if (queryParams.featureAx3 === null || queryParams.featureAx3 === undefined) {
+            throw new Error('Required parameter queryParams.featureAx3 was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
+
         // verify required parameter 'category' is not null or undefined
+
+
         if (category === null || category === undefined) {
             throw new Error('Required parameter category was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
-        if (featureAx1 !== undefined) {
-            localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(featureAx1, "number");
+        if (queryParams.featureAx1 !== undefined) {
+            localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(queryParams.featureAx1, "number");
         }
 
-        if (featureAx2 !== undefined) {
-            localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(featureAx2, "number");
+        if (queryParams.featureAx2 !== undefined) {
+            localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(queryParams.featureAx2, "number");
         }
 
-        if (featureAx3 !== undefined) {
-            localVarQueryParameters['featureAx3'] = ObjectSerializer.serialize(featureAx3, "number");
+        if (queryParams.featureAx3 !== undefined) {
+            localVarQueryParameters['featureAx3'] = ObjectSerializer.serialize(queryParams.featureAx3, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -577,6 +670,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get a set of parameters, found as a result of running the DSP autotuner.
      * @summary Get results from DSP autotuner
@@ -599,16 +693,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getAutotunerResults.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getAutotunerResults.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -661,6 +760,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Retrieve the configuration parameters for the DSP block. Use the impulse functions to retrieve all DSP blocks.
      * @summary Get config
@@ -683,16 +783,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspConfig.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspConfig.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -745,6 +850,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Retrieve the feature importance for a DSP block (only available for blocks where dimensionalityReduction is not enabled)
      * @summary Feature importance
@@ -767,16 +873,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspFeatureImportance.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspFeatureImportance.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -829,6 +940,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Retrieve the names of the features the DSP block generates
      * @summary Feature labels
@@ -851,16 +963,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspFeatureLabels.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspFeatureLabels.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -913,6 +1030,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Retrieve the metadata from a generated DSP block.
      * @summary Get metadata
@@ -935,16 +1053,21 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspMetadata.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspMetadata.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -997,6 +1120,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get raw sample data, but with only the axes selected by the DSP block. E.g. if you have selected only accX and accY as inputs for the DSP block, but the raw sample also contains accZ, accZ is filtered out. If you pass dspId = 0 this will return a raw graph without any processing.
      * @summary Get raw sample
@@ -1005,7 +1129,7 @@ export class DSPApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      */
-    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, limitPayloadValues?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1022,25 +1146,32 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspRawSample.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspRawSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getDspRawSample.');
         }
 
-        if (limitPayloadValues !== undefined) {
-            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(limitPayloadValues, "number");
+        if (queryParams.limitPayloadValues !== undefined) {
+            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1093,6 +1224,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get slice of raw sample data, but with only the axes selected by the DSP block. E.g. if you have selected only accX and accY as inputs for the DSP block, but the raw sample also contains accZ, accZ is filtered out.
      * @summary Get raw sample (slice)
@@ -1102,7 +1234,7 @@ export class DSPApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice
      */
-    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, sliceStart: number, sliceEnd: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1119,39 +1251,50 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspSampleSlice.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspSampleSlice.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getDspSampleSlice.');
         }
 
         // verify required parameter 'sliceStart' is not null or undefined
-        if (sliceStart === null || sliceStart === undefined) {
-            throw new Error('Required parameter sliceStart was null or undefined when calling getDspSampleSlice.');
+
+        if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
+            throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling getDspSampleSlice.');
         }
+
 
         // verify required parameter 'sliceEnd' is not null or undefined
-        if (sliceEnd === null || sliceEnd === undefined) {
-            throw new Error('Required parameter sliceEnd was null or undefined when calling getDspSampleSlice.');
+
+        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
+            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling getDspSampleSlice.');
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1204,6 +1347,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get slice of sample data, and run it through the DSP block. This only the axes selected by the DSP block. E.g. if you have selected only accX and accY as inputs for the DSP block, but the raw sample also contains accZ, accZ is filtered out.
      * @summary Get processed sample (slice)
@@ -1214,7 +1358,7 @@ export class DSPApi {
      * @param sliceEnd End index of the slice
      * @param dspRunRequestWithoutFeatures 
      */
-    public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, sliceStart: number, sliceEnd: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
+    public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, queryParams: runDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1231,44 +1375,57 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling runDspSampleSlice.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling runDspSampleSlice.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling runDspSampleSlice.');
         }
 
         // verify required parameter 'sliceStart' is not null or undefined
-        if (sliceStart === null || sliceStart === undefined) {
-            throw new Error('Required parameter sliceStart was null or undefined when calling runDspSampleSlice.');
+
+        if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
+            throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling runDspSampleSlice.');
         }
+
 
         // verify required parameter 'sliceEnd' is not null or undefined
-        if (sliceEnd === null || sliceEnd === undefined) {
-            throw new Error('Required parameter sliceEnd was null or undefined when calling runDspSampleSlice.');
+
+        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
+            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSlice.');
         }
 
+
         // verify required parameter 'dspRunRequestWithoutFeatures' is not null or undefined
+
+
         if (dspRunRequestWithoutFeatures === null || dspRunRequestWithoutFeatures === undefined) {
             throw new Error('Required parameter dspRunRequestWithoutFeatures was null or undefined when calling runDspSampleSlice.');
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1322,6 +1479,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Get slice of sample data, and run it through the DSP block. This only the axes selected by the DSP block. E.g. if you have selected only accX and accY as inputs for the DSP block, but the raw sample also contains accZ, accZ is filtered out.
      * @summary Get processed sample (slice)
@@ -1331,7 +1489,7 @@ export class DSPApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice
      */
-    public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, sliceStart: number, sliceEnd: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
+    public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, queryParams: runDspSampleSliceReadOnlyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run/readonly'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1348,39 +1506,50 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling runDspSampleSliceReadOnly.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling runDspSampleSliceReadOnly.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling runDspSampleSliceReadOnly.');
         }
 
         // verify required parameter 'sliceStart' is not null or undefined
-        if (sliceStart === null || sliceStart === undefined) {
-            throw new Error('Required parameter sliceStart was null or undefined when calling runDspSampleSliceReadOnly.');
+
+        if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
+            throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling runDspSampleSliceReadOnly.');
         }
+
 
         // verify required parameter 'sliceEnd' is not null or undefined
-        if (sliceEnd === null || sliceEnd === undefined) {
-            throw new Error('Required parameter sliceEnd was null or undefined when calling runDspSampleSliceReadOnly.');
+
+        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
+            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSliceReadOnly.');
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1433,6 +1602,7 @@ export class DSPApi {
             });
         });
     }
+
     /**
      * Set configuration parameters for the DSP block. Only values set in the body will be overwritten.
      * @summary Set config
@@ -1456,21 +1626,28 @@ export class DSPApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setDspConfig.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling setDspConfig.');
         }
 
         // verify required parameter 'dSPConfigRequest' is not null or undefined
+
+
         if (dSPConfigRequest === null || dSPConfigRequest === undefined) {
             throw new Error('Required parameter dSPConfigRequest was null or undefined when calling setDspConfig.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1507,6 +1684,105 @@ export class DSPApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Returns performance characteristics for a custom DSP block (needs `hasTfliteImplementation`). Updates are streamed over the websocket API (or can be retrieved through the /stdout endpoint). Use getProfileTfliteJobResult to get the results when the job is completed.
+     * @summary Profile custom DSP block
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param dspRunRequestWithoutFeaturesReadOnly 
+     */
+    public async startProfileCustomDspBlock (projectId: number, dspId: number, dspRunRequestWithoutFeaturesReadOnly: DspRunRequestWithoutFeaturesReadOnly, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/profile'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling startProfileCustomDspBlock.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling startProfileCustomDspBlock.');
+        }
+
+        // verify required parameter 'dspRunRequestWithoutFeaturesReadOnly' is not null or undefined
+
+
+        if (dspRunRequestWithoutFeaturesReadOnly === null || dspRunRequestWithoutFeaturesReadOnly === undefined) {
+            throw new Error('Required parameter dspRunRequestWithoutFeaturesReadOnly was null or undefined when calling startProfileCustomDspBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(dspRunRequestWithoutFeaturesReadOnly, "DspRunRequestWithoutFeaturesReadOnly")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

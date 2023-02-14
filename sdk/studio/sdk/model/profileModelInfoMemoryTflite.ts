@@ -10,28 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { ProfileTfLiteResponseAllOfMemoryTflite } from './profileTfLiteResponseAllOfMemoryTflite';
 
-export class ProfileTfLiteResponseAllOfMemory {
-    'tflite': ProfileTfLiteResponseAllOfMemoryTflite;
-    'eon': ProfileTfLiteResponseAllOfMemoryTflite;
+export class ProfileModelInfoMemoryTflite {
+    'ram': number;
+    'rom': number;
+    'arenaSize': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "tflite",
-            "baseName": "tflite",
-            "type": "ProfileTfLiteResponseAllOfMemoryTflite"
+            "name": "ram",
+            "baseName": "ram",
+            "type": "number"
         },
         {
-            "name": "eon",
-            "baseName": "eon",
-            "type": "ProfileTfLiteResponseAllOfMemoryTflite"
+            "name": "rom",
+            "baseName": "rom",
+            "type": "number"
+        },
+        {
+            "name": "arenaSize",
+            "baseName": "arenaSize",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProfileTfLiteResponseAllOfMemory.attributeTypeMap;
+        return ProfileModelInfoMemoryTflite.attributeTypeMap;
     }
 }
 

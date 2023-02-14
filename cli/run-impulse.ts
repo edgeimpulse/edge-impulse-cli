@@ -245,110 +245,107 @@ async function startWebServer(config: EiSerialDeviceConfig) {
         // noop
     });
 
-    let currentMsg: string | undefined;
+    let rxMsg: string;
     serial.on('data', (data: Buffer) => {
         let s = data.toString('utf-8');
-        if (s.indexOf('End output') > -1) {
-            if (typeof currentMsg === 'string') {
-                currentMsg += s.substr(0, s.indexOf('End output'));
+        rxMsg += s;
 
-                let lines = currentMsg.split('\n');
-                let fb = lines.find(x => x.startsWith('Framebuffer: '));
+        if (rxMsg.indexOf('Begin output') > -1) {
+            // remove everything before 'Begin output' (and this phrase also)
+            rxMsg = rxMsg.substr(rxMsg.indexOf('Begin output') + 'Begin output'.length);
+        }
 
-                let printMsg = '';
+        if (rxMsg.indexOf('End output') > 1)  {
+            // get everything up to 'End output' (excluding this phrase)
+            let currentMsg = rxMsg.substr(0, rxMsg.indexOf('End output'));
+            // remove everything before 'End output' phrase
+            rxMsg = rxMsg.substr(rxMsg.indexOf('End output'));
 
-                let classifyTime = 0;
-                let timingLine = lines.find(x => x.startsWith('Predictions'));
-                if (timingLine) {
-                    let m = timingLine.match(/Classification: ([\d\.]+)/);
-                    if (m) {
-                        classifyTime = Number(m[1]);
-                    }
-                    printMsg += timingLine + '\n';
+            // console.log('msg', currentMsg);
+
+            let lines = currentMsg.split('\n');
+            let fb = lines.find(x => x.startsWith('Framebuffer: '));
+
+            let printMsg = '';
+
+            let classifyTime = 0;
+            let timingLine = lines.find(x => x.startsWith('Predictions'));
+            if (timingLine) {
+                let m = timingLine.match(/Classification: ([\d\.]+)/);
+                if (m) {
+                    classifyTime = Number(m[1]);
                 }
-
-                if (fb) {
-                    fb = fb.replace('Framebuffer: ', '').trim();
-
-                    let snapshot = Buffer.from(fb, 'base64');
-                    io.emit('image', {
-                        img: 'data:image/jpeg;base64,' + snapshot.toString('base64')
-                    });
-                }
-
-                let mode: 'classification' | 'object_detection';
-                let firstClassifyLine = lines.find(x => x.startsWith('    '));
-                if (firstClassifyLine && !isNaN(Number(firstClassifyLine.split(':')[1]))) {
-                    mode = 'classification';
-                }
-                else {
-                    mode = 'object_detection';
-                }
-
-                if (mode === 'object_detection') {
-                    let cubes = [];
-                    // parse object detection
-                    for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
-                        let m = l.trim()
-                            .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
-                        if (!m) continue;
-                        let cube = {
-                            label: m[1],
-                            value: Number(m[2]),
-                            x: Number(m[3]),
-                            y: Number(m[4]),
-                            width: Number(m[5]),
-                            height: Number(m[6]),
-                        };
-                        cubes.push(cube);
-                        printMsg += l + '\n';
-                    }
-
-                    io.emit('classification', {
-                        result: {
-                            bounding_boxes: cubes
-                        },
-                        timeMs: classifyTime,
-                    });
-                }
-                else {
-                    let results: { [k: string]: number } = { };
-                    // parse object detection
-                    for (let l of lines.filter(x => x.startsWith('    '))) {
-                        let m = l.split(':').map(x => x.trim());
-                        if (m.length !== 2) continue;
-                        results[m[0]] = Number(m[1]);
-                        printMsg += l + '\n';
-                    }
-
-                    io.emit('classification', {
-                        result: {
-                            classification: results
-                        },
-                        timeMs: classifyTime,
-                    });
-                }
-
-                if (inferenceStarted) {
-                    console.log(printMsg.trim());
-                }
+                printMsg += timingLine + '\n';
             }
 
-            currentMsg = undefined;
-            s = s.substr(s.indexOf('End output'));
+            if (fb) {
+                fb = fb.replace('Framebuffer: ', '').trim();
+
+                let snapshot = Buffer.from(fb, 'base64');
+                io.emit('image', {
+                    img: 'data:image/jpeg;base64,' + snapshot.toString('base64')
+                });
+            }
+
+            let mode: 'classification' | 'object_detection';
+            let firstClassifyLine = lines.find(x => x.startsWith('    '));
+            if (firstClassifyLine && !isNaN(Number(firstClassifyLine.split(':')[1]))) {
+                mode = 'classification';
+            }
+            else {
+                mode = 'object_detection';
+            }
+
+            if (mode === 'object_detection') {
+                let cubes = [];
+                // parse object detection
+                for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
+                    let m = l.trim()
+                        .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
+                    if (!m) continue;
+                    let cube = {
+                        label: m[1],
+                        value: Number(m[2]),
+                        x: Number(m[3]),
+                        y: Number(m[4]),
+                        width: Number(m[5]),
+                        height: Number(m[6]),
+                    };
+                    cubes.push(cube);
+                    printMsg += l + '\n';
+                }
+
+                io.emit('classification', {
+                    result: {
+                        bounding_boxes: cubes
+                    },
+                    timeMs: classifyTime,
+                });
+            }
+            else {
+                let results: { [k: string]: number } = { };
+                // parse object detection
+                for (let l of lines.filter(x => x.startsWith('    '))) {
+                    let m = l.split(':').map(x => x.trim());
+                    if (m.length !== 2) continue;
+                    results[m[0]] = Number(m[1]);
+                    printMsg += l + '\n';
+                }
+
+                io.emit('classification', {
+                    result: {
+                        classification: results
+                    },
+                    timeMs: classifyTime,
+                });
+            }
+
+            if (inferenceStarted) {
+                console.log(printMsg.trim());
+            }
         }
 
-        if (s.indexOf('Begin output') > -1) {
-            s = s.substr(s.indexOf('Begin output') + 'Begin output'.length);
-            currentMsg = s;
-            return;
-        }
-
-        if (currentMsg) {
-            currentMsg += s;
-        }
-
-        // console.log('data', data.toString('utf-8');
+        // console.log('data', data.toString('utf-8'));
     });
 
     io.on('connection', socket => {

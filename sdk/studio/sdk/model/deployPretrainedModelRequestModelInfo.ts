@@ -11,8 +11,8 @@
  */
 
 
-import { DeployPretrainedModelInputTimeSeries, DeployPretrainedModelInputImage, DeployPretrainedModelInputNone } from './models'; import { DeployPretrainedModelModelClassification, DeployPretrainedModelModelRegression, DeployPretrainedModelModelObjectDetection } from './models'; export class DeployPretrainedModelRequestModelInfo {
-    'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputImage | DeployPretrainedModelInputNone;
+import { DeployPretrainedModelInputTimeSeries, DeployPretrainedModelInputAudio, DeployPretrainedModelInputImage, DeployPretrainedModelInputOther } from './models'; import { DeployPretrainedModelModelClassification, DeployPretrainedModelModelRegression, DeployPretrainedModelModelObjectDetection } from './models'; export class DeployPretrainedModelRequestModelInfo {
+    'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
     'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection;
 
     static discriminator: string | undefined = undefined;

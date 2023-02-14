@@ -37,10 +37,24 @@ export enum SupportsRangeApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type getSampleAsAudioQueryParams = {
+    axisIx: number,
+    sliceStart?: number,
+    sliceEnd?: number,
+};
+
+
+export type SupportsRangeApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class SupportsRangeApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : SupportsRangeApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -49,8 +63,8 @@ export class SupportsRangeApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: SupportsRangeApiOpts);
+    constructor(basePathOrUsername: string, opts?: SupportsRangeApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -60,6 +74,8 @@ export class SupportsRangeApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -74,6 +90,14 @@ export class SupportsRangeApi {
         return this._basePath;
     }
 
+    set opts(opts: SupportsRangeApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -81,6 +105,7 @@ export class SupportsRangeApi {
     public setApiKey(key: SupportsRangeApiApiKeys, value: string | undefined) {
         (this.authentications as any)[SupportsRangeApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Get a sample as a WAV file. This only applies to samples with an audio axis.
@@ -91,7 +116,7 @@ export class SupportsRangeApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice
      */
-    public async getSampleAsAudio (projectId: number, sampleId: number, axisIx: number, sliceStart?: number, sliceEnd?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -107,33 +132,40 @@ export class SupportsRangeApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleAsAudio.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsAudio.');
         }
 
         // verify required parameter 'axisIx' is not null or undefined
-        if (axisIx === null || axisIx === undefined) {
-            throw new Error('Required parameter axisIx was null or undefined when calling getSampleAsAudio.');
+
+        if (queryParams.axisIx === null || queryParams.axisIx === undefined) {
+            throw new Error('Required parameter queryParams.axisIx was null or undefined when calling getSampleAsAudio.');
         }
 
-        if (axisIx !== undefined) {
-            localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(axisIx, "number");
+
+        if (queryParams.axisIx !== undefined) {
+            localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(queryParams.axisIx, "number");
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -186,6 +218,7 @@ export class SupportsRangeApi {
             });
         });
     }
+
     /**
      * Get the synthetic sample as a WAV file
      * @summary Get WAV file
@@ -206,11 +239,14 @@ export class SupportsRangeApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getWavFile.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

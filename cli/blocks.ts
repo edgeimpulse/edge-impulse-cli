@@ -239,7 +239,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             try {
                 await config.api.organizationJobs.cancelOrganizationJob(
                     pushingBlockJobId.organizationId,
-                    pushingBlockJobId.jobId
+                    pushingBlockJobId.jobId,
+                    { }
                 );
                 process.exit(0);
             }
@@ -823,9 +824,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 }
                 else if (currentBlockConfig.type === 'deploy') {
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
-                        organizationId, blockName, '', blockDescription, '',
-                        undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-                        undefined, undefined, currentBlockConfig.deployCategory);
+                        organizationId, {
+                            name: blockName,
+                            dockerContainer: '',
+                            description: blockDescription,
+                            cliArguments: '',
+                            category: currentBlockConfig.deployCategory
+                        });
                 }
                 else if (currentBlockConfig.type === 'dsp') {
                     if (currentBlockConfig.type === 'dsp' && typeof currentBlockConfig.port !== 'number') {
@@ -991,9 +996,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
             let uploadResponse = await config.api.organizationCreateProject.uploadCustomBlock(
                 currentBlockConfig.organizationId,
-                tarFile,
-                currentBlockConfig.type,
-                currentBlockConfig.id || 0
+                {
+                    tar: tarFile,
+                    type: currentBlockConfig.type,
+                    blockId: currentBlockConfig.id || 0
+                }
             );
 
             if (!uploadResponse.success || !uploadResponse.id) {

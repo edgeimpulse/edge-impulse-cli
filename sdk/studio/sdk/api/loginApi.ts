@@ -35,17 +35,25 @@ let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 export enum LoginApiApiKeys {
 }
 
+
+export type LoginApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class LoginApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : LoginApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: LoginApiOpts);
+    constructor(basePathOrUsername: string, opts?: LoginApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -55,6 +63,8 @@ export class LoginApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -69,6 +79,14 @@ export class LoginApi {
         return this._basePath;
     }
 
+    set opts(opts: LoginApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -76,6 +94,7 @@ export class LoginApi {
     public setApiKey(key: LoginApiApiKeys, value: string | undefined) {
         (this.authentications as any)[LoginApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Get a JWT token to authenticate with the API.
@@ -96,11 +115,14 @@ export class LoginApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'getJWTTokenRequest' is not null or undefined
+
+
         if (getJWTTokenRequest === null || getJWTTokenRequest === undefined) {
             throw new Error('Required parameter getJWTTokenRequest was null or undefined when calling login.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

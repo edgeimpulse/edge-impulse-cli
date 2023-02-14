@@ -73,10 +73,107 @@ export enum OrganizationAllowDeveloperProfileApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type addOrganizationDeployBlockFormParams = {
+    name: string,
+    dockerContainer: string,
+    description: string,
+    cliArguments: string,
+    requestsCpu?: number,
+    requestsMemory?: number,
+    limitsCpu?: number,
+    limitsMemory?: number,
+    photo?: RequestFile,
+    integrateUrl?: string,
+    privileged?: boolean,
+    mountLearnBlock?: boolean,
+    supportsEonCompiler?: boolean,
+    showOptimizations?: boolean,
+    category?: string,
+};
+
+type cancelOrganizationJobQueryParams = {
+    forceCancel?: string,
+};
+
+type downloadOrganizationJobsLogsQueryParams = {
+    limit?: number,
+    logLevel?: 'error' | 'warn' | 'info' | 'debug',
+};
+
+type getOrganizationJobsLogsQueryParams = {
+    limit?: number,
+    logLevel?: 'error' | 'warn' | 'info' | 'debug',
+};
+
+type listActiveOrganizationJobsQueryParams = {
+    rootOnly?: boolean,
+};
+
+type listAllOrganizationJobsQueryParams = {
+    startDate?: Date,
+    endDate?: Date,
+    limit?: number,
+    offset?: number,
+    excludePipelineTransformJobs?: boolean,
+    rootOnly?: boolean,
+};
+
+type listArchivedOrganizationPipelinesQueryParams = {
+    projectId?: number,
+};
+
+type listFinishedOrganizationJobsQueryParams = {
+    startDate?: Date,
+    endDate?: Date,
+    limit?: number,
+    offset?: number,
+    rootOnly?: boolean,
+};
+
+type listOrganizationPipelinesQueryParams = {
+    projectId?: number,
+};
+
+type runOrganizationPipelineQueryParams = {
+    ignoreLastSuccessfulRun?: boolean,
+};
+
+type updateOrganizationDeployBlockFormParams = {
+    name?: string,
+    dockerContainer?: string,
+    description?: string,
+    cliArguments?: string,
+    requestsCpu?: number,
+    requestsMemory?: number,
+    limitsCpu?: number,
+    limitsMemory?: number,
+    photo?: RequestFile,
+    integrateUrl?: string,
+    privileged?: boolean,
+    mountLearnBlock?: boolean,
+    supportsEonCompiler?: boolean,
+    showOptimizations?: boolean,
+    category?: string,
+};
+
+type uploadCustomBlockFormParams = {
+    tar: RequestFile,
+    type: string,
+    blockId: number,
+};
+
+
+export type OrganizationAllowDeveloperProfileApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class OrganizationAllowDeveloperProfileApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : OrganizationAllowDeveloperProfileApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -85,8 +182,8 @@ export class OrganizationAllowDeveloperProfileApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: OrganizationAllowDeveloperProfileApiOpts);
+    constructor(basePathOrUsername: string, opts?: OrganizationAllowDeveloperProfileApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -96,6 +193,8 @@ export class OrganizationAllowDeveloperProfileApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -110,6 +209,14 @@ export class OrganizationAllowDeveloperProfileApi {
         return this._basePath;
     }
 
+    set opts(opts: OrganizationAllowDeveloperProfileApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -117,6 +224,7 @@ export class OrganizationAllowDeveloperProfileApi {
     public setApiKey(key: OrganizationAllowDeveloperProfileApiApiKeys, value: string | undefined) {
         (this.authentications as any)[OrganizationAllowDeveloperProfileApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Add an API key.
@@ -139,16 +247,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationApiKey.');
         }
 
         // verify required parameter 'addOrganizationApiKeyRequest' is not null or undefined
+
+
         if (addOrganizationApiKeyRequest === null || addOrganizationApiKeyRequest === undefined) {
             throw new Error('Required parameter addOrganizationApiKeyRequest was null or undefined when calling addOrganizationApiKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -202,6 +315,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Adds a deploy block.
      * @summary Add deploy block
@@ -222,7 +336,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param showOptimizations 
      * @param category 
      */
-    public async addOrganizationDeployBlock (organizationId: number, name: string, dockerContainer: string, description: string, cliArguments: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, mountLearnBlock?: boolean, supportsEonCompiler?: boolean, showOptimizations?: boolean, category?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddOrganizationDeployBlockResponse> {
+    public async addOrganizationDeployBlock (organizationId: number, params: addOrganizationDeployBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddOrganizationDeployBlockResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -237,93 +351,104 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDeployBlock.');
         }
 
         // verify required parameter 'name' is not null or undefined
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling addOrganizationDeployBlock.');
+        if (params.name === null || params.name === undefined) {
+            throw new Error('Required parameter params.name was null or undefined when calling addOrganizationDeployBlock.');
         }
+
+
 
         // verify required parameter 'dockerContainer' is not null or undefined
-        if (dockerContainer === null || dockerContainer === undefined) {
-            throw new Error('Required parameter dockerContainer was null or undefined when calling addOrganizationDeployBlock.');
+        if (params.dockerContainer === null || params.dockerContainer === undefined) {
+            throw new Error('Required parameter params.dockerContainer was null or undefined when calling addOrganizationDeployBlock.');
         }
+
+
 
         // verify required parameter 'description' is not null or undefined
-        if (description === null || description === undefined) {
-            throw new Error('Required parameter description was null or undefined when calling addOrganizationDeployBlock.');
+        if (params.description === null || params.description === undefined) {
+            throw new Error('Required parameter params.description was null or undefined when calling addOrganizationDeployBlock.');
         }
+
+
 
         // verify required parameter 'cliArguments' is not null or undefined
-        if (cliArguments === null || cliArguments === undefined) {
-            throw new Error('Required parameter cliArguments was null or undefined when calling addOrganizationDeployBlock.');
+        if (params.cliArguments === null || params.cliArguments === undefined) {
+            throw new Error('Required parameter params.cliArguments was null or undefined when calling addOrganizationDeployBlock.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(name, "string");
+        if (params.name !== undefined) {
+            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
         }
 
-        if (dockerContainer !== undefined) {
-            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(dockerContainer, "string");
+        if (params.dockerContainer !== undefined) {
+            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(params.dockerContainer, "string");
         }
 
-        if (description !== undefined) {
-            localVarFormParams['description'] = ObjectSerializer.serialize(description, "string");
+        if (params.description !== undefined) {
+            localVarFormParams['description'] = ObjectSerializer.serialize(params.description, "string");
         }
 
-        if (cliArguments !== undefined) {
-            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(cliArguments, "string");
+        if (params.cliArguments !== undefined) {
+            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(params.cliArguments, "string");
         }
 
-        if (requestsCpu !== undefined) {
-            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(requestsCpu, "number");
+        if (params.requestsCpu !== undefined) {
+            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(params.requestsCpu, "number");
         }
 
-        if (requestsMemory !== undefined) {
-            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(requestsMemory, "number");
+        if (params.requestsMemory !== undefined) {
+            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(params.requestsMemory, "number");
         }
 
-        if (limitsCpu !== undefined) {
-            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(limitsCpu, "number");
+        if (params.limitsCpu !== undefined) {
+            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(params.limitsCpu, "number");
         }
 
-        if (limitsMemory !== undefined) {
-            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(limitsMemory, "number");
+        if (params.limitsMemory !== undefined) {
+            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(params.limitsMemory, "number");
         }
 
-        if (photo !== undefined) {
-            localVarFormParams['photo'] = photo;
+        if (params.photo !== undefined) {
+            localVarFormParams['photo'] = params.photo;
         }
         localVarUseFormData = true;
 
-        if (integrateUrl !== undefined) {
-            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(integrateUrl, "string");
+        if (params.integrateUrl !== undefined) {
+            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(params.integrateUrl, "string");
         }
 
-        if (privileged !== undefined) {
-            localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
+        if (params.privileged !== undefined) {
+            localVarFormParams['privileged'] = ObjectSerializer.serialize(params.privileged, "boolean");
         }
 
-        if (mountLearnBlock !== undefined) {
-            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(mountLearnBlock, "boolean");
+        if (params.mountLearnBlock !== undefined) {
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(params.mountLearnBlock, "boolean");
         }
 
-        if (supportsEonCompiler !== undefined) {
-            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(supportsEonCompiler, "boolean");
+        if (params.supportsEonCompiler !== undefined) {
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(params.supportsEonCompiler, "boolean");
         }
 
-        if (showOptimizations !== undefined) {
-            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(showOptimizations, "boolean");
+        if (params.showOptimizations !== undefined) {
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(params.showOptimizations, "boolean");
         }
 
-        if (category !== undefined) {
-            localVarFormParams['category'] = ObjectSerializer.serialize(category, "string");
+        if (params.category !== undefined) {
+            localVarFormParams['category'] = ObjectSerializer.serialize(params.category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -375,6 +500,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Adds a dsp block.
      * @summary Add dsp block
@@ -396,16 +522,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDspBlock.');
         }
 
         // verify required parameter 'addOrganizationDspBlockRequest' is not null or undefined
+
+
         if (addOrganizationDspBlockRequest === null || addOrganizationDspBlockRequest === undefined) {
             throw new Error('Required parameter addOrganizationDspBlockRequest was null or undefined when calling addOrganizationDspBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -459,6 +590,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Adds a secret.
      * @summary Add secret
@@ -480,16 +612,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationSecret.');
         }
 
         // verify required parameter 'addOrganizationSecretRequest' is not null or undefined
+
+
         if (addOrganizationSecretRequest === null || addOrganizationSecretRequest === undefined) {
             throw new Error('Required parameter addOrganizationSecretRequest was null or undefined when calling addOrganizationSecret.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -543,6 +680,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Adds a transfer learning block.
      * @summary Add transfer learning block
@@ -564,16 +702,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationTransferLearningBlock.');
         }
 
         // verify required parameter 'addOrganizationTransferLearningBlockRequest' is not null or undefined
+
+
         if (addOrganizationTransferLearningBlockRequest === null || addOrganizationTransferLearningBlockRequest === undefined) {
             throw new Error('Required parameter addOrganizationTransferLearningBlockRequest was null or undefined when calling addOrganizationTransferLearningBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -627,6 +770,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Adds a transformation block.
      * @summary Add transformation block
@@ -648,16 +792,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationTransformationBlock.');
         }
 
         // verify required parameter 'addOrganizationTransformationBlockRequest' is not null or undefined
+
+
         if (addOrganizationTransformationBlockRequest === null || addOrganizationTransformationBlockRequest === undefined) {
             throw new Error('Required parameter addOrganizationTransformationBlockRequest was null or undefined when calling addOrganizationTransformationBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -711,6 +860,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Cancel a running job.
      * @summary Cancel job
@@ -718,7 +868,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param jobId Job ID
      * @param forceCancel If set to \&#39;true\&#39;, we won\&#39;t wait for the job cluster to cancel the job, and will mark the job as finished.
      */
-    public async cancelOrganizationJob (organizationId: number, jobId: number, forceCancel?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async cancelOrganizationJob (organizationId: number, jobId: number, queryParams: cancelOrganizationJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/cancel'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -734,20 +884,25 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling cancelOrganizationJob.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling cancelOrganizationJob.');
         }
 
-        if (forceCancel !== undefined) {
-            localVarQueryParameters['forceCancel'] = ObjectSerializer.serialize(forceCancel, "string");
+        if (queryParams.forceCancel !== undefined) {
+            localVarQueryParameters['forceCancel'] = ObjectSerializer.serialize(queryParams.forceCancel, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -800,6 +955,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Create a new organization. This is an internal API.
      * @summary Create new organization
@@ -819,11 +975,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'createOrganizationRequest' is not null or undefined
+
+
         if (createOrganizationRequest === null || createOrganizationRequest === undefined) {
             throw new Error('Required parameter createOrganizationRequest was null or undefined when calling createOrganization.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -877,6 +1036,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Create an organizational pipelines
      * @summary Create pipeline
@@ -898,16 +1058,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling createOrganizationPipeline.');
         }
 
         // verify required parameter 'organizationUpdatePipelineBody' is not null or undefined
+
+
         if (organizationUpdatePipelineBody === null || organizationUpdatePipelineBody === undefined) {
             throw new Error('Required parameter organizationUpdatePipelineBody was null or undefined when calling createOrganizationPipeline.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -961,6 +1126,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Deletes a deploy block.
      * @summary Delete deploy block
@@ -983,16 +1149,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationDeployBlock.');
         }
 
         // verify required parameter 'deployId' is not null or undefined
+
+
         if (deployId === null || deployId === undefined) {
             throw new Error('Required parameter deployId was null or undefined when calling deleteOrganizationDeployBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1045,6 +1216,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Deletes a dsp block.
      * @summary Delete dsp block
@@ -1067,16 +1239,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationDspBlock.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling deleteOrganizationDspBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1129,6 +1306,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Delete an organizational pipelines
      * @summary Delete pipeline
@@ -1151,16 +1329,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationPipeline.');
         }
 
         // verify required parameter 'pipelineId' is not null or undefined
+
+
         if (pipelineId === null || pipelineId === undefined) {
             throw new Error('Required parameter pipelineId was null or undefined when calling deleteOrganizationPipeline.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1213,6 +1396,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Deletes a transfer learning block.
      * @summary Delete transfer learning block
@@ -1235,16 +1419,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationSecret.');
         }
 
         // verify required parameter 'secretId' is not null or undefined
+
+
         if (secretId === null || secretId === undefined) {
             throw new Error('Required parameter secretId was null or undefined when calling deleteOrganizationSecret.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1297,6 +1486,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Deletes a transfer learning block.
      * @summary Delete transfer learning block
@@ -1319,16 +1509,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationTransferLearningBlock.');
         }
 
         // verify required parameter 'transferLearningId' is not null or undefined
+
+
         if (transferLearningId === null || transferLearningId === undefined) {
             throw new Error('Required parameter transferLearningId was null or undefined when calling deleteOrganizationTransferLearningBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1381,6 +1576,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Deletes a transformation block.
      * @summary Delete transformation block
@@ -1403,16 +1599,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationTransformationBlock.');
         }
 
         // verify required parameter 'transformationId' is not null or undefined
+
+
         if (transformationId === null || transformationId === undefined) {
             throw new Error('Required parameter transformationId was null or undefined when calling deleteOrganizationTransformationBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1465,6 +1666,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Download the logs for a job (as a text file).
      * @summary Download logs
@@ -1473,7 +1675,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: downloadOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1489,24 +1691,29 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationJobsLogs.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling downloadOrganizationJobsLogs.');
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
+        if (queryParams.logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1559,6 +1766,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * List all information about this organization.
      * @summary Organization information
@@ -1579,11 +1787,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationInfo.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1636,6 +1847,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get the status for a job.
      * @summary Get job status
@@ -1658,16 +1870,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationJobStatus.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling getOrganizationJobStatus.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1720,6 +1937,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get the logs for a job.
      * @summary Get logs
@@ -1728,7 +1946,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getOrganizationJobsLogs (organizationId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: getOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1744,24 +1962,29 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationJobsLogs.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling getOrganizationJobsLogs.');
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
+        if (queryParams.logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1814,6 +2037,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve an organizational pipelines
      * @summary Get pipeline
@@ -1836,16 +2060,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationPipeline.');
         }
 
         // verify required parameter 'pipelineId' is not null or undefined
+
+
         if (pipelineId === null || pipelineId === undefined) {
             throw new Error('Required parameter pipelineId was null or undefined when calling getOrganizationPipeline.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1898,6 +2127,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get a token to authenticate with the web socket interface.
      * @summary Get socket token for an organization
@@ -1918,11 +2148,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationSocketToken.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1975,13 +2208,14 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get all active jobs for this organization
      * @summary List active jobs
      * @param organizationId Organization ID
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listActiveOrganizationJobs (organizationId: number, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listActiveOrganizationJobs (organizationId: number, queryParams: listActiveOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1996,15 +2230,18 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listActiveOrganizationJobs.');
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2057,6 +2294,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get all jobs for this organization
      * @summary List all jobs
@@ -2068,7 +2306,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param excludePipelineTransformJobs Whether to exclude pipeline / transformation jobs
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listAllOrganizationJobs (organizationId: number, startDate?: Date, endDate?: Date, limit?: number, offset?: number, excludePipelineTransformJobs?: boolean, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listAllOrganizationJobs (organizationId: number, queryParams: listAllOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/all'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2083,35 +2321,38 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listAllOrganizationJobs.');
         }
 
-        if (startDate !== undefined) {
-            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(startDate, "Date");
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (endDate !== undefined) {
-            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(endDate, "Date");
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (excludePipelineTransformJobs !== undefined) {
-            localVarQueryParameters['excludePipelineTransformJobs'] = ObjectSerializer.serialize(excludePipelineTransformJobs, "boolean");
+        if (queryParams.excludePipelineTransformJobs !== undefined) {
+            localVarQueryParameters['excludePipelineTransformJobs'] = ObjectSerializer.serialize(queryParams.excludePipelineTransformJobs, "boolean");
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2164,12 +2405,14 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all archived organizational pipelines
      * @summary List archived pipelines
      * @param organizationId Organization ID
+     * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listArchivedOrganizationPipelines (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listArchivedOrganizationPipelines (organizationId: number, queryParams: listArchivedOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/archived'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2184,11 +2427,18 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listArchivedOrganizationPipelines.');
         }
 
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2241,6 +2491,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Get all finished jobs for this organization
      * @summary List finished jobs
@@ -2251,7 +2502,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listFinishedOrganizationJobs (organizationId: number, startDate?: Date, endDate?: Date, limit?: number, offset?: number, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listFinishedOrganizationJobs (organizationId: number, queryParams: listFinishedOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/history'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2266,31 +2517,34 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listFinishedOrganizationJobs.');
         }
 
-        if (startDate !== undefined) {
-            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(startDate, "Date");
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (endDate !== undefined) {
-            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(endDate, "Date");
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2343,6 +2597,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes).
      * @summary Get API keys
@@ -2363,11 +2618,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationApiKeys.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2420,6 +2678,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all deploy blocks.
      * @summary Get deploy blocks
@@ -2440,11 +2699,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationDeployBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2497,6 +2759,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all dsp blocks.
      * @summary Get dsp blocks
@@ -2517,11 +2780,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationDspBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2574,12 +2840,14 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all organizational pipelines
      * @summary List pipelines
      * @param organizationId Organization ID
+     * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listOrganizationPipelines (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listOrganizationPipelines (organizationId: number, queryParams: listOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2594,11 +2862,18 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationPipelines.');
         }
 
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2651,6 +2926,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all projects for the organization.
      * @summary Get projects
@@ -2671,11 +2947,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationProjects.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2728,6 +3007,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all secrets.
      * @summary Get secrets
@@ -2748,11 +3028,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationSecrets.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2805,6 +3088,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all transfer learning blocks.
      * @summary Get transfer learning blocks
@@ -2825,11 +3109,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationTransferLearningBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2882,6 +3169,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retrieve all transformation blocks.
      * @summary Get transformation blocks
@@ -2902,11 +3190,14 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationTransformationBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2959,6 +3250,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retry launch a dsp block.
      * @summary Retry connection to dsp block
@@ -2981,16 +3273,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling retryOrganizationDspBlock.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling retryOrganizationDspBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3043,6 +3340,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Retry the upload job from a transformation job. Only jobs that have failed can be retried.
      * @summary Retry transformation upload job
@@ -3065,16 +3363,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling retryOrganizationUpload.');
         }
 
         // verify required parameter 'createProjectId' is not null or undefined
+
+
         if (createProjectId === null || createProjectId === undefined) {
             throw new Error('Required parameter createProjectId was null or undefined when calling retryOrganizationUpload.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3127,6 +3430,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Revoke an API key.
      * @summary Revoke API key
@@ -3149,16 +3453,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling revokeOrganizationApiKey.');
         }
 
         // verify required parameter 'apiKeyId' is not null or undefined
+
+
         if (apiKeyId === null || apiKeyId === undefined) {
             throw new Error('Required parameter apiKeyId was null or undefined when calling revokeOrganizationApiKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3211,6 +3520,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Run an organizational pipeline
      * @summary Run pipelines
@@ -3218,7 +3528,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param pipelineId Pipeline ID
      * @param ignoreLastSuccessfulRun If set then &#x60;EI_LAST_SUCCESSFUL_RUN&#x60; is not set. You can use this to re-run a pipeline from scratch.
      */
-    public async runOrganizationPipeline (organizationId: number, pipelineId: number, ignoreLastSuccessfulRun?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
+    public async runOrganizationPipeline (organizationId: number, pipelineId: number, queryParams: runOrganizationPipelineQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}/run'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -3234,20 +3544,25 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling runOrganizationPipeline.');
         }
 
         // verify required parameter 'pipelineId' is not null or undefined
+
+
         if (pipelineId === null || pipelineId === undefined) {
             throw new Error('Required parameter pipelineId was null or undefined when calling runOrganizationPipeline.');
         }
 
-        if (ignoreLastSuccessfulRun !== undefined) {
-            localVarQueryParameters['ignoreLastSuccessfulRun'] = ObjectSerializer.serialize(ignoreLastSuccessfulRun, "boolean");
+        if (queryParams.ignoreLastSuccessfulRun !== undefined) {
+            localVarQueryParameters['ignoreLastSuccessfulRun'] = ObjectSerializer.serialize(queryParams.ignoreLastSuccessfulRun, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3300,6 +3615,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Updates a deploy block. Only values in the body will be updated.
      * @summary Update deploy block
@@ -3321,7 +3637,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param showOptimizations 
      * @param category 
      */
-    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, name?: string, dockerContainer?: string, description?: string, cliArguments?: string, requestsCpu?: number, requestsMemory?: number, limitsCpu?: number, limitsMemory?: number, photo?: RequestFile, integrateUrl?: string, privileged?: boolean, mountLearnBlock?: boolean, supportsEonCompiler?: boolean, showOptimizations?: boolean, category?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationDeployBlock (organizationId: number, deployId: number, params: updateOrganizationDeployBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy/{deployId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'deployId' + '}', encodeURIComponent(String(deployId)));
@@ -3337,78 +3653,83 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationDeployBlock.');
         }
 
         // verify required parameter 'deployId' is not null or undefined
+
+
         if (deployId === null || deployId === undefined) {
             throw new Error('Required parameter deployId was null or undefined when calling updateOrganizationDeployBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(name, "string");
+        if (params.name !== undefined) {
+            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
         }
 
-        if (dockerContainer !== undefined) {
-            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(dockerContainer, "string");
+        if (params.dockerContainer !== undefined) {
+            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(params.dockerContainer, "string");
         }
 
-        if (description !== undefined) {
-            localVarFormParams['description'] = ObjectSerializer.serialize(description, "string");
+        if (params.description !== undefined) {
+            localVarFormParams['description'] = ObjectSerializer.serialize(params.description, "string");
         }
 
-        if (cliArguments !== undefined) {
-            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(cliArguments, "string");
+        if (params.cliArguments !== undefined) {
+            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(params.cliArguments, "string");
         }
 
-        if (requestsCpu !== undefined) {
-            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(requestsCpu, "number");
+        if (params.requestsCpu !== undefined) {
+            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(params.requestsCpu, "number");
         }
 
-        if (requestsMemory !== undefined) {
-            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(requestsMemory, "number");
+        if (params.requestsMemory !== undefined) {
+            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(params.requestsMemory, "number");
         }
 
-        if (limitsCpu !== undefined) {
-            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(limitsCpu, "number");
+        if (params.limitsCpu !== undefined) {
+            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(params.limitsCpu, "number");
         }
 
-        if (limitsMemory !== undefined) {
-            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(limitsMemory, "number");
+        if (params.limitsMemory !== undefined) {
+            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(params.limitsMemory, "number");
         }
 
-        if (photo !== undefined) {
-            localVarFormParams['photo'] = photo;
+        if (params.photo !== undefined) {
+            localVarFormParams['photo'] = params.photo;
         }
         localVarUseFormData = true;
 
-        if (integrateUrl !== undefined) {
-            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(integrateUrl, "string");
+        if (params.integrateUrl !== undefined) {
+            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(params.integrateUrl, "string");
         }
 
-        if (privileged !== undefined) {
-            localVarFormParams['privileged'] = ObjectSerializer.serialize(privileged, "boolean");
+        if (params.privileged !== undefined) {
+            localVarFormParams['privileged'] = ObjectSerializer.serialize(params.privileged, "boolean");
         }
 
-        if (mountLearnBlock !== undefined) {
-            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(mountLearnBlock, "boolean");
+        if (params.mountLearnBlock !== undefined) {
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(params.mountLearnBlock, "boolean");
         }
 
-        if (supportsEonCompiler !== undefined) {
-            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(supportsEonCompiler, "boolean");
+        if (params.supportsEonCompiler !== undefined) {
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(params.supportsEonCompiler, "boolean");
         }
 
-        if (showOptimizations !== undefined) {
-            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(showOptimizations, "boolean");
+        if (params.showOptimizations !== undefined) {
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(params.showOptimizations, "boolean");
         }
 
-        if (category !== undefined) {
-            localVarFormParams['category'] = ObjectSerializer.serialize(category, "string");
+        if (params.category !== undefined) {
+            localVarFormParams['category'] = ObjectSerializer.serialize(params.category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -3460,6 +3781,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Updates a dsp block. Only values in the body will be updated.
      * @summary Update dsp block
@@ -3483,21 +3805,28 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationDspBlock.');
         }
 
         // verify required parameter 'dspId' is not null or undefined
+
+
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling updateOrganizationDspBlock.');
         }
 
         // verify required parameter 'updateOrganizationDspBlockRequest' is not null or undefined
+
+
         if (updateOrganizationDspBlockRequest === null || updateOrganizationDspBlockRequest === undefined) {
             throw new Error('Required parameter updateOrganizationDspBlockRequest was null or undefined when calling updateOrganizationDspBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3551,6 +3880,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Update an organizational pipelines
      * @summary Update pipeline
@@ -3574,21 +3904,28 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationPipeline.');
         }
 
         // verify required parameter 'pipelineId' is not null or undefined
+
+
         if (pipelineId === null || pipelineId === undefined) {
             throw new Error('Required parameter pipelineId was null or undefined when calling updateOrganizationPipeline.');
         }
 
         // verify required parameter 'organizationUpdatePipelineBody' is not null or undefined
+
+
         if (organizationUpdatePipelineBody === null || organizationUpdatePipelineBody === undefined) {
             throw new Error('Required parameter organizationUpdatePipelineBody was null or undefined when calling updateOrganizationPipeline.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3642,6 +3979,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Updates a transfer learning block. Only values in the body will be updated.
      * @summary Update transfer learning block
@@ -3665,21 +4003,28 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationTransferLearningBlock.');
         }
 
         // verify required parameter 'transferLearningId' is not null or undefined
+
+
         if (transferLearningId === null || transferLearningId === undefined) {
             throw new Error('Required parameter transferLearningId was null or undefined when calling updateOrganizationTransferLearningBlock.');
         }
 
         // verify required parameter 'updateOrganizationTransferLearningBlockRequest' is not null or undefined
+
+
         if (updateOrganizationTransferLearningBlockRequest === null || updateOrganizationTransferLearningBlockRequest === undefined) {
             throw new Error('Required parameter updateOrganizationTransferLearningBlockRequest was null or undefined when calling updateOrganizationTransferLearningBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3733,6 +4078,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Updates a transformation block. Only values in the body will be updated.
      * @summary Update transformation block
@@ -3756,21 +4102,28 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationTransformationBlock.');
         }
 
         // verify required parameter 'transformationId' is not null or undefined
+
+
         if (transformationId === null || transformationId === undefined) {
             throw new Error('Required parameter transformationId was null or undefined when calling updateOrganizationTransformationBlock.');
         }
 
         // verify required parameter 'updateOrganizationTransformationBlockRequest' is not null or undefined
+
+
         if (updateOrganizationTransformationBlockRequest === null || updateOrganizationTransformationBlockRequest === undefined) {
             throw new Error('Required parameter updateOrganizationTransformationBlockRequest was null or undefined when calling updateOrganizationTransformationBlock.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3824,6 +4177,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Upload a zip file containing a custom transformation or deployment block.
      * @summary Upload a custom block
@@ -3832,7 +4186,7 @@ export class OrganizationAllowDeveloperProfileApi {
      * @param type 
      * @param blockId 
      */
-    public async uploadCustomBlock (organizationId: number, tar: RequestFile, type: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async uploadCustomBlock (organizationId: number, params: uploadCustomBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3847,40 +4201,49 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling uploadCustomBlock.');
         }
 
         // verify required parameter 'tar' is not null or undefined
-        if (tar === null || tar === undefined) {
-            throw new Error('Required parameter tar was null or undefined when calling uploadCustomBlock.');
+        if (params.tar === null || params.tar === undefined) {
+            throw new Error('Required parameter params.tar was null or undefined when calling uploadCustomBlock.');
         }
+
+
 
         // verify required parameter 'type' is not null or undefined
-        if (type === null || type === undefined) {
-            throw new Error('Required parameter type was null or undefined when calling uploadCustomBlock.');
+        if (params.type === null || params.type === undefined) {
+            throw new Error('Required parameter params.type was null or undefined when calling uploadCustomBlock.');
         }
+
+
 
         // verify required parameter 'blockId' is not null or undefined
-        if (blockId === null || blockId === undefined) {
-            throw new Error('Required parameter blockId was null or undefined when calling uploadCustomBlock.');
+        if (params.blockId === null || params.blockId === undefined) {
+            throw new Error('Required parameter params.blockId was null or undefined when calling uploadCustomBlock.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (tar !== undefined) {
-            localVarFormParams['tar'] = tar;
+        if (params.tar !== undefined) {
+            localVarFormParams['tar'] = params.tar;
         }
         localVarUseFormData = true;
 
-        if (type !== undefined) {
-            localVarFormParams['type'] = ObjectSerializer.serialize(type, "string");
+        if (params.type !== undefined) {
+            localVarFormParams['type'] = ObjectSerializer.serialize(params.type, "string");
         }
 
-        if (blockId !== undefined) {
-            localVarFormParams['blockId'] = ObjectSerializer.serialize(blockId, "number");
+        if (params.blockId !== undefined) {
+            localVarFormParams['blockId'] = ObjectSerializer.serialize(params.blockId, "number");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -3932,6 +4295,7 @@ export class OrganizationAllowDeveloperProfileApi {
             });
         });
     }
+
     /**
      * Verify whether we can reach a bucket before adding it.
      * @summary Verify bucket connectivity
@@ -3953,16 +4317,21 @@ export class OrganizationAllowDeveloperProfileApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling verifyOrganizationBucket.');
         }
 
         // verify required parameter 'verifyOrganizationBucketRequest' is not null or undefined
+
+
         if (verifyOrganizationBucketRequest === null || verifyOrganizationBucketRequest === undefined) {
             throw new Error('Required parameter verifyOrganizationBucketRequest was null or undefined when calling verifyOrganizationBucket.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

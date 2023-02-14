@@ -59,10 +59,26 @@ export enum UserApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type uploadPhotoCurrentUserFormParams = {
+    photo: RequestFile,
+};
+
+type uploadPhotoUserFormParams = {
+    photo: RequestFile,
+};
+
+
+export type UserApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class UserApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : UserApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -71,8 +87,8 @@ export class UserApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: UserApiOpts);
+    constructor(basePathOrUsername: string, opts?: UserApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -82,6 +98,8 @@ export class UserApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -96,6 +114,14 @@ export class UserApi {
         return this._basePath;
     }
 
+    set opts(opts: UserApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -103,6 +129,7 @@ export class UserApi {
     public setApiKey(key: UserApiApiKeys, value: string | undefined) {
         (this.authentications as any)[UserApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Accept Terms of Service.
@@ -122,6 +149,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -174,6 +202,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Activate the current user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate current user
@@ -193,11 +222,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'activateUserRequest' is not null or undefined
+
+
         if (activateUserRequest === null || activateUserRequest === undefined) {
             throw new Error('Required parameter activateUserRequest was null or undefined when calling activateCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -251,6 +283,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Activate a user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate user
@@ -272,16 +305,21 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling activateUser.');
         }
 
         // verify required parameter 'activateUserRequest' is not null or undefined
+
+
         if (activateUserRequest === null || activateUserRequest === undefined) {
             throw new Error('Required parameter activateUserRequest was null or undefined when calling activateUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -335,6 +373,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Activate a user that was created by a third party. This function is only available through a JWT token.
      * @summary Activate user by third party activation code
@@ -354,11 +393,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'activateUserByThirdPartyActivationCodeRequest' is not null or undefined
+
+
         if (activateUserByThirdPartyActivationCodeRequest === null || activateUserByThirdPartyActivationCodeRequest === undefined) {
             throw new Error('Required parameter activateUserByThirdPartyActivationCodeRequest was null or undefined when calling activateUserByThirdPartyActivationCode.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -412,6 +454,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Change the password for the current user account. This function is only available through a JWT token.
      * @summary Change password current user
@@ -431,11 +474,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'changePasswordRequest' is not null or undefined
+
+
         if (changePasswordRequest === null || changePasswordRequest === undefined) {
             throw new Error('Required parameter changePasswordRequest was null or undefined when calling changePasswordCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -489,6 +535,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Change the password for a user account. This function is only available through a JWT token.
      * @summary Change password
@@ -510,16 +557,21 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling changePasswordUser.');
         }
 
         // verify required parameter 'changePasswordRequest' is not null or undefined
+
+
         if (changePasswordRequest === null || changePasswordRequest === undefined) {
             throw new Error('Required parameter changePasswordRequest was null or undefined when calling changePasswordUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -573,6 +625,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Convert current evaluation user account to regular account.
      * @summary Convert current evaluation user
@@ -592,11 +645,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'convertUserRequest' is not null or undefined
+
+
         if (convertUserRequest === null || convertUserRequest === undefined) {
             throw new Error('Required parameter convertUserRequest was null or undefined when calling convertCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -650,6 +706,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Create a developer profile for the current active user.
      * @summary Create developer profile
@@ -668,6 +725,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -720,6 +778,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Creates an evaluation user and a new project, and redirects the user to the new project.
      * @summary Create evaluation user
@@ -738,6 +797,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -784,6 +844,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Create a new user and project
      * @summary Create user
@@ -803,11 +864,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'createUserRequest' is not null or undefined
+
+
         if (createUserRequest === null || createUserRequest === undefined) {
             throw new Error('Required parameter createUserRequest was null or undefined when calling createUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -855,6 +919,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Delete a user. This function is only available through a JWT token, and can only remove the current user.
      * @summary Delete current user
@@ -873,6 +938,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -925,6 +991,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Delete user profile photo. This function is only available through a JWT token.
      * @summary Delete photo
@@ -943,6 +1010,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -995,6 +1063,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Delete a user. This function is only available through a JWT token, and can only remove the current user.
      * @summary Delete user
@@ -1015,11 +1084,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling deleteUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1072,6 +1144,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Get information about the current user. This function is only available through a JWT token.
      * @summary Get current user
@@ -1090,6 +1163,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1142,6 +1216,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Get information about a user. This function is only available through a JWT token.
      * @summary Get user
@@ -1162,11 +1237,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling getUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1219,6 +1297,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Get information about a user through an activation code. This function is only available through a JWT token.
      * @summary Get user by third party activation code
@@ -1238,11 +1317,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userByThirdPartyActivationRequest' is not null or undefined
+
+
         if (userByThirdPartyActivationRequest === null || userByThirdPartyActivationRequest === undefined) {
             throw new Error('Required parameter userByThirdPartyActivationRequest was null or undefined when calling getUserByThirdPartyActivationCode.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1296,6 +1378,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Tells whether the user needs to set its password.
      * @summary Get user password state
@@ -1316,11 +1399,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'usernameOrEmail' is not null or undefined
+
+
         if (usernameOrEmail === null || usernameOrEmail === undefined) {
             throw new Error('Required parameter usernameOrEmail was null or undefined when calling getUserNeedToSetPassword.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1367,6 +1453,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Get a list of all emails sent by Edge Impulse to the current user. This function is only available through a JWT token, and is not available for all users.
      * @summary List emails
@@ -1385,6 +1472,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1437,6 +1525,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Get a list of all emails sent by Edge Impulse to a user. This function is only available through a JWT token, and is not available for all users.
      * @summary List emails
@@ -1457,11 +1546,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling listEmailsUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1514,6 +1606,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * List all organizational storage buckets that the current user has access to. This function is only available through a JWT token.
      * @summary Get buckets current user
@@ -1532,6 +1625,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1584,6 +1678,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * List all organizational storage buckets that a user has access to. This function is only available through a JWT token.
      * @summary Get buckets
@@ -1604,11 +1699,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling listOrganizationBucketsUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1661,6 +1759,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * List all organizations that the current user is a member of. This function is only available through a JWT token.
      * @summary Get organizations
@@ -1679,6 +1778,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1731,6 +1831,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * List all organizations for a user. This function is only available through a JWT token.
      * @summary Get organizations
@@ -1751,11 +1852,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling listOrganizationsUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1808,6 +1912,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Request a new activation code for the current user. This function is only available through a JWT token.
      * @summary Request activation code
@@ -1826,6 +1931,7 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1878,6 +1984,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Request a new activation code. This function is only available through a JWT token.
      * @summary Request activation code
@@ -1898,11 +2005,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling requestActivationCodeUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1955,6 +2065,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Request a password reset link for a user.
      * @summary Request reset password
@@ -1974,11 +2085,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'requestResetPasswordRequest' is not null or undefined
+
+
         if (requestResetPasswordRequest === null || requestResetPasswordRequest === undefined) {
             throw new Error('Required parameter requestResetPasswordRequest was null or undefined when calling requestResetPassword.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2026,6 +2140,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Reset the password for a user.
      * @summary Reset password
@@ -2045,11 +2160,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'resetPasswordRequest' is not null or undefined
+
+
         if (resetPasswordRequest === null || resetPasswordRequest === undefined) {
             throw new Error('Required parameter resetPasswordRequest was null or undefined when calling resetPassword.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2097,6 +2215,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Set the password for a new SSO user. This function is only available through an SSO access token.
      * @summary Set password for SSO user
@@ -2118,16 +2237,21 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling setUserPassword.');
         }
 
         // verify required parameter 'setUserPasswordRequest' is not null or undefined
+
+
         if (setUserPasswordRequest === null || setUserPasswordRequest === undefined) {
             throw new Error('Required parameter setUserPasswordRequest was null or undefined when calling setUserPassword.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2175,6 +2299,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Update user properties such as name. This function is only available through a JWT token.
      * @summary Update current user
@@ -2194,11 +2319,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'updateUserRequest' is not null or undefined
+
+
         if (updateUserRequest === null || updateUserRequest === undefined) {
             throw new Error('Required parameter updateUserRequest was null or undefined when calling updateCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2252,6 +2380,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Update user properties such as name. This function is only available through a JWT token.
      * @summary Update user
@@ -2273,16 +2402,21 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling updateUser.');
         }
 
         // verify required parameter 'updateUserRequest' is not null or undefined
+
+
         if (updateUserRequest === null || updateUserRequest === undefined) {
             throw new Error('Required parameter updateUserRequest was null or undefined when calling updateUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2336,12 +2470,13 @@ export class UserApi {
             });
         });
     }
+
     /**
-     * Upload a photo for the current user. This function is only available through a JWT token. Don\'t trust the code generated by the widget, there are examples of using this API in Python, cURL and Node.js under the parameters.
+     * Upload a photo for the current user. This function is only available through a JWT token.
      * @summary Upload photo
      * @param photo 
      */
-    public async uploadPhotoCurrentUser (photo: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
+    public async uploadPhotoCurrentUser (params: uploadPhotoCurrentUserFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
         const localVarPath = this.basePath + '/api/user/photo';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -2355,16 +2490,19 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'photo' is not null or undefined
-        if (photo === null || photo === undefined) {
-            throw new Error('Required parameter photo was null or undefined when calling uploadPhotoCurrentUser.');
+        if (params.photo === null || params.photo === undefined) {
+            throw new Error('Required parameter params.photo was null or undefined when calling uploadPhotoCurrentUser.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (photo !== undefined) {
-            localVarFormParams['photo'] = photo;
+        if (params.photo !== undefined) {
+            localVarFormParams['photo'] = params.photo;
         }
         localVarUseFormData = true;
 
@@ -2417,13 +2555,14 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Upload a photo for a user. This function is only available through a JWT token, and is not available for all users.
      * @summary Upload photo
      * @param userId User ID
      * @param photo 
      */
-    public async uploadPhotoUser (userId: number, photo: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
+    public async uploadPhotoUser (userId: number, params: uploadPhotoUserFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/photo'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
@@ -2438,21 +2577,26 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'userId' is not null or undefined
+
+
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling uploadPhotoUser.');
         }
 
         // verify required parameter 'photo' is not null or undefined
-        if (photo === null || photo === undefined) {
-            throw new Error('Required parameter photo was null or undefined when calling uploadPhotoUser.');
+        if (params.photo === null || params.photo === undefined) {
+            throw new Error('Required parameter params.photo was null or undefined when calling uploadPhotoUser.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (photo !== undefined) {
-            localVarFormParams['photo'] = photo;
+        if (params.photo !== undefined) {
+            localVarFormParams['photo'] = params.photo;
         }
         localVarUseFormData = true;
 
@@ -2505,6 +2649,7 @@ export class UserApi {
             });
         });
     }
+
     /**
      * Verify whether the reset password code for the user is valid.
      * @summary Verify reset password code
@@ -2524,11 +2669,14 @@ export class UserApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'verifyResetPasswordRequest' is not null or undefined
+
+
         if (verifyResetPasswordRequest === null || verifyResetPasswordRequest === undefined) {
             throw new Error('Required parameter verifyResetPasswordRequest was null or undefined when calling verifyResetPassword.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

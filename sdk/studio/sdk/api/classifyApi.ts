@@ -39,10 +39,18 @@ export enum ClassifyApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type ClassifyApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ClassifyApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ClassifyApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -51,8 +59,8 @@ export class ClassifyApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ClassifyApiOpts);
+    constructor(basePathOrUsername: string, opts?: ClassifyApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -62,6 +70,8 @@ export class ClassifyApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -76,6 +86,14 @@ export class ClassifyApi {
         return this._basePath;
     }
 
+    set opts(opts: ClassifyApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -83,6 +101,7 @@ export class ClassifyApi {
     public setApiKey(key: ClassifyApiApiKeys, value: string | undefined) {
         (this.authentications as any)[ClassifyApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Classify a complete file against the current impulse. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.
@@ -106,16 +125,21 @@ export class ClassifyApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling classifySample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling classifySample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -168,6 +192,7 @@ export class ClassifyApi {
             });
         });
     }
+
     /**
      * Get classify job result, containing the result for the complete testing dataset.
      * @summary Classify job result
@@ -188,11 +213,14 @@ export class ClassifyApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getClassifyJobResult.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

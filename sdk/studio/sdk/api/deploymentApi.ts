@@ -46,10 +46,38 @@ export enum DeploymentApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type downloadBuildQueryParams = {
+    type: string,
+    modelType?: KerasModelTypeEnum,
+    engine?: DeploymentTargetEngine,
+};
+
+type findSyntiantPosteriorFormParams = {
+    targetWords: Array<string>,
+    referenceSet: string,
+    wavFile?: RequestFile,
+    metaCsvFile?: RequestFile,
+    deploymentTarget?: string,
+};
+
+type getDeploymentQueryParams = {
+    type: string,
+    modelType?: KerasModelTypeEnum,
+    engine?: DeploymentTargetEngine,
+};
+
+
+export type DeploymentApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class DeploymentApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : DeploymentApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -58,8 +86,8 @@ export class DeploymentApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: DeploymentApiOpts);
+    constructor(basePathOrUsername: string, opts?: DeploymentApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -69,6 +97,8 @@ export class DeploymentApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -83,6 +113,14 @@ export class DeploymentApi {
         return this._basePath;
     }
 
+    set opts(opts: DeploymentApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -90,6 +128,7 @@ export class DeploymentApi {
     public setApiKey(key: DeploymentApiApiKeys, value: string | undefined) {
         (this.authentications as any)[DeploymentApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Download the build artefacts for a project
@@ -99,7 +138,7 @@ export class DeploymentApi {
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      */
-    public async downloadBuild (projectId: number, type: string, modelType?: KerasModelTypeEnum, engine?: DeploymentTargetEngine, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadBuild (projectId: number, queryParams: downloadBuildQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -114,28 +153,33 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadBuild.');
         }
 
         // verify required parameter 'type' is not null or undefined
-        if (type === null || type === undefined) {
-            throw new Error('Required parameter type was null or undefined when calling downloadBuild.');
+
+        if (queryParams.type === null || queryParams.type === undefined) {
+            throw new Error('Required parameter queryParams.type was null or undefined when calling downloadBuild.');
         }
 
-        if (type !== undefined) {
-            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "string");
+
+        if (queryParams.type !== undefined) {
+            localVarQueryParameters['type'] = ObjectSerializer.serialize(queryParams.type, "string");
         }
 
-        if (modelType !== undefined) {
-            localVarQueryParameters['modelType'] = ObjectSerializer.serialize(modelType, "KerasModelTypeEnum");
+        if (queryParams.modelType !== undefined) {
+            localVarQueryParameters['modelType'] = ObjectSerializer.serialize(queryParams.modelType, "KerasModelTypeEnum");
         }
 
-        if (engine !== undefined) {
-            localVarQueryParameters['engine'] = ObjectSerializer.serialize(engine, "DeploymentTargetEngine");
+        if (queryParams.engine !== undefined) {
+            localVarQueryParameters['engine'] = ObjectSerializer.serialize(queryParams.engine, "DeploymentTargetEngine");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -188,6 +232,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Automatically find the current posterior parameters for the Syntiant deployment target
      * @summary Find Syntiant posterior parameters
@@ -196,8 +241,9 @@ export class DeploymentApi {
      * @param referenceSet 
      * @param wavFile 
      * @param metaCsvFile 
+     * @param deploymentTarget 
      */
-    public async findSyntiantPosterior (projectId: number, targetWords: Array<string>, referenceSet: string, wavFile?: RequestFile, metaCsvFile?: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async findSyntiantPosterior (projectId: number, params: findSyntiantPosteriorFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/find-syntiant-posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -212,41 +258,52 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling findSyntiantPosterior.');
         }
 
         // verify required parameter 'targetWords' is not null or undefined
-        if (targetWords === null || targetWords === undefined) {
-            throw new Error('Required parameter targetWords was null or undefined when calling findSyntiantPosterior.');
+        if (params.targetWords === null || params.targetWords === undefined) {
+            throw new Error('Required parameter params.targetWords was null or undefined when calling findSyntiantPosterior.');
         }
+
+
 
         // verify required parameter 'referenceSet' is not null or undefined
-        if (referenceSet === null || referenceSet === undefined) {
-            throw new Error('Required parameter referenceSet was null or undefined when calling findSyntiantPosterior.');
+        if (params.referenceSet === null || params.referenceSet === undefined) {
+            throw new Error('Required parameter params.referenceSet was null or undefined when calling findSyntiantPosterior.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (targetWords !== undefined) {
-            localVarFormParams['targetWords'] = ObjectSerializer.serialize(targetWords, "Array<string>");
+        if (params.targetWords !== undefined) {
+            localVarFormParams['targetWords'] = ObjectSerializer.serialize(params.targetWords, "Array<string>");
         }
 
-        if (referenceSet !== undefined) {
-            localVarFormParams['referenceSet'] = ObjectSerializer.serialize(referenceSet, "string");
+        if (params.referenceSet !== undefined) {
+            localVarFormParams['referenceSet'] = ObjectSerializer.serialize(params.referenceSet, "string");
         }
 
-        if (wavFile !== undefined) {
-            localVarFormParams['wavFile'] = wavFile;
+        if (params.wavFile !== undefined) {
+            localVarFormParams['wavFile'] = params.wavFile;
         }
         localVarUseFormData = true;
 
-        if (metaCsvFile !== undefined) {
-            localVarFormParams['metaCsvFile'] = metaCsvFile;
+        if (params.metaCsvFile !== undefined) {
+            localVarFormParams['metaCsvFile'] = params.metaCsvFile;
         }
         localVarUseFormData = true;
+
+        if (params.deploymentTarget !== undefined) {
+            localVarFormParams['deploymentTarget'] = ObjectSerializer.serialize(params.deploymentTarget, "string");
+        }
 
         let localVarRequestOptions: localVarRequest.Options = {
             method: 'POST',
@@ -297,6 +354,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Gives information on whether a deployment was already built for a type
      * @summary Get deployment info
@@ -305,7 +363,7 @@ export class DeploymentApi {
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      */
-    public async getDeployment (projectId: number, type: string, modelType?: KerasModelTypeEnum, engine?: DeploymentTargetEngine, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
+    public async getDeployment (projectId: number, queryParams: getDeploymentQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -320,28 +378,33 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDeployment.');
         }
 
         // verify required parameter 'type' is not null or undefined
-        if (type === null || type === undefined) {
-            throw new Error('Required parameter type was null or undefined when calling getDeployment.');
+
+        if (queryParams.type === null || queryParams.type === undefined) {
+            throw new Error('Required parameter queryParams.type was null or undefined when calling getDeployment.');
         }
 
-        if (type !== undefined) {
-            localVarQueryParameters['type'] = ObjectSerializer.serialize(type, "string");
+
+        if (queryParams.type !== undefined) {
+            localVarQueryParameters['type'] = ObjectSerializer.serialize(queryParams.type, "string");
         }
 
-        if (modelType !== undefined) {
-            localVarQueryParameters['modelType'] = ObjectSerializer.serialize(modelType, "KerasModelTypeEnum");
+        if (queryParams.modelType !== undefined) {
+            localVarQueryParameters['modelType'] = ObjectSerializer.serialize(queryParams.modelType, "KerasModelTypeEnum");
         }
 
-        if (engine !== undefined) {
-            localVarQueryParameters['engine'] = ObjectSerializer.serialize(engine, "DeploymentTargetEngine");
+        if (queryParams.engine !== undefined) {
+            localVarQueryParameters['engine'] = ObjectSerializer.serialize(queryParams.engine, "DeploymentTargetEngine");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -394,6 +457,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Get evaluate job result, containing detailed performance statistics for every possible variant of the impulse.
      * @summary Evaluate job result
@@ -414,11 +478,14 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getEvaluateJobResult.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -471,6 +538,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Get evaluate job result, containing detailed performance statistics for every possible variant of the impulse. This only checks cache, and throws an error if there is no data in cache.
      * @summary Check evaluate job result (cache)
@@ -491,11 +559,14 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getEvaluateJobResultCache.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -548,6 +619,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Get the current posterior parameters for the Syntiant deployment target
      * @summary Get Syntiant posterior parameters
@@ -568,11 +640,14 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSyntiantPosterior.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -625,6 +700,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * List all deployment targets
      * @summary Deployment targets
@@ -643,6 +719,7 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -695,6 +772,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * List deployment targets for a project
      * @summary Deployment targets
@@ -715,11 +793,14 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDeploymentTargetsForProject.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -772,6 +853,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * List deployment targets for a project from data sources page  (it shows some things like all Linux deploys, and hides \'fake\' deploy targets like mobile phone / computer)
      * @summary Deployment targets (data sources)
@@ -792,11 +874,14 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDeploymentTargetsForProjectDataSources.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -849,6 +934,7 @@ export class DeploymentApi {
             });
         });
     }
+
     /**
      * Set the current posterior parameters for the Syntiant deployment target
      * @summary Set Syntiant posterior parameters
@@ -870,16 +956,21 @@ export class DeploymentApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setSyntiantPosterior.');
         }
 
         // verify required parameter 'setSyntiantPosteriorRequest' is not null or undefined
+
+
         if (setSyntiantPosteriorRequest === null || setSyntiantPosteriorRequest === undefined) {
             throw new Error('Required parameter setSyntiantPosteriorRequest was null or undefined when calling setSyntiantPosterior.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

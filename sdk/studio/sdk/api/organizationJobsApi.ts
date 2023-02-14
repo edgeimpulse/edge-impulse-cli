@@ -42,10 +42,53 @@ export enum OrganizationJobsApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type cancelOrganizationJobQueryParams = {
+    forceCancel?: string,
+};
+
+type downloadOrganizationJobsLogsQueryParams = {
+    limit?: number,
+    logLevel?: 'error' | 'warn' | 'info' | 'debug',
+};
+
+type getOrganizationJobsLogsQueryParams = {
+    limit?: number,
+    logLevel?: 'error' | 'warn' | 'info' | 'debug',
+};
+
+type listActiveOrganizationJobsQueryParams = {
+    rootOnly?: boolean,
+};
+
+type listAllOrganizationJobsQueryParams = {
+    startDate?: Date,
+    endDate?: Date,
+    limit?: number,
+    offset?: number,
+    excludePipelineTransformJobs?: boolean,
+    rootOnly?: boolean,
+};
+
+type listFinishedOrganizationJobsQueryParams = {
+    startDate?: Date,
+    endDate?: Date,
+    limit?: number,
+    offset?: number,
+    rootOnly?: boolean,
+};
+
+
+export type OrganizationJobsApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class OrganizationJobsApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : OrganizationJobsApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -54,8 +97,8 @@ export class OrganizationJobsApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: OrganizationJobsApiOpts);
+    constructor(basePathOrUsername: string, opts?: OrganizationJobsApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -65,6 +108,8 @@ export class OrganizationJobsApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -79,6 +124,14 @@ export class OrganizationJobsApi {
         return this._basePath;
     }
 
+    set opts(opts: OrganizationJobsApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -87,6 +140,7 @@ export class OrganizationJobsApi {
         (this.authentications as any)[OrganizationJobsApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Cancel a running job.
      * @summary Cancel job
@@ -94,7 +148,7 @@ export class OrganizationJobsApi {
      * @param jobId Job ID
      * @param forceCancel If set to \&#39;true\&#39;, we won\&#39;t wait for the job cluster to cancel the job, and will mark the job as finished.
      */
-    public async cancelOrganizationJob (organizationId: number, jobId: number, forceCancel?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async cancelOrganizationJob (organizationId: number, jobId: number, queryParams: cancelOrganizationJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/cancel'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -110,20 +164,25 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling cancelOrganizationJob.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling cancelOrganizationJob.');
         }
 
-        if (forceCancel !== undefined) {
-            localVarQueryParameters['forceCancel'] = ObjectSerializer.serialize(forceCancel, "string");
+        if (queryParams.forceCancel !== undefined) {
+            localVarQueryParameters['forceCancel'] = ObjectSerializer.serialize(queryParams.forceCancel, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -176,6 +235,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Download the logs for a job (as a text file).
      * @summary Download logs
@@ -184,7 +244,7 @@ export class OrganizationJobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: downloadOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -200,24 +260,29 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationJobsLogs.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling downloadOrganizationJobsLogs.');
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
+        if (queryParams.logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -270,6 +335,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get the status for a job.
      * @summary Get job status
@@ -292,16 +358,21 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationJobStatus.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling getOrganizationJobStatus.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -354,6 +425,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get the logs for a job.
      * @summary Get logs
@@ -362,7 +434,7 @@ export class OrganizationJobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getOrganizationJobsLogs (organizationId: number, jobId: number, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: getOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -378,24 +450,29 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationJobsLogs.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling getOrganizationJobsLogs.');
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
+        if (queryParams.logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -448,6 +525,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get a token to authenticate with the web socket interface.
      * @summary Get socket token for an organization
@@ -468,11 +546,14 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationSocketToken.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -525,13 +606,14 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get all active jobs for this organization
      * @summary List active jobs
      * @param organizationId Organization ID
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listActiveOrganizationJobs (organizationId: number, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listActiveOrganizationJobs (organizationId: number, queryParams: listActiveOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -546,15 +628,18 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listActiveOrganizationJobs.');
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -607,6 +692,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get all jobs for this organization
      * @summary List all jobs
@@ -618,7 +704,7 @@ export class OrganizationJobsApi {
      * @param excludePipelineTransformJobs Whether to exclude pipeline / transformation jobs
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listAllOrganizationJobs (organizationId: number, startDate?: Date, endDate?: Date, limit?: number, offset?: number, excludePipelineTransformJobs?: boolean, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listAllOrganizationJobs (organizationId: number, queryParams: listAllOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/all'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -633,35 +719,38 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listAllOrganizationJobs.');
         }
 
-        if (startDate !== undefined) {
-            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(startDate, "Date");
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (endDate !== undefined) {
-            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(endDate, "Date");
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (excludePipelineTransformJobs !== undefined) {
-            localVarQueryParameters['excludePipelineTransformJobs'] = ObjectSerializer.serialize(excludePipelineTransformJobs, "boolean");
+        if (queryParams.excludePipelineTransformJobs !== undefined) {
+            localVarQueryParameters['excludePipelineTransformJobs'] = ObjectSerializer.serialize(queryParams.excludePipelineTransformJobs, "boolean");
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -714,6 +803,7 @@ export class OrganizationJobsApi {
             });
         });
     }
+
     /**
      * Get all finished jobs for this organization
      * @summary List finished jobs
@@ -724,7 +814,7 @@ export class OrganizationJobsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listFinishedOrganizationJobs (organizationId: number, startDate?: Date, endDate?: Date, limit?: number, offset?: number, rootOnly?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listFinishedOrganizationJobs (organizationId: number, queryParams: listFinishedOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/history'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -739,31 +829,34 @@ export class OrganizationJobsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listFinishedOrganizationJobs.');
         }
 
-        if (startDate !== undefined) {
-            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(startDate, "Date");
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (endDate !== undefined) {
-            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(endDate, "Date");
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (rootOnly !== undefined) {
-            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(rootOnly, "boolean");
+        if (queryParams.rootOnly !== undefined) {
+            localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

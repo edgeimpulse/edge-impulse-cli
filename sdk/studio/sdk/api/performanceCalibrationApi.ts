@@ -45,10 +45,22 @@ export enum PerformanceCalibrationApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type uploadLabeledAudioFormParams = {
+    zip: RequestFile,
+};
+
+
+export type PerformanceCalibrationApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class PerformanceCalibrationApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : PerformanceCalibrationApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -57,8 +69,8 @@ export class PerformanceCalibrationApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: PerformanceCalibrationApiOpts);
+    constructor(basePathOrUsername: string, opts?: PerformanceCalibrationApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -68,6 +80,8 @@ export class PerformanceCalibrationApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -82,6 +96,14 @@ export class PerformanceCalibrationApi {
         return this._basePath;
     }
 
+    set opts(opts: PerformanceCalibrationApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -89,6 +111,7 @@ export class PerformanceCalibrationApi {
     public setApiKey(key: PerformanceCalibrationApiApiKeys, value: string | undefined) {
         (this.authentications as any)[PerformanceCalibrationApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Clears the current performance calibration parameters
@@ -110,11 +133,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deletePerformanceCalibrationSavedParameters.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -167,6 +193,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get performance calibration ground truth data
      * @summary Get ground truth
@@ -187,11 +214,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationGroundTruth.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -244,6 +274,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get performance calibration parameter sets
      * @summary Get parameter sets
@@ -264,11 +295,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationParameterSets.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -321,6 +355,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get performance calibration raw result
      * @summary Get raw result
@@ -341,11 +376,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationRawResult.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -398,6 +436,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get performance calibration stored parameters
      * @summary Get parameters
@@ -418,11 +457,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationSavedParameters.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -475,6 +517,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get performance calibration status
      * @summary Get status
@@ -495,11 +538,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationStatus.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -552,6 +598,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Get the synthetic sample as a WAV file
      * @summary Get WAV file
@@ -572,11 +619,14 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getWavFile.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -629,6 +679,7 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Set the current performance calibration parameters
      * @summary Save performance calibration parameters
@@ -650,16 +701,21 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setPerformanceCalibrationSavedParameters.');
         }
 
         // verify required parameter 'performanceCalibrationSaveParameterSetRequest' is not null or undefined
+
+
         if (performanceCalibrationSaveParameterSetRequest === null || performanceCalibrationSaveParameterSetRequest === undefined) {
             throw new Error('Required parameter performanceCalibrationSaveParameterSetRequest was null or undefined when calling setPerformanceCalibrationSavedParameters.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -713,13 +769,14 @@ export class PerformanceCalibrationApi {
             });
         });
     }
+
     /**
      * Upload a zip files with a wav file and its Label metadata to run performance calibration on it.
      * @summary Upload Performance Calibration Audio files
      * @param projectId Project ID
      * @param zip 
      */
-    public async uploadLabeledAudio (projectId: number, zip: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
+    public async uploadLabeledAudio (projectId: number, params: uploadLabeledAudioFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -734,21 +791,26 @@ export class PerformanceCalibrationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling uploadLabeledAudio.');
         }
 
         // verify required parameter 'zip' is not null or undefined
-        if (zip === null || zip === undefined) {
-            throw new Error('Required parameter zip was null or undefined when calling uploadLabeledAudio.');
+        if (params.zip === null || params.zip === undefined) {
+            throw new Error('Required parameter params.zip was null or undefined when calling uploadLabeledAudio.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (zip !== undefined) {
-            localVarFormParams['zip'] = zip;
+        if (params.zip !== undefined) {
+            localVarFormParams['zip'] = params.zip;
         }
         localVarUseFormData = true;
 

@@ -11,6 +11,7 @@
  */
 
 import { OrganizationUser } from './organizationUser';
+import { Project } from './project';
 
 export class Organization {
     'id': number;
@@ -23,9 +24,10 @@ export class Organization {
     'users': Array<OrganizationUser>;
     'isDeveloperProfile': boolean;
     /**
-    * Unique identifier of the white label this project belongs to, if any.
+    * Unique identifier of the white label this organization belongs to, if any.
     */
     'whitelabelId': number | null;
+    'projects'?: Array<Project>;
 
     static discriminator: string | undefined = undefined;
 
@@ -64,6 +66,11 @@ export class Organization {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<Project>"
         }    ];
 
     static getAttributeTypeMap() {

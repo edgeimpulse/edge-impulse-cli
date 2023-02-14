@@ -1,6 +1,6 @@
 # Edge Impulse Uploader
 
-The uploader signs local files and uploads them to the [ingestion service](https://docs.edgeimpulse.com/reference-link/ingestion-api). This is useful to upload existing data sets, or to migrate data between Edge Impulse instances. The uploader currently handles these type of files:
+The uploader signs local files and uploads them to the [ingestion service](https://docs.edgeimpulse.com/reference/data-ingestion/new-ingestion-api). This is useful to upload existing data sets, or to migrate data between Edge Impulse instances. The uploader currently handles these type of files:
 
 1. `.cbor` - Files in the Edge Impulse Data Acquisition format. The uploader will not resign these files, only upload them.
 2. `.json` - Files in the Edge Impulse Data Acquisition format. The uploader will not resign these files, only upload them.
@@ -33,7 +33,7 @@ Or set the category to `split` to automatically split data between training and 
 
 ### Labeling
 
-A label is automatically infered from the file name, see the [Ingestion service documentation](https://docs.edgeimpulse.com/reference#ingestion-api). You can override this with the `--label` option. E.g.:
+A label is automatically infered from the file name, see the [Ingestion service documentation](https://docs.edgeimpulse.com/reference/data-ingestion/new-ingestion-api). You can override this with the `--label` option. E.g.:
 
 ```
 $ edge-impulse-uploader --label noise path/to/a/file.wav

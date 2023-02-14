@@ -19,6 +19,10 @@ export class AdminUpdateUserRequest {
     * New email. This will also update the forum\'s email address but the user may need to logout/login back
     */
     'email'?: string;
+    /**
+    * New user full name
+    */
+    'name'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -26,6 +30,11 @@ export class AdminUpdateUserRequest {
         {
             "name": "email",
             "baseName": "email",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         }    ];
 

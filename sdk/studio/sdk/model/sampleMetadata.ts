@@ -11,23 +11,32 @@
  */
 
 
-export class DeployPretrainedModelInputNone {
-    'inputType': DeployPretrainedModelInputNoneInputTypeEnum;
+export class SampleMetadata {
+    /**
+    * Sample ID
+    */
+    'id': number;
+    /**
+    * Sample free form associated metadata
+    */
+    'metadata': { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "inputType",
-            "baseName": "inputType",
-            "type": "DeployPretrainedModelInputNoneInputTypeEnum"
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return DeployPretrainedModelInputNone.attributeTypeMap;
+        return SampleMetadata.attributeTypeMap;
     }
 }
 
-
-export type DeployPretrainedModelInputNoneInputTypeEnum = 'none';
-export const DeployPretrainedModelInputNoneInputTypeEnumValues: string[] = ['none'];

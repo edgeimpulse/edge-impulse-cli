@@ -18,6 +18,7 @@ export class User {
     'name': string;
     'photo'?: string;
     'created': Date;
+    'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
@@ -48,6 +49,11 @@ export class User {
         {
             "name": "created",
             "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "lastSeen",
+            "baseName": "lastSeen",
             "type": "Date"
         },
         {

@@ -30,6 +30,7 @@ import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
+import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
 import { ListSamplesResponse } from '../model/listSamplesResponse';
@@ -65,10 +66,147 @@ export enum RawDataApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type batchDeleteQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+};
+
+type batchDisableQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+};
+
+type batchEditLabelsQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+};
+
+type batchEnableQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+};
+
+type batchMoveQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+};
+
+type countSamplesQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+};
+
+type getSampleQueryParams = {
+    limitPayloadValues?: number,
+};
+
+type getSampleAsAudioQueryParams = {
+    axisIx: number,
+    sliceStart?: number,
+    sliceEnd?: number,
+};
+
+type getSampleAsImageQueryParams = {
+    afterInputBlock?: boolean,
+};
+
+type getSampleAsVideoQueryParams = {
+    afterInputBlock?: boolean,
+};
+
+type getSampleMetadataQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+};
+
+type getSampleSliceQueryParams = {
+    sliceStart: number,
+    sliceEnd: number,
+};
+
+type getUncroppedDownsampledSampleQueryParams = {
+    limitPayloadValues?: number,
+    zoomStart?: number,
+    zoomEnd?: number,
+};
+
+type listSamplesQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    limit?: number,
+    offset?: number,
+    excludeSensors?: boolean,
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+};
+
+type uploadDataExplorerScreenshotFormParams = {
+    image: RequestFile,
+};
+
+
+export type RawDataApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class RawDataApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : RawDataApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -77,8 +215,8 @@ export class RawDataApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: RawDataApiOpts);
+    constructor(basePathOrUsername: string, opts?: RawDataApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -88,6 +226,8 @@ export class RawDataApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -102,6 +242,14 @@ export class RawDataApi {
         return this._basePath;
     }
 
+    set opts(opts: RawDataApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -109,6 +257,7 @@ export class RawDataApi {
     public setApiKey(key: RawDataApiApiKeys, value: string | undefined) {
         (this.authentications as any)[RawDataApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Deletes samples. Note that this does not delete the data from cold storage.
@@ -125,7 +274,7 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchDelete (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -140,56 +289,61 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling batchDelete.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling batchDelete.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchDelete.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -242,6 +396,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Disables samples, ensuring that they are excluded from the dataset.
      * @summary Disable multiple samples
@@ -257,7 +412,7 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchDisable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -272,56 +427,61 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling batchDisable.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling batchDisable.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchDisable.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -374,6 +534,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Sets the label (also known as class) of multiple samples.
      * @summary Edit labels for multiple samples
@@ -390,7 +551,7 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchEditLabels (projectId: number, category: 'training' | 'testing' | 'anomaly', editSampleLabelRequest: EditSampleLabelRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -405,61 +566,68 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling batchEditLabels.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling batchEditLabels.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchEditLabels.');
         }
 
+
         // verify required parameter 'editSampleLabelRequest' is not null or undefined
+
+
         if (editSampleLabelRequest === null || editSampleLabelRequest === undefined) {
             throw new Error('Required parameter editSampleLabelRequest was null or undefined when calling batchEditLabels.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -513,6 +681,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Enables samples, ensuring that they are not excluded from the dataset.
      * @summary Enable multiple samples
@@ -528,7 +697,7 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchEnable (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -543,56 +712,61 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling batchEnable.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling batchEnable.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchEnable.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -645,6 +819,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Move multiple samples to another category (e.g. from test to training).
      * @summary Move multiple samples
@@ -661,7 +836,7 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async batchMove (projectId: number, category: 'training' | 'testing' | 'anomaly', moveRawDataRequest: MoveRawDataRequest, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', ids?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -676,61 +851,68 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling batchMove.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling batchMove.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchMove.');
         }
 
+
         // verify required parameter 'moveRawDataRequest' is not null or undefined
+
+
         if (moveRawDataRequest === null || moveRawDataRequest === undefined) {
             throw new Error('Required parameter moveRawDataRequest was null or undefined when calling batchMove.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(ids, "string");
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -784,6 +966,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Classify an image using another neural network.
      * @summary Auto-label an image
@@ -807,21 +990,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling classifyUsingAutolabel.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling classifyUsingAutolabel.');
         }
 
         // verify required parameter 'objectDetectionAutoLabelRequest' is not null or undefined
+
+
         if (objectDetectionAutoLabelRequest === null || objectDetectionAutoLabelRequest === undefined) {
             throw new Error('Required parameter objectDetectionAutoLabelRequest was null or undefined when calling classifyUsingAutolabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -875,6 +1065,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Remove the current data explorer state
      * @summary Clear data explorer
@@ -895,11 +1086,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling clearDataExplorer.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -952,6 +1146,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Count all raw data by category.
      * @summary Count samples
@@ -966,7 +1161,7 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async countSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
+    public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -981,52 +1176,57 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling countSamples.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling countSamples.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling countSamples.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1079,6 +1279,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Crop a sample to within a new range.
      * @summary Crop sample
@@ -1102,21 +1303,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling cropSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling cropSample.');
         }
 
         // verify required parameter 'cropSampleRequest' is not null or undefined
+
+
         if (cropSampleRequest === null || cropSampleRequest === undefined) {
             throw new Error('Required parameter cropSampleRequest was null or undefined when calling cropSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1170,6 +1378,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Deletes all samples for this project over all categories. This also invalidates all DSP and learn blocks. Note that this does not delete the data from cold storage.
      * @summary Remove all samples
@@ -1190,11 +1399,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteAllSamples.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1247,6 +1459,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Deletes all samples for this project over a single category. Note that this does not delete the data from cold storage.
      * @summary Remove all samples by category
@@ -1269,16 +1482,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteAllSamplesByCategory.');
         }
 
         // verify required parameter 'category' is not null or undefined
+
+
         if (category === null || category === undefined) {
             throw new Error('Required parameter category was null or undefined when calling deleteAllSamplesByCategory.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1331,6 +1549,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Deletes the sample. Note that this does not delete the data from cold storage.
      * @summary Remove sample
@@ -1353,16 +1572,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling deleteSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1415,6 +1639,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Disable a sample, ensuring that it is excluded from the dataset.
      * @summary Disable sample
@@ -1437,16 +1662,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling disableSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling disableSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1499,6 +1729,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Sets the label (also known as class) of the sample. Use the same label for similar types of data, as they are used during training.
      * @summary Edit label
@@ -1522,21 +1753,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling editLabel.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling editLabel.');
         }
 
         // verify required parameter 'editSampleLabelRequest' is not null or undefined
+
+
         if (editSampleLabelRequest === null || editSampleLabelRequest === undefined) {
             throw new Error('Required parameter editSampleLabelRequest was null or undefined when calling editLabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1590,6 +1828,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Enable a sample, ensuring that it is not excluded from the dataset.
      * @summary Enable sample
@@ -1612,16 +1851,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling enableSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling enableSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1674,6 +1918,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Find start and end times for all non-noise events in a sample
      * @summary Find segments
@@ -1697,21 +1942,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling findSegmentsInSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling findSegmentsInSample.');
         }
 
         // verify required parameter 'findSegmentSampleRequest' is not null or undefined
+
+
         if (findSegmentSampleRequest === null || findSegmentSampleRequest === undefined) {
             throw new Error('Required parameter findSegmentSampleRequest was null or undefined when calling findSegmentsInSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1765,6 +2017,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * t-SNE2 output of the raw dataset
      * @summary Get data explorer features
@@ -1785,11 +2038,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDataExplorerFeatures.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1842,6 +2098,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Predictions for every data explorer point (only available when using current impulse to populate data explorer)
      * @summary Get data explorer predictions
@@ -1862,11 +2119,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDataExplorerPredictions.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1919,6 +2179,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get data explorer configuration, like the type of data, and the input / dsp block to use.
      * @summary Get data explorer settings
@@ -1939,11 +2200,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDataExplorerSettings.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1996,6 +2260,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get all unlabeled items from the object detection queue.
      * @summary Object detection label queue
@@ -2016,11 +2281,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getObjectDetectionLabelQueue.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2073,6 +2341,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get count for unlabeled items from the object detection queue.
      * @summary Object detection label queue count
@@ -2093,11 +2362,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getObjectDetectionLabelQueueCount.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2150,6 +2422,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get a sample.
      * @summary Get sample
@@ -2157,7 +2430,7 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      */
-    public async getSample (projectId: number, sampleId: number, limitPayloadValues?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSample (projectId: number, sampleId: number, queryParams: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2173,20 +2446,25 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSample.');
         }
 
-        if (limitPayloadValues !== undefined) {
-            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(limitPayloadValues, "number");
+        if (queryParams.limitPayloadValues !== undefined) {
+            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2239,6 +2517,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get a sample as a WAV file. This only applies to samples with an audio axis.
      * @summary Get WAV file
@@ -2248,7 +2527,7 @@ export class RawDataApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice
      */
-    public async getSampleAsAudio (projectId: number, sampleId: number, axisIx: number, sliceStart?: number, sliceEnd?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2264,33 +2543,40 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleAsAudio.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsAudio.');
         }
 
         // verify required parameter 'axisIx' is not null or undefined
-        if (axisIx === null || axisIx === undefined) {
-            throw new Error('Required parameter axisIx was null or undefined when calling getSampleAsAudio.');
+
+        if (queryParams.axisIx === null || queryParams.axisIx === undefined) {
+            throw new Error('Required parameter queryParams.axisIx was null or undefined when calling getSampleAsAudio.');
         }
 
-        if (axisIx !== undefined) {
-            localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(axisIx, "number");
+
+        if (queryParams.axisIx !== undefined) {
+            localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(queryParams.axisIx, "number");
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2343,6 +2629,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get a sample as an image file. This only applies to samples with RGBA data.
      * @summary Get image file
@@ -2350,7 +2637,7 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
      */
-    public async getSampleAsImage (projectId: number, sampleId: number, afterInputBlock?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsImage (projectId: number, sampleId: number, queryParams: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2366,20 +2653,25 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleAsImage.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsImage.');
         }
 
-        if (afterInputBlock !== undefined) {
-            localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(afterInputBlock, "boolean");
+        if (queryParams.afterInputBlock !== undefined) {
+            localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2432,6 +2724,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Download a sample in it\'s original format as uploaded to the ingestion service.
      * @summary Download file
@@ -2454,16 +2747,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleAsRaw.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsRaw.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2516,6 +2814,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get a sample as an video file. This only applies to samples with video data.
      * @summary Get video file
@@ -2523,7 +2822,7 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
      */
-    public async getSampleAsVideo (projectId: number, sampleId: number, afterInputBlock?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2539,20 +2838,25 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleAsVideo.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsVideo.');
         }
 
-        if (afterInputBlock !== undefined) {
-            localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(afterInputBlock, "boolean");
+        if (queryParams.afterInputBlock !== undefined) {
+            localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2605,6 +2909,100 @@ export class RawDataApi {
             });
         });
     }
+
+    /**
+     * Get metadata for all samples in a project.
+     * @summary Get project sample metadata
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     */
+    public async getSampleMetadata (projectId: number, queryParams: getSampleMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleMetadataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getSampleMetadata.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling getSampleMetadata.');
+        }
+
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetSampleMetadataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetSampleMetadataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Get a slice of a sample.
      * @summary Get sample slice
@@ -2613,7 +3011,7 @@ export class RawDataApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice
      */
-    public async getSampleSlice (projectId: number, sampleId: number, sliceStart: number, sliceEnd: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2629,34 +3027,43 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSampleSlice.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleSlice.');
         }
 
         // verify required parameter 'sliceStart' is not null or undefined
-        if (sliceStart === null || sliceStart === undefined) {
-            throw new Error('Required parameter sliceStart was null or undefined when calling getSampleSlice.');
+
+        if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
+            throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling getSampleSlice.');
         }
+
 
         // verify required parameter 'sliceEnd' is not null or undefined
-        if (sliceEnd === null || sliceEnd === undefined) {
-            throw new Error('Required parameter sliceEnd was null or undefined when calling getSampleSlice.');
+
+        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
+            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling getSampleSlice.');
         }
 
-        if (sliceStart !== undefined) {
-            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(sliceStart, "number");
+
+        if (queryParams.sliceStart !== undefined) {
+            localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (sliceEnd !== undefined) {
-            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(sliceEnd, "number");
+        if (queryParams.sliceEnd !== undefined) {
+            localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2709,6 +3116,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Get the original, uncropped, downsampled data.
      * @summary Get the original downsampled data
@@ -2718,7 +3126,7 @@ export class RawDataApi {
      * @param zoomStart Zoom into the sample, with the focus starting at this index
      * @param zoomEnd Zoom into the sample, with the focus ending at this index
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, limitPayloadValues?: number, zoomStart?: number, zoomEnd?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2734,28 +3142,33 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getUncroppedDownsampledSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling getUncroppedDownsampledSample.');
         }
 
-        if (limitPayloadValues !== undefined) {
-            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(limitPayloadValues, "number");
+        if (queryParams.limitPayloadValues !== undefined) {
+            localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
-        if (zoomStart !== undefined) {
-            localVarQueryParameters['zoomStart'] = ObjectSerializer.serialize(zoomStart, "number");
+        if (queryParams.zoomStart !== undefined) {
+            localVarQueryParameters['zoomStart'] = ObjectSerializer.serialize(queryParams.zoomStart, "number");
         }
 
-        if (zoomEnd !== undefined) {
-            localVarQueryParameters['zoomEnd'] = ObjectSerializer.serialize(zoomEnd, "number");
+        if (queryParams.zoomEnd !== undefined) {
+            localVarQueryParameters['zoomEnd'] = ObjectSerializer.serialize(queryParams.zoomEnd, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2808,6 +3221,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * t-SNE2 output of the raw dataset
      * @summary Check data explorer features
@@ -2828,11 +3242,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling hasDataExplorerFeatures.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2885,6 +3302,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Retrieve all raw data by category.
      * @summary List samples
@@ -2902,7 +3320,7 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      */
-    public async listSamples (projectId: number, category: 'training' | 'testing' | 'anomaly', limit?: number, offset?: number, excludeSensors?: boolean, labels?: string, filename?: string, maxLength?: number, minLength?: number, minFrequency?: number, maxFrequency?: number, signatureValidity?: 'both' | 'valid' | 'invalid', includeDisabled?: 'both' | 'enabled' | 'disabled', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
+    public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2917,64 +3335,69 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listSamples.');
         }
 
         // verify required parameter 'category' is not null or undefined
-        if (category === null || category === undefined) {
-            throw new Error('Required parameter category was null or undefined when calling listSamples.');
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling listSamples.');
         }
 
-        if (category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(category, "'training' | 'testing' | 'anomaly'");
+
+        if (queryParams.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (excludeSensors !== undefined) {
-            localVarQueryParameters['excludeSensors'] = ObjectSerializer.serialize(excludeSensors, "boolean");
+        if (queryParams.excludeSensors !== undefined) {
+            localVarQueryParameters['excludeSensors'] = ObjectSerializer.serialize(queryParams.excludeSensors, "boolean");
         }
 
-        if (labels !== undefined) {
-            localVarQueryParameters['labels'] = ObjectSerializer.serialize(labels, "string");
+        if (queryParams.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (filename !== undefined) {
-            localVarQueryParameters['filename'] = ObjectSerializer.serialize(filename, "string");
+        if (queryParams.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (maxLength !== undefined) {
-            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(maxLength, "number");
+        if (queryParams.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (minLength !== undefined) {
-            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(minLength, "number");
+        if (queryParams.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (minFrequency !== undefined) {
-            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(minFrequency, "number");
+        if (queryParams.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (maxFrequency !== undefined) {
-            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(maxFrequency, "number");
+        if (queryParams.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (signatureValidity !== undefined) {
-            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(signatureValidity, "'both' | 'valid' | 'invalid'");
+        if (queryParams.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (includeDisabled !== undefined) {
-            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(includeDisabled, "'both' | 'enabled' | 'disabled'");
+        if (queryParams.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3027,6 +3450,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Move a sample to another category (e.g. from test to training).
      * @summary Move sample
@@ -3050,21 +3474,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling moveSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling moveSample.');
         }
 
         // verify required parameter 'moveRawDataRequest' is not null or undefined
+
+
         if (moveRawDataRequest === null || moveRawDataRequest === undefined) {
             throw new Error('Required parameter moveRawDataRequest was null or undefined when calling moveSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3118,6 +3549,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
      * @summary Rebalance dataset
@@ -3138,11 +3570,14 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling rebalanceDataset.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3195,6 +3630,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Sets the file name of the sample. This name does not need to be unique, but it\'s highly recommended to do so.
      * @summary Rename sample
@@ -3218,21 +3654,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling renameSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling renameSample.');
         }
 
         // verify required parameter 'renameSampleRequest' is not null or undefined
+
+
         if (renameSampleRequest === null || renameSampleRequest === undefined) {
             throw new Error('Required parameter renameSampleRequest was null or undefined when calling renameSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3286,6 +3729,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * If a sample failed processing, retry the processing operation.
      * @summary Retry processing
@@ -3308,16 +3752,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling retryProcessing.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling retryProcessing.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3370,6 +3819,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Slice a sample into multiple segments. The original file will be marked as deleted, but you can crop any created segment to retrieve the original file.
      * @summary Segment sample
@@ -3393,21 +3843,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling segmentSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling segmentSample.');
         }
 
         // verify required parameter 'segmentSampleRequest' is not null or undefined
+
+
         if (segmentSampleRequest === null || segmentSampleRequest === undefined) {
             throw new Error('Required parameter segmentSampleRequest was null or undefined when calling segmentSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3461,6 +3918,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Set data explorer configuration, like the type of data, and the input / dsp block to use.
      * @summary Set data explorer settings
@@ -3482,16 +3940,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setDataExplorerSettings.');
         }
 
         // verify required parameter 'dataExplorerSettings' is not null or undefined
+
+
         if (dataExplorerSettings === null || dataExplorerSettings === undefined) {
             throw new Error('Required parameter dataExplorerSettings was null or undefined when calling setDataExplorerSettings.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3545,6 +4008,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Set the bounding boxes for a sample
      * @summary Set bounding boxes
@@ -3568,21 +4032,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setSampleBoundingBoxes.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling setSampleBoundingBoxes.');
         }
 
         // verify required parameter 'sampleBoundingBoxesRequest' is not null or undefined
+
+
         if (sampleBoundingBoxesRequest === null || sampleBoundingBoxesRequest === undefined) {
             throw new Error('Required parameter sampleBoundingBoxesRequest was null or undefined when calling setSampleBoundingBoxes.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3636,6 +4107,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Adds or updates the metadata associated to a sample.
      * @summary Set sample metadata
@@ -3659,21 +4131,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setSampleMetadata.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling setSampleMetadata.');
         }
 
         // verify required parameter 'setSampleMetadataRequest' is not null or undefined
+
+
         if (setSampleMetadataRequest === null || setSampleMetadataRequest === undefined) {
             throw new Error('Required parameter setSampleMetadataRequest was null or undefined when calling setSampleMetadata.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3727,6 +4206,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Split a video sample into individual frames.
      * @summary Split sample into frames
@@ -3750,21 +4230,28 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling splitSampleInFrames.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling splitSampleInFrames.');
         }
 
         // verify required parameter 'splitSampleInFramesRequest' is not null or undefined
+
+
         if (splitSampleInFramesRequest === null || splitSampleInFramesRequest === undefined) {
             throw new Error('Required parameter splitSampleInFramesRequest was null or undefined when calling splitSampleInFrames.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3818,6 +4305,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * When segmenting a sample into smaller segments, store the segment length to ensure uniform segment lengths.
      * @summary Store the last segment length
@@ -3839,16 +4327,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling storeSegmentLength.');
         }
 
         // verify required parameter 'storeSegmentLengthRequest' is not null or undefined
+
+
         if (storeSegmentLengthRequest === null || storeSegmentLengthRequest === undefined) {
             throw new Error('Required parameter storeSegmentLengthRequest was null or undefined when calling storeSegmentLength.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3902,6 +4395,7 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Track objects between two samples. Source sample should have bounding boxes set.
      * @summary Track objects
@@ -3923,16 +4417,21 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling trackObjects.');
         }
 
         // verify required parameter 'trackObjectsRequest' is not null or undefined
+
+
         if (trackObjectsRequest === null || trackObjectsRequest === undefined) {
             throw new Error('Required parameter trackObjectsRequest was null or undefined when calling trackObjects.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -3986,13 +4485,14 @@ export class RawDataApi {
             });
         });
     }
+
     /**
      * Used internally (from a data pipeline) to upload a picture of the data explorer
      * @summary Upload a data explorer screenshot
      * @param projectId Project ID
      * @param image 
      */
-    public async uploadDataExplorerScreenshot (projectId: number, image: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadDataExplorerScreenshot (projectId: number, params: uploadDataExplorerScreenshotFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/screenshot'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -4007,21 +4507,26 @@ export class RawDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling uploadDataExplorerScreenshot.');
         }
 
         // verify required parameter 'image' is not null or undefined
-        if (image === null || image === undefined) {
-            throw new Error('Required parameter image was null or undefined when calling uploadDataExplorerScreenshot.');
+        if (params.image === null || params.image === undefined) {
+            throw new Error('Required parameter params.image was null or undefined when calling uploadDataExplorerScreenshot.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (image !== undefined) {
-            localVarFormParams['image'] = image;
+        if (params.image !== undefined) {
+            localVarFormParams['image'] = params.image;
         }
         localVarUseFormData = true;
 

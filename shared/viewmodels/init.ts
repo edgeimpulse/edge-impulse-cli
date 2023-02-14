@@ -41,6 +41,7 @@ export enum PageType {
     DeveloperProfile = 39,
     AccountSettings = 40,
     UploadCsv = 41,
+    PretrainedModel = 42,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -59,6 +60,7 @@ export enum PageType {
     OrganizationSettings = 105,
     OrganizationDatasets = 106,
     OrganizationJobs = 107,
+    OrganizationDataHub = 108,
     UploadPortal = 200,
 }
 

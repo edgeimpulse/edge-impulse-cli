@@ -78,6 +78,10 @@ export class KerasResponseAllOf {
     * If set, skips creating embeddings and measuring memory (used in tests)
     */
     'skipEmbeddingsAndMemory': boolean;
+    /**
+    * If the \'custom validation split\' experiment is enabled, this metadata key is used to prevent group data leakage between train and validation datasets.
+    */
+    'customValidationMetadataKey'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -181,6 +185,11 @@ export class KerasResponseAllOf {
             "name": "skipEmbeddingsAndMemory",
             "baseName": "skipEmbeddingsAndMemory",
             "type": "boolean"
+        },
+        {
+            "name": "customValidationMetadataKey",
+            "baseName": "customValidationMetadataKey",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

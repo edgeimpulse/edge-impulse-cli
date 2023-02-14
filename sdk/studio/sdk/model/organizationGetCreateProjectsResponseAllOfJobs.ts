@@ -10,15 +10,16 @@
  * Do not edit the class manually.
  */
 
+import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'id': number;
     'organizationId'?: number;
     'name': string;
     'uploadType': OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum;
-    'transformJobStatus': OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnum;
+    'transformJobStatus': TransformationJobStatusEnum;
     'uploadJobId'?: number;
-    'uploadJobStatus': OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnum;
+    'uploadJobStatus': TransformationJobStatusEnum;
     'projectOwner'?: string;
     'projectId'?: number;
     'projectName'?: string;
@@ -58,7 +59,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
         {
             "name": "transformJobStatus",
             "baseName": "transformJobStatus",
-            "type": "OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnum"
+            "type": "TransformationJobStatusEnum"
         },
         {
             "name": "uploadJobId",
@@ -68,7 +69,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
         {
             "name": "uploadJobStatus",
             "baseName": "uploadJobStatus",
-            "type": "OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnum"
+            "type": "TransformationJobStatusEnum"
         },
         {
             "name": "projectOwner",
@@ -139,9 +140,3 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
 
 export type OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum = 'dataset' | 'project';
 export const OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnumValues: string[] = ['dataset', 'project'];
-
-export type OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationGetCreateProjectsResponseAllOfJobsTransformJobStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];
-
-export type OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationGetCreateProjectsResponseAllOfJobsUploadJobStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];

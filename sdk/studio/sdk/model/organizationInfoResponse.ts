@@ -33,7 +33,7 @@ export class OrganizationInfoResponse {
     /**
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
+    'experiments'?: Array<ProjectInfoResponseAllOfExperiments>;
     'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
 

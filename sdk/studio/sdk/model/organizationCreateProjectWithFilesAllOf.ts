@@ -10,27 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationCreateProjectWithFilesAllOfFiles } from './organizationCreateProjectWithFilesAllOfFiles';
 
-export class ProfileTfLiteResponseAllOfMemoryTflite {
-    'ram': number;
-    'rom': number;
+export class OrganizationCreateProjectWithFilesAllOf {
+    'files': Array<OrganizationCreateProjectWithFilesAllOfFiles>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ram",
-            "baseName": "ram",
-            "type": "number"
-        },
-        {
-            "name": "rom",
-            "baseName": "rom",
-            "type": "number"
+            "name": "files",
+            "baseName": "files",
+            "type": "Array<OrganizationCreateProjectWithFilesAllOfFiles>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProfileTfLiteResponseAllOfMemoryTflite.attributeTypeMap;
+        return OrganizationCreateProjectWithFilesAllOf.attributeTypeMap;
     }
 }
 

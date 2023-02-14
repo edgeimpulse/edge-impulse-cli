@@ -12,5 +12,5 @@
 
 
 
-export type ObjectDetectionLastLayer = 'mobilenet-ssd' | 'fomo' | 'yolov5' | 'yolov5v5-drpai' | 'yolox';
-export const ObjectDetectionLastLayerValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5', 'yolov5v5-drpai', 'yolox'];
+export type ObjectDetectionLastLayer = 'mobilenet-ssd' | 'fomo' | 'yolov5' | 'yolov5v5-drpai' | 'yolox' | 'yolov7';
+export const ObjectDetectionLastLayerValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov5', 'yolov5v5-drpai', 'yolox', 'yolov7'];

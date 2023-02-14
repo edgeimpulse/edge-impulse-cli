@@ -38,10 +38,18 @@ export enum ExportApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type ExportApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ExportApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ExportApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -50,8 +58,8 @@ export class ExportApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ExportApiOpts);
+    constructor(basePathOrUsername: string, opts?: ExportApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -61,6 +69,8 @@ export class ExportApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -75,6 +85,14 @@ export class ExportApi {
         return this._basePath;
     }
 
+    set opts(opts: ExportApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -82,6 +100,7 @@ export class ExportApi {
     public setApiKey(key: ExportApiApiKeys, value: string | undefined) {
         (this.authentications as any)[ExportApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Get the URL to the exported artefacts for an export job of a project.
@@ -103,11 +122,14 @@ export class ExportApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getExportUrl.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

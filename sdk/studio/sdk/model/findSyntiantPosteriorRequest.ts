@@ -16,6 +16,7 @@ export class FindSyntiantPosteriorRequest {
     'referenceSet': FindSyntiantPosteriorRequestReferenceSetEnum;
     'wavFile'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
     'metaCsvFile'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+    'deploymentTarget'?: FindSyntiantPosteriorRequestDeploymentTargetEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +40,11 @@ export class FindSyntiantPosteriorRequest {
             "name": "metaCsvFile",
             "baseName": "metaCsvFile",
             "type": "RequestFile"
+        },
+        {
+            "name": "deploymentTarget",
+            "baseName": "deploymentTarget",
+            "type": "FindSyntiantPosteriorRequestDeploymentTargetEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -49,3 +55,6 @@ export class FindSyntiantPosteriorRequest {
 
 export type FindSyntiantPosteriorRequestReferenceSetEnum = '600_seconds' | 'full' | 'custom' | 'no_calibration';
 export const FindSyntiantPosteriorRequestReferenceSetEnumValues: string[] = ['600_seconds', 'full', 'custom', 'no_calibration'];
+
+export type FindSyntiantPosteriorRequestDeploymentTargetEnum = 'syntiant-ndp101' | 'syntiant-ndp101-lib' | 'syntiant-ndp120-lib' | 'syntiant-nicla-ndp120';
+export const FindSyntiantPosteriorRequestDeploymentTargetEnumValues: string[] = ['syntiant-ndp101', 'syntiant-ndp101-lib', 'syntiant-ndp120-lib', 'syntiant-nicla-ndp120'];

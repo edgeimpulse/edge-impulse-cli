@@ -11,19 +11,11 @@
  */
 
 
-export class GetUserResponseAllOfOrganizations {
+export class ListOrganizationProjectsDataResponseAllOfProjects {
     'id': number;
     'name': string;
-    'logo'?: string;
-    'isDeveloperProfile': boolean;
-    /**
-    * Unique identifier of the white label this project belongs to, if any.
-    */
-    'whitelabelId': number | null;
-    /**
-    * Whether the user is admin of this organization or not.
-    */
-    'isAdmin': boolean;
+    'owner': string;
+    'description': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,28 +31,18 @@ export class GetUserResponseAllOfOrganizations {
             "type": "string"
         },
         {
-            "name": "logo",
-            "baseName": "logo",
+            "name": "owner",
+            "baseName": "owner",
             "type": "string"
         },
         {
-            "name": "isDeveloperProfile",
-            "baseName": "isDeveloperProfile",
-            "type": "boolean"
-        },
-        {
-            "name": "whitelabelId",
-            "baseName": "whitelabelId",
-            "type": "number"
-        },
-        {
-            "name": "isAdmin",
-            "baseName": "isAdmin",
-            "type": "boolean"
+            "name": "description",
+            "baseName": "description",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetUserResponseAllOfOrganizations.attributeTypeMap;
+        return ListOrganizationProjectsDataResponseAllOfProjects.attributeTypeMap;
     }
 }
 

@@ -11,6 +11,9 @@
  */
 
 
+/**
+* This has the _absolute values_ for x/y/w/h (so 0..x (where x is the w/h of the image))
+*/
 export class BoundingBox {
     'label': string;
     'x': number;

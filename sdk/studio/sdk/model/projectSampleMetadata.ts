@@ -10,28 +10,28 @@
  * Do not edit the class manually.
  */
 
-import { ProfileTfLiteResponseAllOfMemory } from './profileTfLiteResponseAllOfMemory';
+import { SampleMetadata } from './sampleMetadata';
 
-export class ProfileTfLiteResponseAllOf {
-    'memory'?: ProfileTfLiteResponseAllOfMemory;
-    'timePerInferenceMs'?: number;
+/**
+* Project sample metadata
+*/
+export class ProjectSampleMetadata {
+    /**
+    * Array with all available sample metadata.
+    */
+    'metadata': Array<SampleMetadata>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "memory",
-            "baseName": "memory",
-            "type": "ProfileTfLiteResponseAllOfMemory"
-        },
-        {
-            "name": "timePerInferenceMs",
-            "baseName": "timePerInferenceMs",
-            "type": "number"
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "Array<SampleMetadata>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProfileTfLiteResponseAllOf.attributeTypeMap;
+        return ProjectSampleMetadata.attributeTypeMap;
     }
 }
 

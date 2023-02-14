@@ -85,9 +85,29 @@ export class Sample {
     */
     'processingError': boolean;
     /**
+    * Error (only set when processing this sample failed)
+    */
+    'processingErrorString'?: string;
+    /**
     * Sample free form associated metadata
     */
     'metadata'?: { [key: string]: string; };
+    /**
+    * Unique identifier of the project this sample belongs to
+    */
+    'projectId': number;
+    /**
+    * Name of the owner of the project this sample belongs to
+    */
+    'projectOwnerName'?: string;
+    /**
+    * Name of the project this sample belongs to
+    */
+    'projectName'?: string;
+    /**
+    * What labeling flow the project this sample belongs to uses
+    */
+    'projectLabelingMethod'?: SampleProjectLabelingMethodEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -233,9 +253,34 @@ export class Sample {
             "type": "boolean"
         },
         {
+            "name": "processingErrorString",
+            "baseName": "processingErrorString",
+            "type": "string"
+        },
+        {
             "name": "metadata",
             "baseName": "metadata",
             "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "projectId",
+            "baseName": "projectId",
+            "type": "number"
+        },
+        {
+            "name": "projectOwnerName",
+            "baseName": "projectOwnerName",
+            "type": "string"
+        },
+        {
+            "name": "projectName",
+            "baseName": "projectName",
+            "type": "string"
+        },
+        {
+            "name": "projectLabelingMethod",
+            "baseName": "projectLabelingMethod",
+            "type": "SampleProjectLabelingMethodEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -249,3 +294,6 @@ export const SampleBoundingBoxesTypeEnumValues: string[] = ['object_detection', 
 
 export type SampleChartTypeEnum = 'chart' | 'image' | 'video';
 export const SampleChartTypeEnumValues: string[] = ['chart', 'image', 'video'];
+
+export type SampleProjectLabelingMethodEnum = 'single_label' | 'object_detection';
+export const SampleProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];

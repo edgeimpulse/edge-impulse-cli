@@ -39,6 +39,7 @@ export class DspRunResponseWithSample {
     'labels': Array<string>;
     'sample': RawSampleData;
     'performance'?: DspRunResponseAllOfPerformance;
+    'canProfilePerformance': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,6 +78,11 @@ export class DspRunResponseWithSample {
             "name": "performance",
             "baseName": "performance",
             "type": "DspRunResponseAllOfPerformance"
+        },
+        {
+            "name": "canProfilePerformance",
+            "baseName": "canProfilePerformance",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

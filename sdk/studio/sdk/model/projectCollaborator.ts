@@ -20,6 +20,7 @@ export class ProjectCollaborator {
     'name': string;
     'photo'?: string;
     'created': Date;
+    'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
@@ -51,6 +52,11 @@ export class ProjectCollaborator {
         {
             "name": "created",
             "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "lastSeen",
+            "baseName": "lastSeen",
             "type": "Date"
         },
         {

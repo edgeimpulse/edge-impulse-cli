@@ -34,17 +34,33 @@ let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 export enum HealthApiApiKeys {
 }
 
+type apiHealthQueryParams = {
+    requester?: string,
+};
+
+type healthQueryParams = {
+    requester?: string,
+};
+
+
+export type HealthApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class HealthApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : HealthApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: HealthApiOpts);
+    constructor(basePathOrUsername: string, opts?: HealthApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -54,6 +70,8 @@ export class HealthApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -68,6 +86,14 @@ export class HealthApi {
         return this._basePath;
     }
 
+    set opts(opts: HealthApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -76,12 +102,13 @@ export class HealthApi {
         (this.authentications as any)[HealthApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Get studio api containers health.
      * @summary Get studio api containers health
      * @param requester Health check requester
      */
-    public async apiHealth (requester?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async apiHealth (queryParams: apiHealthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/api-health';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -94,11 +121,12 @@ export class HealthApi {
         }
         let localVarFormParams: any = {};
 
-        if (requester !== undefined) {
-            localVarQueryParameters['requester'] = ObjectSerializer.serialize(requester, "string");
+        if (queryParams.requester !== undefined) {
+            localVarQueryParameters['requester'] = ObjectSerializer.serialize(queryParams.requester, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -145,12 +173,13 @@ export class HealthApi {
             });
         });
     }
+
     /**
      * Get studio web containers health.
      * @summary Get studio web containers health
      * @param requester Health check requester
      */
-    public async health (requester?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async health (queryParams: healthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-health';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -163,11 +192,12 @@ export class HealthApi {
         }
         let localVarFormParams: any = {};
 
-        if (requester !== undefined) {
-            localVarQueryParameters['requester'] = ObjectSerializer.serialize(requester, "string");
+        if (queryParams.requester !== undefined) {
+            localVarQueryParameters['requester'] = ObjectSerializer.serialize(queryParams.requester, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

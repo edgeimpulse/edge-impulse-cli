@@ -10,14 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
-export class OrganizationCreateProjectFiles {
+export class OrganizationCreateProjectWithFilesAllOfFiles {
     'id': number;
     'fileName': string;
     'dataItemId': number;
     'dataItemName': string;
     'transformationJobId'?: number;
-    'transformationJobStatus': OrganizationCreateProjectFilesTransformationJobStatusEnum;
+    'transformationJobStatus': TransformationJobStatusEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,14 +51,11 @@ export class OrganizationCreateProjectFiles {
         {
             "name": "transformationJobStatus",
             "baseName": "transformationJobStatus",
-            "type": "OrganizationCreateProjectFilesTransformationJobStatusEnum"
+            "type": "TransformationJobStatusEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationCreateProjectFiles.attributeTypeMap;
+        return OrganizationCreateProjectWithFilesAllOfFiles.attributeTypeMap;
     }
 }
 
-
-export type OrganizationCreateProjectFilesTransformationJobStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationCreateProjectFilesTransformationJobStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];

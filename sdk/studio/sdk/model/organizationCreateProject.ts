@@ -10,18 +10,18 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationCreateProjectFiles } from './organizationCreateProjectFiles';
 import { OrganizationCreateProjectTransformationSummary } from './organizationCreateProjectTransformationSummary';
+import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationCreateProject {
     'id': number;
     'organizationId': number;
     'name': string;
     'uploadType': OrganizationCreateProjectUploadTypeEnum;
-    'status': OrganizationCreateProjectStatusEnum;
-    'transformJobStatus': OrganizationCreateProjectTransformJobStatusEnum;
+    'status': TransformationJobStatusEnum;
+    'transformJobStatus': TransformationJobStatusEnum;
     'uploadJobId'?: number;
-    'uploadJobStatus': OrganizationCreateProjectUploadJobStatusEnum;
+    'uploadJobStatus': TransformationJobStatusEnum;
     'uploadJobFilesUploaded'?: number;
     'projectOwner'?: string;
     'projectId'?: number;
@@ -41,7 +41,6 @@ export class OrganizationCreateProject {
     */
     'transformationParallel': number;
     'transformationSummary': OrganizationCreateProjectTransformationSummary;
-    'files': Array<OrganizationCreateProjectFiles>;
     'inProgress': boolean;
     'label'?: string;
     'filterQuery'?: string;
@@ -78,12 +77,12 @@ export class OrganizationCreateProject {
         {
             "name": "status",
             "baseName": "status",
-            "type": "OrganizationCreateProjectStatusEnum"
+            "type": "TransformationJobStatusEnum"
         },
         {
             "name": "transformJobStatus",
             "baseName": "transformJobStatus",
-            "type": "OrganizationCreateProjectTransformJobStatusEnum"
+            "type": "TransformationJobStatusEnum"
         },
         {
             "name": "uploadJobId",
@@ -93,7 +92,7 @@ export class OrganizationCreateProject {
         {
             "name": "uploadJobStatus",
             "baseName": "uploadJobStatus",
-            "type": "OrganizationCreateProjectUploadJobStatusEnum"
+            "type": "TransformationJobStatusEnum"
         },
         {
             "name": "uploadJobFilesUploaded",
@@ -176,11 +175,6 @@ export class OrganizationCreateProject {
             "type": "OrganizationCreateProjectTransformationSummary"
         },
         {
-            "name": "files",
-            "baseName": "files",
-            "type": "Array<OrganizationCreateProjectFiles>"
-        },
-        {
             "name": "inProgress",
             "baseName": "inProgress",
             "type": "boolean"
@@ -234,15 +228,6 @@ export class OrganizationCreateProject {
 
 export type OrganizationCreateProjectUploadTypeEnum = 'dataset' | 'project';
 export const OrganizationCreateProjectUploadTypeEnumValues: string[] = ['dataset', 'project'];
-
-export type OrganizationCreateProjectStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationCreateProjectStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];
-
-export type OrganizationCreateProjectTransformJobStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationCreateProjectTransformJobStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];
-
-export type OrganizationCreateProjectUploadJobStatusEnum = 'waiting' | 'created' | 'started' | 'finished' | 'failed';
-export const OrganizationCreateProjectUploadJobStatusEnumValues: string[] = ['waiting', 'created', 'started', 'finished', 'failed'];
 
 export type OrganizationCreateProjectCategoryEnum = 'training' | 'testing' | 'split';
 export const OrganizationCreateProjectCategoryEnumValues: string[] = ['training', 'testing', 'split'];

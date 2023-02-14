@@ -39,10 +39,18 @@ export enum RequiresThirdPartyAuthApiKeyApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type RequiresThirdPartyAuthApiKeyApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class RequiresThirdPartyAuthApiKeyApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : RequiresThirdPartyAuthApiKeyApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -51,8 +59,8 @@ export class RequiresThirdPartyAuthApiKeyApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: RequiresThirdPartyAuthApiKeyApiOpts);
+    constructor(basePathOrUsername: string, opts?: RequiresThirdPartyAuthApiKeyApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -62,6 +70,8 @@ export class RequiresThirdPartyAuthApiKeyApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -76,6 +86,14 @@ export class RequiresThirdPartyAuthApiKeyApi {
         return this._basePath;
     }
 
+    set opts(opts: RequiresThirdPartyAuthApiKeyApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -83,6 +101,7 @@ export class RequiresThirdPartyAuthApiKeyApi {
     public setApiKey(key: RequiresThirdPartyAuthApiKeyApiApiKeys, value: string | undefined) {
         (this.authentications as any)[RequiresThirdPartyAuthApiKeyApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Login as a user as a third-party authentication provider. If the user does not exists, it\'s automatically created. You can only log in as users that were previously created by you.
@@ -105,16 +124,21 @@ export class RequiresThirdPartyAuthApiKeyApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling createUserThirdParty.');
         }
 
         // verify required parameter 'createUserThirdPartyRequest' is not null or undefined
+
+
         if (createUserThirdPartyRequest === null || createUserThirdPartyRequest === undefined) {
             throw new Error('Required parameter createUserThirdPartyRequest was null or undefined when calling createUserThirdParty.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

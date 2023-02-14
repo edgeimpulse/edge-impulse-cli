@@ -11,8 +11,8 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { OrganizationCreateProject } from './organizationCreateProject';
 import { OrganizationCreateProjectStatusResponseAllOf } from './organizationCreateProjectStatusResponseAllOf';
+import { OrganizationCreateProjectWithFiles } from './organizationCreateProjectWithFiles';
 
 export class OrganizationCreateProjectStatusResponse {
     /**
@@ -23,7 +23,7 @@ export class OrganizationCreateProjectStatusResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'status'?: OrganizationCreateProject;
+    'status'?: OrganizationCreateProjectWithFiles;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class OrganizationCreateProjectStatusResponse {
         {
             "name": "status",
             "baseName": "status",
-            "type": "OrganizationCreateProject"
+            "type": "OrganizationCreateProjectWithFiles"
         }    ];
 
     static getAttributeTypeMap() {

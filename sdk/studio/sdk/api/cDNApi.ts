@@ -33,17 +33,29 @@ let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 export enum CDNApiApiKeys {
 }
 
+type getUserCDNResourceQueryParams = {
+    path: string,
+};
+
+
+export type CDNApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class CDNApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : CDNApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: CDNApiOpts);
+    constructor(basePathOrUsername: string, opts?: CDNApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -53,6 +65,8 @@ export class CDNApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -67,6 +81,14 @@ export class CDNApi {
         return this._basePath;
     }
 
+    set opts(opts: CDNApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -75,12 +97,13 @@ export class CDNApi {
         (this.authentications as any)[CDNApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Proxy function to retrieve data from the user CDN. This function is only used during development.
      * @summary User CDN resource
      * @param path CDN Path
      */
-    public async getUserCDNResource (path: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async getUserCDNResource (queryParams: getUserCDNResourceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api-usercdn';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -94,15 +117,18 @@ export class CDNApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'path' is not null or undefined
-        if (path === null || path === undefined) {
-            throw new Error('Required parameter path was null or undefined when calling getUserCDNResource.');
+
+        if (queryParams.path === null || queryParams.path === undefined) {
+            throw new Error('Required parameter queryParams.path was null or undefined when calling getUserCDNResource.');
         }
 
-        if (path !== undefined) {
-            localVarQueryParameters['path'] = ObjectSerializer.serialize(path, "string");
+
+        if (queryParams.path !== undefined) {
+            localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

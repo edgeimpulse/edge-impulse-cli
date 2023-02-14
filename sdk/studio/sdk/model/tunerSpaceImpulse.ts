@@ -13,6 +13,10 @@
 
 export class TunerSpaceImpulse {
     /**
+    * Hyperparameters with potential values that can be used in any block in this impulse
+    */
+    'parameters'?: object;
+    /**
     * Input Blocks that are part of this impulse
     */
     'inputBlocks': Array<any>;
@@ -28,6 +32,11 @@ export class TunerSpaceImpulse {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "object"
+        },
         {
             "name": "inputBlocks",
             "baseName": "inputBlocks",

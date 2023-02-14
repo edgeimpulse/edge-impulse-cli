@@ -24,10 +24,15 @@ import { AnomalyResponse } from '../model/anomalyResponse';
 import { AnomalyTrainedFeaturesResponse } from '../model/anomalyTrainedFeaturesResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
+import { GetPretrainedModelResponse } from '../model/getPretrainedModelResponse';
 import { KerasModelMetadata } from '../model/kerasModelMetadata';
 import { KerasResponse } from '../model/kerasResponse';
+import { SavePretrainedModelRequest } from '../model/savePretrainedModelRequest';
 import { SetAnomalyParameterRequest } from '../model/setAnomalyParameterRequest';
 import { SetKerasParameterRequest } from '../model/setKerasParameterRequest';
+import { StartJobResponse } from '../model/startJobResponse';
+import { TestPretrainedModelRequest } from '../model/testPretrainedModelRequest';
+import { TestPretrainedModelResponse } from '../model/testPretrainedModelResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -46,10 +51,33 @@ export enum LearnApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type anomalyTrainedFeaturesQueryParams = {
+    featureAx1: number,
+    featureAx2: number,
+};
+
+type uploadKerasFilesFormParams = {
+    zip: RequestFile,
+};
+
+type uploadPretrainedModelFormParams = {
+    modelFile: RequestFile,
+    modelFileName: string,
+    modelFileType: string,
+};
+
+
+export type LearnApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class LearnApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : LearnApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -58,8 +86,8 @@ export class LearnApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: LearnApiOpts);
+    constructor(basePathOrUsername: string, opts?: LearnApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -69,6 +97,8 @@ export class LearnApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -83,6 +113,14 @@ export class LearnApi {
         return this._basePath;
     }
 
+    set opts(opts: LearnApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -90,6 +128,7 @@ export class LearnApi {
     public setApiKey(key: LearnApiApiKeys, value: string | undefined) {
         (this.authentications as any)[LearnApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Get a sample of trained features, this extracts a number of samples and their features.
@@ -99,7 +138,7 @@ export class LearnApi {
      * @param featureAx1 Feature axis 1
      * @param featureAx2 Feature axis 2
      */
-    public async anomalyTrainedFeatures (projectId: number, learnId: number, featureAx1: number, featureAx2: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyTrainedFeaturesResponse> {
+    public async anomalyTrainedFeatures (projectId: number, learnId: number, queryParams: anomalyTrainedFeaturesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyTrainedFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/features/get-graph'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -115,34 +154,43 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling anomalyTrainedFeatures.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling anomalyTrainedFeatures.');
         }
 
         // verify required parameter 'featureAx1' is not null or undefined
-        if (featureAx1 === null || featureAx1 === undefined) {
-            throw new Error('Required parameter featureAx1 was null or undefined when calling anomalyTrainedFeatures.');
+
+        if (queryParams.featureAx1 === null || queryParams.featureAx1 === undefined) {
+            throw new Error('Required parameter queryParams.featureAx1 was null or undefined when calling anomalyTrainedFeatures.');
         }
+
 
         // verify required parameter 'featureAx2' is not null or undefined
-        if (featureAx2 === null || featureAx2 === undefined) {
-            throw new Error('Required parameter featureAx2 was null or undefined when calling anomalyTrainedFeatures.');
+
+        if (queryParams.featureAx2 === null || queryParams.featureAx2 === undefined) {
+            throw new Error('Required parameter queryParams.featureAx2 was null or undefined when calling anomalyTrainedFeatures.');
         }
 
-        if (featureAx1 !== undefined) {
-            localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(featureAx1, "number");
+
+        if (queryParams.featureAx1 !== undefined) {
+            localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(queryParams.featureAx1, "number");
         }
 
-        if (featureAx2 !== undefined) {
-            localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(featureAx2, "number");
+        if (queryParams.featureAx2 !== undefined) {
+            localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(queryParams.featureAx2, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -195,6 +243,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Get trained features for a single sample. This runs both the DSP prerequisites and the anomaly classifier.
      * @summary Trained features for sample
@@ -219,21 +268,28 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling anomalyTrainedFeaturesPerSample.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling anomalyTrainedFeaturesPerSample.');
         }
 
         // verify required parameter 'sampleId' is not null or undefined
+
+
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling anomalyTrainedFeaturesPerSample.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -286,6 +342,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Download the data of an exported Keras block - needs to be exported via \'exportKerasBlockData\' first
      * @summary Download Keras data export
@@ -308,16 +365,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadKerasData.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling downloadKerasData.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -370,6 +432,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Download an exported Keras block - needs to be exported via \'exportKerasBlock\' first
      * @summary Download Keras export
@@ -392,16 +455,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadKerasExport.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling downloadKerasExport.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -454,6 +522,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Download a trained model for a learning block. Depending on the block this can be a TensorFlow model, or the cluster centroids.
      * @summary Download trained model
@@ -478,21 +547,28 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling downloadLearnModel.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling downloadLearnModel.');
         }
 
         // verify required parameter 'modelDownloadId' is not null or undefined
+
+
         if (modelDownloadId === null || modelDownloadId === undefined) {
             throw new Error('Required parameter modelDownloadId was null or undefined when calling downloadLearnModel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -545,6 +621,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Get information about an anomaly block, such as its dependencies. Use the impulse blocks to find the learnId.
      * @summary Anomaly information
@@ -567,16 +644,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getAnomaly.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getAnomaly.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -629,6 +711,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Get metadata about a trained anomaly block. Use the impulse blocks to find the learnId.
      * @summary Anomaly metadata
@@ -651,16 +734,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getAnomalyMetadata.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getAnomalyMetadata.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -713,6 +801,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Get information about a Keras block, such as its dependencies. Use the impulse blocks to find the learnId.
      * @summary Keras information
@@ -735,16 +824,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getKeras.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getKeras.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -797,6 +891,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * t-SNE2 output of the raw dataset using embeddings from this Keras block
      * @summary Get data explorer features
@@ -819,16 +914,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getKerasDataExplorerFeatures.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getKerasDataExplorerFeatures.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -881,6 +981,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Get metadata about a trained Keras block. Use the impulse blocks to find the learnId.
      * @summary Keras metadata
@@ -903,16 +1004,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getKerasMetadata.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getKerasMetadata.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -965,6 +1071,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Download the processed data for this learning block. This is data already processed by the signal processing blocks.
      * @summary Download data
@@ -987,16 +1094,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getLearnXData.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getLearnXData.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1049,6 +1161,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Download the labels for this learning block. This is data already processed by the signal processing blocks. Not all blocks support this function. If so, a GenericApiResponse is returned with an error message.
      * @summary Download labels
@@ -1071,16 +1184,21 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getLearnYData.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling getLearnYData.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1133,6 +1251,252 @@ export class LearnApi {
             });
         });
     }
+
+    /**
+     * Receive info back about the earlier uploaded pretrained model (via `uploadPretrainedModel`) input/output tensors. If you want to deploy a pretrained model from the API, see `startDeployPretrainedModelJob`.
+     * @summary Get pretrained model
+     * @param projectId Project ID
+     */
+    public async getPretrainedModelInfo (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getPretrainedModelInfo.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetPretrainedModelResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetPretrainedModelResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Returns the latency, RAM and ROM used for the pretrained model - upload first via  `uploadPretrainedModel`. This is using the project\'s selected latency device. Updates are streamed over the websocket API (or can be retrieved through the /stdout endpoint). Use getProfileTfliteJobResult to get the results when the job is completed.
+     * @summary Profile pretrained model
+     * @param projectId Project ID
+     */
+    public async profilePretrainedModel (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/profile'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling profilePretrainedModel.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Save input / model configuration for a pretrained model. This overrides the current impulse. If you want to deploy a pretrained model from the API, see `startDeployPretrainedModelJob`.
+     * @summary Save parameters for pretrained model
+     * @param projectId Project ID
+     * @param savePretrainedModelRequest 
+     */
+    public async savePretrainedModelParameters (projectId: number, savePretrainedModelRequest?: SavePretrainedModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/save'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling savePretrainedModelParameters.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(savePretrainedModelRequest, "SavePretrainedModelRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Configure the anomaly block, such as its minimum confidence score. Use the impulse blocks to find the learnId.
      * @summary Anomaly settings
@@ -1156,21 +1520,28 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setAnomaly.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling setAnomaly.');
         }
 
         // verify required parameter 'setAnomalyParameterRequest' is not null or undefined
+
+
         if (setAnomalyParameterRequest === null || setAnomalyParameterRequest === undefined) {
             throw new Error('Required parameter setAnomalyParameterRequest was null or undefined when calling setAnomaly.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1224,6 +1595,7 @@ export class LearnApi {
             });
         });
     }
+
     /**
      * Configure the Keras block, such as its minimum confidence score. Use the impulse blocks to find the learnId.
      * @summary Keras settings
@@ -1247,21 +1619,28 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling setKeras.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling setKeras.');
         }
 
         // verify required parameter 'setKerasParameterRequest' is not null or undefined
+
+
         if (setKerasParameterRequest === null || setKerasParameterRequest === undefined) {
             throw new Error('Required parameter setKerasParameterRequest was null or undefined when calling setKeras.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1315,6 +1694,90 @@ export class LearnApi {
             });
         });
     }
+
+    /**
+     * Test out a pretrained model (using raw features) - upload first via  `uploadPretrainedModel`. If you want to deploy a pretrained model from the API, see `startDeployPretrainedModelJob`.
+     * @summary Test pretrained model
+     * @param projectId Project ID
+     * @param testPretrainedModelRequest 
+     */
+    public async testPretrainedModel (projectId: number, testPretrainedModelRequest?: TestPretrainedModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/test'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling testPretrainedModel.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(testPretrainedModelRequest, "TestPretrainedModelRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<TestPretrainedModelResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "TestPretrainedModelResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Replace Keras block files with the contents of a zip. This is an internal API.
      * @summary Upload Keras files
@@ -1322,7 +1785,7 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param zip 
      */
-    public async uploadKerasFiles (projectId: number, learnId: number, zip: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadKerasFiles (projectId: number, learnId: number, params: uploadKerasFilesFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1338,26 +1801,33 @@ export class LearnApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling uploadKerasFiles.');
         }
 
         // verify required parameter 'learnId' is not null or undefined
+
+
         if (learnId === null || learnId === undefined) {
             throw new Error('Required parameter learnId was null or undefined when calling uploadKerasFiles.');
         }
 
         // verify required parameter 'zip' is not null or undefined
-        if (zip === null || zip === undefined) {
-            throw new Error('Required parameter zip was null or undefined when calling uploadKerasFiles.');
+        if (params.zip === null || params.zip === undefined) {
+            throw new Error('Required parameter params.zip was null or undefined when calling uploadKerasFiles.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (zip !== undefined) {
-            localVarFormParams['zip'] = zip;
+        if (params.zip !== undefined) {
+            localVarFormParams['zip'] = params.zip;
         }
         localVarUseFormData = true;
 
@@ -1393,6 +1863,124 @@ export class LearnApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Upload a pretrained model and receive info back about the input/output tensors. If you want to deploy a pretrained model from the API, see `startDeployPretrainedModelJob`.
+     * @summary Upload a pretrained model
+     * @param projectId Project ID
+     * @param modelFile 
+     * @param modelFileName 
+     * @param modelFileType 
+     */
+    public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/upload'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling uploadPretrainedModel.');
+        }
+
+        // verify required parameter 'modelFile' is not null or undefined
+        if (params.modelFile === null || params.modelFile === undefined) {
+            throw new Error('Required parameter params.modelFile was null or undefined when calling uploadPretrainedModel.');
+        }
+
+
+
+        // verify required parameter 'modelFileName' is not null or undefined
+        if (params.modelFileName === null || params.modelFileName === undefined) {
+            throw new Error('Required parameter params.modelFileName was null or undefined when calling uploadPretrainedModel.');
+        }
+
+
+
+        // verify required parameter 'modelFileType' is not null or undefined
+        if (params.modelFileType === null || params.modelFileType === undefined) {
+            throw new Error('Required parameter params.modelFileType was null or undefined when calling uploadPretrainedModel.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.modelFile !== undefined) {
+            localVarFormParams['modelFile'] = params.modelFile;
+        }
+        localVarUseFormData = true;
+
+        if (params.modelFileName !== undefined) {
+            localVarFormParams['modelFileName'] = ObjectSerializer.serialize(params.modelFileName, "string");
+        }
+
+        if (params.modelFileType !== undefined) {
+            localVarFormParams['modelFileType'] = ObjectSerializer.serialize(params.modelFileType, "string");
+        }
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetPretrainedModelResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetPretrainedModelResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

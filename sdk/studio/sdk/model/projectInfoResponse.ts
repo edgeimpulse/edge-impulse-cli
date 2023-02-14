@@ -81,6 +81,7 @@ export class ProjectInfoResponse {
     * Config file specifying how to process CSV files.
     */
     'csvImportConfig'?: object;
+    'studioUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -219,6 +220,11 @@ export class ProjectInfoResponse {
             "name": "csvImportConfig",
             "baseName": "csvImportConfig",
             "type": "object"
+        },
+        {
+            "name": "studioUrl",
+            "baseName": "studioUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -34,17 +34,25 @@ let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 export enum MetricsApiApiKeys {
 }
 
+
+export type MetricsApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class MetricsApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : MetricsApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: MetricsApiOpts);
+    constructor(basePathOrUsername: string, opts?: MetricsApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -54,6 +62,8 @@ export class MetricsApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -68,6 +78,14 @@ export class MetricsApi {
         return this._basePath;
     }
 
+    set opts(opts: MetricsApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -75,6 +93,7 @@ export class MetricsApi {
     public setApiKey(key: MetricsApiApiKeys, value: string | undefined) {
         (this.authentications as any)[MetricsApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Get information about number of projects, compute and data samples. Updated once per hour.
@@ -94,6 +113,7 @@ export class MetricsApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

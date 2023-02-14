@@ -11,8 +11,8 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { ProfileTfLiteResponseAllOf } from './profileTfLiteResponseAllOf';
-import { ProfileTfLiteResponseAllOfMemory } from './profileTfLiteResponseAllOfMemory';
+import { ProfileModelInfo } from './profileModelInfo';
+import { ProfileModelInfoMemory } from './profileModelInfoMemory';
 
 export class ProfileTfLiteResponse {
     /**
@@ -23,8 +23,12 @@ export class ProfileTfLiteResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'memory'?: ProfileTfLiteResponseAllOfMemory;
+    'device': string;
+    'tfliteFileSizeBytes': number;
+    'isSupportedOnMcu': boolean;
+    'memory'?: ProfileModelInfoMemory;
     'timePerInferenceMs'?: number;
+    'mcuSupportError'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,14 +44,34 @@ export class ProfileTfLiteResponse {
             "type": "string"
         },
         {
+            "name": "device",
+            "baseName": "device",
+            "type": "string"
+        },
+        {
+            "name": "tfliteFileSizeBytes",
+            "baseName": "tfliteFileSizeBytes",
+            "type": "number"
+        },
+        {
+            "name": "isSupportedOnMcu",
+            "baseName": "isSupportedOnMcu",
+            "type": "boolean"
+        },
+        {
             "name": "memory",
             "baseName": "memory",
-            "type": "ProfileTfLiteResponseAllOfMemory"
+            "type": "ProfileModelInfoMemory"
         },
         {
             "name": "timePerInferenceMs",
             "baseName": "timePerInferenceMs",
             "type": "number"
+        },
+        {
+            "name": "mcuSupportError",
+            "baseName": "mcuSupportError",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -48,10 +48,28 @@ export enum OptimizationApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type getDspParametersQueryParams = {
+    organizationId: number,
+    organizationDspId: number,
+};
+
+type getTrialLogsQueryParams = {
+    limit?: number,
+    logLevel?: 'error' | 'warn' | 'info' | 'debug',
+};
+
+
+export type OptimizationApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class OptimizationApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : OptimizationApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -60,8 +78,8 @@ export class OptimizationApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: OptimizationApiOpts);
+    constructor(basePathOrUsername: string, opts?: OptimizationApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -71,6 +89,8 @@ export class OptimizationApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -85,6 +105,14 @@ export class OptimizationApi {
         return this._basePath;
     }
 
+    set opts(opts: OptimizationApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -92,6 +120,7 @@ export class OptimizationApi {
     public setApiKey(key: OptimizationApiApiKeys, value: string | undefined) {
         (this.authentications as any)[OptimizationApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Create trial
@@ -116,21 +145,28 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling createTrial.');
         }
 
         // verify required parameter 'jobId' is not null or undefined
+
+
         if (jobId === null || jobId === undefined) {
             throw new Error('Required parameter jobId was null or undefined when calling createTrial.');
         }
 
         // verify required parameter 'tunerCreateTrialImpulse' is not null or undefined
+
+
         if (tunerCreateTrialImpulse === null || tunerCreateTrialImpulse === undefined) {
             throw new Error('Required parameter tunerCreateTrialImpulse was null or undefined when calling createTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -184,6 +220,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Completely clears the EON tuner state for this project.
      * @summary Delete EON tuner state
@@ -204,11 +241,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteState.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -261,6 +301,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Get config
      * @summary Get config
@@ -281,11 +322,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getConfig.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -338,6 +382,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Retrieves DSP block parameters
      * @summary Retrieves DSP block parameters
@@ -345,7 +390,7 @@ export class OptimizationApi {
      * @param organizationId Organization ID
      * @param organizationDspId Organization DSP ID
      */
-    public async getDspParameters (projectId: number, organizationId: number, organizationDspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeDSPParametersResponse> {
+    public async getDspParameters (projectId: number, queryParams: getDspParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeDSPParametersResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/dsp-parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -360,29 +405,36 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDspParameters.');
         }
 
         // verify required parameter 'organizationId' is not null or undefined
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling getDspParameters.');
+
+        if (queryParams.organizationId === null || queryParams.organizationId === undefined) {
+            throw new Error('Required parameter queryParams.organizationId was null or undefined when calling getDspParameters.');
         }
+
 
         // verify required parameter 'organizationDspId' is not null or undefined
-        if (organizationDspId === null || organizationDspId === undefined) {
-            throw new Error('Required parameter organizationDspId was null or undefined when calling getDspParameters.');
+
+        if (queryParams.organizationDspId === null || queryParams.organizationDspId === undefined) {
+            throw new Error('Required parameter queryParams.organizationDspId was null or undefined when calling getDspParameters.');
         }
 
-        if (organizationId !== undefined) {
-            localVarQueryParameters['organizationId'] = ObjectSerializer.serialize(organizationId, "number");
+
+        if (queryParams.organizationId !== undefined) {
+            localVarQueryParameters['organizationId'] = ObjectSerializer.serialize(queryParams.organizationId, "number");
         }
 
-        if (organizationDspId !== undefined) {
-            localVarQueryParameters['organizationDspId'] = ObjectSerializer.serialize(organizationDspId, "number");
+        if (queryParams.organizationDspId !== undefined) {
+            localVarQueryParameters['organizationDspId'] = ObjectSerializer.serialize(queryParams.organizationDspId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -435,6 +487,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Search space
      * @summary Search space
@@ -455,11 +508,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSpace.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -512,6 +568,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Retrieves the EON tuner state
      * @summary Retrieves the EON tuner state
@@ -532,11 +589,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getState.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -589,6 +649,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Retrieves available transfer learning models
      * @summary Retrieves available transfer learning models
@@ -609,11 +670,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getTransferLearningModels.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -666,6 +730,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Get the logs for a trial.
      * @summary Get trial logs
@@ -674,7 +739,7 @@ export class OptimizationApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getTrialLogs (projectId: number, trialId: string, limit?: number, logLevel?: 'error' | 'warn' | 'info' | 'debug', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getTrialLogs (projectId: number, trialId: string, queryParams: getTrialLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/trial/{trialId}/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'trialId' + '}', encodeURIComponent(String(trialId)));
@@ -690,24 +755,29 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getTrialLogs.');
         }
 
         // verify required parameter 'trialId' is not null or undefined
+
+
         if (trialId === null || trialId === undefined) {
             throw new Error('Required parameter trialId was null or undefined when calling getTrialLogs.');
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(logLevel, "'error' | 'warn' | 'info' | 'debug'");
+        if (queryParams.logLevel !== undefined) {
+            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -760,6 +830,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Get window settings
      * @summary Get window settings
@@ -780,11 +851,14 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getWindowSettings.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -837,6 +911,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Score trial
      * @summary Score trial
@@ -858,16 +933,21 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling scoreTrial.');
         }
 
         // verify required parameter 'tunerCreateTrialImpulse' is not null or undefined
+
+
         if (tunerCreateTrialImpulse === null || tunerCreateTrialImpulse === undefined) {
             throw new Error('Required parameter tunerCreateTrialImpulse was null or undefined when calling scoreTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -921,6 +1001,7 @@ export class OptimizationApi {
             });
         });
     }
+
     /**
      * Update config
      * @summary Update config
@@ -942,16 +1023,21 @@ export class OptimizationApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling updateConfig.');
         }
 
         // verify required parameter 'optimizeConfig' is not null or undefined
+
+
         if (optimizeConfig === null || optimizeConfig === undefined) {
             throw new Error('Required parameter optimizeConfig was null or undefined when calling updateConfig.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

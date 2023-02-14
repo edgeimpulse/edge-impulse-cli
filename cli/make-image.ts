@@ -46,6 +46,7 @@ export async function upload(opts: {
 
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
+        'x-upload-source': 'EDGE_IMPULSE_CLI_UPLOADER',
         'Connection': 'keep-alive'
     };
 
@@ -69,6 +70,8 @@ export async function upload(opts: {
     if (opts.addDateId) {
         headers['x-add-date-id'] = '1';
     }
+
+    headers['x-device-type'] = 'EDGE_IMPULSE_CLI';
 
     let agent = opts.config.endpoints.internal.ingestion.indexOf('https:') === 0 ?
         keepAliveAgentHttps :

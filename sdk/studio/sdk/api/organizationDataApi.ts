@@ -23,10 +23,15 @@ import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequ
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDataItemResponse } from '../model/getOrganizationDataItemResponse';
 import { GetOrganizationDatasetResponse } from '../model/getOrganizationDatasetResponse';
+import { GetOrganizationProjectsDataCountResponse } from '../model/getOrganizationProjectsDataCountResponse';
 import { ListOrganizationBucketsResponse } from '../model/listOrganizationBucketsResponse';
 import { ListOrganizationDataResponse } from '../model/listOrganizationDataResponse';
 import { ListOrganizationFilesResponse } from '../model/listOrganizationFilesResponse';
+import { ListOrganizationProjectsDataResponse } from '../model/listOrganizationProjectsDataResponse';
 import { OrganizationAddDataFolderRequest } from '../model/organizationAddDataFolderRequest';
+import { OrganizationProjectsDataBatchDisableResponse } from '../model/organizationProjectsDataBatchDisableResponse';
+import { OrganizationProjectsDataBatchEnableResponse } from '../model/organizationProjectsDataBatchEnableResponse';
+import { OrganizationProjectsDataBatchRequest } from '../model/organizationProjectsDataBatchRequest';
 import { SetOrganizationDataDatasetRequest } from '../model/setOrganizationDataDatasetRequest';
 import { StartJobResponse } from '../model/startJobResponse';
 import { UpdateOrganizationBucketRequest } from '../model/updateOrganizationBucketRequest';
@@ -52,10 +57,128 @@ export enum OrganizationDataApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type addOrganizationDataFileFormParams = {
+    files: Array<RequestFile>,
+};
+
+type addOrganizationDataItemFormParams = {
+    name: string,
+    bucketId?: number,
+    bucketName?: string,
+    dataset: string,
+    bucketPath?: string,
+    metadata: string,
+    files: Array<RequestFile>,
+};
+
+type changeDatasetOrganizationDataItemsQueryParams = {
+    dataset?: string,
+    dataIds: string,
+    filter?: string,
+};
+
+type clearChecklistOrganizationDataItemsQueryParams = {
+    dataset?: string,
+    dataIds: string,
+    filter?: string,
+};
+
+type deleteOrganizationDataFileQueryParams = {
+    fileName: string,
+};
+
+type deleteOrganizationDataItemsQueryParams = {
+    dataset?: string,
+    dataIds: string,
+    filter?: string,
+};
+
+type deleteOrganizationProjectsDataQueryParams = {
+    projectId?: number,
+    ids?: string,
+};
+
+type downloadOrganizationDataFileQueryParams = {
+    fileName: string,
+};
+
+type downloadOrganizationDataItemQueryParams = {
+    dataset?: string,
+    dataIds: string,
+    filter?: string,
+};
+
+type downloadOrganizationProjectsDataQueryParams = {
+    projectId?: number,
+    ids?: string,
+};
+
+type downloadOrganizationSingleDataItemQueryParams = {
+    filter?: string,
+};
+
+type getOrganizationDataItemQueryParams = {
+    filter?: string,
+};
+
+type getOrganizationProjectsDataCountQueryParams = {
+    projectId?: number,
+    filter?: string,
+    ids?: string,
+};
+
+type listOrganizationDataQueryParams = {
+    dataset?: string,
+    filter?: string,
+    limit?: number,
+    offset?: number,
+};
+
+type listOrganizationFilesQueryParams = {
+    dataset?: string,
+    filter?: string,
+    limit?: number,
+    offset?: number,
+};
+
+type listOrganizationProjectsDataQueryParams = {
+    projectId?: number,
+    filter?: string,
+    ids?: string,
+    limit?: number,
+    offset?: number,
+};
+
+type organizationBulkUpdateMetadataFormParams = {
+    dataset: string,
+    csvFile: RequestFile,
+};
+
+type organizationProjectsDataBulkUpdateMetadataFormParams = {
+    projectIds?: Array<number>,
+    csvFile: RequestFile,
+};
+
+type previewOrganizationDataFileQueryParams = {
+    fileName: string,
+};
+
+type refreshOrganizationDataQueryParams = {
+    dataset?: string,
+};
+
+
+export type OrganizationDataApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class OrganizationDataApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : OrganizationDataApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -64,8 +187,8 @@ export class OrganizationDataApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: OrganizationDataApiOpts);
+    constructor(basePathOrUsername: string, opts?: OrganizationDataApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -75,6 +198,8 @@ export class OrganizationDataApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -89,6 +214,14 @@ export class OrganizationDataApi {
         return this._basePath;
     }
 
+    set opts(opts: OrganizationDataApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -96,6 +229,7 @@ export class OrganizationDataApi {
     public setApiKey(key: OrganizationDataApiApiKeys, value: string | undefined) {
         (this.authentications as any)[OrganizationDataApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Add a storage bucket.
@@ -118,16 +252,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationBucket.');
         }
 
         // verify required parameter 'addOrganizationBucketRequest' is not null or undefined
+
+
         if (addOrganizationBucketRequest === null || addOrganizationBucketRequest === undefined) {
             throw new Error('Required parameter addOrganizationBucketRequest was null or undefined when calling addOrganizationBucket.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -181,14 +320,15 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
-     * Add a new file to an existing data item.  Don\'t trust the code generated by the widget, there are examples of using this API in Python, cURL and Node.js under the parameters.
+     * Add a new file to an existing data item.
      * @summary Add files
      * @param organizationId Organization ID
      * @param dataId Data ID
      * @param files 
      */
-    public async addOrganizationDataFile (organizationId: number, dataId: number, files: Array<RequestFile>, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addOrganizationDataFile (organizationId: number, dataId: number, params: addOrganizationDataFileFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/add'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -204,26 +344,33 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDataFile.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling addOrganizationDataFile.');
         }
 
         // verify required parameter 'files' is not null or undefined
-        if (files === null || files === undefined) {
-            throw new Error('Required parameter files was null or undefined when calling addOrganizationDataFile.');
+        if (params.files === null || params.files === undefined) {
+            throw new Error('Required parameter params.files was null or undefined when calling addOrganizationDataFile.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (files !== undefined) {
-            localVarFormParams['files[]'] = files;
+        if (params.files !== undefined) {
+            localVarFormParams['files[]'] = params.files;
         }
         localVarUseFormData = true;
 
@@ -276,6 +423,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Bulk adds data items that already exist in a storage bucket. The bucket path specified should contain folders. Each folder is added as a data item in Edge Impulse.
      * @summary Add data items from bucket
@@ -297,16 +445,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDataFolder.');
         }
 
         // verify required parameter 'organizationAddDataFolderRequest' is not null or undefined
+
+
         if (organizationAddDataFolderRequest === null || organizationAddDataFolderRequest === undefined) {
             throw new Error('Required parameter organizationAddDataFolderRequest was null or undefined when calling addOrganizationDataFolder.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -360,8 +513,9 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
-     * Add a new data item. You can add a maximum of 10000 files directly through this API. Use `addOrganizationDataFile` to add additional files. Don\'t trust the code generated by the widget, there are examples of using this API in Python, cURL and Node.js under the parameters.
+     * Add a new data item. You can add a maximum of 10000 files directly through this API. Use `addOrganizationDataFile` to add additional files.
      * @summary Add new data
      * @param organizationId Organization ID
      * @param name 
@@ -372,7 +526,7 @@ export class OrganizationDataApi {
      * @param bucketName Name of the bucket name (as an Edge Impulse name)
      * @param bucketPath Optional path in the bucket to create this data item (files are created under this path).
      */
-    public async addOrganizationDataItem (organizationId: number, name: string, dataset: string, metadata: string, files: Array<RequestFile>, bucketId?: number, bucketName?: string, bucketPath?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addOrganizationDataItem (organizationId: number, params: addOrganizationDataItemFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/add'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -387,60 +541,71 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDataItem.');
         }
 
         // verify required parameter 'name' is not null or undefined
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling addOrganizationDataItem.');
+        if (params.name === null || params.name === undefined) {
+            throw new Error('Required parameter params.name was null or undefined when calling addOrganizationDataItem.');
         }
+
+
 
         // verify required parameter 'dataset' is not null or undefined
-        if (dataset === null || dataset === undefined) {
-            throw new Error('Required parameter dataset was null or undefined when calling addOrganizationDataItem.');
+        if (params.dataset === null || params.dataset === undefined) {
+            throw new Error('Required parameter params.dataset was null or undefined when calling addOrganizationDataItem.');
         }
+
+
 
         // verify required parameter 'metadata' is not null or undefined
-        if (metadata === null || metadata === undefined) {
-            throw new Error('Required parameter metadata was null or undefined when calling addOrganizationDataItem.');
+        if (params.metadata === null || params.metadata === undefined) {
+            throw new Error('Required parameter params.metadata was null or undefined when calling addOrganizationDataItem.');
         }
+
+
 
         // verify required parameter 'files' is not null or undefined
-        if (files === null || files === undefined) {
-            throw new Error('Required parameter files was null or undefined when calling addOrganizationDataItem.');
+        if (params.files === null || params.files === undefined) {
+            throw new Error('Required parameter params.files was null or undefined when calling addOrganizationDataItem.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(name, "string");
+        if (params.name !== undefined) {
+            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
         }
 
-        if (bucketId !== undefined) {
-            localVarFormParams['bucketId'] = ObjectSerializer.serialize(bucketId, "number");
+        if (params.bucketId !== undefined) {
+            localVarFormParams['bucketId'] = ObjectSerializer.serialize(params.bucketId, "number");
         }
 
-        if (bucketName !== undefined) {
-            localVarFormParams['bucketName'] = ObjectSerializer.serialize(bucketName, "string");
+        if (params.bucketName !== undefined) {
+            localVarFormParams['bucketName'] = ObjectSerializer.serialize(params.bucketName, "string");
         }
 
-        if (dataset !== undefined) {
-            localVarFormParams['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (params.dataset !== undefined) {
+            localVarFormParams['dataset'] = ObjectSerializer.serialize(params.dataset, "string");
         }
 
-        if (bucketPath !== undefined) {
-            localVarFormParams['bucketPath'] = ObjectSerializer.serialize(bucketPath, "string");
+        if (params.bucketPath !== undefined) {
+            localVarFormParams['bucketPath'] = ObjectSerializer.serialize(params.bucketPath, "string");
         }
 
-        if (metadata !== undefined) {
-            localVarFormParams['metadata'] = ObjectSerializer.serialize(metadata, "string");
+        if (params.metadata !== undefined) {
+            localVarFormParams['metadata'] = ObjectSerializer.serialize(params.metadata, "string");
         }
 
-        if (files !== undefined) {
-            localVarFormParams['files[]'] = files;
+        if (params.files !== undefined) {
+            localVarFormParams['files[]'] = params.files;
         }
         localVarUseFormData = true;
 
@@ -493,6 +658,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Change the dataset for selected data items.
      * @summary Change dataset
@@ -502,7 +668,7 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async changeDatasetOrganizationDataItems (organizationId: number, dataIds: string, setOrganizationDataDatasetRequest: SetOrganizationDataDatasetRequest, dataset?: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async changeDatasetOrganizationDataItems (organizationId: number, setOrganizationDataDatasetRequest: SetOrganizationDataDatasetRequest, queryParams: changeDatasetOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/change-dataset'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -517,33 +683,40 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling changeDatasetOrganizationDataItems.');
         }
 
         // verify required parameter 'dataIds' is not null or undefined
-        if (dataIds === null || dataIds === undefined) {
-            throw new Error('Required parameter dataIds was null or undefined when calling changeDatasetOrganizationDataItems.');
+
+        if (queryParams.dataIds === null || queryParams.dataIds === undefined) {
+            throw new Error('Required parameter queryParams.dataIds was null or undefined when calling changeDatasetOrganizationDataItems.');
         }
 
+
         // verify required parameter 'setOrganizationDataDatasetRequest' is not null or undefined
+
+
         if (setOrganizationDataDatasetRequest === null || setOrganizationDataDatasetRequest === undefined) {
             throw new Error('Required parameter setOrganizationDataDatasetRequest was null or undefined when calling changeDatasetOrganizationDataItems.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (dataIds !== undefined) {
-            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(dataIds, "string");
+        if (queryParams.dataIds !== undefined) {
+            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -597,6 +770,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Clear all checklist flags for selected data items.
      * @summary Clear checklist for data
@@ -605,7 +779,7 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async clearChecklistOrganizationDataItems (organizationId: number, dataIds: string, dataset?: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async clearChecklistOrganizationDataItems (organizationId: number, queryParams: clearChecklistOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/clear-checklist'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -620,28 +794,33 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling clearChecklistOrganizationDataItems.');
         }
 
         // verify required parameter 'dataIds' is not null or undefined
-        if (dataIds === null || dataIds === undefined) {
-            throw new Error('Required parameter dataIds was null or undefined when calling clearChecklistOrganizationDataItems.');
+
+        if (queryParams.dataIds === null || queryParams.dataIds === undefined) {
+            throw new Error('Required parameter queryParams.dataIds was null or undefined when calling clearChecklistOrganizationDataItems.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (dataIds !== undefined) {
-            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(dataIds, "string");
+        if (queryParams.dataIds !== undefined) {
+            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -694,6 +873,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Delete a single file from a data item.
      * @summary Delete file
@@ -701,7 +881,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async deleteOrganizationDataFile (organizationId: number, dataId: number, fileName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationDataFile (organizationId: number, dataId: number, queryParams: deleteOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -717,25 +897,32 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationDataFile.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling deleteOrganizationDataFile.');
         }
 
         // verify required parameter 'fileName' is not null or undefined
-        if (fileName === null || fileName === undefined) {
-            throw new Error('Required parameter fileName was null or undefined when calling deleteOrganizationDataFile.');
+
+        if (queryParams.fileName === null || queryParams.fileName === undefined) {
+            throw new Error('Required parameter queryParams.fileName was null or undefined when calling deleteOrganizationDataFile.');
         }
 
-        if (fileName !== undefined) {
-            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(fileName, "string");
+
+        if (queryParams.fileName !== undefined) {
+            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -788,6 +975,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Delete a data item. This does not remove the items from the underlying storage.
      * @summary Delete data
@@ -810,16 +998,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationDataItem.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling deleteOrganizationDataItem.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -872,6 +1065,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Delete all data for selected data items. This removes all data in the underlying data bucket.
      * @summary Delete data
@@ -880,7 +1074,7 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async deleteOrganizationDataItems (organizationId: number, dataIds: string, dataset?: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async deleteOrganizationDataItems (organizationId: number, queryParams: deleteOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/delete'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -895,28 +1089,33 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationDataItems.');
         }
 
         // verify required parameter 'dataIds' is not null or undefined
-        if (dataIds === null || dataIds === undefined) {
-            throw new Error('Required parameter dataIds was null or undefined when calling deleteOrganizationDataItems.');
+
+        if (queryParams.dataIds === null || queryParams.dataIds === undefined) {
+            throw new Error('Required parameter queryParams.dataIds was null or undefined when calling deleteOrganizationDataItems.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (dataIds !== undefined) {
-            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(dataIds, "string");
+        if (queryParams.dataIds !== undefined) {
+            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -969,6 +1168,98 @@ export class OrganizationDataApi {
             });
         });
     }
+
+    /**
+     * Delete data samples from organizational projects.
+     * @summary Delete projects data
+     * @param organizationId Organization ID
+     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async deleteOrganizationProjectsData (organizationId: number, queryParams: deleteOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationProjectsData.');
+        }
+
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Download a single file from a data item.
      * @summary Download file
@@ -976,7 +1267,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async downloadOrganizationDataFile (organizationId: number, dataId: number, fileName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationDataFile (organizationId: number, dataId: number, queryParams: downloadOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/files/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -992,25 +1283,32 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationDataFile.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling downloadOrganizationDataFile.');
         }
 
         // verify required parameter 'fileName' is not null or undefined
-        if (fileName === null || fileName === undefined) {
-            throw new Error('Required parameter fileName was null or undefined when calling downloadOrganizationDataFile.');
+
+        if (queryParams.fileName === null || queryParams.fileName === undefined) {
+            throw new Error('Required parameter queryParams.fileName was null or undefined when calling downloadOrganizationDataFile.');
         }
 
-        if (fileName !== undefined) {
-            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(fileName, "string");
+
+        if (queryParams.fileName !== undefined) {
+            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1063,6 +1361,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Download all data for selected data items. This function does not query the underlying bucket.
      * @summary Download data
@@ -1071,7 +1370,7 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationDataItem (organizationId: number, dataIds: string, dataset?: string, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationDataItem (organizationId: number, queryParams: downloadOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1086,28 +1385,33 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationDataItem.');
         }
 
         // verify required parameter 'dataIds' is not null or undefined
-        if (dataIds === null || dataIds === undefined) {
-            throw new Error('Required parameter dataIds was null or undefined when calling downloadOrganizationDataItem.');
+
+        if (queryParams.dataIds === null || queryParams.dataIds === undefined) {
+            throw new Error('Required parameter queryParams.dataIds was null or undefined when calling downloadOrganizationDataItem.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (dataIds !== undefined) {
-            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(dataIds, "string");
+        if (queryParams.dataIds !== undefined) {
+            localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1160,6 +1464,98 @@ export class OrganizationDataApi {
             });
         });
     }
+
+    /**
+     * Download all selected project data items.
+     * @summary Download data
+     * @param organizationId Organization ID
+     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async downloadOrganizationProjectsData (organizationId: number, queryParams: downloadOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/download'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/x-zip'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationProjectsData.');
+        }
+
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Download all data for this data item.
      * @summary Download data
@@ -1167,7 +1563,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, queryParams: downloadOrganizationSingleDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1183,20 +1579,25 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationSingleDataItem.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling downloadOrganizationSingleDataItem.');
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1249,6 +1650,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Get a data item. This will HEAD the underlying bucket to retrieve the last file information.
      * @summary Get data metadata
@@ -1256,7 +1658,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async getOrganizationDataItem (organizationId: number, dataId: number, filter?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemResponse> {
+    public async getOrganizationDataItem (organizationId: number, dataId: number, queryParams: getOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1272,20 +1674,25 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationDataItem.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling getOrganizationDataItem.');
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1338,6 +1745,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Get information about a dataset
      * @summary Get dataset
@@ -1360,16 +1768,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationDataset.');
         }
 
         // verify required parameter 'dataset' is not null or undefined
+
+
         if (dataset === null || dataset === undefined) {
             throw new Error('Required parameter dataset was null or undefined when calling getOrganizationDataset.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1422,6 +1835,103 @@ export class OrganizationDataApi {
             });
         });
     }
+
+    /**
+     * Get the number of samples for all or for a specific organization project.
+     * @summary Get projects data count
+     * @param organizationId Organization ID
+     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
+     * @param filter Data filter in SQL WHERE format, where you can reference \&#39;filename\&#39;, \&#39;label\&#39;, \&#39;project_name\&#39;, \&#39;category\&#39;, \&#39;sensors\&#39;, \&#39;frequency\&#39;, and any metadata through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     */
+    public async getOrganizationProjectsDataCount (organizationId: number, queryParams: getOrganizationProjectsDataCountQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationProjectsDataCountResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/count'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationProjectsDataCount.');
+        }
+
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
+        }
+
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationProjectsDataCountResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationProjectsDataCountResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Hide a dataset (does not remove underlying data)
      * @summary Hide dataset
@@ -1444,16 +1954,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling hideOrganizationDataset.');
         }
 
         // verify required parameter 'dataset' is not null or undefined
+
+
         if (dataset === null || dataset === undefined) {
             throw new Error('Required parameter dataset was null or undefined when calling hideOrganizationDataset.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1506,6 +2021,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Retrieve all configured storage buckets. This does not list the secret key.
      * @summary List storage buckets
@@ -1526,11 +2042,14 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationBuckets.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1583,6 +2102,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Lists all data items. This can be filtered by the ?filter parameter.
      * @summary List data
@@ -1592,7 +2112,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationData (organizationId: number, dataset?: string, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
+    public async listOrganizationData (organizationId: number, queryParams: listOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1607,27 +2127,30 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationData.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1680,6 +2203,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Lists all files included by the filter.
      * @summary List files
@@ -1689,7 +2213,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationFiles (organizationId: number, dataset?: string, filter?: string, limit?: number, offset?: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationFilesResponse> {
+    public async listOrganizationFiles (organizationId: number, queryParams: listOrganizationFilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationFilesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/files'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1704,27 +2228,30 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationFiles.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(filter, "string");
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1777,6 +2304,113 @@ export class OrganizationDataApi {
             });
         });
     }
+
+    /**
+     * Retrieve all the data samples from organizational projects.
+     * @summary Get projects data
+     * @param organizationId Organization ID
+     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
+     * @param filter Data filter in SQL WHERE format, where you can reference \&#39;filename\&#39;, \&#39;label\&#39;, \&#39;project_name\&#39;, \&#39;category\&#39;, \&#39;sensors\&#39;, \&#39;frequency\&#39;, and any metadata through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async listOrganizationProjectsData (organizationId: number, queryParams: listOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationProjectsDataResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationProjectsData.');
+        }
+
+        if (queryParams.projectId !== undefined) {
+            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
+        }
+
+        if (queryParams.filter !== undefined) {
+            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
+        }
+
+        if (queryParams.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListOrganizationProjectsDataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListOrganizationProjectsDataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Bulk update the metadata of many data items in one go. This requires you to submit a CSV file with headers, one of which the columns should be named \'name\'. The other columns are used as metadata keys.
      * @summary Bulk update metadata
@@ -1784,7 +2418,7 @@ export class OrganizationDataApi {
      * @param dataset 
      * @param csvFile 
      */
-    public async organizationBulkUpdateMetadata (organizationId: number, dataset: string, csvFile: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async organizationBulkUpdateMetadata (organizationId: number, params: organizationBulkUpdateMetadataFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/bulk-metadata'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1799,30 +2433,37 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling organizationBulkUpdateMetadata.');
         }
 
         // verify required parameter 'dataset' is not null or undefined
-        if (dataset === null || dataset === undefined) {
-            throw new Error('Required parameter dataset was null or undefined when calling organizationBulkUpdateMetadata.');
+        if (params.dataset === null || params.dataset === undefined) {
+            throw new Error('Required parameter params.dataset was null or undefined when calling organizationBulkUpdateMetadata.');
         }
+
+
 
         // verify required parameter 'csvFile' is not null or undefined
-        if (csvFile === null || csvFile === undefined) {
-            throw new Error('Required parameter csvFile was null or undefined when calling organizationBulkUpdateMetadata.');
+        if (params.csvFile === null || params.csvFile === undefined) {
+            throw new Error('Required parameter params.csvFile was null or undefined when calling organizationBulkUpdateMetadata.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (dataset !== undefined) {
-            localVarFormParams['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (params.dataset !== undefined) {
+            localVarFormParams['dataset'] = ObjectSerializer.serialize(params.dataset, "string");
         }
 
-        if (csvFile !== undefined) {
-            localVarFormParams['csvFile'] = csvFile;
+        if (params.csvFile !== undefined) {
+            localVarFormParams['csvFile'] = params.csvFile;
         }
         localVarUseFormData = true;
 
@@ -1875,6 +2516,286 @@ export class OrganizationDataApi {
             });
         });
     }
+
+    /**
+     * Batch disable project data samples by dataId
+     * @summary Batch disable data
+     * @param organizationId Organization ID
+     * @param organizationProjectsDataBatchRequest 
+     */
+    public async organizationProjectsDataBatchDisable (organizationId: number, organizationProjectsDataBatchRequest: OrganizationProjectsDataBatchRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationProjectsDataBatchDisableResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/disable'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBatchDisable.');
+        }
+
+        // verify required parameter 'organizationProjectsDataBatchRequest' is not null or undefined
+
+
+        if (organizationProjectsDataBatchRequest === null || organizationProjectsDataBatchRequest === undefined) {
+            throw new Error('Required parameter organizationProjectsDataBatchRequest was null or undefined when calling organizationProjectsDataBatchDisable.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(organizationProjectsDataBatchRequest, "OrganizationProjectsDataBatchRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<OrganizationProjectsDataBatchDisableResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OrganizationProjectsDataBatchDisableResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Batch enable project data samples by dataId
+     * @summary Batch enable data
+     * @param organizationId Organization ID
+     * @param organizationProjectsDataBatchRequest 
+     */
+    public async organizationProjectsDataBatchEnable (organizationId: number, organizationProjectsDataBatchRequest: OrganizationProjectsDataBatchRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationProjectsDataBatchEnableResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/enable'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBatchEnable.');
+        }
+
+        // verify required parameter 'organizationProjectsDataBatchRequest' is not null or undefined
+
+
+        if (organizationProjectsDataBatchRequest === null || organizationProjectsDataBatchRequest === undefined) {
+            throw new Error('Required parameter organizationProjectsDataBatchRequest was null or undefined when calling organizationProjectsDataBatchEnable.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(organizationProjectsDataBatchRequest, "OrganizationProjectsDataBatchRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<OrganizationProjectsDataBatchEnableResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OrganizationProjectsDataBatchEnableResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Bulk update the metadata of many raw data items in one go. This requires you to submit a CSV file with headers, one of which the columns should be named \'name\'. The other columns are used as metadata keys.
+     * @summary Bulk update metadata
+     * @param organizationId Organization ID
+     * @param csvFile 
+     * @param projectIds 
+     */
+    public async organizationProjectsDataBulkUpdateMetadata (organizationId: number, params: organizationProjectsDataBulkUpdateMetadataFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/metadata'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBulkUpdateMetadata.');
+        }
+
+        // verify required parameter 'csvFile' is not null or undefined
+        if (params.csvFile === null || params.csvFile === undefined) {
+            throw new Error('Required parameter params.csvFile was null or undefined when calling organizationProjectsDataBulkUpdateMetadata.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.projectIds !== undefined) {
+            localVarFormParams['projectIds'] = ObjectSerializer.serialize(params.projectIds, "Array<number>");
+        }
+
+        if (params.csvFile !== undefined) {
+            localVarFormParams['csvFile'] = params.csvFile;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
     /**
      * Preview a single file from a data item (same as downloadOrganizationDataFile but w/ content-disposition inline).
      * @summary Preview file
@@ -1882,7 +2803,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async previewOrganizationDataFile (organizationId: number, dataId: number, fileName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async previewOrganizationDataFile (organizationId: number, dataId: number, queryParams: previewOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/files/preview'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1898,25 +2819,32 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling previewOrganizationDataFile.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling previewOrganizationDataFile.');
         }
 
         // verify required parameter 'fileName' is not null or undefined
-        if (fileName === null || fileName === undefined) {
-            throw new Error('Required parameter fileName was null or undefined when calling previewOrganizationDataFile.');
+
+        if (queryParams.fileName === null || queryParams.fileName === undefined) {
+            throw new Error('Required parameter queryParams.fileName was null or undefined when calling previewOrganizationDataFile.');
         }
 
-        if (fileName !== undefined) {
-            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(fileName, "string");
+
+        if (queryParams.fileName !== undefined) {
+            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -1969,13 +2897,14 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Update all data items. HEADs all underlying buckets to retrieve the last file information. Use this API after uploading data directly to S3.
      * @summary Refresh data
      * @param organizationId Organization ID
      * @param dataset Selected dataset
      */
-    public async refreshOrganizationData (organizationId: number, dataset?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async refreshOrganizationData (organizationId: number, queryParams: refreshOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/refresh'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1990,15 +2919,18 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling refreshOrganizationData.');
         }
 
-        if (dataset !== undefined) {
-            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(dataset, "string");
+        if (queryParams.dataset !== undefined) {
+            localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2051,6 +2983,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Remove a storage bucket. This will render any data in this storage bucket unreachable.
      * @summary Remove storage bucket
@@ -2073,16 +3006,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling removeOrganizationBucket.');
         }
 
         // verify required parameter 'bucketId' is not null or undefined
+
+
         if (bucketId === null || bucketId === undefined) {
             throw new Error('Required parameter bucketId was null or undefined when calling removeOrganizationBucket.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2135,6 +3073,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Updates storage bucket details. This only updates fields that were set in the request body.
      * @summary Update storage bucket
@@ -2158,21 +3097,28 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationBucket.');
         }
 
         // verify required parameter 'bucketId' is not null or undefined
+
+
         if (bucketId === null || bucketId === undefined) {
             throw new Error('Required parameter bucketId was null or undefined when calling updateOrganizationBucket.');
         }
 
         // verify required parameter 'updateOrganizationBucketRequest' is not null or undefined
+
+
         if (updateOrganizationBucketRequest === null || updateOrganizationBucketRequest === undefined) {
             throw new Error('Required parameter updateOrganizationBucketRequest was null or undefined when calling updateOrganizationBucket.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2226,6 +3172,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Update the data item metadata.
      * @summary Update data metadata
@@ -2249,21 +3196,28 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationDataItem.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling updateOrganizationDataItem.');
         }
 
         // verify required parameter 'updateOrganizationDataItemRequest' is not null or undefined
+
+
         if (updateOrganizationDataItemRequest === null || updateOrganizationDataItemRequest === undefined) {
             throw new Error('Required parameter updateOrganizationDataItemRequest was null or undefined when calling updateOrganizationDataItem.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2317,6 +3271,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Set information about a dataset
      * @summary Update dataset
@@ -2340,21 +3295,28 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationDataset.');
         }
 
         // verify required parameter 'dataset' is not null or undefined
+
+
         if (dataset === null || dataset === undefined) {
             throw new Error('Required parameter dataset was null or undefined when calling updateOrganizationDataset.');
         }
 
         // verify required parameter 'updateOrganizationDatasetRequest' is not null or undefined
+
+
         if (updateOrganizationDatasetRequest === null || updateOrganizationDatasetRequest === undefined) {
             throw new Error('Required parameter updateOrganizationDatasetRequest was null or undefined when calling updateOrganizationDataset.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -2408,6 +3370,7 @@ export class OrganizationDataApi {
             });
         });
     }
+
     /**
      * Verify whether we can reach a bucket before adding it.
      * @summary Verify bucket connectivity
@@ -2429,16 +3392,21 @@ export class OrganizationDataApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling verifyOrganizationBucket.');
         }
 
         // verify required parameter 'verifyOrganizationBucketRequest' is not null or undefined
+
+
         if (verifyOrganizationBucketRequest === null || verifyOrganizationBucketRequest === undefined) {
             throw new Error('Required parameter verifyOrganizationBucketRequest was null or undefined when calling verifyOrganizationBucket.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

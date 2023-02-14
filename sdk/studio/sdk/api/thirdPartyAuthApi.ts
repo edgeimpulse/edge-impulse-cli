@@ -45,10 +45,22 @@ export enum ThirdPartyAuthApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type authorizeThirdPartyFormParams = {
+    nextUrl: string,
+};
+
+
+export type ThirdPartyAuthApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ThirdPartyAuthApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ThirdPartyAuthApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -57,8 +69,8 @@ export class ThirdPartyAuthApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ThirdPartyAuthApiOpts);
+    constructor(basePathOrUsername: string, opts?: ThirdPartyAuthApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -68,6 +80,8 @@ export class ThirdPartyAuthApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -82,6 +96,14 @@ export class ThirdPartyAuthApi {
         return this._basePath;
     }
 
+    set opts(opts: ThirdPartyAuthApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -90,6 +112,7 @@ export class ThirdPartyAuthApi {
         (this.authentications as any)[ThirdPartyAuthApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Authorize a third party to access a project
      * @summary Give access to project
@@ -97,7 +120,7 @@ export class ThirdPartyAuthApi {
      * @param authId Auth ID
      * @param nextUrl The URL to redirect to after authorization is completed.
      */
-    public async authorizeThirdParty (projectId: number, authId: number, nextUrl: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async authorizeThirdParty (projectId: number, authId: number, params: authorizeThirdPartyFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
         const localVarPath = this.basePath + '/api/{projectId}/third-party-auth/{authId}/authorize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
@@ -106,26 +129,33 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling authorizeThirdParty.');
         }
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling authorizeThirdParty.');
         }
 
         // verify required parameter 'nextUrl' is not null or undefined
-        if (nextUrl === null || nextUrl === undefined) {
-            throw new Error('Required parameter nextUrl was null or undefined when calling authorizeThirdParty.');
+        if (params.nextUrl === null || params.nextUrl === undefined) {
+            throw new Error('Required parameter params.nextUrl was null or undefined when calling authorizeThirdParty.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (nextUrl !== undefined) {
-            localVarFormParams['nextUrl'] = ObjectSerializer.serialize(nextUrl, "string");
+        if (params.nextUrl !== undefined) {
+            localVarFormParams['nextUrl'] = ObjectSerializer.serialize(params.nextUrl, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -176,6 +206,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Create a new third party authentication partner
      * @summary Create third party auth
@@ -195,11 +226,14 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'createThirdPartyAuthRequest' is not null or undefined
+
+
         if (createThirdPartyAuthRequest === null || createThirdPartyAuthRequest === undefined) {
             throw new Error('Required parameter createThirdPartyAuthRequest was null or undefined when calling createThirdPartyAuth.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -253,6 +287,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Login as a user as a third-party authentication provider. If the user does not exists, it\'s automatically created. You can only log in as users that were previously created by you.
      * @summary Create or login a user
@@ -274,16 +309,21 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling createUserThirdParty.');
         }
 
         // verify required parameter 'createUserThirdPartyRequest' is not null or undefined
+
+
         if (createUserThirdPartyRequest === null || createUserThirdPartyRequest === undefined) {
             throw new Error('Required parameter createUserThirdPartyRequest was null or undefined when calling createUserThirdParty.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -337,6 +377,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Delete a third party authentication partner
      * @summary Delete third party auth
@@ -357,11 +398,14 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling deleteThirdPartyAuth.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -414,6 +458,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Get information about all third party authentication partners
      * @summary Get all third party auth
@@ -432,6 +477,7 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -484,6 +530,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Get information about a third party authentication partner
      * @summary Get third party auth
@@ -504,11 +551,14 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling getThirdPartyAuth.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -561,6 +611,7 @@ export class ThirdPartyAuthApi {
             });
         });
     }
+
     /**
      * Update a third party authentication partner
      * @summary Update third party auth
@@ -582,16 +633,21 @@ export class ThirdPartyAuthApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'authId' is not null or undefined
+
+
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling updateThirdPartyAuth.');
         }
 
         // verify required parameter 'updateThirdPartyAuthRequest' is not null or undefined
+
+
         if (updateThirdPartyAuthRequest === null || updateThirdPartyAuthRequest === undefined) {
             throw new Error('Required parameter updateThirdPartyAuthRequest was null or undefined when calling updateThirdPartyAuth.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

@@ -37,10 +37,22 @@ export enum ContentDispositionInlineApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type previewOrganizationDataFileQueryParams = {
+    fileName: string,
+};
+
+
+export type ContentDispositionInlineApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ContentDispositionInlineApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ContentDispositionInlineApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -49,8 +61,8 @@ export class ContentDispositionInlineApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ContentDispositionInlineApiOpts);
+    constructor(basePathOrUsername: string, opts?: ContentDispositionInlineApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -60,6 +72,8 @@ export class ContentDispositionInlineApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -74,6 +88,14 @@ export class ContentDispositionInlineApi {
         return this._basePath;
     }
 
+    set opts(opts: ContentDispositionInlineApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -82,6 +104,7 @@ export class ContentDispositionInlineApi {
         (this.authentications as any)[ContentDispositionInlineApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Preview a single file from a data item (same as downloadOrganizationDataFile but w/ content-disposition inline).
      * @summary Preview file
@@ -89,7 +112,7 @@ export class ContentDispositionInlineApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async previewOrganizationDataFile (organizationId: number, dataId: number, fileName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async previewOrganizationDataFile (organizationId: number, dataId: number, queryParams: previewOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/files/preview'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -105,25 +128,32 @@ export class ContentDispositionInlineApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'organizationId' is not null or undefined
+
+
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling previewOrganizationDataFile.');
         }
 
         // verify required parameter 'dataId' is not null or undefined
+
+
         if (dataId === null || dataId === undefined) {
             throw new Error('Required parameter dataId was null or undefined when calling previewOrganizationDataFile.');
         }
 
         // verify required parameter 'fileName' is not null or undefined
-        if (fileName === null || fileName === undefined) {
-            throw new Error('Required parameter fileName was null or undefined when calling previewOrganizationDataFile.');
+
+        if (queryParams.fileName === null || queryParams.fileName === undefined) {
+            throw new Error('Required parameter queryParams.fileName was null or undefined when calling previewOrganizationDataFile.');
         }
 
-        if (fileName !== undefined) {
-            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(fileName, "string");
+
+        if (queryParams.fileName !== undefined) {
+            localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

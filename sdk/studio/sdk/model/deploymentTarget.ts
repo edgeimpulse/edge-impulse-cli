@@ -163,5 +163,5 @@ export class DeploymentTarget {
 }
 
 
-export type DeploymentTargetUiSectionEnum = 'library' | 'firmware' | 'mobile';
-export const DeploymentTargetUiSectionEnumValues: string[] = ['library', 'firmware', 'mobile'];
+export type DeploymentTargetUiSectionEnum = 'library' | 'firmware' | 'mobile' | 'hidden';
+export const DeploymentTargetUiSectionEnumValues: string[] = ['library', 'firmware', 'mobile', 'hidden'];

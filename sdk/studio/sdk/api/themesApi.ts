@@ -42,10 +42,22 @@ export enum ThemesApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type updateThemeFaviconFormParams = {
+    image: RequestFile,
+};
+
+
+export type ThemesApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ThemesApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ThemesApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -54,8 +66,8 @@ export class ThemesApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ThemesApiOpts);
+    constructor(basePathOrUsername: string, opts?: ThemesApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -65,6 +77,8 @@ export class ThemesApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -79,6 +93,14 @@ export class ThemesApi {
         return this._basePath;
     }
 
+    set opts(opts: ThemesApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -86,6 +108,7 @@ export class ThemesApi {
     public setApiKey(key: ThemesApiApiKeys, value: string | undefined) {
         (this.authentications as any)[ThemesApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Delete a theme given its unique identifier.
@@ -107,11 +130,14 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'themeId' is not null or undefined
+
+
         if (themeId === null || themeId === undefined) {
             throw new Error('Required parameter themeId was null or undefined when calling deleteTheme.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -164,6 +190,7 @@ export class ThemesApi {
             });
         });
     }
+
     /**
      * Get a theme given its unique identifier.
      * @summary Get theme by ID
@@ -184,11 +211,14 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'themeId' is not null or undefined
+
+
         if (themeId === null || themeId === undefined) {
             throw new Error('Required parameter themeId was null or undefined when calling getTheme.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -241,6 +271,7 @@ export class ThemesApi {
             });
         });
     }
+
     /**
      * Get all available Studio themes.
      * @summary Get themes
@@ -259,6 +290,7 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -311,6 +343,7 @@ export class ThemesApi {
             });
         });
     }
+
     /**
      * Update some or all theme colors.
      * @summary Update theme colors
@@ -332,16 +365,21 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'themeId' is not null or undefined
+
+
         if (themeId === null || themeId === undefined) {
             throw new Error('Required parameter themeId was null or undefined when calling updateThemeColors.');
         }
 
         // verify required parameter 'updateThemeColorsRequest' is not null or undefined
+
+
         if (updateThemeColorsRequest === null || updateThemeColorsRequest === undefined) {
             throw new Error('Required parameter updateThemeColorsRequest was null or undefined when calling updateThemeColors.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -395,13 +433,14 @@ export class ThemesApi {
             });
         });
     }
+
     /**
      * Update the theme favicon
      * @summary Update theme favicon
      * @param themeId Theme ID
      * @param image 
      */
-    public async updateThemeFavicon (themeId: number, image: RequestFile, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateThemeFavicon (themeId: number, params: updateThemeFaviconFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}/favicon'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
@@ -416,21 +455,26 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'themeId' is not null or undefined
+
+
         if (themeId === null || themeId === undefined) {
             throw new Error('Required parameter themeId was null or undefined when calling updateThemeFavicon.');
         }
 
         // verify required parameter 'image' is not null or undefined
-        if (image === null || image === undefined) {
-            throw new Error('Required parameter image was null or undefined when calling updateThemeFavicon.');
+        if (params.image === null || params.image === undefined) {
+            throw new Error('Required parameter params.image was null or undefined when calling updateThemeFavicon.');
         }
 
+
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
-        if (image !== undefined) {
-            localVarFormParams['image'] = image;
+        if (params.image !== undefined) {
+            localVarFormParams['image'] = params.image;
         }
         localVarUseFormData = true;
 
@@ -483,6 +527,7 @@ export class ThemesApi {
             });
         });
     }
+
     /**
      * Update some or all theme logos.
      * @summary Update theme logos
@@ -504,16 +549,21 @@ export class ThemesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'themeId' is not null or undefined
+
+
         if (themeId === null || themeId === undefined) {
             throw new Error('Required parameter themeId was null or undefined when calling updateThemeLogos.');
         }
 
         // verify required parameter 'updateThemeLogosRequest' is not null or undefined
+
+
         if (updateThemeLogosRequest === null || updateThemeLogosRequest === undefined) {
             throw new Error('Required parameter updateThemeLogosRequest was null or undefined when calling updateThemeLogos.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

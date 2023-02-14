@@ -26,6 +26,7 @@ const JOB_CONNECTION_TIMEOUT = 60000;
 export type EdgeImpulseApiOpts = {
     endpoint?: string;
     debug?: boolean;
+    extraHeaders?: { [name: string]: string };
 };
 
 export type EdgeImpulseApiAuthOpts = {
@@ -39,7 +40,7 @@ export type EdgeImpulseApiAuthOpts = {
 const DEBUG_PREFIX = '\x1b[33m[API]\x1b[0m';
 
 export class EdgeImpulseApi {
-    private _opts: { endpoint: string, debug: boolean };
+    private _opts: { endpoint: string, debug: boolean, extraHeaders: { [name: string]: string } };
 
     admin: AdminApi;
     auth: AuthApi;
@@ -87,37 +88,67 @@ export class EdgeImpulseApi {
         this._opts = {
             endpoint,
             debug: opts?.debug || false,
+            extraHeaders: opts?.extraHeaders || { },
         };
 
-        this.admin = new AdminApi(this._opts.endpoint + '/v1');
-        this.auth = new AuthApi(this._opts.endpoint + '/v1');
-        this.classify = new ClassifyApi(this._opts.endpoint + '/v1');
-        this.dsp = new DSPApi(this._opts.endpoint + '/v1');
-        this.deployment = new DeploymentApi(this._opts.endpoint + '/v1');
-        this.devices = new DevicesApi(this._opts.endpoint + '/v1');
-        this.export = new ExportApi(this._opts.endpoint + '/v1');
-        this.health = new HealthApi(this._opts.endpoint + '/v1');
-        this.impulse = new ImpulseApi(this._opts.endpoint + '/v1');
-        this.jobs = new JobsApi(this._opts.endpoint + '/v1');
-        this.learn = new LearnApi(this._opts.endpoint + '/v1');
-        this.login = new LoginApi(this._opts.endpoint + '/v1');
-        this.metrics = new MetricsApi(this._opts.endpoint + '/v1');
-        this.optimization = new OptimizationApi(this._opts.endpoint + '/v1');
-        this.organizationBlocks = new OrganizationBlocksApi(this._opts.endpoint + '/v1');
-        this.organizationCreateProject = new OrganizationCreateProjectApi(this._opts.endpoint + '/v1');
-        this.organizationData = new OrganizationDataApi(this._opts.endpoint + '/v1');
-        this.organizationJobs = new OrganizationJobsApi(this._opts.endpoint + '/v1');
-        this.organizationPipelines = new OrganizationPipelinesApi(this._opts.endpoint + '/v1');
-        this.organizationPortals = new OrganizationPortalsApi(this._opts.endpoint + '/v1');
-        this.organizations = new OrganizationsApi(this._opts.endpoint + '/v1');
-        this.performanceCalibration = new PerformanceCalibrationApi(this._opts.endpoint + '/v1');
-        this.projects = new ProjectsApi(this._opts.endpoint + '/v1');
-        this.rawData = new RawDataApi(this._opts.endpoint + '/v1');
-        this.themes = new ThemesApi(this._opts.endpoint + '/v1');
-        this.thirdPartyAuth = new ThirdPartyAuthApi(this._opts.endpoint + '/v1');
-        this.uploadPortal = new UploadPortalApi(this._opts.endpoint + '/v1');
-        this.user = new UserApi(this._opts.endpoint + '/v1');
-        this.whitelabels = new WhitelabelsApi(this._opts.endpoint + '/v1');
+        this.admin = new AdminApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.auth = new AuthApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.classify = new ClassifyApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.dsp = new DSPApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.deployment = new DeploymentApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.devices = new DevicesApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.export = new ExportApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.health = new HealthApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.impulse = new ImpulseApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.jobs = new JobsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.learn = new LearnApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.login = new LoginApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.metrics = new MetricsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.optimization = new OptimizationApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationBlocks = new OrganizationBlocksApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationCreateProject = new OrganizationCreateProjectApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationData = new OrganizationDataApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationJobs = new OrganizationJobsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationPipelines = new OrganizationPipelinesApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizationPortals = new OrganizationPortalsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.organizations = new OrganizationsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.performanceCalibration = new PerformanceCalibrationApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.projects = new ProjectsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.rawData = new RawDataApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.themes = new ThemesApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.thirdPartyAuth = new ThirdPartyAuthApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.uploadPortal = new UploadPortalApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.user = new UserApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.whitelabels = new WhitelabelsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
     }
 
     async authenticate(opts: EdgeImpulseApiAuthOpts) {

@@ -45,10 +45,18 @@ export enum ImpulseApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type ImpulseApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class ImpulseApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : ImpulseApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -57,8 +65,8 @@ export class ImpulseApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: ImpulseApiOpts);
+    constructor(basePathOrUsername: string, opts?: ImpulseApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -68,6 +76,8 @@ export class ImpulseApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -82,6 +92,14 @@ export class ImpulseApi {
         return this._basePath;
     }
 
+    set opts(opts: ImpulseApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -89,6 +107,7 @@ export class ImpulseApi {
     public setApiKey(key: ImpulseApiApiKeys, value: string | undefined) {
         (this.authentications as any)[ImpulseApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Create a new version of a given block
@@ -114,21 +133,28 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling createBlockVersion.');
         }
 
         // verify required parameter 'blockType' is not null or undefined
+
+
         if (blockType === null || blockType === undefined) {
             throw new Error('Required parameter blockType was null or undefined when calling createBlockVersion.');
         }
 
         // verify required parameter 'blockId' is not null or undefined
+
+
         if (blockId === null || blockId === undefined) {
             throw new Error('Required parameter blockId was null or undefined when calling createBlockVersion.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -181,6 +207,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Sets the impulse for this project.
      * @summary Create impulse
@@ -202,16 +229,21 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling createImpulse.');
         }
 
         // verify required parameter 'impulse' is not null or undefined
+
+
         if (impulse === null || impulse === undefined) {
             throw new Error('Required parameter impulse was null or undefined when calling createImpulse.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -265,6 +297,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Completely clears the impulse for this project.
      * @summary Delete impulse
@@ -285,11 +318,14 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteImpulse.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -342,6 +378,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Retrieve the impulse for this project
      * @summary Get impulse
@@ -362,11 +399,14 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getImpulse.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -419,6 +459,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Retrieve the impulse for this project including disabled blocks
      * @summary Get impulse including disabled blocks
@@ -439,11 +480,14 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getImpulseAll.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -496,6 +540,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Lists all possible blocks that can be used in the impulse
      * @summary Get impulse blocks
@@ -516,11 +561,14 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getImpulseBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -573,6 +621,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Update the details of a block version
      * @summary Update block version details
@@ -598,26 +647,35 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling updateBlockVersion.');
         }
 
         // verify required parameter 'blockType' is not null or undefined
+
+
         if (blockType === null || blockType === undefined) {
             throw new Error('Required parameter blockType was null or undefined when calling updateBlockVersion.');
         }
 
         // verify required parameter 'blockId' is not null or undefined
+
+
         if (blockId === null || blockId === undefined) {
             throw new Error('Required parameter blockId was null or undefined when calling updateBlockVersion.');
         }
 
         // verify required parameter 'impulseBlockVersion' is not null or undefined
+
+
         if (impulseBlockVersion === null || impulseBlockVersion === undefined) {
             throw new Error('Required parameter impulseBlockVersion was null or undefined when calling updateBlockVersion.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -671,6 +729,7 @@ export class ImpulseApi {
             });
         });
     }
+
     /**
      * Verify the validity of a custom DSP block
      * @summary Verify custom DSP block
@@ -692,16 +751,21 @@ export class ImpulseApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling verifyDspBlockUrl.');
         }
 
         // verify required parameter 'verifyDspBlockUrlRequest' is not null or undefined
+
+
         if (verifyDspBlockUrlRequest === null || verifyDspBlockUrlRequest === undefined) {
             throw new Error('Required parameter verifyDspBlockUrlRequest was null or undefined when calling verifyDspBlockUrl.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

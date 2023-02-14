@@ -14,6 +14,7 @@
 export class DSPGroupItemSelectOptions {
     'value'?: string;
     'selected'?: boolean;
+    'optionLabel'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +28,11 @@ export class DSPGroupItemSelectOptions {
             "name": "selected",
             "baseName": "selected",
             "type": "boolean"
+        },
+        {
+            "name": "optionLabel",
+            "baseName": "optionLabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

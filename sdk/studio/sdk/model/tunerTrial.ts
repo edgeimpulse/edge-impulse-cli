@@ -24,6 +24,7 @@ export class TunerTrial {
     'impulse'?: object;
     'experiment'?: string;
     'originalTrialId'?: string;
+    'model'?: { [key: string]: object; };
 
     static discriminator: string | undefined = undefined;
 
@@ -82,6 +83,11 @@ export class TunerTrial {
             "name": "originalTrialId",
             "baseName": "original_trial_id",
             "type": "string"
+        },
+        {
+            "name": "model",
+            "baseName": "model",
+            "type": "{ [key: string]: object; }"
         }    ];
 
     static getAttributeTypeMap() {

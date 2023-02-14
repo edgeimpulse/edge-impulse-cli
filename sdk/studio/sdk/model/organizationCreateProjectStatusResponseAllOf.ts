@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationCreateProject } from './organizationCreateProject';
+import { OrganizationCreateProjectWithFiles } from './organizationCreateProjectWithFiles';
 
 export class OrganizationCreateProjectStatusResponseAllOf {
-    'status'?: OrganizationCreateProject;
+    'status'?: OrganizationCreateProjectWithFiles;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class OrganizationCreateProjectStatusResponseAllOf {
         {
             "name": "status",
             "baseName": "status",
-            "type": "OrganizationCreateProject"
+            "type": "OrganizationCreateProjectWithFiles"
         }    ];
 
     static getAttributeTypeMap() {

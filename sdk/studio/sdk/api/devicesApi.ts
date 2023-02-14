@@ -44,10 +44,18 @@ export enum DevicesApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type DevicesApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class DevicesApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : DevicesApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -56,8 +64,8 @@ export class DevicesApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: DevicesApiOpts);
+    constructor(basePathOrUsername: string, opts?: DevicesApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -67,6 +75,8 @@ export class DevicesApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -81,6 +91,14 @@ export class DevicesApi {
         return this._basePath;
     }
 
+    set opts(opts: DevicesApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -88,6 +106,7 @@ export class DevicesApi {
     public setApiKey(key: DevicesApiApiKeys, value: string | undefined) {
         (this.authentications as any)[DevicesApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Create a new device. If you set `ifNotExists` to `false` and the device already exists, the `deviceType` will be overwritten.
@@ -110,16 +129,21 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling createDevice.');
         }
 
         // verify required parameter 'createDeviceRequest' is not null or undefined
+
+
         if (createDeviceRequest === null || createDeviceRequest === undefined) {
             throw new Error('Required parameter createDeviceRequest was null or undefined when calling createDevice.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -173,6 +197,7 @@ export class DevicesApi {
             });
         });
     }
+
     /**
      * Delete a device. When this device sends a new message to ingestion or connects to remote management the device will be recreated.
      * @summary Delete device
@@ -195,16 +220,21 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteDevice.');
         }
 
         // verify required parameter 'deviceId' is not null or undefined
+
+
         if (deviceId === null || deviceId === undefined) {
             throw new Error('Required parameter deviceId was null or undefined when calling deleteDevice.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -257,6 +287,7 @@ export class DevicesApi {
             });
         });
     }
+
     /**
      * Retrieves a single device
      * @summary Get device
@@ -279,16 +310,21 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getDevice.');
         }
 
         // verify required parameter 'deviceId' is not null or undefined
+
+
         if (deviceId === null || deviceId === undefined) {
             throw new Error('Required parameter deviceId was null or undefined when calling getDevice.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -341,6 +377,7 @@ export class DevicesApi {
             });
         });
     }
+
     /**
      * List all devices for this project. Devices get included here if they connect to the remote management API or if they have sent data to the ingestion API and had the `device_id` field set.
      * @summary Lists devices
@@ -361,11 +398,14 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDevices.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -418,6 +458,7 @@ export class DevicesApi {
             });
         });
     }
+
     /**
      * Set the current name for a device.
      * @summary Rename
@@ -441,21 +482,28 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling renameDevice.');
         }
 
         // verify required parameter 'deviceId' is not null or undefined
+
+
         if (deviceId === null || deviceId === undefined) {
             throw new Error('Required parameter deviceId was null or undefined when calling renameDevice.');
         }
 
         // verify required parameter 'renameDeviceRequest' is not null or undefined
+
+
         if (renameDeviceRequest === null || renameDeviceRequest === undefined) {
             throw new Error('Required parameter renameDeviceRequest was null or undefined when calling renameDevice.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -509,6 +557,7 @@ export class DevicesApi {
             });
         });
     }
+
     /**
      * Start sampling on a device. This function returns immediately. Updates are streamed through the websocket API.
      * @summary Start sampling
@@ -532,21 +581,28 @@ export class DevicesApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
+
+
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling startSampling.');
         }
 
         // verify required parameter 'deviceId' is not null or undefined
+
+
         if (deviceId === null || deviceId === undefined) {
             throw new Error('Required parameter deviceId was null or undefined when calling startSampling.');
         }
 
         // verify required parameter 'startSamplingRequest' is not null or undefined
+
+
         if (startSamplingRequest === null || startSamplingRequest === undefined) {
             throw new Error('Required parameter startSamplingRequest was null or undefined when calling startSampling.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

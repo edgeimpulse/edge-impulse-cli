@@ -218,6 +218,7 @@ export class Config {
 
         this._api = new EdgeImpulseApi({
             endpoint: apiEndpointInternal,
+            extraHeaders: { 'User-Agent': 'EDGE_IMPULSE_CLI' },
         });
 
         this._endpoints = {

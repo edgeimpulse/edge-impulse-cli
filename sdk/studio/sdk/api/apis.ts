@@ -50,6 +50,8 @@ export * from './organizationPortalsApi';
 import { OrganizationPortalsApi } from './organizationPortalsApi';
 export * from './organizationRequiresAdminApi';
 import { OrganizationRequiresAdminApi } from './organizationRequiresAdminApi';
+export * from './organizationRequiresWhitelabelAdminApi';
+import { OrganizationRequiresWhitelabelAdminApi } from './organizationRequiresWhitelabelAdminApi';
 export * from './organizationsApi';
 import { OrganizationsApi } from './organizationsApi';
 export * from './performanceCalibrationApi';
@@ -94,4 +96,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationAllowGuestAccessApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationAllowGuestAccessApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationRequiresWhitelabelAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];

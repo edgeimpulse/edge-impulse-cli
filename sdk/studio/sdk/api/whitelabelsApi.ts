@@ -45,10 +45,18 @@ export enum WhitelabelsApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+
+export type WhitelabelsApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class WhitelabelsApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : WhitelabelsApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -57,8 +65,8 @@ export class WhitelabelsApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: WhitelabelsApiOpts);
+    constructor(basePathOrUsername: string, opts?: WhitelabelsApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -68,6 +76,8 @@ export class WhitelabelsApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -82,6 +92,14 @@ export class WhitelabelsApi {
         return this._basePath;
     }
 
+    set opts(opts: WhitelabelsApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -89,6 +107,7 @@ export class WhitelabelsApi {
     public setApiKey(key: WhitelabelsApiApiKeys, value: string | undefined) {
         (this.authentications as any)[WhitelabelsApiApiKeys[key]].apiKey = value;
     }
+
 
     /**
      * Create a new white label
@@ -109,11 +128,14 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'createWhitelabelRequest' is not null or undefined
+
+
         if (createWhitelabelRequest === null || createWhitelabelRequest === undefined) {
             throw new Error('Required parameter createWhitelabelRequest was null or undefined when calling createWhitelabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -167,6 +189,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Deletes the white label with the given id.
      * @summary Deletes a white label
@@ -187,11 +210,14 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
         if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
             throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling deleteWhitelabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -244,6 +270,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Lists all possible DSP and ML blocks available for this white label.
      * @summary Get impulse blocks
@@ -264,11 +291,14 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
         if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
             throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getAllImpulseBlocks.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -321,6 +351,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Retrieve the list of registered white labels.
      * @summary List the registered white labels
@@ -339,6 +370,7 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -391,6 +423,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Retrieve all the information about this white label.
      * @summary White label information
@@ -411,11 +444,14 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
         if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
             throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getWhitelabel.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -468,6 +504,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Get a white label domain given its unique identifier.
      * @summary Get white label domain
@@ -488,11 +525,14 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
         if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
             throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling getWhitelabelDomain.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -539,6 +579,7 @@ export class WhitelabelsApi {
             });
         });
     }
+
     /**
      * Update some or all of the deployment targets enabled for this white label.
      * @summary Update deployment targets
@@ -560,16 +601,21 @@ export class WhitelabelsApi {
         let localVarFormParams: any = {};
 
         // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
         if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
             throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling updateDeploymentTargets.');
         }
 
         // verify required parameter 'updateWhitelabelDeploymentTargetsRequest' is not null or undefined
+
+
         if (updateWhitelabelDeploymentTargetsRequest === null || updateWhitelabelDeploymentTargetsRequest === undefined) {
             throw new Error('Required parameter updateWhitelabelDeploymentTargetsRequest was null or undefined when calling updateDeploymentTargets.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

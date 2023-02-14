@@ -37,10 +37,23 @@ export enum AuthApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type discourseQueryParams = {
+    sso: string,
+    sig: string,
+};
+
+
+export type AuthApiOpts = {
+    extraHeaders?: {
+        [name: string]: string
+    },
+};
+
 export class AuthApi {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
+    protected _opts : AuthApiOpts = { };
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
@@ -49,8 +62,8 @@ export class AuthApi {
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
 
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+    constructor(basePath?: string, opts?: AuthApiOpts);
+    constructor(basePathOrUsername: string, opts?: AuthApiOpts, password?: string, basePath?: string) {
         if (password) {
             if (basePath) {
                 this.basePath = basePath;
@@ -60,6 +73,8 @@ export class AuthApi {
                 this.basePath = basePathOrUsername
             }
         }
+
+        this.opts = opts ?? { };
     }
 
     set useQuerystring(value: boolean) {
@@ -74,6 +89,14 @@ export class AuthApi {
         return this._basePath;
     }
 
+    set opts(opts: AuthApiOpts) {
+        this._opts = opts;
+    }
+
+    get opts() {
+        return this._opts;
+    }
+
     public setDefaultAuthentication(auth: Authentication) {
         this.authentications.default = auth;
     }
@@ -82,37 +105,43 @@ export class AuthApi {
         (this.authentications as any)[AuthApiApiKeys[key]].apiKey = value;
     }
 
+
     /**
      * Log in a user to the forum. This function is only available through a JWT token.
      * @summary Discourse
      * @param sso Single sign-on token
      * @param sig Verification signature
      */
-    public async discourse (sso: string, sig: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async discourse (queryParams: discourseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
         const localVarPath = this.basePath + '/api/auth/discourse';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
         // verify required parameter 'sso' is not null or undefined
-        if (sso === null || sso === undefined) {
-            throw new Error('Required parameter sso was null or undefined when calling discourse.');
+
+        if (queryParams.sso === null || queryParams.sso === undefined) {
+            throw new Error('Required parameter queryParams.sso was null or undefined when calling discourse.');
         }
+
 
         // verify required parameter 'sig' is not null or undefined
-        if (sig === null || sig === undefined) {
-            throw new Error('Required parameter sig was null or undefined when calling discourse.');
+
+        if (queryParams.sig === null || queryParams.sig === undefined) {
+            throw new Error('Required parameter queryParams.sig was null or undefined when calling discourse.');
         }
 
-        if (sso !== undefined) {
-            localVarQueryParameters['sso'] = ObjectSerializer.serialize(sso, "string");
+
+        if (queryParams.sso !== undefined) {
+            localVarQueryParameters['sso'] = ObjectSerializer.serialize(queryParams.sso, "string");
         }
 
-        if (sig !== undefined) {
-            localVarQueryParameters['sig'] = ObjectSerializer.serialize(sig, "string");
+        if (queryParams.sig !== undefined) {
+            localVarQueryParameters['sig'] = ObjectSerializer.serialize(queryParams.sig, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 
@@ -164,6 +193,7 @@ export class AuthApi {
             });
         });
     }
+
     /**
      * Log in a user to the docs. This function is only available through a JWT token.
      * @summary Readme.io
@@ -175,6 +205,7 @@ export class AuthApi {
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
         let localVarUseFormData = false;
 

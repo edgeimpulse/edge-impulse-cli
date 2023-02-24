@@ -13,6 +13,7 @@
 import { Organization } from './organization';
 import { OrganizationDataset } from './organizationDataset';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
@@ -20,6 +21,7 @@ export class OrganizationInfoResponseAllOf {
     'organization': Organization;
     'datasets': Array<OrganizationDataset>;
     'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
+    'entitlementLimits'?: OrganizationInfoResponseAllOfEntitlementLimits;
     /**
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
@@ -44,6 +46,11 @@ export class OrganizationInfoResponseAllOf {
             "name": "defaultComputeLimits",
             "baseName": "defaultComputeLimits",
             "type": "OrganizationInfoResponseAllOfDefaultComputeLimits"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "OrganizationInfoResponseAllOfEntitlementLimits"
         },
         {
             "name": "experiments",

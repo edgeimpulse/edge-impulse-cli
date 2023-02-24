@@ -45,7 +45,7 @@ export async function initCliApp(opts: {
         catch (ex2) {
             let ex = <Error>ex2;
             let msg = ex.message || ex.toString();
-            if (msg.indexOf('need to set an app password') > -1) {
+            if (msg.indexOf('need to set a password') > -1) {
                 console.log('');
                 console.log('\x1b[33mWARN\x1b[0m', ex.message);
                 console.log('');

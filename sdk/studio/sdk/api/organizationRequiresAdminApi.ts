@@ -69,29 +69,29 @@ type uploadOrganizationLogoFormParams = {
 };
 
 type whitelabelAdminGetOrganizationsQueryParams = {
-    name?: string,
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 type whitelabelAdminGetProjectsQueryParams = {
-    name?: string,
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 type whitelabelAdminGetUsersQueryParams = {
-    user?: string,
     active?: number,
     tier?: 'free' | 'pro' | 'enterprise',
     fields?: string,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 
@@ -1686,11 +1686,11 @@ export class OrganizationRequiresAdminApi {
      * White label admin only API to get the list of all organizations.
      * @summary Get all organizations within a white label
      * @param organizationId Organization ID
-     * @param name Part of an entity name (could be a project, an org...)
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async whitelabelAdminGetOrganizations (organizationId: number, queryParams: whitelabelAdminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations'
@@ -1713,10 +1713,6 @@ export class OrganizationRequiresAdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetOrganizations.');
         }
 
-        if (queryParams.name !== undefined) {
-            localVarQueryParameters['name'] = ObjectSerializer.serialize(queryParams.name, "string");
-        }
-
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
@@ -1731,6 +1727,10 @@ export class OrganizationRequiresAdminApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1882,11 +1882,11 @@ export class OrganizationRequiresAdminApi {
      * White label admin only API to get the list of all projects.
      * @summary Get all white label projects
      * @param organizationId Organization ID
-     * @param name Part of an entity name (could be a project, an org...)
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async whitelabelAdminGetProjects (organizationId: number, queryParams: whitelabelAdminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects'
@@ -1909,10 +1909,6 @@ export class OrganizationRequiresAdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetProjects.');
         }
 
-        if (queryParams.name !== undefined) {
-            localVarQueryParameters['name'] = ObjectSerializer.serialize(queryParams.name, "string");
-        }
-
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
@@ -1927,6 +1923,10 @@ export class OrganizationRequiresAdminApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2168,13 +2168,13 @@ export class OrganizationRequiresAdminApi {
      * White label admin only API to get the list of all registered users.
      * @summary Get all white label users
      * @param organizationId Organization ID
-     * @param user Part of e-mail address or username
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param tier Whether to search for free, pro or enterprise entities (users, projects)
      * @param fields Comma separated list of fields to fetch in a query
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async whitelabelAdminGetUsers (organizationId: number, queryParams: whitelabelAdminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/users'
@@ -2195,10 +2195,6 @@ export class OrganizationRequiresAdminApi {
 
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetUsers.');
-        }
-
-        if (queryParams.user !== undefined) {
-            localVarQueryParameters['user'] = ObjectSerializer.serialize(queryParams.user, "string");
         }
 
         if (queryParams.active !== undefined) {
@@ -2223,6 +2219,10 @@ export class OrganizationRequiresAdminApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

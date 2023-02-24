@@ -270,11 +270,15 @@ export class Config {
                     }
                     // Some users may be part of different white labels. In these cases, we cannot provide an
                     // URL for them to set the password, so we invite them to visit their user profile.
-                    throw new Error(
-                        `To use the CLI you'll need to set an app password. ` +
+
+                    let errorMsg = 'To use the CLI you will need to set a password. ';
+                    errorMsg +=
                         resetUrl ?
                         `Go to ${resetUrl} to set one.` :
-                        `Go to your user profile settings in Studio to set one.`
+                        'Go to your user profile settings in Studio to set one.';
+
+                    throw new Error(
+                        errorMsg,
                     );
                 }
 

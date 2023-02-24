@@ -426,6 +426,10 @@ export * from './organizationGetCreateProjectsResponseAllOfJobs';
 export * from './organizationInfoResponse';
 export * from './organizationInfoResponseAllOf';
 export * from './organizationInfoResponseAllOfDefaultComputeLimits';
+export * from './organizationInfoResponseAllOfEntitlementLimits';
+export * from './organizationMetricsResponse';
+export * from './organizationMetricsResponseAllOf';
+export * from './organizationMetricsResponseAllOfMetrics';
 export * from './organizationPipeline';
 export * from './organizationPipelineFeedingIntoDataset';
 export * from './organizationPipelineFeedingIntoProject';
@@ -1047,6 +1051,10 @@ import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGe
 import { OrganizationInfoResponse } from './organizationInfoResponse';
 import { OrganizationInfoResponseAllOf } from './organizationInfoResponseAllOf';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
+import { OrganizationMetricsResponse } from './organizationMetricsResponse';
+import { OrganizationMetricsResponseAllOf } from './organizationMetricsResponseAllOf';
+import { OrganizationMetricsResponseAllOfMetrics } from './organizationMetricsResponseAllOfMetrics';
 import { OrganizationPipeline } from './organizationPipeline';
 import { OrganizationPipelineFeedingIntoDataset } from './organizationPipelineFeedingIntoDataset';
 import { OrganizationPipelineFeedingIntoProject } from './organizationPipelineFeedingIntoProject';
@@ -1794,6 +1802,10 @@ let typeMap: {[index: string]: any} = {
     "OrganizationInfoResponse": OrganizationInfoResponse,
     "OrganizationInfoResponseAllOf": OrganizationInfoResponseAllOf,
     "OrganizationInfoResponseAllOfDefaultComputeLimits": OrganizationInfoResponseAllOfDefaultComputeLimits,
+    "OrganizationInfoResponseAllOfEntitlementLimits": OrganizationInfoResponseAllOfEntitlementLimits,
+    "OrganizationMetricsResponse": OrganizationMetricsResponse,
+    "OrganizationMetricsResponseAllOf": OrganizationMetricsResponseAllOf,
+    "OrganizationMetricsResponseAllOfMetrics": OrganizationMetricsResponseAllOfMetrics,
     "OrganizationPipeline": OrganizationPipeline,
     "OrganizationPipelineFeedingIntoDataset": OrganizationPipelineFeedingIntoDataset,
     "OrganizationPipelineFeedingIntoProject": OrganizationPipelineFeedingIntoProject,

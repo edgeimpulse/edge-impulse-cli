@@ -7,12 +7,13 @@ import asyncpool from 'tiny-async-pool';
 import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
-import { ExportBoundingBoxesFile, ExportInputBoundingBox, parseBoundingBoxLabels, parseUploaderInfo } from '../shared/bounding-box-file-types';
+import { ExportBoundingBoxesFile, ExportInputBoundingBox, ExportUploaderInfoFileCategory,
+    parseBoundingBoxLabels, parseUploaderInfo } from '../shared/bounding-box-file-types';
 import { FSHelpers } from './fs-helpers';
 
 type UploaderFileType = {
     path: string,
-    category: string,
+    category: ExportUploaderInfoFileCategory,
     label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
     metadata: { [k: string]: string } | undefined,
     boundingBoxes: ExportInputBoundingBox[] | undefined,
@@ -175,7 +176,7 @@ const cliOptions = {
                     if (f.startsWith('.')) continue;
 
                     files.push({
-                        category: c,
+                        category: <ExportUploaderInfoFileCategory>c,
                         label: { type: 'infer' },
                         path: fullPath,
                         metadata: { },
@@ -275,7 +276,7 @@ const cliOptions = {
                 files = fileArgs.map(f => {
                     return {
                         path: f,
-                        category: categoryArgv || 'training',
+                        category: (<ExportUploaderInfoFileCategory | undefined>categoryArgv) || 'training',
                         label: labelArgv ? {
                             type: 'label',
                             label: labelArgv

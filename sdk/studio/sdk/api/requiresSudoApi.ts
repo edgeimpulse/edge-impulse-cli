@@ -80,29 +80,29 @@ type adminFindUserQueryParams = {
 };
 
 type adminGetOrganizationsQueryParams = {
-    name?: string,
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 type adminGetProjectsQueryParams = {
-    name?: string,
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 type adminGetUsersQueryParams = {
-    user?: string,
     active?: number,
     tier?: 'free' | 'pro' | 'enterprise',
     fields?: string,
     sort?: string,
     limit?: number,
     offset?: number,
+    search?: string,
 };
 
 type uploadKerasFilesFormParams = {
@@ -1055,11 +1055,11 @@ export class RequiresSudoApi {
     /**
      * Admin-only API to get the list of all organizations.
      * @summary Get all organizations
-     * @param name Part of an entity name (could be a project, an org...)
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async adminGetOrganizations (queryParams: adminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations';
@@ -1073,10 +1073,6 @@ export class RequiresSudoApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
-
-        if (queryParams.name !== undefined) {
-            localVarQueryParameters['name'] = ObjectSerializer.serialize(queryParams.name, "string");
-        }
 
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
@@ -1092,6 +1088,10 @@ export class RequiresSudoApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1233,11 +1233,11 @@ export class RequiresSudoApi {
     /**
      * Admin-only API to get the list of all projects.
      * @summary Get all projects
-     * @param name Part of an entity name (could be a project, an org...)
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async adminGetProjects (queryParams: adminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
         const localVarPath = this.basePath + '/api/admin/projects';
@@ -1251,10 +1251,6 @@ export class RequiresSudoApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
-
-        if (queryParams.name !== undefined) {
-            localVarQueryParameters['name'] = ObjectSerializer.serialize(queryParams.name, "string");
-        }
 
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
@@ -1270,6 +1266,10 @@ export class RequiresSudoApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1492,13 +1492,13 @@ export class RequiresSudoApi {
     /**
      * Admin-only API to get the list of all registered users.
      * @summary Get all users
-     * @param user Part of e-mail address or username
      * @param active Whether to search for entities (users, orgs) active in the last X days
      * @param tier Whether to search for free, pro or enterprise entities (users, projects)
      * @param fields Comma separated list of fields to fetch in a query
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
      */
     public async adminGetUsers (queryParams: adminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
         const localVarPath = this.basePath + '/api/admin/users';
@@ -1512,10 +1512,6 @@ export class RequiresSudoApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
-
-        if (queryParams.user !== undefined) {
-            localVarQueryParameters['user'] = ObjectSerializer.serialize(queryParams.user, "string");
-        }
 
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
@@ -1539,6 +1535,10 @@ export class RequiresSudoApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

@@ -26,9 +26,11 @@ export function parseBoundingBoxLabels(jsonFile: string) {
     return data;
 }
 
+export type ExportUploaderInfoFileCategory = 'training' | 'testing' | 'split';
+
 export interface ExportUploaderInfoFile {
     path: string;
-    category: string;
+    category: ExportUploaderInfoFileCategory;
     label: { type: 'unlabeled' } | { type: 'label', label: string };
     metadata: { [k: string]: string } | undefined;
     boundingBoxes: ExportInputBoundingBox[] | undefined;

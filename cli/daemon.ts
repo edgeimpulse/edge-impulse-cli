@@ -536,10 +536,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.7.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 7) {
+            // we support devices with version 1.8.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 8) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.7.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.8.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,

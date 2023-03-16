@@ -17,9 +17,9 @@ export class StartTrainingRequestAnomaly {
     */
     'axes': Array<number>;
     /**
-    * Number of clusters
+    * Number of clusters for K-means, or number of components for GMM
     */
-    'clusterCount': number;
+    'clusterCount'?: number;
     /**
     * Minimum confidence rating required before tagging as anomaly
     */

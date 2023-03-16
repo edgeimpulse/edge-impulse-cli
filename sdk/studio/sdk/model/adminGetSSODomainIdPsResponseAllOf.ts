@@ -11,32 +11,20 @@
  */
 
 
-export class AddNoteRequest {
-    /**
-    * Text of the note
-    */
-    'note': string;
-    /**
-    * if the note is created in response of a previous note, this field holds the ID of that note
-    */
-    'parentId'?: number;
+export class AdminGetSSODomainIdPsResponseAllOf {
+    'idps': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "note",
-            "baseName": "note",
-            "type": "string"
-        },
-        {
-            "name": "parentId",
-            "baseName": "parentId",
-            "type": "number"
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddNoteRequest.attributeTypeMap;
+        return AdminGetSSODomainIdPsResponseAllOf.attributeTypeMap;
     }
 }
 

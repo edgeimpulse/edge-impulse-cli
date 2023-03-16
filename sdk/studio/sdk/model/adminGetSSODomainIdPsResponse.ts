@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { CountSamplesResponseAllOf } from './countSamplesResponseAllOf';
+import { AdminGetSSODomainIdPsResponseAllOf } from './adminGetSSODomainIdPsResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class GetOrganizationProjectsDataCountResponse {
+export class AdminGetSSODomainIdPsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +22,7 @@ export class GetOrganizationProjectsDataCountResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'count': number;
+    'idps': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +38,13 @@ export class GetOrganizationProjectsDataCountResponse {
             "type": "string"
         },
         {
-            "name": "count",
-            "baseName": "count",
-            "type": "number"
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetOrganizationProjectsDataCountResponse.attributeTypeMap;
+        return AdminGetSSODomainIdPsResponse.attributeTypeMap;
     }
 }
 

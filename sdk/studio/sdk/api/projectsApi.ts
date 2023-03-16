@@ -22,8 +22,6 @@ import http = require('http');
 import { AddApiKeyRequest } from '../model/addApiKeyRequest';
 import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
 import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
-import { AddNoteRequest } from '../model/addNoteRequest';
-import { CreateNoteResponse } from '../model/createNoteResponse';
 import { CreateProjectRequest } from '../model/createProjectRequest';
 import { CreateProjectResponse } from '../model/createProjectResponse';
 import { DevelopmentKeysResponse } from '../model/developmentKeysResponse';
@@ -47,8 +45,6 @@ import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequ
 import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
 import { SocketTokenResponse } from '../model/socketTokenResponse';
 import { TransferOwnershipOrganizationRequest } from '../model/transferOwnershipOrganizationRequest';
-import { UpdateNoteRequest } from '../model/updateNoteRequest';
-import { UpdateNoteResponse } from '../model/updateNoteResponse';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
 import { UpdateProjectTagsRequest } from '../model/updateProjectTagsRequest';
 import { UpdateVersionRequest } from '../model/updateVersionRequest';
@@ -222,96 +218,6 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Add a note to a project.
-     * @summary Add note
-     * @param projectId Project ID
-     * @param addNoteRequest 
-     */
-    public async addNote (projectId: number, addNoteRequest: AddNoteRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateNoteResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/notes/add'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling addNote.');
-        }
-
-        // verify required parameter 'addNoteRequest' is not null or undefined
-
-
-        if (addNoteRequest === null || addNoteRequest === undefined) {
-            throw new Error('Required parameter addNoteRequest was null or undefined when calling addNote.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(addNoteRequest, "AddNoteRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<CreateNoteResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "CreateNoteResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2315,96 +2221,6 @@ export class ProjectsApi {
     }
 
     /**
-     * Remove a note from a project.
-     * @summary Remove note
-     * @param projectId Project ID
-     * @param noteId Note ID
-     */
-    public async removeNote (projectId: number, noteId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/notes/{noteId}/remove'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'noteId' + '}', encodeURIComponent(String(noteId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling removeNote.');
-        }
-
-        // verify required parameter 'noteId' is not null or undefined
-
-
-        if (noteId === null || noteId === undefined) {
-            throw new Error('Required parameter noteId was null or undefined when calling removeNote.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'DELETE',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Revoke an API key. Note that if you revoke the development API key some services (such as automatic provisioning of devices through the serial daemon) will no longer work.
      * @summary Revoke API key
      * @param projectId Project ID
@@ -2926,105 +2742,6 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Update a note from a project.
-     * @summary Update note
-     * @param projectId Project ID
-     * @param noteId Note ID
-     * @param updateNoteRequest 
-     */
-    public async updateNote (projectId: number, noteId: number, updateNoteRequest: UpdateNoteRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UpdateNoteResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/notes/{noteId}/update'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'noteId' + '}', encodeURIComponent(String(noteId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling updateNote.');
-        }
-
-        // verify required parameter 'noteId' is not null or undefined
-
-
-        if (noteId === null || noteId === undefined) {
-            throw new Error('Required parameter noteId was null or undefined when calling updateNote.');
-        }
-
-        // verify required parameter 'updateNoteRequest' is not null or undefined
-
-
-        if (updateNoteRequest === null || updateNoteRequest === undefined) {
-            throw new Error('Required parameter updateNoteRequest was null or undefined when calling updateNote.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(updateNoteRequest, "UpdateNoteRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<UpdateNoteResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "UpdateNoteResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

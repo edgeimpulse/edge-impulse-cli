@@ -10,17 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { GenericApiResponse } from './genericApiResponse';
 
-export class UpdateNoteResponse extends GenericApiResponse {
+export class AdminAddOrUpdateSSODomainIdPsRequest {
+    'idps': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-    ];
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
+        }    ];
 
     static getAttributeTypeMap() {
-        return super.getAttributeTypeMap().concat(UpdateNoteResponse.attributeTypeMap);
+        return AdminAddOrUpdateSSODomainIdPsRequest.attributeTypeMap;
     }
 }
 

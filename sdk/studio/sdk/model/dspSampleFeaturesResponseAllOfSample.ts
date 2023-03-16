@@ -11,11 +11,11 @@
  */
 
 
-export class CreateNoteResponseAllOf {
-    /**
-    * Note ID for the new note
-    */
+export class DspSampleFeaturesResponseAllOfSample {
     'id': number;
+    'name': string;
+    'startMs': number;
+    'endMs': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,10 +24,25 @@ export class CreateNoteResponseAllOf {
             "name": "id",
             "baseName": "id",
             "type": "number"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "startMs",
+            "baseName": "startMs",
+            "type": "number"
+        },
+        {
+            "name": "endMs",
+            "baseName": "endMs",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateNoteResponseAllOf.attributeTypeMap;
+        return DspSampleFeaturesResponseAllOfSample.attributeTypeMap;
     }
 }
 

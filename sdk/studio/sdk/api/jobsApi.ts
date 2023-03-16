@@ -2999,7 +2999,7 @@ export class JobsApi {
     }
 
     /**
-     * Take the output from a DSP block and train an anomaly detection model using K-means. Updates are streamed over the websocket API.
+     * Take the output from a DSP block and train an anomaly detection model using K-means or GMM. Updates are streamed over the websocket API.
      * @summary Train model (Anomaly)
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID

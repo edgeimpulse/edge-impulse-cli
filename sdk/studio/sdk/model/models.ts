@@ -4,7 +4,6 @@ export * from './addApiKeyRequest';
 export * from './addCollaboratorRequest';
 export * from './addHmacKeyRequest';
 export * from './addMemberRequest';
-export * from './addNoteRequest';
 export * from './addOrganizationApiKeyRequest';
 export * from './addOrganizationBucketRequest';
 export * from './addOrganizationDeployBlockRequest';
@@ -19,6 +18,7 @@ export * from './addOrganizationTransferLearningBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
 export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
+export * from './adminAddOrUpdateSSODomainIdPsRequest';
 export * from './adminAddProjectUserRequest';
 export * from './adminApiOrganization';
 export * from './adminApiOrganizationAllOf';
@@ -31,6 +31,11 @@ export * from './adminGetMetricsResponseAllOf';
 export * from './adminGetOrganizationsResponse';
 export * from './adminGetOrganizationsResponseAllOf';
 export * from './adminGetOrganizationsResponseAllOfOrganizations';
+export * from './adminGetSSODomainIdPsResponse';
+export * from './adminGetSSODomainIdPsResponseAllOf';
+export * from './adminGetSSOSettingsResponse';
+export * from './adminGetSSOSettingsResponseAllOf';
+export * from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
 export * from './adminGetUserIdsResponse';
 export * from './adminGetUserIdsResponseAllOf';
 export * from './adminGetUserMetricsResponse';
@@ -81,8 +86,6 @@ export * from './createDeveloperProfileResponseAllOf';
 export * from './createDeviceRequest';
 export * from './createEvaluationUserResponse';
 export * from './createEvaluationUserResponseAllOf';
-export * from './createNoteResponse';
-export * from './createNoteResponseAllOf';
 export * from './createOrganizationPortalRequest';
 export * from './createOrganizationPortalResponse';
 export * from './createOrganizationPortalResponseAllOf';
@@ -178,6 +181,7 @@ export * from './dspRunResponseWithSampleAllOf';
 export * from './dspSampleFeaturesResponse';
 export * from './dspSampleFeaturesResponseAllOf';
 export * from './dspSampleFeaturesResponseAllOfData';
+export * from './dspSampleFeaturesResponseAllOfSample';
 export * from './dspTrainedFeaturesResponse';
 export * from './dspTrainedFeaturesResponseAllOf';
 export * from './dspTrainedFeaturesResponseAllOfData';
@@ -231,7 +235,6 @@ export * from './getOrganizationPipelinesResponseAllOf';
 export * from './getOrganizationPortalResponse';
 export * from './getOrganizationPortalResponseAllOf';
 export * from './getOrganizationProjectsDataCountResponse';
-export * from './getOrganizationProjectsDataCountResponseAllOf';
 export * from './getPerformanceCalibrationGroundTruthResponse';
 export * from './getPerformanceCalibrationGroundTruthResponseAllOf';
 export * from './getPerformanceCalibrationParameterSetsResponse';
@@ -568,8 +571,6 @@ export * from './tunerSpaceImpulse';
 export * from './tunerTrial';
 export * from './tunerTrialBlocks';
 export * from './updateJobRequest';
-export * from './updateNoteRequest';
-export * from './updateNoteResponse';
 export * from './updateOrganizationAddCollaboratorRequest';
 export * from './updateOrganizationBucketRequest';
 export * from './updateOrganizationCreateEmptyProjectRequest';
@@ -629,7 +630,6 @@ import { AddApiKeyRequest } from './addApiKeyRequest';
 import { AddCollaboratorRequest } from './addCollaboratorRequest';
 import { AddHmacKeyRequest } from './addHmacKeyRequest';
 import { AddMemberRequest } from './addMemberRequest';
-import { AddNoteRequest } from './addNoteRequest';
 import { AddOrganizationApiKeyRequest } from './addOrganizationApiKeyRequest';
 import { AddOrganizationBucketRequest } from './addOrganizationBucketRequest';
 import { AddOrganizationDeployBlockRequest } from './addOrganizationDeployBlockRequest';
@@ -644,6 +644,7 @@ import { AddOrganizationTransferLearningBlockResponse } from './addOrganizationT
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from './addOrganizationTransformationBlockResponse';
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { AdminAddOrUpdateSSODomainIdPsRequest } from './adminAddOrUpdateSSODomainIdPsRequest';
 import { AdminAddProjectUserRequest } from './adminAddProjectUserRequest';
 import { AdminApiOrganization } from './adminApiOrganization';
 import { AdminApiOrganizationAllOf } from './adminApiOrganizationAllOf';
@@ -656,6 +657,11 @@ import { AdminGetMetricsResponseAllOf } from './adminGetMetricsResponseAllOf';
 import { AdminGetOrganizationsResponse } from './adminGetOrganizationsResponse';
 import { AdminGetOrganizationsResponseAllOf } from './adminGetOrganizationsResponseAllOf';
 import { AdminGetOrganizationsResponseAllOfOrganizations } from './adminGetOrganizationsResponseAllOfOrganizations';
+import { AdminGetSSODomainIdPsResponse } from './adminGetSSODomainIdPsResponse';
+import { AdminGetSSODomainIdPsResponseAllOf } from './adminGetSSODomainIdPsResponseAllOf';
+import { AdminGetSSOSettingsResponse } from './adminGetSSOSettingsResponse';
+import { AdminGetSSOSettingsResponseAllOf } from './adminGetSSOSettingsResponseAllOf';
+import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
 import { AdminGetUserIdsResponse } from './adminGetUserIdsResponse';
 import { AdminGetUserIdsResponseAllOf } from './adminGetUserIdsResponseAllOf';
 import { AdminGetUserMetricsResponse } from './adminGetUserMetricsResponse';
@@ -706,8 +712,6 @@ import { CreateDeveloperProfileResponseAllOf } from './createDeveloperProfileRes
 import { CreateDeviceRequest } from './createDeviceRequest';
 import { CreateEvaluationUserResponse } from './createEvaluationUserResponse';
 import { CreateEvaluationUserResponseAllOf } from './createEvaluationUserResponseAllOf';
-import { CreateNoteResponse } from './createNoteResponse';
-import { CreateNoteResponseAllOf } from './createNoteResponseAllOf';
 import { CreateOrganizationPortalRequest } from './createOrganizationPortalRequest';
 import { CreateOrganizationPortalResponse } from './createOrganizationPortalResponse';
 import { CreateOrganizationPortalResponseAllOf } from './createOrganizationPortalResponseAllOf';
@@ -803,6 +807,7 @@ import { DspRunResponseWithSampleAllOf } from './dspRunResponseWithSampleAllOf';
 import { DspSampleFeaturesResponse } from './dspSampleFeaturesResponse';
 import { DspSampleFeaturesResponseAllOf } from './dspSampleFeaturesResponseAllOf';
 import { DspSampleFeaturesResponseAllOfData } from './dspSampleFeaturesResponseAllOfData';
+import { DspSampleFeaturesResponseAllOfSample } from './dspSampleFeaturesResponseAllOfSample';
 import { DspTrainedFeaturesResponse } from './dspTrainedFeaturesResponse';
 import { DspTrainedFeaturesResponseAllOf } from './dspTrainedFeaturesResponseAllOf';
 import { DspTrainedFeaturesResponseAllOfData } from './dspTrainedFeaturesResponseAllOfData';
@@ -856,7 +861,6 @@ import { GetOrganizationPipelinesResponseAllOf } from './getOrganizationPipeline
 import { GetOrganizationPortalResponse } from './getOrganizationPortalResponse';
 import { GetOrganizationPortalResponseAllOf } from './getOrganizationPortalResponseAllOf';
 import { GetOrganizationProjectsDataCountResponse } from './getOrganizationProjectsDataCountResponse';
-import { GetOrganizationProjectsDataCountResponseAllOf } from './getOrganizationProjectsDataCountResponseAllOf';
 import { GetPerformanceCalibrationGroundTruthResponse } from './getPerformanceCalibrationGroundTruthResponse';
 import { GetPerformanceCalibrationGroundTruthResponseAllOf } from './getPerformanceCalibrationGroundTruthResponseAllOf';
 import { GetPerformanceCalibrationParameterSetsResponse } from './getPerformanceCalibrationParameterSetsResponse';
@@ -1193,8 +1197,6 @@ import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 import { TunerTrial } from './tunerTrial';
 import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { UpdateJobRequest } from './updateJobRequest';
-import { UpdateNoteRequest } from './updateNoteRequest';
-import { UpdateNoteResponse } from './updateNoteResponse';
 import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
 import { UpdateOrganizationBucketRequest } from './updateOrganizationBucketRequest';
 import { UpdateOrganizationCreateEmptyProjectRequest } from './updateOrganizationCreateEmptyProjectRequest';
@@ -1386,7 +1388,6 @@ let typeMap: {[index: string]: any} = {
     "AddCollaboratorRequest": AddCollaboratorRequest,
     "AddHmacKeyRequest": AddHmacKeyRequest,
     "AddMemberRequest": AddMemberRequest,
-    "AddNoteRequest": AddNoteRequest,
     "AddOrganizationApiKeyRequest": AddOrganizationApiKeyRequest,
     "AddOrganizationBucketRequest": AddOrganizationBucketRequest,
     "AddOrganizationDeployBlockRequest": AddOrganizationDeployBlockRequest,
@@ -1401,6 +1402,7 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
     "AddOrganizationTransformationBlockResponse": AddOrganizationTransformationBlockResponse,
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
+    "AdminAddOrUpdateSSODomainIdPsRequest": AdminAddOrUpdateSSODomainIdPsRequest,
     "AdminAddProjectUserRequest": AdminAddProjectUserRequest,
     "AdminApiOrganization": AdminApiOrganization,
     "AdminApiOrganizationAllOf": AdminApiOrganizationAllOf,
@@ -1413,6 +1415,11 @@ let typeMap: {[index: string]: any} = {
     "AdminGetOrganizationsResponse": AdminGetOrganizationsResponse,
     "AdminGetOrganizationsResponseAllOf": AdminGetOrganizationsResponseAllOf,
     "AdminGetOrganizationsResponseAllOfOrganizations": AdminGetOrganizationsResponseAllOfOrganizations,
+    "AdminGetSSODomainIdPsResponse": AdminGetSSODomainIdPsResponse,
+    "AdminGetSSODomainIdPsResponseAllOf": AdminGetSSODomainIdPsResponseAllOf,
+    "AdminGetSSOSettingsResponse": AdminGetSSOSettingsResponse,
+    "AdminGetSSOSettingsResponseAllOf": AdminGetSSOSettingsResponseAllOf,
+    "AdminGetSSOSettingsResponseAllOfSsoWhitelist": AdminGetSSOSettingsResponseAllOfSsoWhitelist,
     "AdminGetUserIdsResponse": AdminGetUserIdsResponse,
     "AdminGetUserIdsResponseAllOf": AdminGetUserIdsResponseAllOf,
     "AdminGetUserMetricsResponse": AdminGetUserMetricsResponse,
@@ -1462,8 +1469,6 @@ let typeMap: {[index: string]: any} = {
     "CreateDeviceRequest": CreateDeviceRequest,
     "CreateEvaluationUserResponse": CreateEvaluationUserResponse,
     "CreateEvaluationUserResponseAllOf": CreateEvaluationUserResponseAllOf,
-    "CreateNoteResponse": CreateNoteResponse,
-    "CreateNoteResponseAllOf": CreateNoteResponseAllOf,
     "CreateOrganizationPortalRequest": CreateOrganizationPortalRequest,
     "CreateOrganizationPortalResponse": CreateOrganizationPortalResponse,
     "CreateOrganizationPortalResponseAllOf": CreateOrganizationPortalResponseAllOf,
@@ -1558,6 +1563,7 @@ let typeMap: {[index: string]: any} = {
     "DspSampleFeaturesResponse": DspSampleFeaturesResponse,
     "DspSampleFeaturesResponseAllOf": DspSampleFeaturesResponseAllOf,
     "DspSampleFeaturesResponseAllOfData": DspSampleFeaturesResponseAllOfData,
+    "DspSampleFeaturesResponseAllOfSample": DspSampleFeaturesResponseAllOfSample,
     "DspTrainedFeaturesResponse": DspTrainedFeaturesResponse,
     "DspTrainedFeaturesResponseAllOf": DspTrainedFeaturesResponseAllOf,
     "DspTrainedFeaturesResponseAllOfData": DspTrainedFeaturesResponseAllOfData,
@@ -1611,7 +1617,6 @@ let typeMap: {[index: string]: any} = {
     "GetOrganizationPortalResponse": GetOrganizationPortalResponse,
     "GetOrganizationPortalResponseAllOf": GetOrganizationPortalResponseAllOf,
     "GetOrganizationProjectsDataCountResponse": GetOrganizationProjectsDataCountResponse,
-    "GetOrganizationProjectsDataCountResponseAllOf": GetOrganizationProjectsDataCountResponseAllOf,
     "GetPerformanceCalibrationGroundTruthResponse": GetPerformanceCalibrationGroundTruthResponse,
     "GetPerformanceCalibrationGroundTruthResponseAllOf": GetPerformanceCalibrationGroundTruthResponseAllOf,
     "GetPerformanceCalibrationParameterSetsResponse": GetPerformanceCalibrationParameterSetsResponse,
@@ -1943,8 +1948,6 @@ let typeMap: {[index: string]: any} = {
     "TunerTrial": TunerTrial,
     "TunerTrialBlocks": TunerTrialBlocks,
     "UpdateJobRequest": UpdateJobRequest,
-    "UpdateNoteRequest": UpdateNoteRequest,
-    "UpdateNoteResponse": UpdateNoteResponse,
     "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,
     "UpdateOrganizationBucketRequest": UpdateOrganizationBucketRequest,
     "UpdateOrganizationCreateEmptyProjectRequest": UpdateOrganizationCreateEmptyProjectRequest,

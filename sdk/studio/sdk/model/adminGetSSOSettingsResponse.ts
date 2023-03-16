@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { CreateNoteResponseAllOf } from './createNoteResponseAllOf';
+import { AdminGetSSOSettingsResponseAllOf } from './adminGetSSOSettingsResponseAllOf';
+import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class CreateNoteResponse {
+export class AdminGetSSOSettingsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,10 +23,7 @@ export class CreateNoteResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * Note ID for the new note
-    */
-    'id': number;
+    'ssoWhitelist': Array<AdminGetSSOSettingsResponseAllOfSsoWhitelist>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,13 +39,13 @@ export class CreateNoteResponse {
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "ssoWhitelist",
+            "baseName": "ssoWhitelist",
+            "type": "Array<AdminGetSSOSettingsResponseAllOfSsoWhitelist>"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateNoteResponse.attributeTypeMap;
+        return AdminGetSSOSettingsResponse.attributeTypeMap;
     }
 }
 

@@ -11,20 +11,26 @@
  */
 
 
-export class GetOrganizationProjectsDataCountResponseAllOf {
-    'count': number;
+export class AdminGetSSOSettingsResponseAllOfSsoWhitelist {
+    'domain': string;
+    'idps': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "count",
-            "baseName": "count",
-            "type": "number"
+            "name": "domain",
+            "baseName": "domain",
+            "type": "string"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetOrganizationProjectsDataCountResponseAllOf.attributeTypeMap;
+        return AdminGetSSOSettingsResponseAllOfSsoWhitelist.attributeTypeMap;
     }
 }
 

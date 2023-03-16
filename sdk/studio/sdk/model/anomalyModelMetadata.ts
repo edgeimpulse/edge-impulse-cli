@@ -33,6 +33,10 @@ export class AnomalyModelMetadata {
     * Which axes were included during training (by index)
     */
     'axes': Array<number>;
+    /**
+    * Default minimum confidence rating required before tagging as anomaly, based on scores of training data (GMM only).
+    */
+    'defaultMinimumConfidenceRating'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -61,6 +65,11 @@ export class AnomalyModelMetadata {
             "name": "axes",
             "baseName": "axes",
             "type": "Array<number>"
+        },
+        {
+            "name": "defaultMinimumConfidenceRating",
+            "baseName": "defaultMinimumConfidenceRating",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

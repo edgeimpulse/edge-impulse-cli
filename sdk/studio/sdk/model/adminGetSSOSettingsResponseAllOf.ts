@@ -10,33 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
 
-export class UpdateNoteRequest {
-    /**
-    * Text of the note
-    */
-    'note': string;
-    /**
-    * if the note is created in response of a previous note, this field holds the ID of that note
-    */
-    'parentId'?: number;
+export class AdminGetSSOSettingsResponseAllOf {
+    'ssoWhitelist': Array<AdminGetSSOSettingsResponseAllOfSsoWhitelist>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "note",
-            "baseName": "note",
-            "type": "string"
-        },
-        {
-            "name": "parentId",
-            "baseName": "parentId",
-            "type": "number"
+            "name": "ssoWhitelist",
+            "baseName": "ssoWhitelist",
+            "type": "Array<AdminGetSSOSettingsResponseAllOfSsoWhitelist>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateNoteRequest.attributeTypeMap;
+        return AdminGetSSOSettingsResponseAllOf.attributeTypeMap;
     }
 }
 

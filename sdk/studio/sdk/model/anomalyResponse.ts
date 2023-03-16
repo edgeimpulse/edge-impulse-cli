@@ -35,9 +35,9 @@ export class AnomalyResponse {
     */
     'trained': boolean;
     /**
-    * Number of clusters (in config)
+    * Number of clusters for K-means, or number of components for GMM (in config)
     */
-    'clusterCount': number;
+    'clusterCount'?: number;
     /**
     * Selected clusters (in config)
     */

@@ -31,7 +31,14 @@ export class DSPInfo {
     'performance'?: DspRunResponseAllOfPerformance;
     'canCalculateFeatureImportance': boolean;
     'calculateFeatureImportance': boolean;
+    /**
+    * Whether this DSP block supports autotuning.
+    */
     'hasAutoTune'?: boolean;
+    /**
+    * For DSP blocks that support autotuning, this value specifies the minimum block implementation version for which autotuning is supported.
+    */
+    'minimumVersionForAutotune'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -95,6 +102,11 @@ export class DSPInfo {
             "name": "hasAutoTune",
             "baseName": "hasAutoTune",
             "type": "boolean"
+        },
+        {
+            "name": "minimumVersionForAutotune",
+            "baseName": "minimumVersionForAutotune",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

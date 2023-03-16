@@ -45,7 +45,7 @@
     "tiny-async-pool": "1.1.0",
     "tsee": "1.3.0",
     "unzipper": "0.10.11",
-    "ws": "7.2.0",
+    "ws": "7.4.6",
     "yauzl": "2.10.0"
   },
   "devDependencies": {

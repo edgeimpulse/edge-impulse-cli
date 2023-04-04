@@ -584,7 +584,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
             if (!remoteMgmt) {
                 const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
-                remoteMgmt = new RemoteMgmt(projectId, devKeys, eiConfig, device,
+                remoteMgmt = new RemoteMgmt(projectId, devKeys, Object.assign({
+                    command: <'edge-impulse-daemon'>'edge-impulse-daemon'
+                }, eiConfig), device,
                     url => new WebSocket(url),
                     async (currName) => {
                         let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{

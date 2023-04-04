@@ -115,7 +115,9 @@ export class AuthApi {
     public async discourse (queryParams: discourseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
         const localVarPath = this.basePath + '/api/auth/discourse';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         let localVarFormParams: any = {};
 
         // verify required parameter 'sso' is not null or undefined
@@ -201,7 +203,9 @@ export class AuthApi {
     public async readme (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
         const localVarPath = this.basePath + '/api/auth/readme';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         let localVarFormParams: any = {};
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

@@ -24,6 +24,7 @@ export class ProjectCollaborator {
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
+    'jobTitle'?: string;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -73,6 +74,11 @@ export class ProjectCollaborator {
             "name": "lastTosAcceptanceDate",
             "baseName": "lastTosAcceptanceDate",
             "type": "Date"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
         },
         {
             "name": "isOwner",

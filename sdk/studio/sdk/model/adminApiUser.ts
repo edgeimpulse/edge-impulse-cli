@@ -27,6 +27,7 @@ export class AdminApiUser {
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
+    'jobTitle'?: string;
     'email': string;
     'activated': boolean;
     /**
@@ -102,6 +103,11 @@ export class AdminApiUser {
             "name": "lastTosAcceptanceDate",
             "baseName": "lastTosAcceptanceDate",
             "type": "Date"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
         },
         {
             "name": "email",

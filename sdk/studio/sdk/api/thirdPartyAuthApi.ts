@@ -125,7 +125,9 @@ export class ThirdPartyAuthApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         let localVarFormParams: any = {};
 
         // verify required parameter 'projectId' is not null or undefined
@@ -215,7 +217,9 @@ export class ThirdPartyAuthApi {
     public async createThirdPartyAuth (createThirdPartyAuthRequest: CreateThirdPartyAuthRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateThirdPartyAuthResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -298,7 +302,9 @@ export class ThirdPartyAuthApi {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}/login'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -387,7 +393,9 @@ export class ThirdPartyAuthApi {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -466,7 +474,9 @@ export class ThirdPartyAuthApi {
     public async getAllThirdPartyAuth (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllThirdPartyAuthResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -540,7 +550,9 @@ export class ThirdPartyAuthApi {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -622,7 +634,9 @@ export class ThirdPartyAuthApi {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

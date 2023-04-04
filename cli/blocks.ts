@@ -19,7 +19,7 @@ import {
     AddOrganizationTransferLearningBlockRequest,
     AddOrganizationTransformationBlockRequest,
     ListOrganizationDspBlocksResponse,
-    ObjectDetectionLastLayer, OrganizationInfoResponse, OrganizationTransferLearningBlockOperatesOnEnum,
+    ObjectDetectionLastLayer, OrganizationInfoResponse, OrganizationTransferLearningOperatesOn,
     UploadCustomBlockRequestTypeEnum,
     UploadCustomBlockRequestTypeEnumValues
 } from '../sdk/studio';
@@ -44,7 +44,7 @@ export type BlockConfigItem = {
     }[] | undefined,
 } | {
     type: 'transferLearning',
-    tlOperatesOn?: OrganizationTransferLearningBlockOperatesOnEnum,
+    tlOperatesOn?: OrganizationTransferLearningOperatesOn,
     tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
     repositoryUrl?: string;
 } | {
@@ -351,7 +351,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         let blockName: string | undefined;
         let blockDescription: string | undefined;
         let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
-        let blockTlOperatesOn: OrganizationTransferLearningBlockOperatesOnEnum | undefined;
+        let blockTlOperatesOn: OrganizationTransferLearningOperatesOn | undefined;
         let blockTlObjectDetectionLastLayer: ObjectDetectionLastLayer | undefined;
         let transformMountpoints: {
             bucketId: number;
@@ -547,7 +547,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         if (createOrUpdateInqRes === 'create' && blockType === 'transferLearning') {
-            blockTlOperatesOn = <OrganizationTransferLearningBlockOperatesOnEnum>(await inquirer.prompt([{
+            blockTlOperatesOn = <OrganizationTransferLearningOperatesOn>(await inquirer.prompt([{
                 type: 'list',
                 name: 'operatesOn',
                 choices: [

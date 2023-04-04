@@ -44,6 +44,14 @@ export class CreateUserRequest {
     * Unique identifier of the identity provider asserting the identity of this user
     */
     'identityProvider'?: string;
+    /**
+    * Job title of the user. Optional field
+    */
+    'jobTitle'?: string;
+    /**
+    * Session ID. Optional field
+    */
+    'sessionId'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -86,6 +94,16 @@ export class CreateUserRequest {
         {
             "name": "identityProvider",
             "baseName": "identityProvider",
+            "type": "string"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "sessionId",
+            "baseName": "sessionId",
             "type": "string"
         }    ];
 

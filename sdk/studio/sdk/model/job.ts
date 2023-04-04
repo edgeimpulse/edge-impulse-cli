@@ -41,6 +41,10 @@ export class Job {
     * The IDs of users who should be notified when a job is finished.
     */
     'jobNotificationUids': Array<number>;
+    /**
+    * Additional metadata associated with this job.
+    */
+    'additionalInfo'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -84,6 +88,11 @@ export class Job {
             "name": "jobNotificationUids",
             "baseName": "jobNotificationUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "additionalInfo",
+            "baseName": "additionalInfo",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

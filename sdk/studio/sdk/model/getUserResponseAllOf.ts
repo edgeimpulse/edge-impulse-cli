@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
 import { UserExperiment } from './userExperiment';
 import { UserOrganization } from './userOrganization';
@@ -42,6 +43,10 @@ export class GetUserResponseAllOf {
     * The user account tier.
     */
     'tier': GetUserResponseAllOfTierEnum;
+    /**
+    * List of white labels the user is a member of
+    */
+    'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
 
     static discriminator: string | undefined = undefined;
 
@@ -90,6 +95,11 @@ export class GetUserResponseAllOf {
             "name": "tier",
             "baseName": "tier",
             "type": "GetUserResponseAllOfTierEnum"
+        },
+        {
+            "name": "whitelabels",
+            "baseName": "whitelabels",
+            "type": "Array<GetUserResponseAllOfWhitelabels>"
         }    ];
 
     static getAttributeTypeMap() {

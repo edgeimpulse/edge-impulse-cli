@@ -25,6 +25,10 @@ export class GetJWTTokenRequest {
     */
     'uuid'?: string;
     'ssoType'?: GetJWTTokenRequestSsoTypeEnum;
+    /**
+    * Session ID
+    */
+    'sessionId'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -48,6 +52,11 @@ export class GetJWTTokenRequest {
             "name": "ssoType",
             "baseName": "ssoType",
             "type": "GetJWTTokenRequestSsoTypeEnum"
+        },
+        {
+            "name": "sessionId",
+            "baseName": "sessionId",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

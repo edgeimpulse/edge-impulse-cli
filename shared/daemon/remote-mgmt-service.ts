@@ -50,6 +50,7 @@ export interface RemoteMgmtDevice extends TypedEmitter<{
 }
 
 export interface RemoteMgmtConfig {
+    command: 'edge-impulse-linux' | 'edge-impulse-daemon';
     endpoints: {
         internal: {
             ws: string;
@@ -546,7 +547,8 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 }
 
                 console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
-                    '"' + projectInfo.name + '"');
+                    '"' + projectInfo.name + '". ' +
+                    'To connect to another project, run `' + this._eiConfig.command + ' --clean`.');
                 console.log(TCP_PREFIX,
                     `Go to ${studioUrl}/studio/${this._projectId}/acquisition/training ` +
                     `to build your machine learning model!`);

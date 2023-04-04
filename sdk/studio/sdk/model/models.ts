@@ -51,6 +51,7 @@ export * from './adminOrganizationInfoResponse';
 export * from './adminOrganizationInfoResponseAllOf';
 export * from './adminUpdateOrganizationRequest';
 export * from './adminUpdateUserRequest';
+export * from './akidaEdgeLearningConfig';
 export * from './anomalyModelMetadata';
 export * from './anomalyModelMetadataClusters';
 export * from './anomalyModelMetadataResponse';
@@ -150,6 +151,9 @@ export * from './deploymentTargetBadge';
 export * from './deploymentTargetEngine';
 export * from './deploymentTargetsResponse';
 export * from './deploymentTargetsResponseAllOf';
+export * from './developmentBoard';
+export * from './developmentBoardsResponse';
+export * from './developmentBoardsResponseAllOf';
 export * from './developmentKeys';
 export * from './developmentKeysResponse';
 export * from './device';
@@ -169,6 +173,9 @@ export * from './dspFeatureImportanceResponseAllOfFeatures';
 export * from './dspFeatureImportanceResponseAllOfLabels';
 export * from './dspFeatureLabelsResponse';
 export * from './dspFeatureLabelsResponseAllOf';
+export * from './dspPerformanceAllVariantsResponse';
+export * from './dspPerformanceAllVariantsResponseAllOf';
+export * from './dspPerformanceAllVariantsResponseAllOfPerformance';
 export * from './dspRunGraph';
 export * from './dspRunGraphAxisLabels';
 export * from './dspRunRequestWithoutFeatures';
@@ -224,6 +231,9 @@ export * from './getJWTTokenResponse';
 export * from './getJWTTokenResponseAllOf';
 export * from './getJobResponse';
 export * from './getJobResponseAllOf';
+export * from './getLastDeploymentBuildResponse';
+export * from './getLastDeploymentBuildResponseAllOf';
+export * from './getLastDeploymentBuildResponseAllOfLastBuild';
 export * from './getNotesResponse';
 export * from './getNotesResponseAllOf';
 export * from './getOrganizationDataItemResponse';
@@ -248,6 +258,7 @@ export * from './getPerformanceCalibrationStatusResponseAllOf';
 export * from './getPretrainedModelResponse';
 export * from './getPretrainedModelResponseAllOf';
 export * from './getPretrainedModelResponseAllOfModel';
+export * from './getPretrainedModelResponseAllOfModelProfileInfo';
 export * from './getPublicMetricsResponse';
 export * from './getPublicMetricsResponseAllOf';
 export * from './getSampleMetadataResponse';
@@ -264,6 +275,7 @@ export * from './getUserNeedToSetPasswordResponse';
 export * from './getUserNeedToSetPasswordResponseAllOf';
 export * from './getUserResponse';
 export * from './getUserResponseAllOf';
+export * from './getUserResponseAllOfWhitelabels';
 export * from './getWhitelabelDomainResponse';
 export * from './getWhitelabelDomainResponseAllOf';
 export * from './getWhitelabelResponse';
@@ -297,6 +309,7 @@ export * from './kerasVisualLayer';
 export * from './kerasVisualLayerType';
 export * from './lastModificationDateResponse';
 export * from './lastModificationDateResponseAllOf';
+export * from './latencyDevice';
 export * from './learnBlock';
 export * from './learnBlockType';
 export * from './listApiKeysResponse';
@@ -371,6 +384,7 @@ export * from './listVersionsResponseAllOfVersions';
 export * from './logStdoutResponse';
 export * from './logStdoutResponseAllOf';
 export * from './logStdoutResponseAllOfStdout';
+export * from './logWebsitePageviewRequest';
 export * from './loginResponse';
 export * from './loginResponseAllOf';
 export * from './modelPrediction';
@@ -445,6 +459,7 @@ export * from './organizationProjectsDataBatchEnableResponse';
 export * from './organizationProjectsDataBatchRequest';
 export * from './organizationProjectsDataBulkMetadataRequest';
 export * from './organizationTransferLearningBlock';
+export * from './organizationTransferLearningOperatesOn';
 export * from './organizationTransformationBlock';
 export * from './organizationUpdatePipelineBody';
 export * from './organizationUser';
@@ -469,6 +484,10 @@ export * from './profileModelInfo';
 export * from './profileModelInfoMemory';
 export * from './profileModelInfoMemoryEon';
 export * from './profileModelInfoMemoryTflite';
+export * from './profileModelTable';
+export * from './profileModelTableMcu';
+export * from './profileModelTableMcuMemory';
+export * from './profileModelTableMpu';
 export * from './profileTfLiteRequest';
 export * from './profileTfLiteResponse';
 export * from './project';
@@ -479,6 +498,10 @@ export * from './projectDataAxesSummaryResponseAllOf';
 export * from './projectDataIntervalResponse';
 export * from './projectDataIntervalResponseAllOf';
 export * from './projectDataSummary';
+export * from './projectDeploymentTarget';
+export * from './projectDeploymentTargetAllOf';
+export * from './projectDeploymentTargetsResponse';
+export * from './projectDeploymentTargetsResponseAllOf';
 export * from './projectDownloadsResponse';
 export * from './projectDownloadsResponseAllOf';
 export * from './projectInfoResponse';
@@ -489,7 +512,6 @@ export * from './projectInfoResponseAllOfDataSummaryPerCategory';
 export * from './projectInfoResponseAllOfDeploySettings';
 export * from './projectInfoResponseAllOfExperiments';
 export * from './projectInfoResponseAllOfImpulse';
-export * from './projectInfoResponseAllOfLatencyDevices';
 export * from './projectInfoResponseAllOfPerformance';
 export * from './projectInfoResponseAllOfShowGettingStartedWizard';
 export * from './projectInfoResponseAllOfUrls';
@@ -524,6 +546,7 @@ export * from './scoreTrialResponseAllOfLatency';
 export * from './scoreTrialResponseAllOfRam';
 export * from './segmentSampleRequest';
 export * from './segmentSampleRequestSegments';
+export * from './sendUserFeedbackRequest';
 export * from './sensor';
 export * from './setAnomalyParameterRequest';
 export * from './setKerasParameterRequest';
@@ -677,6 +700,7 @@ import { AdminOrganizationInfoResponse } from './adminOrganizationInfoResponse';
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
 import { AdminUpdateOrganizationRequest } from './adminUpdateOrganizationRequest';
 import { AdminUpdateUserRequest } from './adminUpdateUserRequest';
+import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
 import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
 import { AnomalyModelMetadataResponse } from './anomalyModelMetadataResponse';
@@ -776,6 +800,9 @@ import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
 import { DeploymentTargetsResponse } from './deploymentTargetsResponse';
 import { DeploymentTargetsResponseAllOf } from './deploymentTargetsResponseAllOf';
+import { DevelopmentBoard } from './developmentBoard';
+import { DevelopmentBoardsResponse } from './developmentBoardsResponse';
+import { DevelopmentBoardsResponseAllOf } from './developmentBoardsResponseAllOf';
 import { DevelopmentKeys } from './developmentKeys';
 import { DevelopmentKeysResponse } from './developmentKeysResponse';
 import { Device } from './device';
@@ -795,6 +822,9 @@ import { DspFeatureImportanceResponseAllOfFeatures } from './dspFeatureImportanc
 import { DspFeatureImportanceResponseAllOfLabels } from './dspFeatureImportanceResponseAllOfLabels';
 import { DspFeatureLabelsResponse } from './dspFeatureLabelsResponse';
 import { DspFeatureLabelsResponseAllOf } from './dspFeatureLabelsResponseAllOf';
+import { DspPerformanceAllVariantsResponse } from './dspPerformanceAllVariantsResponse';
+import { DspPerformanceAllVariantsResponseAllOf } from './dspPerformanceAllVariantsResponseAllOf';
+import { DspPerformanceAllVariantsResponseAllOfPerformance } from './dspPerformanceAllVariantsResponseAllOfPerformance';
 import { DspRunGraph } from './dspRunGraph';
 import { DspRunGraphAxisLabels } from './dspRunGraphAxisLabels';
 import { DspRunRequestWithoutFeatures } from './dspRunRequestWithoutFeatures';
@@ -850,6 +880,9 @@ import { GetJWTTokenResponse } from './getJWTTokenResponse';
 import { GetJWTTokenResponseAllOf } from './getJWTTokenResponseAllOf';
 import { GetJobResponse } from './getJobResponse';
 import { GetJobResponseAllOf } from './getJobResponseAllOf';
+import { GetLastDeploymentBuildResponse } from './getLastDeploymentBuildResponse';
+import { GetLastDeploymentBuildResponseAllOf } from './getLastDeploymentBuildResponseAllOf';
+import { GetLastDeploymentBuildResponseAllOfLastBuild } from './getLastDeploymentBuildResponseAllOfLastBuild';
 import { GetNotesResponse } from './getNotesResponse';
 import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
 import { GetOrganizationDataItemResponse } from './getOrganizationDataItemResponse';
@@ -874,6 +907,7 @@ import { GetPerformanceCalibrationStatusResponseAllOf } from './getPerformanceCa
 import { GetPretrainedModelResponse } from './getPretrainedModelResponse';
 import { GetPretrainedModelResponseAllOf } from './getPretrainedModelResponseAllOf';
 import { GetPretrainedModelResponseAllOfModel } from './getPretrainedModelResponseAllOfModel';
+import { GetPretrainedModelResponseAllOfModelProfileInfo } from './getPretrainedModelResponseAllOfModelProfileInfo';
 import { GetPublicMetricsResponse } from './getPublicMetricsResponse';
 import { GetPublicMetricsResponseAllOf } from './getPublicMetricsResponseAllOf';
 import { GetSampleMetadataResponse } from './getSampleMetadataResponse';
@@ -890,6 +924,7 @@ import { GetUserNeedToSetPasswordResponse } from './getUserNeedToSetPasswordResp
 import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
 import { GetUserResponse } from './getUserResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { GetWhitelabelDomainResponse } from './getWhitelabelDomainResponse';
 import { GetWhitelabelDomainResponseAllOf } from './getWhitelabelDomainResponseAllOf';
 import { GetWhitelabelResponse } from './getWhitelabelResponse';
@@ -923,6 +958,7 @@ import { KerasVisualLayer } from './kerasVisualLayer';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LastModificationDateResponse } from './lastModificationDateResponse';
 import { LastModificationDateResponseAllOf } from './lastModificationDateResponseAllOf';
+import { LatencyDevice } from './latencyDevice';
 import { LearnBlock } from './learnBlock';
 import { LearnBlockType } from './learnBlockType';
 import { ListApiKeysResponse } from './listApiKeysResponse';
@@ -997,6 +1033,7 @@ import { ListVersionsResponseAllOfVersions } from './listVersionsResponseAllOfVe
 import { LogStdoutResponse } from './logStdoutResponse';
 import { LogStdoutResponseAllOf } from './logStdoutResponseAllOf';
 import { LogStdoutResponseAllOfStdout } from './logStdoutResponseAllOfStdout';
+import { LogWebsitePageviewRequest } from './logWebsitePageviewRequest';
 import { LoginResponse } from './loginResponse';
 import { LoginResponseAllOf } from './loginResponseAllOf';
 import { ModelPrediction } from './modelPrediction';
@@ -1071,6 +1108,7 @@ import { OrganizationProjectsDataBatchEnableResponse } from './organizationProje
 import { OrganizationProjectsDataBatchRequest } from './organizationProjectsDataBatchRequest';
 import { OrganizationProjectsDataBulkMetadataRequest } from './organizationProjectsDataBulkMetadataRequest';
 import { OrganizationTransferLearningBlock } from './organizationTransferLearningBlock';
+import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 import { OrganizationTransformationBlock } from './organizationTransformationBlock';
 import { OrganizationUpdatePipelineBody } from './organizationUpdatePipelineBody';
 import { OrganizationUser } from './organizationUser';
@@ -1095,6 +1133,10 @@ import { ProfileModelInfo } from './profileModelInfo';
 import { ProfileModelInfoMemory } from './profileModelInfoMemory';
 import { ProfileModelInfoMemoryEon } from './profileModelInfoMemoryEon';
 import { ProfileModelInfoMemoryTflite } from './profileModelInfoMemoryTflite';
+import { ProfileModelTable } from './profileModelTable';
+import { ProfileModelTableMcu } from './profileModelTableMcu';
+import { ProfileModelTableMcuMemory } from './profileModelTableMcuMemory';
+import { ProfileModelTableMpu } from './profileModelTableMpu';
 import { ProfileTfLiteRequest } from './profileTfLiteRequest';
 import { ProfileTfLiteResponse } from './profileTfLiteResponse';
 import { Project } from './project';
@@ -1105,6 +1147,10 @@ import { ProjectDataAxesSummaryResponseAllOf } from './projectDataAxesSummaryRes
 import { ProjectDataIntervalResponse } from './projectDataIntervalResponse';
 import { ProjectDataIntervalResponseAllOf } from './projectDataIntervalResponseAllOf';
 import { ProjectDataSummary } from './projectDataSummary';
+import { ProjectDeploymentTarget } from './projectDeploymentTarget';
+import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
+import { ProjectDeploymentTargetsResponse } from './projectDeploymentTargetsResponse';
+import { ProjectDeploymentTargetsResponseAllOf } from './projectDeploymentTargetsResponseAllOf';
 import { ProjectDownloadsResponse } from './projectDownloadsResponse';
 import { ProjectDownloadsResponseAllOf } from './projectDownloadsResponseAllOf';
 import { ProjectInfoResponse } from './projectInfoResponse';
@@ -1115,7 +1161,6 @@ import { ProjectInfoResponseAllOfDataSummaryPerCategory } from './projectInfoRes
 import { ProjectInfoResponseAllOfDeploySettings } from './projectInfoResponseAllOfDeploySettings';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
-import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
@@ -1150,6 +1195,7 @@ import { ScoreTrialResponseAllOfLatency } from './scoreTrialResponseAllOfLatency
 import { ScoreTrialResponseAllOfRam } from './scoreTrialResponseAllOfRam';
 import { SegmentSampleRequest } from './segmentSampleRequest';
 import { SegmentSampleRequestSegments } from './segmentSampleRequestSegments';
+import { SendUserFeedbackRequest } from './sendUserFeedbackRequest';
 import { Sensor } from './sensor';
 import { SetAnomalyParameterRequest } from './setAnomalyParameterRequest';
 import { SetKerasParameterRequest } from './setKerasParameterRequest';
@@ -1265,7 +1311,6 @@ let enumsMap: {[index: string]: any} = {
     "AddMemberRequestRoleEnum": "AddMemberRequestRoleEnum",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
     "AddOrganizationDeployBlockRequestCategoryEnum": "AddOrganizationDeployBlockRequestCategoryEnum",
-    "AddOrganizationTransferLearningBlockRequestOperatesOnEnum": "AddOrganizationTransferLearningBlockRequestOperatesOnEnum",
     "AddOrganizationTransformationBlockRequestOperatesOnEnum": "AddOrganizationTransformationBlockRequestOperatesOnEnum",
     "AdminApiProjectTierEnum": "AdminApiProjectTierEnum",
     "AdminApiUserTierEnum": "AdminApiUserTierEnum",
@@ -1291,6 +1336,7 @@ let enumsMap: {[index: string]: any} = {
     "DeployPretrainedModelModelObjectDetectionModelTypeEnum": "DeployPretrainedModelModelObjectDetectionModelTypeEnum",
     "DeployPretrainedModelModelRegressionModelTypeEnum": "DeployPretrainedModelModelRegressionModelTypeEnum",
     "DeployPretrainedModelRequestModelFileTypeEnum": "DeployPretrainedModelRequestModelFileTypeEnum",
+    "DeployPretrainedModelRequestDeployModelTypeEnum": "DeployPretrainedModelRequestDeployModelTypeEnum",
     "DeploymentTargetUiSectionEnum": "DeploymentTargetUiSectionEnum",
     "DeploymentTargetEngine": "DeploymentTargetEngine",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
@@ -1350,7 +1396,7 @@ let enumsMap: {[index: string]: any} = {
     "OrganizationPipelineRunStepCategoryEnum": "OrganizationPipelineRunStepCategoryEnum",
     "OrganizationPipelineStepUploadTypeEnum": "OrganizationPipelineStepUploadTypeEnum",
     "OrganizationPipelineStepCategoryEnum": "OrganizationPipelineStepCategoryEnum",
-    "OrganizationTransferLearningBlockOperatesOnEnum": "OrganizationTransferLearningBlockOperatesOnEnum",
+    "OrganizationTransferLearningOperatesOn": "OrganizationTransferLearningOperatesOn",
     "OrganizationTransformationBlockOperatesOnEnum": "OrganizationTransformationBlockOperatesOnEnum",
     "OrganizationUpdatePipelineBodyWhenToEmailEnum": "OrganizationUpdatePipelineBodyWhenToEmailEnum",
     "OrganizationUserRoleEnum": "OrganizationUserRoleEnum",
@@ -1358,14 +1404,16 @@ let enumsMap: {[index: string]: any} = {
     "PerformanceCalibrationGroundTruthTypeEnum": "PerformanceCalibrationGroundTruthTypeEnum",
     "PerformanceCalibrationParametersTypeEnum": "PerformanceCalibrationParametersTypeEnum",
     "PretrainedModelTensorDataTypeEnum": "PretrainedModelTensorDataTypeEnum",
-    "ProfileTfLiteRequestReferenceModelEnum": "ProfileTfLiteRequestReferenceModelEnum",
+    "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
     "ProjectTierEnum": "ProjectTierEnum",
+    "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
     "ProjectPublicDataProjectTypeEnum": "ProjectPublicDataProjectTypeEnum",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SampleProjectLabelingMethodEnum": "SampleProjectLabelingMethodEnum",
+    "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
     "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
@@ -1373,7 +1421,6 @@ let enumsMap: {[index: string]: any} = {
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
     "TransformationJobStatusEnum": "TransformationJobStatusEnum",
     "UpdateOrganizationDeployBlockRequestCategoryEnum": "UpdateOrganizationDeployBlockRequestCategoryEnum",
-    "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum": "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum",
     "UpdateOrganizationTransformationBlockRequestOperatesOnEnum": "UpdateOrganizationTransformationBlockRequestOperatesOnEnum",
     "UpdateProjectRequestLabelingMethodEnum": "UpdateProjectRequestLabelingMethodEnum",
     "UpdateProjectRequestSelectedProjectTypeInWizardEnum": "UpdateProjectRequestSelectedProjectTypeInWizardEnum",
@@ -1435,6 +1482,7 @@ let typeMap: {[index: string]: any} = {
     "AdminOrganizationInfoResponseAllOf": AdminOrganizationInfoResponseAllOf,
     "AdminUpdateOrganizationRequest": AdminUpdateOrganizationRequest,
     "AdminUpdateUserRequest": AdminUpdateUserRequest,
+    "AkidaEdgeLearningConfig": AkidaEdgeLearningConfig,
     "AnomalyModelMetadata": AnomalyModelMetadata,
     "AnomalyModelMetadataClusters": AnomalyModelMetadataClusters,
     "AnomalyModelMetadataResponse": AnomalyModelMetadataResponse,
@@ -1532,6 +1580,9 @@ let typeMap: {[index: string]: any} = {
     "DeploymentTargetBadge": DeploymentTargetBadge,
     "DeploymentTargetsResponse": DeploymentTargetsResponse,
     "DeploymentTargetsResponseAllOf": DeploymentTargetsResponseAllOf,
+    "DevelopmentBoard": DevelopmentBoard,
+    "DevelopmentBoardsResponse": DevelopmentBoardsResponse,
+    "DevelopmentBoardsResponseAllOf": DevelopmentBoardsResponseAllOf,
     "DevelopmentKeys": DevelopmentKeys,
     "DevelopmentKeysResponse": DevelopmentKeysResponse,
     "Device": Device,
@@ -1551,6 +1602,9 @@ let typeMap: {[index: string]: any} = {
     "DspFeatureImportanceResponseAllOfLabels": DspFeatureImportanceResponseAllOfLabels,
     "DspFeatureLabelsResponse": DspFeatureLabelsResponse,
     "DspFeatureLabelsResponseAllOf": DspFeatureLabelsResponseAllOf,
+    "DspPerformanceAllVariantsResponse": DspPerformanceAllVariantsResponse,
+    "DspPerformanceAllVariantsResponseAllOf": DspPerformanceAllVariantsResponseAllOf,
+    "DspPerformanceAllVariantsResponseAllOfPerformance": DspPerformanceAllVariantsResponseAllOfPerformance,
     "DspRunGraph": DspRunGraph,
     "DspRunGraphAxisLabels": DspRunGraphAxisLabels,
     "DspRunRequestWithoutFeatures": DspRunRequestWithoutFeatures,
@@ -1606,6 +1660,9 @@ let typeMap: {[index: string]: any} = {
     "GetJWTTokenResponseAllOf": GetJWTTokenResponseAllOf,
     "GetJobResponse": GetJobResponse,
     "GetJobResponseAllOf": GetJobResponseAllOf,
+    "GetLastDeploymentBuildResponse": GetLastDeploymentBuildResponse,
+    "GetLastDeploymentBuildResponseAllOf": GetLastDeploymentBuildResponseAllOf,
+    "GetLastDeploymentBuildResponseAllOfLastBuild": GetLastDeploymentBuildResponseAllOfLastBuild,
     "GetNotesResponse": GetNotesResponse,
     "GetNotesResponseAllOf": GetNotesResponseAllOf,
     "GetOrganizationDataItemResponse": GetOrganizationDataItemResponse,
@@ -1630,6 +1687,7 @@ let typeMap: {[index: string]: any} = {
     "GetPretrainedModelResponse": GetPretrainedModelResponse,
     "GetPretrainedModelResponseAllOf": GetPretrainedModelResponseAllOf,
     "GetPretrainedModelResponseAllOfModel": GetPretrainedModelResponseAllOfModel,
+    "GetPretrainedModelResponseAllOfModelProfileInfo": GetPretrainedModelResponseAllOfModelProfileInfo,
     "GetPublicMetricsResponse": GetPublicMetricsResponse,
     "GetPublicMetricsResponseAllOf": GetPublicMetricsResponseAllOf,
     "GetSampleMetadataResponse": GetSampleMetadataResponse,
@@ -1646,6 +1704,7 @@ let typeMap: {[index: string]: any} = {
     "GetUserNeedToSetPasswordResponseAllOf": GetUserNeedToSetPasswordResponseAllOf,
     "GetUserResponse": GetUserResponse,
     "GetUserResponseAllOf": GetUserResponseAllOf,
+    "GetUserResponseAllOfWhitelabels": GetUserResponseAllOfWhitelabels,
     "GetWhitelabelDomainResponse": GetWhitelabelDomainResponse,
     "GetWhitelabelDomainResponseAllOf": GetWhitelabelDomainResponseAllOf,
     "GetWhitelabelResponse": GetWhitelabelResponse,
@@ -1677,6 +1736,7 @@ let typeMap: {[index: string]: any} = {
     "KerasVisualLayer": KerasVisualLayer,
     "LastModificationDateResponse": LastModificationDateResponse,
     "LastModificationDateResponseAllOf": LastModificationDateResponseAllOf,
+    "LatencyDevice": LatencyDevice,
     "LearnBlock": LearnBlock,
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
@@ -1750,6 +1810,7 @@ let typeMap: {[index: string]: any} = {
     "LogStdoutResponse": LogStdoutResponse,
     "LogStdoutResponseAllOf": LogStdoutResponseAllOf,
     "LogStdoutResponseAllOfStdout": LogStdoutResponseAllOfStdout,
+    "LogWebsitePageviewRequest": LogWebsitePageviewRequest,
     "LoginResponse": LoginResponse,
     "LoginResponseAllOf": LoginResponseAllOf,
     "ModelPrediction": ModelPrediction,
@@ -1847,6 +1908,10 @@ let typeMap: {[index: string]: any} = {
     "ProfileModelInfoMemory": ProfileModelInfoMemory,
     "ProfileModelInfoMemoryEon": ProfileModelInfoMemoryEon,
     "ProfileModelInfoMemoryTflite": ProfileModelInfoMemoryTflite,
+    "ProfileModelTable": ProfileModelTable,
+    "ProfileModelTableMcu": ProfileModelTableMcu,
+    "ProfileModelTableMcuMemory": ProfileModelTableMcuMemory,
+    "ProfileModelTableMpu": ProfileModelTableMpu,
     "ProfileTfLiteRequest": ProfileTfLiteRequest,
     "ProfileTfLiteResponse": ProfileTfLiteResponse,
     "Project": Project,
@@ -1857,6 +1922,10 @@ let typeMap: {[index: string]: any} = {
     "ProjectDataIntervalResponse": ProjectDataIntervalResponse,
     "ProjectDataIntervalResponseAllOf": ProjectDataIntervalResponseAllOf,
     "ProjectDataSummary": ProjectDataSummary,
+    "ProjectDeploymentTarget": ProjectDeploymentTarget,
+    "ProjectDeploymentTargetAllOf": ProjectDeploymentTargetAllOf,
+    "ProjectDeploymentTargetsResponse": ProjectDeploymentTargetsResponse,
+    "ProjectDeploymentTargetsResponseAllOf": ProjectDeploymentTargetsResponseAllOf,
     "ProjectDownloadsResponse": ProjectDownloadsResponse,
     "ProjectDownloadsResponseAllOf": ProjectDownloadsResponseAllOf,
     "ProjectInfoResponse": ProjectInfoResponse,
@@ -1867,7 +1936,6 @@ let typeMap: {[index: string]: any} = {
     "ProjectInfoResponseAllOfDeploySettings": ProjectInfoResponseAllOfDeploySettings,
     "ProjectInfoResponseAllOfExperiments": ProjectInfoResponseAllOfExperiments,
     "ProjectInfoResponseAllOfImpulse": ProjectInfoResponseAllOfImpulse,
-    "ProjectInfoResponseAllOfLatencyDevices": ProjectInfoResponseAllOfLatencyDevices,
     "ProjectInfoResponseAllOfPerformance": ProjectInfoResponseAllOfPerformance,
     "ProjectInfoResponseAllOfShowGettingStartedWizard": ProjectInfoResponseAllOfShowGettingStartedWizard,
     "ProjectInfoResponseAllOfUrls": ProjectInfoResponseAllOfUrls,
@@ -1902,6 +1970,7 @@ let typeMap: {[index: string]: any} = {
     "ScoreTrialResponseAllOfRam": ScoreTrialResponseAllOfRam,
     "SegmentSampleRequest": SegmentSampleRequest,
     "SegmentSampleRequestSegments": SegmentSampleRequestSegments,
+    "SendUserFeedbackRequest": SendUserFeedbackRequest,
     "Sensor": Sensor,
     "SetAnomalyParameterRequest": SetAnomalyParameterRequest,
     "SetKerasParameterRequest": SetKerasParameterRequest,

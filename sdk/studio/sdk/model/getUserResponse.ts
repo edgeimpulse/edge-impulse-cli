@@ -12,6 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
@@ -36,6 +37,7 @@ export class GetUserResponse {
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
+    'jobTitle'?: string;
     'email': string;
     'activated': boolean;
     /**
@@ -63,6 +65,10 @@ export class GetUserResponse {
     * The user account tier.
     */
     'tier': GetUserResponseTierEnum;
+    /**
+    * List of white labels the user is a member of
+    */
+    'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
 
     static discriminator: string | undefined = undefined;
 
@@ -123,6 +129,11 @@ export class GetUserResponse {
             "type": "Date"
         },
         {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
             "name": "email",
             "baseName": "email",
             "type": "string"
@@ -166,6 +177,11 @@ export class GetUserResponse {
             "name": "tier",
             "baseName": "tier",
             "type": "GetUserResponseTierEnum"
+        },
+        {
+            "name": "whitelabels",
+            "baseName": "whitelabels",
+            "type": "Array<GetUserResponseAllOfWhitelabels>"
         }    ];
 
     static getAttributeTypeMap() {

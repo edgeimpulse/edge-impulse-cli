@@ -25,6 +25,11 @@ export class DeployPretrainedModelRequest {
     'deploymentType': string;
     'engine'?: DeploymentTargetEngine;
     'modelInfo': DeployPretrainedModelRequestModelInfo;
+    /**
+    * A base64 encoded .npy file containing the features from your validation set (optional for onnx and saved_model) - used to quantize your model.
+    */
+    'representativeFeaturesBase64'?: string;
+    'deployModelType'?: DeployPretrainedModelRequestDeployModelTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +58,16 @@ export class DeployPretrainedModelRequest {
             "name": "modelInfo",
             "baseName": "modelInfo",
             "type": "DeployPretrainedModelRequestModelInfo"
+        },
+        {
+            "name": "representativeFeaturesBase64",
+            "baseName": "representativeFeaturesBase64",
+            "type": "string"
+        },
+        {
+            "name": "deployModelType",
+            "baseName": "deployModelType",
+            "type": "DeployPretrainedModelRequestDeployModelTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -61,5 +76,8 @@ export class DeployPretrainedModelRequest {
 }
 
 
-export type DeployPretrainedModelRequestModelFileTypeEnum = 'tflite';
-export const DeployPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite'];
+export type DeployPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';
+export const DeployPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model'];
+
+export type DeployPretrainedModelRequestDeployModelTypeEnum = 'int8' | 'float32';
+export const DeployPretrainedModelRequestDeployModelTypeEnumValues: string[] = ['int8', 'float32'];

@@ -22,6 +22,7 @@ export class User {
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
+    'jobTitle'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,6 +71,11 @@ export class User {
             "name": "lastTosAcceptanceDate",
             "baseName": "lastTosAcceptanceDate",
             "type": "Date"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,12 +11,13 @@
  */
 
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 
 export class AddOrganizationTransferLearningBlockRequest {
     'name': string;
     'dockerContainer': string;
     'description': string;
-    'operatesOn': AddOrganizationTransferLearningBlockRequestOperatesOnEnum;
+    'operatesOn': OrganizationTransferLearningOperatesOn;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'implementationVersion': number;
     /**
@@ -53,7 +54,7 @@ export class AddOrganizationTransferLearningBlockRequest {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "AddOrganizationTransferLearningBlockRequestOperatesOnEnum"
+            "type": "OrganizationTransferLearningOperatesOn"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -86,6 +87,3 @@ export class AddOrganizationTransferLearningBlockRequest {
     }
 }
 
-
-export type AddOrganizationTransferLearningBlockRequestOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
-export const AddOrganizationTransferLearningBlockRequestOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];

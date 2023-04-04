@@ -42,10 +42,6 @@ export class UpdateProjectRequest {
     */
     'labelingMethod'?: UpdateProjectRequestLabelingMethodEnum;
     /**
-    * Whether to show the getting started wizard on the next page load of the dashboard
-    */
-    'showProjectTypeWizard'?: boolean;
-    /**
     * Which option was selected in the project type wizard
     */
     'selectedProjectTypeInWizard'?: UpdateProjectRequestSelectedProjectTypeInWizardEnum;
@@ -99,6 +95,7 @@ export class UpdateProjectRequest {
     * Config file specifying how to process CSV files.
     */
     'csvImportConfig'?: object;
+    'inPretrainedModelFlow'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -142,11 +139,6 @@ export class UpdateProjectRequest {
             "name": "labelingMethod",
             "baseName": "labelingMethod",
             "type": "UpdateProjectRequestLabelingMethodEnum"
-        },
-        {
-            "name": "showProjectTypeWizard",
-            "baseName": "showProjectTypeWizard",
-            "type": "boolean"
         },
         {
             "name": "selectedProjectTypeInWizard",
@@ -222,6 +214,11 @@ export class UpdateProjectRequest {
             "name": "csvImportConfig",
             "baseName": "csvImportConfig",
             "type": "object"
+        },
+        {
+            "name": "inPretrainedModelFlow",
+            "baseName": "inPretrainedModelFlow",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

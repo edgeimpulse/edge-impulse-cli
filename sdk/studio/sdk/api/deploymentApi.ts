@@ -24,8 +24,10 @@ import { DeploymentTargetsResponse } from '../model/deploymentTargetsResponse';
 import { EvaluateJobResponse } from '../model/evaluateJobResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDeploymentResponse } from '../model/getDeploymentResponse';
+import { GetLastDeploymentBuildResponse } from '../model/getLastDeploymentBuildResponse';
 import { GetSyntiantPosteriorResponse } from '../model/getSyntiantPosteriorResponse';
 import { KerasModelTypeEnum } from '../model/kerasModelTypeEnum';
+import { ProjectDeploymentTargetsResponse } from '../model/projectDeploymentTargetsResponse';
 import { SetSyntiantPosteriorRequest } from '../model/setSyntiantPosteriorRequest';
 import { StartJobResponse } from '../model/startJobResponse';
 
@@ -142,7 +144,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/zip'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -247,7 +251,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/find-syntiant-posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -367,7 +373,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -467,7 +475,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -548,7 +558,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate/cache'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -621,6 +633,89 @@ export class DeploymentApi {
     }
 
     /**
+     * Get information on the result of the last successful deployment job, including info on the build e.g. whether it is still valid.
+     * @summary Get information on the last deployment build
+     * @param projectId Project ID
+     */
+    public async getLastDeploymentBuild (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetLastDeploymentBuildResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/deployment/last'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getLastDeploymentBuild.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetLastDeploymentBuildResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetLastDeploymentBuildResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get the current posterior parameters for the Syntiant deployment target
      * @summary Get Syntiant posterior parameters
      * @param projectId Project ID
@@ -629,7 +724,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -708,7 +805,9 @@ export class DeploymentApi {
     public async listAllDeploymentTargets (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/deployment/targets';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -778,11 +877,13 @@ export class DeploymentApi {
      * @summary Deployment targets
      * @param projectId Project ID
      */
-    public async listDeploymentTargetsForProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
+    public async listDeploymentTargetsForProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -830,12 +931,12 @@ export class DeploymentApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<DeploymentTargetsResponse>((resolve, reject) => {
+            return new Promise<ProjectDeploymentTargetsResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "DeploymentTargetsResponse");
+                        body = ObjectSerializer.deserialize(body, "ProjectDeploymentTargetsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -863,7 +964,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets/data-sources'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -945,7 +1048,9 @@ export class DeploymentApi {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

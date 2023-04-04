@@ -11,6 +11,7 @@
  */
 
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 
 export class OrganizationTransferLearningBlock {
     'id': number;
@@ -21,7 +22,7 @@ export class OrganizationTransferLearningBlock {
     'description': string;
     'userId'?: number;
     'userName'?: string;
-    'operatesOn': OrganizationTransferLearningBlockOperatesOnEnum;
+    'operatesOn': OrganizationTransferLearningOperatesOn;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'implementationVersion': number;
     /**
@@ -83,7 +84,7 @@ export class OrganizationTransferLearningBlock {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "OrganizationTransferLearningBlockOperatesOnEnum"
+            "type": "OrganizationTransferLearningOperatesOn"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -116,6 +117,3 @@ export class OrganizationTransferLearningBlock {
     }
 }
 
-
-export type OrganizationTransferLearningBlockOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
-export const OrganizationTransferLearningBlockOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];

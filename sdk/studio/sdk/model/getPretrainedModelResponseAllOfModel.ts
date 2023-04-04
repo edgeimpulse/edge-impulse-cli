@@ -10,14 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { GetPretrainedModelResponseAllOfModelProfileInfo } from './getPretrainedModelResponseAllOfModelProfileInfo';
 import { PretrainedModelTensor } from './pretrainedModelTensor';
-import { ProfileModelInfo } from './profileModelInfo';
 
 export class GetPretrainedModelResponseAllOfModel {
     'fileName': string;
-    'profileInfo'?: ProfileModelInfo;
+    'profileInfo'?: GetPretrainedModelResponseAllOfModelProfileInfo;
     'inputs': Array<PretrainedModelTensor>;
     'outputs': Array<PretrainedModelTensor>;
+    'profileJobId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,7 +31,7 @@ export class GetPretrainedModelResponseAllOfModel {
         {
             "name": "profileInfo",
             "baseName": "profileInfo",
-            "type": "ProfileModelInfo"
+            "type": "GetPretrainedModelResponseAllOfModelProfileInfo"
         },
         {
             "name": "inputs",
@@ -41,6 +42,11 @@ export class GetPretrainedModelResponseAllOfModel {
             "name": "outputs",
             "baseName": "outputs",
             "type": "Array<PretrainedModelTensor>"
+        },
+        {
+            "name": "profileJobId",
+            "baseName": "profileJobId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

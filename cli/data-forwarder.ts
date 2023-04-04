@@ -237,7 +237,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 const studioUrl = await configFactory.getStudioUrl(whitelabelId);
 
                 console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
-                    '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '"');
+                    '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '". ' +
+                    'To connect to another project, run `edge-impulse-data-forwarder --clean`.');
                 console.log(TCP_PREFIX,
                     `Go to ${studioUrl}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
                     `to build your machine learning model!`);

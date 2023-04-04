@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { DependencyData } from './dependencyData';
@@ -88,6 +89,7 @@ export class KerasResponse {
     * If set, skips creating embeddings and measuring memory (used in tests)
     */
     'skipEmbeddingsAndMemory': boolean;
+    'akidaEdgeLearningConfig'?: AkidaEdgeLearningConfig;
     /**
     * If the \'custom validation split\' experiment is enabled, this metadata key is used to prevent group data leakage between train and validation datasets.
     */
@@ -205,6 +207,11 @@ export class KerasResponse {
             "name": "skipEmbeddingsAndMemory",
             "baseName": "skipEmbeddingsAndMemory",
             "type": "boolean"
+        },
+        {
+            "name": "akidaEdgeLearningConfig",
+            "baseName": "akidaEdgeLearningConfig",
+            "type": "AkidaEdgeLearningConfig"
         },
         {
             "name": "customValidationMetadataKey",

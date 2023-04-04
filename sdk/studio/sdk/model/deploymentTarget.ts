@@ -52,6 +52,7 @@ export class DeploymentTarget {
     'supportedEngines': Array<DeploymentTargetEngine>;
     'preferredEngine': DeploymentTargetEngine;
     'url'?: string;
+    'docsUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -154,6 +155,11 @@ export class DeploymentTarget {
         {
             "name": "url",
             "baseName": "url",
+            "type": "string"
+        },
+        {
+            "name": "docsUrl",
+            "baseName": "docsUrl",
             "type": "string"
         }    ];
 

@@ -32,6 +32,8 @@ export class KerasModelMetadataMetrics {
     'onDevicePerformance': Array<KerasModelMetadataMetricsOnDevicePerformance>;
     'predictions'?: Array<ModelPrediction>;
     'visualization': KerasModelMetadataMetricsVisualizationEnum;
+    'isSupportedOnMcu': boolean;
+    'mcuSupportError'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +77,16 @@ export class KerasModelMetadataMetrics {
             "name": "visualization",
             "baseName": "visualization",
             "type": "KerasModelMetadataMetricsVisualizationEnum"
+        },
+        {
+            "name": "isSupportedOnMcu",
+            "baseName": "isSupportedOnMcu",
+            "type": "boolean"
+        },
+        {
+            "name": "mcuSupportError",
+            "baseName": "mcuSupportError",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

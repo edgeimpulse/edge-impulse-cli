@@ -94,6 +94,10 @@ export class ImpulseDspBlock {
     */
     'implementationVersion': number;
     'organization'?: ImpulseDspBlockOrganization;
+    /**
+    * Required for type \'custom\'
+    */
+    'customUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -202,6 +206,11 @@ export class ImpulseDspBlock {
             "name": "organization",
             "baseName": "organization",
             "type": "ImpulseDspBlockOrganization"
+        },
+        {
+            "name": "customUrl",
+            "baseName": "customUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

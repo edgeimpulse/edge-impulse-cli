@@ -17,13 +17,9 @@ export class ProfileTfLiteRequest {
     */
     'tfliteFileBase64': string;
     /**
-    * MCU used for calculating latency, query `latencyDevices` in `listProject` for a list of supported devices.
+    * MCU used for calculating latency, query `latencyDevices` in `listProject` for a list of supported devices  (and use the \"mcu\" property here).
     */
     'device': string;
-    /**
-    * Choose a reference model that\'s closest to your model architecture
-    */
-    'referenceModel': ProfileTfLiteRequestReferenceModelEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,11 +33,6 @@ export class ProfileTfLiteRequest {
             "name": "device",
             "baseName": "device",
             "type": "string"
-        },
-        {
-            "name": "referenceModel",
-            "baseName": "referenceModel",
-            "type": "ProfileTfLiteRequestReferenceModelEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -49,6 +40,3 @@ export class ProfileTfLiteRequest {
     }
 }
 
-
-export type ProfileTfLiteRequestReferenceModelEnum = 'gestures-large-f32' | 'gestures-large-i8' | 'image-32-32-mobilenet-f32' | 'image-32-32-mobilenet-i8' | 'image-96-96-mobilenet-f32' | 'image-96-96-mobilenet-i8' | 'image-320-320-mobilenet-ssd-f32' | 'keywords-2d-f32' | 'keywords-2d-i8';
-export const ProfileTfLiteRequestReferenceModelEnumValues: string[] = ['gestures-large-f32', 'gestures-large-i8', 'image-32-32-mobilenet-f32', 'image-32-32-mobilenet-i8', 'image-96-96-mobilenet-f32', 'image-96-96-mobilenet-i8', 'image-320-320-mobilenet-ssd-f32', 'keywords-2d-f32', 'keywords-2d-i8'];

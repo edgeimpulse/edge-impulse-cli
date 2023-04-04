@@ -18,6 +18,7 @@ export class LearnBlock {
     'description': string;
     'name': string;
     'recommended'?: boolean;
+    'organizationModelId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +52,11 @@ export class LearnBlock {
             "name": "recommended",
             "baseName": "recommended",
             "type": "boolean"
+        },
+        {
+            "name": "organizationModelId",
+            "baseName": "organizationModelId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

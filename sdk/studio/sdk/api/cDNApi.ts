@@ -106,7 +106,9 @@ export class CDNApi {
     public async getUserCDNResource (queryParams: getUserCDNResourceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api-usercdn';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['image/jpeg'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

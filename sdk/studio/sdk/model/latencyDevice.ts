@@ -11,7 +11,7 @@
  */
 
 
-export class ProjectInfoResponseAllOfLatencyDevices {
+export class LatencyDevice {
     'mcu': string;
     'name': string;
     'selected': boolean;
@@ -66,7 +66,7 @@ export class ProjectInfoResponseAllOfLatencyDevices {
         }    ];
 
     static getAttributeTypeMap() {
-        return ProjectInfoResponseAllOfLatencyDevices.attributeTypeMap;
+        return LatencyDevice.attributeTypeMap;
     }
 }
 

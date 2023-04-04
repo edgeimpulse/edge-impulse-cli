@@ -113,7 +113,9 @@ export class RequiresThirdPartyAuthApiKeyApi {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}/login'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

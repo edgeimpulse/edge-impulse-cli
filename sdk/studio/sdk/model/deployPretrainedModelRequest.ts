@@ -76,8 +76,8 @@ export class DeployPretrainedModelRequest {
 }
 
 
-export type DeployPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';
-export const DeployPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model'];
+export type DeployPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model' | 'lgbm';
+export const DeployPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model', 'lgbm'];
 
 export type DeployPretrainedModelRequestDeployModelTypeEnum = 'int8' | 'float32';
 export const DeployPretrainedModelRequestDeployModelTypeEnumValues: string[] = ['int8', 'float32'];

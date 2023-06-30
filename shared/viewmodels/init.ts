@@ -43,6 +43,8 @@ export enum PageType {
     UploadCsv = 41,
     PretrainedModel = 42,
     DeploymentBeta = 43,
+    AutoSegmenter = 44,
+    Scratchpad = 45,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -62,6 +64,7 @@ export enum PageType {
     OrganizationDatasets = 106,
     OrganizationJobs = 107,
     OrganizationDataHub = 108,
+    OrganizationDataCampaignsDashboard = 109,
     UploadPortal = 200,
 }
 

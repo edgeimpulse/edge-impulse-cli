@@ -28,7 +28,7 @@ import { CreateEvaluationUserResponse } from '../model/createEvaluationUserRespo
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetJWTTokenResponse } from '../model/getJWTTokenResponse';
+import { GetJWTResponse } from '../model/getJWTResponse';
 import { GetUserNeedToSetPasswordResponse } from '../model/getUserNeedToSetPasswordResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
@@ -386,7 +386,7 @@ export class UserApi {
      * @summary Activate user by third party activation code
      * @param activateUserByThirdPartyActivationCodeRequest 
      */
-    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTTokenResponse> {
+    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTResponse> {
         const localVarPath = this.basePath + '/api/user/activate-by-third-party-activation-code';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -440,12 +440,12 @@ export class UserApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetJWTTokenResponse>((resolve, reject) => {
+            return new Promise<GetJWTResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetJWTTokenResponse");
+                        body = ObjectSerializer.deserialize(body, "GetJWTResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

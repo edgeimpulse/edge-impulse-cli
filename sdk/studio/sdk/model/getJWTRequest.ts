@@ -11,7 +11,7 @@
  */
 
 
-export class GetJWTTokenRequest {
+export class GetJWTRequest {
     /**
     * Username or e-mail address
     */
@@ -24,7 +24,7 @@ export class GetJWTTokenRequest {
     * Evaluation user UUID
     */
     'uuid'?: string;
-    'ssoType'?: GetJWTTokenRequestSsoTypeEnum;
+    'ssoType'?: GetJWTRequestSsoTypeEnum;
     /**
     * Session ID
     */
@@ -51,7 +51,7 @@ export class GetJWTTokenRequest {
         {
             "name": "ssoType",
             "baseName": "ssoType",
-            "type": "GetJWTTokenRequestSsoTypeEnum"
+            "type": "GetJWTRequestSsoTypeEnum"
         },
         {
             "name": "sessionId",
@@ -60,10 +60,10 @@ export class GetJWTTokenRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenRequest.attributeTypeMap;
+        return GetJWTRequest.attributeTypeMap;
     }
 }
 
 
-export type GetJWTTokenRequestSsoTypeEnum = 'browser' | 'cli';
-export const GetJWTTokenRequestSsoTypeEnumValues: string[] = ['browser', 'cli'];
+export type GetJWTRequestSsoTypeEnum = 'browser' | 'cli';
+export const GetJWTRequestSsoTypeEnumValues: string[] = ['browser', 'cli'];

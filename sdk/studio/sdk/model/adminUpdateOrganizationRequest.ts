@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 
 /**
 * Only fields set in this object will be updated.
@@ -33,6 +34,7 @@ export class AdminUpdateOrganizationRequest {
     */
     'readme'?: string;
     'billable'?: boolean;
+    'entitlementLimits'?: EntitlementLimits;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,6 +68,11 @@ export class AdminUpdateOrganizationRequest {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
         }    ];
 
     static getAttributeTypeMap() {

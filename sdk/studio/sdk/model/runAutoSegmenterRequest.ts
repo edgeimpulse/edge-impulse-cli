@@ -11,38 +11,32 @@
  */
 
 
-export class OrganizationInfoResponseAllOfEntitlementLimits {
-    'totalStorage'?: number;
-    'computeTimePerYear'?: number;
-    'numberOfProjects'?: number;
-    'numberOfUsers'?: number;
+export class RunAutoSegmenterRequest {
+    'simThreshold': number;
+    'minObjectSizePx': number;
+    'whichItemsToInclude': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "totalStorage",
-            "baseName": "totalStorage",
+            "name": "simThreshold",
+            "baseName": "simThreshold",
             "type": "number"
         },
         {
-            "name": "computeTimePerYear",
-            "baseName": "computeTimePerYear",
+            "name": "minObjectSizePx",
+            "baseName": "minObjectSizePx",
             "type": "number"
         },
         {
-            "name": "numberOfProjects",
-            "baseName": "numberOfProjects",
-            "type": "number"
-        },
-        {
-            "name": "numberOfUsers",
-            "baseName": "numberOfUsers",
-            "type": "number"
+            "name": "whichItemsToInclude",
+            "baseName": "whichItemsToInclude",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationInfoResponseAllOfEntitlementLimits.attributeTypeMap;
+        return RunAutoSegmenterRequest.attributeTypeMap;
     }
 }
 

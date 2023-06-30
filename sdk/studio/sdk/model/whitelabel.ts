@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { Theme } from './theme';
+import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
 
 export class Whitelabel {
     'id': number;
@@ -17,12 +19,32 @@ export class Whitelabel {
     'domain': string;
     'ownerOrganizationId'?: number;
     'themeId': number;
+    'theme'?: Theme;
     'identityProviders': Array<string>;
     'allowPasswordAuth': boolean;
+    /**
+    * List of deployment targets enabled for this white label
+    */
     'deploymentTargets': Array<string>;
+    /**
+    * List of all supported deployment targets
+    */
+    'allDeploymentTargets'?: Array<string>;
+    /**
+    * List of custom deployment blocks available to this white label
+    */
+    'customDeploymentBlocks'?: Array<WhitelabelCustomDeploymentBlocks>;
+    /**
+    * Optional attribute allowing a whitelabel to customize the order of deployment options in the deployment view, given as an in-order list of deployment options.
+    */
+    'deploymentOptionsOrder'?: Array<string>;
     'allowSignup': boolean;
     'allowFreeProjects': boolean;
     'exposePublicProjects'?: boolean;
+    /**
+    * The name of the default deployment target for this white label
+    */
+    'defaultDeploymentTarget'?: string | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +75,11 @@ export class Whitelabel {
             "type": "number"
         },
         {
+            "name": "theme",
+            "baseName": "theme",
+            "type": "Theme"
+        },
+        {
             "name": "identityProviders",
             "baseName": "identityProviders",
             "type": "Array<string>"
@@ -65,6 +92,21 @@ export class Whitelabel {
         {
             "name": "deploymentTargets",
             "baseName": "deploymentTargets",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allDeploymentTargets",
+            "baseName": "allDeploymentTargets",
+            "type": "Array<string>"
+        },
+        {
+            "name": "customDeploymentBlocks",
+            "baseName": "customDeploymentBlocks",
+            "type": "Array<WhitelabelCustomDeploymentBlocks>"
+        },
+        {
+            "name": "deploymentOptionsOrder",
+            "baseName": "deploymentOptionsOrder",
             "type": "Array<string>"
         },
         {
@@ -81,6 +123,11 @@ export class Whitelabel {
             "name": "exposePublicProjects",
             "baseName": "exposePublicProjects",
             "type": "boolean"
+        },
+        {
+            "name": "defaultDeploymentTarget",
+            "baseName": "defaultDeploymentTarget",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

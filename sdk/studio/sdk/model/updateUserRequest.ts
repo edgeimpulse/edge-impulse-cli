@@ -20,6 +20,14 @@ export class UpdateUserRequest {
     */
     'name'?: string;
     /**
+    * New job title
+    */
+    'jobTitle'?: string;
+    /**
+    * New company name
+    */
+    'companyName'?: string;
+    /**
     * Whether to show the Imagine 2022 banner
     */
     'showImagine2022'?: boolean;
@@ -34,6 +42,16 @@ export class UpdateUserRequest {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
             "type": "string"
         },
         {

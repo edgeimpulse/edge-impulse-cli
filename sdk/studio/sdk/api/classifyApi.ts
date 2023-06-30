@@ -20,6 +20,7 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { ClassifyJobResponse } from '../model/classifyJobResponse';
+import { ClassifyJobResponsePage } from '../model/classifyJobResponsePage';
 import { ClassifySampleResponse } from '../model/classifySampleResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -38,6 +39,19 @@ export enum ClassifyApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+type classifySampleQueryParams = {
+    includeDebugInfo?: boolean,
+};
+
+type getClassifyJobResultQueryParams = {
+    featureExplorerOnly?: boolean,
+};
+
+type getClassifyJobResultPageQueryParams = {
+    limit?: number,
+    offset?: number,
+};
 
 
 export type ClassifyApiOpts = {
@@ -108,8 +122,9 @@ export class ClassifyApi {
      * @summary Classify sample
      * @param projectId Project ID
      * @param sampleId Sample ID
+     * @param includeDebugInfo Whether to return the debug information from FOMO classification.
      */
-    public async classifySample (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
+    public async classifySample (projectId: number, sampleId: number, queryParams: classifySampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -138,6 +153,10 @@ export class ClassifyApi {
 
         if (sampleId === null || sampleId === undefined) {
             throw new Error('Required parameter sampleId was null or undefined when calling classifySample.');
+        }
+
+        if (queryParams.includeDebugInfo !== undefined) {
+            localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -300,8 +319,9 @@ export class ClassifyApi {
      * Get classify job result, containing the result for the complete testing dataset.
      * @summary Classify job result
      * @param projectId Project ID
+     * @param featureExplorerOnly Whether to get only the classification results relevant to the feature explorer.
      */
-    public async getClassifyJobResult (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
+    public async getClassifyJobResult (projectId: number, queryParams: getClassifyJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -322,6 +342,10 @@ export class ClassifyApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getClassifyJobResult.');
+        }
+
+        if (queryParams.featureExplorerOnly !== undefined) {
+            localVarQueryParameters['featureExplorerOnly'] = ObjectSerializer.serialize(queryParams.featureExplorerOnly, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -361,6 +385,99 @@ export class ClassifyApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifyJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get classify job result, containing the predictions for a given page.
+     * @summary Single page of a classify job result
+     * @param projectId Project ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async getClassifyJobResultPage (projectId: number, queryParams: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
+        const localVarPath = this.basePath + '/api/{projectId}/classify/all/result/page'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getClassifyJobResultPage.');
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ClassifyJobResponsePage>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ClassifyJobResponsePage");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

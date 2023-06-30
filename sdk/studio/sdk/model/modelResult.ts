@@ -13,7 +13,7 @@
 import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
 import { Sample } from './sample';
 
-export class ClassifyJobResponseAllOfResult {
+export class ModelResult {
     'sampleId': number;
     'sample': Sample;
     'classifications': Array<ClassifySampleResponseClassification>;
@@ -38,7 +38,7 @@ export class ClassifyJobResponseAllOfResult {
         }    ];
 
     static getAttributeTypeMap() {
-        return ClassifyJobResponseAllOfResult.attributeTypeMap;
+        return ModelResult.attributeTypeMap;
     }
 }
 

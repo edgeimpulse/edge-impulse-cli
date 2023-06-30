@@ -10,14 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationAddDatasetRequestBucket } from './organizationAddDatasetRequestBucket';
 
 export class UpdateOrganizationDatasetRequest {
+    'dataset'?: string;
     'tags'?: Array<string>;
     'category'?: string;
+    'bucket'?: OrganizationAddDatasetRequestBucket;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "dataset",
+            "baseName": "dataset",
+            "type": "string"
+        },
         {
             "name": "tags",
             "baseName": "tags",
@@ -27,6 +35,11 @@ export class UpdateOrganizationDatasetRequest {
             "name": "category",
             "baseName": "category",
             "type": "string"
+        },
+        {
+            "name": "bucket",
+            "baseName": "bucket",
+            "type": "OrganizationAddDatasetRequestBucket"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
@@ -40,6 +41,7 @@ export class KerasModelMetadataAllOf {
     'hasTrainedModel': boolean;
     'mode': KerasModelMetadataAllOfModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
+    'imageInputScaling': ImageInputScaling;
 
     static discriminator: string | undefined = undefined;
 
@@ -88,6 +90,11 @@ export class KerasModelMetadataAllOf {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
             "type": "ObjectDetectionLastLayer"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
         }    ];
 
     static getAttributeTypeMap() {

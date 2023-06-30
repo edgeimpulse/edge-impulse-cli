@@ -16,6 +16,10 @@ export class GetUserResponseAllOfWhitelabels {
     'domain': string;
     'name': string;
     'ownerOrganizationId': number;
+    /**
+    * Whether the user is an admin of the white label.
+    */
+    'isAdmin': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +43,11 @@ export class GetUserResponseAllOfWhitelabels {
             "name": "ownerOrganizationId",
             "baseName": "ownerOrganizationId",
             "type": "number"
+        },
+        {
+            "name": "isAdmin",
+            "baseName": "isAdmin",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

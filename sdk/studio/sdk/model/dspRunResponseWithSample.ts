@@ -36,7 +36,7 @@ export class DspRunResponseWithSample {
     /**
     * Labels of the feature axes
     */
-    'labels': Array<string>;
+    'labels'?: Array<string>;
     'sample': RawSampleData;
     'performance'?: DspRunResponseAllOfPerformance;
     'canProfilePerformance': boolean;

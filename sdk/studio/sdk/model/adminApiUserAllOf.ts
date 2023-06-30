@@ -43,6 +43,10 @@ export class AdminApiUserAllOf {
     */
     'tier': AdminApiUserAllOfTierEnum;
     'lastSeen'?: Date;
+    /**
+    * Whether the user is suspended.
+    */
+    'suspended': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -96,6 +100,11 @@ export class AdminApiUserAllOf {
             "name": "lastSeen",
             "baseName": "lastSeen",
             "type": "Date"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

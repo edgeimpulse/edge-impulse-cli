@@ -19,6 +19,7 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     'dataItemName': string;
     'transformationJobId'?: number;
     'transformationJobStatus': TransformationJobStatusEnum;
+    'linkToDataItem': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,6 +53,11 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
             "name": "transformationJobStatus",
             "baseName": "transformationJobStatus",
             "type": "TransformationJobStatusEnum"
+        },
+        {
+            "name": "linkToDataItem",
+            "baseName": "linkToDataItem",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

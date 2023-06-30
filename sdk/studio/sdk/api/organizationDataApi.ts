@@ -22,6 +22,7 @@ import http = require('http');
 import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDataItemResponse } from '../model/getOrganizationDataItemResponse';
+import { GetOrganizationDataItemTransformJobsResponse } from '../model/getOrganizationDataItemTransformJobsResponse';
 import { GetOrganizationDatasetResponse } from '../model/getOrganizationDatasetResponse';
 import { GetOrganizationProjectsDataCountResponse } from '../model/getOrganizationProjectsDataCountResponse';
 import { ListOrganizationBucketsResponse } from '../model/listOrganizationBucketsResponse';
@@ -29,6 +30,7 @@ import { ListOrganizationDataResponse } from '../model/listOrganizationDataRespo
 import { ListOrganizationFilesResponse } from '../model/listOrganizationFilesResponse';
 import { ListOrganizationProjectsDataResponse } from '../model/listOrganizationProjectsDataResponse';
 import { OrganizationAddDataFolderRequest } from '../model/organizationAddDataFolderRequest';
+import { OrganizationAddDatasetRequest } from '../model/organizationAddDatasetRequest';
 import { OrganizationProjectsDataBatchDisableResponse } from '../model/organizationProjectsDataBatchDisableResponse';
 import { OrganizationProjectsDataBatchEnableResponse } from '../model/organizationProjectsDataBatchEnableResponse';
 import { OrganizationProjectsDataBatchRequest } from '../model/organizationProjectsDataBatchRequest';
@@ -121,6 +123,11 @@ type getOrganizationDataItemQueryParams = {
     filter?: string,
 };
 
+type getOrganizationDataItemTransformJobsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type getOrganizationProjectsDataCountQueryParams = {
     projectId?: number,
     filter?: string,
@@ -164,7 +171,7 @@ type previewOrganizationDataFileQueryParams = {
 };
 
 type refreshOrganizationDataQueryParams = {
-    dataset?: string,
+    dataset: string,
 };
 
 
@@ -668,6 +675,98 @@ export class OrganizationDataApi {
     }
 
     /**
+     * Add a new research dataset
+     * @summary Add dataset
+     * @param organizationId Organization ID
+     * @param organizationAddDatasetRequest 
+     */
+    public async addOrganizationDataset (organizationId: number, organizationAddDatasetRequest: OrganizationAddDatasetRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationDataset.');
+        }
+
+        // verify required parameter 'organizationAddDatasetRequest' is not null or undefined
+
+
+        if (organizationAddDatasetRequest === null || organizationAddDatasetRequest === undefined) {
+            throw new Error('Required parameter organizationAddDatasetRequest was null or undefined when calling addOrganizationDataset.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(organizationAddDatasetRequest, "OrganizationAddDatasetRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Change the dataset for selected data items.
      * @summary Change dataset
      * @param organizationId Organization ID
@@ -991,7 +1090,7 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Delete a data item. This does not remove the items from the underlying storage.
+     * Delete a data item. This will remove items the items from the underlying storage if your dataset has \"bucketPath\" set.
      * @summary Delete data
      * @param organizationId Organization ID
      * @param dataId Data ID
@@ -1758,6 +1857,108 @@ export class OrganizationDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetOrganizationDataItemResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get all transformation jobs that ran for a data item. If limit / offset is not provided then max. 20 results are returned.
+     * @summary Get transformation jobs for data item
+     * @param organizationId Organization ID
+     * @param dataId Data ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async getOrganizationDataItemTransformJobs (organizationId: number, dataId: number, queryParams: getOrganizationDataItemTransformJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemTransformJobsResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/transformation-jobs'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationDataItemTransformJobs.');
+        }
+
+        // verify required parameter 'dataId' is not null or undefined
+
+
+        if (dataId === null || dataId === undefined) {
+            throw new Error('Required parameter dataId was null or undefined when calling getOrganizationDataItemTransformJobs.');
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationDataItemTransformJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDataItemTransformJobsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2953,7 +3154,7 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Update all data items. HEADs all underlying buckets to retrieve the last file information. Use this API after uploading data directly to S3.
+     * Update all data items. HEADs all underlying buckets to retrieve the last file information. Use this API after uploading data directly to S3. If your dataset has bucketId and bucketPath set then this will also remove items that have been removed from S3.
      * @summary Refresh data
      * @param organizationId Organization ID
      * @param dataset Selected dataset
@@ -2980,6 +3181,13 @@ export class OrganizationDataApi {
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling refreshOrganizationData.');
         }
+
+        // verify required parameter 'dataset' is not null or undefined
+
+        if (queryParams.dataset === null || queryParams.dataset === undefined) {
+            throw new Error('Required parameter queryParams.dataset was null or undefined when calling refreshOrganizationData.');
+        }
+
 
         if (queryParams.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");

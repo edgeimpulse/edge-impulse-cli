@@ -16,6 +16,7 @@ export class ProjectInfoResponseAllOfDeploySettings {
     'sensor': ProjectInfoResponseAllOfDeploySettingsSensorEnum;
     'arduinoLibraryName': string;
     'tinkergenLibraryName': string;
+    'particleLibraryName': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +39,11 @@ export class ProjectInfoResponseAllOfDeploySettings {
         {
             "name": "tinkergenLibraryName",
             "baseName": "tinkergenLibraryName",
+            "type": "string"
+        },
+        {
+            "name": "particleLibraryName",
+            "baseName": "particleLibraryName",
             "type": "string"
         }    ];
 

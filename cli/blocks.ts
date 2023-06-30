@@ -25,7 +25,7 @@ import {
 } from '../sdk/studio';
 import { ips } from './get-ips';
 import { spawnHelper } from './spawn-helper';
-import { RequestDetailedFile } from '../sdk/studio/sdk/api';
+import { ImageInputScaling, RequestDetailedFile, UpdateOrganizationTransferLearningBlockRequest } from '../sdk/studio/sdk/api';
 
 const version = getCliVersion();
 
@@ -46,6 +46,7 @@ export type BlockConfigItem = {
     type: 'transferLearning',
     tlOperatesOn?: OrganizationTransferLearningOperatesOn,
     tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
+    tlImageInputScaling?: ImageInputScaling,
     repositoryUrl?: string;
 } | {
     type: 'deploy',
@@ -302,7 +303,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }]);
             organizationId = Number(orgInqRes.organization);
         }
-        let organization = organizations.organizations.filter(org => org.id === organizationId)[0];
+        const organization = organizations.organizations.filter(org => org.id === organizationId)[0];
+        const organizationInfo = (await config.api.organizations.getOrganizationInfo(organizationId));
 
         console.log(`Attaching block to organization '${organization.name}'`);
 
@@ -353,6 +355,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
         let blockTlOperatesOn: OrganizationTransferLearningOperatesOn | undefined;
         let blockTlObjectDetectionLastLayer: ObjectDetectionLastLayer | undefined;
+        let blockTlImageInputScaling: ImageInputScaling | undefined;
         let transformMountpoints: {
             bucketId: number;
             mountPoint: string;
@@ -530,7 +533,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     name: 'buckets',
                     choices: buckets.buckets.map(x => {
                         return {
-                            name: x.name,
+                            name: x.bucket,
                             value: x.id.toString()
                         };
                     }),
@@ -575,33 +578,32 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 message: 'What type of data does this model operate on?',
             }])).operatesOn;
 
+            if (blockTlOperatesOn === 'image' || blockTlOperatesOn === 'object_detection') {
+                blockTlImageInputScaling = <ImageInputScaling>(await inquirer.prompt([{
+                    type: 'list',
+                    name: 'inputScaling',
+                    choices: organizationInfo.cliLists.imageInputScalingOptions.map(o => {
+                        return {
+                            name: o.label,
+                            value: o.value,
+                        };
+                    }),
+                    message: 'How is your input scaled?',
+                    default: '0..1'
+                }])).inputScaling;
+            }
+
             if (blockTlOperatesOn === 'object_detection') {
                 blockTlObjectDetectionLastLayer = <ObjectDetectionLastLayer>
                     (await inquirer.prompt([{
                         type: 'list',
                         name: 'lastLayer',
-                        choices: [
-                            {
-                                name: 'MobileNet SSD',
-                                value: 'mobilenet-ssd'
-                            },
-                            {
-                                name: 'Edge Impulse FOMO',
-                                value: 'fomo'
-                            },
-                            {
-                                name: 'YOLOv5',
-                                value: 'yolov5'
-                            },
-                            {
-                                name: 'YOLOv5 for Renesas DRP-AI',
-                                value: 'yolov5v5-drpai'
-                            },
-                            {
-                                name: 'YOLOX',
-                                value: 'yolox'
-                            },
-                        ],
+                        choices: organizationInfo.cliLists.objectDetectionLastLayerOptions.map(o => {
+                            return {
+                                name: o.label,
+                                value: o.value,
+                            };
+                        }),
                         message: `What's the last layer of this object detection model?`,
                     }])).lastLayer;
             }
@@ -636,6 +638,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             organizationId,
             operatesOn: blockOperatesOn,
             tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
+            tlImageInputScaling: blockTlImageInputScaling,
             tlOperatesOn: blockTlOperatesOn,
             deployCategory: deployCategory,
             transformMountpoints: transformMountpoints,
@@ -646,6 +649,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             organizationId,
             operatesOn: blockOperatesOn,
             tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
+            tlImageInputScaling: blockTlImageInputScaling,
             tlOperatesOn: blockTlOperatesOn,
             deployCategory: deployCategory,
             transformMountpoints: transformMountpoints,
@@ -888,17 +892,25 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         }
                     }
 
+                    let parameters: { }[] | undefined;
+
+                    const paramsFile = Path.join(Path.dirname(dockerfilePath), 'parameters.json');
+                    if (await exists(paramsFile)) {
+                        parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
+                    }
+
                     let repoUrl = await guessRepoUrl();
 
                     const newBlockObject: AddOrganizationTransferLearningBlockRequest = {
                         name: blockName,
                         description: blockDescription,
                         dockerContainer: '',
-                        objectDetectionLastLayer:
-                            <ObjectDetectionLastLayer>currentBlockConfig.tlObjectDetectionLastLayer,
+                        objectDetectionLastLayer: currentBlockConfig.tlObjectDetectionLastLayer,
+                        imageInputScaling: currentBlockConfig.tlImageInputScaling,
                         operatesOn: currentBlockConfig.tlOperatesOn || 'image',
                         repositoryUrl: repoUrl,
                         implementationVersion,
+                        parameters: parameters,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newBlockObject);
@@ -914,7 +926,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         console.log('      After updating your script, make sure to set "implementation version" to "2" for this block on:');
 
                         let link = organizationNameResponse.organization.isDeveloperProfile ?
-                            `/studio/profile/machine-learning-blocks` :
+                            `/studio/profile/custom-blocks` :
                             `/organization/${organizationId}/machine-learning-blocks`;
                         link = `${studioUrl}${link}`;
 
@@ -935,6 +947,30 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
                 currentBlockConfig.id = newResponse.id;
                 await writeConfigFile();
+            }
+            else {
+                if (currentBlockConfig.type === 'transferLearning') {
+                    // Validation is done on the server, so just cast to whatever is needed to bypass
+                    // the TypeScript check
+                    let parameters: { }[] | undefined;
+
+                    const paramsFile = Path.join(Path.dirname(dockerfilePath), 'parameters.json');
+                    if (await exists(paramsFile)) {
+                        parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
+                    }
+
+                    console.log('');
+                    console.log(`INFO: Found parameters.json file, updated parameters for this block`);
+                    console.log('');
+
+                    if (parameters) {
+                        const newBlockObject: UpdateOrganizationTransferLearningBlockRequest = {
+                            parameters: parameters,
+                        };
+                        await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
+                            organizationId, currentBlockConfig.id, newBlockObject);
+                    }
+                }
             }
 
             // Tar & compress the file & push to the endpoint

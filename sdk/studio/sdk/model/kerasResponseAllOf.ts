@@ -81,9 +81,17 @@ export class KerasResponseAllOf {
     'skipEmbeddingsAndMemory': boolean;
     'akidaEdgeLearningConfig'?: AkidaEdgeLearningConfig;
     /**
-    * If the \'custom validation split\' experiment is enabled, this metadata key is used to prevent group data leakage between train and validation datasets.
+    * This metadata key is used to prevent group data leakage between train and validation datasets.
     */
     'customValidationMetadataKey'?: string;
+    /**
+    * Whether the \'Advanced training settings\' UI element should be expanded.
+    */
+    'showAdvancedTrainingSettings': boolean;
+    /**
+    * Training parameters, this list depends on the list of parameters that the model exposes.
+    */
+    'customParameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -197,6 +205,16 @@ export class KerasResponseAllOf {
             "name": "customValidationMetadataKey",
             "baseName": "customValidationMetadataKey",
             "type": "string"
+        },
+        {
+            "name": "showAdvancedTrainingSettings",
+            "baseName": "showAdvancedTrainingSettings",
+            "type": "boolean"
+        },
+        {
+            "name": "customParameters",
+            "baseName": "customParameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

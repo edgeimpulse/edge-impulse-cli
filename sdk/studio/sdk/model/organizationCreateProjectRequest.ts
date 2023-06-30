@@ -12,7 +12,7 @@
 
 
 /**
-* If uploadType is set to \'project\', either projectId, newProjectName or both projectApiKey and projectHmacKey are required. projectId and newProjectName are only available through JWT tokens. If uploadType is set to \'dataset\' then outputDatasetName can be set to \'\' to output in the same dataset, or set to a string to create (or append to) a new dataset.
+* If uploadType is set to \'project\', either projectId, newProjectName or both projectApiKey and projectHmacKey are required. projectId and newProjectName are only available through JWT tokens. If uploadType is set to \'dataset\' then outputDatasetName can be set to \'\' to output in the same dataset, or set to a string to create (or append to) a new dataset.
 */
 export class OrganizationCreateProjectRequest {
     'name': string;
@@ -26,6 +26,8 @@ export class OrganizationCreateProjectRequest {
     'builtinTransformationBlock'?: object;
     'category'?: OrganizationCreateProjectRequestCategoryEnum;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'label'?: string;
     'emailRecipientUids'?: Array<number>;
     /**
@@ -93,6 +95,16 @@ export class OrganizationCreateProjectRequest {
         {
             "name": "outputDatasetName",
             "baseName": "outputDatasetName",
+            "type": "string"
+        },
+        {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
             "type": "string"
         },
         {

@@ -32,6 +32,8 @@ export class OrganizationCreateProject {
     'category': OrganizationCreateProjectCategoryEnum;
     'created': Date;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'totalDownloadFileCount': number;
     'totalDownloadFileSize': number;
     'totalDownloadFileSizeString': string;
@@ -142,6 +144,16 @@ export class OrganizationCreateProject {
         {
             "name": "outputDatasetName",
             "baseName": "outputDatasetName",
+            "type": "string"
+        },
+        {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
             "type": "string"
         },
         {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPGroupItem } from './dSPGroupItem';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LearnBlockType } from './learnBlockType';
 
@@ -31,6 +32,7 @@ export class TransferLearningModel {
     'repositoryUrl'?: string;
     'author': string;
     'blockType': TransferLearningModelBlockTypeEnum;
+    'customParameters'?: Array<DSPGroupItem>;
 
     static discriminator: string | undefined = undefined;
 
@@ -119,6 +121,11 @@ export class TransferLearningModel {
             "name": "blockType",
             "baseName": "blockType",
             "type": "TransferLearningModelBlockTypeEnum"
+        },
+        {
+            "name": "customParameters",
+            "baseName": "customParameters",
+            "type": "Array<DSPGroupItem>"
         }    ];
 
     static getAttributeTypeMap() {

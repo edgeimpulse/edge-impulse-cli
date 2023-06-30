@@ -10,24 +10,17 @@
  * Do not edit the class manually.
  */
 
+import { AdminAddUserRequest } from './adminAddUserRequest';
 
-export class AdminAddProjectUserRequest {
-    /**
-    * Username or email of the user to be added to the project.
-    */
-    'user'?: string;
+export class AdminAddProjectUserRequest extends AdminAddUserRequest {
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "user",
-            "baseName": "user",
-            "type": "string"
-        }    ];
+    ];
 
     static getAttributeTypeMap() {
-        return AdminAddProjectUserRequest.attributeTypeMap;
+        return super.getAttributeTypeMap().concat(AdminAddProjectUserRequest.attributeTypeMap);
     }
 }
 

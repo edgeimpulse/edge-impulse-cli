@@ -11,6 +11,7 @@
  */
 
 import { AdminApiUserAllOf } from './adminApiUserAllOf';
+import { Permission } from './permission';
 import { Project } from './project';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
@@ -21,6 +22,7 @@ export class AdminApiUser {
     'id': number;
     'username': string;
     'name': string;
+    'email': string;
     'photo'?: string;
     'created': Date;
     'lastSeen'?: Date;
@@ -28,7 +30,11 @@ export class AdminApiUser {
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
-    'email': string;
+    /**
+    * List of permissions the user has
+    */
+    'permissions'?: Array<Permission>;
+    'companyName'?: string;
     'activated': boolean;
     /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
@@ -55,6 +61,10 @@ export class AdminApiUser {
     * The user account tier.
     */
     'tier': AdminApiUserTierEnum;
+    /**
+    * Whether the user is suspended.
+    */
+    'suspended': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -72,6 +82,11 @@ export class AdminApiUser {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "baseName": "email",
             "type": "string"
         },
         {
@@ -110,8 +125,13 @@ export class AdminApiUser {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
+            "name": "permissions",
+            "baseName": "permissions",
+            "type": "Array<Permission>"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
             "type": "string"
         },
         {
@@ -153,6 +173,11 @@ export class AdminApiUser {
             "name": "tier",
             "baseName": "tier",
             "type": "AdminApiUserTierEnum"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -33,7 +33,6 @@ export class ProjectInfoResponseAllOf {
     'impulse': ProjectInfoResponseAllOfImpulse;
     'devices': Array<Device>;
     'dataSummary': ProjectDataSummary;
-    'dataSummaryProcessedData': ProjectDataSummary;
     'dataSummaryPerCategory': ProjectInfoResponseAllOfDataSummaryPerCategory;
     'computeTime': ProjectInfoResponseAllOfComputeTime;
     'acquisitionSettings': ProjectInfoResponseAllOfAcquisitionSettings;
@@ -61,6 +60,10 @@ export class ProjectInfoResponseAllOf {
     * The IDs of users who should be notified when a model testing job is finished.
     */
     'modelTestingJobNotificationUids': Array<number>;
+    /**
+    * The IDs of users who should be notified when an auto segmentation job is finished.
+    */
+    'autoSegmenterJobNotificationUids': Array<number>;
     /**
     * The IDs of users who should be notified when an export job is finished.
     */
@@ -99,11 +102,6 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "dataSummary",
             "baseName": "dataSummary",
-            "type": "ProjectDataSummary"
-        },
-        {
-            "name": "dataSummaryProcessedData",
-            "baseName": "dataSummaryProcessedData",
             "type": "ProjectDataSummary"
         },
         {
@@ -179,6 +177,11 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "modelTestingJobNotificationUids",
             "baseName": "modelTestingJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
+            "name": "autoSegmenterJobNotificationUids",
+            "baseName": "autoSegmenterJobNotificationUids",
             "type": "Array<number>"
         },
         {

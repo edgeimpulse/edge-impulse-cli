@@ -35,7 +35,7 @@ export class DspRunResponse {
     /**
     * Labels of the feature axes
     */
-    'labels': Array<string>;
+    'labels'?: Array<string>;
     'performance'?: DspRunResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;

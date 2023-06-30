@@ -11,32 +11,26 @@
  */
 
 
-export class GetJWTTokenResponseAllOf {
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token'?: string;
-    /**
-    * Redirect URL to follow to complete login
-    */
-    'redirectUrl'?: string;
+export class TimeSeriesDataPoint {
+    'timestamp': Date;
+    'value': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
+            "name": "timestamp",
+            "baseName": "timestamp",
+            "type": "Date"
         },
         {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "value",
+            "baseName": "value",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenResponseAllOf.attributeTypeMap;
+        return TimeSeriesDataPoint.attributeTypeMap;
     }
 }
 

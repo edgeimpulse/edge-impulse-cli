@@ -120,5 +120,5 @@ export class OrganizationPipeline {
 }
 
 
-export type OrganizationPipelineWhenToEmailEnum = 'always' | 'on_new_data';
-export const OrganizationPipelineWhenToEmailEnumValues: string[] = ['always', 'on_new_data'];
+export type OrganizationPipelineWhenToEmailEnum = 'always' | 'on_new_data' | 'never';
+export const OrganizationPipelineWhenToEmailEnumValues: string[] = ['always', 'on_new_data', 'never'];

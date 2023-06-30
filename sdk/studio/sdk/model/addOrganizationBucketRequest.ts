@@ -13,10 +13,6 @@
 
 export class AddOrganizationBucketRequest {
     /**
-    * S3 bucket description
-    */
-    'name': string;
-    /**
     * S3 access key
     */
     'accessKey': string;
@@ -33,22 +29,17 @@ export class AddOrganizationBucketRequest {
     */
     'bucket': string;
     /**
-    * Prefix within the bucket
-    */
-    'prefix'?: string;
-    /**
     * S3 region
     */
     'region': string;
+    /**
+    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket.
+    */
+    'checkConnectivityPrefix'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
         {
             "name": "accessKey",
             "baseName": "accessKey",
@@ -70,13 +61,13 @@ export class AddOrganizationBucketRequest {
             "type": "string"
         },
         {
-            "name": "prefix",
-            "baseName": "prefix",
+            "name": "region",
+            "baseName": "region",
             "type": "string"
         },
         {
-            "name": "region",
-            "baseName": "region",
+            "name": "checkConnectivityPrefix",
+            "baseName": "checkConnectivityPrefix",
             "type": "string"
         }    ];
 

@@ -15,7 +15,7 @@ export class OrganizationMetricsResponseAllOfMetrics {
     /**
     * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs).
     */
-    'totalJobsComputeTime'?: number;
+    'totalJobsComputeTime': number;
     /**
     * Total compute time of all jobs in the organization in the current year (including organizational project jobs).
     */

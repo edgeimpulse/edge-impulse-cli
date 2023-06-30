@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 
@@ -37,6 +38,11 @@ export class OrganizationTransferLearningBlock {
     * URL to the source code of this custom learn block.
     */
     'repositoryUrl'?: string;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters': Array<object>;
+    'imageInputScaling'?: ImageInputScaling;
 
     static discriminator: string | undefined = undefined;
 
@@ -110,6 +116,16 @@ export class OrganizationTransferLearningBlock {
             "name": "repositoryUrl",
             "baseName": "repositoryUrl",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
         }    ];
 
     static getAttributeTypeMap() {

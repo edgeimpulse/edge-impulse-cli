@@ -10,9 +10,27 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 
 export class AdminOrganizationInfoResponseAllOf {
     'billable'?: boolean;
+    'entitlementLimits'?: EntitlementLimits;
+    /**
+    * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs).
+    */
+    'totalJobsComputeTime'?: number;
+    /**
+    * Total compute time of all jobs in the organization in the current year (including organizational project jobs).
+    */
+    'jobsComputeTimeCurrentYear'?: number;
+    /**
+    * The date from which the compute time for the running year is calculated.
+    */
+    'jobsComputeTimeCurrentYearSince'?: Date;
+    /**
+    * Total storage used by the organization.
+    */
+    'totalStorage'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,6 +39,31 @@ export class AdminOrganizationInfoResponseAllOf {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
+        },
+        {
+            "name": "totalJobsComputeTime",
+            "baseName": "totalJobsComputeTime",
+            "type": "number"
+        },
+        {
+            "name": "jobsComputeTimeCurrentYear",
+            "baseName": "jobsComputeTimeCurrentYear",
+            "type": "number"
+        },
+        {
+            "name": "jobsComputeTimeCurrentYearSince",
+            "baseName": "jobsComputeTimeCurrentYearSince",
+            "type": "Date"
+        },
+        {
+            "name": "totalStorage",
+            "baseName": "totalStorage",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

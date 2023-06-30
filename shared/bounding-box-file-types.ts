@@ -9,11 +9,17 @@ export interface ExportInputBoundingBox {
 export interface ExportBoundingBoxesFile {
     version: 1;
     type: 'bounding-box-labels';
-    boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
+    boundingBoxes: BoundingBoxesMap;
 }
 
+export interface BoundingBoxesMap { [fileName: string]: ExportInputBoundingBox[]; }
+
 export function parseBoundingBoxLabels(jsonFile: string) {
-    let data = <ExportBoundingBoxesFile>JSON.parse(jsonFile);
+    const data = <ExportBoundingBoxesFile>JSON.parse(jsonFile);
+    return validateBoundingBoxLabels(data);
+}
+
+export function validateBoundingBoxLabels(data: ExportBoundingBoxesFile) {
     if (data.version !== 1) {
         throw new Error('Invalid version');
     }

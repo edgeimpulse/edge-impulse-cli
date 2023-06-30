@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { Permission } from './permission';
 import { ProjectCollaboratorAllOf } from './projectCollaboratorAllOf';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
@@ -18,6 +19,7 @@ export class ProjectCollaborator {
     'id': number;
     'username': string;
     'name': string;
+    'email': string;
     'photo'?: string;
     'created': Date;
     'lastSeen'?: Date;
@@ -25,6 +27,15 @@ export class ProjectCollaborator {
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
+    /**
+    * List of permissions the user has
+    */
+    'permissions'?: Array<Permission>;
+    'companyName'?: string;
+    /**
+    * Whether the user has activated their account or not.
+    */
+    'activated': boolean;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -43,6 +54,11 @@ export class ProjectCollaborator {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "baseName": "email",
             "type": "string"
         },
         {
@@ -79,6 +95,21 @@ export class ProjectCollaborator {
             "name": "jobTitle",
             "baseName": "jobTitle",
             "type": "string"
+        },
+        {
+            "name": "permissions",
+            "baseName": "permissions",
+            "type": "Array<Permission>"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
+            "type": "string"
+        },
+        {
+            "name": "activated",
+            "baseName": "activated",
+            "type": "boolean"
         },
         {
             "name": "isOwner",

@@ -47,6 +47,10 @@ export class GetUserResponseAllOf {
     * List of white labels the user is a member of
     */
     'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
+    /**
+    * Whether the user is suspended.
+    */
+    'suspended': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -100,6 +104,11 @@ export class GetUserResponseAllOf {
             "name": "whitelabels",
             "baseName": "whitelabels",
             "type": "Array<GetUserResponseAllOfWhitelabels>"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

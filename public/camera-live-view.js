@@ -14,7 +14,10 @@ window.CameraLiveView = async () => {
         views: {
             loading: document.querySelector('#loading-view'),
             captureCamera: document.querySelector('#capture-camera'),
-        }
+        },
+        resultsTable: document.querySelector('#results-table'),
+        resultsThead: document.querySelector('#results-table thead tr'),
+        resultsTbody: document.querySelector('#results-table tbody'),
     };
 
     const colors = [
@@ -55,6 +58,9 @@ window.CameraLiveView = async () => {
         img.src = opts.img;
     });
 
+    let isFirstClassification = true;
+    let inferenceIx = 0;
+
     socket.on('classification', (opts) => {
         let result = opts.result;
 
@@ -63,14 +69,59 @@ window.CameraLiveView = async () => {
         console.log('classification', opts.result, opts.timeMs);
 
         if (result.classification) {
+            if (isFirstClassification) {
+                for (let ix = 0; ix < Object.keys(result.classification).length; ix++) {
+                    const key = Object.keys(result.classification)[ix];
+
+                    let th = document.createElement('th');
+                    th.scope = 'col';
+                    th.classList.add('px-0', 'text-center');
+                    th.textContent = th.title = key;
+                    els.resultsThead.appendChild(th);
+                }
+
+                els.resultsTable.style.display = '';
+                isFirstClassification = false;
+            }
+
             els.imageClassify.row.style.display = '';
 
             let conclusion = 'uncertain';
+            let highest = Math.max(...Object.values(result.classification));
 
             for (let k of Object.keys(result.classification)) {
-                if (result.classification[k] >= 0.7) {
+                if (result.classification[k] >= 0.55) {
                     conclusion = k + ' (' + result.classification[k].toFixed(2) + ')';
                 }
+            }
+
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            td1.textContent = (++inferenceIx).toString();
+            tr.appendChild(td1);
+            for (let k of Object.keys(result.classification)) {
+                let td = document.createElement('td');
+                td.classList.add('text-center');
+                td.textContent = result.classification[k].toFixed(2);
+                if (result.classification[k] === highest) {
+                    td.style.fontWeight = 600;
+                }
+                tr.appendChild(td);
+            }
+            tr.classList.add('active');
+            setTimeout(() => {
+                tr.classList.remove('active');
+            }, 200);
+            if (els.resultsTbody.firstChild) {
+                els.resultsTbody.insertBefore(tr, els.resultsTbody.firstChild);
+            }
+            else {
+                els.resultsTbody.appendChild(tr);
+            }
+
+            // keep max n rows
+            if (els.resultsTbody.childElementCount >= 100) {
+                els.resultsTbody.removeChild(els.resultsTbody.lastChild);
             }
 
             els.imageClassify.text.textContent = conclusion;

@@ -14,6 +14,7 @@ import {
     OrganizationTransformationBlock, UpdateProjectRequest,
     UploadCustomBlockRequestTypeEnum
 } from "../sdk/studio";
+import * as models from '../sdk/studio/sdk/model/models';
 
 const CON_PREFIX = '\x1b[34m[BLK]\x1b[0m';
 
@@ -214,13 +215,15 @@ export abstract class BlockRunner implements IRunner {
             const p = spawn(opts.command, opts.args, spawnOpts);
 
             if (!forwardStdio) {
-                p.stdout.on("data", (data: Buffer) => {
-                    process.stdout.write(data);
-                });
+                if (p.stdout && p.stderr) {
+                    p.stdout.on("data", (data: Buffer) => {
+                        process.stdout.write(data);
+                    });
 
-                p.stderr.on("data", (data: Buffer) => {
-                    process.stderr.write(data);
-                });
+                    p.stderr.on("data", (data: Buffer) => {
+                        process.stderr.write(data);
+                    });
+                }
             }
 
             p.on("error", (err) => {
@@ -252,13 +255,15 @@ export abstract class BlockRunner implements IRunner {
             const p = spawn(opts.command, opts.args, spawnOpts);
 
             if (!forwardStdio) {
-                p.stdout.on("data", (data: Buffer) => {
-                    process.stdout.write(data);
-                });
+                if (p.stdout && p.stderr) {
+                    p.stdout.on("data", (data: Buffer) => {
+                        process.stdout.write(data);
+                    });
 
-                p.stderr.on("data", (data: Buffer) => {
-                    process.stderr.write(data);
-                });
+                    p.stderr.on("data", (data: Buffer) => {
+                        process.stderr.write(data);
+                    });
+                }
             }
 
             p.on("error", (err) => {
@@ -1012,10 +1017,43 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         targetDir: string,
     ): Promise<void> {
 
+        let overrideImageInputScaling: models.ImageInputScaling | undefined;
+
+        if (this._blockConfig.id) {
+            const blocks = (await this._eiConfig.api.organizationBlocks.listOrganizationTransferLearningBlocks(
+                this._blockConfig.organizationId)).transferLearningBlocks;
+            let block = blocks.find(x => x.id === this._blockConfig.id);
+            if (block) {
+                overrideImageInputScaling = block.imageInputScaling;
+                if (overrideImageInputScaling) {
+                    console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                        `(read from block "${block.name}" (ID: ${block.id}) in Edge Impulse)`);
+                }
+            }
+            else {
+                overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
+                    this._blockConfig.tlImageInputScaling : undefined;
+                if (overrideImageInputScaling) {
+                    console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                        '(read from .ei-block-config)');
+                }
+            }
+        }
+        else {
+            overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
+                this._blockConfig.tlImageInputScaling : undefined;
+            if (overrideImageInputScaling) {
+                console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                    '(read from .ei-block-config)');
+            }
+        }
+
         await fs.promises.mkdir(targetDir, { recursive: true });
 
         console.log(CON_PREFIX, 'Creating download job...');
-        let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId);
+        let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId, {
+            overrideImageInputScaling: overrideImageInputScaling,
+        });
         console.log(CON_PREFIX, 'Creating download job OK', job.id);
         await this._eiConfig.api.runJobUntilCompletion({
             type: 'project',

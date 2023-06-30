@@ -13,6 +13,7 @@
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
+import { Permission } from './permission';
 import { Project } from './project';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
@@ -31,6 +32,7 @@ export class GetUserResponse {
     'id': number;
     'username': string;
     'name': string;
+    'email': string;
     'photo'?: string;
     'created': Date;
     'lastSeen'?: Date;
@@ -38,7 +40,11 @@ export class GetUserResponse {
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
-    'email': string;
+    /**
+    * List of permissions the user has
+    */
+    'permissions'?: Array<Permission>;
+    'companyName'?: string;
     'activated': boolean;
     /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
@@ -69,6 +75,10 @@ export class GetUserResponse {
     * List of white labels the user is a member of
     */
     'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
+    /**
+    * Whether the user is suspended.
+    */
+    'suspended': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -96,6 +106,11 @@ export class GetUserResponse {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "baseName": "email",
             "type": "string"
         },
         {
@@ -134,8 +149,13 @@ export class GetUserResponse {
             "type": "string"
         },
         {
-            "name": "email",
-            "baseName": "email",
+            "name": "permissions",
+            "baseName": "permissions",
+            "type": "Array<Permission>"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
             "type": "string"
         },
         {
@@ -182,6 +202,11 @@ export class GetUserResponse {
             "name": "whitelabels",
             "baseName": "whitelabels",
             "type": "Array<GetUserResponseAllOfWhitelabels>"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

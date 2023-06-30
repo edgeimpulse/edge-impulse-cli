@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
-import { ClassifyJobResponseAllOfResult } from './classifyJobResponseAllOfResult';
+import { ClassifyJobResponseAllOfAccuracy } from './classifyJobResponseAllOfAccuracy';
 import { ModelPrediction } from './modelPrediction';
+import { ModelResult } from './modelResult';
 
 export class ClassifyJobResponseAllOf {
-    'result': Array<ClassifyJobResponseAllOfResult>;
+    'result': Array<ModelResult>;
     'predictions': Array<ModelPrediction>;
+    'accuracy': ClassifyJobResponseAllOfAccuracy;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,12 +25,17 @@ export class ClassifyJobResponseAllOf {
         {
             "name": "result",
             "baseName": "result",
-            "type": "Array<ClassifyJobResponseAllOfResult>"
+            "type": "Array<ModelResult>"
         },
         {
             "name": "predictions",
             "baseName": "predictions",
             "type": "Array<ModelPrediction>"
+        },
+        {
+            "name": "accuracy",
+            "baseName": "accuracy",
+            "type": "ClassifyJobResponseAllOfAccuracy"
         }    ];
 
     static getAttributeTypeMap() {

@@ -87,5 +87,5 @@ export class OrganizationUpdatePipelineBody {
 }
 
 
-export type OrganizationUpdatePipelineBodyWhenToEmailEnum = 'always' | 'on_new_data';
-export const OrganizationUpdatePipelineBodyWhenToEmailEnumValues: string[] = ['always', 'on_new_data'];
+export type OrganizationUpdatePipelineBodyWhenToEmailEnum = 'always' | 'on_new_data' | 'never';
+export const OrganizationUpdatePipelineBodyWhenToEmailEnumValues: string[] = ['always', 'on_new_data', 'never'];

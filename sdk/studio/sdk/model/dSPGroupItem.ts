@@ -18,12 +18,13 @@ export class DSPGroupItem {
     'value'?: string;
     'defaultValue': string;
     'type': string;
-    'help': string;
+    'help'?: string;
     'param': string;
     'selectOptions'?: Array<DSPGroupItemSelectOptions>;
     'readonly': boolean;
     'shouldShow': boolean;
     'showIf'?: DSPGroupItemShowIf;
+    'invalidText'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,6 +78,11 @@ export class DSPGroupItem {
             "name": "showIf",
             "baseName": "showIf",
             "type": "DSPGroupItemShowIf"
+        },
+        {
+            "name": "invalidText",
+            "baseName": "invalidText",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

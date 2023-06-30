@@ -344,7 +344,7 @@ export class OrganizationAllowGuestAccessApi {
     }
 
     /**
-     * Delete a data item. This does not remove the items from the underlying storage.
+     * Delete a data item. This will remove items the items from the underlying storage if your dataset has \"bucketPath\" set.
      * @summary Delete data
      * @param organizationId Organization ID
      * @param dataId Data ID

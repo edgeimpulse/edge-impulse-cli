@@ -11,9 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { GetJWTTokenResponseAllOf } from './getJWTTokenResponseAllOf';
+import { GetAllImportedFromResponseAllOf } from './getAllImportedFromResponseAllOf';
+import { GetAllImportedFromResponseAllOfData } from './getAllImportedFromResponseAllOfData';
 
-export class GetJWTTokenResponse {
+export class GetAllImportedFromResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,14 +23,7 @@ export class GetJWTTokenResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token'?: string;
-    /**
-    * Redirect URL to follow to complete login
-    */
-    'redirectUrl'?: string;
+    'data': Array<GetAllImportedFromResponseAllOfData>;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,18 +39,13 @@ export class GetJWTTokenResponse {
             "type": "string"
         },
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
-        },
-        {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<GetAllImportedFromResponseAllOfData>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetJWTTokenResponse.attributeTypeMap;
+        return GetAllImportedFromResponse.attributeTypeMap;
     }
 }
 

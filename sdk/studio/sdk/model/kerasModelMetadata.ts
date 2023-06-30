@@ -11,6 +11,7 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
+import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadataAllOf } from './kerasModelMetadataAllOf';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
@@ -50,6 +51,7 @@ export class KerasModelMetadata {
     'hasTrainedModel': boolean;
     'mode': KerasModelMetadataModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
+    'imageInputScaling': ImageInputScaling;
 
     static discriminator: string | undefined = undefined;
 
@@ -108,6 +110,11 @@ export class KerasModelMetadata {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
             "type": "ObjectDetectionLastLayer"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
         }    ];
 
     static getAttributeTypeMap() {

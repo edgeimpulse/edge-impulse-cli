@@ -6,6 +6,12 @@ export * from './addHmacKeyRequest';
 export * from './addMemberRequest';
 export * from './addOrganizationApiKeyRequest';
 export * from './addOrganizationBucketRequest';
+export * from './addOrganizationDataCampaignDashboardRequest';
+export * from './addOrganizationDataCampaignDashboardResponse';
+export * from './addOrganizationDataCampaignDashboardResponseAllOf';
+export * from './addOrganizationDataCampaignRequest';
+export * from './addOrganizationDataCampaignResponse';
+export * from './addOrganizationDataCampaignResponseAllOf';
 export * from './addOrganizationDeployBlockRequest';
 export * from './addOrganizationDeployBlockResponse';
 export * from './addOrganizationDspBlockRequest';
@@ -18,14 +24,24 @@ export * from './addOrganizationTransferLearningBlockResponse';
 export * from './addOrganizationTransformationBlockRequest';
 export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
+export * from './adminAddDisallowedEmailDomainRequest';
 export * from './adminAddOrUpdateSSODomainIdPsRequest';
+export * from './adminAddOrganizationUserRequest';
+export * from './adminAddOrganizationUserRequestAllOf';
 export * from './adminAddProjectUserRequest';
+export * from './adminAddUserRequest';
 export * from './adminApiOrganization';
 export * from './adminApiOrganizationAllOf';
 export * from './adminApiProject';
 export * from './adminApiUser';
 export * from './adminApiUserAllOf';
 export * from './adminCreateOrganizationRequest';
+export * from './adminGetDataMigrationResponse';
+export * from './adminGetDataMigrationResponseAllOf';
+export * from './adminGetDataMigrationsResponse';
+export * from './adminGetDataMigrationsResponseAllOf';
+export * from './adminGetDisallowedEmailDomainsResponse';
+export * from './adminGetDisallowedEmailDomainsResponseAllOf';
 export * from './adminGetMetricsResponse';
 export * from './adminGetMetricsResponseAllOf';
 export * from './adminGetOrganizationsResponse';
@@ -49,7 +65,9 @@ export * from './adminListProjects';
 export * from './adminListProjectsResponse';
 export * from './adminOrganizationInfoResponse';
 export * from './adminOrganizationInfoResponseAllOf';
+export * from './adminToggleDataMigrationRequest';
 export * from './adminUpdateOrganizationRequest';
+export * from './adminUpdateUserPermissionsRequest';
 export * from './adminUpdateUserRequest';
 export * from './akidaEdgeLearningConfig';
 export * from './anomalyModelMetadata';
@@ -72,7 +90,10 @@ export * from './buildOrganizationOnDeviceModelRequest';
 export * from './changePasswordRequest';
 export * from './classifyJobResponse';
 export * from './classifyJobResponseAllOf';
-export * from './classifyJobResponseAllOfResult';
+export * from './classifyJobResponseAllOfAccuracy';
+export * from './classifyJobResponseAllOfAccuracyTotalSummary';
+export * from './classifyJobResponsePage';
+export * from './classifyJobResponsePageAllOf';
 export * from './classifySampleResponse';
 export * from './classifySampleResponseAllOf';
 export * from './classifySampleResponseClassification';
@@ -130,6 +151,13 @@ export * from './dSPMetadataIncludedSamples';
 export * from './dSPMetadataOutputConfig';
 export * from './dSPMetadataOutputConfigShape';
 export * from './dSPMetadataResponse';
+export * from './dataCampaign';
+export * from './dataCampaignDashboard';
+export * from './dataCampaignGraph';
+export * from './dataCampaignGraphValues';
+export * from './dataCampaignGraphXData';
+export * from './dataCampaignLink';
+export * from './dataCampaignQuery';
 export * from './dataExplorerPredictionsResponse';
 export * from './dataExplorerPredictionsResponseAllOf';
 export * from './dataExplorerSettings';
@@ -178,6 +206,7 @@ export * from './dspPerformanceAllVariantsResponseAllOf';
 export * from './dspPerformanceAllVariantsResponseAllOfPerformance';
 export * from './dspRunGraph';
 export * from './dspRunGraphAxisLabels';
+export * from './dspRunRequestWithFeatures';
 export * from './dspRunRequestWithoutFeatures';
 export * from './dspRunRequestWithoutFeaturesReadOnly';
 export * from './dspRunResponse';
@@ -194,11 +223,13 @@ export * from './dspTrainedFeaturesResponseAllOf';
 export * from './dspTrainedFeaturesResponseAllOfData';
 export * from './dspTrainedFeaturesResponseAllOfSample';
 export * from './editSampleLabelRequest';
+export * from './entitlementLimits';
 export * from './evaluateJobResponse';
 export * from './evaluateJobResponseAllOf';
 export * from './evaluateResultValue';
 export * from './exportGetUrlResponse';
 export * from './exportGetUrlResponseAllOf';
+export * from './exportKerasBlockDataRequest';
 export * from './exportOriginalDataRequest';
 export * from './exportWavDataRequest';
 export * from './findSegmentSampleRequest';
@@ -210,10 +241,17 @@ export * from './findUserResponseAllOf';
 export * from './findUserResponseAllOfUsers';
 export * from './generateFeaturesRequest';
 export * from './genericApiResponse';
+export * from './getAllImportedFromResponse';
+export * from './getAllImportedFromResponseAllOf';
+export * from './getAllImportedFromResponseAllOfData';
 export * from './getAllThirdPartyAuthResponse';
 export * from './getAllThirdPartyAuthResponseAllOf';
 export * from './getAllWhitelabelsResponse';
 export * from './getAllWhitelabelsResponseAllOf';
+export * from './getAutoSegmenterResponse';
+export * from './getAutoSegmenterResponseAllOf';
+export * from './getAutoSegmenterResponseAllOfClusters';
+export * from './getAutoSegmenterResponseAllOfItems';
 export * from './getDataExplorerFeaturesResponse';
 export * from './getDataExplorerFeaturesResponseAllOf';
 export * from './getDataExplorerSettingsResponse';
@@ -226,9 +264,9 @@ export * from './getImpulseBlocksResponse';
 export * from './getImpulseBlocksResponseAllOf';
 export * from './getImpulseResponse';
 export * from './getImpulseResponseAllOf';
-export * from './getJWTTokenRequest';
-export * from './getJWTTokenResponse';
-export * from './getJWTTokenResponseAllOf';
+export * from './getJWTRequest';
+export * from './getJWTResponse';
+export * from './getJWTResponseAllOf';
 export * from './getJobResponse';
 export * from './getJobResponseAllOf';
 export * from './getLastDeploymentBuildResponse';
@@ -236,8 +274,19 @@ export * from './getLastDeploymentBuildResponseAllOf';
 export * from './getLastDeploymentBuildResponseAllOfLastBuild';
 export * from './getNotesResponse';
 export * from './getNotesResponseAllOf';
+export * from './getOrganizationDataCampaignDashboardResponse';
+export * from './getOrganizationDataCampaignDashboardResponseAllOf';
+export * from './getOrganizationDataCampaignDashboardsResponse';
+export * from './getOrganizationDataCampaignDashboardsResponseAllOf';
+export * from './getOrganizationDataCampaignResponse';
+export * from './getOrganizationDataCampaignsResponse';
+export * from './getOrganizationDataCampaignsResponseAllOf';
+export * from './getOrganizationDataCampaignsResponseAllOfCampaigns';
 export * from './getOrganizationDataItemResponse';
 export * from './getOrganizationDataItemResponseAllOf';
+export * from './getOrganizationDataItemTransformJobsResponse';
+export * from './getOrganizationDataItemTransformJobsResponseAllOf';
+export * from './getOrganizationDataItemTransformJobsResponseAllOfTransformationJobs';
 export * from './getOrganizationDatasetResponse';
 export * from './getOrganizationDatasetResponseAllOf';
 export * from './getOrganizationPipelinesResponse';
@@ -282,6 +331,7 @@ export * from './getWhitelabelResponse';
 export * from './getWhitelabelResponseAllOf';
 export * from './hasDataExplorerFeaturesResponse';
 export * from './hasDataExplorerFeaturesResponseAllOf';
+export * from './imageInputScaling';
 export * from './impulse';
 export * from './impulseBlockVersion';
 export * from './impulseDspBlock';
@@ -291,6 +341,19 @@ export * from './impulseLearnBlock';
 export * from './inputBlock';
 export * from './inviteOrganizationMemberRequest';
 export * from './job';
+export * from './jobDetails';
+export * from './jobDetailsAllOf';
+export * from './jobDetailsResponse';
+export * from './jobDetailsResponseAllOf';
+export * from './jobFailureDetails';
+export * from './jobLogsResponse';
+export * from './jobLogsResponseAllOf';
+export * from './jobMetricsResponse';
+export * from './jobMetricsResponseAllOf';
+export * from './jobParentTypeEnum';
+export * from './jobState';
+export * from './jobStateExecutionDetails';
+export * from './jobStep';
 export * from './jobSummaryResponse';
 export * from './jobSummaryResponseAllOf';
 export * from './jobSummaryResponseAllOfSummary';
@@ -387,7 +450,9 @@ export * from './logStdoutResponseAllOfStdout';
 export * from './logWebsitePageviewRequest';
 export * from './loginResponse';
 export * from './loginResponseAllOf';
+export * from './migration';
 export * from './modelPrediction';
+export * from './modelResult';
 export * from './modelVariantStats';
 export * from './moveRawDataRequest';
 export * from './note';
@@ -421,6 +486,8 @@ export * from './organizationAddDataFolderRequest';
 export * from './organizationAddDataFolderResponse';
 export * from './organizationAddDataFolderResponseAllOf';
 export * from './organizationAddDataItemRequest';
+export * from './organizationAddDatasetRequest';
+export * from './organizationAddDatasetRequestBucket';
 export * from './organizationBulkMetadataRequest';
 export * from './organizationCreateProject';
 export * from './organizationCreateProjectRequest';
@@ -432,9 +499,15 @@ export * from './organizationCreateProjectTransformationSummary';
 export * from './organizationCreateProjectWithFiles';
 export * from './organizationCreateProjectWithFilesAllOf';
 export * from './organizationCreateProjectWithFilesAllOfFiles';
+export * from './organizationDataCampaignDiffRequest';
+export * from './organizationDataCampaignDiffRequestQueries';
+export * from './organizationDataCampaignDiffResponse';
+export * from './organizationDataCampaignDiffResponseAllOf';
+export * from './organizationDataCampaignDiffResponseAllOfQueries';
 export * from './organizationDataItem';
 export * from './organizationDataItemFiles';
 export * from './organizationDataset';
+export * from './organizationDatasetBucket';
 export * from './organizationDeployBlock';
 export * from './organizationDspBlock';
 export * from './organizationGetCreateProjectsResponse';
@@ -442,8 +515,11 @@ export * from './organizationGetCreateProjectsResponseAllOf';
 export * from './organizationGetCreateProjectsResponseAllOfJobs';
 export * from './organizationInfoResponse';
 export * from './organizationInfoResponseAllOf';
+export * from './organizationInfoResponseAllOfCliLists';
+export * from './organizationInfoResponseAllOfCliListsImageInputScalingOptions';
+export * from './organizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions';
 export * from './organizationInfoResponseAllOfDefaultComputeLimits';
-export * from './organizationInfoResponseAllOfEntitlementLimits';
+export * from './organizationMemberRole';
 export * from './organizationMetricsResponse';
 export * from './organizationMetricsResponseAllOf';
 export * from './organizationMetricsResponseAllOfMetrics';
@@ -463,6 +539,7 @@ export * from './organizationTransferLearningOperatesOn';
 export * from './organizationTransformationBlock';
 export * from './organizationUpdatePipelineBody';
 export * from './organizationUser';
+export * from './organizationUserAllOf';
 export * from './performanceCalibrationDetection';
 export * from './performanceCalibrationFalsePositive';
 export * from './performanceCalibrationGroundTruth';
@@ -477,6 +554,7 @@ export * from './performanceCalibrationSaveParameterSetRequest';
 export * from './performanceCalibrationUploadLabeledAudioRequest';
 export * from './performanceCalibrationUploadLabeledAudioResponse';
 export * from './performanceCalibrationUploadLabeledAudioResponseAllOf';
+export * from './permission';
 export * from './portalFile';
 export * from './portalInfoResponse';
 export * from './pretrainedModelTensor';
@@ -521,6 +599,8 @@ export * from './projectPrivateData';
 export * from './projectPublicData';
 export * from './projectPublicDataReadme';
 export * from './projectSampleMetadata';
+export * from './projectTrainingDataSummaryResponse';
+export * from './projectTrainingDataSummaryResponseAllOf';
 export * from './projectVersionRequest';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
@@ -534,11 +614,16 @@ export * from './requestResetPasswordRequest';
 export * from './resetPasswordRequest';
 export * from './restoreProjectFromPublicRequest';
 export * from './restoreProjectRequest';
+export * from './runAutoSegmenterRequest';
 export * from './runOrganizationPipelineResponse';
 export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
 export * from './sampleMetadata';
+export * from './saveAutoSegmenterClustersRequest';
+export * from './saveAutoSegmenterClustersRequestClusters';
+export * from './saveAutoSegmenterClustersResponse';
+export * from './saveAutoSegmenterClustersResponseAllOf';
 export * from './savePretrainedModelRequest';
 export * from './scoreTrialResponse';
 export * from './scoreTrialResponseAllOf';
@@ -582,6 +667,7 @@ export * from './themeColors';
 export * from './themeFavicon';
 export * from './themeLogos';
 export * from './thirdPartyAuth';
+export * from './timeSeriesDataPoint';
 export * from './trackObjectsRequest';
 export * from './trackObjectsResponse';
 export * from './trackObjectsResponseAllOf';
@@ -598,6 +684,8 @@ export * from './updateOrganizationAddCollaboratorRequest';
 export * from './updateOrganizationBucketRequest';
 export * from './updateOrganizationCreateEmptyProjectRequest';
 export * from './updateOrganizationCreateProjectRequest';
+export * from './updateOrganizationDataCampaignDashboardRequest';
+export * from './updateOrganizationDataCampaignRequest';
 export * from './updateOrganizationDataItemRequest';
 export * from './updateOrganizationDatasetRequest';
 export * from './updateOrganizationDeployBlockRequest';
@@ -614,6 +702,8 @@ export * from './updateThemeLogosRequest';
 export * from './updateThirdPartyAuthRequest';
 export * from './updateUserRequest';
 export * from './updateVersionRequest';
+export * from './updateWhitelabelDefaultDeploymentTargetRequest';
+export * from './updateWhitelabelDeploymentOptionsOrderRequest';
 export * from './updateWhitelabelDeploymentTargetsRequest';
 export * from './uploadAssetRequest';
 export * from './uploadAssetResponse';
@@ -641,6 +731,7 @@ export * from './verifyOrganizationBucketResponseAllOfFiles';
 export * from './verifyResetPasswordRequest';
 export * from './whitelabel';
 export * from './whitelabelAdminCreateOrganizationRequest';
+export * from './whitelabelCustomDeploymentBlocks';
 export * from './windowSettingsResponse';
 export * from './windowSettingsResponseAllOf';
 export * from './windowSettingsResponseAllOfWindowSettings';
@@ -655,6 +746,12 @@ import { AddHmacKeyRequest } from './addHmacKeyRequest';
 import { AddMemberRequest } from './addMemberRequest';
 import { AddOrganizationApiKeyRequest } from './addOrganizationApiKeyRequest';
 import { AddOrganizationBucketRequest } from './addOrganizationBucketRequest';
+import { AddOrganizationDataCampaignDashboardRequest } from './addOrganizationDataCampaignDashboardRequest';
+import { AddOrganizationDataCampaignDashboardResponse } from './addOrganizationDataCampaignDashboardResponse';
+import { AddOrganizationDataCampaignDashboardResponseAllOf } from './addOrganizationDataCampaignDashboardResponseAllOf';
+import { AddOrganizationDataCampaignRequest } from './addOrganizationDataCampaignRequest';
+import { AddOrganizationDataCampaignResponse } from './addOrganizationDataCampaignResponse';
+import { AddOrganizationDataCampaignResponseAllOf } from './addOrganizationDataCampaignResponseAllOf';
 import { AddOrganizationDeployBlockRequest } from './addOrganizationDeployBlockRequest';
 import { AddOrganizationDeployBlockResponse } from './addOrganizationDeployBlockResponse';
 import { AddOrganizationDspBlockRequest } from './addOrganizationDspBlockRequest';
@@ -667,14 +764,24 @@ import { AddOrganizationTransferLearningBlockResponse } from './addOrganizationT
 import { AddOrganizationTransformationBlockRequest } from './addOrganizationTransformationBlockRequest';
 import { AddOrganizationTransformationBlockResponse } from './addOrganizationTransformationBlockResponse';
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { AdminAddDisallowedEmailDomainRequest } from './adminAddDisallowedEmailDomainRequest';
 import { AdminAddOrUpdateSSODomainIdPsRequest } from './adminAddOrUpdateSSODomainIdPsRequest';
+import { AdminAddOrganizationUserRequest } from './adminAddOrganizationUserRequest';
+import { AdminAddOrganizationUserRequestAllOf } from './adminAddOrganizationUserRequestAllOf';
 import { AdminAddProjectUserRequest } from './adminAddProjectUserRequest';
+import { AdminAddUserRequest } from './adminAddUserRequest';
 import { AdminApiOrganization } from './adminApiOrganization';
 import { AdminApiOrganizationAllOf } from './adminApiOrganizationAllOf';
 import { AdminApiProject } from './adminApiProject';
 import { AdminApiUser } from './adminApiUser';
 import { AdminApiUserAllOf } from './adminApiUserAllOf';
 import { AdminCreateOrganizationRequest } from './adminCreateOrganizationRequest';
+import { AdminGetDataMigrationResponse } from './adminGetDataMigrationResponse';
+import { AdminGetDataMigrationResponseAllOf } from './adminGetDataMigrationResponseAllOf';
+import { AdminGetDataMigrationsResponse } from './adminGetDataMigrationsResponse';
+import { AdminGetDataMigrationsResponseAllOf } from './adminGetDataMigrationsResponseAllOf';
+import { AdminGetDisallowedEmailDomainsResponse } from './adminGetDisallowedEmailDomainsResponse';
+import { AdminGetDisallowedEmailDomainsResponseAllOf } from './adminGetDisallowedEmailDomainsResponseAllOf';
 import { AdminGetMetricsResponse } from './adminGetMetricsResponse';
 import { AdminGetMetricsResponseAllOf } from './adminGetMetricsResponseAllOf';
 import { AdminGetOrganizationsResponse } from './adminGetOrganizationsResponse';
@@ -698,7 +805,9 @@ import { AdminListProjects } from './adminListProjects';
 import { AdminListProjectsResponse } from './adminListProjectsResponse';
 import { AdminOrganizationInfoResponse } from './adminOrganizationInfoResponse';
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
+import { AdminToggleDataMigrationRequest } from './adminToggleDataMigrationRequest';
 import { AdminUpdateOrganizationRequest } from './adminUpdateOrganizationRequest';
+import { AdminUpdateUserPermissionsRequest } from './adminUpdateUserPermissionsRequest';
 import { AdminUpdateUserRequest } from './adminUpdateUserRequest';
 import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
@@ -721,7 +830,10 @@ import { BuildOrganizationOnDeviceModelRequest } from './buildOrganizationOnDevi
 import { ChangePasswordRequest } from './changePasswordRequest';
 import { ClassifyJobResponse } from './classifyJobResponse';
 import { ClassifyJobResponseAllOf } from './classifyJobResponseAllOf';
-import { ClassifyJobResponseAllOfResult } from './classifyJobResponseAllOfResult';
+import { ClassifyJobResponseAllOfAccuracy } from './classifyJobResponseAllOfAccuracy';
+import { ClassifyJobResponseAllOfAccuracyTotalSummary } from './classifyJobResponseAllOfAccuracyTotalSummary';
+import { ClassifyJobResponsePage } from './classifyJobResponsePage';
+import { ClassifyJobResponsePageAllOf } from './classifyJobResponsePageAllOf';
 import { ClassifySampleResponse } from './classifySampleResponse';
 import { ClassifySampleResponseAllOf } from './classifySampleResponseAllOf';
 import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
@@ -779,6 +891,13 @@ import { DSPMetadataIncludedSamples } from './dSPMetadataIncludedSamples';
 import { DSPMetadataOutputConfig } from './dSPMetadataOutputConfig';
 import { DSPMetadataOutputConfigShape } from './dSPMetadataOutputConfigShape';
 import { DSPMetadataResponse } from './dSPMetadataResponse';
+import { DataCampaign } from './dataCampaign';
+import { DataCampaignDashboard } from './dataCampaignDashboard';
+import { DataCampaignGraph } from './dataCampaignGraph';
+import { DataCampaignGraphValues } from './dataCampaignGraphValues';
+import { DataCampaignGraphXData } from './dataCampaignGraphXData';
+import { DataCampaignLink } from './dataCampaignLink';
+import { DataCampaignQuery } from './dataCampaignQuery';
 import { DataExplorerPredictionsResponse } from './dataExplorerPredictionsResponse';
 import { DataExplorerPredictionsResponseAllOf } from './dataExplorerPredictionsResponseAllOf';
 import { DataExplorerSettings } from './dataExplorerSettings';
@@ -827,6 +946,7 @@ import { DspPerformanceAllVariantsResponseAllOf } from './dspPerformanceAllVaria
 import { DspPerformanceAllVariantsResponseAllOfPerformance } from './dspPerformanceAllVariantsResponseAllOfPerformance';
 import { DspRunGraph } from './dspRunGraph';
 import { DspRunGraphAxisLabels } from './dspRunGraphAxisLabels';
+import { DspRunRequestWithFeatures } from './dspRunRequestWithFeatures';
 import { DspRunRequestWithoutFeatures } from './dspRunRequestWithoutFeatures';
 import { DspRunRequestWithoutFeaturesReadOnly } from './dspRunRequestWithoutFeaturesReadOnly';
 import { DspRunResponse } from './dspRunResponse';
@@ -843,11 +963,13 @@ import { DspTrainedFeaturesResponseAllOf } from './dspTrainedFeaturesResponseAll
 import { DspTrainedFeaturesResponseAllOfData } from './dspTrainedFeaturesResponseAllOfData';
 import { DspTrainedFeaturesResponseAllOfSample } from './dspTrainedFeaturesResponseAllOfSample';
 import { EditSampleLabelRequest } from './editSampleLabelRequest';
+import { EntitlementLimits } from './entitlementLimits';
 import { EvaluateJobResponse } from './evaluateJobResponse';
 import { EvaluateJobResponseAllOf } from './evaluateJobResponseAllOf';
 import { EvaluateResultValue } from './evaluateResultValue';
 import { ExportGetUrlResponse } from './exportGetUrlResponse';
 import { ExportGetUrlResponseAllOf } from './exportGetUrlResponseAllOf';
+import { ExportKerasBlockDataRequest } from './exportKerasBlockDataRequest';
 import { ExportOriginalDataRequest } from './exportOriginalDataRequest';
 import { ExportWavDataRequest } from './exportWavDataRequest';
 import { FindSegmentSampleRequest } from './findSegmentSampleRequest';
@@ -859,10 +981,17 @@ import { FindUserResponseAllOf } from './findUserResponseAllOf';
 import { FindUserResponseAllOfUsers } from './findUserResponseAllOfUsers';
 import { GenerateFeaturesRequest } from './generateFeaturesRequest';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetAllImportedFromResponse } from './getAllImportedFromResponse';
+import { GetAllImportedFromResponseAllOf } from './getAllImportedFromResponseAllOf';
+import { GetAllImportedFromResponseAllOfData } from './getAllImportedFromResponseAllOfData';
 import { GetAllThirdPartyAuthResponse } from './getAllThirdPartyAuthResponse';
 import { GetAllThirdPartyAuthResponseAllOf } from './getAllThirdPartyAuthResponseAllOf';
 import { GetAllWhitelabelsResponse } from './getAllWhitelabelsResponse';
 import { GetAllWhitelabelsResponseAllOf } from './getAllWhitelabelsResponseAllOf';
+import { GetAutoSegmenterResponse } from './getAutoSegmenterResponse';
+import { GetAutoSegmenterResponseAllOf } from './getAutoSegmenterResponseAllOf';
+import { GetAutoSegmenterResponseAllOfClusters } from './getAutoSegmenterResponseAllOfClusters';
+import { GetAutoSegmenterResponseAllOfItems } from './getAutoSegmenterResponseAllOfItems';
 import { GetDataExplorerFeaturesResponse } from './getDataExplorerFeaturesResponse';
 import { GetDataExplorerFeaturesResponseAllOf } from './getDataExplorerFeaturesResponseAllOf';
 import { GetDataExplorerSettingsResponse } from './getDataExplorerSettingsResponse';
@@ -875,9 +1004,9 @@ import { GetImpulseBlocksResponse } from './getImpulseBlocksResponse';
 import { GetImpulseBlocksResponseAllOf } from './getImpulseBlocksResponseAllOf';
 import { GetImpulseResponse } from './getImpulseResponse';
 import { GetImpulseResponseAllOf } from './getImpulseResponseAllOf';
-import { GetJWTTokenRequest } from './getJWTTokenRequest';
-import { GetJWTTokenResponse } from './getJWTTokenResponse';
-import { GetJWTTokenResponseAllOf } from './getJWTTokenResponseAllOf';
+import { GetJWTRequest } from './getJWTRequest';
+import { GetJWTResponse } from './getJWTResponse';
+import { GetJWTResponseAllOf } from './getJWTResponseAllOf';
 import { GetJobResponse } from './getJobResponse';
 import { GetJobResponseAllOf } from './getJobResponseAllOf';
 import { GetLastDeploymentBuildResponse } from './getLastDeploymentBuildResponse';
@@ -885,8 +1014,19 @@ import { GetLastDeploymentBuildResponseAllOf } from './getLastDeploymentBuildRes
 import { GetLastDeploymentBuildResponseAllOfLastBuild } from './getLastDeploymentBuildResponseAllOfLastBuild';
 import { GetNotesResponse } from './getNotesResponse';
 import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
+import { GetOrganizationDataCampaignDashboardResponse } from './getOrganizationDataCampaignDashboardResponse';
+import { GetOrganizationDataCampaignDashboardResponseAllOf } from './getOrganizationDataCampaignDashboardResponseAllOf';
+import { GetOrganizationDataCampaignDashboardsResponse } from './getOrganizationDataCampaignDashboardsResponse';
+import { GetOrganizationDataCampaignDashboardsResponseAllOf } from './getOrganizationDataCampaignDashboardsResponseAllOf';
+import { GetOrganizationDataCampaignResponse } from './getOrganizationDataCampaignResponse';
+import { GetOrganizationDataCampaignsResponse } from './getOrganizationDataCampaignsResponse';
+import { GetOrganizationDataCampaignsResponseAllOf } from './getOrganizationDataCampaignsResponseAllOf';
+import { GetOrganizationDataCampaignsResponseAllOfCampaigns } from './getOrganizationDataCampaignsResponseAllOfCampaigns';
 import { GetOrganizationDataItemResponse } from './getOrganizationDataItemResponse';
 import { GetOrganizationDataItemResponseAllOf } from './getOrganizationDataItemResponseAllOf';
+import { GetOrganizationDataItemTransformJobsResponse } from './getOrganizationDataItemTransformJobsResponse';
+import { GetOrganizationDataItemTransformJobsResponseAllOf } from './getOrganizationDataItemTransformJobsResponseAllOf';
+import { GetOrganizationDataItemTransformJobsResponseAllOfTransformationJobs } from './getOrganizationDataItemTransformJobsResponseAllOfTransformationJobs';
 import { GetOrganizationDatasetResponse } from './getOrganizationDatasetResponse';
 import { GetOrganizationDatasetResponseAllOf } from './getOrganizationDatasetResponseAllOf';
 import { GetOrganizationPipelinesResponse } from './getOrganizationPipelinesResponse';
@@ -931,6 +1071,7 @@ import { GetWhitelabelResponse } from './getWhitelabelResponse';
 import { GetWhitelabelResponseAllOf } from './getWhitelabelResponseAllOf';
 import { HasDataExplorerFeaturesResponse } from './hasDataExplorerFeaturesResponse';
 import { HasDataExplorerFeaturesResponseAllOf } from './hasDataExplorerFeaturesResponseAllOf';
+import { ImageInputScaling } from './imageInputScaling';
 import { Impulse } from './impulse';
 import { ImpulseBlockVersion } from './impulseBlockVersion';
 import { ImpulseDspBlock } from './impulseDspBlock';
@@ -940,6 +1081,19 @@ import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { InputBlock } from './inputBlock';
 import { InviteOrganizationMemberRequest } from './inviteOrganizationMemberRequest';
 import { Job } from './job';
+import { JobDetails } from './jobDetails';
+import { JobDetailsAllOf } from './jobDetailsAllOf';
+import { JobDetailsResponse } from './jobDetailsResponse';
+import { JobDetailsResponseAllOf } from './jobDetailsResponseAllOf';
+import { JobFailureDetails } from './jobFailureDetails';
+import { JobLogsResponse } from './jobLogsResponse';
+import { JobLogsResponseAllOf } from './jobLogsResponseAllOf';
+import { JobMetricsResponse } from './jobMetricsResponse';
+import { JobMetricsResponseAllOf } from './jobMetricsResponseAllOf';
+import { JobParentTypeEnum } from './jobParentTypeEnum';
+import { JobState } from './jobState';
+import { JobStateExecutionDetails } from './jobStateExecutionDetails';
+import { JobStep } from './jobStep';
 import { JobSummaryResponse } from './jobSummaryResponse';
 import { JobSummaryResponseAllOf } from './jobSummaryResponseAllOf';
 import { JobSummaryResponseAllOfSummary } from './jobSummaryResponseAllOfSummary';
@@ -1036,7 +1190,9 @@ import { LogStdoutResponseAllOfStdout } from './logStdoutResponseAllOfStdout';
 import { LogWebsitePageviewRequest } from './logWebsitePageviewRequest';
 import { LoginResponse } from './loginResponse';
 import { LoginResponseAllOf } from './loginResponseAllOf';
+import { Migration } from './migration';
 import { ModelPrediction } from './modelPrediction';
+import { ModelResult } from './modelResult';
 import { ModelVariantStats } from './modelVariantStats';
 import { MoveRawDataRequest } from './moveRawDataRequest';
 import { Note } from './note';
@@ -1070,6 +1226,8 @@ import { OrganizationAddDataFolderRequest } from './organizationAddDataFolderReq
 import { OrganizationAddDataFolderResponse } from './organizationAddDataFolderResponse';
 import { OrganizationAddDataFolderResponseAllOf } from './organizationAddDataFolderResponseAllOf';
 import { OrganizationAddDataItemRequest } from './organizationAddDataItemRequest';
+import { OrganizationAddDatasetRequest } from './organizationAddDatasetRequest';
+import { OrganizationAddDatasetRequestBucket } from './organizationAddDatasetRequestBucket';
 import { OrganizationBulkMetadataRequest } from './organizationBulkMetadataRequest';
 import { OrganizationCreateProject } from './organizationCreateProject';
 import { OrganizationCreateProjectRequest } from './organizationCreateProjectRequest';
@@ -1081,9 +1239,15 @@ import { OrganizationCreateProjectTransformationSummary } from './organizationCr
 import { OrganizationCreateProjectWithFiles } from './organizationCreateProjectWithFiles';
 import { OrganizationCreateProjectWithFilesAllOf } from './organizationCreateProjectWithFilesAllOf';
 import { OrganizationCreateProjectWithFilesAllOfFiles } from './organizationCreateProjectWithFilesAllOfFiles';
+import { OrganizationDataCampaignDiffRequest } from './organizationDataCampaignDiffRequest';
+import { OrganizationDataCampaignDiffRequestQueries } from './organizationDataCampaignDiffRequestQueries';
+import { OrganizationDataCampaignDiffResponse } from './organizationDataCampaignDiffResponse';
+import { OrganizationDataCampaignDiffResponseAllOf } from './organizationDataCampaignDiffResponseAllOf';
+import { OrganizationDataCampaignDiffResponseAllOfQueries } from './organizationDataCampaignDiffResponseAllOfQueries';
 import { OrganizationDataItem } from './organizationDataItem';
 import { OrganizationDataItemFiles } from './organizationDataItemFiles';
 import { OrganizationDataset } from './organizationDataset';
+import { OrganizationDatasetBucket } from './organizationDatasetBucket';
 import { OrganizationDeployBlock } from './organizationDeployBlock';
 import { OrganizationDspBlock } from './organizationDspBlock';
 import { OrganizationGetCreateProjectsResponse } from './organizationGetCreateProjectsResponse';
@@ -1091,8 +1255,11 @@ import { OrganizationGetCreateProjectsResponseAllOf } from './organizationGetCre
 import { OrganizationGetCreateProjectsResponseAllOfJobs } from './organizationGetCreateProjectsResponseAllOfJobs';
 import { OrganizationInfoResponse } from './organizationInfoResponse';
 import { OrganizationInfoResponseAllOf } from './organizationInfoResponseAllOf';
+import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
+import { OrganizationInfoResponseAllOfCliListsImageInputScalingOptions } from './organizationInfoResponseAllOfCliListsImageInputScalingOptions';
+import { OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions } from './organizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
+import { OrganizationMemberRole } from './organizationMemberRole';
 import { OrganizationMetricsResponse } from './organizationMetricsResponse';
 import { OrganizationMetricsResponseAllOf } from './organizationMetricsResponseAllOf';
 import { OrganizationMetricsResponseAllOfMetrics } from './organizationMetricsResponseAllOfMetrics';
@@ -1112,6 +1279,7 @@ import { OrganizationTransferLearningOperatesOn } from './organizationTransferLe
 import { OrganizationTransformationBlock } from './organizationTransformationBlock';
 import { OrganizationUpdatePipelineBody } from './organizationUpdatePipelineBody';
 import { OrganizationUser } from './organizationUser';
+import { OrganizationUserAllOf } from './organizationUserAllOf';
 import { PerformanceCalibrationDetection } from './performanceCalibrationDetection';
 import { PerformanceCalibrationFalsePositive } from './performanceCalibrationFalsePositive';
 import { PerformanceCalibrationGroundTruth } from './performanceCalibrationGroundTruth';
@@ -1126,6 +1294,7 @@ import { PerformanceCalibrationSaveParameterSetRequest } from './performanceCali
 import { PerformanceCalibrationUploadLabeledAudioRequest } from './performanceCalibrationUploadLabeledAudioRequest';
 import { PerformanceCalibrationUploadLabeledAudioResponse } from './performanceCalibrationUploadLabeledAudioResponse';
 import { PerformanceCalibrationUploadLabeledAudioResponseAllOf } from './performanceCalibrationUploadLabeledAudioResponseAllOf';
+import { Permission } from './permission';
 import { PortalFile } from './portalFile';
 import { PortalInfoResponse } from './portalInfoResponse';
 import { PretrainedModelTensor } from './pretrainedModelTensor';
@@ -1170,6 +1339,8 @@ import { ProjectPrivateData } from './projectPrivateData';
 import { ProjectPublicData } from './projectPublicData';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 import { ProjectSampleMetadata } from './projectSampleMetadata';
+import { ProjectTrainingDataSummaryResponse } from './projectTrainingDataSummaryResponse';
+import { ProjectTrainingDataSummaryResponseAllOf } from './projectTrainingDataSummaryResponseAllOf';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
@@ -1183,11 +1354,16 @@ import { RequestResetPasswordRequest } from './requestResetPasswordRequest';
 import { ResetPasswordRequest } from './resetPasswordRequest';
 import { RestoreProjectFromPublicRequest } from './restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from './restoreProjectRequest';
+import { RunAutoSegmenterRequest } from './runAutoSegmenterRequest';
 import { RunOrganizationPipelineResponse } from './runOrganizationPipelineResponse';
 import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineResponseAllOf';
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
 import { SampleMetadata } from './sampleMetadata';
+import { SaveAutoSegmenterClustersRequest } from './saveAutoSegmenterClustersRequest';
+import { SaveAutoSegmenterClustersRequestClusters } from './saveAutoSegmenterClustersRequestClusters';
+import { SaveAutoSegmenterClustersResponse } from './saveAutoSegmenterClustersResponse';
+import { SaveAutoSegmenterClustersResponseAllOf } from './saveAutoSegmenterClustersResponseAllOf';
 import { SavePretrainedModelRequest } from './savePretrainedModelRequest';
 import { ScoreTrialResponse } from './scoreTrialResponse';
 import { ScoreTrialResponseAllOf } from './scoreTrialResponseAllOf';
@@ -1231,6 +1407,7 @@ import { ThemeColors } from './themeColors';
 import { ThemeFavicon } from './themeFavicon';
 import { ThemeLogos } from './themeLogos';
 import { ThirdPartyAuth } from './thirdPartyAuth';
+import { TimeSeriesDataPoint } from './timeSeriesDataPoint';
 import { TrackObjectsRequest } from './trackObjectsRequest';
 import { TrackObjectsResponse } from './trackObjectsResponse';
 import { TrackObjectsResponseAllOf } from './trackObjectsResponseAllOf';
@@ -1247,6 +1424,8 @@ import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAd
 import { UpdateOrganizationBucketRequest } from './updateOrganizationBucketRequest';
 import { UpdateOrganizationCreateEmptyProjectRequest } from './updateOrganizationCreateEmptyProjectRequest';
 import { UpdateOrganizationCreateProjectRequest } from './updateOrganizationCreateProjectRequest';
+import { UpdateOrganizationDataCampaignDashboardRequest } from './updateOrganizationDataCampaignDashboardRequest';
+import { UpdateOrganizationDataCampaignRequest } from './updateOrganizationDataCampaignRequest';
 import { UpdateOrganizationDataItemRequest } from './updateOrganizationDataItemRequest';
 import { UpdateOrganizationDatasetRequest } from './updateOrganizationDatasetRequest';
 import { UpdateOrganizationDeployBlockRequest } from './updateOrganizationDeployBlockRequest';
@@ -1263,6 +1442,8 @@ import { UpdateThemeLogosRequest } from './updateThemeLogosRequest';
 import { UpdateThirdPartyAuthRequest } from './updateThirdPartyAuthRequest';
 import { UpdateUserRequest } from './updateUserRequest';
 import { UpdateVersionRequest } from './updateVersionRequest';
+import { UpdateWhitelabelDefaultDeploymentTargetRequest } from './updateWhitelabelDefaultDeploymentTargetRequest';
+import { UpdateWhitelabelDeploymentOptionsOrderRequest } from './updateWhitelabelDeploymentOptionsOrderRequest';
 import { UpdateWhitelabelDeploymentTargetsRequest } from './updateWhitelabelDeploymentTargetsRequest';
 import { UploadAssetRequest } from './uploadAssetRequest';
 import { UploadAssetResponse } from './uploadAssetResponse';
@@ -1290,6 +1471,7 @@ import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganization
 import { VerifyResetPasswordRequest } from './verifyResetPasswordRequest';
 import { Whitelabel } from './whitelabel';
 import { WhitelabelAdminCreateOrganizationRequest } from './whitelabelAdminCreateOrganizationRequest';
+import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
 import { WindowSettingsResponse } from './windowSettingsResponse';
 import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
 import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
@@ -1308,8 +1490,8 @@ let primitives = [
 
 let enumsMap: {[index: string]: any} = {
     "AddApiKeyRequestRoleEnum": "AddApiKeyRequestRoleEnum",
-    "AddMemberRequestRoleEnum": "AddMemberRequestRoleEnum",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
+    "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
     "AddOrganizationDeployBlockRequestCategoryEnum": "AddOrganizationDeployBlockRequestCategoryEnum",
     "AddOrganizationTransformationBlockRequestOperatesOnEnum": "AddOrganizationTransformationBlockRequestOperatesOnEnum",
     "AdminApiProjectTierEnum": "AdminApiProjectTierEnum",
@@ -1324,6 +1506,8 @@ let enumsMap: {[index: string]: any} = {
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
     "DSPGroupItemShowIfOperatorEnum": "DSPGroupItemShowIfOperatorEnum",
     "DSPMetadataOutputConfigTypeEnum": "DSPMetadataOutputConfigTypeEnum",
+    "DataCampaignDashboardWhenToEmailEnum": "DataCampaignDashboardWhenToEmailEnum",
+    "DataCampaignGraphXDataDataTypeEnum": "DataCampaignGraphXDataDataTypeEnum",
     "DataExplorerPredictionsResponseClassificationTypeEnum": "DataExplorerPredictionsResponseClassificationTypeEnum",
     "DataExplorerPredictionsResponseAllOfClassificationTypeEnum": "DataExplorerPredictionsResponseAllOfClassificationTypeEnum",
     "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
@@ -1345,9 +1529,10 @@ let enumsMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum",
     "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum",
     "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum",
-    "GetJWTTokenRequestSsoTypeEnum": "GetJWTTokenRequestSsoTypeEnum",
+    "GetJWTRequestSsoTypeEnum": "GetJWTRequestSsoTypeEnum",
     "GetUserResponseTierEnum": "GetUserResponseTierEnum",
     "GetUserResponseAllOfTierEnum": "GetUserResponseAllOfTierEnum",
+    "ImageInputScaling": "ImageInputScaling",
     "ImpulseBlockVersionResizeModeEnum": "ImpulseBlockVersionResizeModeEnum",
     "ImpulseBlockVersionResizeMethodEnum": "ImpulseBlockVersionResizeMethodEnum",
     "ImpulseBlockVersionCropAnchorEnum": "ImpulseBlockVersionCropAnchorEnum",
@@ -1356,7 +1541,7 @@ let enumsMap: {[index: string]: any} = {
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",
     "InputBlockTypeEnum": "InputBlockTypeEnum",
-    "InviteOrganizationMemberRequestRoleEnum": "InviteOrganizationMemberRequestRoleEnum",
+    "JobParentTypeEnum": "JobParentTypeEnum",
     "KerasModelMetadataModeEnum": "KerasModelMetadataModeEnum",
     "KerasModelMetadataAllOfModeEnum": "KerasModelMetadataAllOfModeEnum",
     "KerasModelMetadataMetricsVisualizationEnum": "KerasModelMetadataMetricsVisualizationEnum",
@@ -1368,6 +1553,7 @@ let enumsMap: {[index: string]: any} = {
     "ListApiKeysResponseAllOfApiKeysRoleEnum": "ListApiKeysResponseAllOfApiKeysRoleEnum",
     "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum",
     "LogStdoutResponseAllOfStdoutLogLevelEnum": "LogStdoutResponseAllOfStdoutLogLevelEnum",
+    "MigrationStateEnum": "MigrationStateEnum",
     "MoveRawDataRequestNewCategoryEnum": "MoveRawDataRequestNewCategoryEnum",
     "ObjectDetectionAutoLabelRequestNeuralNetworkEnum": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum",
     "ObjectDetectionLastLayer": "ObjectDetectionLastLayer",
@@ -1391,6 +1577,7 @@ let enumsMap: {[index: string]: any} = {
     "OrganizationCreateProjectWithFilesOperatesOnEnum": "OrganizationCreateProjectWithFilesOperatesOnEnum",
     "OrganizationDeployBlockCategoryEnum": "OrganizationDeployBlockCategoryEnum",
     "OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum": "OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum",
+    "OrganizationMemberRole": "OrganizationMemberRole",
     "OrganizationPipelineWhenToEmailEnum": "OrganizationPipelineWhenToEmailEnum",
     "OrganizationPipelineRunStepUploadTypeEnum": "OrganizationPipelineRunStepUploadTypeEnum",
     "OrganizationPipelineRunStepCategoryEnum": "OrganizationPipelineRunStepCategoryEnum",
@@ -1399,10 +1586,10 @@ let enumsMap: {[index: string]: any} = {
     "OrganizationTransferLearningOperatesOn": "OrganizationTransferLearningOperatesOn",
     "OrganizationTransformationBlockOperatesOnEnum": "OrganizationTransformationBlockOperatesOnEnum",
     "OrganizationUpdatePipelineBodyWhenToEmailEnum": "OrganizationUpdatePipelineBodyWhenToEmailEnum",
-    "OrganizationUserRoleEnum": "OrganizationUserRoleEnum",
     "PerformanceCalibrationFalsePositiveTypeEnum": "PerformanceCalibrationFalsePositiveTypeEnum",
     "PerformanceCalibrationGroundTruthTypeEnum": "PerformanceCalibrationGroundTruthTypeEnum",
     "PerformanceCalibrationParametersTypeEnum": "PerformanceCalibrationParametersTypeEnum",
+    "Permission": "Permission",
     "PretrainedModelTensorDataTypeEnum": "PretrainedModelTensorDataTypeEnum",
     "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
@@ -1415,11 +1602,11 @@ let enumsMap: {[index: string]: any} = {
     "SampleProjectLabelingMethodEnum": "SampleProjectLabelingMethodEnum",
     "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
-    "SetMemberRoleRequestRoleEnum": "SetMemberRoleRequestRoleEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
     "TransferLearningModelBlockTypeEnum": "TransferLearningModelBlockTypeEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
     "TransformationJobStatusEnum": "TransformationJobStatusEnum",
+    "UpdateOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "UpdateOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
     "UpdateOrganizationDeployBlockRequestCategoryEnum": "UpdateOrganizationDeployBlockRequestCategoryEnum",
     "UpdateOrganizationTransformationBlockRequestOperatesOnEnum": "UpdateOrganizationTransformationBlockRequestOperatesOnEnum",
     "UpdateProjectRequestLabelingMethodEnum": "UpdateProjectRequestLabelingMethodEnum",
@@ -1437,6 +1624,12 @@ let typeMap: {[index: string]: any} = {
     "AddMemberRequest": AddMemberRequest,
     "AddOrganizationApiKeyRequest": AddOrganizationApiKeyRequest,
     "AddOrganizationBucketRequest": AddOrganizationBucketRequest,
+    "AddOrganizationDataCampaignDashboardRequest": AddOrganizationDataCampaignDashboardRequest,
+    "AddOrganizationDataCampaignDashboardResponse": AddOrganizationDataCampaignDashboardResponse,
+    "AddOrganizationDataCampaignDashboardResponseAllOf": AddOrganizationDataCampaignDashboardResponseAllOf,
+    "AddOrganizationDataCampaignRequest": AddOrganizationDataCampaignRequest,
+    "AddOrganizationDataCampaignResponse": AddOrganizationDataCampaignResponse,
+    "AddOrganizationDataCampaignResponseAllOf": AddOrganizationDataCampaignResponseAllOf,
     "AddOrganizationDeployBlockRequest": AddOrganizationDeployBlockRequest,
     "AddOrganizationDeployBlockResponse": AddOrganizationDeployBlockResponse,
     "AddOrganizationDspBlockRequest": AddOrganizationDspBlockRequest,
@@ -1449,14 +1642,24 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationTransformationBlockRequest": AddOrganizationTransformationBlockRequest,
     "AddOrganizationTransformationBlockResponse": AddOrganizationTransformationBlockResponse,
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
+    "AdminAddDisallowedEmailDomainRequest": AdminAddDisallowedEmailDomainRequest,
     "AdminAddOrUpdateSSODomainIdPsRequest": AdminAddOrUpdateSSODomainIdPsRequest,
+    "AdminAddOrganizationUserRequest": AdminAddOrganizationUserRequest,
+    "AdminAddOrganizationUserRequestAllOf": AdminAddOrganizationUserRequestAllOf,
     "AdminAddProjectUserRequest": AdminAddProjectUserRequest,
+    "AdminAddUserRequest": AdminAddUserRequest,
     "AdminApiOrganization": AdminApiOrganization,
     "AdminApiOrganizationAllOf": AdminApiOrganizationAllOf,
     "AdminApiProject": AdminApiProject,
     "AdminApiUser": AdminApiUser,
     "AdminApiUserAllOf": AdminApiUserAllOf,
     "AdminCreateOrganizationRequest": AdminCreateOrganizationRequest,
+    "AdminGetDataMigrationResponse": AdminGetDataMigrationResponse,
+    "AdminGetDataMigrationResponseAllOf": AdminGetDataMigrationResponseAllOf,
+    "AdminGetDataMigrationsResponse": AdminGetDataMigrationsResponse,
+    "AdminGetDataMigrationsResponseAllOf": AdminGetDataMigrationsResponseAllOf,
+    "AdminGetDisallowedEmailDomainsResponse": AdminGetDisallowedEmailDomainsResponse,
+    "AdminGetDisallowedEmailDomainsResponseAllOf": AdminGetDisallowedEmailDomainsResponseAllOf,
     "AdminGetMetricsResponse": AdminGetMetricsResponse,
     "AdminGetMetricsResponseAllOf": AdminGetMetricsResponseAllOf,
     "AdminGetOrganizationsResponse": AdminGetOrganizationsResponse,
@@ -1480,7 +1683,9 @@ let typeMap: {[index: string]: any} = {
     "AdminListProjectsResponse": AdminListProjectsResponse,
     "AdminOrganizationInfoResponse": AdminOrganizationInfoResponse,
     "AdminOrganizationInfoResponseAllOf": AdminOrganizationInfoResponseAllOf,
+    "AdminToggleDataMigrationRequest": AdminToggleDataMigrationRequest,
     "AdminUpdateOrganizationRequest": AdminUpdateOrganizationRequest,
+    "AdminUpdateUserPermissionsRequest": AdminUpdateUserPermissionsRequest,
     "AdminUpdateUserRequest": AdminUpdateUserRequest,
     "AkidaEdgeLearningConfig": AkidaEdgeLearningConfig,
     "AnomalyModelMetadata": AnomalyModelMetadata,
@@ -1502,7 +1707,10 @@ let typeMap: {[index: string]: any} = {
     "ChangePasswordRequest": ChangePasswordRequest,
     "ClassifyJobResponse": ClassifyJobResponse,
     "ClassifyJobResponseAllOf": ClassifyJobResponseAllOf,
-    "ClassifyJobResponseAllOfResult": ClassifyJobResponseAllOfResult,
+    "ClassifyJobResponseAllOfAccuracy": ClassifyJobResponseAllOfAccuracy,
+    "ClassifyJobResponseAllOfAccuracyTotalSummary": ClassifyJobResponseAllOfAccuracyTotalSummary,
+    "ClassifyJobResponsePage": ClassifyJobResponsePage,
+    "ClassifyJobResponsePageAllOf": ClassifyJobResponsePageAllOf,
     "ClassifySampleResponse": ClassifySampleResponse,
     "ClassifySampleResponseAllOf": ClassifySampleResponseAllOf,
     "ClassifySampleResponseClassification": ClassifySampleResponseClassification,
@@ -1560,6 +1768,13 @@ let typeMap: {[index: string]: any} = {
     "DSPMetadataOutputConfig": DSPMetadataOutputConfig,
     "DSPMetadataOutputConfigShape": DSPMetadataOutputConfigShape,
     "DSPMetadataResponse": DSPMetadataResponse,
+    "DataCampaign": DataCampaign,
+    "DataCampaignDashboard": DataCampaignDashboard,
+    "DataCampaignGraph": DataCampaignGraph,
+    "DataCampaignGraphValues": DataCampaignGraphValues,
+    "DataCampaignGraphXData": DataCampaignGraphXData,
+    "DataCampaignLink": DataCampaignLink,
+    "DataCampaignQuery": DataCampaignQuery,
     "DataExplorerPredictionsResponse": DataExplorerPredictionsResponse,
     "DataExplorerPredictionsResponseAllOf": DataExplorerPredictionsResponseAllOf,
     "DataExplorerSettings": DataExplorerSettings,
@@ -1607,6 +1822,7 @@ let typeMap: {[index: string]: any} = {
     "DspPerformanceAllVariantsResponseAllOfPerformance": DspPerformanceAllVariantsResponseAllOfPerformance,
     "DspRunGraph": DspRunGraph,
     "DspRunGraphAxisLabels": DspRunGraphAxisLabels,
+    "DspRunRequestWithFeatures": DspRunRequestWithFeatures,
     "DspRunRequestWithoutFeatures": DspRunRequestWithoutFeatures,
     "DspRunRequestWithoutFeaturesReadOnly": DspRunRequestWithoutFeaturesReadOnly,
     "DspRunResponse": DspRunResponse,
@@ -1623,11 +1839,13 @@ let typeMap: {[index: string]: any} = {
     "DspTrainedFeaturesResponseAllOfData": DspTrainedFeaturesResponseAllOfData,
     "DspTrainedFeaturesResponseAllOfSample": DspTrainedFeaturesResponseAllOfSample,
     "EditSampleLabelRequest": EditSampleLabelRequest,
+    "EntitlementLimits": EntitlementLimits,
     "EvaluateJobResponse": EvaluateJobResponse,
     "EvaluateJobResponseAllOf": EvaluateJobResponseAllOf,
     "EvaluateResultValue": EvaluateResultValue,
     "ExportGetUrlResponse": ExportGetUrlResponse,
     "ExportGetUrlResponseAllOf": ExportGetUrlResponseAllOf,
+    "ExportKerasBlockDataRequest": ExportKerasBlockDataRequest,
     "ExportOriginalDataRequest": ExportOriginalDataRequest,
     "ExportWavDataRequest": ExportWavDataRequest,
     "FindSegmentSampleRequest": FindSegmentSampleRequest,
@@ -1639,10 +1857,17 @@ let typeMap: {[index: string]: any} = {
     "FindUserResponseAllOfUsers": FindUserResponseAllOfUsers,
     "GenerateFeaturesRequest": GenerateFeaturesRequest,
     "GenericApiResponse": GenericApiResponse,
+    "GetAllImportedFromResponse": GetAllImportedFromResponse,
+    "GetAllImportedFromResponseAllOf": GetAllImportedFromResponseAllOf,
+    "GetAllImportedFromResponseAllOfData": GetAllImportedFromResponseAllOfData,
     "GetAllThirdPartyAuthResponse": GetAllThirdPartyAuthResponse,
     "GetAllThirdPartyAuthResponseAllOf": GetAllThirdPartyAuthResponseAllOf,
     "GetAllWhitelabelsResponse": GetAllWhitelabelsResponse,
     "GetAllWhitelabelsResponseAllOf": GetAllWhitelabelsResponseAllOf,
+    "GetAutoSegmenterResponse": GetAutoSegmenterResponse,
+    "GetAutoSegmenterResponseAllOf": GetAutoSegmenterResponseAllOf,
+    "GetAutoSegmenterResponseAllOfClusters": GetAutoSegmenterResponseAllOfClusters,
+    "GetAutoSegmenterResponseAllOfItems": GetAutoSegmenterResponseAllOfItems,
     "GetDataExplorerFeaturesResponse": GetDataExplorerFeaturesResponse,
     "GetDataExplorerFeaturesResponseAllOf": GetDataExplorerFeaturesResponseAllOf,
     "GetDataExplorerSettingsResponse": GetDataExplorerSettingsResponse,
@@ -1655,9 +1880,9 @@ let typeMap: {[index: string]: any} = {
     "GetImpulseBlocksResponseAllOf": GetImpulseBlocksResponseAllOf,
     "GetImpulseResponse": GetImpulseResponse,
     "GetImpulseResponseAllOf": GetImpulseResponseAllOf,
-    "GetJWTTokenRequest": GetJWTTokenRequest,
-    "GetJWTTokenResponse": GetJWTTokenResponse,
-    "GetJWTTokenResponseAllOf": GetJWTTokenResponseAllOf,
+    "GetJWTRequest": GetJWTRequest,
+    "GetJWTResponse": GetJWTResponse,
+    "GetJWTResponseAllOf": GetJWTResponseAllOf,
     "GetJobResponse": GetJobResponse,
     "GetJobResponseAllOf": GetJobResponseAllOf,
     "GetLastDeploymentBuildResponse": GetLastDeploymentBuildResponse,
@@ -1665,8 +1890,19 @@ let typeMap: {[index: string]: any} = {
     "GetLastDeploymentBuildResponseAllOfLastBuild": GetLastDeploymentBuildResponseAllOfLastBuild,
     "GetNotesResponse": GetNotesResponse,
     "GetNotesResponseAllOf": GetNotesResponseAllOf,
+    "GetOrganizationDataCampaignDashboardResponse": GetOrganizationDataCampaignDashboardResponse,
+    "GetOrganizationDataCampaignDashboardResponseAllOf": GetOrganizationDataCampaignDashboardResponseAllOf,
+    "GetOrganizationDataCampaignDashboardsResponse": GetOrganizationDataCampaignDashboardsResponse,
+    "GetOrganizationDataCampaignDashboardsResponseAllOf": GetOrganizationDataCampaignDashboardsResponseAllOf,
+    "GetOrganizationDataCampaignResponse": GetOrganizationDataCampaignResponse,
+    "GetOrganizationDataCampaignsResponse": GetOrganizationDataCampaignsResponse,
+    "GetOrganizationDataCampaignsResponseAllOf": GetOrganizationDataCampaignsResponseAllOf,
+    "GetOrganizationDataCampaignsResponseAllOfCampaigns": GetOrganizationDataCampaignsResponseAllOfCampaigns,
     "GetOrganizationDataItemResponse": GetOrganizationDataItemResponse,
     "GetOrganizationDataItemResponseAllOf": GetOrganizationDataItemResponseAllOf,
+    "GetOrganizationDataItemTransformJobsResponse": GetOrganizationDataItemTransformJobsResponse,
+    "GetOrganizationDataItemTransformJobsResponseAllOf": GetOrganizationDataItemTransformJobsResponseAllOf,
+    "GetOrganizationDataItemTransformJobsResponseAllOfTransformationJobs": GetOrganizationDataItemTransformJobsResponseAllOfTransformationJobs,
     "GetOrganizationDatasetResponse": GetOrganizationDatasetResponse,
     "GetOrganizationDatasetResponseAllOf": GetOrganizationDatasetResponseAllOf,
     "GetOrganizationPipelinesResponse": GetOrganizationPipelinesResponse,
@@ -1720,6 +1956,18 @@ let typeMap: {[index: string]: any} = {
     "InputBlock": InputBlock,
     "InviteOrganizationMemberRequest": InviteOrganizationMemberRequest,
     "Job": Job,
+    "JobDetails": JobDetails,
+    "JobDetailsAllOf": JobDetailsAllOf,
+    "JobDetailsResponse": JobDetailsResponse,
+    "JobDetailsResponseAllOf": JobDetailsResponseAllOf,
+    "JobFailureDetails": JobFailureDetails,
+    "JobLogsResponse": JobLogsResponse,
+    "JobLogsResponseAllOf": JobLogsResponseAllOf,
+    "JobMetricsResponse": JobMetricsResponse,
+    "JobMetricsResponseAllOf": JobMetricsResponseAllOf,
+    "JobState": JobState,
+    "JobStateExecutionDetails": JobStateExecutionDetails,
+    "JobStep": JobStep,
     "JobSummaryResponse": JobSummaryResponse,
     "JobSummaryResponseAllOf": JobSummaryResponseAllOf,
     "JobSummaryResponseAllOfSummary": JobSummaryResponseAllOfSummary,
@@ -1813,7 +2061,9 @@ let typeMap: {[index: string]: any} = {
     "LogWebsitePageviewRequest": LogWebsitePageviewRequest,
     "LoginResponse": LoginResponse,
     "LoginResponseAllOf": LoginResponseAllOf,
+    "Migration": Migration,
     "ModelPrediction": ModelPrediction,
+    "ModelResult": ModelResult,
     "ModelVariantStats": ModelVariantStats,
     "MoveRawDataRequest": MoveRawDataRequest,
     "Note": Note,
@@ -1846,6 +2096,8 @@ let typeMap: {[index: string]: any} = {
     "OrganizationAddDataFolderResponse": OrganizationAddDataFolderResponse,
     "OrganizationAddDataFolderResponseAllOf": OrganizationAddDataFolderResponseAllOf,
     "OrganizationAddDataItemRequest": OrganizationAddDataItemRequest,
+    "OrganizationAddDatasetRequest": OrganizationAddDatasetRequest,
+    "OrganizationAddDatasetRequestBucket": OrganizationAddDatasetRequestBucket,
     "OrganizationBulkMetadataRequest": OrganizationBulkMetadataRequest,
     "OrganizationCreateProject": OrganizationCreateProject,
     "OrganizationCreateProjectRequest": OrganizationCreateProjectRequest,
@@ -1857,9 +2109,15 @@ let typeMap: {[index: string]: any} = {
     "OrganizationCreateProjectWithFiles": OrganizationCreateProjectWithFiles,
     "OrganizationCreateProjectWithFilesAllOf": OrganizationCreateProjectWithFilesAllOf,
     "OrganizationCreateProjectWithFilesAllOfFiles": OrganizationCreateProjectWithFilesAllOfFiles,
+    "OrganizationDataCampaignDiffRequest": OrganizationDataCampaignDiffRequest,
+    "OrganizationDataCampaignDiffRequestQueries": OrganizationDataCampaignDiffRequestQueries,
+    "OrganizationDataCampaignDiffResponse": OrganizationDataCampaignDiffResponse,
+    "OrganizationDataCampaignDiffResponseAllOf": OrganizationDataCampaignDiffResponseAllOf,
+    "OrganizationDataCampaignDiffResponseAllOfQueries": OrganizationDataCampaignDiffResponseAllOfQueries,
     "OrganizationDataItem": OrganizationDataItem,
     "OrganizationDataItemFiles": OrganizationDataItemFiles,
     "OrganizationDataset": OrganizationDataset,
+    "OrganizationDatasetBucket": OrganizationDatasetBucket,
     "OrganizationDeployBlock": OrganizationDeployBlock,
     "OrganizationDspBlock": OrganizationDspBlock,
     "OrganizationGetCreateProjectsResponse": OrganizationGetCreateProjectsResponse,
@@ -1867,8 +2125,10 @@ let typeMap: {[index: string]: any} = {
     "OrganizationGetCreateProjectsResponseAllOfJobs": OrganizationGetCreateProjectsResponseAllOfJobs,
     "OrganizationInfoResponse": OrganizationInfoResponse,
     "OrganizationInfoResponseAllOf": OrganizationInfoResponseAllOf,
+    "OrganizationInfoResponseAllOfCliLists": OrganizationInfoResponseAllOfCliLists,
+    "OrganizationInfoResponseAllOfCliListsImageInputScalingOptions": OrganizationInfoResponseAllOfCliListsImageInputScalingOptions,
+    "OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions": OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions,
     "OrganizationInfoResponseAllOfDefaultComputeLimits": OrganizationInfoResponseAllOfDefaultComputeLimits,
-    "OrganizationInfoResponseAllOfEntitlementLimits": OrganizationInfoResponseAllOfEntitlementLimits,
     "OrganizationMetricsResponse": OrganizationMetricsResponse,
     "OrganizationMetricsResponseAllOf": OrganizationMetricsResponseAllOf,
     "OrganizationMetricsResponseAllOfMetrics": OrganizationMetricsResponseAllOfMetrics,
@@ -1887,6 +2147,7 @@ let typeMap: {[index: string]: any} = {
     "OrganizationTransformationBlock": OrganizationTransformationBlock,
     "OrganizationUpdatePipelineBody": OrganizationUpdatePipelineBody,
     "OrganizationUser": OrganizationUser,
+    "OrganizationUserAllOf": OrganizationUserAllOf,
     "PerformanceCalibrationDetection": PerformanceCalibrationDetection,
     "PerformanceCalibrationFalsePositive": PerformanceCalibrationFalsePositive,
     "PerformanceCalibrationGroundTruth": PerformanceCalibrationGroundTruth,
@@ -1945,6 +2206,8 @@ let typeMap: {[index: string]: any} = {
     "ProjectPublicData": ProjectPublicData,
     "ProjectPublicDataReadme": ProjectPublicDataReadme,
     "ProjectSampleMetadata": ProjectSampleMetadata,
+    "ProjectTrainingDataSummaryResponse": ProjectTrainingDataSummaryResponse,
+    "ProjectTrainingDataSummaryResponseAllOf": ProjectTrainingDataSummaryResponseAllOf,
     "ProjectVersionRequest": ProjectVersionRequest,
     "RawSampleData": RawSampleData,
     "RawSamplePayload": RawSamplePayload,
@@ -1958,11 +2221,16 @@ let typeMap: {[index: string]: any} = {
     "ResetPasswordRequest": ResetPasswordRequest,
     "RestoreProjectFromPublicRequest": RestoreProjectFromPublicRequest,
     "RestoreProjectRequest": RestoreProjectRequest,
+    "RunAutoSegmenterRequest": RunAutoSegmenterRequest,
     "RunOrganizationPipelineResponse": RunOrganizationPipelineResponse,
     "RunOrganizationPipelineResponseAllOf": RunOrganizationPipelineResponseAllOf,
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
     "SampleMetadata": SampleMetadata,
+    "SaveAutoSegmenterClustersRequest": SaveAutoSegmenterClustersRequest,
+    "SaveAutoSegmenterClustersRequestClusters": SaveAutoSegmenterClustersRequestClusters,
+    "SaveAutoSegmenterClustersResponse": SaveAutoSegmenterClustersResponse,
+    "SaveAutoSegmenterClustersResponseAllOf": SaveAutoSegmenterClustersResponseAllOf,
     "SavePretrainedModelRequest": SavePretrainedModelRequest,
     "ScoreTrialResponse": ScoreTrialResponse,
     "ScoreTrialResponseAllOf": ScoreTrialResponseAllOf,
@@ -2006,6 +2274,7 @@ let typeMap: {[index: string]: any} = {
     "ThemeFavicon": ThemeFavicon,
     "ThemeLogos": ThemeLogos,
     "ThirdPartyAuth": ThirdPartyAuth,
+    "TimeSeriesDataPoint": TimeSeriesDataPoint,
     "TrackObjectsRequest": TrackObjectsRequest,
     "TrackObjectsResponse": TrackObjectsResponse,
     "TrackObjectsResponseAllOf": TrackObjectsResponseAllOf,
@@ -2021,6 +2290,8 @@ let typeMap: {[index: string]: any} = {
     "UpdateOrganizationBucketRequest": UpdateOrganizationBucketRequest,
     "UpdateOrganizationCreateEmptyProjectRequest": UpdateOrganizationCreateEmptyProjectRequest,
     "UpdateOrganizationCreateProjectRequest": UpdateOrganizationCreateProjectRequest,
+    "UpdateOrganizationDataCampaignDashboardRequest": UpdateOrganizationDataCampaignDashboardRequest,
+    "UpdateOrganizationDataCampaignRequest": UpdateOrganizationDataCampaignRequest,
     "UpdateOrganizationDataItemRequest": UpdateOrganizationDataItemRequest,
     "UpdateOrganizationDatasetRequest": UpdateOrganizationDatasetRequest,
     "UpdateOrganizationDeployBlockRequest": UpdateOrganizationDeployBlockRequest,
@@ -2037,6 +2308,8 @@ let typeMap: {[index: string]: any} = {
     "UpdateThirdPartyAuthRequest": UpdateThirdPartyAuthRequest,
     "UpdateUserRequest": UpdateUserRequest,
     "UpdateVersionRequest": UpdateVersionRequest,
+    "UpdateWhitelabelDefaultDeploymentTargetRequest": UpdateWhitelabelDefaultDeploymentTargetRequest,
+    "UpdateWhitelabelDeploymentOptionsOrderRequest": UpdateWhitelabelDeploymentOptionsOrderRequest,
     "UpdateWhitelabelDeploymentTargetsRequest": UpdateWhitelabelDeploymentTargetsRequest,
     "UploadAssetRequest": UploadAssetRequest,
     "UploadAssetResponse": UploadAssetResponse,
@@ -2064,6 +2337,7 @@ let typeMap: {[index: string]: any} = {
     "VerifyResetPasswordRequest": VerifyResetPasswordRequest,
     "Whitelabel": Whitelabel,
     "WhitelabelAdminCreateOrganizationRequest": WhitelabelAdminCreateOrganizationRequest,
+    "WhitelabelCustomDeploymentBlocks": WhitelabelCustomDeploymentBlocks,
     "WindowSettingsResponse": WindowSettingsResponse,
     "WindowSettingsResponseAllOf": WindowSettingsResponseAllOf,
     "WindowSettingsResponseAllOfWindowSettings": WindowSettingsResponseAllOfWindowSettings,

@@ -25,6 +25,8 @@ export class OrganizationPipelineRunStep {
     'builtinTransformationBlock'?: object;
     'category'?: OrganizationPipelineRunStepCategoryEnum;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'label'?: string;
     'extraCliArguments'?: string;
 
@@ -89,6 +91,16 @@ export class OrganizationPipelineRunStep {
         {
             "name": "outputDatasetName",
             "baseName": "outputDatasetName",
+            "type": "string"
+        },
+        {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
             "type": "string"
         },
         {

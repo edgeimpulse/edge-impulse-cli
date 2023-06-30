@@ -28,6 +28,8 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'transformationBlockName'?: string;
     'created': Date;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'totalDownloadFileCount': number;
     'totalDownloadFileSize': number;
     'totalDownloadFileSizeString': string;
@@ -109,6 +111,16 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
         {
             "name": "outputDatasetName",
             "baseName": "outputDatasetName",
+            "type": "string"
+        },
+        {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
             "type": "string"
         },
         {

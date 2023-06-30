@@ -14,10 +14,6 @@
 export class ListOrganizationBucketsResponseAllOfBuckets {
     'id': number;
     /**
-    * S3 bucket description
-    */
-    'name': string;
-    /**
     * S3 access key
     */
     'accessKey': string;
@@ -30,10 +26,6 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
     */
     'bucket': string;
     /**
-    * Prefix within the bucket
-    */
-    'prefix'?: string;
-    /**
     * S3 region
     */
     'region': string;
@@ -41,6 +33,10 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
     * Whether we can reach the bucket
     */
     'connected': boolean;
+    /**
+    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket.
+    */
+    'checkConnectivityPrefix'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,11 +45,6 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
             "name": "id",
             "baseName": "id",
             "type": "number"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
         },
         {
             "name": "accessKey",
@@ -71,11 +62,6 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
             "type": "string"
         },
         {
-            "name": "prefix",
-            "baseName": "prefix",
-            "type": "string"
-        },
-        {
             "name": "region",
             "baseName": "region",
             "type": "string"
@@ -84,6 +70,11 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
             "name": "connected",
             "baseName": "connected",
             "type": "boolean"
+        },
+        {
+            "name": "checkConnectivityPrefix",
+            "baseName": "checkConnectivityPrefix",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -16,17 +16,9 @@ export class ListOrganizationBucketsUserResponseAllOfBuckets {
     'organizationId': number;
     'organizationName': string;
     /**
-    * S3 bucket description
-    */
-    'name': string;
-    /**
     * S3 bucket
     */
     'bucket': string;
-    /**
-    * Prefix within the bucket
-    */
-    'prefix'?: string;
     /**
     * S3 region
     */
@@ -55,18 +47,8 @@ export class ListOrganizationBucketsUserResponseAllOfBuckets {
             "type": "string"
         },
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
             "name": "bucket",
             "baseName": "bucket",
-            "type": "string"
-        },
-        {
-            "name": "prefix",
-            "baseName": "prefix",
             "type": "string"
         },
         {

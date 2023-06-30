@@ -44,15 +44,21 @@ export class DeploymentTarget {
     * Preferably use supportedEngines / preferredEngine
     */
     'hasAkida': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasMemryx': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
     'customDeployId'?: number;
     'integrateUrl'?: string;
+    'ownerOrganizationName'?: string;
     'supportedEngines': Array<DeploymentTargetEngine>;
     'preferredEngine': DeploymentTargetEngine;
     'url'?: string;
     'docsUrl': string;
+    'firmwareRepoUrl'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -118,6 +124,11 @@ export class DeploymentTarget {
             "type": "boolean"
         },
         {
+            "name": "hasMemryx",
+            "baseName": "hasMemryx",
+            "type": "boolean"
+        },
+        {
             "name": "hideOptimizations",
             "baseName": "hideOptimizations",
             "type": "boolean"
@@ -143,6 +154,11 @@ export class DeploymentTarget {
             "type": "string"
         },
         {
+            "name": "ownerOrganizationName",
+            "baseName": "ownerOrganizationName",
+            "type": "string"
+        },
+        {
             "name": "supportedEngines",
             "baseName": "supportedEngines",
             "type": "Array<DeploymentTargetEngine>"
@@ -160,6 +176,11 @@ export class DeploymentTarget {
         {
             "name": "docsUrl",
             "baseName": "docsUrl",
+            "type": "string"
+        },
+        {
+            "name": "firmwareRepoUrl",
+            "baseName": "firmwareRepoUrl",
             "type": "string"
         }    ];
 

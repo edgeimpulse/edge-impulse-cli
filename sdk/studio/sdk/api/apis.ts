@@ -42,6 +42,8 @@ export * from './organizationCreateProjectApi';
 import { OrganizationCreateProjectApi } from './organizationCreateProjectApi';
 export * from './organizationDataApi';
 import { OrganizationDataApi } from './organizationDataApi';
+export * from './organizationDataCampaignsApi';
+import { OrganizationDataCampaignsApi } from './organizationDataCampaignsApi';
 export * from './organizationJobsApi';
 import { OrganizationJobsApi } from './organizationJobsApi';
 export * from './organizationPipelinesApi';
@@ -56,6 +58,8 @@ export * from './organizationsApi';
 import { OrganizationsApi } from './organizationsApi';
 export * from './performanceCalibrationApi';
 import { PerformanceCalibrationApi } from './performanceCalibrationApi';
+export * from './projectRequiresAdminApi';
+import { ProjectRequiresAdminApi } from './projectRequiresAdminApi';
 export * from './projectsApi';
 import { ProjectsApi } from './projectsApi';
 export * from './rawDataApi';
@@ -96,4 +100,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = RequestDetailedFile;
 
-export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationAllowGuestAccessApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationRequiresWhitelabelAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];
+export const APIS = [AdminApi, AllowsReadOnlyApi, AuthApi, CDNApi, ClassifyApi, ContentDispositionInlineApi, DSPApi, DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationAllowDeveloperProfileApi, OrganizationAllowGuestAccessApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationRequiresAdminApi, OrganizationRequiresWhitelabelAdminApi, OrganizationsApi, PerformanceCalibrationApi, ProjectRequiresAdminApi, ProjectsApi, RawDataApi, RequiresSudoApi, RequiresThirdPartyAuthApiKeyApi, SupportsRangeApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];

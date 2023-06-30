@@ -45,6 +45,10 @@ export class Job {
     * Additional metadata associated with this job.
     */
     'additionalInfo'?: string;
+    /**
+    * Job duration time in seconds from start to finished, measured by k8s job watcher.
+    */
+    'computeTime'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -93,6 +97,11 @@ export class Job {
             "name": "additionalInfo",
             "baseName": "additionalInfo",
             "type": "string"
+        },
+        {
+            "name": "computeTime",
+            "baseName": "computeTime",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

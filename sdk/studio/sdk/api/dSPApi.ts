@@ -26,8 +26,10 @@ import { DspAutotunerResults } from '../model/dspAutotunerResults';
 import { DspFeatureImportanceResponse } from '../model/dspFeatureImportanceResponse';
 import { DspFeatureLabelsResponse } from '../model/dspFeatureLabelsResponse';
 import { DspPerformanceAllVariantsResponse } from '../model/dspPerformanceAllVariantsResponse';
+import { DspRunRequestWithFeatures } from '../model/dspRunRequestWithFeatures';
 import { DspRunRequestWithoutFeatures } from '../model/dspRunRequestWithoutFeatures';
 import { DspRunRequestWithoutFeaturesReadOnly } from '../model/dspRunRequestWithoutFeaturesReadOnly';
+import { DspRunResponse } from '../model/dspRunResponse';
 import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
 import { DspSampleFeaturesResponse } from '../model/dspSampleFeaturesResponse';
 import { DspTrainedFeaturesResponse } from '../model/dspTrainedFeaturesResponse';
@@ -1447,6 +1449,107 @@ export class DSPApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "DspPerformanceAllVariantsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Takes in a features array and runs it through the DSP block. This data should have the same frequency as set in the input block in your impulse.
+     * @summary Get processed sample (from features array)
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param dspRunRequestWithFeatures 
+     */
+    public async runDspOnFeaturesArray (projectId: number, dspId: number, dspRunRequestWithFeatures: DspRunRequestWithFeatures, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/run'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        // verify required parameter 'dspRunRequestWithFeatures' is not null or undefined
+
+
+        if (dspRunRequestWithFeatures === null || dspRunRequestWithFeatures === undefined) {
+            throw new Error('Required parameter dspRunRequestWithFeatures was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(dspRunRequestWithFeatures, "DspRunRequestWithFeatures")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<DspRunResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DspRunResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

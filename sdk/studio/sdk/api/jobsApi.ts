@@ -23,6 +23,7 @@ import { AutotuneDspRequest } from '../model/autotuneDspRequest';
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
 import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
 import { DeployPretrainedModelRequest } from '../model/deployPretrainedModelRequest';
+import { ExportKerasBlockDataRequest } from '../model/exportKerasBlockDataRequest';
 import { ExportOriginalDataRequest } from '../model/exportOriginalDataRequest';
 import { ExportWavDataRequest } from '../model/exportWavDataRequest';
 import { GenerateFeaturesRequest } from '../model/generateFeaturesRequest';
@@ -754,8 +755,9 @@ export class JobsApi {
      * @summary Export Keras block data
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param exportKerasBlockDataRequest 
      */
-    public async exportKerasBlockData (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async exportKerasBlockData (projectId: number, learnId: number, exportKerasBlockDataRequest?: ExportKerasBlockDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/train/keras/{learnId}/data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -799,6 +801,7 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(exportKerasBlockDataRequest, "ExportKerasBlockDataRequest")
         };
 
         let authenticationPromise = Promise.resolve();

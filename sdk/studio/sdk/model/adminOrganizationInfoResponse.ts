@@ -11,11 +11,12 @@
  */
 
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
+import { EntitlementLimits } from './entitlementLimits';
 import { Organization } from './organization';
 import { OrganizationDataset } from './organizationDataset';
 import { OrganizationInfoResponse } from './organizationInfoResponse';
+import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
@@ -31,14 +32,31 @@ export class AdminOrganizationInfoResponse {
     'organization': Organization;
     'datasets': Array<OrganizationDataset>;
     'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
-    'entitlementLimits'?: OrganizationInfoResponseAllOfEntitlementLimits;
+    'entitlementLimits'?: EntitlementLimits;
     /**
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments'?: Array<ProjectInfoResponseAllOfExperiments>;
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
+    'cliLists': OrganizationInfoResponseAllOfCliLists;
     'billable'?: boolean;
+    /**
+    * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs).
+    */
+    'totalJobsComputeTime'?: number;
+    /**
+    * Total compute time of all jobs in the organization in the current year (including organizational project jobs).
+    */
+    'jobsComputeTimeCurrentYear'?: number;
+    /**
+    * The date from which the compute time for the running year is calculated.
+    */
+    'jobsComputeTimeCurrentYearSince'?: Date;
+    /**
+    * Total storage used by the organization.
+    */
+    'totalStorage'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -71,7 +89,7 @@ export class AdminOrganizationInfoResponse {
         {
             "name": "entitlementLimits",
             "baseName": "entitlementLimits",
-            "type": "OrganizationInfoResponseAllOfEntitlementLimits"
+            "type": "EntitlementLimits"
         },
         {
             "name": "experiments",
@@ -89,9 +107,34 @@ export class AdminOrganizationInfoResponse {
             "type": "number"
         },
         {
+            "name": "cliLists",
+            "baseName": "cliLists",
+            "type": "OrganizationInfoResponseAllOfCliLists"
+        },
+        {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "totalJobsComputeTime",
+            "baseName": "totalJobsComputeTime",
+            "type": "number"
+        },
+        {
+            "name": "jobsComputeTimeCurrentYear",
+            "baseName": "jobsComputeTimeCurrentYear",
+            "type": "number"
+        },
+        {
+            "name": "jobsComputeTimeCurrentYearSince",
+            "baseName": "jobsComputeTimeCurrentYearSince",
+            "type": "Date"
+        },
+        {
+            "name": "totalStorage",
+            "baseName": "totalStorage",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

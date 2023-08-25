@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ProjectType } from './projectType';
 import { Theme } from './theme';
 import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
 
@@ -45,6 +46,7 @@ export class Whitelabel {
     * The name of the default deployment target for this white label
     */
     'defaultDeploymentTarget'?: string | null;
+    'supportedProjectTypes': Array<ProjectType>;
 
     static discriminator: string | undefined = undefined;
 
@@ -128,6 +130,11 @@ export class Whitelabel {
             "name": "defaultDeploymentTarget",
             "baseName": "defaultDeploymentTarget",
             "type": "string"
+        },
+        {
+            "name": "supportedProjectTypes",
+            "baseName": "supportedProjectTypes",
+            "type": "Array<ProjectType>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -28,6 +28,10 @@ export class UpdateOrganizationTransformationBlockRequest {
     'additionalMountPoints'?: Array<TransformationBlockAdditionalMountPoint>;
     'operatesOn'?: UpdateOrganizationTransformationBlockRequestOperatesOnEnum;
     'allowExtraCliArguments'?: boolean;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters'?: Array<object>;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,6 +95,11 @@ export class UpdateOrganizationTransformationBlockRequest {
             "name": "allowExtraCliArguments",
             "baseName": "allowExtraCliArguments",
             "type": "boolean"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
         }    ];
 
     static getAttributeTypeMap() {

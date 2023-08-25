@@ -10,38 +10,19 @@
  * Do not edit the class manually.
  */
 
-import { GenericApiResponse } from './genericApiResponse';
-import { GetAutoSegmenterResponseAllOf } from './getAutoSegmenterResponseAllOf';
-import { GetAutoSegmenterResponseAllOfClusters } from './getAutoSegmenterResponseAllOfClusters';
+import { GetAutoLabelerResponseAllOfClusters } from './getAutoLabelerResponseAllOfClusters';
 
-export class GetAutoSegmenterResponse {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
+export class GetAutoLabelerResponseAllOf {
     'hasResults': boolean;
-    'clusters': Array<GetAutoSegmenterResponseAllOfClusters>;
+    'clusters': Array<GetAutoLabelerResponseAllOfClusters>;
     'simThreshold': number;
     'minObjectSizePx': number;
+    'maxObjectSizePx'?: number;
     'whichItemsToInclude': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "hasResults",
             "baseName": "hasResults",
@@ -50,7 +31,7 @@ export class GetAutoSegmenterResponse {
         {
             "name": "clusters",
             "baseName": "clusters",
-            "type": "Array<GetAutoSegmenterResponseAllOfClusters>"
+            "type": "Array<GetAutoLabelerResponseAllOfClusters>"
         },
         {
             "name": "simThreshold",
@@ -63,13 +44,18 @@ export class GetAutoSegmenterResponse {
             "type": "number"
         },
         {
+            "name": "maxObjectSizePx",
+            "baseName": "maxObjectSizePx",
+            "type": "number"
+        },
+        {
             "name": "whichItemsToInclude",
             "baseName": "whichItemsToInclude",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoSegmenterResponse.attributeTypeMap;
+        return GetAutoLabelerResponseAllOf.attributeTypeMap;
     }
 }
 

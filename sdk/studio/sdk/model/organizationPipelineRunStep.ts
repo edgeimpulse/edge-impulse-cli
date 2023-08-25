@@ -29,6 +29,7 @@ export class OrganizationPipelineRunStep {
     'outputDatasetBucketPath'?: string;
     'label'?: string;
     'extraCliArguments'?: string;
+    'parameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -112,6 +113,11 @@ export class OrganizationPipelineRunStep {
             "name": "extraCliArguments",
             "baseName": "extraCliArguments",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

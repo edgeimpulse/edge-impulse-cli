@@ -28,6 +28,7 @@ export class OrganizationPipelineStep {
     'label'?: string;
     'transformationParallel'?: number;
     'extraCliArguments'?: string;
+    'parameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -111,6 +112,11 @@ export class OrganizationPipelineStep {
             "name": "extraCliArguments",
             "baseName": "extraCliArguments",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

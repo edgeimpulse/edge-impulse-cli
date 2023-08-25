@@ -11,8 +11,8 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectTrainingDataSummaryResponseAllOf } from './projectTrainingDataSummaryResponseAllOf';
+import { ProjectTrainingDataSummaryResponseAllOfDataSummary } from './projectTrainingDataSummaryResponseAllOfDataSummary';
 
 export class ProjectTrainingDataSummaryResponse {
     /**
@@ -23,7 +23,7 @@ export class ProjectTrainingDataSummaryResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'dataSummary': ProjectDataSummary;
+    'dataSummary': ProjectTrainingDataSummaryResponseAllOfDataSummary;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class ProjectTrainingDataSummaryResponse {
         {
             "name": "dataSummary",
             "baseName": "dataSummary",
-            "type": "ProjectDataSummary"
+            "type": "ProjectTrainingDataSummaryResponseAllOfDataSummary"
         }    ];
 
     static getAttributeTypeMap() {

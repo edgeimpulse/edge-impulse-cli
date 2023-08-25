@@ -10,24 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { EnterpriseTrial } from './enterpriseTrial';
 
-export class ActivateUserRequest {
-    /**
-    * Activation code (sent through an email)
-    */
-    'code': string;
+export class AdminGetUserTrialResponseAllOf {
+    'trial': EnterpriseTrial;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "code",
-            "baseName": "code",
-            "type": "string"
+            "name": "trial",
+            "baseName": "trial",
+            "type": "EnterpriseTrial"
         }    ];
 
     static getAttributeTypeMap() {
-        return ActivateUserRequest.attributeTypeMap;
+        return AdminGetUserTrialResponseAllOf.attributeTypeMap;
     }
 }
 

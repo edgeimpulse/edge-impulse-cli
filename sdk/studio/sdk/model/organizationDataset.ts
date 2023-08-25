@@ -23,6 +23,7 @@ export class OrganizationDataset {
     'tags': Array<string>;
     'category'?: string;
     'bucket'?: OrganizationDatasetBucket;
+    'type': OrganizationDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +77,11 @@ export class OrganizationDataset {
             "name": "bucket",
             "baseName": "bucket",
             "type": "OrganizationDatasetBucket"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "OrganizationDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -83,3 +89,6 @@ export class OrganizationDataset {
     }
 }
 
+
+export type OrganizationDatasetTypeEnum = 'files' | 'clinical';
+export const OrganizationDatasetTypeEnumValues: string[] = ['files', 'clinical'];

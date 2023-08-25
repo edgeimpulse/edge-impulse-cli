@@ -784,16 +784,18 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let runner = await this._cliConfig.getRunner();
 
-        if (!runner.projectId) {
-            // Select a project
-            let projectList = (await this._eiConfig.api.projects.listProjects());
+        let projectList = (await this._eiConfig.api.projects.listProjects());
 
-            if (!projectList.success) {
-                throw new Error(
-                    `Failed to retrieve project list: ${projectList.error}`
-                );
+        if (runner.projectId) {
+            // is this a valid project? do we have access to it?
+            const project = projectList.projects.find(p => p.id === runner.projectId);
+            if (!project) {
+                // if not, let the user choose a new project
+                runner.projectId = undefined;
             }
+        }
 
+        if (!runner.projectId) {
             let projectChoices = (projectList.projects || []).map((p) => ({
                 name: p.owner + " / " + p.name,
                 value: p.id
@@ -822,7 +824,10 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             this._projectId = runner.projectId;
         }
 
-        console.log(CON_PREFIX, `Selecting project with ID ${this._projectId}`);
+        const projectInfo = await this._eiConfig.api.projects.getProjectInfo(this._projectId);
+
+        console.log(CON_PREFIX, `Loading data from project "${projectInfo.project.owner} / ${projectInfo.project.name}" (ID: ${this._projectId}) ` +
+            `(run with --clean to switch projects)`);
 
         let impulseRes = (
             await this._eiConfig.api.impulse.getImpulse(this._projectId)
@@ -839,12 +844,22 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         if (!impulseRes.impulse || impulseRes.impulse.learnBlocks.length === 0) {
             console.error(CON_PREFIX,
-                `Unable to find learn blocks for project id '${this._projectId}'`
+                `Unable to find learn blocks for project id '${this._projectId}'. Create an impulse first.`
             );
             process.exit(1);
         }
 
-        let learnBlockId = -1;
+        let learnBlockId: number;
+
+        // https://github.com/edgeimpulse/edgeimpulse/issues/7799
+        // if the learn block is deleted then set blockId back to undefined
+        // so we ask about the block again...
+        if (runner.blockId) {
+            let block = impulseRes.impulse.learnBlocks.find(l => l.id === runner.blockId);
+            if (!block) {
+                runner.blockId = undefined;
+            }
+        }
 
         if (!runner.blockId) {
             let learnBlocks = impulseRes.impulse.learnBlocks.filter(x => x.primaryVersion);
@@ -875,10 +890,6 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, learnBlockId));
 
-        if (!learnBlockRes.success) {
-            console.error(CON_PREFIX, 'Unable to retrieve learning block data', learnBlockRes.error);
-        }
-
         try {
             if (await this.checkFilesPresent(this._projectId) && !this._runnerOpts.downloadData) {
                 console.log(CON_PREFIX, "Not downloading new data, " +
@@ -889,9 +900,9 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                     this._runnerOpts.downloadData :
                     Path.join(process.cwd(), 'ei-block-data', this._projectId.toString());
 
-                console.log(CON_PREFIX, "Downloading files...");
+                console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" (run with --clean to switch blocks)...`);
                 await this.downloadFiles(this._projectId, learnBlockId, targetDir);
-                console.log(CON_PREFIX, `Training files downloaded to`, targetDir);
+                console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" OK (stored in "${targetDir}")`);
 
                 if (this._runnerOpts.downloadData) {
                     process.exit(0);

@@ -108,6 +108,10 @@ export class Sample {
     * What labeling flow the project this sample belongs to uses
     */
     'projectLabelingMethod'?: SampleProjectLabelingMethodEnum;
+    /**
+    * Data sample SHA 256 hash (including CBOR envelope if applicable)
+    */
+    'sha256Hash': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -281,6 +285,11 @@ export class Sample {
             "name": "projectLabelingMethod",
             "baseName": "projectLabelingMethod",
             "type": "SampleProjectLabelingMethodEnum"
+        },
+        {
+            "name": "sha256Hash",
+            "baseName": "sha256Hash",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

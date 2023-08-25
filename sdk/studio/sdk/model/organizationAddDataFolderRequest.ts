@@ -16,6 +16,7 @@ export class OrganizationAddDataFolderRequest {
     'bucketId': number;
     'bucketPath': string;
     'metadataDataset'?: string;
+    'type'?: OrganizationAddDataFolderRequestTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +40,11 @@ export class OrganizationAddDataFolderRequest {
             "name": "metadataDataset",
             "baseName": "metadataDataset",
             "type": "string"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "OrganizationAddDataFolderRequestTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -46,3 +52,6 @@ export class OrganizationAddDataFolderRequest {
     }
 }
 
+
+export type OrganizationAddDataFolderRequestTypeEnum = 'files' | 'clinical';
+export const OrganizationAddDataFolderRequestTypeEnumValues: string[] = ['files', 'clinical'];

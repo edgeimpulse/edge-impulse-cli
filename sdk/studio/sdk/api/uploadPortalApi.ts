@@ -659,18 +659,25 @@ export class UploadPortalApi {
     }
 
     /**
-     * View a file that\'s located in an upload portal (requires JWT auth). Will return a signed URL to the bucket.
+     * View a file that\'s located in an upload portal (requires JWT auth).
      * @summary View file from portal
      * @param portalId Portal ID
      * @param path Path to file in portal
      */
-    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/view'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
         }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
         let localVarFormParams: any = {};
 
         // verify required parameter 'portalId' is not null or undefined
@@ -703,7 +710,7 @@ export class UploadPortalApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
-            json: true,
+            encoding: null,
         };
 
         let authenticationPromise = Promise.resolve();
@@ -722,11 +729,12 @@ export class UploadPortalApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<any>((resolve, reject) => {
+            return new Promise<Buffer>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

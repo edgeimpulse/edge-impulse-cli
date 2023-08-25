@@ -38,6 +38,10 @@ export class OrganizationCreateProjectRequest {
     * Optional extra arguments for this transformation block
     */
     'extraCliArguments'?: string;
+    /**
+    * List of custom parameters for this transformation job (see the list of parameters that the block exposes).
+    */
+    'parameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -126,6 +130,11 @@ export class OrganizationCreateProjectRequest {
             "name": "extraCliArguments",
             "baseName": "extraCliArguments",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

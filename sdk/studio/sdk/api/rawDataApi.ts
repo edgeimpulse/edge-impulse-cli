@@ -29,9 +29,10 @@ import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
-import { GetAutoSegmenterResponse } from '../model/getAutoSegmenterResponse';
+import { GetAutoLabelerResponse } from '../model/getAutoLabelerResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
+import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
@@ -43,10 +44,10 @@ import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetection
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
-import { RunAutoSegmenterRequest } from '../model/runAutoSegmenterRequest';
+import { RunAutoLabelerRequest } from '../model/runAutoLabelerRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
-import { SaveAutoSegmenterClustersRequest } from '../model/saveAutoSegmenterClustersRequest';
-import { SaveAutoSegmenterClustersResponse } from '../model/saveAutoSegmenterClustersResponse';
+import { SaveAutoLabelerClustersRequest } from '../model/saveAutoLabelerClustersRequest';
+import { SaveAutoLabelerClustersResponse } from '../model/saveAutoLabelerClustersResponse';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
 import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
@@ -159,7 +160,7 @@ type getAllImportedFromQueryParams = {
     offset?: number,
 };
 
-type getAutoSegmenterImageQueryParams = {
+type getAutoLabelerImageQueryParams = {
     image: string,
 };
 
@@ -2272,12 +2273,12 @@ export class RawDataApi {
     }
 
     /**
-     * Retrieve the results of the auto-segmenter (after running `StartJobResponse`)
-     * @summary Get auto-segmenter results
+     * Retrieve the results of the auto-labeler (after running `StartJobResponse`)
+     * @summary Get auto-labeler results
      * @param projectId Project ID
      */
-    public async getAutoSegmenter (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoSegmenterResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-segmenter'
+    public async getAutoLabeler (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoLabelerResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -2296,7 +2297,7 @@ export class RawDataApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getAutoSegmenter.');
+            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabeler.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2330,12 +2331,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetAutoSegmenterResponse>((resolve, reject) => {
+            return new Promise<GetAutoLabelerResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetAutoSegmenterResponse");
+                        body = ObjectSerializer.deserialize(body, "GetAutoLabelerResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2355,13 +2356,13 @@ export class RawDataApi {
     }
 
     /**
-     * Grab a segment image from the auto-segmenter
-     * @summary Get auto-segmenter image
+     * Grab a segment image from the auto-labeler
+     * @summary Get auto-labeler image
      * @param projectId Project ID
-     * @param image Which image to receive from the auto-segmenter
+     * @param image Which image to receive from the auto-labeler
      */
-    public async getAutoSegmenterImage (projectId: number, queryParams: getAutoSegmenterImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-segmenter/image'
+    public async getAutoLabelerImage (projectId: number, queryParams: getAutoLabelerImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -2380,13 +2381,13 @@ export class RawDataApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getAutoSegmenterImage.');
+            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabelerImage.');
         }
 
         // verify required parameter 'image' is not null or undefined
 
         if (queryParams.image === null || queryParams.image === undefined) {
-            throw new Error('Required parameter queryParams.image was null or undefined when calling getAutoSegmenterImage.');
+            throw new Error('Required parameter queryParams.image was null or undefined when calling getAutoLabelerImage.');
         }
 
 
@@ -2680,6 +2681,89 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetDataExplorerSettingsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Structure describing the similarity and diversity of a dataset
+     * @summary Get diversity visualization data
+     * @param projectId Project ID
+     */
+    public async getDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDiversityDataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDiversityData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetDiversityDataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetDiversityDataResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -3763,6 +3847,89 @@ export class RawDataApi {
     }
 
     /**
+     * Determine if data diversity metrics have been calculated
+     * @summary Check if data diversity metrics exist
+     * @param projectId Project ID
+     */
+    public async hasDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity/exists'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling hasDiversityData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<HasDataExplorerFeaturesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Retrieve all raw data by category.
      * @summary List samples
      * @param projectId Project ID
@@ -3971,6 +4138,98 @@ export class RawDataApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(moveRawDataRequest, "MoveRawDataRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Clears the bounding box labels and moves item back to labeling queue
+     * @summary Move sample to labeling queue
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     */
+    public async moveToLabelingQueue (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/to-labeling-queue'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling moveToLabelingQueue.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling moveToLabelingQueue.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
         };
 
         let authenticationPromise = Promise.resolve();
@@ -4290,13 +4549,13 @@ export class RawDataApi {
     }
 
     /**
-     * Run the auto-segmenter over all unlabeled data.
-     * @summary Run auto-segmenter job
+     * Run the auto-labeler over all unlabeled data.
+     * @summary Run auto-labeler job
      * @param projectId Project ID
-     * @param runAutoSegmenterRequest 
+     * @param runAutoLabelerRequest 
      */
-    public async runAutoSegmenter (projectId: number, runAutoSegmenterRequest: RunAutoSegmenterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-segmenter/run'
+    public async runAutoLabeler (projectId: number, runAutoLabelerRequest: RunAutoLabelerRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/run'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -4315,14 +4574,14 @@ export class RawDataApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling runAutoSegmenter.');
+            throw new Error('Required parameter projectId was null or undefined when calling runAutoLabeler.');
         }
 
-        // verify required parameter 'runAutoSegmenterRequest' is not null or undefined
+        // verify required parameter 'runAutoLabelerRequest' is not null or undefined
 
 
-        if (runAutoSegmenterRequest === null || runAutoSegmenterRequest === undefined) {
-            throw new Error('Required parameter runAutoSegmenterRequest was null or undefined when calling runAutoSegmenter.');
+        if (runAutoLabelerRequest === null || runAutoLabelerRequest === undefined) {
+            throw new Error('Required parameter runAutoLabelerRequest was null or undefined when calling runAutoLabeler.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4338,7 +4597,7 @@ export class RawDataApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(runAutoSegmenterRequest, "RunAutoSegmenterRequest")
+            body: ObjectSerializer.serialize(runAutoLabelerRequest, "RunAutoLabelerRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -4383,12 +4642,12 @@ export class RawDataApi {
 
     /**
      * Set labels for all auto-segment clusters.
-     * @summary Save auto-segmenter clusters
+     * @summary Save auto-labeler clusters
      * @param projectId Project ID
-     * @param saveAutoSegmenterClustersRequest 
+     * @param saveAutoLabelerClustersRequest 
      */
-    public async saveAutoSegmenterClusters (projectId: number, saveAutoSegmenterClustersRequest: SaveAutoSegmenterClustersRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SaveAutoSegmenterClustersResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-segmenter/save'
+    public async saveAutoLabelerClusters (projectId: number, saveAutoLabelerClustersRequest: SaveAutoLabelerClustersRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SaveAutoLabelerClustersResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/save'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -4407,14 +4666,14 @@ export class RawDataApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling saveAutoSegmenterClusters.');
+            throw new Error('Required parameter projectId was null or undefined when calling saveAutoLabelerClusters.');
         }
 
-        // verify required parameter 'saveAutoSegmenterClustersRequest' is not null or undefined
+        // verify required parameter 'saveAutoLabelerClustersRequest' is not null or undefined
 
 
-        if (saveAutoSegmenterClustersRequest === null || saveAutoSegmenterClustersRequest === undefined) {
-            throw new Error('Required parameter saveAutoSegmenterClustersRequest was null or undefined when calling saveAutoSegmenterClusters.');
+        if (saveAutoLabelerClustersRequest === null || saveAutoLabelerClustersRequest === undefined) {
+            throw new Error('Required parameter saveAutoLabelerClustersRequest was null or undefined when calling saveAutoLabelerClusters.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4430,7 +4689,7 @@ export class RawDataApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(saveAutoSegmenterClustersRequest, "SaveAutoSegmenterClustersRequest")
+            body: ObjectSerializer.serialize(saveAutoLabelerClustersRequest, "SaveAutoLabelerClustersRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -4449,12 +4708,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<SaveAutoSegmenterClustersResponse>((resolve, reject) => {
+            return new Promise<SaveAutoLabelerClustersResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "SaveAutoSegmenterClustersResponse");
+                        body = ObjectSerializer.deserialize(body, "SaveAutoLabelerClustersResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

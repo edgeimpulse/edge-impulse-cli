@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { ProjectDataSummary } from './projectDataSummary';
+import { ProjectTrainingDataSummaryResponseAllOfDataSummary } from './projectTrainingDataSummaryResponseAllOfDataSummary';
 
 export class ProjectTrainingDataSummaryResponseAllOf {
-    'dataSummary': ProjectDataSummary;
+    'dataSummary': ProjectTrainingDataSummaryResponseAllOfDataSummary;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class ProjectTrainingDataSummaryResponseAllOf {
         {
             "name": "dataSummary",
             "baseName": "dataSummary",
-            "type": "ProjectDataSummary"
+            "type": "ProjectTrainingDataSummaryResponseAllOfDataSummary"
         }    ];
 
     static getAttributeTypeMap() {

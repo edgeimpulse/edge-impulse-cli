@@ -26,7 +26,7 @@ export class OrganizationDatasetBucket {
     */
     'fullBucketPathDescription': string;
     /**
-    * Number of levels deep for data items, e.g. if you have folder \"test/abc\", with value 1 \"test\" will be a data item, with value 2 \"test/abc\" will be a data item.
+    * Number of levels deep for data items, e.g. if you have folder \"test/abc\", with value 1 \"test\" will be a data item, with value 2 \"test/abc\" will be a data item. Only used for \"clinical\" type.
     */
     'dataItemNamingLevelsDeep': number;
 

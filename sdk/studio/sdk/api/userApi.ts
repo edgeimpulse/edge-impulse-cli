@@ -20,24 +20,29 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { ActivateUserByThirdPartyActivationCodeRequest } from '../model/activateUserByThirdPartyActivationCodeRequest';
-import { ActivateUserRequest } from '../model/activateUserRequest';
+import { ActivateUserOrVerifyEmailRequest } from '../model/activateUserOrVerifyEmailRequest';
 import { ChangePasswordRequest } from '../model/changePasswordRequest';
 import { ConvertUserRequest } from '../model/convertUserRequest';
 import { CreateDeveloperProfileResponse } from '../model/createDeveloperProfileResponse';
+import { CreateEnterpriseTrialResponse } from '../model/createEnterpriseTrialResponse';
+import { CreateEnterpriseTrialUserRequest } from '../model/createEnterpriseTrialUserRequest';
 import { CreateEvaluationUserResponse } from '../model/createEvaluationUserResponse';
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
+import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetJWTResponse } from '../model/getJWTResponse';
 import { GetUserNeedToSetPasswordResponse } from '../model/getUserNeedToSetPasswordResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
+import { ListEnterpriseTrialsResponse } from '../model/listEnterpriseTrialsResponse';
 import { ListOrganizationBucketsUserResponse } from '../model/listOrganizationBucketsUserResponse';
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
 import { RequestResetPasswordRequest } from '../model/requestResetPasswordRequest';
 import { ResetPasswordRequest } from '../model/resetPasswordRequest';
 import { SendUserFeedbackRequest } from '../model/sendUserFeedbackRequest';
 import { SetUserPasswordRequest } from '../model/setUserPasswordRequest';
+import { StartEnterpriseTrialRequest } from '../model/startEnterpriseTrialRequest';
 import { UpdateUserRequest } from '../model/updateUserRequest';
 import { UploadUserPhotoResponse } from '../model/uploadUserPhotoResponse';
 import { UserByThirdPartyActivationRequest } from '../model/userByThirdPartyActivationRequest';
@@ -209,9 +214,9 @@ export class UserApi {
     /**
      * Activate the current user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate current user
-     * @param activateUserRequest 
+     * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateCurrentUser (activateUserRequest: ActivateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateCurrentUser (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/activate';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -226,11 +231,11 @@ export class UserApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'activateUserRequest' is not null or undefined
+        // verify required parameter 'activateUserOrVerifyEmailRequest' is not null or undefined
 
 
-        if (activateUserRequest === null || activateUserRequest === undefined) {
-            throw new Error('Required parameter activateUserRequest was null or undefined when calling activateCurrentUser.');
+        if (activateUserOrVerifyEmailRequest === null || activateUserOrVerifyEmailRequest === undefined) {
+            throw new Error('Required parameter activateUserOrVerifyEmailRequest was null or undefined when calling activateCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -246,7 +251,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(activateUserRequest, "ActivateUserRequest")
+            body: ObjectSerializer.serialize(activateUserOrVerifyEmailRequest, "ActivateUserOrVerifyEmailRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -293,9 +298,9 @@ export class UserApi {
      * Activate a user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate user
      * @param userId User ID
-     * @param activateUserRequest 
+     * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateUser (userId: number, activateUserRequest: ActivateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateUser (userId: number, activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/activate'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
@@ -318,11 +323,11 @@ export class UserApi {
             throw new Error('Required parameter userId was null or undefined when calling activateUser.');
         }
 
-        // verify required parameter 'activateUserRequest' is not null or undefined
+        // verify required parameter 'activateUserOrVerifyEmailRequest' is not null or undefined
 
 
-        if (activateUserRequest === null || activateUserRequest === undefined) {
-            throw new Error('Required parameter activateUserRequest was null or undefined when calling activateUser.');
+        if (activateUserOrVerifyEmailRequest === null || activateUserOrVerifyEmailRequest === undefined) {
+            throw new Error('Required parameter activateUserOrVerifyEmailRequest was null or undefined when calling activateUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -338,7 +343,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(activateUserRequest, "ActivateUserRequest")
+            body: ObjectSerializer.serialize(activateUserOrVerifyEmailRequest, "ActivateUserOrVerifyEmailRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -778,6 +783,83 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateDeveloperProfileResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Creates an enterprise trial user and a new trial organization, and redirects the user to the new organization.
+     * @summary Create enterprise trial user
+     * @param createEnterpriseTrialUserRequest Trial request
+     */
+    public async createEnterpriseTrialUser (createEnterpriseTrialUserRequest: CreateEnterpriseTrialUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+        const localVarPath = this.basePath + '/api-user-create-enterprise-trial';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'createEnterpriseTrialUserRequest' is not null or undefined
+
+
+        if (createEnterpriseTrialUserRequest === null || createEnterpriseTrialUserRequest === undefined) {
+            throw new Error('Required parameter createEnterpriseTrialUserRequest was null or undefined when calling createEnterpriseTrialUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(createEnterpriseTrialUserRequest, "CreateEnterpriseTrialUserRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateEnterpriseTrialResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateEnterpriseTrialResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1413,8 +1495,8 @@ export class UserApi {
     }
 
     /**
-     * Tells whether the user needs to set its password.
-     * @summary Get user password state
+     * Tells whether a user is registered and whether it needs to set its password.
+     * @summary Get user registration state
      * @param usernameOrEmail Username or email
      */
     public async getUserNeedToSetPassword (usernameOrEmail: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserNeedToSetPasswordResponse> {
@@ -1628,6 +1710,89 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListEmailResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get a list of all enterprise trials for a user. This function is only available through a JWT token.
+     * @summary Get enterprise trials
+     * @param userId User ID
+     */
+    public async listEnterpriseTrialsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEnterpriseTrialsResponse> {
+        const localVarPath = this.basePath + '/api/users/{userId}/trials'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling listEnterpriseTrialsUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListEnterpriseTrialsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListEnterpriseTrialsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2364,6 +2529,98 @@ export class UserApi {
     }
 
     /**
+     * Send an upgrade to Enterprise request to Edge Impulse.
+     * @summary Send upgrade request
+     * @param userId User ID
+     * @param enterpriseUpgradeOrTrialExtensionRequest 
+     */
+    public async sendUserUpgradeRequest (userId: number, enterpriseUpgradeOrTrialExtensionRequest: EnterpriseUpgradeOrTrialExtensionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/users/{userId}/upgrade'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling sendUserUpgradeRequest.');
+        }
+
+        // verify required parameter 'enterpriseUpgradeOrTrialExtensionRequest' is not null or undefined
+
+
+        if (enterpriseUpgradeOrTrialExtensionRequest === null || enterpriseUpgradeOrTrialExtensionRequest === undefined) {
+            throw new Error('Required parameter enterpriseUpgradeOrTrialExtensionRequest was null or undefined when calling sendUserUpgradeRequest.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(enterpriseUpgradeOrTrialExtensionRequest, "EnterpriseUpgradeOrTrialExtensionRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Set the password for a new SSO user. This function is only available through an SSO access token.
      * @summary Set password for SSO user
      * @param userId User ID
@@ -2431,6 +2688,89 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Create an enterprise trial for the current user. Users can only go through a trial once.
+     * @summary Start enterprise trial
+     * @param startEnterpriseTrialRequest 
+     */
+    public async startEnterpriseTrial (startEnterpriseTrialRequest: StartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+        const localVarPath = this.basePath + '/api/user/trial';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'startEnterpriseTrialRequest' is not null or undefined
+
+
+        if (startEnterpriseTrialRequest === null || startEnterpriseTrialRequest === undefined) {
+            throw new Error('Required parameter startEnterpriseTrialRequest was null or undefined when calling startEnterpriseTrial.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(startEnterpriseTrialRequest, "StartEnterpriseTrialRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateEnterpriseTrialResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateEnterpriseTrialResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

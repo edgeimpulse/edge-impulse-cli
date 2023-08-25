@@ -41,6 +41,14 @@ type previewOrganizationDataFileQueryParams = {
     fileName: string,
 };
 
+type viewDatasetFileQueryParams = {
+    path: string,
+};
+
+type viewPortalFileQueryParams = {
+    path: string,
+};
+
 
 export type ContentDispositionInlineApiOpts = {
     extraHeaders?: {
@@ -152,6 +160,205 @@ export class ContentDispositionInlineApi {
 
         if (queryParams.fileName !== undefined) {
             localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * View a file that\'s located in a dataset (requires JWT auth).
+     * @summary View file from dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     * @param path Path to file in portal
+     */
+    public async viewDatasetFile (organizationId: number, dataset: string, queryParams: viewDatasetFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/view'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling viewDatasetFile.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling viewDatasetFile.');
+        }
+
+        // verify required parameter 'path' is not null or undefined
+
+        if (queryParams.path === null || queryParams.path === undefined) {
+            throw new Error('Required parameter queryParams.path was null or undefined when calling viewDatasetFile.');
+        }
+
+
+        if (queryParams.path !== undefined) {
+            localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * View a file that\'s located in an upload portal (requires JWT auth).
+     * @summary View file from portal
+     * @param portalId Portal ID
+     * @param path Path to file in portal
+     */
+    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/portals/{portalId}/files/view'
+            .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'portalId' is not null or undefined
+
+
+        if (portalId === null || portalId === undefined) {
+            throw new Error('Required parameter portalId was null or undefined when calling viewPortalFile.');
+        }
+
+        // verify required parameter 'path' is not null or undefined
+
+        if (queryParams.path === null || queryParams.path === undefined) {
+            throw new Error('Required parameter queryParams.path was null or undefined when calling viewPortalFile.');
+        }
+
+
+        if (queryParams.path !== undefined) {
+            localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

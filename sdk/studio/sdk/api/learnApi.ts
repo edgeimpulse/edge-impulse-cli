@@ -19,7 +19,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { AnomalyModelMetadataResponse } from '../model/anomalyModelMetadataResponse';
+import { AnomalyModelMetadata } from '../model/anomalyModelMetadata';
 import { AnomalyResponse } from '../model/anomalyResponse';
 import { AnomalyTrainedFeaturesResponse } from '../model/anomalyTrainedFeaturesResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -50,6 +50,10 @@ export enum LearnApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+type addKerasFilesFormParams = {
+    zip: RequestFile,
+};
 
 type anomalyTrainedFeaturesQueryParams = {
     featureAx1: number,
@@ -131,6 +135,111 @@ export class LearnApi {
         (this.authentications as any)[LearnApiApiKeys[key]].apiKey = value;
     }
 
+
+    /**
+     * Add Keras block files with the contents of a zip. This is an internal API.
+     * @summary Add Keras files
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param zip 
+     */
+    public async addKerasFiles (projectId: number, learnId: number, params: addKerasFilesFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/addFiles'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling addKerasFiles.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+
+
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling addKerasFiles.');
+        }
+
+        // verify required parameter 'zip' is not null or undefined
+        if (params.zip === null || params.zip === undefined) {
+            throw new Error('Required parameter params.zip was null or undefined when calling addKerasFiles.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.zip !== undefined) {
+            localVarFormParams['zip'] = params.zip;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
 
     /**
      * Get a sample of trained features, this extracts a number of samples and their features.
@@ -824,7 +933,7 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAnomalyMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyModelMetadataResponse> {
+    public async getAnomalyMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyModelMetadata> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -886,12 +995,12 @@ export class LearnApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<AnomalyModelMetadataResponse>((resolve, reject) => {
+            return new Promise<AnomalyModelMetadata>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "AnomalyModelMetadataResponse");
+                        body = ObjectSerializer.deserialize(body, "AnomalyModelMetadata");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

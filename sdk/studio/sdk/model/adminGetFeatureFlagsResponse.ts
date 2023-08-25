@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { AdminGetFeatureFlagsResponseAllOf } from './adminGetFeatureFlagsResponseAllOf';
+import { AdminGetFeatureFlagsResponseAllOfFlags } from './adminGetFeatureFlagsResponseAllOfFlags';
 import { GenericApiResponse } from './genericApiResponse';
-import { SaveAutoSegmenterClustersResponseAllOf } from './saveAutoSegmenterClustersResponseAllOf';
 
-export class SaveAutoSegmenterClustersResponse {
+export class AdminGetFeatureFlagsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +23,10 @@ export class SaveAutoSegmenterClustersResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'updatedItemCount': number;
+    /**
+    * List of feature flags.
+    */
+    'flags': Array<AdminGetFeatureFlagsResponseAllOfFlags>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +42,13 @@ export class SaveAutoSegmenterClustersResponse {
             "type": "string"
         },
         {
-            "name": "updatedItemCount",
-            "baseName": "updatedItemCount",
-            "type": "number"
+            "name": "flags",
+            "baseName": "flags",
+            "type": "Array<AdminGetFeatureFlagsResponseAllOfFlags>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoSegmenterClustersResponse.attributeTypeMap;
+        return AdminGetFeatureFlagsResponse.attributeTypeMap;
     }
 }
 

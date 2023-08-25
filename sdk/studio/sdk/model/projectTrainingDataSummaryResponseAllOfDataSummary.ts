@@ -11,20 +11,29 @@
  */
 
 
-export class GetAutoSegmenterResponseAllOfItems {
-    'imageUrl': string;
+export class ProjectTrainingDataSummaryResponseAllOfDataSummary {
+    /**
+    * Labels in the training set
+    */
+    'labels': Array<string>;
+    'dataCount': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "imageUrl",
-            "baseName": "imageUrl",
-            "type": "string"
+            "name": "labels",
+            "baseName": "labels",
+            "type": "Array<string>"
+        },
+        {
+            "name": "dataCount",
+            "baseName": "dataCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoSegmenterResponseAllOfItems.attributeTypeMap;
+        return ProjectTrainingDataSummaryResponseAllOfDataSummary.attributeTypeMap;
     }
 }
 

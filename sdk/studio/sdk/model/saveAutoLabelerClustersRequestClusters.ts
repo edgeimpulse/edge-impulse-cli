@@ -11,20 +11,26 @@
  */
 
 
-export class AdminGetUserMetricsResponseAllOf {
-    'metrics': object;
+export class SaveAutoLabelerClustersRequestClusters {
+    'index': number;
+    'label': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "metrics",
-            "baseName": "metrics",
-            "type": "object"
+            "name": "index",
+            "baseName": "index",
+            "type": "number"
+        },
+        {
+            "name": "label",
+            "baseName": "label",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetUserMetricsResponseAllOf.attributeTypeMap;
+        return SaveAutoLabelerClustersRequestClusters.attributeTypeMap;
     }
 }
 

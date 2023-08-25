@@ -38,6 +38,10 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     */
     'parameters'?: Array<object>;
     'imageInputScaling'?: ImageInputScaling;
+    /**
+    * If set, requires this block to be scheduled on GPU.
+    */
+    'indRequiresGpu'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -96,6 +100,11 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "name": "imageInputScaling",
             "baseName": "imageInputScaling",
             "type": "ImageInputScaling"
+        },
+        {
+            "name": "indRequiresGpu",
+            "baseName": "indRequiresGpu",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

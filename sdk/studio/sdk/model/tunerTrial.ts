@@ -11,6 +11,7 @@
  */
 
 import { TunerTrialBlocks } from './tunerTrialBlocks';
+import { TunerTrialDspJobId } from './tunerTrialDspJobId';
 
 export class TunerTrial {
     'id': string;
@@ -25,6 +26,8 @@ export class TunerTrial {
     'experiment'?: string;
     'originalTrialId'?: string;
     'model'?: { [key: string]: object; };
+    'dspJobId'?: TunerTrialDspJobId;
+    'learnJobId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -88,6 +91,16 @@ export class TunerTrial {
             "name": "model",
             "baseName": "model",
             "type": "{ [key: string]: object; }"
+        },
+        {
+            "name": "dspJobId",
+            "baseName": "dspJobId",
+            "type": "TunerTrialDspJobId"
+        },
+        {
+            "name": "learnJobId",
+            "baseName": "learnJobId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

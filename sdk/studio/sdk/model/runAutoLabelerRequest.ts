@@ -10,28 +10,16 @@
  * Do not edit the class manually.
  */
 
-import { GetAutoSegmenterResponseAllOfClusters } from './getAutoSegmenterResponseAllOfClusters';
 
-export class GetAutoSegmenterResponseAllOf {
-    'hasResults': boolean;
-    'clusters': Array<GetAutoSegmenterResponseAllOfClusters>;
+export class RunAutoLabelerRequest {
     'simThreshold': number;
     'minObjectSizePx': number;
+    'maxObjectSizePx'?: number;
     'whichItemsToInclude': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "hasResults",
-            "baseName": "hasResults",
-            "type": "boolean"
-        },
-        {
-            "name": "clusters",
-            "baseName": "clusters",
-            "type": "Array<GetAutoSegmenterResponseAllOfClusters>"
-        },
         {
             "name": "simThreshold",
             "baseName": "simThreshold",
@@ -43,13 +31,18 @@ export class GetAutoSegmenterResponseAllOf {
             "type": "number"
         },
         {
+            "name": "maxObjectSizePx",
+            "baseName": "maxObjectSizePx",
+            "type": "number"
+        },
+        {
             "name": "whichItemsToInclude",
             "baseName": "whichItemsToInclude",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoSegmenterResponseAllOf.attributeTypeMap;
+        return RunAutoLabelerRequest.attributeTypeMap;
     }
 }
 

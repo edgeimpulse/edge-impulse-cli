@@ -10,22 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { SaveAutoSegmenterClustersRequestClusters } from './saveAutoSegmenterClustersRequestClusters';
 
-export class SaveAutoSegmenterClustersRequest {
-    'clusters': Array<SaveAutoSegmenterClustersRequestClusters>;
+export class GetEmailVerificationCodeResponseAllOf {
+    /**
+    * The verification code associated with the provided email.
+    */
+    'code'?: string | null;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "clusters",
-            "baseName": "clusters",
-            "type": "Array<SaveAutoSegmenterClustersRequestClusters>"
+            "name": "code",
+            "baseName": "code",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoSegmenterClustersRequest.attributeTypeMap;
+        return GetEmailVerificationCodeResponseAllOf.attributeTypeMap;
     }
 }
 

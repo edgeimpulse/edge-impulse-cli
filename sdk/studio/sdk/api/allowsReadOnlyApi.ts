@@ -19,7 +19,7 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { AnomalyModelMetadataResponse } from '../model/anomalyModelMetadataResponse';
+import { AnomalyModelMetadata } from '../model/anomalyModelMetadata';
 import { AnomalyTrainedFeaturesResponse } from '../model/anomalyTrainedFeaturesResponse';
 import { ClassifyJobResponse } from '../model/classifyJobResponse';
 import { ClassifyJobResponsePage } from '../model/classifyJobResponsePage';
@@ -33,6 +33,7 @@ import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
 import { DspSampleFeaturesResponse } from '../model/dspSampleFeaturesResponse';
 import { DspTrainedFeaturesResponse } from '../model/dspTrainedFeaturesResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
+import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetNotesResponse } from '../model/getNotesResponse';
 import { GetPerformanceCalibrationGroundTruthResponse } from '../model/getPerformanceCalibrationGroundTruthResponse';
 import { GetPerformanceCalibrationParameterSetsResponse } from '../model/getPerformanceCalibrationParameterSetsResponse';
@@ -110,6 +111,10 @@ type getClassifyJobResultQueryParams = {
 type getClassifyJobResultPageQueryParams = {
     limit?: number,
     offset?: number,
+};
+
+type getDspMetadataQueryParams = {
+    excludeIncludedSamples?: boolean,
 };
 
 type getDspRawSampleQueryParams = {
@@ -1435,7 +1440,7 @@ export class AllowsReadOnlyApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAnomalyMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyModelMetadataResponse> {
+    public async getAnomalyMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyModelMetadata> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1497,12 +1502,12 @@ export class AllowsReadOnlyApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<AnomalyModelMetadataResponse>((resolve, reject) => {
+            return new Promise<AnomalyModelMetadata>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "AnomalyModelMetadataResponse");
+                        body = ObjectSerializer.deserialize(body, "AnomalyModelMetadata");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1869,12 +1874,96 @@ export class AllowsReadOnlyApi {
     }
 
     /**
+     * Structure describing the similarity and diversity of a dataset
+     * @summary Get diversity visualization data
+     * @param projectId Project ID
+     */
+    public async getDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDiversityDataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDiversityData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetDiversityDataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetDiversityDataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Retrieve the metadata from a generated DSP block.
      * @summary Get metadata
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
      */
-    public async getDspMetadata (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
+    public async getDspMetadata (projectId: number, dspId: number, queryParams: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1903,6 +1992,10 @@ export class AllowsReadOnlyApi {
 
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspMetadata.');
+        }
+
+        if (queryParams.excludeIncludedSamples !== undefined) {
+            localVarQueryParameters['excludeIncludedSamples'] = ObjectSerializer.serialize(queryParams.excludeIncludedSamples, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3678,6 +3771,89 @@ export class AllowsReadOnlyApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling hasDataExplorerFeatures.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<HasDataExplorerFeaturesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Determine if data diversity metrics have been calculated
+     * @summary Check if data diversity metrics exist
+     * @param projectId Project ID
+     */
+    public async hasDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity/exists'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling hasDiversityData.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

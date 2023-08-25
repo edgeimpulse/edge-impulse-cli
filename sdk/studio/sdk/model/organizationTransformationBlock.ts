@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPGroupItem } from './dSPGroupItem';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 
 export class OrganizationTransformationBlock {
@@ -33,6 +34,14 @@ export class OrganizationTransformationBlock {
     'additionalMountPoints': Array<TransformationBlockAdditionalMountPoint>;
     'operatesOn': OrganizationTransformationBlockOperatesOnEnum;
     'allowExtraCliArguments': boolean;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters'?: Array<object>;
+    /**
+    * List of parameters to be rendered in the UI
+    */
+    'parametersUI'?: Array<DSPGroupItem>;
 
     static discriminator: string | undefined = undefined;
 
@@ -121,6 +130,16 @@ export class OrganizationTransformationBlock {
             "name": "allowExtraCliArguments",
             "baseName": "allowExtraCliArguments",
             "type": "boolean"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
+        },
+        {
+            "name": "parametersUI",
+            "baseName": "parametersUI",
+            "type": "Array<DSPGroupItem>"
         }    ];
 
     static getAttributeTypeMap() {

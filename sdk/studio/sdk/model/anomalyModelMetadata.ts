@@ -10,9 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
+import { AnomalyModelMetadataAllOf } from './anomalyModelMetadataAllOf';
+import { AnomalyModelMetadataAllOfClusters } from './anomalyModelMetadataAllOfClusters';
+import { GenericApiResponse } from './genericApiResponse';
+import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class AnomalyModelMetadata {
+    /**
+    * Whether the operation succeeded
+    */
+    'success': boolean;
+    /**
+    * Optional error description (set if \'success\' was false)
+    */
+    'error'?: string;
     /**
     * Date when the model was trained
     */
@@ -28,7 +40,7 @@ export class AnomalyModelMetadata {
     /**
     * Trained K-means clusters
     */
-    'clusters': Array<AnomalyModelMetadataClusters>;
+    'clusters': Array<AnomalyModelMetadataAllOfClusters>;
     /**
     * Which axes were included during training (by index)
     */
@@ -37,10 +49,30 @@ export class AnomalyModelMetadata {
     * Default minimum confidence rating required before tagging as anomaly, based on scores of training data (GMM only).
     */
     'defaultMinimumConfidenceRating'?: number;
+    /**
+    * The types of model that are available
+    */
+    'availableModelTypes'?: Array<KerasModelTypeEnum>;
+    'recommendedModelType'?: KerasModelTypeEnum;
+    /**
+    * Metrics for each of the available model types
+    */
+    'modelValidationMetrics'?: Array<KerasModelMetadataMetrics>;
+    'hasTrainedModel'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        },
         {
             "name": "created",
             "baseName": "created",
@@ -59,7 +91,7 @@ export class AnomalyModelMetadata {
         {
             "name": "clusters",
             "baseName": "clusters",
-            "type": "Array<AnomalyModelMetadataClusters>"
+            "type": "Array<AnomalyModelMetadataAllOfClusters>"
         },
         {
             "name": "axes",
@@ -70,6 +102,26 @@ export class AnomalyModelMetadata {
             "name": "defaultMinimumConfidenceRating",
             "baseName": "defaultMinimumConfidenceRating",
             "type": "number"
+        },
+        {
+            "name": "availableModelTypes",
+            "baseName": "availableModelTypes",
+            "type": "Array<KerasModelTypeEnum>"
+        },
+        {
+            "name": "recommendedModelType",
+            "baseName": "recommendedModelType",
+            "type": "KerasModelTypeEnum"
+        },
+        {
+            "name": "modelValidationMetrics",
+            "baseName": "modelValidationMetrics",
+            "type": "Array<KerasModelMetadataMetrics>"
+        },
+        {
+            "name": "hasTrainedModel",
+            "baseName": "hasTrainedModel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

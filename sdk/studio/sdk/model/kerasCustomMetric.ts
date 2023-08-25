@@ -11,32 +11,32 @@
  */
 
 
-export class RunAutoSegmenterRequest {
-    'simThreshold': number;
-    'minObjectSizePx': number;
-    'whichItemsToInclude': string;
+export class KerasCustomMetric {
+    /**
+    * The name of the metric
+    */
+    'name': string;
+    /**
+    * The value of this metric for this model type
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "simThreshold",
-            "baseName": "simThreshold",
-            "type": "number"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
         },
         {
-            "name": "minObjectSizePx",
-            "baseName": "minObjectSizePx",
-            "type": "number"
-        },
-        {
-            "name": "whichItemsToInclude",
-            "baseName": "whichItemsToInclude",
+            "name": "value",
+            "baseName": "value",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return RunAutoSegmenterRequest.attributeTypeMap;
+        return KerasCustomMetric.attributeTypeMap;
     }
 }
 

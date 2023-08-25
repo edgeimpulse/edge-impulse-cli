@@ -22,7 +22,7 @@ export class OrganizationPipeline {
     /**
     * 15m for every 15 minutes, 2h for every 2 hours, 1d for every 1 day
     */
-    'intervalStr': string;
+    'intervalStr'?: string;
     'steps': Array<OrganizationPipelineStep>;
     'nextRun'?: Date;
     'created': Date;

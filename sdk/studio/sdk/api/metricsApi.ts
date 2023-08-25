@@ -21,6 +21,7 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetPublicMetricsResponse } from '../model/getPublicMetricsResponse';
+import { LogAnalyticsEventRequest } from '../model/logAnalyticsEventRequest';
 import { LogWebsitePageviewRequest } from '../model/logWebsitePageviewRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -147,6 +148,83 @@ export class MetricsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetPublicMetricsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Log an analytics event.
+     * @summary Log analytics event
+     * @param logAnalyticsEventRequest 
+     */
+    public async logAnalyticsEvent (logAnalyticsEventRequest: LogAnalyticsEventRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api-metrics/events';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'logAnalyticsEventRequest' is not null or undefined
+
+
+        if (logAnalyticsEventRequest === null || logAnalyticsEventRequest === undefined) {
+            throw new Error('Required parameter logAnalyticsEventRequest was null or undefined when calling logAnalyticsEvent.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(logAnalyticsEventRequest, "LogAnalyticsEventRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

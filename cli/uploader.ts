@@ -7,9 +7,26 @@ import asyncpool from 'tiny-async-pool';
 import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
-import { ExportBoundingBoxesFile, ExportInputBoundingBox, ExportUploaderInfoFileCategory,
-    parseBoundingBoxLabels, parseUploaderInfo } from '../shared/bounding-box-file-types';
+import {
+    ExportBoundingBoxesFile,
+    ExportInputBoundingBox,
+    ExportUploaderInfoFileCategory,
+    parseBoundingBoxLabels,
+    parseUploaderInfo
+} from '../shared/bounding-box-file-types';
 import { FSHelpers } from './fs-helpers';
+import {
+    checkDatasetMatchesFormat,
+    DatasetConverterHelperCli,
+    deriveDatasetFormat,
+    getAllFilesInFolder
+} from './dataset-converter-cli';
+import {
+    FormatMetadata,
+    getMetadataForFormat,
+    listAllAnnotationFormats,
+    SupportedLabelType
+} from '../shared/uploader/annotations-parsing-shared/label-file-types';
 
 type UploaderFileType = {
     path: string,
@@ -49,6 +66,8 @@ const metadataArgvIx = process.argv.indexOf('--metadata');
 const metadataArgv = metadataArgvIx !== -1 ? process.argv[metadataArgvIx + 1] : undefined;
 const directoryArgvIx = process.argv.indexOf('--directory');
 const directoryArgv = directoryArgvIx !== -1 ? process.argv[directoryArgvIx + 1] : undefined;
+const annotationFormatArgvIx = process.argv.indexOf('--dataset-format');
+const annotationFormatArgv = annotationFormatArgvIx !== -1 ? process.argv[annotationFormatArgvIx + 1] : undefined;
 
 let configFactory: Config;
 
@@ -67,6 +86,22 @@ const cliOptions = {
         }
         return { projectId: projectId };
     }
+};
+
+const logAllAnnotationFormats = () => {
+    [{
+        name: 'OBJECT DETECTION',
+        key: 'object-detection',
+    }, {
+        name: 'SINGLE LABEL',
+        key: 'single-label',
+    }].forEach(type => {
+        console.log(`${type.name}:`);
+        console.log(listAllAnnotationFormats(type.key as SupportedLabelType)
+            .map(format => `    * ${format.name} (--dataset-format ${format.key})`)
+            .join('\n'));
+        console.log();
+    });
 };
 
 // tslint:disable-next-line:no-floating-promises
@@ -98,11 +133,15 @@ const cliOptions = {
 
         console.log('Upload configuration:');
         if (openmvArgv) {
-            console.log('    Label:      ', 'Will be infered from folder structure');
-            console.log('    Category:   ', 'Will be infered from folder structure');
+            console.log('    Label:      ', 'Will be inferred from folder structure');
+            console.log('    Category:   ', 'Will be inferred from folder structure');
+        }
+        else if (annotationFormatArgv) {
+            console.log('    Label:      ', 'Will be taken from any label files in the dataset');
+            console.log('    Category:   ', 'Will be inferred from folder structure');
         }
         else {
-            console.log('    Label:      ', labelArgv || 'Not set, will be infered from file name');
+            console.log('    Label:      ', labelArgv || 'Not set, will be inferred from file name');
             console.log('    Category:   ', categoryArgv || 'training');
         }
     }
@@ -124,6 +163,7 @@ const cliOptions = {
     if (openmvArgv) argv++;
     if (infoFileArgv) argv += 2;
     if (metadataArgv) argv += 2;
+    if (annotationFormatArgv) argv += 2;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -158,30 +198,101 @@ const cliOptions = {
             }
         }
         else if (directoryArgv) {
-            const dir = await fs.promises.realpath(directoryArgv);
-            let dirs = await fs.promises.readdir(dir);
-            if (!dirs.find(x => x === 'training')) {
-                throw new Error(`Cannot find a "training" directory in ${dir} (via --directory)`);
-            }
-            if (!dirs.find(x => x === 'testing')) {
-                throw new Error(`Cannot find a "testing" directory in ${dir} (via --directory)`);
+            // Check this is actually a directory
+            if (!fs.statSync(directoryArgv).isDirectory()) {
+                console.log(directoryArgv + ' is not a directory');
+                process.exit(1);
             }
 
-            files = [];
+            const allFiles = getAllFilesInFolder(directoryArgv);
+            if (allFiles.length === 0) {
+                console.log(directoryArgv + ' contains no valid files');
+                process.exit(1);
+            }
 
-            for (let c of [ 'training', 'testing' ]) {
-                for (let f of await fs.promises.readdir(Path.join(dir, c))) {
-                    let fullPath = Path.join(dir, c, f);
+            // Find the dataset format, if relevant
+            let datasetFormat: FormatMetadata | undefined;
 
-                    if (f.startsWith('.')) continue;
+            if (annotationFormatArgv) {
+                // User has specified a dataset format; check it is correct
+                datasetFormat = getMetadataForFormat(annotationFormatArgv);
+                if (!datasetFormat) {
+                    console.log(`\nFormat '${annotationFormatArgv}' was not recognised. Supported formats:\n`);
+                    logAllAnnotationFormats();
+                    process.exit(1);
+                }
+                const formatMatches = datasetFormat.formatStyle !== 'txt' ?
+                    checkDatasetMatchesFormat(allFiles, datasetFormat.key) : true;
+                if (!formatMatches) {
+                    console.log('\nThis directory does not appear to include any annotation files matching format ' +
+                        `'${datasetFormat.key}'. If there are no annotations to convert, do not pass ` +
+                        '--dataset-format when uploading your data.');
+                    process.exit(1);
+                }
+            } else {
+                // Try to work out what format this dataset is in
+                const derivedFormat = deriveDatasetFormat(allFiles);
+                if (derivedFormat) {
+                    datasetFormat = getMetadataForFormat(derivedFormat);
+                }
+            }
 
-                    files.push({
-                        category: <ExportUploaderInfoFileCategory>c,
-                        label: { type: 'infer' },
-                        path: fullPath,
-                        metadata: { },
-                        boundingBoxes: [],
-                    });
+            if (datasetFormat) {
+                // Convert the directory into EI dataset
+                try {
+                    const datasetConverter = new DatasetConverterHelperCli(datasetFormat,
+                        { silent: silentArgv, validExtensions: VALID_EXTENSIONS });
+                    await datasetConverter.convertDataset(allFiles);
+
+                    const samples = datasetConverter.getSamples();
+                    if (!samples) {
+                        throw new Error('Could not find any samples in the directory.');
+                    }
+                    files = [];
+
+                    for (const sample of samples) {
+                        const annotations = await datasetConverter.getAnnotationsForSample(sample);
+                        files.push({
+                            path: Path.join(sample.directory, sample.filename),
+                            category: sample.category || 'training',
+                            metadata: { },
+                            label: annotations.label,
+                            boundingBoxes: annotations.boundingBoxes
+                        });
+                    }
+                } catch (ex) {
+                    console.log(`Could not convert directory: ${ex}`);
+                    process.exit(1);
+                }
+            }
+            else {
+                // Just upload the directory
+                const dir = await fs.promises.realpath(directoryArgv);
+                let dirs = await fs.promises.readdir(dir);
+                if (!dirs.find(x => x === 'training') || !dirs.find(x => x === 'testing')) {
+                    console.log('\nThe format of the dataset in this directory was not recognised. Select a ' +
+                        'directory containing both "training" and "testing" folders, or upload data in ' +
+                        'another supported format:\n');
+                    logAllAnnotationFormats();
+                    process.exit(1);
+                }
+
+                files = [];
+
+                for (let c of [ 'training', 'testing' ]) {
+                    for (let f of await fs.promises.readdir(Path.join(dir, c))) {
+                        let fullPath = Path.join(dir, c, f);
+
+                        if (f.startsWith('.')) continue;
+
+                        files.push({
+                            category: <ExportUploaderInfoFileCategory>c,
+                            label: { type: 'infer' },
+                            path: fullPath,
+                            metadata: { },
+                            boundingBoxes: [],
+                        });
+                    }
                 }
             }
         }
@@ -260,6 +371,13 @@ const cliOptions = {
                 }
             }
             else {
+                // Check if the user passed a directory
+                if (fileArgs.length === 1 && fs.statSync(fileArgs[0]).isDirectory()) {
+                    console.log('Cannot handle file, file is a directory. Please use --directory to upload.');
+                    process.exit(1);
+                }
+
+                // Check extension is valid
                 if (VALID_EXTENSIONS.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
                     console.log('Cannot handle this file, only ' +
                         VALID_EXTENSIONS.join(', ') + ' supported:', fileArgs[0]);

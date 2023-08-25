@@ -10,28 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { GetAutoSegmenterResponseAllOfItems } from './getAutoSegmenterResponseAllOfItems';
 
-export class GetAutoSegmenterResponseAllOfClusters {
-    'label'?: string;
-    'items': Array<GetAutoSegmenterResponseAllOfItems>;
+export class AddKerasFilesRequest {
+    'zip':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "label",
-            "baseName": "label",
-            "type": "string"
-        },
-        {
-            "name": "items",
-            "baseName": "items",
-            "type": "Array<GetAutoSegmenterResponseAllOfItems>"
+            "name": "zip",
+            "baseName": "zip",
+            "type": "RequestFile"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoSegmenterResponseAllOfClusters.attributeTypeMap;
+        return AddKerasFilesRequest.attributeTypeMap;
     }
 }
 

@@ -45,6 +45,7 @@ export enum PageType {
     DeploymentBeta = 43,
     AutoSegmenter = 44,
     Scratchpad = 45,
+    TrialSignup = 46,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -65,6 +66,7 @@ export enum PageType {
     OrganizationJobs = 107,
     OrganizationDataHub = 108,
     OrganizationDataCampaignsDashboard = 109,
+    OrganizationDataFiles = 110,
     UploadPortal = 200,
 }
 

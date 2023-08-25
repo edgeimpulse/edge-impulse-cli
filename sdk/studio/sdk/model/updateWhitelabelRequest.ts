@@ -10,27 +10,25 @@
  * Do not edit the class manually.
  */
 
+import { ProjectType } from './projectType';
 
-export class SaveAutoSegmenterClustersRequestClusters {
-    'index': number;
-    'label': string;
+/**
+* Only fields set in this object will be updated.
+*/
+export class UpdateWhitelabelRequest {
+    'supportedProjectTypes'?: Array<ProjectType>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "index",
-            "baseName": "index",
-            "type": "number"
-        },
-        {
-            "name": "label",
-            "baseName": "label",
-            "type": "string"
+            "name": "supportedProjectTypes",
+            "baseName": "supportedProjectTypes",
+            "type": "Array<ProjectType>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoSegmenterClustersRequestClusters.attributeTypeMap;
+        return UpdateWhitelabelRequest.attributeTypeMap;
     }
 }
 

@@ -56,6 +56,7 @@ export class OrganizationCreateProjectWithFiles {
     'pipelineStep'?: number;
     'operatesOn': OrganizationCreateProjectWithFilesOperatesOnEnum;
     'files': Array<OrganizationCreateProjectWithFilesAllOfFiles>;
+    'fileCountForFilter': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -239,6 +240,11 @@ export class OrganizationCreateProjectWithFiles {
             "name": "files",
             "baseName": "files",
             "type": "Array<OrganizationCreateProjectWithFilesAllOfFiles>"
+        },
+        {
+            "name": "fileCountForFilter",
+            "baseName": "fileCountForFilter",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

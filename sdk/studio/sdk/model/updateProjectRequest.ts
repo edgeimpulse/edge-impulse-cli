@@ -100,6 +100,10 @@ export class UpdateProjectRequest {
     */
     'csvImportConfig'?: object;
     'inPretrainedModelFlow'?: boolean;
+    /**
+    * Set to \'0\' to disable DSP paging
+    */
+    'dspPageSize'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -228,6 +232,11 @@ export class UpdateProjectRequest {
             "name": "inPretrainedModelFlow",
             "baseName": "inPretrainedModelFlow",
             "type": "boolean"
+        },
+        {
+            "name": "dspPageSize",
+            "baseName": "dspPageSize",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

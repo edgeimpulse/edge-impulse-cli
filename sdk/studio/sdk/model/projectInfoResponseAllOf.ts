@@ -75,6 +75,7 @@ export class ProjectInfoResponseAllOf {
     'csvImportConfig'?: object;
     'studioUrl': string;
     'inPretrainedModelFlow': boolean;
+    'dspPageSize'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -208,6 +209,11 @@ export class ProjectInfoResponseAllOf {
             "name": "inPretrainedModelFlow",
             "baseName": "inPretrainedModelFlow",
             "type": "boolean"
+        },
+        {
+            "name": "dspPageSize",
+            "baseName": "dspPageSize",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

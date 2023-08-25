@@ -28,6 +28,18 @@ export class Organization {
     */
     'whitelabelId': number | null;
     'projects'?: Array<Project>;
+    /**
+    * Unique identifier of the trial this organization belongs to, if any.
+    */
+    'trialId': number | null;
+    /**
+    * Date when the trial expired, if any. A expired trial has a grace period of 30 days before it\'s associated organization is deleted.
+    */
+    'trialExpiredDate': Date | null;
+    /**
+    * Date when the trial was upgraded to a full enterprise account, if any.
+    */
+    'trialUpgradedDate': Date | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -71,6 +83,21 @@ export class Organization {
             "name": "projects",
             "baseName": "projects",
             "type": "Array<Project>"
+        },
+        {
+            "name": "trialId",
+            "baseName": "trialId",
+            "type": "number"
+        },
+        {
+            "name": "trialExpiredDate",
+            "baseName": "trialExpiredDate",
+            "type": "Date"
+        },
+        {
+            "name": "trialUpgradedDate",
+            "baseName": "trialUpgradedDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

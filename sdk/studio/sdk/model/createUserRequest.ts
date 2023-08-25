@@ -52,6 +52,10 @@ export class CreateUserRequest {
     * Session ID. Optional field
     */
     'sessionId'?: string;
+    /**
+    * ACME Inc.
+    */
+    'companyName'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -104,6 +108,11 @@ export class CreateUserRequest {
         {
             "name": "sessionId",
             "baseName": "sessionId",
+            "type": "string"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
             "type": "string"
         }    ];
 

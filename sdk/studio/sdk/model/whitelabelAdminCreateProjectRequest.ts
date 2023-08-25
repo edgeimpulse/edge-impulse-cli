@@ -11,32 +11,41 @@
  */
 
 
-export class AnomalyModelMetadataClusters {
+export class WhitelabelAdminCreateProjectRequest {
     /**
-    * Center of each cluster (one value per axis)
+    * The name of the project.
     */
-    'center': Array<number>;
+    'projectName': string;
     /**
-    * Size of the cluster
+    * Unique identifier of the owner of the new project.
     */
-    'maxError': number;
+    'ownerId'?: number;
+    /**
+    * Email of the owner of the new project.
+    */
+    'ownerEmail'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "center",
-            "baseName": "center",
-            "type": "Array<number>"
+            "name": "projectName",
+            "baseName": "projectName",
+            "type": "string"
         },
         {
-            "name": "maxError",
-            "baseName": "maxError",
+            "name": "ownerId",
+            "baseName": "ownerId",
             "type": "number"
+        },
+        {
+            "name": "ownerEmail",
+            "baseName": "ownerEmail",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AnomalyModelMetadataClusters.attributeTypeMap;
+        return WhitelabelAdminCreateProjectRequest.attributeTypeMap;
     }
 }
 

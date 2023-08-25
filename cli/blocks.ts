@@ -25,7 +25,8 @@ import {
 } from '../sdk/studio';
 import { ips } from './get-ips';
 import { spawnHelper } from './spawn-helper';
-import { ImageInputScaling, RequestDetailedFile, UpdateOrganizationTransferLearningBlockRequest } from '../sdk/studio/sdk/api';
+import { ImageInputScaling, RequestDetailedFile, UpdateOrganizationTransferLearningBlockRequest,
+    UpdateOrganizationTransformationBlockRequest } from '../sdk/studio/sdk/api';
 
 const version = getCliVersion();
 
@@ -47,6 +48,7 @@ export type BlockConfigItem = {
     tlOperatesOn?: OrganizationTransferLearningOperatesOn,
     tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
     tlImageInputScaling?: ImageInputScaling,
+    tlIndRequiresGpu?: boolean,
     repositoryUrl?: string;
 } | {
     type: 'deploy',
@@ -356,6 +358,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         let blockTlOperatesOn: OrganizationTransferLearningOperatesOn | undefined;
         let blockTlObjectDetectionLastLayer: ObjectDetectionLastLayer | undefined;
         let blockTlImageInputScaling: ImageInputScaling | undefined;
+        let blockTlCanRunWhere: 'gpu' | 'cpu-or-gpu' | undefined;
         let transformMountpoints: {
             bucketId: number;
             mountPoint: string;
@@ -607,6 +610,23 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         message: `What's the last layer of this object detection model?`,
                     }])).lastLayer;
             }
+
+            blockTlCanRunWhere = <'gpu' | 'cpu-or-gpu'>(await inquirer.prompt([{
+                type: 'list',
+                name: 'canRunWhere',
+                default: 'cpu-or-gpu',
+                choices: [
+                    {
+                        name: 'Both CPU or GPU (default)',
+                        value: 'cpu-or-gpu'
+                    },
+                    {
+                        name: 'Only on GPU (GPUs are only available for enterprise projects)',
+                        value: 'gpu'
+                    },
+                ],
+                message: 'Where can your model train?',
+            }])).canRunWhere;
         }
 
 
@@ -640,6 +660,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
             tlImageInputScaling: blockTlImageInputScaling,
             tlOperatesOn: blockTlOperatesOn,
+            tlIndRequiresGpu: blockTlCanRunWhere === 'gpu',
             deployCategory: deployCategory,
             transformMountpoints: transformMountpoints,
         } : {
@@ -651,6 +672,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             tlObjectDetectionLastLayer: blockTlObjectDetectionLastLayer,
             tlImageInputScaling: blockTlImageInputScaling,
             tlOperatesOn: blockTlOperatesOn,
+            tlIndRequiresGpu: blockTlCanRunWhere === 'gpu',
             deployCategory: deployCategory,
             transformMountpoints: transformMountpoints,
         };
@@ -763,8 +785,9 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
         catch (ex2) {
             let ex = <Error>ex2;
-            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`,
-                ex.message || ex.toString());
+            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`);
+            console.error('    ' + ex.message || ex.toString());
+            console.error('Or, run with --clean to re-authenticate.');
             process.exit(1);
         }
 
@@ -807,13 +830,20 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 // Create a new block
                 let newResponse: { success: boolean, id: number, error?: string };
                 if (currentBlockConfig.type === 'transform') {
+                    let parameters: { }[] | undefined;
+
+                    const paramsFile = Path.join(Path.dirname(dockerfilePath), 'parameters.json');
+                    if (await exists(paramsFile)) {
+                        parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
+                    }
+
                     const newBlockObject: AddOrganizationTransformationBlockRequest = {
                         name: blockName,
                         description: blockDescription,
                         dockerContainer: '',
                         indMetadata: true,
                         cliArguments: '',
-                        allowExtraCliArguments: true,
+                        allowExtraCliArguments: parameters ? false : true,
                         operatesOn: currentBlockConfig.operatesOn || 'file',
                         additionalMountPoints: (currentBlockConfig.transformMountpoints || []).map(x => {
                             return {
@@ -822,6 +852,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 mountPoint: x.mountPoint,
                             };
                         }),
+                        parameters: parameters,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newBlockObject);
@@ -908,6 +939,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         objectDetectionLastLayer: currentBlockConfig.tlObjectDetectionLastLayer,
                         imageInputScaling: currentBlockConfig.tlImageInputScaling,
                         operatesOn: currentBlockConfig.tlOperatesOn || 'image',
+                        indRequiresGpu: currentBlockConfig.tlIndRequiresGpu,
                         repositoryUrl: repoUrl,
                         implementationVersion,
                         parameters: parameters,
@@ -949,7 +981,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 await writeConfigFile();
             }
             else {
-                if (currentBlockConfig.type === 'transferLearning') {
+                if (currentBlockConfig.type === 'transferLearning' || currentBlockConfig.type === 'transform') {
                     // Validation is done on the server, so just cast to whatever is needed to bypass
                     // the TypeScript check
                     let parameters: { }[] | undefined;
@@ -959,16 +991,58 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
                     }
 
-                    console.log('');
-                    console.log(`INFO: Found parameters.json file, updated parameters for this block`);
-                    console.log('');
-
                     if (parameters) {
-                        const newBlockObject: UpdateOrganizationTransferLearningBlockRequest = {
-                            parameters: parameters,
-                        };
-                        await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
-                            organizationId, currentBlockConfig.id, newBlockObject);
+                        let currParams: { }[] | undefined;
+                        if (currentBlockConfig.type === 'transferLearning') {
+                            currParams = (await config.api.organizationBlocks.listOrganizationTransferLearningBlocks(
+                                organizationId)).transferLearningBlocks
+                                    .find(x => x.id === currentBlockConfig?.id)?.parameters;
+                        }
+                        else if (currentBlockConfig.type === 'transform') {
+                            currParams = (await config.api.organizationBlocks.listOrganizationTransformationBlocks(
+                                organizationId)).transformationBlocks
+                                    .find(x => x.id === currentBlockConfig?.id)?.parameters;
+                        }
+
+                        let shouldOverwrite = true;
+
+                        if (parameters && currParams && currParams.length !== 0) {
+                            if (!deepCompare(parameters, currParams)) {
+                                console.log('');
+                                console.log('Your current parameters.json differs from the parameters for this block.');
+                                console.log('Remote block config:');
+                                console.log(JSON.stringify(currParams, null, 4).split('\n').map(x => '    ' + x).join('\n'));
+                                console.log('Local parameters.json:');
+                                console.log(JSON.stringify(parameters, null, 4).split('\n').map(x => '    ' + x).join('\n'));
+                                console.log('');
+                                shouldOverwrite = <boolean>(await inquirer.prompt([{
+                                    type: 'confirm',
+                                    name: 'overwrite',
+                                    message: 'Do you want to override the parameters?',
+                                }])).overwrite;
+                            }
+                        }
+
+                        if (shouldOverwrite) {
+                            console.log('');
+                            console.log(`INFO: Found parameters.json file, updating parameters for this block`);
+                            console.log('');
+
+                            if (currentBlockConfig.type === 'transferLearning') {
+                                const newBlockObject: UpdateOrganizationTransferLearningBlockRequest = {
+                                    parameters: parameters,
+                                };
+                                await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
+                                    organizationId, currentBlockConfig.id, newBlockObject);
+                            }
+                            else if (currentBlockConfig.type === 'transform') {
+                                const newBlockObject: UpdateOrganizationTransformationBlockRequest = {
+                                    parameters: parameters,
+                                };
+                                await config.api.organizationBlocks.updateOrganizationTransformationBlock(
+                                    organizationId, currentBlockConfig.id, newBlockObject);
+                            }
+                        }
                     }
                 }
             }
@@ -1167,8 +1241,9 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
         catch (ex2) {
             let ex = <Error>ex2;
-            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`,
-                ex.message || ex.toString());
+            console.error(`Unable to find organization ${organizationId}. Does the organization still exist?`);
+            console.error('    ' + ex.message || ex.toString());
+            console.error('Or, run with --clean to re-authenticate.');
             process.exit(1);
         }
 
@@ -1191,6 +1266,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             let ex2 = <Error>ex;
 
             console.error('Error while running block: ' + ex2.stack || ex2.toString());
+            console.error('Run with --clean to clear state');
             process.exit(1);
         }
     }
@@ -1399,4 +1475,44 @@ async function guessRepoUrl() {
     catch (ex) {
         return undefined;
     }
+}
+
+
+/**
+ * Deep compare two objects (underneaths JSON stringifies them)
+ */
+function deepCompare(obj1: { [k: string]: any } | any, obj2: { [k: string]: any } | any) {
+    // keys need to be ordered first
+    const orderObject = (unordered: { [k: string]: any }) => {
+        const ordered = Object.keys(unordered).sort().reduce(
+            (curr: { [k: string]: any }, key) => {
+                curr[key] = unordered[key];
+                return curr;
+            },
+            { }
+        );
+        for (let k of Object.keys(ordered)) {
+            if (Array.isArray(ordered[k])) {
+                continue;
+            }
+            if (ordered[k] instanceof Date) {
+                continue;
+            }
+            if (ordered[k] instanceof Object) {
+                ordered[k] = orderObject(<{ [k: string]: any }>ordered[k]);
+            }
+        }
+        return ordered;
+    };
+
+    let obj1Ordered = obj1 instanceof Object ?
+        // tslint:disable-next-line: no-unsafe-any
+        orderObject(obj1) :
+        obj1;
+    let obj2Ordered = obj1 instanceof Object ?
+        // tslint:disable-next-line: no-unsafe-any
+        orderObject(obj2) :
+        obj2;
+
+    return JSON.stringify(obj1Ordered) === JSON.stringify(obj2Ordered);
 }

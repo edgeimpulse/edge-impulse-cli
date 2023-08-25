@@ -64,6 +64,10 @@ type dspSampleTrainedFeaturesQueryParams = {
     featureAx3: number,
 };
 
+type getDspMetadataQueryParams = {
+    excludeIncludedSamples?: boolean,
+};
+
 type getDspRawSampleQueryParams = {
     limitPayloadValues?: number,
 };
@@ -1057,8 +1061,9 @@ export class DSPApi {
      * @summary Get metadata
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
      */
-    public async getDspMetadata (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
+    public async getDspMetadata (projectId: number, dspId: number, queryParams: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1087,6 +1092,10 @@ export class DSPApi {
 
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspMetadata.');
+        }
+
+        if (queryParams.excludeIncludedSamples !== undefined) {
+            localVarQueryParameters['excludeIncludedSamples'] = ObjectSerializer.serialize(queryParams.excludeIncludedSamples, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

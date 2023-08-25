@@ -11,6 +11,7 @@
  */
 
 import { AdminApiUserAllOf } from './adminApiUserAllOf';
+import { EnterpriseTrial } from './enterpriseTrial';
 import { Permission } from './permission';
 import { Project } from './project';
 import { StaffInfo } from './staffInfo';
@@ -65,6 +66,10 @@ export class AdminApiUser {
     * Whether the user is suspended.
     */
     'suspended': boolean;
+    /**
+    * Current or past enterprise trials.
+    */
+    'trials': Array<EnterpriseTrial>;
 
     static discriminator: string | undefined = undefined;
 
@@ -178,6 +183,11 @@ export class AdminApiUser {
             "name": "suspended",
             "baseName": "suspended",
             "type": "boolean"
+        },
+        {
+            "name": "trials",
+            "baseName": "trials",
+            "type": "Array<EnterpriseTrial>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -257,8 +257,8 @@ export class ImpulseInputBlock {
 }
 
 
-export type ImpulseInputBlockTypeEnum = 'time-series' | 'image' | 'video';
-export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image', 'video'];
+export type ImpulseInputBlockTypeEnum = 'time-series' | 'image';
+export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image'];
 
 export type ImpulseInputBlockResizeModeEnum = 'squash' | 'fit-short' | 'fit-long' | 'crop';
 export const ImpulseInputBlockResizeModeEnumValues: string[] = ['squash', 'fit-short', 'fit-long', 'crop'];

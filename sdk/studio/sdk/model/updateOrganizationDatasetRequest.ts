@@ -10,13 +10,14 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationAddDatasetRequestBucket } from './organizationAddDatasetRequestBucket';
+import { UpdateOrganizationDatasetRequestBucket } from './updateOrganizationDatasetRequestBucket';
 
 export class UpdateOrganizationDatasetRequest {
     'dataset'?: string;
     'tags'?: Array<string>;
     'category'?: string;
-    'bucket'?: OrganizationAddDatasetRequestBucket;
+    'type'?: UpdateOrganizationDatasetRequestTypeEnum;
+    'bucket'?: UpdateOrganizationDatasetRequestBucket;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,9 +38,14 @@ export class UpdateOrganizationDatasetRequest {
             "type": "string"
         },
         {
+            "name": "type",
+            "baseName": "type",
+            "type": "UpdateOrganizationDatasetRequestTypeEnum"
+        },
+        {
             "name": "bucket",
             "baseName": "bucket",
-            "type": "OrganizationAddDatasetRequestBucket"
+            "type": "UpdateOrganizationDatasetRequestBucket"
         }    ];
 
     static getAttributeTypeMap() {
@@ -47,3 +53,6 @@ export class UpdateOrganizationDatasetRequest {
     }
 }
 
+
+export type UpdateOrganizationDatasetRequestTypeEnum = 'clinical' | 'files';
+export const UpdateOrganizationDatasetRequestTypeEnumValues: string[] = ['clinical', 'files'];

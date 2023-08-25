@@ -10,21 +10,25 @@
  * Do not edit the class manually.
  */
 
+import { AdminGetFeatureFlagsResponseAllOfFlags } from './adminGetFeatureFlagsResponseAllOfFlags';
 
-export class SaveAutoSegmenterClustersResponseAllOf {
-    'updatedItemCount': number;
+export class AdminGetFeatureFlagsResponseAllOf {
+    /**
+    * List of feature flags.
+    */
+    'flags': Array<AdminGetFeatureFlagsResponseAllOfFlags>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "updatedItemCount",
-            "baseName": "updatedItemCount",
-            "type": "number"
+            "name": "flags",
+            "baseName": "flags",
+            "type": "Array<AdminGetFeatureFlagsResponseAllOfFlags>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoSegmenterClustersResponseAllOf.attributeTypeMap;
+        return AdminGetFeatureFlagsResponseAllOf.attributeTypeMap;
     }
 }
 

@@ -17,6 +17,10 @@ export class VerifyOrganizationBucketResponseAllOf {
     * 20 random files from the bucket.
     */
     'files': Array<VerifyOrganizationBucketResponseAllOfFiles>;
+    /**
+    * A signed URL that allows you to PUT an item, to check whether CORS headers are set up correctly for this bucket.
+    */
+    'signedUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -25,6 +29,11 @@ export class VerifyOrganizationBucketResponseAllOf {
             "name": "files",
             "baseName": "files",
             "type": "Array<VerifyOrganizationBucketResponseAllOfFiles>"
+        },
+        {
+            "name": "signedUrl",
+            "baseName": "signedUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

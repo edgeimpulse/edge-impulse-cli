@@ -11,32 +11,20 @@
  */
 
 
-export class DevelopmentBoard {
-    'name': string;
-    'image': string;
-    'docsUrl': string;
+export class UserDismissNotificationRequest {
+    'notification': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "image",
-            "baseName": "image",
-            "type": "string"
-        },
-        {
-            "name": "docsUrl",
-            "baseName": "docsUrl",
+            "name": "notification",
+            "baseName": "notification",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return DevelopmentBoard.attributeTypeMap;
+        return UserDismissNotificationRequest.attributeTypeMap;
     }
 }
 

@@ -52,6 +52,14 @@ export class StartEnterpriseTrialRequest {
     * State or province of the company requesting the trial.
     */
     'stateOrProvince'?: string;
+    /**
+    * Origin of the redirect URL returned as result of creating the trial user.
+    */
+    'redirectUrlOrigin'?: string;
+    /**
+    * Query parameters to be appended to the redirect URL returned as result of creating the trial user.
+    */
+    'redirectUrlQueryParams'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -104,6 +112,16 @@ export class StartEnterpriseTrialRequest {
         {
             "name": "stateOrProvince",
             "baseName": "stateOrProvince",
+            "type": "string"
+        },
+        {
+            "name": "redirectUrlOrigin",
+            "baseName": "redirectUrlOrigin",
+            "type": "string"
+        },
+        {
+            "name": "redirectUrlQueryParams",
+            "baseName": "redirectUrlQueryParams",
             "type": "string"
         }    ];
 

@@ -914,7 +914,10 @@ export default class EiSerialProtocol {
                 callback(Buffer.concat(allBuffers));
             }
 
-            checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            // cut the find sequence buffer
+            if (checkSeqBuffer.length > seq.length) {
+                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            }
         };
         this._serial.on('data', fn);
 

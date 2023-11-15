@@ -10,22 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { Project } from './project';
 
-export class ListOrganizationProjectsResponseAllOf {
-    'projects': Array<Project>;
+export class UpdateWhitelabelLearningBlocksRequest {
+    /**
+    * The types of the learning blocks that are enabled for this whitelabel.
+    */
+    'learningBlocks'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projects",
-            "baseName": "projects",
-            "type": "Array<Project>"
+            "name": "learningBlocks",
+            "baseName": "learningBlocks",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListOrganizationProjectsResponseAllOf.attributeTypeMap;
+        return UpdateWhitelabelLearningBlocksRequest.attributeTypeMap;
     }
 }
 

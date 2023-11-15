@@ -20,6 +20,10 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     'transformationJobId'?: number;
     'transformationJobStatus': TransformationJobStatusEnum;
     'linkToDataItem': string;
+    /**
+    * Only set after job was finished
+    */
+    'lengthString': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +61,11 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
         {
             "name": "linkToDataItem",
             "baseName": "linkToDataItem",
+            "type": "string"
+        },
+        {
+            "name": "lengthString",
+            "baseName": "lengthString",
             "type": "string"
         }    ];
 

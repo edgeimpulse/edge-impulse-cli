@@ -11,9 +11,11 @@
  */
 
 import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
+import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 
 /**
@@ -45,6 +47,10 @@ export class SetKerasParameterRequest {
     * Learning rate (between 0 and 1) (only in visual mode).
     */
     'learningRate'?: number;
+    /**
+    * Batch size used during training (only in visual mode).
+    */
+    'batchSize'?: number;
     /**
     * Train/test split (between 0 and 1)
     */
@@ -80,6 +86,8 @@ export class SetKerasParameterRequest {
     * Training parameters, this list depends on the list of parameters that the model exposes.
     */
     'customParameters'?: { [key: string]: string; };
+    'anomalyCapacity'?: AnomalyCapacity;
+    'lastShownModelVariant'?: KerasModelVariantEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -117,6 +125,11 @@ export class SetKerasParameterRequest {
         {
             "name": "learningRate",
             "baseName": "learningRate",
+            "type": "number"
+        },
+        {
+            "name": "batchSize",
+            "baseName": "batchSize",
             "type": "number"
         },
         {
@@ -173,6 +186,16 @@ export class SetKerasParameterRequest {
             "name": "customParameters",
             "baseName": "customParameters",
             "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "anomalyCapacity",
+            "baseName": "anomalyCapacity",
+            "type": "AnomalyCapacity"
+        },
+        {
+            "name": "lastShownModelVariant",
+            "baseName": "lastShownModelVariant",
+            "type": "KerasModelVariantEnum"
         }    ];
 
     static getAttributeTypeMap() {

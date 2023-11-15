@@ -12,9 +12,25 @@
 
 
 export class EntitlementLimits {
+    /**
+    * Storage entitlement, in bytes
+    */
     'totalStorage'?: number;
+    /**
+    * Total compute time entitlement (CPU + GPU), in seconds
+    */
     'computeTimePerYear'?: number;
+    /**
+    * GPU compute time entitlement, in seconds
+    */
+    'gpuComputeTimePerYear'?: number;
+    /**
+    * Number of projects allowed for this organization
+    */
     'numberOfProjects'?: number;
+    /**
+    * Number of users allowed for this organization
+    */
     'numberOfUsers'?: number;
 
     static discriminator: string | undefined = undefined;
@@ -28,6 +44,11 @@ export class EntitlementLimits {
         {
             "name": "computeTimePerYear",
             "baseName": "computeTimePerYear",
+            "type": "number"
+        },
+        {
+            "name": "gpuComputeTimePerYear",
+            "baseName": "gpuComputeTimePerYear",
             "type": "number"
         },
         {

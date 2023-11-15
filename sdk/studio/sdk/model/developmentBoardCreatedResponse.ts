@@ -10,11 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetFeatureFlagsResponseAllOf } from './adminGetFeatureFlagsResponseAllOf';
-import { AdminGetFeatureFlagsResponseAllOfFlags } from './adminGetFeatureFlagsResponseAllOfFlags';
+import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class AdminGetFeatureFlagsResponse {
+export class DevelopmentBoardCreatedResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,10 +22,7 @@ export class AdminGetFeatureFlagsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * List of feature flags.
-    */
-    'flags': Array<AdminGetFeatureFlagsResponseAllOfFlags>;
+    'id': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,13 +38,13 @@ export class AdminGetFeatureFlagsResponse {
             "type": "string"
         },
         {
-            "name": "flags",
-            "baseName": "flags",
-            "type": "Array<AdminGetFeatureFlagsResponseAllOfFlags>"
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetFeatureFlagsResponse.attributeTypeMap;
+        return DevelopmentBoardCreatedResponse.attributeTypeMap;
     }
 }
 

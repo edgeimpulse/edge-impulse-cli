@@ -24,6 +24,7 @@ import { AddOrganizationApiKeyRequest } from '../model/addOrganizationApiKeyRequ
 import { AdminAddOrganizationUserRequest } from '../model/adminAddOrganizationUserRequest';
 import { AdminAddProjectUserRequest } from '../model/adminAddProjectUserRequest';
 import { AdminAddUserRequest } from '../model/adminAddUserRequest';
+import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
 import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
 import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
 import { AdminGetUserMetricsResponse } from '../model/adminGetUserMetricsResponse';
@@ -36,13 +37,16 @@ import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
 import { CreateOrganizationRequest } from '../model/createOrganizationRequest';
 import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
 import { CreateProjectResponse } from '../model/createProjectResponse';
+import { DevelopmentBoardCreatedResponse } from '../model/developmentBoardCreatedResponse';
+import { DevelopmentBoardRequest } from '../model/developmentBoardRequest';
+import { DevelopmentBoardRequestUpdate } from '../model/developmentBoardRequestUpdate';
 import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetWhitelabelResponse } from '../model/getWhitelabelResponse';
 import { InviteOrganizationMemberRequest } from '../model/inviteOrganizationMemberRequest';
 import { ListOrganizationApiKeysResponse } from '../model/listOrganizationApiKeysResponse';
-import { ListOrganizationProjectsResponse } from '../model/listOrganizationProjectsResponse';
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
+import { ListProjectsResponse } from '../model/listProjectsResponse';
 import { OrganizationInfoResponse } from '../model/organizationInfoResponse';
 import { OrganizationMetricsResponse } from '../model/organizationMetricsResponse';
 import { ProjectInfoResponse } from '../model/projectInfoResponse';
@@ -55,11 +59,11 @@ import { UpdateThemeColorsRequest } from '../model/updateThemeColorsRequest';
 import { UpdateWhitelabelDefaultDeploymentTargetRequest } from '../model/updateWhitelabelDefaultDeploymentTargetRequest';
 import { UpdateWhitelabelDeploymentOptionsOrderRequest } from '../model/updateWhitelabelDeploymentOptionsOrderRequest';
 import { UpdateWhitelabelDeploymentTargetsRequest } from '../model/updateWhitelabelDeploymentTargetsRequest';
+import { UpdateWhitelabelLearningBlocksRequest } from '../model/updateWhitelabelLearningBlocksRequest';
 import { UpdateWhitelabelRequest } from '../model/updateWhitelabelRequest';
 import { UploadAssetResponse } from '../model/uploadAssetResponse';
 import { UploadReadmeImageResponse } from '../model/uploadReadmeImageResponse';
 import { WhitelabelAdminCreateOrganizationRequest } from '../model/whitelabelAdminCreateOrganizationRequest';
-import { WhitelabelAdminCreateProjectRequest } from '../model/whitelabelAdminCreateProjectRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -118,6 +122,10 @@ type whitelabelAdminGetUsersQueryParams = {
     limit?: number,
     offset?: number,
     search?: string,
+};
+
+type whitelabelAdminUpdateDevelopmentBoardImageFormParams = {
+    image?: RequestFile,
 };
 
 type whitelabelAdminUpdateThemeDeviceLogoFormParams = {
@@ -897,7 +905,7 @@ export class OrganizationsApi {
      * @summary Get projects
      * @param organizationId Organization ID
      */
-    public async listOrganizationProjects (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationProjectsResponse> {
+    public async listOrganizationProjects (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -951,12 +959,12 @@ export class OrganizationsApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<ListOrganizationProjectsResponse>((resolve, reject) => {
+            return new Promise<ListProjectsResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "ListOrganizationProjectsResponse");
+                        body = ObjectSerializer.deserialize(body, "ListProjectsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2069,6 +2077,91 @@ export class OrganizationsApi {
     }
 
     /**
+     * White label admin only API to add a development board.
+     * @summary Add a development board to a whitelabel
+     * @param organizationId Organization ID
+     * @param developmentBoardRequest 
+     */
+    public async whitelabelAdminAddDevelopmentBoard (organizationId: number, developmentBoardRequest?: DevelopmentBoardRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DevelopmentBoardCreatedResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminAddDevelopmentBoard.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(developmentBoardRequest, "DevelopmentBoardRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<DevelopmentBoardCreatedResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DevelopmentBoardCreatedResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to add a user to an organization. If no user is provided, the current user is used.
      * @summary Add user to an organization
      * @param organizationId Organization ID
@@ -2349,14 +2442,16 @@ export class OrganizationsApi {
     }
 
     /**
-     * Create a new free tier project. This is an internal API only available to white label admins.
-     * @summary Create a new project within white label context.
+     * White label admin only API to create a new project for an organization.
+     * @summary Create a new organization project
      * @param organizationId Organization ID
-     * @param whitelabelAdminCreateProjectRequest 
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param adminCreateProjectRequest 
      */
-    public async whitelabelAdminCreateProject (organizationId: number, whitelabelAdminCreateProjectRequest: WhitelabelAdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+    public async whitelabelAdminCreateOrganizationProject (organizationId: number, innerOrganizationId: number, adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/projects'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -2374,14 +2469,21 @@ export class OrganizationsApi {
 
 
         if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminCreateProject.');
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminCreateOrganizationProject.');
         }
 
-        // verify required parameter 'whitelabelAdminCreateProjectRequest' is not null or undefined
+        // verify required parameter 'innerOrganizationId' is not null or undefined
 
 
-        if (whitelabelAdminCreateProjectRequest === null || whitelabelAdminCreateProjectRequest === undefined) {
-            throw new Error('Required parameter whitelabelAdminCreateProjectRequest was null or undefined when calling whitelabelAdminCreateProject.');
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminCreateOrganizationProject.');
+        }
+
+        // verify required parameter 'adminCreateProjectRequest' is not null or undefined
+
+
+        if (adminCreateProjectRequest === null || adminCreateProjectRequest === undefined) {
+            throw new Error('Required parameter adminCreateProjectRequest was null or undefined when calling whitelabelAdminCreateOrganizationProject.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2397,7 +2499,7 @@ export class OrganizationsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(whitelabelAdminCreateProjectRequest, "WhitelabelAdminCreateProjectRequest")
+            body: ObjectSerializer.serialize(adminCreateProjectRequest, "AdminCreateProjectRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -2422,6 +2524,282 @@ export class OrganizationsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Create a new free tier project. This is an internal API only available to white label admins.
+     * @summary Create a new project within white label context.
+     * @param organizationId Organization ID
+     * @param adminCreateProjectRequest 
+     */
+    public async whitelabelAdminCreateProject (organizationId: number, adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminCreateProject.');
+        }
+
+        // verify required parameter 'adminCreateProjectRequest' is not null or undefined
+
+
+        if (adminCreateProjectRequest === null || adminCreateProjectRequest === undefined) {
+            throw new Error('Required parameter adminCreateProjectRequest was null or undefined when calling whitelabelAdminCreateProject.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminCreateProjectRequest, "AdminCreateProjectRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateProjectResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * White label admin only API to delete an organization.
+     * @summary Delete an organization
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     */
+    public async whitelabelAdminDeleteOrganization (organizationId: number, innerOrganizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminDeleteOrganization.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminDeleteOrganization.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * White label admin only API to delete a project.
+     * @summary Delete a project
+     * @param organizationId Organization ID
+     * @param projectId Project ID
+     */
+    public async whitelabelAdminDeleteProject (organizationId: number, projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects/{projectId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminDeleteProject.');
+        }
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling whitelabelAdminDeleteProject.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -3309,6 +3687,98 @@ export class OrganizationsApi {
     }
 
     /**
+     * White label admin only API to remove a development board.
+     * @summary Remove a development board from a whitelabel
+     * @param organizationId Organization ID
+     * @param developmentBoardId Development board ID.
+     */
+    public async whitelabelAdminRemoveDevelopmentBoard (organizationId: number, developmentBoardId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards/{developmentBoardId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'developmentBoardId' + '}', encodeURIComponent(String(developmentBoardId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminRemoveDevelopmentBoard.');
+        }
+
+        // verify required parameter 'developmentBoardId' is not null or undefined
+
+
+        if (developmentBoardId === null || developmentBoardId === undefined) {
+            throw new Error('Required parameter developmentBoardId was null or undefined when calling whitelabelAdminRemoveDevelopmentBoard.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to remove a user from an organization.
      * @summary Remove user from an organization
      * @param organizationId Organization ID
@@ -3787,6 +4257,198 @@ export class OrganizationsApi {
     }
 
     /**
+     * White label admin only API to update a development board.
+     * @summary Update a development board in a whitelabel
+     * @param organizationId Organization ID
+     * @param developmentBoardId Development board ID.
+     * @param developmentBoardRequestUpdate 
+     */
+    public async whitelabelAdminUpdateDevelopmentBoard (organizationId: number, developmentBoardId: number, developmentBoardRequestUpdate?: DevelopmentBoardRequestUpdate, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards/{developmentBoardId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'developmentBoardId' + '}', encodeURIComponent(String(developmentBoardId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminUpdateDevelopmentBoard.');
+        }
+
+        // verify required parameter 'developmentBoardId' is not null or undefined
+
+
+        if (developmentBoardId === null || developmentBoardId === undefined) {
+            throw new Error('Required parameter developmentBoardId was null or undefined when calling whitelabelAdminUpdateDevelopmentBoard.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(developmentBoardRequestUpdate, "DevelopmentBoardRequestUpdate")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * White label admin only API to update the image of a development board.
+     * @summary Update the image of a whitelabel development board
+     * @param organizationId Organization ID
+     * @param developmentBoardId Development board ID.
+     * @param image 
+     */
+    public async whitelabelAdminUpdateDevelopmentBoardImage (organizationId: number, developmentBoardId: number, params: whitelabelAdminUpdateDevelopmentBoardImageFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadAssetResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards/{developmentBoardId}/image'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'developmentBoardId' + '}', encodeURIComponent(String(developmentBoardId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminUpdateDevelopmentBoardImage.');
+        }
+
+        // verify required parameter 'developmentBoardId' is not null or undefined
+
+
+        if (developmentBoardId === null || developmentBoardId === undefined) {
+            throw new Error('Required parameter developmentBoardId was null or undefined when calling whitelabelAdminUpdateDevelopmentBoardImage.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.image !== undefined) {
+            localVarFormParams['image'] = params.image;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UploadAssetResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UploadAssetResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to update the white label information.
      * @summary Update white label information
      * @param organizationId Organization ID
@@ -3836,6 +4498,98 @@ export class OrganizationsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateWhitelabelRequest, "UpdateWhitelabelRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * White label admin only API to update some or all of the learning blocks enabled for this white label.
+     * @summary Update learning blocks
+     * @param organizationId Organization ID
+     * @param updateWhitelabelLearningBlocksRequest 
+     */
+    public async whitelabelAdminUpdateLearningBlocks (organizationId: number, updateWhitelabelLearningBlocksRequest: UpdateWhitelabelLearningBlocksRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/learningBlocks'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminUpdateLearningBlocks.');
+        }
+
+        // verify required parameter 'updateWhitelabelLearningBlocksRequest' is not null or undefined
+
+
+        if (updateWhitelabelLearningBlocksRequest === null || updateWhitelabelLearningBlocksRequest === undefined) {
+            throw new Error('Required parameter updateWhitelabelLearningBlocksRequest was null or undefined when calling whitelabelAdminUpdateLearningBlocks.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(updateWhitelabelLearningBlocksRequest, "UpdateWhitelabelLearningBlocksRequest")
         };
 
         let authenticationPromise = Promise.resolve();

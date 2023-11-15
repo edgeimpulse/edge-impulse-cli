@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { DevelopmentBoardResponse } from './developmentBoardResponse';
 import { ProjectType } from './projectType';
 import { Theme } from './theme';
+import { WhitelabelAllLearningBlocks } from './whitelabelAllLearningBlocks';
 import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
 
 export class Whitelabel {
@@ -30,7 +32,7 @@ export class Whitelabel {
     /**
     * List of all supported deployment targets
     */
-    'allDeploymentTargets'?: Array<string>;
+    'allDeploymentTargets': Array<string>;
     /**
     * List of custom deployment blocks available to this white label
     */
@@ -47,6 +49,20 @@ export class Whitelabel {
     */
     'defaultDeploymentTarget'?: string | null;
     'supportedProjectTypes': Array<ProjectType>;
+    /**
+    * Whether the new project UI should be enabled for this white label or not.
+    */
+    'allowNewProjectUi': boolean;
+    /**
+    * List of learning blocks enabled for this white label
+    */
+    'learningBlocks': Array<string>;
+    /**
+    * List of all supported learning blocks
+    */
+    'allLearningBlocks': Array<WhitelabelAllLearningBlocks>;
+    'developmentBoards': Array<DevelopmentBoardResponse>;
+    'allDevelopmentBoards': Array<DevelopmentBoardResponse>;
 
     static discriminator: string | undefined = undefined;
 
@@ -135,6 +151,31 @@ export class Whitelabel {
             "name": "supportedProjectTypes",
             "baseName": "supportedProjectTypes",
             "type": "Array<ProjectType>"
+        },
+        {
+            "name": "allowNewProjectUi",
+            "baseName": "allowNewProjectUi",
+            "type": "boolean"
+        },
+        {
+            "name": "learningBlocks",
+            "baseName": "learningBlocks",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allLearningBlocks",
+            "baseName": "allLearningBlocks",
+            "type": "Array<WhitelabelAllLearningBlocks>"
+        },
+        {
+            "name": "developmentBoards",
+            "baseName": "developmentBoards",
+            "type": "Array<DevelopmentBoardResponse>"
+        },
+        {
+            "name": "allDevelopmentBoards",
+            "baseName": "allDevelopmentBoards",
+            "type": "Array<DevelopmentBoardResponse>"
         }    ];
 
     static getAttributeTypeMap() {

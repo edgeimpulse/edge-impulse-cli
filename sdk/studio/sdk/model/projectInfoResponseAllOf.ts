@@ -76,6 +76,10 @@ export class ProjectInfoResponseAllOf {
     'studioUrl': string;
     'inPretrainedModelFlow': boolean;
     'dspPageSize'?: number;
+    /**
+    * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
+    */
+    'showSensorDataInAcquisitionGraph': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -214,6 +218,11 @@ export class ProjectInfoResponseAllOf {
             "name": "dspPageSize",
             "baseName": "dspPageSize",
             "type": "number"
+        },
+        {
+            "name": "showSensorDataInAcquisitionGraph",
+            "baseName": "showSensorDataInAcquisitionGraph",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

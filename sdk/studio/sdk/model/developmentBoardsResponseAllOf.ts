@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { DevelopmentBoard } from './developmentBoard';
+import { DevelopmentBoardResponse } from './developmentBoardResponse';
 
 export class DevelopmentBoardsResponseAllOf {
-    'developmentBoards': Array<DevelopmentBoard>;
+    'developmentBoards': Array<DevelopmentBoardResponse>;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class DevelopmentBoardsResponseAllOf {
         {
             "name": "developmentBoards",
             "baseName": "developmentBoards",
-            "type": "Array<DevelopmentBoard>"
+            "type": "Array<DevelopmentBoardResponse>"
         }    ];
 
     static getAttributeTypeMap() {

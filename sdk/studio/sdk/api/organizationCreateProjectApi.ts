@@ -56,6 +56,7 @@ type getOrganizationCreateProjectStatusQueryParams = {
 type getOrganizationCreateProjectsQueryParams = {
     limit?: number,
     offset?: number,
+    includePipelineJobs?: boolean,
 };
 
 type uploadCustomBlockFormParams = {
@@ -540,6 +541,7 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param includePipelineJobs If enabled, also includes jobs that are part of a pipeline
      */
     public async getOrganizationCreateProjects (organizationId: number, queryParams: getOrganizationCreateProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationGetCreateProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project'
@@ -570,6 +572,10 @@ export class OrganizationCreateProjectApi {
 
         if (queryParams.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        if (queryParams.includePipelineJobs !== undefined) {
+            localVarQueryParameters['includePipelineJobs'] = ObjectSerializer.serialize(queryParams.includePipelineJobs, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

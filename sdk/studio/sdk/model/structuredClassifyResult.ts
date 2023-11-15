@@ -15,7 +15,7 @@ export class StructuredClassifyResult {
     /**
     * For object detection. An array of bounding box arrays, (x, y, width, height), one per detection in the image.
     */
-    'boxes'?: Array<Array<number>>;
+    'boxes': Array<Array<number>>;
     /**
     * For object detection. An array of labels, one per detection in the image.
     */
@@ -23,23 +23,23 @@ export class StructuredClassifyResult {
     /**
     * For object detection. An array of probability scores, one per detection in the image.
     */
-    'scores'?: Array<number>;
+    'scores': Array<number>;
     /**
     * For object detection. A score that indicates accuracy compared to the ground truth, if available.
     */
-    'mAP'?: number;
+    'mAP': number;
     /**
     * For FOMO. A score that combines the precision and recall of a classifier into a single metric, if available.
     */
-    'f1'?: number;
+    'f1': number;
     /**
     * A measure of how many of the positive predictions made are correct (true positives).
     */
-    'precision'?: number;
+    'precision': number;
     /**
     * A measure of how many of the positive cases the classifier correctly predicted, over all the positive cases.
     */
-    'recall'?: number;
+    'recall': number;
     /**
     * Debug info in JSON format
     */

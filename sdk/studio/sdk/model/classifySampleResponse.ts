@@ -38,6 +38,7 @@ export class ClassifySampleResponse {
     * Whether this sample is already in the training database
     */
     'alreadyInDatabase': boolean;
+    'warning'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +77,11 @@ export class ClassifySampleResponse {
             "name": "alreadyInDatabase",
             "baseName": "alreadyInDatabase",
             "type": "boolean"
+        },
+        {
+            "name": "warning",
+            "baseName": "warning",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

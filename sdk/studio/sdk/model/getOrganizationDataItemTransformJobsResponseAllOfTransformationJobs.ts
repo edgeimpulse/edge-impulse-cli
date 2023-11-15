@@ -17,6 +17,7 @@ export class GetOrganizationDataItemTransformJobsResponseAllOfTransformationJobs
     'createProjectId': number;
     'created': Date;
     'jobId': number;
+    'jobStarted'?: Date;
     'jobFinished'?: Date;
     'jobFinishedSuccessful'?: boolean;
     'transformationBlockName': string;
@@ -49,6 +50,11 @@ export class GetOrganizationDataItemTransformJobsResponseAllOfTransformationJobs
             "name": "jobId",
             "baseName": "jobId",
             "type": "number"
+        },
+        {
+            "name": "jobStarted",
+            "baseName": "jobStarted",
+            "type": "Date"
         },
         {
             "name": "jobFinished",

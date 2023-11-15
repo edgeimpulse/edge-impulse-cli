@@ -11,10 +11,12 @@
  */
 
 import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
+import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { DependencyData } from './dependencyData';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 import { LearnBlockType } from './learnBlockType';
 import { TransferLearningModel } from './transferLearningModel';
@@ -52,6 +54,14 @@ export class KerasResponseAllOf {
     * Learning rate (between 0 and 1). If in expert mode this will be 0.
     */
     'learningRate': number;
+    /**
+    * The batch size used during training.
+    */
+    'batchSize'?: number;
+    /**
+    * The default batch size if a value is not configured.
+    */
+    'defaultBatchSize': number;
     /**
     * Python-formatted tuple of input axes
     */
@@ -92,6 +102,8 @@ export class KerasResponseAllOf {
     * Training parameters, this list depends on the list of parameters that the model exposes.
     */
     'customParameters'?: { [key: string]: string; };
+    'anomalyCapacity'?: AnomalyCapacity;
+    'lastShownModelVariant'?: KerasModelVariantEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -149,6 +161,16 @@ export class KerasResponseAllOf {
         {
             "name": "learningRate",
             "baseName": "learningRate",
+            "type": "number"
+        },
+        {
+            "name": "batchSize",
+            "baseName": "batchSize",
+            "type": "number"
+        },
+        {
+            "name": "defaultBatchSize",
+            "baseName": "defaultBatchSize",
             "type": "number"
         },
         {
@@ -215,6 +237,16 @@ export class KerasResponseAllOf {
             "name": "customParameters",
             "baseName": "customParameters",
             "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "anomalyCapacity",
+            "baseName": "anomalyCapacity",
+            "type": "AnomalyCapacity"
+        },
+        {
+            "name": "lastShownModelVariant",
+            "baseName": "lastShownModelVariant",
+            "type": "KerasModelVariantEnum"
         }    ];
 
     static getAttributeTypeMap() {

@@ -18,6 +18,7 @@ export class AddOrganizationDataCampaignDashboardRequest {
     */
     'emailRecipientUids': Array<number>;
     'whenToEmail': AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum;
+    'showNoOfDays': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +37,11 @@ export class AddOrganizationDataCampaignDashboardRequest {
             "name": "whenToEmail",
             "baseName": "whenToEmail",
             "type": "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum"
+        },
+        {
+            "name": "showNoOfDays",
+            "baseName": "showNoOfDays",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

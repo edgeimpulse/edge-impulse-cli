@@ -104,6 +104,14 @@ export class UpdateProjectRequest {
     * Set to \'0\' to disable DSP paging
     */
     'dspPageSize'?: number;
+    /**
+    * Used in tests, to ensure samples that need to be processed async are not picked up until the flag is set to FALSE again.
+    */
+    'indPauseProcessingSamples'?: boolean;
+    /**
+    * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
+    */
+    'showSensorDataInAcquisitionGraph'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -237,6 +245,16 @@ export class UpdateProjectRequest {
             "name": "dspPageSize",
             "baseName": "dspPageSize",
             "type": "number"
+        },
+        {
+            "name": "indPauseProcessingSamples",
+            "baseName": "indPauseProcessingSamples",
+            "type": "boolean"
+        },
+        {
+            "name": "showSensorDataInAcquisitionGraph",
+            "baseName": "showSensorDataInAcquisitionGraph",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

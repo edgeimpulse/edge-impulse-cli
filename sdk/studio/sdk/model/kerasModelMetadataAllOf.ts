@@ -30,6 +30,10 @@ export class KerasModelMetadataAllOf {
     */
     'classNames': Array<string>;
     /**
+    * Original labels in the dataset when features were generated, e.g. used to render the feature explorer.
+    */
+    'labels': Array<string>;
+    /**
     * The types of model that are available
     */
     'availableModelTypes': Array<KerasModelTypeEnum>;
@@ -59,6 +63,11 @@ export class KerasModelMetadataAllOf {
         {
             "name": "classNames",
             "baseName": "classNames",
+            "type": "Array<string>"
+        },
+        {
+            "name": "labels",
+            "baseName": "labels",
             "type": "Array<string>"
         },
         {
@@ -103,5 +112,5 @@ export class KerasModelMetadataAllOf {
 }
 
 
-export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection';
-export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];
+export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly';
+export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly'];

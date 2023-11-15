@@ -25,7 +25,7 @@ export class GetDiversityDataResponseAllOfClusterInfos {
     */
     'indexes': Array<number>;
     /**
-    * The sample ID of every window in the cluster
+    * The sample ID and window start and end of every window in the cluster
     */
     'windows': Array<Array<number>>;
     /**

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationCreateProjectCreatedByUser } from './organizationCreateProjectCreatedByUser';
 import { OrganizationCreateProjectTransformationSummary } from './organizationCreateProjectTransformationSummary';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
@@ -52,6 +53,15 @@ export class OrganizationCreateProject {
     'pipelineRunId'?: number;
     'pipelineStep'?: number;
     'operatesOn': OrganizationCreateProjectOperatesOnEnum;
+    /**
+    * Total amount of compute used for this job (in seconds)
+    */
+    'totalTimeSpentSeconds': number;
+    /**
+    * Total amount of compute used (friendly string)
+    */
+    'totalTimeSpentString': string;
+    'createdByUser'?: OrganizationCreateProjectCreatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -230,6 +240,21 @@ export class OrganizationCreateProject {
             "name": "operatesOn",
             "baseName": "operatesOn",
             "type": "OrganizationCreateProjectOperatesOnEnum"
+        },
+        {
+            "name": "totalTimeSpentSeconds",
+            "baseName": "totalTimeSpentSeconds",
+            "type": "number"
+        },
+        {
+            "name": "totalTimeSpentString",
+            "baseName": "totalTimeSpentString",
+            "type": "string"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "OrganizationCreateProjectCreatedByUser"
         }    ];
 
     static getAttributeTypeMap() {

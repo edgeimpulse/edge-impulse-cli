@@ -11,6 +11,7 @@
  */
 
 import { OrganizationCreateProject } from './organizationCreateProject';
+import { OrganizationCreateProjectCreatedByUser } from './organizationCreateProjectCreatedByUser';
 import { OrganizationCreateProjectTransformationSummary } from './organizationCreateProjectTransformationSummary';
 import { OrganizationCreateProjectWithFilesAllOf } from './organizationCreateProjectWithFilesAllOf';
 import { OrganizationCreateProjectWithFilesAllOfFiles } from './organizationCreateProjectWithFilesAllOfFiles';
@@ -55,6 +56,15 @@ export class OrganizationCreateProjectWithFiles {
     'pipelineRunId'?: number;
     'pipelineStep'?: number;
     'operatesOn': OrganizationCreateProjectWithFilesOperatesOnEnum;
+    /**
+    * Total amount of compute used for this job (in seconds)
+    */
+    'totalTimeSpentSeconds': number;
+    /**
+    * Total amount of compute used (friendly string)
+    */
+    'totalTimeSpentString': string;
+    'createdByUser'?: OrganizationCreateProjectCreatedByUser;
     'files': Array<OrganizationCreateProjectWithFilesAllOfFiles>;
     'fileCountForFilter': number;
 
@@ -235,6 +245,21 @@ export class OrganizationCreateProjectWithFiles {
             "name": "operatesOn",
             "baseName": "operatesOn",
             "type": "OrganizationCreateProjectWithFilesOperatesOnEnum"
+        },
+        {
+            "name": "totalTimeSpentSeconds",
+            "baseName": "totalTimeSpentSeconds",
+            "type": "number"
+        },
+        {
+            "name": "totalTimeSpentString",
+            "baseName": "totalTimeSpentString",
+            "type": "string"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "OrganizationCreateProjectCreatedByUser"
         },
         {
             "name": "files",

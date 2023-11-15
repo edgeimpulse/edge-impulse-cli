@@ -40,6 +40,14 @@ export class Organization {
     * Date when the trial was upgraded to a full enterprise account, if any.
     */
     'trialUpgradedDate': Date | null;
+    /**
+    * Date when the organization was created.
+    */
+    'created': Date;
+    /**
+    * Date when the current contract started, if any.
+    */
+    'contractStartDate'?: Date | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -97,6 +105,16 @@ export class Organization {
         {
             "name": "trialUpgradedDate",
             "baseName": "trialUpgradedDate",
+            "type": "Date"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "contractStartDate",
+            "baseName": "contractStartDate",
             "type": "Date"
         }    ];
 

@@ -11,10 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { ListOrganizationProjectsResponseAllOf } from './listOrganizationProjectsResponseAllOf';
-import { Project } from './project';
+import { GetFeatureFlagsResponseAllOf } from './getFeatureFlagsResponseAllOf';
+import { GetFeatureFlagsResponseAllOfFlags } from './getFeatureFlagsResponseAllOfFlags';
 
-export class ListOrganizationProjectsResponse {
+export class GetFeatureFlagsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,7 +23,10 @@ export class ListOrganizationProjectsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'projects': Array<Project>;
+    /**
+    * List of feature flags.
+    */
+    'flags': Array<GetFeatureFlagsResponseAllOfFlags>;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,13 +42,13 @@ export class ListOrganizationProjectsResponse {
             "type": "string"
         },
         {
-            "name": "projects",
-            "baseName": "projects",
-            "type": "Array<Project>"
+            "name": "flags",
+            "baseName": "flags",
+            "type": "Array<GetFeatureFlagsResponseAllOfFlags>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListOrganizationProjectsResponse.attributeTypeMap;
+        return GetFeatureFlagsResponse.attributeTypeMap;
     }
 }
 

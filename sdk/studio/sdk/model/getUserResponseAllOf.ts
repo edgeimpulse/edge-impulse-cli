@@ -36,10 +36,6 @@ export class GetUserResponseAllOf {
     */
     'ambassador'?: boolean;
     /**
-    * Whether to show the Imagine 2022 banner.
-    */
-    'showImagine2022': boolean;
-    /**
     * The user account tier.
     */
     'tier': GetUserResponseAllOfTierEnum;
@@ -51,6 +47,10 @@ export class GetUserResponseAllOf {
     * Whether the user is suspended.
     */
     'suspended': boolean;
+    /**
+    * List of notifications to show to the user
+    */
+    'notifications': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,11 +91,6 @@ export class GetUserResponseAllOf {
             "type": "boolean"
         },
         {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
-            "type": "boolean"
-        },
-        {
             "name": "tier",
             "baseName": "tier",
             "type": "GetUserResponseAllOfTierEnum"
@@ -109,6 +104,11 @@ export class GetUserResponseAllOf {
             "name": "suspended",
             "baseName": "suspended",
             "type": "boolean"
+        },
+        {
+            "name": "notifications",
+            "baseName": "notifications",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

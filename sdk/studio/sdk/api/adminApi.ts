@@ -25,10 +25,10 @@ import { AdminAddOrganizationUserRequest } from '../model/adminAddOrganizationUs
 import { AdminAddProjectUserRequest } from '../model/adminAddProjectUserRequest';
 import { AdminAddUserRequest } from '../model/adminAddUserRequest';
 import { AdminCreateOrganizationRequest } from '../model/adminCreateOrganizationRequest';
+import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
 import { AdminGetDataMigrationResponse } from '../model/adminGetDataMigrationResponse';
 import { AdminGetDataMigrationsResponse } from '../model/adminGetDataMigrationsResponse';
 import { AdminGetDisallowedEmailDomainsResponse } from '../model/adminGetDisallowedEmailDomainsResponse';
-import { AdminGetFeatureFlagsResponse } from '../model/adminGetFeatureFlagsResponse';
 import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
 import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
 import { AdminGetSSODomainIdPsResponse } from '../model/adminGetSSODomainIdPsResponse';
@@ -46,11 +46,13 @@ import { AdminUpdateUserPermissionsRequest } from '../model/adminUpdateUserPermi
 import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
 import { AdminUpdateUserTrialRequest } from '../model/adminUpdateUserTrialRequest';
 import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
+import { CreateProjectResponse } from '../model/createProjectResponse';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { Feature } from '../model/feature';
 import { FindUserResponse } from '../model/findUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetEmailVerificationCodeResponse } from '../model/getEmailVerificationCodeResponse';
+import { GetFeatureFlagsResponse } from '../model/getFeatureFlagsResponse';
 import { JobDetailsResponse } from '../model/jobDetailsResponse';
 import { JobLogsResponse } from '../model/jobLogsResponse';
 import { JobMetricsResponse } from '../model/jobMetricsResponse';
@@ -686,6 +688,181 @@ export class AdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateOrganizationResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to create a new project for an organization.
+     * @summary Create a new organization project
+     * @param organizationId Organization ID
+     * @param adminCreateProjectRequest 
+     */
+    public async adminCreateOrganizationProject (organizationId: number, adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/projects'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminCreateOrganizationProject.');
+        }
+
+        // verify required parameter 'adminCreateProjectRequest' is not null or undefined
+
+
+        if (adminCreateProjectRequest === null || adminCreateProjectRequest === undefined) {
+            throw new Error('Required parameter adminCreateProjectRequest was null or undefined when calling adminCreateOrganizationProject.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminCreateProjectRequest, "AdminCreateProjectRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateProjectResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to create a new free tier project.
+     * @summary Create a new project
+     * @param adminCreateProjectRequest 
+     */
+    public async adminCreateProject (adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+        const localVarPath = this.basePath + '/api/admin/projects';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'adminCreateProjectRequest' is not null or undefined
+
+
+        if (adminCreateProjectRequest === null || adminCreateProjectRequest === undefined) {
+            throw new Error('Required parameter adminCreateProjectRequest was null or undefined when calling adminCreateProject.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminCreateProjectRequest, "AdminCreateProjectRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateProjectResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2031,7 +2208,7 @@ export class AdminApi {
      * Admin-only API to get all feature flags.
      * @summary Get all feature flags
      */
-    public async adminGetFeatureFlags (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetFeatureFlagsResponse> {
+    public async adminGetFeatureFlags (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetFeatureFlagsResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/featureFlags';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -2077,12 +2254,12 @@ export class AdminApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<AdminGetFeatureFlagsResponse>((resolve, reject) => {
+            return new Promise<GetFeatureFlagsResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "AdminGetFeatureFlagsResponse");
+                        body = ObjectSerializer.deserialize(body, "GetFeatureFlagsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

@@ -10,25 +10,31 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetFeatureFlagsResponseAllOfFlags } from './adminGetFeatureFlagsResponseAllOfFlags';
+import { Feature } from './feature';
 
-export class AdminGetFeatureFlagsResponseAllOf {
+export class GetFeatureFlagsResponseAllOfFlags {
+    'feature': Feature;
     /**
-    * List of feature flags.
+    * Whether the feature is enabled.
     */
-    'flags': Array<AdminGetFeatureFlagsResponseAllOfFlags>;
+    'enabled': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "flags",
-            "baseName": "flags",
-            "type": "Array<AdminGetFeatureFlagsResponseAllOfFlags>"
+            "name": "feature",
+            "baseName": "feature",
+            "type": "Feature"
+        },
+        {
+            "name": "enabled",
+            "baseName": "enabled",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetFeatureFlagsResponseAllOf.attributeTypeMap;
+        return GetFeatureFlagsResponseAllOfFlags.attributeTypeMap;
     }
 }
 

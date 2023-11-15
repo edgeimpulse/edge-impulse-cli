@@ -28,10 +28,6 @@ export class UpdateUserRequest {
     */
     'companyName'?: string;
     /**
-    * Whether to show the Imagine 2022 banner
-    */
-    'showImagine2022'?: boolean;
-    /**
     * List of user experiments
     */
     'experiments'?: Array<string>;
@@ -53,11 +49,6 @@ export class UpdateUserRequest {
             "name": "companyName",
             "baseName": "companyName",
             "type": "string"
-        },
-        {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
-            "type": "boolean"
         },
         {
             "name": "experiments",

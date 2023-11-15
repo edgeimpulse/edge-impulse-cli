@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationCreateProjectCreatedByUser } from './organizationCreateProjectCreatedByUser';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationGetCreateProjectsResponseAllOfJobs {
@@ -26,6 +27,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'transformationBlockId'?: number;
     'builtinTransformationBlock'?: object;
     'transformationBlockName'?: string;
+    'transformationOperatesOn'?: OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum;
     'created': Date;
     'outputDatasetName'?: string;
     'outputDatasetBucketId'?: number;
@@ -34,6 +36,15 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'totalDownloadFileSize': number;
     'totalDownloadFileSizeString': string;
     'totalUploadFileCount'?: number;
+    /**
+    * Total amount of compute used for this job (in seconds)
+    */
+    'totalTimeSpentSeconds'?: number;
+    /**
+    * Total amount of compute used (friendly string)
+    */
+    'totalTimeSpentString': string;
+    'createdByUser'?: OrganizationCreateProjectCreatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -104,6 +115,11 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
             "type": "string"
         },
         {
+            "name": "transformationOperatesOn",
+            "baseName": "transformationOperatesOn",
+            "type": "OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum"
+        },
+        {
             "name": "created",
             "baseName": "created",
             "type": "Date"
@@ -142,6 +158,21 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
             "name": "totalUploadFileCount",
             "baseName": "totalUploadFileCount",
             "type": "number"
+        },
+        {
+            "name": "totalTimeSpentSeconds",
+            "baseName": "totalTimeSpentSeconds",
+            "type": "number"
+        },
+        {
+            "name": "totalTimeSpentString",
+            "baseName": "totalTimeSpentString",
+            "type": "string"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "OrganizationCreateProjectCreatedByUser"
         }    ];
 
     static getAttributeTypeMap() {
@@ -152,3 +183,6 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
 
 export type OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum = 'dataset' | 'project';
 export const OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnumValues: string[] = ['dataset', 'project'];
+
+export type OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
+export const OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

@@ -34,6 +34,14 @@ export class KerasModelMetadataMetrics {
     'visualization': KerasModelMetadataMetricsVisualizationEnum;
     'isSupportedOnMcu': boolean;
     'mcuSupportError'?: string;
+    /**
+    * If this is set, then we\'re still profiling this model. Subscribe to job updates to see when it\'s done (afterward the metadata will be updated).
+    */
+    'profilingJobId'?: number;
+    /**
+    * If this is set, then the profiling job failed (get the status by getting the job logs for \'profilingJobId\').
+    */
+    'profilingJobFailed'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +95,16 @@ export class KerasModelMetadataMetrics {
             "name": "mcuSupportError",
             "baseName": "mcuSupportError",
             "type": "string"
+        },
+        {
+            "name": "profilingJobId",
+            "baseName": "profilingJobId",
+            "type": "number"
+        },
+        {
+            "name": "profilingJobFailed",
+            "baseName": "profilingJobFailed",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

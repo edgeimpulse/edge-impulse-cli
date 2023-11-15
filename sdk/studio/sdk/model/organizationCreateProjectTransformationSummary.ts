@@ -16,6 +16,10 @@ export class OrganizationCreateProjectTransformationSummary {
     'succeededCount': number;
     'finishedCount': number;
     'totalFileCount': number;
+    /**
+    * Total amount of compute used for this job (in seconds)
+    */
+    'totalTimeSpentSeconds': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +42,11 @@ export class OrganizationCreateProjectTransformationSummary {
         {
             "name": "totalFileCount",
             "baseName": "totalFileCount",
+            "type": "number"
+        },
+        {
+            "name": "totalTimeSpentSeconds",
+            "baseName": "totalTimeSpentSeconds",
             "type": "number"
         }    ];
 

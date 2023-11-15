@@ -19,6 +19,10 @@ export class LearnBlock {
     'name': string;
     'recommended'?: boolean;
     'organizationModelId'?: number;
+    /**
+    * Whether this block is publicly available to Edge Impulse only to enterprise users
+    */
+    'isPublicEnterpriseOnly'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +61,11 @@ export class LearnBlock {
             "name": "organizationModelId",
             "baseName": "organizationModelId",
             "type": "number"
+        },
+        {
+            "name": "isPublicEnterpriseOnly",
+            "baseName": "isPublicEnterpriseOnly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

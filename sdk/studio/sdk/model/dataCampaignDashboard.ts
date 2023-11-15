@@ -21,6 +21,7 @@ export class DataCampaignDashboard {
     'emailRecipientUids': Array<number>;
     'latestScreenshot'?: string;
     'whenToEmail': DataCampaignDashboardWhenToEmailEnum;
+    'showNoOfDays': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -54,6 +55,11 @@ export class DataCampaignDashboard {
             "name": "whenToEmail",
             "baseName": "whenToEmail",
             "type": "DataCampaignDashboardWhenToEmailEnum"
+        },
+        {
+            "name": "showNoOfDays",
+            "baseName": "showNoOfDays",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

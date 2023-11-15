@@ -20,7 +20,7 @@ import {
 import { FSHelpers, FileInFolder } from './fs-helpers';
 import { checkCsvMatchesAnyFormat, parseCsvLabelsFile }
     from "../shared/uploader/annotations-parsing-shared/parse-label-csv";
-import { ExportBoundingBoxesFile, ExportInputBoundingBox, validateBoundingBoxLabels }
+import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, validateBoundingBoxLabelsFile }
     from '../shared/bounding-box-file-types';
 import {
     Annotations,
@@ -207,10 +207,10 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                 }
                 else if (this._datasetFormat.formatStyle === 'bounding_boxes.labels') {
                     // Original bounding boxes format
-                    const bboxFile = JSON.parse(fileContents) as ExportBoundingBoxesFile;
+                    const bboxFile = JSON.parse(fileContents) as ExportBoundingBoxesFileV1;
                     labelFileRes = {
                         type: 'object-detection',
-                        labels: validateBoundingBoxLabels(bboxFile).boundingBoxes,
+                        labels: validateBoundingBoxLabelsFile(bboxFile).boundingBoxes,
                     };
                 }
                 else if (this._datasetFormat.formatStyle === 'xml') {

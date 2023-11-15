@@ -36,10 +36,6 @@ export class AdminApiUserAllOf {
     */
     'ambassador'?: boolean;
     /**
-    * Whether to show the Imagine 2022 banner.
-    */
-    'showImagine2022': boolean;
-    /**
     * The user account tier.
     */
     'tier': AdminApiUserAllOfTierEnum;
@@ -89,11 +85,6 @@ export class AdminApiUserAllOf {
         {
             "name": "ambassador",
             "baseName": "ambassador",
-            "type": "boolean"
-        },
-        {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
             "type": "boolean"
         },
         {

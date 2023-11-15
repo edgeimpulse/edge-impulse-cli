@@ -27,6 +27,10 @@ export class DspRunResponseWithSampleAllOf {
     * Labels of the feature axes
     */
     'labels'?: Array<string>;
+    /**
+    * Label for the window (only present for time-series data)
+    */
+    'labelAtEndOfWindow'?: string;
     'sample': RawSampleData;
     'performance'?: DspRunResponseAllOfPerformance;
     'canProfilePerformance': boolean;
@@ -48,6 +52,11 @@ export class DspRunResponseWithSampleAllOf {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "labelAtEndOfWindow",
+            "baseName": "labelAtEndOfWindow",
+            "type": "string"
         },
         {
             "name": "sample",

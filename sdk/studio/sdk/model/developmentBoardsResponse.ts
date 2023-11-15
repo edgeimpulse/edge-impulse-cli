@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { DevelopmentBoard } from './developmentBoard';
+import { DevelopmentBoardResponse } from './developmentBoardResponse';
 import { DevelopmentBoardsResponseAllOf } from './developmentBoardsResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
@@ -23,7 +23,7 @@ export class DevelopmentBoardsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'developmentBoards': Array<DevelopmentBoard>;
+    'developmentBoards': Array<DevelopmentBoardResponse>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class DevelopmentBoardsResponse {
         {
             "name": "developmentBoards",
             "baseName": "developmentBoards",
-            "type": "Array<DevelopmentBoard>"
+            "type": "Array<DevelopmentBoardResponse>"
         }    ];
 
     static getAttributeTypeMap() {

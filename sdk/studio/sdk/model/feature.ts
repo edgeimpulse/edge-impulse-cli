@@ -15,5 +15,5 @@
 * Known feature identifiers.
 */
 
-export type Feature = 'enterprise-trial';
-export const FeatureValues: string[] = ['enterprise-trial'];
+export type Feature = 'signup-thank-you-page';
+export const FeatureValues: string[] = ['signup-thank-you-page'];

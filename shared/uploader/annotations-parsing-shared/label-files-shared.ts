@@ -1,4 +1,4 @@
-import { BoundingBoxesMap, ExportInputBoundingBox } from "../../bounding-box-file-types";
+import { BoundingBoxesMap, ExportInputBoundingBox, ExportUploaderInfoFileLabel } from "../../bounding-box-file-types";
 import { LabelMapFile, SupportedLabelFormatInfo } from "./label-file-types";
 
 export type AnnotationLookup = { [key: string]: Annotations | undefined };
@@ -27,7 +27,7 @@ export type LabelsParseOutput = {
 };
 
 export type SampleAnnotations = {
-    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
+    label: { type: 'infer'} | ExportUploaderInfoFileLabel;
     boundingBoxes: ExportInputBoundingBox[] | undefined,
 };
 

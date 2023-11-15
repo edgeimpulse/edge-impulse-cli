@@ -8,9 +8,10 @@ import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
 import {
-    ExportBoundingBoxesFile,
+    ExportBoundingBoxesFileV1,
     ExportInputBoundingBox,
     ExportUploaderInfoFileCategory,
+    ExportUploaderInfoFileLabel,
     parseBoundingBoxLabels,
     parseUploaderInfo
 } from '../shared/bounding-box-file-types';
@@ -30,8 +31,9 @@ import {
 
 type UploaderFileType = {
     path: string,
+    name: string | undefined;
     category: ExportUploaderInfoFileCategory,
-    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
+    label: { type: 'infer'} | ExportUploaderInfoFileLabel,
     metadata: { [k: string]: string } | undefined,
     boundingBoxes: ExportInputBoundingBox[] | undefined,
 };
@@ -185,6 +187,7 @@ const logAllAnnotationFormats = () => {
 
                     files.push({
                         category: f.category,
+                        name: f.name,
                         label: f.label,
                         path: f.path,
                         metadata: f.metadata,
@@ -254,6 +257,7 @@ const logAllAnnotationFormats = () => {
                         const annotations = await datasetConverter.getAnnotationsForSample(sample);
                         files.push({
                             path: Path.join(sample.directory, sample.filename),
+                            name: undefined, // infer from filename
                             category: sample.category || 'training',
                             metadata: { },
                             label: annotations.label,
@@ -287,6 +291,7 @@ const logAllAnnotationFormats = () => {
 
                         files.push({
                             category: <ExportUploaderInfoFileCategory>c,
+                            name: undefined, // infer from filename
                             label: { type: 'infer' },
                             path: fullPath,
                             metadata: { },
@@ -362,6 +367,7 @@ const logAllAnnotationFormats = () => {
                     for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
                         files.push({
                             path: Path.join(fileArgs[0], categoryFolder, f),
+                            name: undefined, // infer from filename
                             category: 'split',
                             label: { type: 'label', label: categoryFolder.replace('.class', '') },
                             metadata: metadata,
@@ -394,6 +400,7 @@ const logAllAnnotationFormats = () => {
                 files = fileArgs.map(f => {
                     return {
                         path: f,
+                        name: undefined, // infer from filename
                         category: (<ExportUploaderInfoFileCategory | undefined>categoryArgv) || 'training',
                         label: labelArgv ? {
                             type: 'label',
@@ -415,7 +422,7 @@ const logAllAnnotationFormats = () => {
         let failed = 0;
         let totalFilesLength = endIxArgv ? Number(endIxArgv) : files.length;
 
-        let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFile | undefined } = { };
+        let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFileV1 | undefined } = { };
 
         let allDirectories = [...new Set(files.map(f => Path.resolve(Path.dirname(f.path))))];
         const loadBoundingBoxCache = async (directory: string) => {
@@ -449,8 +456,21 @@ const logAllAnnotationFormats = () => {
 
             try {
                 let hrstart = Date.now();
+
+                let filename: string;
+                if (file.name) {
+                    filename = file.name;
+                    let ext = Path.extname(file.path);
+                    if (ext) {
+                        filename += ext;
+                    }
+                }
+                else {
+                    filename = Path.basename(file.path);
+                }
+
                 await upload({
-                    filename: Path.basename(file.path),
+                    filename: filename,
                     buffer: await fs.promises.readFile(file.path),
                     apiKey: apiKeyArgv || devKeys.apiKey || '',
                     allowDuplicates: allowDuplicatesArgv,

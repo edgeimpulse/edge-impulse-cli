@@ -462,7 +462,7 @@ export class JobsApi {
 
     /**
      * Calculate data quality metrics for the dataset
-     * @summary Calculate data quality metrics
+     * @summary Calculate data quality metrics. Only available for EI staff.
      * @param projectId Project ID
      * @param calculateDataQualityMetricsRequest 
      */

@@ -42,6 +42,10 @@ export class OrganizationTransformationBlock {
     * List of parameters to be rendered in the UI
     */
     'parametersUI'?: Array<DSPGroupItem>;
+    /**
+    * 15m for 15 minutes, 2h for 2 hours, 1d for 1 day. If not set, the default is 8 hours.
+    */
+    'maxRunningTimeStr'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -140,6 +144,11 @@ export class OrganizationTransformationBlock {
             "name": "parametersUI",
             "baseName": "parametersUI",
             "type": "Array<DSPGroupItem>"
+        },
+        {
+            "name": "maxRunningTimeStr",
+            "baseName": "maxRunningTimeStr",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,31 +10,25 @@
  * Do not edit the class manually.
  */
 
-import { Feature } from './feature';
+import { CrossValidationDataScores } from './crossValidationDataScores';
 
-export class AdminGetFeatureFlagsResponseAllOfFlags {
-    'feature': Feature;
-    /**
-    * Whether the feature is enabled.
-    */
-    'enabled': boolean;
+/**
+* Describes the results of running the cross validation label noise detection method.
+*/
+export class CrossValidationData {
+    'scores': Array<CrossValidationDataScores>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "feature",
-            "baseName": "feature",
-            "type": "Feature"
-        },
-        {
-            "name": "enabled",
-            "baseName": "enabled",
-            "type": "boolean"
+            "name": "scores",
+            "baseName": "scores",
+            "type": "Array<CrossValidationDataScores>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetFeatureFlagsResponseAllOfFlags.attributeTypeMap;
+        return CrossValidationData.attributeTypeMap;
     }
 }
 

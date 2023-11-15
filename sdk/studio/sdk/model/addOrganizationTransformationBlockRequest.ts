@@ -32,6 +32,10 @@ export class AddOrganizationTransformationBlockRequest {
     * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
     */
     'parameters'?: Array<object>;
+    /**
+    * 15m for 15 minutes, 2h for 2 hours, 1d for 1 day. If not set, the default is 8 hours.
+    */
+    'maxRunningTimeStr'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -100,6 +104,11 @@ export class AddOrganizationTransformationBlockRequest {
             "name": "parameters",
             "baseName": "parameters",
             "type": "Array<object>"
+        },
+        {
+            "name": "maxRunningTimeStr",
+            "baseName": "maxRunningTimeStr",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

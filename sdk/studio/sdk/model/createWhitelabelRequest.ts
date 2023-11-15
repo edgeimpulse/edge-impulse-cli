@@ -53,6 +53,10 @@ export class CreateWhitelabelRequest {
     * Whether public projects created in this white label scope should be exposed through the Public Projects API or not.
     */
     'exposePublicProjects'?: boolean;
+    /**
+    * The list of learning block types to show on the UI
+    */
+    'learningBlocks'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -111,6 +115,11 @@ export class CreateWhitelabelRequest {
             "name": "exposePublicProjects",
             "baseName": "exposePublicProjects",
             "type": "boolean"
+        },
+        {
+            "name": "learningBlocks",
+            "baseName": "learningBlocks",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

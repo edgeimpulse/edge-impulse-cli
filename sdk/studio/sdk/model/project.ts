@@ -33,6 +33,10 @@ export class Project {
     */
     'ownerAvatar'?: string;
     'ownerIsDeveloperProfile': boolean;
+    /**
+    * User ID of the developer profile, if any.
+    */
+    'developerProfileUserId'?: number;
     'collaborators': Array<ProjectCollaborator>;
     'labelingMethod': ProjectLabelingMethodEnum;
     /**
@@ -65,6 +69,7 @@ export class Project {
     * Whether this project has been published or not.
     */
     'hasPublicVersion': boolean;
+    'indPauseProcessingSamples': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -125,6 +130,11 @@ export class Project {
             "type": "boolean"
         },
         {
+            "name": "developerProfileUserId",
+            "baseName": "developerProfileUserId",
+            "type": "number"
+        },
+        {
             "name": "collaborators",
             "baseName": "collaborators",
             "type": "Array<ProjectCollaborator>"
@@ -177,6 +187,11 @@ export class Project {
         {
             "name": "hasPublicVersion",
             "baseName": "hasPublicVersion",
+            "type": "boolean"
+        },
+        {
+            "name": "indPauseProcessingSamples",
+            "baseName": "indPauseProcessingSamples",
             "type": "boolean"
         }    ];
 

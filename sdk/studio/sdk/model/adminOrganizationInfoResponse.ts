@@ -42,17 +42,21 @@ export class AdminOrganizationInfoResponse {
     'cliLists': OrganizationInfoResponseAllOfCliLists;
     'billable'?: boolean;
     /**
-    * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs).
+    * CPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
     */
-    'totalJobsComputeTime'?: number;
+    'cpuComputeTimeCurrentContract'?: number;
     /**
-    * Total compute time of all jobs in the organization in the current year (including organizational project jobs).
+    * GPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
     */
-    'jobsComputeTimeCurrentYear'?: number;
+    'gpuComputeTimeCurrentContract'?: number;
     /**
-    * The date from which the compute time for the running year is calculated.
+    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over a 12 month period, calculated as 1 x CPU + 3 x GPU minutes.
     */
-    'jobsComputeTimeCurrentYearSince'?: Date;
+    'totalComputeTimeCurrentContract'?: number;
+    /**
+    * The date from which the compute time for the running contract is calculated.
+    */
+    'computeTimeCurrentContractSince'?: Date;
     /**
     * Total storage used by the organization.
     */
@@ -117,18 +121,23 @@ export class AdminOrganizationInfoResponse {
             "type": "boolean"
         },
         {
-            "name": "totalJobsComputeTime",
-            "baseName": "totalJobsComputeTime",
+            "name": "cpuComputeTimeCurrentContract",
+            "baseName": "cpuComputeTimeCurrentContract",
             "type": "number"
         },
         {
-            "name": "jobsComputeTimeCurrentYear",
-            "baseName": "jobsComputeTimeCurrentYear",
+            "name": "gpuComputeTimeCurrentContract",
+            "baseName": "gpuComputeTimeCurrentContract",
             "type": "number"
         },
         {
-            "name": "jobsComputeTimeCurrentYearSince",
-            "baseName": "jobsComputeTimeCurrentYearSince",
+            "name": "totalComputeTimeCurrentContract",
+            "baseName": "totalComputeTimeCurrentContract",
+            "type": "number"
+        },
+        {
+            "name": "computeTimeCurrentContractSince",
+            "baseName": "computeTimeCurrentContractSince",
             "type": "Date"
         },
         {

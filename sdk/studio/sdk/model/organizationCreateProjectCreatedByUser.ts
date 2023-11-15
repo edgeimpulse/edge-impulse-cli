@@ -11,41 +11,38 @@
  */
 
 
-export class WhitelabelAdminCreateProjectRequest {
-    /**
-    * The name of the project.
-    */
-    'projectName': string;
-    /**
-    * Unique identifier of the owner of the new project.
-    */
-    'ownerId'?: number;
-    /**
-    * Email of the owner of the new project.
-    */
-    'ownerEmail'?: string;
+export class OrganizationCreateProjectCreatedByUser {
+    'id': number;
+    'name': string;
+    'username': string;
+    'photo'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectName",
-            "baseName": "projectName",
-            "type": "string"
-        },
-        {
-            "name": "ownerId",
-            "baseName": "ownerId",
+            "name": "id",
+            "baseName": "id",
             "type": "number"
         },
         {
-            "name": "ownerEmail",
-            "baseName": "ownerEmail",
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "username",
+            "baseName": "username",
+            "type": "string"
+        },
+        {
+            "name": "photo",
+            "baseName": "photo",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return WhitelabelAdminCreateProjectRequest.attributeTypeMap;
+        return OrganizationCreateProjectCreatedByUser.attributeTypeMap;
     }
 }
 

@@ -22,6 +22,8 @@ import http = require('http');
 import { ClassifyJobResponse } from '../model/classifyJobResponse';
 import { ClassifyJobResponsePage } from '../model/classifyJobResponsePage';
 import { ClassifySampleResponse } from '../model/classifySampleResponse';
+import { StartJobResponse } from '../model/startJobResponse';
+import { KerasModelVariantEnum } from '../model/kerasModelVariantEnum';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -42,6 +44,15 @@ export enum ClassifyApiApiKeys {
 
 type classifySampleQueryParams = {
     includeDebugInfo?: boolean,
+};
+
+type classifySampleByLearnBlockV2QueryParams = {
+    variant?: KerasModelVariantEnum,
+};
+
+type classifySampleV2QueryParams = {
+    includeDebugInfo?: boolean,
+    variant?: KerasModelVariantEnum,
 };
 
 type getClassifyJobResultQueryParams = {
@@ -118,8 +129,8 @@ export class ClassifyApi {
 
 
     /**
-     * Classify a complete file against the current impulse. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.
-     * @summary Classify sample
+     * This API is deprecated, use classifySampleV2 instead (`/v1/api/{projectId}/classify/v2/{sampleId}`). Classify a complete file against the current impulse. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.
+     * @summary Classify sample (deprecated)
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
@@ -215,7 +226,7 @@ export class ClassifyApi {
     }
 
     /**
-     * Classify a complete file against the specified learn block. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.
+     * This API is deprecated, use classifySampleByLearnBlockV2 (`/v1/api/{projectId}/classify/anomaly-gmm/v2/{blockId}/{sampleId}`) instead. Classify a complete file against the specified learn block. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.
      * @summary Classify sample by learn block
      * @param projectId Project ID
      * @param sampleId Sample ID
@@ -297,6 +308,214 @@ export class ClassifyApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Classify a complete file against the specified learn block. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted. Depending on the size of your file, whether your sample is resampled, and whether the result is cached you\'ll get either the result or a job back. If you receive a job, then wait for the completion of the job, and then call this function again to receive the results. The unoptimized (float32) model is used by default, and classification with an optimized (int8) model can be slower. 
+     * @summary Classify sample by learn block
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param blockId Block ID
+     * @param variant Keras model variant
+     */
+    public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams: classifySampleByLearnBlockV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/classify/anomaly-gmm/v2/{blockId}/{sampleId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
+            .replace('{' + 'blockId' + '}', encodeURIComponent(String(blockId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling classifySampleByLearnBlockV2.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling classifySampleByLearnBlockV2.');
+        }
+
+        // verify required parameter 'blockId' is not null or undefined
+
+
+        if (blockId === null || blockId === undefined) {
+            throw new Error('Required parameter blockId was null or undefined when calling classifySampleByLearnBlockV2.');
+        }
+
+        if (queryParams.variant !== undefined) {
+            localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ClassifySampleResponse | StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ClassifySampleResponse | StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Classify a complete file against the current impulse. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted. Depending on the size of your file, whether your sample is resampled, and whether the result is cached you\'ll get either the result or a job back. If you receive a job, then wait for the completion of the job, and then call this function again to receive the results. The unoptimized (float32) model is used by default, and classification with an optimized (int8) model can be slower. 
+     * @summary Classify sample
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param includeDebugInfo Whether to return the debug information from FOMO classification.
+     * @param variant Keras model variant
+     */
+    public async classifySampleV2 (projectId: number, sampleId: number, queryParams: classifySampleV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling classifySampleV2.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling classifySampleV2.');
+        }
+
+        if (queryParams.includeDebugInfo !== undefined) {
+            localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
+        }
+
+        if (queryParams.variant !== undefined) {
+            localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ClassifySampleResponse | StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ClassifySampleResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

@@ -15,6 +15,7 @@ export class ModelPrediction {
     'sampleId': number;
     'startMs': number;
     'endMs': number;
+    'label'?: string;
     'prediction': string;
     'predictionCorrect'?: boolean;
     /**
@@ -39,6 +40,11 @@ export class ModelPrediction {
             "name": "endMs",
             "baseName": "endMs",
             "type": "number"
+        },
+        {
+            "name": "label",
+            "baseName": "label",
+            "type": "string"
         },
         {
             "name": "prediction",

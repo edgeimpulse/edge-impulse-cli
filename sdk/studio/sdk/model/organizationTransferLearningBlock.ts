@@ -35,6 +35,14 @@ export class OrganizationTransferLearningBlock {
     */
     'isPublicForDevices': Array<string>;
     /**
+    * Whether this block is publicly available to Edge Impulse only to enterprise users
+    */
+    'isPublicEnterpriseOnly': boolean;
+    /**
+    * Whether this block is available to Edge Impulse only to enterprise users
+    */
+    'enterpriseOnly'?: boolean;
+    /**
     * URL to the source code of this custom learn block.
     */
     'repositoryUrl'?: string;
@@ -115,6 +123,16 @@ export class OrganizationTransferLearningBlock {
             "name": "isPublicForDevices",
             "baseName": "isPublicForDevices",
             "type": "Array<string>"
+        },
+        {
+            "name": "isPublicEnterpriseOnly",
+            "baseName": "isPublicEnterpriseOnly",
+            "type": "boolean"
+        },
+        {
+            "name": "enterpriseOnly",
+            "baseName": "enterpriseOnly",
+            "type": "boolean"
         },
         {
             "name": "repositoryUrl",

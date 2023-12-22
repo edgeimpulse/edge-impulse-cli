@@ -43,7 +43,7 @@
     "papaparse": "5.4.0",
     "request": "2.88.0",
     "request-promise": "4.2.4",
-    "serialport": "8.0.8",
+    "serialport": "11.0.1",
     "socket.io": "2.4.1",
     "tar": "6.0.5",
     "tiny-async-pool": "1.1.0",

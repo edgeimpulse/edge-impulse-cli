@@ -20,7 +20,7 @@ export async function findSerial(whichDeviceIndex: number | undefined) {
             filteredDevices = allDevices.filter(d => d.path.indexOf('ttyACM') > -1 || d.path.indexOf('ttyUSB') > -1);
         }
         else {
-            filteredDevices = allDevices.filter(d => d.manufacturer.indexOf('Standard port types') === -1);
+            filteredDevices = allDevices.filter(d => d.manufacturer?.indexOf('Standard port types') === -1);
         }
 
         if (filteredDevices.length === 0) {

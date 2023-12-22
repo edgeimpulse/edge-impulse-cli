@@ -15,7 +15,7 @@ export async function canFlashSerial(deviceId: string) {
         return false;
     }
 
-    if (device.vendorId === '0483' && device.productId.toUpperCase() === '374B') {
+    if (device.vendorId === '0483' && device.productId?.toUpperCase() === '374B') {
         // DISCO-L475VG
         console.log(SERIAL_PREFIX, 'Detected ST B-L475E-IOT01A board, but failed to read config.');
         console.log(SERIAL_PREFIX, 'This can be because the device is not running the right firmware ' +

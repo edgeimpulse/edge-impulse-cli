@@ -39,13 +39,17 @@ export enum PageType {
     DataSources = 37,
     CreateDeveloperProfile = 38,
     DeveloperProfile = 39,
-    AccountSettings = 40,
     UploadCsv = 41,
     PretrainedModel = 42,
     AutoSegmenter = 44,
     Scratchpad = 45,
     TrialSignup = 46,
     ThankYou = 47,
+    AccountSettingsAccountInfo = 60,
+    AccountSettingsAuthentication = 61,
+    AccountSettingsOrganizations = 62,
+    AccountSettingsExperiments = 63,
+    AccountSettingsMfa = 64,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -67,7 +71,9 @@ export enum PageType {
     OrganizationDataHub = 108,
     OrganizationDataCampaignsDashboard = 109,
     OrganizationDataFiles = 110,
+    OrganizationExports = 111,
     UploadPortal = 200,
+    Announcement = 201,
 }
 
 export type ClientConnectionType = 'ip' | 'daemon';
@@ -88,11 +94,11 @@ export interface ClientConnectedDevice {
 export interface ClientStudioWebsocketHello {
     hello: { version: number };
     devices: ClientConnectedDevice[];
-    activeTunerJobId?: number;
 }
 
 export interface ClientInitUser {
     id: number;
+    email: string;
     name: string;
     photo?: string;
     isEvalUser: boolean;
@@ -176,7 +182,12 @@ export interface ClientInitFormOptions {
     staticAssetsPrefix: string;
     sentryDSN?: string;
     sentryEnvironment?: string;
-    user: ClientInitUser | undefined;
+    user: ClientInitUser;
+    userDeveloperProfile: {
+        organizationId: number;
+        organizationName: string;
+        socketToken: string;
+    } | undefined;
 }
 
 export interface ClientInitPublicOptions {

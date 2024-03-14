@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { ProjectVisibility } from './projectVisibility';
 
 export class UpdateOrganizationCreateEmptyProjectRequest {
     /**
     * The name of the project.
     */
     'projectName': string;
+    'projectVisibility'?: ProjectVisibility;
     /**
     * The username or email of the owner of the project. This field is mandatory when authenticating via API key. If no email is provided when authenticating via JWT, the user ID attached to the JWT will be user as project owner.
     */
@@ -28,6 +30,11 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
             "name": "projectName",
             "baseName": "projectName",
             "type": "string"
+        },
+        {
+            "name": "projectVisibility",
+            "baseName": "projectVisibility",
+            "type": "ProjectVisibility"
         },
         {
             "name": "projectOwnerUsernameOrEmail",

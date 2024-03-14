@@ -15,8 +15,7 @@ import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 export class OrganizationCreateProjectWithFilesAllOfFiles {
     'id': number;
     'fileName': string;
-    'dataItemId': number;
-    'dataItemName': string;
+    'bucketPath': string;
     'transformationJobId'?: number;
     'transformationJobStatus': TransformationJobStatusEnum;
     'linkToDataItem': string;
@@ -24,6 +23,7 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     * Only set after job was finished
     */
     'lengthString': string;
+    'sourceDatasetType': OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,13 +39,8 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
             "type": "string"
         },
         {
-            "name": "dataItemId",
-            "baseName": "dataItemId",
-            "type": "number"
-        },
-        {
-            "name": "dataItemName",
-            "baseName": "dataItemName",
+            "name": "bucketPath",
+            "baseName": "bucketPath",
             "type": "string"
         },
         {
@@ -67,6 +62,11 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
             "name": "lengthString",
             "baseName": "lengthString",
             "type": "string"
+        },
+        {
+            "name": "sourceDatasetType",
+            "baseName": "sourceDatasetType",
+            "type": "OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -74,3 +74,6 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     }
 }
 
+
+export type OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum = 'files' | 'clinical';
+export const OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnumValues: string[] = ['files', 'clinical'];

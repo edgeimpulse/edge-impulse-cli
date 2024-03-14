@@ -12,5 +12,5 @@
 
 
 
-export type JobParentTypeEnum = 'project' | 'organization';
-export const JobParentTypeEnumValues: string[] = ['project', 'organization'];
+export type JobParentTypeEnum = 'project' | 'organization' | 'standalone';
+export const JobParentTypeEnumValues: string[] = ['project', 'organization', 'standalone'];

@@ -74,17 +74,17 @@ type getDspRawSampleQueryParams = {
 
 type getDspSampleSliceQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 type runDspSampleSliceQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 type runDspSampleSliceReadOnlyQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 
@@ -225,6 +225,107 @@ export class DSPApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Download an artifact from a DSP block for debugging. This is an internal API.
+     * @summary Download a DSP artifact
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param key DSP artifact file key
+     */
+    public async downloadDspArtifact (projectId: number, dspId: number, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/artifact/{key}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
+            .replace('{' + 'key' + '}', encodeURIComponent(String(key)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadDspArtifact.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling downloadDspArtifact.');
+        }
+
+        // verify required parameter 'key' is not null or undefined
+
+
+        if (key === null || key === undefined) {
+            throw new Error('Required parameter key was null or undefined when calling downloadDspArtifact.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1266,7 +1367,7 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice'
@@ -1311,13 +1412,6 @@ export class DSPApi {
 
         if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
             throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling getDspSampleSlice.');
-        }
-
-
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling getDspSampleSlice.');
         }
 
 
@@ -1584,8 +1678,8 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
      * @param dspRunRequestWithoutFeatures 
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, queryParams: runDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run'
@@ -1630,13 +1724,6 @@ export class DSPApi {
 
         if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
             throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling runDspSampleSlice.');
-        }
-
-
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSlice.');
         }
 
 
@@ -1718,7 +1805,7 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, queryParams: runDspSampleSliceReadOnlyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run/readonly'
@@ -1763,13 +1850,6 @@ export class DSPApi {
 
         if (queryParams.sliceStart === null || queryParams.sliceStart === undefined) {
             throw new Error('Required parameter queryParams.sliceStart was null or undefined when calling runDspSampleSliceReadOnly.');
-        }
-
-
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSliceReadOnly.');
         }
 
 

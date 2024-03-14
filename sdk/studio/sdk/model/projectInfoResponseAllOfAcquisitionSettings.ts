@@ -36,6 +36,22 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     * Whether to auto-shift segments
     */
     'segmentShift': boolean;
+    /**
+    * Default page size on data acquisition
+    */
+    'defaultPageSize': number;
+    /**
+    * Default view type on data acquisition
+    */
+    'viewType': ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum;
+    /**
+    * Number of grid columns in non-detailed view
+    */
+    'gridColumnCount': number;
+    /**
+    * Number of grid columns in detailed view
+    */
+    'gridColumnCountDetailed': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +85,26 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
             "name": "segmentShift",
             "baseName": "segmentShift",
             "type": "boolean"
+        },
+        {
+            "name": "defaultPageSize",
+            "baseName": "defaultPageSize",
+            "type": "number"
+        },
+        {
+            "name": "viewType",
+            "baseName": "viewType",
+            "type": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum"
+        },
+        {
+            "name": "gridColumnCount",
+            "baseName": "gridColumnCount",
+            "type": "number"
+        },
+        {
+            "name": "gridColumnCountDetailed",
+            "baseName": "gridColumnCountDetailed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -76,3 +112,6 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     }
 }
 
+
+export type ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum = 'list' | 'grid';
+export const ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnumValues: string[] = ['list', 'grid'];

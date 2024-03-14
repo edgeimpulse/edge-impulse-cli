@@ -46,7 +46,11 @@ import { StartEnterpriseTrialRequest } from '../model/startEnterpriseTrialReques
 import { UpdateUserRequest } from '../model/updateUserRequest';
 import { UploadUserPhotoResponse } from '../model/uploadUserPhotoResponse';
 import { UserByThirdPartyActivationRequest } from '../model/userByThirdPartyActivationRequest';
+import { UserDeleteTotpMfaKeyRequest } from '../model/userDeleteTotpMfaKeyRequest';
 import { UserDismissNotificationRequest } from '../model/userDismissNotificationRequest';
+import { UserGenerateNewMfaKeyResponse } from '../model/userGenerateNewMfaKeyResponse';
+import { UserSetTotpMfaKeyRequest } from '../model/userSetTotpMfaKeyRequest';
+import { UserSetTotpMfaKeyResponse } from '../model/userSetTotpMfaKeyResponse';
 import { VerifyResetPasswordRequest } from '../model/verifyResetPasswordRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -3149,6 +3153,89 @@ export class UserApi {
     }
 
     /**
+     * Disable MFA on this account using an TOTP token.
+     * @summary Remove TOTP MFA key
+     * @param userDeleteTotpMfaKeyRequest 
+     */
+    public async userDeleteTotpMfaKey (userDeleteTotpMfaKeyRequest: UserDeleteTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/clear';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userDeleteTotpMfaKeyRequest' is not null or undefined
+
+
+        if (userDeleteTotpMfaKeyRequest === null || userDeleteTotpMfaKeyRequest === undefined) {
+            throw new Error('Required parameter userDeleteTotpMfaKeyRequest was null or undefined when calling userDeleteTotpMfaKey.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(userDeleteTotpMfaKeyRequest, "UserDeleteTotpMfaKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Dismiss a notification
      * @summary Dismiss a notification
      * @param userDismissNotificationRequest 
@@ -3213,6 +3300,163 @@ export class UserApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Creates a new MFA key, only allowed if the user has no MFA configured. TOTP tokens use SHA-1 algorithm.
+     * @summary Generate a new TOTP MFA key
+     */
+    public async userGenerateNewTotpMfaKey (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserGenerateNewMfaKeyResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/create-key';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UserGenerateNewMfaKeyResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UserGenerateNewMfaKeyResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Enable MFA on this account using an TOTP token. First create a new key via `userGenerateNewTotpMfaKey`.
+     * @summary Set TOTP MFA key
+     * @param userSetTotpMfaKeyRequest 
+     */
+    public async userSetTotpMfaKey (userSetTotpMfaKeyRequest: UserSetTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserSetTotpMfaKeyResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/set-key';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userSetTotpMfaKeyRequest' is not null or undefined
+
+
+        if (userSetTotpMfaKeyRequest === null || userSetTotpMfaKeyRequest === undefined) {
+            throw new Error('Required parameter userSetTotpMfaKeyRequest was null or undefined when calling userSetTotpMfaKey.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(userSetTotpMfaKeyRequest, "UserSetTotpMfaKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UserSetTotpMfaKeyResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UserSetTotpMfaKeyResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

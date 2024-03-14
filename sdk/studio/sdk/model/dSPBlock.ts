@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockType } from './blockType';
 
 export class DSPBlock {
     'type': string;
@@ -22,6 +23,7 @@ export class DSPBlock {
     'latestImplementationVersion': number;
     'organizationId'?: number;
     'organizationDspId'?: number;
+    'blockType': BlockType;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +77,11 @@ export class DSPBlock {
             "name": "organizationDspId",
             "baseName": "organizationDspId",
             "type": "number"
+        },
+        {
+            "name": "blockType",
+            "baseName": "blockType",
+            "type": "BlockType"
         }    ];
 
     static getAttributeTypeMap() {

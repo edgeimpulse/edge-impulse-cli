@@ -27,6 +27,7 @@ import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfP
 import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
+import { TargetConstraints } from './targetConstraints';
 import { User } from './user';
 
 export class ProjectInfoResponse {
@@ -90,6 +91,7 @@ export class ProjectInfoResponse {
     * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
     */
     'showSensorDataInAcquisitionGraph': boolean;
+    'targetConstraints'?: TargetConstraints;
 
     static discriminator: string | undefined = undefined;
 
@@ -243,6 +245,11 @@ export class ProjectInfoResponse {
             "name": "showSensorDataInAcquisitionGraph",
             "baseName": "showSensorDataInAcquisitionGraph",
             "type": "boolean"
+        },
+        {
+            "name": "targetConstraints",
+            "baseName": "targetConstraints",
+            "type": "TargetConstraints"
         }    ];
 
     static getAttributeTypeMap() {

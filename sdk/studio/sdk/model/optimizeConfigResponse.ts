@@ -25,19 +25,20 @@ export class OptimizeConfigResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
+    'name'?: string;
     /**
     * Dataset category
     */
-    'datasetCategory'?: OptimizeConfigResponseDatasetCategoryEnum;
+    'datasetCategory': OptimizeConfigResponseDatasetCategoryEnum;
     /**
     * Classification type
     */
-    'classificationType'?: OptimizeConfigResponseClassificationTypeEnum;
+    'classificationType': OptimizeConfigResponseClassificationTypeEnum;
     /**
     * Target latency in MS
     */
-    'targetLatency'?: number;
-    'targetDevice'?: OptimizeConfigTargetDevice;
+    'targetLatency': number;
+    'targetDevice': OptimizeConfigTargetDevice;
     'compiler'?: Array<string>;
     'precision'?: Array<string>;
     /**
@@ -59,7 +60,7 @@ export class OptimizeConfigResponse {
     */
     'tuningAlgorithm'?: OptimizeConfigResponseTuningAlgorithmEnum;
     'notificationOnCompletion'?: boolean;
-    'tunerSpaceOptions'?: object;
+    'tunerSpaceOptions'?: { [key: string]: Array<string>; };
     /**
     * List of impulses specifying the EON Tuner search space
     */
@@ -77,6 +78,11 @@ export class OptimizeConfigResponse {
         {
             "name": "error",
             "baseName": "error",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         },
         {
@@ -147,7 +153,7 @@ export class OptimizeConfigResponse {
         {
             "name": "tunerSpaceOptions",
             "baseName": "tunerSpaceOptions",
-            "type": "object"
+            "type": "{ [key: string]: Array<string>; }"
         },
         {
             "name": "space",
@@ -166,8 +172,8 @@ export class OptimizeConfigResponse {
 }
 
 
-export type OptimizeConfigResponseDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection';
-export const OptimizeConfigResponseDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection'];
+export type OptimizeConfigResponseDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection_bounding_boxes' | 'object_detection_centroids';
+export const OptimizeConfigResponseDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection_bounding_boxes', 'object_detection_centroids'];
 
 export type OptimizeConfigResponseClassificationTypeEnum = 'classification' | 'regression';
 export const OptimizeConfigResponseClassificationTypeEnumValues: string[] = ['classification', 'regression'];

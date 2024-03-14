@@ -56,6 +56,10 @@ export class CreateUserRequest {
     * ACME Inc.
     */
     'companyName'?: string;
+    /**
+    * List of UTM parameters.
+    */
+    'utmParams'?: Array<any>;
 
     static discriminator: string | undefined = undefined;
 
@@ -114,6 +118,11 @@ export class CreateUserRequest {
             "name": "companyName",
             "baseName": "companyName",
             "type": "string"
+        },
+        {
+            "name": "utmParams",
+            "baseName": "utmParams",
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

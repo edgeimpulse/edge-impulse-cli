@@ -38,6 +38,10 @@ export class DspRunResponseWithSample {
     */
     'labels'?: Array<string>;
     /**
+    * String representation of the DSP state returned
+    */
+    'stateString'?: string;
+    /**
     * Label for the window (only present for time-series data)
     */
     'labelAtEndOfWindow'?: string;
@@ -72,6 +76,11 @@ export class DspRunResponseWithSample {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "stateString",
+            "baseName": "state_string",
+            "type": "string"
         },
         {
             "name": "labelAtEndOfWindow",

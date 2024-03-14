@@ -82,6 +82,10 @@ export class CreateEnterpriseTrialUserRequest {
     * Job title of the user.
     */
     'jobTitle'?: string;
+    /**
+    * List of UTM parameters.
+    */
+    'utmParams'?: Array<any>;
 
     static discriminator: string | undefined = undefined;
 
@@ -170,6 +174,11 @@ export class CreateEnterpriseTrialUserRequest {
             "name": "jobTitle",
             "baseName": "jobTitle",
             "type": "string"
+        },
+        {
+            "name": "utmParams",
+            "baseName": "utmParams",
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

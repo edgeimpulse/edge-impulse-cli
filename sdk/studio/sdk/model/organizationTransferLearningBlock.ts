@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
@@ -20,6 +22,9 @@ export class OrganizationTransferLearningBlock {
     'dockerContainer': string;
     'dockerContainerManagedByEdgeImpulse': boolean;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUpdated'?: Date;
+    'lastUpdatedByUser'?: CreatedUpdatedByUser;
     'description': string;
     'userId'?: number;
     'userName'?: string;
@@ -55,6 +60,8 @@ export class OrganizationTransferLearningBlock {
     * If set, requires this block to be scheduled on GPU.
     */
     'indRequiresGpu': boolean;
+    'sourceCodeAvailable': boolean;
+    'displayCategory'?: BlockDisplayCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -83,6 +90,21 @@ export class OrganizationTransferLearningBlock {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUpdated",
+            "baseName": "lastUpdated",
+            "type": "Date"
+        },
+        {
+            "name": "lastUpdatedByUser",
+            "baseName": "lastUpdatedByUser",
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "description",
@@ -153,6 +175,16 @@ export class OrganizationTransferLearningBlock {
             "name": "indRequiresGpu",
             "baseName": "indRequiresGpu",
             "type": "boolean"
+        },
+        {
+            "name": "sourceCodeAvailable",
+            "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
         }    ];
 
     static getAttributeTypeMap() {

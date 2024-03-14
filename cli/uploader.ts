@@ -142,6 +142,10 @@ const logAllAnnotationFormats = () => {
             console.log('    Label:      ', 'Will be taken from any label files in the dataset');
             console.log('    Category:   ', 'Will be inferred from folder structure');
         }
+        else if (infoFileArgv) {
+            console.log('    Label:      ', 'Will be read from ' + infoFileArgv);
+            console.log('    Category:   ', 'Will be read from ' + infoFileArgv);
+        }
         else {
             console.log('    Label:      ', labelArgv || 'Not set, will be inferred from file name');
             console.log('    Category:   ', categoryArgv || 'training');

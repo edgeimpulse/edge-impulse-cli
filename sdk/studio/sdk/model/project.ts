@@ -69,7 +69,19 @@ export class Project {
     * Whether this project has been published or not.
     */
     'hasPublicVersion': boolean;
+    /**
+    * Whether this is a public version of a project. A version is a snapshot of a project at a certain point in time, which can be used to periodically save the state of a project. Versions can be private (just for internal use and reference) or public, available to everyone. A public version can be cloned by anyone, restoring the state of the project at the time into a new, separate project. 
+    */
+    'isPublic': boolean;
+    /**
+    * Whether this project allows live, public access. Unlike a public version, a live public project is not fixed in time, and always includes the latest project changes. Similar to public versions, a live public project can be cloned by anyone, creating a new, separate project. 
+    */
+    'allowsLivePublicAccess': boolean;
     'indPauseProcessingSamples': boolean;
+    /**
+    * If the project allows public access, whether to list it the public projects overview response. If not listed, the project is still accessible via direct link. If the project does not allow public access, this field has no effect. 
+    */
+    'publicProjectListed': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -190,8 +202,23 @@ export class Project {
             "type": "boolean"
         },
         {
+            "name": "isPublic",
+            "baseName": "isPublic",
+            "type": "boolean"
+        },
+        {
+            "name": "allowsLivePublicAccess",
+            "baseName": "allowsLivePublicAccess",
+            "type": "boolean"
+        },
+        {
             "name": "indPauseProcessingSamples",
             "baseName": "indPauseProcessingSamples",
+            "type": "boolean"
+        },
+        {
+            "name": "publicProjectListed",
+            "baseName": "publicProjectListed",
             "type": "boolean"
         }    ];
 

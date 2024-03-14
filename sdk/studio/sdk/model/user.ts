@@ -34,6 +34,10 @@ export class User {
     * Whether the user has activated their account or not.
     */
     'activated': boolean;
+    /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -106,6 +110,11 @@ export class User {
         {
             "name": "activated",
             "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
             "type": "boolean"
         }    ];
 

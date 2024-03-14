@@ -35,6 +35,10 @@ export class AdminUpdateUserRequest {
     * New user job title
     */
     'jobTitle'?: string;
+    /**
+    * List of user experiments
+    */
+    'experiments'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +67,11 @@ export class AdminUpdateUserRequest {
             "name": "jobTitle",
             "baseName": "jobTitle",
             "type": "string"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

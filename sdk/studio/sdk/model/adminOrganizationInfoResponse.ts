@@ -12,13 +12,8 @@
 
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
 import { EntitlementLimits } from './entitlementLimits';
-import { Organization } from './organization';
-import { OrganizationDataset } from './organizationDataset';
-import { OrganizationInfoResponse } from './organizationInfoResponse';
-import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
-import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
-import { ProjectPublicDataReadme } from './projectPublicDataReadme';
+import { GenericApiResponse } from './genericApiResponse';
+import { OrganizationComputeTimeUsage } from './organizationComputeTimeUsage';
 
 export class AdminOrganizationInfoResponse {
     /**
@@ -29,30 +24,20 @@ export class AdminOrganizationInfoResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'organization': Organization;
-    'datasets': Array<OrganizationDataset>;
-    'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
-    'entitlementLimits'?: EntitlementLimits;
     /**
-    * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
+    * CPU compute time in seconds of all jobs in the organization (including organizational project jobs).
     */
-    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
-    'readme'?: ProjectPublicDataReadme;
-    'whitelabelId'?: number;
-    'cliLists': OrganizationInfoResponseAllOfCliLists;
+    'cpuComputeTime'?: number;
+    /**
+    * GPU compute time in seconds of all jobs in the organization (including organizational project jobs).
+    */
+    'gpuComputeTime'?: number;
+    /**
+    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as 1 x CPU + 3 x GPU minutes.
+    */
+    'totalComputeTime'?: number;
     'billable'?: boolean;
-    /**
-    * CPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
-    */
-    'cpuComputeTimeCurrentContract'?: number;
-    /**
-    * GPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
-    */
-    'gpuComputeTimeCurrentContract'?: number;
-    /**
-    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over a 12 month period, calculated as 1 x CPU + 3 x GPU minutes.
-    */
-    'totalComputeTimeCurrentContract'?: number;
+    'entitlementLimits'?: EntitlementLimits;
     /**
     * The date from which the compute time for the running contract is calculated.
     */
@@ -76,44 +61,19 @@ export class AdminOrganizationInfoResponse {
             "type": "string"
         },
         {
-            "name": "organization",
-            "baseName": "organization",
-            "type": "Organization"
-        },
-        {
-            "name": "datasets",
-            "baseName": "datasets",
-            "type": "Array<OrganizationDataset>"
-        },
-        {
-            "name": "defaultComputeLimits",
-            "baseName": "defaultComputeLimits",
-            "type": "OrganizationInfoResponseAllOfDefaultComputeLimits"
-        },
-        {
-            "name": "entitlementLimits",
-            "baseName": "entitlementLimits",
-            "type": "EntitlementLimits"
-        },
-        {
-            "name": "experiments",
-            "baseName": "experiments",
-            "type": "Array<ProjectInfoResponseAllOfExperiments>"
-        },
-        {
-            "name": "readme",
-            "baseName": "readme",
-            "type": "ProjectPublicDataReadme"
-        },
-        {
-            "name": "whitelabelId",
-            "baseName": "whitelabelId",
+            "name": "cpuComputeTime",
+            "baseName": "cpuComputeTime",
             "type": "number"
         },
         {
-            "name": "cliLists",
-            "baseName": "cliLists",
-            "type": "OrganizationInfoResponseAllOfCliLists"
+            "name": "gpuComputeTime",
+            "baseName": "gpuComputeTime",
+            "type": "number"
+        },
+        {
+            "name": "totalComputeTime",
+            "baseName": "totalComputeTime",
+            "type": "number"
         },
         {
             "name": "billable",
@@ -121,19 +81,9 @@ export class AdminOrganizationInfoResponse {
             "type": "boolean"
         },
         {
-            "name": "cpuComputeTimeCurrentContract",
-            "baseName": "cpuComputeTimeCurrentContract",
-            "type": "number"
-        },
-        {
-            "name": "gpuComputeTimeCurrentContract",
-            "baseName": "gpuComputeTimeCurrentContract",
-            "type": "number"
-        },
-        {
-            "name": "totalComputeTimeCurrentContract",
-            "baseName": "totalComputeTimeCurrentContract",
-            "type": "number"
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
         },
         {
             "name": "computeTimeCurrentContractSince",

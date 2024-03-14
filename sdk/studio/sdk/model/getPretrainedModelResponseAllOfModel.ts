@@ -19,6 +19,7 @@ export class GetPretrainedModelResponseAllOfModel {
     'inputs': Array<PretrainedModelTensor>;
     'outputs': Array<PretrainedModelTensor>;
     'profileJobId'?: number;
+    'supportsTFLite'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,6 +48,11 @@ export class GetPretrainedModelResponseAllOfModel {
             "name": "profileJobId",
             "baseName": "profileJobId",
             "type": "number"
+        },
+        {
+            "name": "supportsTFLite",
+            "baseName": "supportsTFLite",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

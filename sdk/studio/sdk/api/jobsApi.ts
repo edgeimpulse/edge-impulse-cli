@@ -1905,9 +1905,8 @@ export class JobsApi {
      * Evaluates optimal model architecture
      * @summary Optimize model
      * @param projectId Project ID
-     * @param setKerasParameterRequest 
      */
-    public async optimizeJob (projectId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async optimizeJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1930,13 +1929,6 @@ export class JobsApi {
             throw new Error('Required parameter projectId was null or undefined when calling optimizeJob.');
         }
 
-        // verify required parameter 'setKerasParameterRequest' is not null or undefined
-
-
-        if (setKerasParameterRequest === null || setKerasParameterRequest === undefined) {
-            throw new Error('Required parameter setKerasParameterRequest was null or undefined when calling optimizeJob.');
-        }
-
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1950,7 +1942,6 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(setKerasParameterRequest, "SetKerasParameterRequest")
         };
 
         let authenticationPromise = Promise.resolve();

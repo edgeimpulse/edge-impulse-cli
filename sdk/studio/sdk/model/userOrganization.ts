@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 
 export class UserOrganization {
     'id': number;
@@ -40,6 +41,7 @@ export class UserOrganization {
     * Date when the trial was upgraded to a full enterprise account, if any.
     */
     'trialUpgradedDate': Date | null;
+    'entitlementLimits': EntitlementLimits;
 
     static discriminator: string | undefined = undefined;
 
@@ -93,6 +95,11 @@ export class UserOrganization {
             "name": "trialUpgradedDate",
             "baseName": "trialUpgradedDate",
             "type": "Date"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
         }    ];
 
     static getAttributeTypeMap() {

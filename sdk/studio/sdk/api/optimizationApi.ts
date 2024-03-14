@@ -20,6 +20,7 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { ListTunerRunsResponse } from '../model/listTunerRunsResponse';
 import { LogStdoutResponse } from '../model/logStdoutResponse';
 import { OptimizeConfig } from '../model/optimizeConfig';
 import { OptimizeConfigResponse } from '../model/optimizeConfigResponse';
@@ -29,6 +30,7 @@ import { OptimizeStateResponse } from '../model/optimizeStateResponse';
 import { OptimizeTransferLearningModelsResponse } from '../model/optimizeTransferLearningModelsResponse';
 import { ScoreTrialResponse } from '../model/scoreTrialResponse';
 import { TunerCreateTrialImpulse } from '../model/tunerCreateTrialImpulse';
+import { UpdateTunerRunRequest } from '../model/updateTunerRunRequest';
 import { WindowSettingsResponse } from '../model/windowSettingsResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -51,11 +53,6 @@ export enum OptimizationApiApiKeys {
 type getDspParametersQueryParams = {
     organizationId: number,
     organizationDspId: number,
-};
-
-type getTrialLogsQueryParams = {
-    limit?: number,
-    logLevel?: 'error' | 'warn' | 'info' | 'debug',
 };
 
 
@@ -750,10 +747,8 @@ export class OptimizationApi {
      * @summary Get trial logs
      * @param projectId Project ID
      * @param trialId trial ID
-     * @param limit Maximum number of results
-     * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getTrialLogs (projectId: number, trialId: string, queryParams: getTrialLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getTrialLogs (projectId: number, trialId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/trial/{trialId}/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'trialId' + '}', encodeURIComponent(String(trialId)));
@@ -782,14 +777,6 @@ export class OptimizationApi {
 
         if (trialId === null || trialId === undefined) {
             throw new Error('Required parameter trialId was null or undefined when calling getTrialLogs.');
-        }
-
-        if (queryParams.limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
-        }
-
-        if (queryParams.logLevel !== undefined) {
-            localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -829,6 +816,98 @@ export class OptimizationApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "LogStdoutResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieves the EON tuner state for a specific run.
+     * @summary Retrieves EON tuner state for a run.
+     * @param projectId Project ID
+     * @param tunerCoordinatorJobId Tuner coordinator job ID
+     */
+    public async getTunerRunState (projectId: number, tunerCoordinatorJobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeStateResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/{tunerCoordinatorJobId}/state'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'tunerCoordinatorJobId' + '}', encodeURIComponent(String(tunerCoordinatorJobId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getTunerRunState.');
+        }
+
+        // verify required parameter 'tunerCoordinatorJobId' is not null or undefined
+
+
+        if (tunerCoordinatorJobId === null || tunerCoordinatorJobId === undefined) {
+            throw new Error('Required parameter tunerCoordinatorJobId was null or undefined when calling getTunerRunState.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<OptimizeStateResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "OptimizeStateResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -912,6 +991,89 @@ export class OptimizationApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "WindowSettingsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * List all the tuner runs for a project.
+     * @summary List all tuner runs
+     * @param projectId Project ID
+     */
+    public async listTunerRuns (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListTunerRunsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/runs'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listTunerRuns.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListTunerRunsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListTunerRunsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1072,6 +1234,107 @@ export class OptimizationApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(optimizeConfig, "OptimizeConfig")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Updates the EON tuner state for a specific run.
+     * @summary Update EON tuner state
+     * @param projectId Project ID
+     * @param tunerCoordinatorJobId Tuner coordinator job ID
+     * @param updateTunerRunRequest 
+     */
+    public async updateTunerRun (projectId: number, tunerCoordinatorJobId: number, updateTunerRunRequest: UpdateTunerRunRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/optimize/{tunerCoordinatorJobId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'tunerCoordinatorJobId' + '}', encodeURIComponent(String(tunerCoordinatorJobId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateTunerRun.');
+        }
+
+        // verify required parameter 'tunerCoordinatorJobId' is not null or undefined
+
+
+        if (tunerCoordinatorJobId === null || tunerCoordinatorJobId === undefined) {
+            throw new Error('Required parameter tunerCoordinatorJobId was null or undefined when calling updateTunerRun.');
+        }
+
+        // verify required parameter 'updateTunerRunRequest' is not null or undefined
+
+
+        if (updateTunerRunRequest === null || updateTunerRunRequest === undefined) {
+            throw new Error('Required parameter updateTunerRunRequest was null or undefined when calling updateTunerRun.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(updateTunerRunRequest, "UpdateTunerRunRequest")
         };
 
         let authenticationPromise = Promise.resolve();

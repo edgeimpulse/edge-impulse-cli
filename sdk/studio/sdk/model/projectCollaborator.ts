@@ -36,6 +36,10 @@ export class ProjectCollaborator {
     * Whether the user has activated their account or not.
     */
     'activated': boolean;
+    /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -109,6 +113,11 @@ export class ProjectCollaborator {
         {
             "name": "activated",
             "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
             "type": "boolean"
         },
         {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockType } from './blockType';
 
 export class InputBlock {
     'type': InputBlockTypeEnum;
@@ -18,6 +19,7 @@ export class InputBlock {
     'description': string;
     'name': string;
     'recommended'?: boolean;
+    'blockType': BlockType;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +53,11 @@ export class InputBlock {
             "name": "recommended",
             "baseName": "recommended",
             "type": "boolean"
+        },
+        {
+            "name": "blockType",
+            "baseName": "blockType",
+            "type": "BlockType"
         }    ];
 
     static getAttributeTypeMap() {

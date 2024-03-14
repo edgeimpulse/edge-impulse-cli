@@ -13,6 +13,7 @@
 import { GenericApiResponse } from './genericApiResponse';
 import { GetLastDeploymentBuildResponseAllOf } from './getLastDeploymentBuildResponseAllOf';
 import { GetLastDeploymentBuildResponseAllOfLastBuild } from './getLastDeploymentBuildResponseAllOfLastBuild';
+import { ProjectDeploymentTarget } from './projectDeploymentTarget';
 
 export class GetLastDeploymentBuildResponse {
     /**
@@ -28,6 +29,7 @@ export class GetLastDeploymentBuildResponse {
     */
     'hasBuild': boolean;
     'lastBuild'?: GetLastDeploymentBuildResponseAllOfLastBuild;
+    'lastDeploymentTarget'?: ProjectDeploymentTarget;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +53,11 @@ export class GetLastDeploymentBuildResponse {
             "name": "lastBuild",
             "baseName": "lastBuild",
             "type": "GetLastDeploymentBuildResponseAllOfLastBuild"
+        },
+        {
+            "name": "lastDeploymentTarget",
+            "baseName": "lastDeploymentTarget",
+            "type": "ProjectDeploymentTarget"
         }    ];
 
     static getAttributeTypeMap() {

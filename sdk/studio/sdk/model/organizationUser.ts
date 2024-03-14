@@ -37,6 +37,10 @@ export class OrganizationUser {
     * Whether the user has activated their account or not.
     */
     'activated': boolean;
+    /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
     'added': Date;
     'role': OrganizationMemberRole;
     'projectCount': number;
@@ -113,6 +117,11 @@ export class OrganizationUser {
         {
             "name": "activated",
             "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
             "type": "boolean"
         },
         {

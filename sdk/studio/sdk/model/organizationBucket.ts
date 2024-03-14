@@ -11,7 +11,7 @@
  */
 
 
-export class ListOrganizationBucketsResponseAllOfBuckets {
+export class OrganizationBucket {
     'id': number;
     /**
     * S3 access key
@@ -78,7 +78,7 @@ export class ListOrganizationBucketsResponseAllOfBuckets {
         }    ];
 
     static getAttributeTypeMap() {
-        return ListOrganizationBucketsResponseAllOfBuckets.attributeTypeMap;
+        return OrganizationBucket.attributeTypeMap;
     }
 }
 

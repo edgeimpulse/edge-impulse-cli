@@ -11,6 +11,7 @@
  */
 
 import { Job } from './job';
+import { JobCreatedByUser } from './jobCreatedByUser';
 import { JobDetailsAllOf } from './jobDetailsAllOf';
 import { JobState } from './jobState';
 
@@ -52,6 +53,7 @@ export class JobDetails {
     * Job duration time in seconds from start to finished, measured by k8s job watcher.
     */
     'computeTime'?: number;
+    'createdByUser'?: JobCreatedByUser;
     /**
     * List of jobs children isd triggered by this job
     */
@@ -117,6 +119,11 @@ export class JobDetails {
             "name": "computeTime",
             "baseName": "computeTime",
             "type": "number"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "JobCreatedByUser"
         },
         {
             "name": "childrenIds",

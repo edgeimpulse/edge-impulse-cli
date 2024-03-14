@@ -20,6 +20,7 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
     'latency': number;
     'tflite': KerasModelMetadataMetricsTflite;
     'eon': KerasModelMetadataMetricsTflite;
+    'eonRamOptimized'?: KerasModelMetadataMetricsTflite;
     /**
     * Custom, device-specific performance metrics
     */
@@ -56,6 +57,11 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
         {
             "name": "eon",
             "baseName": "eon",
+            "type": "KerasModelMetadataMetricsTflite"
+        },
+        {
+            "name": "eonRamOptimized",
+            "baseName": "eon_ram_optimized",
             "type": "KerasModelMetadataMetricsTflite"
         },
         {

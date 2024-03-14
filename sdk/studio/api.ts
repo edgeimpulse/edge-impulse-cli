@@ -4,7 +4,7 @@ const PATH = require('path');
 module.paths.push(PATH.join(process.cwd(), 'node_modules'));
 
 import {
-    AuthApi, CDNApi, ClassifyApi, DSPApi,
+    AuthApi, ClassifyApi, DSPApi,
     DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi,
     OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi,
     OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi,

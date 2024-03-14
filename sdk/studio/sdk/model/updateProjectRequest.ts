@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { ModelEngineShortEnum } from './modelEngineShortEnum';
+import { ProjectVisibility } from './projectVisibility';
 
 /**
 * Only fields set in this object will be updated.
@@ -24,10 +26,16 @@ export class UpdateProjectRequest {
     */
     'name'?: string;
     'description'?: string;
+    'projectVisibility'?: ProjectVisibility;
+    /**
+    * If the project allows public access, whether to list it the public projects overview response. If not listed, the project is still accessible via direct link. If the project does not allow public access, this field has no effect. 
+    */
+    'publicProjectListed'?: boolean;
     /**
     * Call this when clicking the Eon compiler setting
     */
     'lastDeployEonCompiler'?: boolean;
+    'lastDeployModelEngine'?: ModelEngineShortEnum;
     /**
     * MCU used for calculating latency
     */
@@ -96,7 +104,7 @@ export class UpdateProjectRequest {
     */
     'exportJobNotificationUids'?: Array<number>;
     /**
-    * Config file specifying how to process CSV files.
+    * Config file specifying how to process CSV files. (set to null to clear the config)
     */
     'csvImportConfig'?: object;
     'inPretrainedModelFlow'?: boolean;
@@ -112,6 +120,26 @@ export class UpdateProjectRequest {
     * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
     */
     'showSensorDataInAcquisitionGraph'?: boolean;
+    /**
+    * Which deployment target was last selected (used to populate this deployment target again the next time you visit the deployment page). Should match the _format_ property of the response from listDeploymentTargetsForProject.
+    */
+    'lastDeploymentTarget'?: string;
+    /**
+    * Default page size on data acquisition
+    */
+    'dataAcquisitionPageSize'?: number;
+    /**
+    * Default view type on data acquisition
+    */
+    'dataAcquisitionViewType'?: UpdateProjectRequestDataAcquisitionViewTypeEnum;
+    /**
+    * Number of grid columns in non-detailed view on data acquisition
+    */
+    'dataAcquisitionGridColumnCount'?: number;
+    /**
+    * Number of grid columns in detailed view on data acquisition
+    */
+    'dataAcquisitionGridColumnCountDetailed'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -132,9 +160,24 @@ export class UpdateProjectRequest {
             "type": "string"
         },
         {
+            "name": "projectVisibility",
+            "baseName": "projectVisibility",
+            "type": "ProjectVisibility"
+        },
+        {
+            "name": "publicProjectListed",
+            "baseName": "publicProjectListed",
+            "type": "boolean"
+        },
+        {
             "name": "lastDeployEonCompiler",
             "baseName": "lastDeployEonCompiler",
             "type": "boolean"
+        },
+        {
+            "name": "lastDeployModelEngine",
+            "baseName": "lastDeployModelEngine",
+            "type": "ModelEngineShortEnum"
         },
         {
             "name": "latencyDevice",
@@ -255,6 +298,31 @@ export class UpdateProjectRequest {
             "name": "showSensorDataInAcquisitionGraph",
             "baseName": "showSensorDataInAcquisitionGraph",
             "type": "boolean"
+        },
+        {
+            "name": "lastDeploymentTarget",
+            "baseName": "lastDeploymentTarget",
+            "type": "string"
+        },
+        {
+            "name": "dataAcquisitionPageSize",
+            "baseName": "dataAcquisitionPageSize",
+            "type": "number"
+        },
+        {
+            "name": "dataAcquisitionViewType",
+            "baseName": "dataAcquisitionViewType",
+            "type": "UpdateProjectRequestDataAcquisitionViewTypeEnum"
+        },
+        {
+            "name": "dataAcquisitionGridColumnCount",
+            "baseName": "dataAcquisitionGridColumnCount",
+            "type": "number"
+        },
+        {
+            "name": "dataAcquisitionGridColumnCountDetailed",
+            "baseName": "dataAcquisitionGridColumnCountDetailed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -268,3 +336,6 @@ export const UpdateProjectRequestLabelingMethodEnumValues: string[] = ['single_l
 
 export type UpdateProjectRequestSelectedProjectTypeInWizardEnum = 'accelerometer' | 'audio' | 'image_classification' | 'object_detection' | 'something_else';
 export const UpdateProjectRequestSelectedProjectTypeInWizardEnumValues: string[] = ['accelerometer', 'audio', 'image_classification', 'object_detection', 'something_else'];
+
+export type UpdateProjectRequestDataAcquisitionViewTypeEnum = 'list' | 'grid';
+export const UpdateProjectRequestDataAcquisitionViewTypeEnumValues: string[] = ['list', 'grid'];

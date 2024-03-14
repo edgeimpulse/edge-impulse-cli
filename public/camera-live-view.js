@@ -126,7 +126,7 @@ window.CameraLiveView = async () => {
 
             els.imageClassify.text.textContent = conclusion;
         }
-        else {
+        else if (result.bounding_boxes) {
             for (let bx of Array.from(els.cameraContainer.querySelectorAll('.bounding-box-container'))) {
                 bx.parentNode?.removeChild(bx);
             }
@@ -168,6 +168,54 @@ window.CameraLiveView = async () => {
                 label.style.background = color;
                 label.textContent = bb.label + ' (' + bb.value.toFixed(2) + ')';
                 el.appendChild(label);
+
+                els.cameraContainer.appendChild(el);
+            }
+
+            els.imageClassify.row.style.display = 'none';
+        }
+        if (result.grid) {
+            for (let bx of Array.from(els.cameraContainer.querySelectorAll('.bounding-box-container'))) {
+                bx.parentNode?.removeChild(bx);
+            }
+
+            let factor = els.cameraImg.naturalHeight / els.cameraImg.clientHeight;
+
+            for (let b of result.grid) {
+                let bb = {
+                    x: b.x / factor,
+                    y: b.y / factor,
+                    width: b.width / factor,
+                    height: b.height / factor,
+                    label: b.label,
+                    value: b.value
+                };
+
+                let el = document.createElement('div');
+                el.classList.add('bounding-box-container');
+                el.style.position = 'absolute';
+                el.style.background = 'rgba(255, 0, 0, 0.5)';
+                el.style.width = (bb.width) + 'px';
+                el.style.height = (bb.height) + 'px';
+                el.style.left = (bb.x) + 'px';
+                el.style.top = (bb.y) + 'px';
+                // Create tooltip element (custom variant because dataset.originalTitle
+                // and el.dataset.toggle don't seem to work in this client)
+                el.addEventListener('mouseenter', function(event) {
+                    const tooltipEl = document.createElement('div');
+                    tooltipEl.classList.add('tooltip-custom');
+                    tooltipEl.textContent = `score ${b.value.toFixed(4)}`;
+                    el.appendChild(tooltipEl);
+                    tooltipEl.classList.add('show');
+                });
+                el.addEventListener('mouseleave', removeExistingTooltips);
+
+                function removeExistingTooltips() {
+                    const existingTooltips = document.querySelectorAll('.tooltip-custom');
+                    existingTooltips.forEach(tooltip => {
+                      tooltip.remove();
+                    });
+                }
 
                 els.cameraContainer.appendChild(el);
             }

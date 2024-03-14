@@ -287,16 +287,30 @@ async function startWebServer(config: EiSerialDeviceConfig) {
                 });
             }
 
-            let mode: 'classification' | 'object_detection';
-            let firstClassifyLine = lines.find(x => x.startsWith('    '));
-            if (firstClassifyLine && !isNaN(Number(firstClassifyLine.split(':')[1]))) {
-                mode = 'classification';
-            }
-            else {
-                mode = 'object_detection';
+            type inferencingMode = 'classification' | 'object_detection' | 'visual_ad';
+            let modes: inferencingMode[] = [];
+            let modeLines = lines.filter(x => x.startsWith('#'));
+
+            for (let element of modeLines) {
+                switch (element) {
+                    case '#Regression results:\r':
+                    case '#Classification results:\r':
+                        modes.push('classification');
+                        break;
+                    case '#Object detection results:\r':
+                        modes.push('object_detection');
+                        break;
+                    case '#Visual anomaly grid results:\r':
+                        modes.push('visual_ad');
+                        break;
+                    default:
+                        console.warn('Unknown mode, defaulting to classification', element);
+                        modes.push('classification');
+                        break;
+                }
             }
 
-            if (mode === 'object_detection') {
+            if (modes.includes('object_detection') || modes.includes('visual_ad')) {
                 let cubes = [];
                 // parse object detection
                 for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
@@ -314,17 +328,27 @@ async function startWebServer(config: EiSerialDeviceConfig) {
                     cubes.push(cube);
                     printMsg += l + '\n';
                 }
-
-                io.emit('classification', {
-                    result: {
-                        bounding_boxes: cubes
-                    },
-                    timeMs: classifyTime,
-                });
+                if (modes.includes('object_detection')) {
+                    io.emit('classification', {
+                        result: {
+                            bounding_boxes: cubes
+                        },
+                        timeMs: classifyTime,
+                    });
+                }
+                if (modes.includes('visual_ad')) {
+                    let visualAdRes = lines.filter(x => x.startsWith('Visual anomaly values'));
+                    printMsg += visualAdRes + '\n';
+                    io.emit('classification', {
+                        result: {
+                            grid: cubes
+                        },
+                        timeMs: classifyTime,
+                    });
+                }
             }
-            else {
+            if (modes.includes('classification')) {
                 let results: { [k: string]: number } = { };
-                // parse object detection
                 for (let l of lines.filter(x => x.startsWith('    '))) {
                     let m = l.split(':').map(x => x.trim());
                     if (m.length !== 2) continue;

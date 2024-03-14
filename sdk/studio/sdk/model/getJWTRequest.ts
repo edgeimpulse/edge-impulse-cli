@@ -29,6 +29,10 @@ export class GetJWTRequest {
     * Session ID
     */
     'sessionId'?: string;
+    /**
+    * TOTP Token. Required if a user has multi-factor authentication with a TOTP token enabled. If a user has MFA enabled, but no totpToken is submitted; then an error starting with \"ERR_TOTP_TOKEN IS REQUIRED\" is returned. Use this to then prompt for an MFA token and re-login.
+    */
+    'totpToken'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,6 +60,11 @@ export class GetJWTRequest {
         {
             "name": "sessionId",
             "baseName": "sessionId",
+            "type": "string"
+        },
+        {
+            "name": "totpToken",
+            "baseName": "totpToken",
             "type": "string"
         }    ];
 

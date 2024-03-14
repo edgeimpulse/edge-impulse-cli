@@ -5,6 +5,7 @@ import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
 import { EdgeImpulseApi } from '../sdk/studio/api';
+import { GetJWTResponse } from '../sdk/studio';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 
@@ -288,16 +289,49 @@ export class Config {
                     message: `What is your password?`
                 });
 
-                let res = (await this._api.login.login({
-                    username: username.username,
-                    password: password.password,
-                }));
+                let res: GetJWTResponse;
+                try {
+                    res = (await this._api.login.login({
+                        username: username.username,
+                        password: password.password,
+                    }));
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    if ((ex.message || ex.toString()).startsWith('ERR_TOTP_TOKEN IS REQUIRED')) {
 
-                if (!res.token) {
+                        // For TOTP allow the user to enter another one if it's invalid (so run in a loop)
+                        while (1) {
+                            try {
+                                const totpToken = <{ totpToken: string }>await inquirer.prompt({
+                                    type: 'input',
+                                    name: 'totpToken',
+                                    message: `Enter a code from your authenticator app`
+                                });
+
+                                res = (await this._api.login.login({
+                                    username: username.username,
+                                    password: password.password,
+                                    totpToken: totpToken.totpToken,
+                                }));
+                                break;
+                            }
+                            catch (ex3) {
+                                let totpEx = <Error>ex3;
+                                console.warn('Failed to log in:', totpEx.message || totpEx.toString());
+                            }
+                        }
+                    }
+                    else {
+                        throw ex;
+                    }
+                }
+
+                if (!res!.token) {
                     throw new Error('Authentication did not return a token');
                 }
 
-                config.jwtToken = res.token;
+                config.jwtToken = res!.token;
             }
 
             await this._api.authenticate({

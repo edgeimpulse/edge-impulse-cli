@@ -19,6 +19,7 @@ import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 import { LearnBlockType } from './learnBlockType';
+import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { TransferLearningModel } from './transferLearningModel';
 
 export class KerasResponseAllOf {
@@ -75,9 +76,9 @@ export class KerasResponseAllOf {
     */
     'autoClassWeights'?: boolean;
     /**
-    * Automatically select the optimal learning rate for your data set.
+    * Use learned optimizer and ignore learning rate.
     */
-    'findLearningRate'?: boolean;
+    'useLearnedOptimizer'?: boolean;
     'augmentationPolicyImage': AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
     'transferLearningModels': Array<TransferLearningModel>;
@@ -99,11 +100,16 @@ export class KerasResponseAllOf {
     */
     'showAdvancedTrainingSettings': boolean;
     /**
+    * Whether the \'Augmentation training settings\' UI element should be expanded.
+    */
+    'showAugmentationTrainingSettings': boolean;
+    /**
     * Training parameters, this list depends on the list of parameters that the model exposes.
     */
     'customParameters'?: { [key: string]: string; };
     'anomalyCapacity'?: AnomalyCapacity;
     'lastShownModelVariant'?: KerasModelVariantEnum;
+    'lastShownModelEngine'?: ModelEngineShortEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -189,8 +195,8 @@ export class KerasResponseAllOf {
             "type": "boolean"
         },
         {
-            "name": "findLearningRate",
-            "baseName": "findLearningRate",
+            "name": "useLearnedOptimizer",
+            "baseName": "useLearnedOptimizer",
             "type": "boolean"
         },
         {
@@ -234,6 +240,11 @@ export class KerasResponseAllOf {
             "type": "boolean"
         },
         {
+            "name": "showAugmentationTrainingSettings",
+            "baseName": "showAugmentationTrainingSettings",
+            "type": "boolean"
+        },
+        {
             "name": "customParameters",
             "baseName": "customParameters",
             "type": "{ [key: string]: string; }"
@@ -247,6 +258,11 @@ export class KerasResponseAllOf {
             "name": "lastShownModelVariant",
             "baseName": "lastShownModelVariant",
             "type": "KerasModelVariantEnum"
+        },
+        {
+            "name": "lastShownModelEngine",
+            "baseName": "lastShownModelEngine",
+            "type": "ModelEngineShortEnum"
         }    ];
 
     static getAttributeTypeMap() {

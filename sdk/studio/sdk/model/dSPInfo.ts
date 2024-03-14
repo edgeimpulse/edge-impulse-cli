@@ -43,6 +43,10 @@ export class DSPInfo {
     * Whether autotune results exist for this DSP block.
     */
     'hasAutotunerResults'?: boolean;
+    /**
+    * Whether this DSP block uses state.
+    */
+    'usesState'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -115,6 +119,11 @@ export class DSPInfo {
         {
             "name": "hasAutotunerResults",
             "baseName": "hasAutotunerResults",
+            "type": "boolean"
+        },
+        {
+            "name": "usesState",
+            "baseName": "usesState",
             "type": "boolean"
         }    ];
 

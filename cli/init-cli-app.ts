@@ -141,6 +141,10 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
             }]);
             projectId = Number(inqRes.project);
         }
+
+        if (!projectId) {
+            throw new Error('projectId is null');
+        }
     }
 
     let devKeys: { apiKey: string, hmacKey: string } = {
@@ -169,6 +173,6 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
 
     return {
         projectId,
-        devKeys
+        devKeys,
     };
 }

@@ -30,6 +30,10 @@ export class Sample {
     * Timestamp when the sample was created on device, or if no accurate time was known on device, the time that the file was processed by the ingestion service.
     */
     'created': Date;
+    /**
+    * Timestamp when the sample was last modified.
+    */
+    'lastModified': Date;
     'category': string;
     'coldstorageFilename': string;
     'label': string;
@@ -151,6 +155,11 @@ export class Sample {
         {
             "name": "created",
             "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "lastModified",
+            "baseName": "lastModified",
             "type": "Date"
         },
         {

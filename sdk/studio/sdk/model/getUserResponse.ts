@@ -47,6 +47,10 @@ export class GetUserResponse {
     'companyName'?: string;
     'activated': boolean;
     /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
+    /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
     'organizations': Array<UserOrganization>;
@@ -161,6 +165,11 @@ export class GetUserResponse {
         {
             "name": "activated",
             "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
             "type": "boolean"
         },
         {

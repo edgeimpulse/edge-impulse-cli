@@ -19,15 +19,17 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { AddApiKeyRequest } from '../model/addApiKeyRequest';
 import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
 import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
+import { AddProjectApiKeyRequest } from '../model/addProjectApiKeyRequest';
 import { CreateProjectRequest } from '../model/createProjectRequest';
 import { CreateProjectResponse } from '../model/createProjectResponse';
 import { DevelopmentBoardsResponse } from '../model/developmentBoardsResponse';
 import { DevelopmentKeysResponse } from '../model/developmentKeysResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
 import { GetNotesResponse } from '../model/getNotesResponse';
+import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
 import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
 import { ListApiKeysResponse } from '../model/listApiKeysResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
@@ -46,6 +48,7 @@ import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
 import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
 import { SocketTokenResponse } from '../model/socketTokenResponse';
+import { TargetConstraints } from '../model/targetConstraints';
 import { TransferOwnershipOrganizationRequest } from '../model/transferOwnershipOrganizationRequest';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
 import { UpdateProjectTagsRequest } from '../model/updateProjectTagsRequest';
@@ -83,6 +86,10 @@ type listPublicProjectsQueryParams = {
     limit?: number,
     offset?: number,
     project?: string,
+};
+
+type uploadCsvWizardUploadedFileFormParams = {
+    file: RequestFile,
 };
 
 type uploadReadmeImageFormParams = {
@@ -249,9 +256,9 @@ export class ProjectsApi {
      * Add an API key. If you set `developmentKey` to `true` this flag will be removed from the current development API key.
      * @summary Add API key
      * @param projectId Project ID
-     * @param addApiKeyRequest 
+     * @param addProjectApiKeyRequest 
      */
-    public async addProjectApiKey (projectId: number, addApiKeyRequest: AddApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addProjectApiKey (projectId: number, addProjectApiKeyRequest: AddProjectApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -274,11 +281,11 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling addProjectApiKey.');
         }
 
-        // verify required parameter 'addApiKeyRequest' is not null or undefined
+        // verify required parameter 'addProjectApiKeyRequest' is not null or undefined
 
 
-        if (addApiKeyRequest === null || addApiKeyRequest === undefined) {
-            throw new Error('Required parameter addApiKeyRequest was null or undefined when calling addProjectApiKey.');
+        if (addProjectApiKeyRequest === null || addProjectApiKeyRequest === undefined) {
+            throw new Error('Required parameter addProjectApiKeyRequest was null or undefined when calling addProjectApiKey.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -294,7 +301,7 @@ export class ProjectsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(addApiKeyRequest, "AddApiKeyRequest")
+            body: ObjectSerializer.serialize(addProjectApiKeyRequest, "AddProjectApiKeyRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -669,6 +676,255 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Returns a JSON file with the current CSV wizard config. If there is no config this will throw a 5xx error.
+     * @summary Download CSV Wizard config
+     * @param projectId Project ID
+     */
+    public async downloadCsvWizardConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/download-config'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadCsvWizardConfig.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Returns the file that was uploaded when the CSV wizard was configured. If there is no config this will throw a 5xx error.
+     * @summary Download CSV Wizard uploaded file
+     * @param projectId Project ID
+     */
+    public async downloadCsvWizardUploadedFile (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file/download'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadCsvWizardUploadedFile.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Returns whether the file that was uploaded when the CSV wizard was configured is available.
+     * @summary Get CSV Wizard uploaded file info
+     * @param projectId Project ID
+     */
+    public async getCsvWizardUploadedFileInfo (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetCsvWizardUploadedFileInfo> {
+        const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getCsvWizardUploadedFileInfo.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetCsvWizardUploadedFileInfo>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetCsvWizardUploadedFileInfo");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1353,6 +1609,89 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "SocketTokenResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve target constraints for a project. The constraints object captures hardware attributes of your target device, along with an application budget to allow guidance on performance and resource usage
+     * @summary Get target constraints
+     * @param projectId Project ID
+     */
+    public async getTargetConstraints (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetTargetConstraintsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/target-constraints'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getTargetConstraints.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetTargetConstraintsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetTargetConstraintsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2822,6 +3161,98 @@ export class ProjectsApi {
     }
 
     /**
+     * Set target constraints for a project. Use the constraints object to capture hardware attributes of your target device, along with an application budget to allow guidance on performance and resource usage
+     * @summary Set target constraints
+     * @param projectId Project ID
+     * @param targetConstraints 
+     */
+    public async setTargetConstraints (projectId: number, targetConstraints: TargetConstraints, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/target-constraints'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setTargetConstraints.');
+        }
+
+        // verify required parameter 'targetConstraints' is not null or undefined
+
+
+        if (targetConstraints === null || targetConstraints === undefined) {
+            throw new Error('Required parameter targetConstraints was null or undefined when calling setTargetConstraints.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(targetConstraints, "TargetConstraints")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Transfer ownership of a project to another user.
      * @summary Transfer ownership (user)
      * @param projectId Project ID
@@ -3248,6 +3679,102 @@ export class ProjectsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateVersionRequest, "UpdateVersionRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Asynchronously called in the CSV Wizard to store the file that the CSV wizard was based on.
+     * @summary Store CSV Wizard uploaded file
+     * @param projectId Project ID
+     * @param file 
+     */
+    public async uploadCsvWizardUploadedFile (projectId: number, params: uploadCsvWizardUploadedFileFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling uploadCsvWizardUploadedFile.');
+        }
+
+        // verify required parameter 'file' is not null or undefined
+        if (params.file === null || params.file === undefined) {
+            throw new Error('Required parameter params.file was null or undefined when calling uploadCsvWizardUploadedFile.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.file !== undefined) {
+            localVarFormParams['file'] = params.file;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
         };
 
         let authenticationPromise = Promise.resolve();

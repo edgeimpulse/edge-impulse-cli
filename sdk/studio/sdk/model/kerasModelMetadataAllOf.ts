@@ -112,5 +112,5 @@ export class KerasModelMetadataAllOf {
 }
 
 
-export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly';
-export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly'];
+export type KerasModelMetadataAllOfModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm';
+export const KerasModelMetadataAllOfModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm'];

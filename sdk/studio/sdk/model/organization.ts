@@ -48,6 +48,10 @@ export class Organization {
     * Date when the current contract started, if any.
     */
     'contractStartDate'?: Date | null;
+    /**
+    * The date in which the organization was deleted. If the organization is not deleted, this field is not set.
+    */
+    'deletedDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -115,6 +119,11 @@ export class Organization {
         {
             "name": "contractStartDate",
             "baseName": "contractStartDate",
+            "type": "Date"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
             "type": "Date"
         }    ];
 

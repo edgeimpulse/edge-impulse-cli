@@ -11,11 +11,12 @@
  */
 
 
-export class OrganizationCreateProjectCreatedByUser {
+export class ExportBlockResponseAllOf {
+    /**
+    * Job identifier. Status updates will include this identifier.
+    */
     'id': number;
-    'name': string;
-    'username': string;
-    'photo'?: string;
+    'exportUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -26,23 +27,13 @@ export class OrganizationCreateProjectCreatedByUser {
             "type": "number"
         },
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "username",
-            "baseName": "username",
-            "type": "string"
-        },
-        {
-            "name": "photo",
-            "baseName": "photo",
+            "name": "exportUrl",
+            "baseName": "exportUrl",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationCreateProjectCreatedByUser.attributeTypeMap;
+        return ExportBlockResponseAllOf.attributeTypeMap;
     }
 }
 

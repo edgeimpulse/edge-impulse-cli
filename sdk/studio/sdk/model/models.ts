@@ -28,6 +28,7 @@ export * from './addOrganizationTransformationBlockResponse';
 export * from './addOrganizationTransformationBlockResponseAllOf';
 export * from './addProjectApiKeyRequest';
 export * from './addProjectApiKeyRequestAllOf';
+export * from './additionalMetric';
 export * from './adminAddDisallowedEmailDomainRequest';
 export * from './adminAddOrUpdateSSODomainIdPsRequest';
 export * from './adminAddOrganizationApiKeyRequest';
@@ -67,13 +68,13 @@ export * from './adminGetSSODomainIdPsResponseAllOf';
 export * from './adminGetSSOSettingsResponse';
 export * from './adminGetSSOSettingsResponseAllOf';
 export * from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
+export * from './adminGetTrialResponse';
+export * from './adminGetTrialResponseAllOf';
 export * from './adminGetUserIdsResponse';
 export * from './adminGetUserIdsResponseAllOf';
 export * from './adminGetUserMetricsResponse';
 export * from './adminGetUserResponse';
 export * from './adminGetUserResponseAllOf';
-export * from './adminGetUserTrialResponse';
-export * from './adminGetUserTrialResponseAllOf';
 export * from './adminGetUsersResponse';
 export * from './adminGetUsersResponseAllOf';
 export * from './adminGetUsersResponseAllOfUsers';
@@ -81,12 +82,14 @@ export * from './adminListProjects';
 export * from './adminListProjectsResponse';
 export * from './adminOrganizationInfoResponse';
 export * from './adminOrganizationInfoResponseAllOf';
+export * from './adminStartEnterpriseTrialRequest';
+export * from './adminStartEnterpriseTrialRequestAllOf';
 export * from './adminToggleDataMigrationRequest';
 export * from './adminUpdateOrganizationDataExportRequest';
 export * from './adminUpdateOrganizationRequest';
+export * from './adminUpdateTrialRequest';
 export * from './adminUpdateUserPermissionsRequest';
 export * from './adminUpdateUserRequest';
-export * from './adminUpdateUserTrialRequest';
 export * from './akidaEdgeLearningConfig';
 export * from './anomalyCapacity';
 export * from './anomalyGmmMetadata';
@@ -105,7 +108,9 @@ export * from './applicationBudget';
 export * from './augmentationPolicyImageEnum';
 export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
+export * from './autoLabelerSegment';
 export * from './autotuneDspRequest';
+export * from './billingCycle';
 export * from './blockDisplayCategory';
 export * from './blockType';
 export * from './boundingBox';
@@ -118,12 +123,16 @@ export * from './classifyJobResponse';
 export * from './classifyJobResponseAllOf';
 export * from './classifyJobResponseAllOfAccuracy';
 export * from './classifyJobResponseAllOfAccuracyTotalSummary';
+export * from './classifyJobResponseAllOfAdditionalMetricsByLearnBlock';
 export * from './classifyJobResponsePage';
 export * from './classifyJobResponsePageAllOf';
 export * from './classifySampleResponse';
 export * from './classifySampleResponseAllOf';
 export * from './classifySampleResponseClassification';
 export * from './classifySampleResponseClassificationDetails';
+export * from './classifySampleResponseMultipleVariants';
+export * from './classifySampleResponseMultipleVariantsAllOf';
+export * from './classifySampleResponseVariantResults';
 export * from './convertUserRequest';
 export * from './cosineSimilarityData';
 export * from './cosineSimilarityIssue';
@@ -150,6 +159,8 @@ export * from './createOrganizationResponse';
 export * from './createOrganizationResponseAllOf';
 export * from './createOrganizationUsageReportBody';
 export * from './createPipelineResponse';
+export * from './createProTierUserRequest';
+export * from './createProTierUserRequestAllOf';
 export * from './createProjectRequest';
 export * from './createProjectResponse';
 export * from './createProjectResponseAllOf';
@@ -189,6 +200,8 @@ export * from './dSPMetadataIncludedSamples';
 export * from './dSPMetadataOutputConfig';
 export * from './dSPMetadataOutputConfigShape';
 export * from './dSPMetadataResponse';
+export * from './dSPNamedAxis';
+export * from './dailyMetricsRecord';
 export * from './dataCampaign';
 export * from './dataCampaignDashboard';
 export * from './dataCampaignGraph';
@@ -202,6 +215,7 @@ export * from './dataExplorerSettings';
 export * from './datasetRatioData';
 export * from './datasetRatioDataRatio';
 export * from './deletePortalFileRequest';
+export * from './deleteUserRequest';
 export * from './dependencyData';
 export * from './deployPretrainedModelInputAudio';
 export * from './deployPretrainedModelInputImage';
@@ -226,6 +240,8 @@ export * from './developmentBoardsResponseAllOf';
 export * from './developmentKeys';
 export * from './developmentKeysResponse';
 export * from './device';
+export * from './deviceDebugStreamType';
+export * from './deviceInferenceInfo';
 export * from './deviceNameResponse';
 export * from './deviceNameResponseAllOf';
 export * from './deviceSensors';
@@ -300,10 +316,14 @@ export * from './getAutoLabelerResponse';
 export * from './getAutoLabelerResponseAllOf';
 export * from './getAutoLabelerResponseAllOfClusters';
 export * from './getAutoLabelerResponseAllOfItems';
+export * from './getAutoLabelerSegmentInfoResponse';
+export * from './getAutoLabelerSegmentInfoResponseAllOf';
 export * from './getCsvWizardUploadedFileInfo';
 export * from './getCsvWizardUploadedFileInfoAllOf';
 export * from './getDataExplorerFeaturesResponse';
 export * from './getDataExplorerFeaturesResponseAllOf';
+export * from './getDataExplorerFeaturesResponseAllOfData';
+export * from './getDataExplorerFeaturesResponseAllOfSample';
 export * from './getDataExplorerSettingsResponse';
 export * from './getDataExplorerSettingsResponseAllOf';
 export * from './getDeploymentResponse';
@@ -323,6 +343,8 @@ export * from './getFeatureFlagsResponseAllOf';
 export * from './getFeatureFlagsResponseAllOfFlags';
 export * from './getImpulseBlocksResponse';
 export * from './getImpulseBlocksResponseAllOf';
+export * from './getImpulseRecordsRequest';
+export * from './getImpulseRecordsRequestRange';
 export * from './getImpulseResponse';
 export * from './getImpulseResponseAllOf';
 export * from './getJWTRequest';
@@ -336,6 +358,8 @@ export * from './getLabelNoiseDataResponseAllOfData';
 export * from './getLastDeploymentBuildResponse';
 export * from './getLastDeploymentBuildResponseAllOf';
 export * from './getLastDeploymentBuildResponseAllOfLastBuild';
+export * from './getModelVariantsResponse';
+export * from './getModelVariantsResponseAllOf';
 export * from './getNotesResponse';
 export * from './getNotesResponseAllOf';
 export * from './getOrganizationBucketResponse';
@@ -440,6 +464,7 @@ export * from './jobStep';
 export * from './jobSummaryResponse';
 export * from './jobSummaryResponseAllOf';
 export * from './jobSummaryResponseAllOfSummary';
+export * from './keepDeviceDebugStreamAliveRequest';
 export * from './kerasCustomMetric';
 export * from './kerasModelLayer';
 export * from './kerasModelLayerInput';
@@ -449,6 +474,7 @@ export * from './kerasModelMetadataAllOf';
 export * from './kerasModelMetadataMetrics';
 export * from './kerasModelMetadataMetricsOnDevicePerformance';
 export * from './kerasModelMetadataMetricsTflite';
+export * from './kerasModelMode';
 export * from './kerasModelTypeEnum';
 export * from './kerasModelVariantEnum';
 export * from './kerasResponse';
@@ -623,6 +649,7 @@ export * from './organizationInfoResponseAllOfCliLists';
 export * from './organizationInfoResponseAllOfCliListsImageInputScalingOptions';
 export * from './organizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions';
 export * from './organizationInfoResponseAllOfDefaultComputeLimits';
+export * from './organizationInfoResponseAllOfPerformance';
 export * from './organizationMemberRole';
 export * from './organizationMetricsResponse';
 export * from './organizationMetricsResponseAllOf';
@@ -688,6 +715,7 @@ export * from './projectDeploymentTarget';
 export * from './projectDeploymentTargetAllOf';
 export * from './projectDeploymentTargetsResponse';
 export * from './projectDeploymentTargetsResponseAllOf';
+export * from './projectDismissNotificationRequest';
 export * from './projectDownloadsResponse';
 export * from './projectDownloadsResponseAllOf';
 export * from './projectInfoResponse';
@@ -703,10 +731,12 @@ export * from './projectInfoResponseAllOfShowGettingStartedWizard';
 export * from './projectInfoResponseAllOfUrls';
 export * from './projectInfoSummaryResponse';
 export * from './projectInfoSummaryResponseAllOf';
+export * from './projectModelVariant';
 export * from './projectPrivateData';
 export * from './projectPublicData';
 export * from './projectPublicDataReadme';
 export * from './projectSampleMetadata';
+export * from './projectTierEnum';
 export * from './projectTrainingDataSummaryResponse';
 export * from './projectTrainingDataSummaryResponseAllOf';
 export * from './projectTrainingDataSummaryResponseAllOfDataSummary';
@@ -714,6 +744,7 @@ export * from './projectType';
 export * from './projectVersionRequest';
 export * from './projectVisibility';
 export * from './publicOrganizationTransformationBlock';
+export * from './publicProjectTierAvailability';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
 export * from './rebalanceDatasetResponse';
@@ -765,6 +796,10 @@ export * from './socketTokenResponseAllOf';
 export * from './socketTokenResponseAllOfToken';
 export * from './splitSampleInFramesRequest';
 export * from './staffInfo';
+export * from './startClassifyJobRequest';
+export * from './startDeviceDebugStreamResponse';
+export * from './startDeviceDebugStreamResponseAllOf';
+export * from './startDeviceSnapshotDebugStreamRequest';
 export * from './startEnterpriseTrialRequest';
 export * from './startJobResponse';
 export * from './startJobResponseAllOf';
@@ -773,6 +808,7 @@ export * from './startSamplingRequest';
 export * from './startSamplingResponse';
 export * from './startSamplingResponseAllOf';
 export * from './startTrainingRequestAnomaly';
+export * from './stopDeviceDebugStreamRequest';
 export * from './storeSegmentLengthRequest';
 export * from './structuredClassifyResult';
 export * from './structuredLabel';
@@ -832,8 +868,10 @@ export * from './updateVersionRequest';
 export * from './updateWhitelabelDefaultDeploymentTargetRequest';
 export * from './updateWhitelabelDeploymentOptionsOrderRequest';
 export * from './updateWhitelabelDeploymentTargetsRequest';
+export * from './updateWhitelabelInternalRequest';
 export * from './updateWhitelabelLearningBlocksRequest';
 export * from './updateWhitelabelRequest';
+export * from './upgradeSubscriptionRequest';
 export * from './uploadAssetRequest';
 export * from './uploadAssetResponse';
 export * from './uploadAssetResponseAllOf';
@@ -854,9 +892,14 @@ export * from './userExperiment';
 export * from './userGenerateNewMfaKeyResponse';
 export * from './userGenerateNewMfaKeyResponseAllOf';
 export * from './userOrganization';
+export * from './userProjectsSortOrder';
 export * from './userSetTotpMfaKeyRequest';
 export * from './userSetTotpMfaKeyResponse';
 export * from './userSetTotpMfaKeyResponseAllOf';
+export * from './userSubscriptionMetricsResponse';
+export * from './userSubscriptionMetricsResponseAllOf';
+export * from './userSubscriptionMetricsResponseAllOfMetrics';
+export * from './userTierEnum';
 export * from './verifyDspBlockUrlRequest';
 export * from './verifyDspBlockUrlResponse';
 export * from './verifyDspBlockUrlResponseAllOf';
@@ -909,6 +952,7 @@ import { AddOrganizationTransformationBlockResponse } from './addOrganizationTra
 import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
 import { AddProjectApiKeyRequest } from './addProjectApiKeyRequest';
 import { AddProjectApiKeyRequestAllOf } from './addProjectApiKeyRequestAllOf';
+import { AdditionalMetric } from './additionalMetric';
 import { AdminAddDisallowedEmailDomainRequest } from './adminAddDisallowedEmailDomainRequest';
 import { AdminAddOrUpdateSSODomainIdPsRequest } from './adminAddOrUpdateSSODomainIdPsRequest';
 import { AdminAddOrganizationApiKeyRequest } from './adminAddOrganizationApiKeyRequest';
@@ -948,13 +992,13 @@ import { AdminGetSSODomainIdPsResponseAllOf } from './adminGetSSODomainIdPsRespo
 import { AdminGetSSOSettingsResponse } from './adminGetSSOSettingsResponse';
 import { AdminGetSSOSettingsResponseAllOf } from './adminGetSSOSettingsResponseAllOf';
 import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
+import { AdminGetTrialResponse } from './adminGetTrialResponse';
+import { AdminGetTrialResponseAllOf } from './adminGetTrialResponseAllOf';
 import { AdminGetUserIdsResponse } from './adminGetUserIdsResponse';
 import { AdminGetUserIdsResponseAllOf } from './adminGetUserIdsResponseAllOf';
 import { AdminGetUserMetricsResponse } from './adminGetUserMetricsResponse';
 import { AdminGetUserResponse } from './adminGetUserResponse';
 import { AdminGetUserResponseAllOf } from './adminGetUserResponseAllOf';
-import { AdminGetUserTrialResponse } from './adminGetUserTrialResponse';
-import { AdminGetUserTrialResponseAllOf } from './adminGetUserTrialResponseAllOf';
 import { AdminGetUsersResponse } from './adminGetUsersResponse';
 import { AdminGetUsersResponseAllOf } from './adminGetUsersResponseAllOf';
 import { AdminGetUsersResponseAllOfUsers } from './adminGetUsersResponseAllOfUsers';
@@ -962,12 +1006,14 @@ import { AdminListProjects } from './adminListProjects';
 import { AdminListProjectsResponse } from './adminListProjectsResponse';
 import { AdminOrganizationInfoResponse } from './adminOrganizationInfoResponse';
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
+import { AdminStartEnterpriseTrialRequest } from './adminStartEnterpriseTrialRequest';
+import { AdminStartEnterpriseTrialRequestAllOf } from './adminStartEnterpriseTrialRequestAllOf';
 import { AdminToggleDataMigrationRequest } from './adminToggleDataMigrationRequest';
 import { AdminUpdateOrganizationDataExportRequest } from './adminUpdateOrganizationDataExportRequest';
 import { AdminUpdateOrganizationRequest } from './adminUpdateOrganizationRequest';
+import { AdminUpdateTrialRequest } from './adminUpdateTrialRequest';
 import { AdminUpdateUserPermissionsRequest } from './adminUpdateUserPermissionsRequest';
 import { AdminUpdateUserRequest } from './adminUpdateUserRequest';
-import { AdminUpdateUserTrialRequest } from './adminUpdateUserTrialRequest';
 import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
 import { AnomalyCapacity } from './anomalyCapacity';
 import { AnomalyGmmMetadata } from './anomalyGmmMetadata';
@@ -986,7 +1032,9 @@ import { ApplicationBudget } from './applicationBudget';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
+import { AutoLabelerSegment } from './autoLabelerSegment';
 import { AutotuneDspRequest } from './autotuneDspRequest';
+import { BillingCycle } from './billingCycle';
 import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockType } from './blockType';
 import { BoundingBox } from './boundingBox';
@@ -999,12 +1047,16 @@ import { ClassifyJobResponse } from './classifyJobResponse';
 import { ClassifyJobResponseAllOf } from './classifyJobResponseAllOf';
 import { ClassifyJobResponseAllOfAccuracy } from './classifyJobResponseAllOfAccuracy';
 import { ClassifyJobResponseAllOfAccuracyTotalSummary } from './classifyJobResponseAllOfAccuracyTotalSummary';
+import { ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock } from './classifyJobResponseAllOfAdditionalMetricsByLearnBlock';
 import { ClassifyJobResponsePage } from './classifyJobResponsePage';
 import { ClassifyJobResponsePageAllOf } from './classifyJobResponsePageAllOf';
 import { ClassifySampleResponse } from './classifySampleResponse';
 import { ClassifySampleResponseAllOf } from './classifySampleResponseAllOf';
 import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
 import { ClassifySampleResponseClassificationDetails } from './classifySampleResponseClassificationDetails';
+import { ClassifySampleResponseMultipleVariants } from './classifySampleResponseMultipleVariants';
+import { ClassifySampleResponseMultipleVariantsAllOf } from './classifySampleResponseMultipleVariantsAllOf';
+import { ClassifySampleResponseVariantResults } from './classifySampleResponseVariantResults';
 import { ConvertUserRequest } from './convertUserRequest';
 import { CosineSimilarityData } from './cosineSimilarityData';
 import { CosineSimilarityIssue } from './cosineSimilarityIssue';
@@ -1031,6 +1083,8 @@ import { CreateOrganizationResponse } from './createOrganizationResponse';
 import { CreateOrganizationResponseAllOf } from './createOrganizationResponseAllOf';
 import { CreateOrganizationUsageReportBody } from './createOrganizationUsageReportBody';
 import { CreatePipelineResponse } from './createPipelineResponse';
+import { CreateProTierUserRequest } from './createProTierUserRequest';
+import { CreateProTierUserRequestAllOf } from './createProTierUserRequestAllOf';
 import { CreateProjectRequest } from './createProjectRequest';
 import { CreateProjectResponse } from './createProjectResponse';
 import { CreateProjectResponseAllOf } from './createProjectResponseAllOf';
@@ -1070,6 +1124,8 @@ import { DSPMetadataIncludedSamples } from './dSPMetadataIncludedSamples';
 import { DSPMetadataOutputConfig } from './dSPMetadataOutputConfig';
 import { DSPMetadataOutputConfigShape } from './dSPMetadataOutputConfigShape';
 import { DSPMetadataResponse } from './dSPMetadataResponse';
+import { DSPNamedAxis } from './dSPNamedAxis';
+import { DailyMetricsRecord } from './dailyMetricsRecord';
 import { DataCampaign } from './dataCampaign';
 import { DataCampaignDashboard } from './dataCampaignDashboard';
 import { DataCampaignGraph } from './dataCampaignGraph';
@@ -1083,6 +1139,7 @@ import { DataExplorerSettings } from './dataExplorerSettings';
 import { DatasetRatioData } from './datasetRatioData';
 import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
+import { DeleteUserRequest } from './deleteUserRequest';
 import { DependencyData } from './dependencyData';
 import { DeployPretrainedModelInputAudio } from './deployPretrainedModelInputAudio';
 import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputImage';
@@ -1107,6 +1164,8 @@ import { DevelopmentBoardsResponseAllOf } from './developmentBoardsResponseAllOf
 import { DevelopmentKeys } from './developmentKeys';
 import { DevelopmentKeysResponse } from './developmentKeysResponse';
 import { Device } from './device';
+import { DeviceDebugStreamType } from './deviceDebugStreamType';
+import { DeviceInferenceInfo } from './deviceInferenceInfo';
 import { DeviceNameResponse } from './deviceNameResponse';
 import { DeviceNameResponseAllOf } from './deviceNameResponseAllOf';
 import { DeviceSensors } from './deviceSensors';
@@ -1181,10 +1240,14 @@ import { GetAutoLabelerResponse } from './getAutoLabelerResponse';
 import { GetAutoLabelerResponseAllOf } from './getAutoLabelerResponseAllOf';
 import { GetAutoLabelerResponseAllOfClusters } from './getAutoLabelerResponseAllOfClusters';
 import { GetAutoLabelerResponseAllOfItems } from './getAutoLabelerResponseAllOfItems';
+import { GetAutoLabelerSegmentInfoResponse } from './getAutoLabelerSegmentInfoResponse';
+import { GetAutoLabelerSegmentInfoResponseAllOf } from './getAutoLabelerSegmentInfoResponseAllOf';
 import { GetCsvWizardUploadedFileInfo } from './getCsvWizardUploadedFileInfo';
 import { GetCsvWizardUploadedFileInfoAllOf } from './getCsvWizardUploadedFileInfoAllOf';
 import { GetDataExplorerFeaturesResponse } from './getDataExplorerFeaturesResponse';
 import { GetDataExplorerFeaturesResponseAllOf } from './getDataExplorerFeaturesResponseAllOf';
+import { GetDataExplorerFeaturesResponseAllOfData } from './getDataExplorerFeaturesResponseAllOfData';
+import { GetDataExplorerFeaturesResponseAllOfSample } from './getDataExplorerFeaturesResponseAllOfSample';
 import { GetDataExplorerSettingsResponse } from './getDataExplorerSettingsResponse';
 import { GetDataExplorerSettingsResponseAllOf } from './getDataExplorerSettingsResponseAllOf';
 import { GetDeploymentResponse } from './getDeploymentResponse';
@@ -1204,6 +1267,8 @@ import { GetFeatureFlagsResponseAllOf } from './getFeatureFlagsResponseAllOf';
 import { GetFeatureFlagsResponseAllOfFlags } from './getFeatureFlagsResponseAllOfFlags';
 import { GetImpulseBlocksResponse } from './getImpulseBlocksResponse';
 import { GetImpulseBlocksResponseAllOf } from './getImpulseBlocksResponseAllOf';
+import { GetImpulseRecordsRequest } from './getImpulseRecordsRequest';
+import { GetImpulseRecordsRequestRange } from './getImpulseRecordsRequestRange';
 import { GetImpulseResponse } from './getImpulseResponse';
 import { GetImpulseResponseAllOf } from './getImpulseResponseAllOf';
 import { GetJWTRequest } from './getJWTRequest';
@@ -1217,6 +1282,8 @@ import { GetLabelNoiseDataResponseAllOfData } from './getLabelNoiseDataResponseA
 import { GetLastDeploymentBuildResponse } from './getLastDeploymentBuildResponse';
 import { GetLastDeploymentBuildResponseAllOf } from './getLastDeploymentBuildResponseAllOf';
 import { GetLastDeploymentBuildResponseAllOfLastBuild } from './getLastDeploymentBuildResponseAllOfLastBuild';
+import { GetModelVariantsResponse } from './getModelVariantsResponse';
+import { GetModelVariantsResponseAllOf } from './getModelVariantsResponseAllOf';
 import { GetNotesResponse } from './getNotesResponse';
 import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
 import { GetOrganizationBucketResponse } from './getOrganizationBucketResponse';
@@ -1321,6 +1388,7 @@ import { JobStep } from './jobStep';
 import { JobSummaryResponse } from './jobSummaryResponse';
 import { JobSummaryResponseAllOf } from './jobSummaryResponseAllOf';
 import { JobSummaryResponseAllOfSummary } from './jobSummaryResponseAllOfSummary';
+import { KeepDeviceDebugStreamAliveRequest } from './keepDeviceDebugStreamAliveRequest';
 import { KerasCustomMetric } from './kerasCustomMetric';
 import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelLayerInput } from './kerasModelLayerInput';
@@ -1330,6 +1398,7 @@ import { KerasModelMetadataAllOf } from './kerasModelMetadataAllOf';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelMetadataMetricsOnDevicePerformance } from './kerasModelMetadataMetricsOnDevicePerformance';
 import { KerasModelMetadataMetricsTflite } from './kerasModelMetadataMetricsTflite';
+import { KerasModelMode } from './kerasModelMode';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasResponse } from './kerasResponse';
@@ -1504,6 +1573,7 @@ import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoRespons
 import { OrganizationInfoResponseAllOfCliListsImageInputScalingOptions } from './organizationInfoResponseAllOfCliListsImageInputScalingOptions';
 import { OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions } from './organizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { OrganizationInfoResponseAllOfPerformance } from './organizationInfoResponseAllOfPerformance';
 import { OrganizationMemberRole } from './organizationMemberRole';
 import { OrganizationMetricsResponse } from './organizationMetricsResponse';
 import { OrganizationMetricsResponseAllOf } from './organizationMetricsResponseAllOf';
@@ -1569,6 +1639,7 @@ import { ProjectDeploymentTarget } from './projectDeploymentTarget';
 import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
 import { ProjectDeploymentTargetsResponse } from './projectDeploymentTargetsResponse';
 import { ProjectDeploymentTargetsResponseAllOf } from './projectDeploymentTargetsResponseAllOf';
+import { ProjectDismissNotificationRequest } from './projectDismissNotificationRequest';
 import { ProjectDownloadsResponse } from './projectDownloadsResponse';
 import { ProjectDownloadsResponseAllOf } from './projectDownloadsResponseAllOf';
 import { ProjectInfoResponse } from './projectInfoResponse';
@@ -1584,10 +1655,12 @@ import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoR
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { ProjectInfoSummaryResponse } from './projectInfoSummaryResponse';
 import { ProjectInfoSummaryResponseAllOf } from './projectInfoSummaryResponseAllOf';
+import { ProjectModelVariant } from './projectModelVariant';
 import { ProjectPrivateData } from './projectPrivateData';
 import { ProjectPublicData } from './projectPublicData';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 import { ProjectSampleMetadata } from './projectSampleMetadata';
+import { ProjectTierEnum } from './projectTierEnum';
 import { ProjectTrainingDataSummaryResponse } from './projectTrainingDataSummaryResponse';
 import { ProjectTrainingDataSummaryResponseAllOf } from './projectTrainingDataSummaryResponseAllOf';
 import { ProjectTrainingDataSummaryResponseAllOfDataSummary } from './projectTrainingDataSummaryResponseAllOfDataSummary';
@@ -1595,6 +1668,7 @@ import { ProjectType } from './projectType';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { ProjectVisibility } from './projectVisibility';
 import { PublicOrganizationTransformationBlock } from './publicOrganizationTransformationBlock';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
 import { RebalanceDatasetResponse } from './rebalanceDatasetResponse';
@@ -1646,6 +1720,10 @@ import { SocketTokenResponseAllOf } from './socketTokenResponseAllOf';
 import { SocketTokenResponseAllOfToken } from './socketTokenResponseAllOfToken';
 import { SplitSampleInFramesRequest } from './splitSampleInFramesRequest';
 import { StaffInfo } from './staffInfo';
+import { StartClassifyJobRequest } from './startClassifyJobRequest';
+import { StartDeviceDebugStreamResponse } from './startDeviceDebugStreamResponse';
+import { StartDeviceDebugStreamResponseAllOf } from './startDeviceDebugStreamResponseAllOf';
+import { StartDeviceSnapshotDebugStreamRequest } from './startDeviceSnapshotDebugStreamRequest';
 import { StartEnterpriseTrialRequest } from './startEnterpriseTrialRequest';
 import { StartJobResponse } from './startJobResponse';
 import { StartJobResponseAllOf } from './startJobResponseAllOf';
@@ -1654,6 +1732,7 @@ import { StartSamplingRequest } from './startSamplingRequest';
 import { StartSamplingResponse } from './startSamplingResponse';
 import { StartSamplingResponseAllOf } from './startSamplingResponseAllOf';
 import { StartTrainingRequestAnomaly } from './startTrainingRequestAnomaly';
+import { StopDeviceDebugStreamRequest } from './stopDeviceDebugStreamRequest';
 import { StoreSegmentLengthRequest } from './storeSegmentLengthRequest';
 import { StructuredClassifyResult } from './structuredClassifyResult';
 import { StructuredLabel } from './structuredLabel';
@@ -1713,8 +1792,10 @@ import { UpdateVersionRequest } from './updateVersionRequest';
 import { UpdateWhitelabelDefaultDeploymentTargetRequest } from './updateWhitelabelDefaultDeploymentTargetRequest';
 import { UpdateWhitelabelDeploymentOptionsOrderRequest } from './updateWhitelabelDeploymentOptionsOrderRequest';
 import { UpdateWhitelabelDeploymentTargetsRequest } from './updateWhitelabelDeploymentTargetsRequest';
+import { UpdateWhitelabelInternalRequest } from './updateWhitelabelInternalRequest';
 import { UpdateWhitelabelLearningBlocksRequest } from './updateWhitelabelLearningBlocksRequest';
 import { UpdateWhitelabelRequest } from './updateWhitelabelRequest';
+import { UpgradeSubscriptionRequest } from './upgradeSubscriptionRequest';
 import { UploadAssetRequest } from './uploadAssetRequest';
 import { UploadAssetResponse } from './uploadAssetResponse';
 import { UploadAssetResponseAllOf } from './uploadAssetResponseAllOf';
@@ -1735,9 +1816,14 @@ import { UserExperiment } from './userExperiment';
 import { UserGenerateNewMfaKeyResponse } from './userGenerateNewMfaKeyResponse';
 import { UserGenerateNewMfaKeyResponseAllOf } from './userGenerateNewMfaKeyResponseAllOf';
 import { UserOrganization } from './userOrganization';
+import { UserProjectsSortOrder } from './userProjectsSortOrder';
 import { UserSetTotpMfaKeyRequest } from './userSetTotpMfaKeyRequest';
 import { UserSetTotpMfaKeyResponse } from './userSetTotpMfaKeyResponse';
 import { UserSetTotpMfaKeyResponseAllOf } from './userSetTotpMfaKeyResponseAllOf';
+import { UserSubscriptionMetricsResponse } from './userSubscriptionMetricsResponse';
+import { UserSubscriptionMetricsResponseAllOf } from './userSubscriptionMetricsResponseAllOf';
+import { UserSubscriptionMetricsResponseAllOfMetrics } from './userSubscriptionMetricsResponseAllOfMetrics';
+import { UserTierEnum } from './userTierEnum';
 import { VerifyDspBlockUrlRequest } from './verifyDspBlockUrlRequest';
 import { VerifyDspBlockUrlResponse } from './verifyDspBlockUrlResponse';
 import { VerifyDspBlockUrlResponseAllOf } from './verifyDspBlockUrlResponseAllOf';
@@ -1779,15 +1865,13 @@ let enumsMap: {[index: string]: any} = {
     "AddProjectApiKeyRequestRoleEnum": "AddProjectApiKeyRequestRoleEnum",
     "AddProjectApiKeyRequestAllOfRoleEnum": "AddProjectApiKeyRequestAllOfRoleEnum",
     "AdminAddOrganizationApiKeyRequestRoleEnum": "AdminAddOrganizationApiKeyRequestRoleEnum",
-    "AdminApiProjectTierEnum": "AdminApiProjectTierEnum",
-    "AdminApiUserTierEnum": "AdminApiUserTierEnum",
-    "AdminApiUserAllOfTierEnum": "AdminApiUserAllOfTierEnum",
-    "AdminGetUsersResponseAllOfUsersTierEnum": "AdminGetUsersResponseAllOfUsersTierEnum",
+    "AdminStartEnterpriseTrialRequestUserHasMLModelsInProductionEnum": "AdminStartEnterpriseTrialRequestUserHasMLModelsInProductionEnum",
     "AnomalyCapacity": "AnomalyCapacity",
     "AugmentationPolicyImageEnum": "AugmentationPolicyImageEnum",
     "AugmentationPolicySpectrogramFreqMaskingEnum": "AugmentationPolicySpectrogramFreqMaskingEnum",
     "AugmentationPolicySpectrogramTimeMaskingEnum": "AugmentationPolicySpectrogramTimeMaskingEnum",
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
+    "BillingCycle": "BillingCycle",
     "BlockDisplayCategory": "BlockDisplayCategory",
     "BlockType": "BlockType",
     "CalculateDataQualityMetricsRequestRepresentationEnum": "CalculateDataQualityMetricsRequestRepresentationEnum",
@@ -1814,16 +1898,18 @@ let enumsMap: {[index: string]: any} = {
     "DeployPretrainedModelRequestDeployModelTypeEnum": "DeployPretrainedModelRequestDeployModelTypeEnum",
     "DeploymentTargetUiSectionEnum": "DeploymentTargetUiSectionEnum",
     "DeploymentTargetEngine": "DeploymentTargetEngine",
+    "DeviceRemoteMgmtModeEnum": "DeviceRemoteMgmtModeEnum",
+    "DeviceDebugStreamType": "DeviceDebugStreamType",
+    "DeviceInferenceInfoModelTypeEnum": "DeviceInferenceInfoModelTypeEnum",
     "Feature": "Feature",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
     "FindSyntiantPosteriorRequestDeploymentTargetEnum": "FindSyntiantPosteriorRequestDeploymentTargetEnum",
+    "GetDataExplorerFeaturesResponseAllOfSampleCategoryEnum": "GetDataExplorerFeaturesResponseAllOfSampleCategoryEnum",
     "GetDataExplorerSettingsResponsePresetEnum": "GetDataExplorerSettingsResponsePresetEnum",
     "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum",
     "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum",
     "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum",
     "GetJWTRequestSsoTypeEnum": "GetJWTRequestSsoTypeEnum",
-    "GetUserResponseTierEnum": "GetUserResponseTierEnum",
-    "GetUserResponseAllOfTierEnum": "GetUserResponseAllOfTierEnum",
     "ImageInputScaling": "ImageInputScaling",
     "ImpulseBlockVersionResizeModeEnum": "ImpulseBlockVersionResizeModeEnum",
     "ImpulseBlockVersionResizeMethodEnum": "ImpulseBlockVersionResizeMethodEnum",
@@ -1835,9 +1921,8 @@ let enumsMap: {[index: string]: any} = {
     "InputBlockTypeEnum": "InputBlockTypeEnum",
     "JobParentTypeEnum": "JobParentTypeEnum",
     "JobStatus": "JobStatus",
-    "KerasModelMetadataModeEnum": "KerasModelMetadataModeEnum",
-    "KerasModelMetadataAllOfModeEnum": "KerasModelMetadataAllOfModeEnum",
     "KerasModelMetadataMetricsVisualizationEnum": "KerasModelMetadataMetricsVisualizationEnum",
+    "KerasModelMode": "KerasModelMode",
     "KerasModelTypeEnum": "KerasModelTypeEnum",
     "KerasModelVariantEnum": "KerasModelVariantEnum",
     "KerasResponseModeEnum": "KerasResponseModeEnum",
@@ -1894,17 +1979,19 @@ let enumsMap: {[index: string]: any} = {
     "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum": "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum",
     "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
     "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
-    "ProjectTierEnum": "ProjectTierEnum",
     "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
+    "ProjectTierEnum": "ProjectTierEnum",
     "ProjectType": "ProjectType",
     "ProjectVisibility": "ProjectVisibility",
+    "PublicProjectTierAvailability": "PublicProjectTierAvailability",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SampleProjectLabelingMethodEnum": "SampleProjectLabelingMethodEnum",
     "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
+    "StartDeviceSnapshotDebugStreamRequestResolutionEnum": "StartDeviceSnapshotDebugStreamRequestResolutionEnum",
     "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum": "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
     "TargetConstraintsSelectedTargetBasedOnEnum": "TargetConstraintsSelectedTargetBasedOnEnum",
@@ -1922,6 +2009,8 @@ let enumsMap: {[index: string]: any} = {
     "UpdateProjectRequestDataAcquisitionViewTypeEnum": "UpdateProjectRequestDataAcquisitionViewTypeEnum",
     "UploadCustomBlockRequestTypeEnum": "UploadCustomBlockRequestTypeEnum",
     "UploadPretrainedModelRequestModelFileTypeEnum": "UploadPretrainedModelRequestModelFileTypeEnum",
+    "UserProjectsSortOrder": "UserProjectsSortOrder",
+    "UserTierEnum": "UserTierEnum",
 }
 
 let typeMap: {[index: string]: any} = {
@@ -1955,6 +2044,7 @@ let typeMap: {[index: string]: any} = {
     "AddOrganizationTransformationBlockResponseAllOf": AddOrganizationTransformationBlockResponseAllOf,
     "AddProjectApiKeyRequest": AddProjectApiKeyRequest,
     "AddProjectApiKeyRequestAllOf": AddProjectApiKeyRequestAllOf,
+    "AdditionalMetric": AdditionalMetric,
     "AdminAddDisallowedEmailDomainRequest": AdminAddDisallowedEmailDomainRequest,
     "AdminAddOrUpdateSSODomainIdPsRequest": AdminAddOrUpdateSSODomainIdPsRequest,
     "AdminAddOrganizationApiKeyRequest": AdminAddOrganizationApiKeyRequest,
@@ -1994,13 +2084,13 @@ let typeMap: {[index: string]: any} = {
     "AdminGetSSOSettingsResponse": AdminGetSSOSettingsResponse,
     "AdminGetSSOSettingsResponseAllOf": AdminGetSSOSettingsResponseAllOf,
     "AdminGetSSOSettingsResponseAllOfSsoWhitelist": AdminGetSSOSettingsResponseAllOfSsoWhitelist,
+    "AdminGetTrialResponse": AdminGetTrialResponse,
+    "AdminGetTrialResponseAllOf": AdminGetTrialResponseAllOf,
     "AdminGetUserIdsResponse": AdminGetUserIdsResponse,
     "AdminGetUserIdsResponseAllOf": AdminGetUserIdsResponseAllOf,
     "AdminGetUserMetricsResponse": AdminGetUserMetricsResponse,
     "AdminGetUserResponse": AdminGetUserResponse,
     "AdminGetUserResponseAllOf": AdminGetUserResponseAllOf,
-    "AdminGetUserTrialResponse": AdminGetUserTrialResponse,
-    "AdminGetUserTrialResponseAllOf": AdminGetUserTrialResponseAllOf,
     "AdminGetUsersResponse": AdminGetUsersResponse,
     "AdminGetUsersResponseAllOf": AdminGetUsersResponseAllOf,
     "AdminGetUsersResponseAllOfUsers": AdminGetUsersResponseAllOfUsers,
@@ -2008,12 +2098,14 @@ let typeMap: {[index: string]: any} = {
     "AdminListProjectsResponse": AdminListProjectsResponse,
     "AdminOrganizationInfoResponse": AdminOrganizationInfoResponse,
     "AdminOrganizationInfoResponseAllOf": AdminOrganizationInfoResponseAllOf,
+    "AdminStartEnterpriseTrialRequest": AdminStartEnterpriseTrialRequest,
+    "AdminStartEnterpriseTrialRequestAllOf": AdminStartEnterpriseTrialRequestAllOf,
     "AdminToggleDataMigrationRequest": AdminToggleDataMigrationRequest,
     "AdminUpdateOrganizationDataExportRequest": AdminUpdateOrganizationDataExportRequest,
     "AdminUpdateOrganizationRequest": AdminUpdateOrganizationRequest,
+    "AdminUpdateTrialRequest": AdminUpdateTrialRequest,
     "AdminUpdateUserPermissionsRequest": AdminUpdateUserPermissionsRequest,
     "AdminUpdateUserRequest": AdminUpdateUserRequest,
-    "AdminUpdateUserTrialRequest": AdminUpdateUserTrialRequest,
     "AkidaEdgeLearningConfig": AkidaEdgeLearningConfig,
     "AnomalyGmmMetadata": AnomalyGmmMetadata,
     "AnomalyGmmMetadataAllOf": AnomalyGmmMetadataAllOf,
@@ -2030,6 +2122,7 @@ let typeMap: {[index: string]: any} = {
     "ApplicationBudget": ApplicationBudget,
     "AugmentationPolicySpectrogram": AugmentationPolicySpectrogram,
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
+    "AutoLabelerSegment": AutoLabelerSegment,
     "AutotuneDspRequest": AutotuneDspRequest,
     "BoundingBox": BoundingBox,
     "BoundingBoxWithScore": BoundingBoxWithScore,
@@ -2041,12 +2134,16 @@ let typeMap: {[index: string]: any} = {
     "ClassifyJobResponseAllOf": ClassifyJobResponseAllOf,
     "ClassifyJobResponseAllOfAccuracy": ClassifyJobResponseAllOfAccuracy,
     "ClassifyJobResponseAllOfAccuracyTotalSummary": ClassifyJobResponseAllOfAccuracyTotalSummary,
+    "ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock": ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock,
     "ClassifyJobResponsePage": ClassifyJobResponsePage,
     "ClassifyJobResponsePageAllOf": ClassifyJobResponsePageAllOf,
     "ClassifySampleResponse": ClassifySampleResponse,
     "ClassifySampleResponseAllOf": ClassifySampleResponseAllOf,
     "ClassifySampleResponseClassification": ClassifySampleResponseClassification,
     "ClassifySampleResponseClassificationDetails": ClassifySampleResponseClassificationDetails,
+    "ClassifySampleResponseMultipleVariants": ClassifySampleResponseMultipleVariants,
+    "ClassifySampleResponseMultipleVariantsAllOf": ClassifySampleResponseMultipleVariantsAllOf,
+    "ClassifySampleResponseVariantResults": ClassifySampleResponseVariantResults,
     "ConvertUserRequest": ConvertUserRequest,
     "CosineSimilarityData": CosineSimilarityData,
     "CosineSimilarityIssue": CosineSimilarityIssue,
@@ -2073,6 +2170,8 @@ let typeMap: {[index: string]: any} = {
     "CreateOrganizationResponseAllOf": CreateOrganizationResponseAllOf,
     "CreateOrganizationUsageReportBody": CreateOrganizationUsageReportBody,
     "CreatePipelineResponse": CreatePipelineResponse,
+    "CreateProTierUserRequest": CreateProTierUserRequest,
+    "CreateProTierUserRequestAllOf": CreateProTierUserRequestAllOf,
     "CreateProjectRequest": CreateProjectRequest,
     "CreateProjectResponse": CreateProjectResponse,
     "CreateProjectResponseAllOf": CreateProjectResponseAllOf,
@@ -2112,6 +2211,8 @@ let typeMap: {[index: string]: any} = {
     "DSPMetadataOutputConfig": DSPMetadataOutputConfig,
     "DSPMetadataOutputConfigShape": DSPMetadataOutputConfigShape,
     "DSPMetadataResponse": DSPMetadataResponse,
+    "DSPNamedAxis": DSPNamedAxis,
+    "DailyMetricsRecord": DailyMetricsRecord,
     "DataCampaign": DataCampaign,
     "DataCampaignDashboard": DataCampaignDashboard,
     "DataCampaignGraph": DataCampaignGraph,
@@ -2125,6 +2226,7 @@ let typeMap: {[index: string]: any} = {
     "DatasetRatioData": DatasetRatioData,
     "DatasetRatioDataRatio": DatasetRatioDataRatio,
     "DeletePortalFileRequest": DeletePortalFileRequest,
+    "DeleteUserRequest": DeleteUserRequest,
     "DependencyData": DependencyData,
     "DeployPretrainedModelInputAudio": DeployPretrainedModelInputAudio,
     "DeployPretrainedModelInputImage": DeployPretrainedModelInputImage,
@@ -2148,6 +2250,7 @@ let typeMap: {[index: string]: any} = {
     "DevelopmentKeys": DevelopmentKeys,
     "DevelopmentKeysResponse": DevelopmentKeysResponse,
     "Device": Device,
+    "DeviceInferenceInfo": DeviceInferenceInfo,
     "DeviceNameResponse": DeviceNameResponse,
     "DeviceNameResponseAllOf": DeviceNameResponseAllOf,
     "DeviceSensors": DeviceSensors,
@@ -2221,10 +2324,14 @@ let typeMap: {[index: string]: any} = {
     "GetAutoLabelerResponseAllOf": GetAutoLabelerResponseAllOf,
     "GetAutoLabelerResponseAllOfClusters": GetAutoLabelerResponseAllOfClusters,
     "GetAutoLabelerResponseAllOfItems": GetAutoLabelerResponseAllOfItems,
+    "GetAutoLabelerSegmentInfoResponse": GetAutoLabelerSegmentInfoResponse,
+    "GetAutoLabelerSegmentInfoResponseAllOf": GetAutoLabelerSegmentInfoResponseAllOf,
     "GetCsvWizardUploadedFileInfo": GetCsvWizardUploadedFileInfo,
     "GetCsvWizardUploadedFileInfoAllOf": GetCsvWizardUploadedFileInfoAllOf,
     "GetDataExplorerFeaturesResponse": GetDataExplorerFeaturesResponse,
     "GetDataExplorerFeaturesResponseAllOf": GetDataExplorerFeaturesResponseAllOf,
+    "GetDataExplorerFeaturesResponseAllOfData": GetDataExplorerFeaturesResponseAllOfData,
+    "GetDataExplorerFeaturesResponseAllOfSample": GetDataExplorerFeaturesResponseAllOfSample,
     "GetDataExplorerSettingsResponse": GetDataExplorerSettingsResponse,
     "GetDataExplorerSettingsResponseAllOf": GetDataExplorerSettingsResponseAllOf,
     "GetDeploymentResponse": GetDeploymentResponse,
@@ -2244,6 +2351,8 @@ let typeMap: {[index: string]: any} = {
     "GetFeatureFlagsResponseAllOfFlags": GetFeatureFlagsResponseAllOfFlags,
     "GetImpulseBlocksResponse": GetImpulseBlocksResponse,
     "GetImpulseBlocksResponseAllOf": GetImpulseBlocksResponseAllOf,
+    "GetImpulseRecordsRequest": GetImpulseRecordsRequest,
+    "GetImpulseRecordsRequestRange": GetImpulseRecordsRequestRange,
     "GetImpulseResponse": GetImpulseResponse,
     "GetImpulseResponseAllOf": GetImpulseResponseAllOf,
     "GetJWTRequest": GetJWTRequest,
@@ -2257,6 +2366,8 @@ let typeMap: {[index: string]: any} = {
     "GetLastDeploymentBuildResponse": GetLastDeploymentBuildResponse,
     "GetLastDeploymentBuildResponseAllOf": GetLastDeploymentBuildResponseAllOf,
     "GetLastDeploymentBuildResponseAllOfLastBuild": GetLastDeploymentBuildResponseAllOfLastBuild,
+    "GetModelVariantsResponse": GetModelVariantsResponse,
+    "GetModelVariantsResponseAllOf": GetModelVariantsResponseAllOf,
     "GetNotesResponse": GetNotesResponse,
     "GetNotesResponseAllOf": GetNotesResponseAllOf,
     "GetOrganizationBucketResponse": GetOrganizationBucketResponse,
@@ -2358,6 +2469,7 @@ let typeMap: {[index: string]: any} = {
     "JobSummaryResponse": JobSummaryResponse,
     "JobSummaryResponseAllOf": JobSummaryResponseAllOf,
     "JobSummaryResponseAllOfSummary": JobSummaryResponseAllOfSummary,
+    "KeepDeviceDebugStreamAliveRequest": KeepDeviceDebugStreamAliveRequest,
     "KerasCustomMetric": KerasCustomMetric,
     "KerasModelLayer": KerasModelLayer,
     "KerasModelLayerInput": KerasModelLayerInput,
@@ -2534,6 +2646,7 @@ let typeMap: {[index: string]: any} = {
     "OrganizationInfoResponseAllOfCliListsImageInputScalingOptions": OrganizationInfoResponseAllOfCliListsImageInputScalingOptions,
     "OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions": OrganizationInfoResponseAllOfCliListsObjectDetectionLastLayerOptions,
     "OrganizationInfoResponseAllOfDefaultComputeLimits": OrganizationInfoResponseAllOfDefaultComputeLimits,
+    "OrganizationInfoResponseAllOfPerformance": OrganizationInfoResponseAllOfPerformance,
     "OrganizationMetricsResponse": OrganizationMetricsResponse,
     "OrganizationMetricsResponseAllOf": OrganizationMetricsResponseAllOf,
     "OrganizationMetricsResponseAllOfMetrics": OrganizationMetricsResponseAllOfMetrics,
@@ -2596,6 +2709,7 @@ let typeMap: {[index: string]: any} = {
     "ProjectDeploymentTargetAllOf": ProjectDeploymentTargetAllOf,
     "ProjectDeploymentTargetsResponse": ProjectDeploymentTargetsResponse,
     "ProjectDeploymentTargetsResponseAllOf": ProjectDeploymentTargetsResponseAllOf,
+    "ProjectDismissNotificationRequest": ProjectDismissNotificationRequest,
     "ProjectDownloadsResponse": ProjectDownloadsResponse,
     "ProjectDownloadsResponseAllOf": ProjectDownloadsResponseAllOf,
     "ProjectInfoResponse": ProjectInfoResponse,
@@ -2611,6 +2725,7 @@ let typeMap: {[index: string]: any} = {
     "ProjectInfoResponseAllOfUrls": ProjectInfoResponseAllOfUrls,
     "ProjectInfoSummaryResponse": ProjectInfoSummaryResponse,
     "ProjectInfoSummaryResponseAllOf": ProjectInfoSummaryResponseAllOf,
+    "ProjectModelVariant": ProjectModelVariant,
     "ProjectPrivateData": ProjectPrivateData,
     "ProjectPublicData": ProjectPublicData,
     "ProjectPublicDataReadme": ProjectPublicDataReadme,
@@ -2671,6 +2786,10 @@ let typeMap: {[index: string]: any} = {
     "SocketTokenResponseAllOfToken": SocketTokenResponseAllOfToken,
     "SplitSampleInFramesRequest": SplitSampleInFramesRequest,
     "StaffInfo": StaffInfo,
+    "StartClassifyJobRequest": StartClassifyJobRequest,
+    "StartDeviceDebugStreamResponse": StartDeviceDebugStreamResponse,
+    "StartDeviceDebugStreamResponseAllOf": StartDeviceDebugStreamResponseAllOf,
+    "StartDeviceSnapshotDebugStreamRequest": StartDeviceSnapshotDebugStreamRequest,
     "StartEnterpriseTrialRequest": StartEnterpriseTrialRequest,
     "StartJobResponse": StartJobResponse,
     "StartJobResponseAllOf": StartJobResponseAllOf,
@@ -2679,6 +2798,7 @@ let typeMap: {[index: string]: any} = {
     "StartSamplingResponse": StartSamplingResponse,
     "StartSamplingResponseAllOf": StartSamplingResponseAllOf,
     "StartTrainingRequestAnomaly": StartTrainingRequestAnomaly,
+    "StopDeviceDebugStreamRequest": StopDeviceDebugStreamRequest,
     "StoreSegmentLengthRequest": StoreSegmentLengthRequest,
     "StructuredClassifyResult": StructuredClassifyResult,
     "StructuredLabel": StructuredLabel,
@@ -2736,8 +2856,10 @@ let typeMap: {[index: string]: any} = {
     "UpdateWhitelabelDefaultDeploymentTargetRequest": UpdateWhitelabelDefaultDeploymentTargetRequest,
     "UpdateWhitelabelDeploymentOptionsOrderRequest": UpdateWhitelabelDeploymentOptionsOrderRequest,
     "UpdateWhitelabelDeploymentTargetsRequest": UpdateWhitelabelDeploymentTargetsRequest,
+    "UpdateWhitelabelInternalRequest": UpdateWhitelabelInternalRequest,
     "UpdateWhitelabelLearningBlocksRequest": UpdateWhitelabelLearningBlocksRequest,
     "UpdateWhitelabelRequest": UpdateWhitelabelRequest,
+    "UpgradeSubscriptionRequest": UpgradeSubscriptionRequest,
     "UploadAssetRequest": UploadAssetRequest,
     "UploadAssetResponse": UploadAssetResponse,
     "UploadAssetResponseAllOf": UploadAssetResponseAllOf,
@@ -2761,6 +2883,9 @@ let typeMap: {[index: string]: any} = {
     "UserSetTotpMfaKeyRequest": UserSetTotpMfaKeyRequest,
     "UserSetTotpMfaKeyResponse": UserSetTotpMfaKeyResponse,
     "UserSetTotpMfaKeyResponseAllOf": UserSetTotpMfaKeyResponseAllOf,
+    "UserSubscriptionMetricsResponse": UserSubscriptionMetricsResponse,
+    "UserSubscriptionMetricsResponseAllOf": UserSubscriptionMetricsResponseAllOf,
+    "UserSubscriptionMetricsResponseAllOfMetrics": UserSubscriptionMetricsResponseAllOfMetrics,
     "VerifyDspBlockUrlRequest": VerifyDspBlockUrlRequest,
     "VerifyDspBlockUrlResponse": VerifyDspBlockUrlResponse,
     "VerifyDspBlockUrlResponseAllOf": VerifyDspBlockUrlResponseAllOf,

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { ProjectVisibility } from './projectVisibility';
 
@@ -140,6 +141,15 @@ export class UpdateProjectRequest {
     * Number of grid columns in detailed view on data acquisition
     */
     'dataAcquisitionGridColumnCountDetailed'?: number;
+    /**
+    * If enabled, does not round sample length to hours/minutes/seconds, but always displays sample length in milliseconds. E.g. instead of 1m 32s, this\'ll say 92,142ms.
+    */
+    'showExactSampleLength'?: boolean;
+    'defaultProfilingVariant'?: KerasModelVariantEnum;
+    /**
+    * Set of model variants enabled by default on the model testing and live classification pages.
+    */
+    'enabledModelProfilingVariants'?: Array<KerasModelVariantEnum>;
 
     static discriminator: string | undefined = undefined;
 
@@ -323,6 +333,21 @@ export class UpdateProjectRequest {
             "name": "dataAcquisitionGridColumnCountDetailed",
             "baseName": "dataAcquisitionGridColumnCountDetailed",
             "type": "number"
+        },
+        {
+            "name": "showExactSampleLength",
+            "baseName": "showExactSampleLength",
+            "type": "boolean"
+        },
+        {
+            "name": "defaultProfilingVariant",
+            "baseName": "defaultProfilingVariant",
+            "type": "KerasModelVariantEnum"
+        },
+        {
+            "name": "enabledModelProfilingVariants",
+            "baseName": "enabledModelProfilingVariants",
+            "type": "Array<KerasModelVariantEnum>"
         }    ];
 
     static getAttributeTypeMap() {

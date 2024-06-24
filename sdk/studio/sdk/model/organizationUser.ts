@@ -15,6 +15,7 @@ import { OrganizationUserAllOf } from './organizationUserAllOf';
 import { Permission } from './permission';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
+import { UserTierEnum } from './userTierEnum';
 
 export class OrganizationUser {
     'id': number;
@@ -41,6 +42,15 @@ export class OrganizationUser {
     * Whether the user has configured multi-factor authentication
     */
     'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier'?: UserTierEnum;
     'added': Date;
     'role': OrganizationMemberRole;
     'projectCount': number;
@@ -123,6 +133,21 @@ export class OrganizationUser {
             "name": "mfaConfigured",
             "baseName": "mfaConfigured",
             "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
         },
         {
             "name": "added",

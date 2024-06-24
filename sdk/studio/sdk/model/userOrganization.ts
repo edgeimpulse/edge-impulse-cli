@@ -42,6 +42,7 @@ export class UserOrganization {
     */
     'trialUpgradedDate': Date | null;
     'entitlementLimits': EntitlementLimits;
+    'userCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -100,6 +101,11 @@ export class UserOrganization {
             "name": "entitlementLimits",
             "baseName": "entitlementLimits",
             "type": "EntitlementLimits"
+        },
+        {
+            "name": "userCount",
+            "baseName": "userCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

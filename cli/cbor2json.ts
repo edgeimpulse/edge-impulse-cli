@@ -7,6 +7,7 @@ function decodeCBOR(obj: any): Promise<any> {
         let decoder = new cbor.Decoder();
         let data: any;
         decoder.on('data', buf => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             data = buf;
         });
         decoder.on('error', rej);
@@ -15,7 +16,7 @@ function decodeCBOR(obj: any): Promise<any> {
     });
 }
 
-// tslint:disable-next-line: no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     let files = process.argv.slice(2);
 
@@ -24,6 +25,7 @@ function decodeCBOR(obj: any): Promise<any> {
     for (let f of files) {
         if (Path.extname(f) !== '.cbor') continue;
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let d = await decodeCBOR(fs.readFileSync(f));
         let dir = Path.dirname(f);
         fs.writeFileSync(Path.join(dir, Path.basename(f, '.cbor') + '.json'), JSON.stringify(d), 'utf8');

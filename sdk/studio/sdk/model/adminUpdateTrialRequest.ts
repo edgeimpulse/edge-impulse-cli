@@ -11,7 +11,7 @@
  */
 
 
-export class AdminUpdateUserTrialRequest {
+export class AdminUpdateTrialRequest {
     /**
     * Expiration date of the trial. The trial will be set as expired after this date. There will be a grace period of 30 days after a trial expires before fully deleting the trial organization. This field is ignored if the trial is requested by a non-admin user, defaulting to 14 days trial.
     */
@@ -36,7 +36,7 @@ export class AdminUpdateUserTrialRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminUpdateUserTrialRequest.attributeTypeMap;
+        return AdminUpdateTrialRequest.attributeTypeMap;
     }
 }
 

@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetUserTrialResponseAllOf } from './adminGetUserTrialResponseAllOf';
-import { EnterpriseTrial } from './enterpriseTrial';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetModelVariantsResponseAllOf } from './getModelVariantsResponseAllOf';
+import { ProjectModelVariant } from './projectModelVariant';
 
-export class AdminGetUserTrialResponse {
+export class GetModelVariantsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,7 +23,10 @@ export class AdminGetUserTrialResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'trial': EnterpriseTrial;
+    /**
+    * All model variants relevant for all learn blocks in the project
+    */
+    'modelVariants'?: Array<ProjectModelVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,13 +42,13 @@ export class AdminGetUserTrialResponse {
             "type": "string"
         },
         {
-            "name": "trial",
-            "baseName": "trial",
-            "type": "EnterpriseTrial"
+            "name": "modelVariants",
+            "baseName": "modelVariants",
+            "type": "Array<ProjectModelVariant>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetUserTrialResponse.attributeTypeMap;
+        return GetModelVariantsResponse.attributeTypeMap;
     }
 }
 

@@ -23,6 +23,7 @@ import { ClassifyJobResponse } from '../model/classifyJobResponse';
 import { ClassifyJobResponsePage } from '../model/classifyJobResponsePage';
 import { ClassifySampleResponse } from '../model/classifySampleResponse';
 import { StartJobResponse } from '../model/startJobResponse';
+import { ClassifySampleResponseMultipleVariants } from '../model/classifySampleResponseMultipleVariants';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { KerasModelVariantEnum } from '../model/kerasModelVariantEnum';
 import { MetricsAllVariantsResponse } from '../model/metricsAllVariantsResponse';
@@ -50,6 +51,11 @@ type classifySampleQueryParams = {
 
 type classifySampleByLearnBlockV2QueryParams = {
     variant?: KerasModelVariantEnum,
+};
+
+type classifySampleForVariantsQueryParams = {
+    includeDebugInfo?: boolean,
+    variants: string,
 };
 
 type classifySampleV2QueryParams = {
@@ -418,6 +424,115 @@ export class ClassifyApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse | StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Classify a complete file against the current impulse, for all given variants. Depending on the size of your file and whether the sample is resampled, you may get a job ID in the response. 
+     * @summary Classify sample for the given set of variants
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param variants List of keras model variants, given as a JSON string
+     * @param includeDebugInfo Whether to return the debug information from FOMO classification.
+     */
+    public async classifySampleForVariants (projectId: number, sampleId: number, queryParams: classifySampleForVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponseMultipleVariants | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/variants'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling classifySampleForVariants.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling classifySampleForVariants.');
+        }
+
+        // verify required parameter 'variants' is not null or undefined
+
+        if (queryParams.variants === null || queryParams.variants === undefined) {
+            throw new Error('Required parameter queryParams.variants was null or undefined when calling classifySampleForVariants.');
+        }
+
+
+        if (queryParams.includeDebugInfo !== undefined) {
+            localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
+        }
+
+        if (queryParams.variants !== undefined) {
+            localVarQueryParameters['variants'] = ObjectSerializer.serialize(queryParams.variants, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ClassifySampleResponseMultipleVariants | StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ClassifySampleResponseMultipleVariants | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

@@ -92,6 +92,10 @@ export class ProjectInfoResponse {
     */
     'showSensorDataInAcquisitionGraph': boolean;
     'targetConstraints'?: TargetConstraints;
+    /**
+    * List of notifications to show within the project
+    */
+    'notifications': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -250,6 +254,11 @@ export class ProjectInfoResponse {
             "name": "targetConstraints",
             "baseName": "targetConstraints",
             "type": "TargetConstraints"
+        },
+        {
+            "name": "notifications",
+            "baseName": "notifications",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

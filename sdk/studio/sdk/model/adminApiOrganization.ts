@@ -23,6 +23,7 @@ export class AdminApiOrganization {
     'name': string;
     'logo'?: string;
     'headerImg'?: string;
+    'showHeaderImgMask': boolean;
     'users': Array<OrganizationUser>;
     'isDeveloperProfile': boolean;
     /**
@@ -80,6 +81,11 @@ export class AdminApiOrganization {
             "name": "headerImg",
             "baseName": "headerImg",
             "type": "string"
+        },
+        {
+            "name": "showHeaderImgMask",
+            "baseName": "showHeaderImgMask",
+            "type": "boolean"
         },
         {
             "name": "users",

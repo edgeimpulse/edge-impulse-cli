@@ -18,7 +18,7 @@ export class AnomalyResult {
     */
     'boxes'?: Array<BoundingBoxWithScore>;
     /**
-    * Raw anomaly scores. For visual anomaly detection, the scores corresponds to each grid cell in the image\'s spatial matrix.
+    * 2D array of shape (n, n) with raw anomaly scores for visual anomaly detection, where n can be calculated as ((1/8 of image input size)/2 - 1). The scores corresponds to each grid cell in the image\'s spatial matrix.
     */
     'scores'?: Array<Array<number>>;
     /**

@@ -12,8 +12,8 @@
 
 
 /**
-* Normalization that\'s applied to images. If this is not set then 0..1 is used. \"0..1\" gives you non-normalized pixels between 0 and 1. \"-1..1\" gives you non-normalized pixels between -1 and 1. \"0..255\" gives you non-normalized pixels between 0 and 255. \"-128..127\" gives you non-normalized pixels between -128 and 127. \"torch\" first scales pixels between 0 and 1, then applies normalization using the ImageNet dataset (same as `torchvision.transforms.Normalize()`).
+* Normalization that is applied to images. If this is not set then 0..1 is used. \"0..1\" gives you non-normalized pixels between 0 and 1. \"-1..1\" gives you non-normalized pixels between -1 and 1. \"0..255\" gives you non-normalized pixels between 0 and 255. \"-128..127\" gives you non-normalized pixels between -128 and 127. \"torch\" first scales pixels between 0 and 1, then applies normalization using the ImageNet dataset (same as `torchvision.transforms.Normalize()`). \"bgr-subtract-imagenet-mean\" scales to 0..255, reorders pixels to BGR, and subtracts the ImageNet mean from each channel.
 */
 
-export type ImageInputScaling = '0..1' | '-1..1' | '-128..127' | '0..255' | 'torch';
-export const ImageInputScalingValues: string[] = ['0..1', '-1..1', '-128..127', '0..255', 'torch'];
+export type ImageInputScaling = '0..1' | '-1..1' | '-128..127' | '0..255' | 'torch' | 'bgr-subtract-imagenet-mean';
+export const ImageInputScalingValues: string[] = ['0..1', '-1..1', '-128..127', '0..255', 'torch', 'bgr-subtract-imagenet-mean'];

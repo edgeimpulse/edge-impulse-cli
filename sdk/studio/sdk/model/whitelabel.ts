@@ -63,6 +63,10 @@ export class Whitelabel {
     'allLearningBlocks': Array<WhitelabelAllLearningBlocks>;
     'developmentBoards': Array<DevelopmentBoardResponse>;
     'allDevelopmentBoards': Array<DevelopmentBoardResponse>;
+    /**
+    * The maximum number of organizations that can be created under this white label.
+    */
+    'organizationsLimit'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -176,6 +180,11 @@ export class Whitelabel {
             "name": "allDevelopmentBoards",
             "baseName": "allDevelopmentBoards",
             "type": "Array<DevelopmentBoardResponse>"
+        },
+        {
+            "name": "organizationsLimit",
+            "baseName": "organizationsLimit",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

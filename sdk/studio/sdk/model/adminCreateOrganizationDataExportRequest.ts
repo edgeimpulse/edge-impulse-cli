@@ -13,10 +13,6 @@
 
 export class AdminCreateOrganizationDataExportRequest {
     /**
-    * Key to the S3 user data bucket containing the data export
-    */
-    'userdataKey': string;
-    /**
     * Description of the data export
     */
     'description': string;
@@ -28,11 +24,6 @@ export class AdminCreateOrganizationDataExportRequest {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "userdataKey",
-            "baseName": "userdataKey",
-            "type": "string"
-        },
         {
             "name": "description",
             "baseName": "description",

@@ -45,11 +45,13 @@ export enum PageType {
     Scratchpad = 45,
     TrialSignup = 46,
     ThankYou = 47,
+    CommunityProSignUp = 48,
     AccountSettingsAccountInfo = 60,
     AccountSettingsAuthentication = 61,
     AccountSettingsOrganizations = 62,
     AccountSettingsExperiments = 63,
     AccountSettingsMfa = 64,
+    AccountSettingsSubscription = 65,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -74,134 +76,4 @@ export enum PageType {
     OrganizationExports = 111,
     UploadPortal = 200,
     Announcement = 201,
-}
-
-export type ClientConnectionType = 'ip' | 'daemon';
-
-export interface ClientConnectedDevice {
-    deviceId: string;
-    connection: ClientConnectionType;
-    sensors: {
-        name: string;
-        maxSampleLengthS: number;
-        frequencies: number[];
-    }[];
-    deviceType: string;
-    deviceName: string;
-    supportsSnapshotStreaming: boolean;
-}
-
-export interface ClientStudioWebsocketHello {
-    hello: { version: number };
-    devices: ClientConnectedDevice[];
-}
-
-export interface ClientInitUser {
-    id: number;
-    email: string;
-    name: string;
-    photo?: string;
-    isEvalUser: boolean;
-}
-
-export interface ClientInitStudioOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    projectId: number;
-    baseUrl: string;
-    projectName: string;
-    projectOwnerOrganizationId: number | undefined;
-    projectOwnerOrganizationName: string | undefined;
-    socketToken: string;
-    orgSocketToken: string | undefined;
-    connectedDevices: ClientConnectedDevice[];
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    gitCommitHash: string;
-    isAdmin: boolean;
-    isObjectDetection: boolean;
-    user: ClientInitUser | undefined;
-    docsUrl: string;
-    urls: {
-        mobileClient?: string;
-        mobileClientComputer?: string;
-        mobileClientInference?: string;
-    };
-}
-
-export interface ClientInitOrganizationOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    organizationId: number;
-    organizationName: string;
-    socketToken: string;
-    staticAssetsPrefix: string;
-    baseUrl: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    user: ClientInitUser | undefined;
-    themeId: number;
-    whitelabelId: number | undefined;
-    docsUrl: string;
-}
-
-export interface ClientInitOrganizationPortalOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    portalId: number;
-    baseUrl: string;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    authToken: string;
-    isAdmin: boolean;
-}
-
-export interface ClientInitFormOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    user: ClientInitUser;
-    userDeveloperProfile: {
-        organizationId: number;
-        organizationName: string;
-        socketToken: string;
-    } | undefined;
-}
-
-export interface ClientInitPublicOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    ssoWhitelist?: { [domain: string]: string[] };
-}
-
-export interface OrganizationWebsocketHello {
-    hello: { version: number };
 }

@@ -1,4 +1,4 @@
-// tslint:disable: no-console
+// eslint-disable-next-line no-console
 
 window.CameraLiveView = async () => {
 

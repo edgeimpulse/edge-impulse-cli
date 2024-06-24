@@ -29,6 +29,7 @@ export class TunerTrial {
     'model'?: { [key: string]: object; };
     'dspJobId'?: TunerTrialDspJobId;
     'learnJobId'?: number;
+    'devicePerformance'?: { [key: string]: object; };
 
     static discriminator: string | undefined = undefined;
 
@@ -102,6 +103,11 @@ export class TunerTrial {
             "name": "learnJobId",
             "baseName": "learnJobId",
             "type": "number"
+        },
+        {
+            "name": "devicePerformance",
+            "baseName": "devicePerformance",
+            "type": "{ [key: string]: object; }"
         }    ];
 
     static getAttributeTypeMap() {

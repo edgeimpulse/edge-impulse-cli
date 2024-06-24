@@ -32,7 +32,7 @@ let startedWebserver = false;
 let inferenceStarted = false;
 
 const configFactory = new Config();
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -74,7 +74,7 @@ function sleep(ms: number) {
 function onStdIn(data: Buffer) {
     if (!serial) return;
 
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial.write(Buffer.from(data.toString('ascii').trim() + '\r\n', 'ascii'));
 }
 
@@ -225,7 +225,7 @@ async function connectToSerial(deviceId: string) {
 
     console.log(SERIAL_PREFIX, 'Connecting to', deviceId);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 }
 

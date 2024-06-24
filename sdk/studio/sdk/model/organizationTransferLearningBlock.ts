@@ -15,6 +15,7 @@ import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class OrganizationTransferLearningBlock {
     'id': number;
@@ -39,12 +40,13 @@ export class OrganizationTransferLearningBlock {
     * If `isPublic` is true, the list of devices (from latencyDevices) for which this model can be shown.
     */
     'isPublicForDevices': Array<string>;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
-    * Whether this block is publicly available to Edge Impulse only to enterprise users
+    * Whether this block is publicly available to only enterprise users
     */
     'isPublicEnterpriseOnly': boolean;
     /**
-    * Whether this block is available to Edge Impulse only to enterprise users
+    * Whether this block is available to only enterprise users
     */
     'enterpriseOnly'?: boolean;
     /**
@@ -145,6 +147,11 @@ export class OrganizationTransferLearningBlock {
             "name": "isPublicForDevices",
             "baseName": "isPublicForDevices",
             "type": "Array<string>"
+        },
+        {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
         },
         {
             "name": "isPublicEnterpriseOnly",

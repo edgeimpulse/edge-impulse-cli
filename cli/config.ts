@@ -12,6 +12,8 @@ const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 export interface RunnerConfig {
     projectId: number | undefined;
     blockId: number | undefined;
+    storageIndex: number | undefined;
+    storagePath: string;
 }
 
 export interface SerialConfig {
@@ -94,6 +96,14 @@ export class Config {
         if (await Config.exists(this._filename)) {
             await util.promisify(fs.unlink)(this._filename);
         }
+    }
+
+    async removeProjectReferences() {
+        let config = await this.load();
+        delete config.apiKey;
+        delete config.linuxProjectId;
+        delete config.uploaderProjectId;
+        await this.store(config);
     }
 
     async getUploaderProjectId() {
@@ -439,6 +449,28 @@ export class Config {
         return config.runner;
     }
 
+    async storeStoragePath(path: string) {
+        let config = await this.load();
+        config.runner.storagePath = path;
+        await this.store(config);
+    }
+
+    async getStoragePath(): Promise<string> {
+        let config = await this.load();
+        return config.runner.storagePath || this.getDefaultStoragePath();
+    }
+
+    async getStorageIndex(): Promise<number> {
+        let config = await this.load();
+        return config.runner.storageIndex || 0;
+    }
+
+    async storeStorageIndex(index: number) {
+        let config = await this.load();
+        config.runner.storageIndex = index;
+        await this.store(config);
+    }
+
     async storeProjectId(projectId: number) {
         let config = await this.load();
         config.runner.projectId = projectId;
@@ -462,6 +494,18 @@ export class Config {
         return this._endpoints?.internal.api.replace('/v1', '');
     }
 
+    getDefaultModelsPath() {
+        return Path.join(this.getDefaultRunnerPath(), 'models');
+    }
+
+    getDefaultStoragePath() {
+        return Path.join(this.getDefaultRunnerPath(), 'storage');
+    }
+
+    private getDefaultRunnerPath() {
+        return Path.join(os.homedir(), '.ei-linux-runner');
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -477,7 +521,9 @@ export class Config {
                 linuxProjectId: undefined,
                 runner: {
                     projectId: undefined,
-                    blockId: undefined
+                    blockId: undefined,
+                    storageIndex: undefined,
+                    storagePath: this.getDefaultStoragePath()
                 }
             };
         }

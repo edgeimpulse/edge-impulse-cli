@@ -150,7 +150,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
 let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     console.log('Edge Impulse Blocks v' + version);
 
@@ -200,8 +200,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
     }
     catch (ex2) {
         let ex = <Error>ex2;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse',
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {
@@ -418,6 +420,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         // If no blocks exist, force create
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let createOrUpdateInqRes = existingBlocks.length > 0 ? (await inquirer.prompt([{
             type: 'list',
             choices: [
@@ -714,7 +717,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             let subdirectories = entry.path.split('/');
                             // Ignore folders
                             if (subdirectories[subdirectories.length - 1] === '') {
-                                // tslint:disable-next-line: no-unsafe-any
+                                // eslint-disable-next-line
                                 entry.autodrain();
                             }
                             else {
@@ -724,7 +727,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                     const newDirectory = subdirectories.join('/');
                                     await fs.promises.mkdir(newDirectory, { recursive: true });
                                 }
-                                // tslint:disable-next-line: no-unsafe-any
+                                // eslint-disable-next-line
                                 entry.pipe(fs.createWriteStream(newFilename));
                             }
                         })
@@ -735,7 +738,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     console.warn('Unable to fetch the repository:', e);
                     console.log('You can fetch the template later from', templateSourcePath);
                 }
-            } else {
+            }
+            else {
                 console.log('You can fetch the template later from', templateSourcePath);
             }
         }
@@ -968,6 +972,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 }
                 else {
                     console.error(`Unable to upload your block - unknown block type: ` +
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         `${(<any>currentBlockConfig).type}`);
                     process.exit(1);
                 }
@@ -1346,6 +1351,7 @@ async function checkConfigFile(host: string): Promise<boolean> {
         let config = <BlockConfigV1>JSON.parse(file);
 
         // old format, no hostnames here?
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (typeof config.version === 'undefined' && typeof (<any>config).name === 'string') {
             let c: BlockConfigV1 = {
                 version: 1,
@@ -1486,6 +1492,7 @@ function deepCompare(obj1: { [k: string]: any } | any, obj2: { [k: string]: any 
     const orderObject = (unordered: { [k: string]: any }) => {
         const ordered = Object.keys(unordered).sort().reduce(
             (curr: { [k: string]: any }, key) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 curr[key] = unordered[key];
                 return curr;
             },
@@ -1505,12 +1512,14 @@ function deepCompare(obj1: { [k: string]: any } | any, obj2: { [k: string]: any 
         return ordered;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let obj1Ordered = obj1 instanceof Object ?
-        // tslint:disable-next-line: no-unsafe-any
+        // eslint-disable-next-line
         orderObject(obj1) :
         obj1;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let obj2Ordered = obj1 instanceof Object ?
-        // tslint:disable-next-line: no-unsafe-any
+        // eslint-disable-next-line
         orderObject(obj2) :
         obj2;
 

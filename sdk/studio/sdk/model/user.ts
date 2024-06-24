@@ -12,6 +12,7 @@
 
 import { Permission } from './permission';
 import { StaffInfo } from './staffInfo';
+import { UserTierEnum } from './userTierEnum';
 
 export class User {
     'id': number;
@@ -38,6 +39,15 @@ export class User {
     * Whether the user has configured multi-factor authentication
     */
     'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier'?: UserTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -116,6 +126,21 @@ export class User {
             "name": "mfaConfigured",
             "baseName": "mfaConfigured",
             "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
         }    ];
 
     static getAttributeTypeMap() {

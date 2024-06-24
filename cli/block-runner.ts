@@ -228,9 +228,11 @@ export abstract class BlockRunner implements IRunner {
             p.on("exit", (code, signal) => {
                 if (typeof code === "number" && code !== 0) {
                     reject("Command exited with code " + code);
-                } else if (signal) {
+                }
+                else if (signal) {
                     reject("Terminated with signal " + signal);
-                } else {
+                }
+                else {
                     resolve();
                 }
             });
@@ -268,9 +270,11 @@ export abstract class BlockRunner implements IRunner {
             p.on("exit", (code, signal) => {
                 if (typeof code === "number" && code !== 0) {
                     reject("Command exited with code " + code);
-                } else if (signal) {
+                }
+                else if (signal) {
                     reject("Terminated with signal " + signal);
-                } else {
+                }
+                else {
                     resolve();
                 }
             });
@@ -412,7 +416,8 @@ export class BlockRunnerTransform extends BlockRunner {
                     method: 'dataitem',
                     dataItemName: this._runnerOpts.dataItem,
                 };
-            } else if (this._runnerOpts.dataPath) {
+            }
+            else if (this._runnerOpts.dataPath) {
                 // We need the dataset name for this option
                 let dataset = this._runnerOpts.dataset;
                 if (!dataset) {
@@ -431,7 +436,8 @@ export class BlockRunnerTransform extends BlockRunner {
                     path: this._runnerOpts.dataPath,
                     dataset: dataset,
                 };
-            } else {
+            }
+            else {
                 // Neither path nor a data item has been specified yet.
                 // Ask the user which they would like to specify, and then get a value for this choice.
                 const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([{
@@ -464,7 +470,8 @@ export class BlockRunnerTransform extends BlockRunner {
                         method: 'dataitem',
                         dataItemName: dataItemInq.dataItemName,
                     };
-                } else {
+                }
+                else {
                     // First we need the dataset name
                     let dataset = this._runnerOpts.dataset;
                     if (!dataset) {
@@ -585,7 +592,8 @@ export class BlockRunnerTransform extends BlockRunner {
                         hmacKey: '0',
                         inDir: Path.join(downloadDir, datasetBucketPath)
                     };
-                } else if (operatesOn === 'file') {
+                }
+                else if (operatesOn === 'file') {
                     // Trim the filename from the given path
                     const pathInDataset = lookupOpts.path.substring(0,
                         lookupOpts.path.lastIndexOf(Path.basename(lookupOpts.path)));
@@ -652,7 +660,8 @@ export class BlockRunnerTransform extends BlockRunner {
                 "--out-directory",
                 "/data/out"
             ]);
-        } else if (this._dockerRunParams.operatesOn === "file") {
+        }
+        else if (this._dockerRunParams.operatesOn === "file") {
             ret.args = ret.args.concat([
                 "--rm",
                 "-v",
@@ -663,7 +672,8 @@ export class BlockRunnerTransform extends BlockRunner {
                 "--out-directory",
                 "/data/out"
             ]);
-        } else if (this._dockerRunParams.operatesOn === "standalone") {
+        }
+        else if (this._dockerRunParams.operatesOn === "standalone") {
             ret.args = ret.args.concat([
                 "--rm",
                 this._dockerRunParams.containerName || ""
@@ -791,7 +801,8 @@ export class BlockRunnerTransform extends BlockRunner {
 
             const rawBuffer = fileRes;
             await fs.promises.writeFile(targetFilePath, rawBuffer);
-        } else {
+        }
+        else {
             const fileRes = await this._eiConfig.api.organizationData.downloadDatasetFolder(
                 this._blockConfig.organizationId,
                 sourceData.dataset,
@@ -1114,7 +1125,8 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
             if (learnBlocks.length === 1) {
                 learnBlockId = learnBlocks[0].id;
-            } else {
+            }
+            else {
                 let learnInq = await inquirer.prompt([
                     {
                         type: "list",
@@ -1194,7 +1206,8 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                 validationSetSize: validationSize,
                 inputShape: inputShape
             };
-        } catch (ex) {
+        }
+        catch (ex) {
             let ex2 = <Error>ex;
             console.error(CON_PREFIX,
                 "Failed to download files for transfer learning block",
@@ -1618,7 +1631,7 @@ export class BlockRunnerDSP extends BlockRunner {
 
             await this.runAndWaitForCompletion(buildCommand, true);
 
-            // // tslint:disable-next-line: no-floating-promises
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             this.runAndWaitForCompletion(runCommand, true).catch((err) => {
                 console.error(CON_PREFIX, "Failed to run container", err);
                 process.exit(1);
@@ -1717,12 +1730,12 @@ export class BlockRunnerDSP extends BlockRunner {
                 try {
                     let tunnels = await getTunnels();
 
-                    // tslint:disable-next-line: no-unsafe-any
+                    // eslint-disable-next-line
                     let foundTunnel = (<any>tunnels).tunnels.find((x: any) => x.proto === 'https');
                     if (!foundTunnel) {
                         throw new Error('Failed to find https tunnel');
                     }
-                    // tslint:disable-next-line: no-unsafe-any
+                    // eslint-disable-next-line
                     let url = foundTunnel.public_url;
                     resolve(<string>url);
                 }
@@ -1808,7 +1821,8 @@ async function extractFiles(
                                 }
                             );
                         }
-                    } catch (ex) {
+                    }
+                    catch (ex) {
                         zipFile.close();
                         reject(new Error("Unable to read ZIP file"));
                     }

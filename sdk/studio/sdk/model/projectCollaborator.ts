@@ -14,6 +14,7 @@ import { Permission } from './permission';
 import { ProjectCollaboratorAllOf } from './projectCollaboratorAllOf';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
+import { UserTierEnum } from './userTierEnum';
 
 export class ProjectCollaborator {
     'id': number;
@@ -40,6 +41,15 @@ export class ProjectCollaborator {
     * Whether the user has configured multi-factor authentication
     */
     'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier'?: UserTierEnum;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -119,6 +129,21 @@ export class ProjectCollaborator {
             "name": "mfaConfigured",
             "baseName": "mfaConfigured",
             "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
         },
         {
             "name": "isOwner",

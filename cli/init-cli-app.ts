@@ -27,8 +27,11 @@ export async function initCliApp(opts: {
     let config: EdgeImpulseConfig | undefined;
 
     try {
-        if (opts.cleanArgv || opts.apiKeyArgv) {
+        if (opts.cleanArgv) {
             await configFactory.clean();
+        }
+        else if (opts.apiKeyArgv) {
+            await configFactory.removeProjectReferences();
         }
 
         try {
@@ -67,8 +70,10 @@ export async function initCliApp(opts: {
     }
     catch (ex2) {
         let ex = <Error>ex2;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse',
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {

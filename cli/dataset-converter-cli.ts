@@ -161,7 +161,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                     path: filePath,
                     name: filename,
                 });
-            } else if (this._datasetFormat.fileFilter(filename)) {
+            }
+            else if (this._datasetFormat.fileFilter(filename)) {
                 // This file is potentially a label file
                 let labelFileRes: Annotations | undefined;
                 const fileContents = fs.readFileSync(filePath, { encoding: 'utf-8' });
@@ -173,7 +174,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                             type: jsonParseRes.type,
                             labels: jsonParseRes.labels,
                         } as Annotations;
-                    } else {
+                    }
+                    else {
                         throw new Error(jsonParseRes.reason);
                     }
                 }
@@ -190,7 +192,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                             type: csvParseRes.type,
                             labels: csvParseRes.labels,
                         } as Annotations;
-                    } else {
+                    }
+                    else {
                         throw new Error(csvParseRes.reason);
                     }
                 }
@@ -201,7 +204,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                             type: txtParseRes.type,
                             labels: txtParseRes.labels,
                         } as Annotations;
-                    } else {
+                    }
+                    else {
                         throw new Error(txtParseRes.reason);
                     }
                 }
@@ -224,7 +228,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                             type: xmlParseRes.type,
                             labels: xmlParseRes.labels,
                         } as Annotations;
-                    } else {
+                    }
+                    else {
                         throw new Error(xmlParseRes.reason);
                     }
                 }
@@ -256,7 +261,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                 throw new Error(`File is not a valid label file (expected ${this._datasetFormat.formatStyle}) ` +
                     `or valid sample file (unsupported extension)`);
             }
-        } catch (ex) {
+        }
+        catch (ex) {
             if (!this._opts.silent) {
                 console.log(`Skipping file '${filePath}': ${ex}`);
             }
@@ -295,6 +301,7 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                     labelMap = labelsFileFormat.conversionFunction(data);
                 }
                 else if (labelsFileFormat.fileType === 'yaml') {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     const yamlParsed = yaml.load(fileContents) as any;
                     labelMap = labelsFileFormat.conversionFunction(yamlParsed);
                 }
@@ -302,7 +309,8 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                     console.log(`Successfully parsed label map file '${labelFile.name}'`);
                     return labelMap;
                 }
-            } catch (ex) {
+            }
+            catch (ex) {
                 console.log(`Failed to automatically parse label map file '${labelFile.name}'`, ex);
             }
         }
@@ -444,7 +452,8 @@ export function checkDatasetMatchesFormat(files: FileInFolder[], formatName: Sup
     const format = deriveDatasetFormat(files, [formatName]);
     if (format && format === formatName) {
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }

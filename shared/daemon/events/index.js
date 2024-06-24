@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 
 /*!
  * EventEmitter v5.2.9 - git.io/ee
@@ -123,9 +123,11 @@
   function isValidListener (listener) {
       if (typeof listener === 'function' || listener instanceof RegExp) {
           return true
-      } else if (listener && typeof listener === 'object') {
+      }
+      else if (listener && typeof listener === 'object') {
           return isValidListener(listener.listener)
-      } else {
+      }
+      else {
           return false
       }
   }

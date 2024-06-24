@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AdditionalMetric } from './additionalMetric';
 import { KerasModelMetadataMetricsOnDevicePerformance } from './kerasModelMetadataMetricsOnDevicePerformance';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ModelPrediction } from './modelPrediction';
@@ -42,6 +43,7 @@ export class KerasModelMetadataMetrics {
     * If this is set, then the profiling job failed (get the status by getting the job logs for \'profilingJobId\').
     */
     'profilingJobFailed'?: boolean;
+    'additionalMetrics': Array<AdditionalMetric>;
 
     static discriminator: string | undefined = undefined;
 
@@ -105,6 +107,11 @@ export class KerasModelMetadataMetrics {
             "name": "profilingJobFailed",
             "baseName": "profilingJobFailed",
             "type": "boolean"
+        },
+        {
+            "name": "additionalMetrics",
+            "baseName": "additionalMetrics",
+            "type": "Array<AdditionalMetric>"
         }    ];
 
     static getAttributeTypeMap() {

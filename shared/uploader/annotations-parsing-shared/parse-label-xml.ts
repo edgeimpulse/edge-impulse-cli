@@ -25,7 +25,8 @@ export function xmlToJson(xml: XMLDocument) {
             const nodeValue = node.nodeValue;
             if (nodeValue) {
                 return nodeValue;
-            } else {
+            }
+            else {
                 return undefined;
             }
         }
@@ -35,14 +36,15 @@ export function xmlToJson(xml: XMLDocument) {
             const nodeValue = node.childNodes[0].nodeValue;
             if (nodeValue) {
                 return nodeValue;
-            } else {
+            }
+            else {
                 return undefined;
             }
         }
 
         // Otherwise we have a node with children; recursively parse it
         let nodeValueParsed: ParsedJSON = { };
-        // tslint:disable-next-line: prefer-for-of
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let ix = 0; ix < node.childNodes.length; ix++) {
             const child = node.childNodes[ix];
             const childKey = child.nodeName as string | undefined;
@@ -66,11 +68,13 @@ export function xmlToJson(xml: XMLDocument) {
                 if (Array.isArray(curNodeVal)) {
                     // Array already exists, push to it
                     curNodeVal.push(childValue);
-                } else {
+                }
+                else {
                     // This is the second entry, so create an array
                     nodeValueParsed[childKey] = [curNodeVal, childValue];
                 }
-            } else {
+            }
+            else {
                 // Otherwise we can just store the node value against its name.
                 nodeValueParsed[childKey] = childValue;
             }
@@ -78,7 +82,6 @@ export function xmlToJson(xml: XMLDocument) {
         return nodeValueParsed;
     };
 
-    // tslint:disable-next-line: no-unbound-method
     const rootNode = typeof xml.getRootNode !== 'undefined' ? xml.getRootNode() : xml;
 
     return exploreNode(rootNode);
@@ -119,7 +122,8 @@ export function parseXmlLabelsFile(xmlDoc: XMLDocument, format: SupportedLabelFo
                 type: 'object-detection',
                 labels: res.bboxes,
             };
-        } else {
+        }
+        else {
             return {
                 success: true,
                 match: xmlFormat.info,
@@ -127,7 +131,8 @@ export function parseXmlLabelsFile(xmlDoc: XMLDocument, format: SupportedLabelFo
                 labels: res.labels,
             };
         }
-    } catch (ex) {
+    }
+    catch (ex) {
         return {
             success: false,
             reason: `Error parsing type '${xmlFormat.info.name}'; ${(<Error>ex).message}`
@@ -152,7 +157,8 @@ export function checkXmlMatchesAnyFormat(xmlFile: XMLDocument, formatsToTry?: Su
             throw new Error('Could not convert XML to JSON');
         }
         jsonObj = json;
-    } catch (ex) {
+    }
+    catch (ex) {
         // Failed to parse; no valid match
         return undefined;
     }

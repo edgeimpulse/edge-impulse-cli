@@ -45,6 +45,10 @@ export class AddOrganizationTransformationBlockRequest {
     * Whether to show this block in \'Data sources\'. Only applies for standalone blocks. (defaults to \'true\' when not provided)
     */
     'showInDataSources'?: boolean;
+    /**
+    * Whether to show this block in \'Create transformation job\'. Only applies for standalone blocks.
+    */
+    'showInCreateTransformationJob'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -132,6 +136,11 @@ export class AddOrganizationTransformationBlockRequest {
         {
             "name": "showInDataSources",
             "baseName": "showInDataSources",
+            "type": "boolean"
+        },
+        {
+            "name": "showInCreateTransformationJob",
+            "baseName": "showInCreateTransformationJob",
             "type": "boolean"
         }    ];
 

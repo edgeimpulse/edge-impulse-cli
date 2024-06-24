@@ -165,7 +165,8 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                     }
                 }
             }
-        } else if (constraint.type === 'object' && constraint.isMap) {
+        }
+        else if (constraint.type === 'object' && constraint.isMap) {
             // Like an 'object', only the keys can be any string, we just enforce types of values
             const rootObj = <{ [k: string]: object }>io;
 
@@ -177,7 +178,8 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                 }
             }
 
-        } else if (constraint.type === 'array') {
+        }
+        else if (constraint.type === 'array') {
             // Validate array has correct types for each entry
             const rootArr = <object[]>io;
 
@@ -210,7 +212,8 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                     break;
                 }
             }
-        } else {
+        }
+        else {
             // Primitive type
             // If we have a constraint on the accepted values here, validate them
             if (constraint.valid) {
@@ -287,7 +290,8 @@ export function parseJsonLabelsFile(jsonFile: string, format: SupportedLabelForm
                 type: 'object-detection',
                 labels: res.bboxes,
             };
-        } else {
+        }
+        else {
             return {
                 success: true,
                 match: jsonFormat.info,
@@ -295,7 +299,8 @@ export function parseJsonLabelsFile(jsonFile: string, format: SupportedLabelForm
                 labels: res.labels,
             };
         }
-    } catch (ex) {
+    }
+    catch (ex) {
         return {
             success: false,
             reason: `Error parsing type '${jsonFormat.info.name}'; ${(<Error>ex).message}`
@@ -332,7 +337,8 @@ export function parseTxtLabelsFile(file: string, filename: string, format: Suppo
             type: 'object-detection',
             labels: labels,
         };
-    } catch (ex) {
+    }
+    catch (ex) {
         return {
             success: false,
             reason: `Error parsing type '${labelFormat.info.name}'; ${(<Error>ex).message}`

@@ -26,6 +26,7 @@ import { AdminAddOrganizationUserRequest } from '../model/adminAddOrganizationUs
 import { AdminAddProjectApiKeyRequest } from '../model/adminAddProjectApiKeyRequest';
 import { AdminAddProjectUserRequest } from '../model/adminAddProjectUserRequest';
 import { AdminAddUserRequest } from '../model/adminAddUserRequest';
+import { AdminCreateOrganizationDataExportRequest } from '../model/adminCreateOrganizationDataExportRequest';
 import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
 import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
 import { AdminGetOrganizationComputeTimeUsageResponse } from '../model/adminGetOrganizationComputeTimeUsageResponse';
@@ -37,6 +38,7 @@ import { AdminGetUserResponse } from '../model/adminGetUserResponse';
 import { AdminGetUsersResponse } from '../model/adminGetUsersResponse';
 import { AdminListProjectsResponse } from '../model/adminListProjectsResponse';
 import { AdminOrganizationInfoResponse } from '../model/adminOrganizationInfoResponse';
+import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
 import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
 import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
 import { CreateOrganizationRequest } from '../model/createOrganizationRequest';
@@ -72,6 +74,7 @@ import { UpdateWhitelabelLearningBlocksRequest } from '../model/updateWhitelabel
 import { UpdateWhitelabelRequest } from '../model/updateWhitelabelRequest';
 import { UploadAssetResponse } from '../model/uploadAssetResponse';
 import { UploadReadmeImageResponse } from '../model/uploadReadmeImageResponse';
+import { UserTierEnum } from '../model/userTierEnum';
 import { WhitelabelAdminCreateOrganizationRequest } from '../model/whitelabelAdminCreateOrganizationRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -123,6 +126,11 @@ type whitelabelAdminGetOrganizationComputeTimeUsageQueryParams = {
     endDate: Date,
 };
 
+type whitelabelAdminGetOrganizationExportsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type whitelabelAdminGetOrganizationInfoQueryParams = {
     includeDeleted?: boolean,
 };
@@ -151,7 +159,7 @@ type whitelabelAdminGetProjectsQueryParams = {
 
 type whitelabelAdminGetUsersQueryParams = {
     active?: number,
-    tier?: 'free' | 'pro' | 'enterprise',
+    tier?: UserTierEnum,
     fields?: string,
     sort?: string,
     limit?: number,
@@ -2953,6 +2961,107 @@ export class OrganizationsApi {
     }
 
     /**
+     * Create a new data export for an organization. A job is created to process the export request and the job details are returned in the response. This is an API only available to white label admins. 
+     * @summary White Label Admin - Create a new organization data export
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param adminCreateOrganizationDataExportRequest 
+     */
+    public async whitelabelAdminCreateOrganizationExport (organizationId: number, innerOrganizationId: number, adminCreateOrganizationDataExportRequest: AdminCreateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminCreateOrganizationExport.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminCreateOrganizationExport.');
+        }
+
+        // verify required parameter 'adminCreateOrganizationDataExportRequest' is not null or undefined
+
+
+        if (adminCreateOrganizationDataExportRequest === null || adminCreateOrganizationDataExportRequest === undefined) {
+            throw new Error('Required parameter adminCreateOrganizationDataExportRequest was null or undefined when calling whitelabelAdminCreateOrganizationExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminCreateOrganizationDataExportRequest, "AdminCreateOrganizationDataExportRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to create a new project for an organization.
      * @summary White Label Admin - Create a new organization project
      * @param organizationId Organization ID
@@ -3296,6 +3405,107 @@ export class OrganizationsApi {
 
         if (innerOrganizationId === null || innerOrganizationId === undefined) {
             throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminDeleteOrganization.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Delete a data export for an organization. This is an API only available to white label admins.
+     * @summary White Label Admin - Delete organization data export
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param exportId Export ID
+     */
+    public async whitelabelAdminDeleteOrganizationExport (organizationId: number, innerOrganizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminDeleteOrganizationExport.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminDeleteOrganizationExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling whitelabelAdminDeleteOrganizationExport.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3995,6 +4205,209 @@ export class OrganizationsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "AdminGetOrganizationComputeTimeUsageResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get a data export for an organization. This is an API only available to white label admins.
+     * @summary White Label Admin - Get organization data export
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param exportId Export ID
+     */
+    public async whitelabelAdminGetOrganizationExport (organizationId: number, innerOrganizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetOrganizationExport.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling whitelabelAdminGetOrganizationExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationDataExportResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDataExportResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get all data exports for an organization. This is an API only available to white label admins.
+     * @summary White Label Admin - Get all organization data exports
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async whitelabelAdminGetOrganizationExports (organizationId: number, innerOrganizationId: number, queryParams: whitelabelAdminGetOrganizationExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetOrganizationExports.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationExports.');
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationDataExportsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDataExportsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -4815,7 +5228,7 @@ export class OrganizationsApi {
      * @summary White Label Admin - Get all white label users
      * @param organizationId Organization ID
      * @param active Whether to search for entities (users, orgs) active in the last X days
-     * @param tier Whether to search for free, pro or enterprise entities (users, projects)
+     * @param tier Whether to search for free, community plus, professional, or enterprise entities (users, projects)
      * @param fields Comma separated list of fields to fetch in a query
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
@@ -4850,7 +5263,7 @@ export class OrganizationsApi {
         }
 
         if (queryParams.tier !== undefined) {
-            localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "'free' | 'pro' | 'enterprise'");
+            localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "UserTierEnum");
         }
 
         if (queryParams.fields !== undefined) {
@@ -6025,6 +6438,116 @@ export class OrganizationsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(adminUpdateOrganizationRequest, "AdminUpdateOrganizationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Update a data export for an organization. This is an API only available to white label admins.
+     * @summary White Label Admin - Update organization data export
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param exportId Export ID
+     * @param adminUpdateOrganizationDataExportRequest 
+     */
+    public async whitelabelAdminUpdateOrganizationExport (organizationId: number, innerOrganizationId: number, exportId: number, adminUpdateOrganizationDataExportRequest: AdminUpdateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminUpdateOrganizationExport.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminUpdateOrganizationExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling whitelabelAdminUpdateOrganizationExport.');
+        }
+
+        // verify required parameter 'adminUpdateOrganizationDataExportRequest' is not null or undefined
+
+
+        if (adminUpdateOrganizationDataExportRequest === null || adminUpdateOrganizationDataExportRequest === undefined) {
+            throw new Error('Required parameter adminUpdateOrganizationDataExportRequest was null or undefined when calling whitelabelAdminUpdateOrganizationExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminUpdateOrganizationDataExportRequest, "AdminUpdateOrganizationDataExportRequest")
         };
 
         let authenticationPromise = Promise.resolve();

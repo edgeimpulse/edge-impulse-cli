@@ -106,7 +106,7 @@ const logAllAnnotationFormats = () => {
     });
 };
 
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     if (versionArgv) {
         console.log(getCliVersion());
@@ -236,7 +236,8 @@ const logAllAnnotationFormats = () => {
                         '--dataset-format when uploading your data.');
                     process.exit(1);
                 }
-            } else {
+            }
+            else {
                 // Try to work out what format this dataset is in
                 const derivedFormat = deriveDatasetFormat(allFiles);
                 if (derivedFormat) {
@@ -268,7 +269,8 @@ const logAllAnnotationFormats = () => {
                             boundingBoxes: annotations.boundingBoxes
                         });
                     }
-                } catch (ex) {
+                }
+                catch (ex) {
                     console.log(`Could not convert directory: ${ex}`);
                     process.exit(1);
                 }
@@ -420,6 +422,24 @@ const logAllAnnotationFormats = () => {
         const { projectId, devKeys } = await setupCliApp(configFactory, config, cliOptions, undefined);
 
         await configFactory.setUploaderProjectId(projectId);
+
+        if (!silentArgv) {
+            const projectInfo = await config.api.projects.getProjectInfo(projectId);
+            let studioUrl = config.endpoints.internal.api.replace('/v1', '');
+            if (projectInfo.project.whitelabelId) {
+                const whitelabelRes = await config.api.whitelabels.getWhitelabelDomain(
+                    projectInfo.project.whitelabelId
+                );
+                if (whitelabelRes.domain) {
+                    const protocol = config.endpoints.internal.api.startsWith('https') ? 'https' : 'http';
+                    studioUrl = `${protocol}://${whitelabelRes.domain}`;
+                }
+            }
+
+            console.log(`Uploading to project "${projectInfo.project.owner} / ${projectInfo.project.name}" ` +
+                `(${studioUrl}/studio/${projectId})`);
+            console.log(``);
+        }
 
         let fileIx = startIxArgv ? Number(startIxArgv) : 0;
         let success = 0;

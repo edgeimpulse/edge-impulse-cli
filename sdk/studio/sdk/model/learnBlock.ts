@@ -12,6 +12,7 @@
 
 import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockType } from './blockType';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class LearnBlock {
     'type': string;
@@ -21,8 +22,9 @@ export class LearnBlock {
     'name': string;
     'recommended'?: boolean;
     'organizationModelId'?: number;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
-    * Whether this block is publicly available to Edge Impulse only to enterprise users
+    * Whether this block is publicly available to only enterprise users
     */
     'isPublicEnterpriseOnly'?: boolean;
     'blockType': BlockType;
@@ -65,6 +67,11 @@ export class LearnBlock {
             "name": "organizationModelId",
             "baseName": "organizationModelId",
             "type": "number"
+        },
+        {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
         },
         {
             "name": "isPublicEnterpriseOnly",

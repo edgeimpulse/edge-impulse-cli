@@ -11,6 +11,7 @@
  */
 
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
+import { DailyMetricsRecord } from './dailyMetricsRecord';
 import { EntitlementLimits } from './entitlementLimits';
 import { GenericApiResponse } from './genericApiResponse';
 import { OrganizationComputeTimeUsage } from './organizationComputeTimeUsage';
@@ -46,6 +47,10 @@ export class AdminOrganizationInfoResponse {
     * Total storage used by the organization.
     */
     'totalStorage'?: number;
+    /**
+    * Metrics for the last 365 days
+    */
+    'dailyMetrics'?: Array<DailyMetricsRecord>;
 
     static discriminator: string | undefined = undefined;
 
@@ -94,6 +99,11 @@ export class AdminOrganizationInfoResponse {
             "name": "totalStorage",
             "baseName": "totalStorage",
             "type": "number"
+        },
+        {
+            "name": "dailyMetrics",
+            "baseName": "dailyMetrics",
+            "type": "Array<DailyMetricsRecord>"
         }    ];
 
     static getAttributeTypeMap() {

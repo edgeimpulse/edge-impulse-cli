@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { UserProjectsSortOrder } from './userProjectsSortOrder';
 
 /**
 * Only fields set in this object will be updated.
@@ -31,6 +32,7 @@ export class UpdateUserRequest {
     * List of user experiments
     */
     'experiments'?: Array<string>;
+    'projectsSortOrder'?: UserProjectsSortOrder;
 
     static discriminator: string | undefined = undefined;
 
@@ -54,6 +56,11 @@ export class UpdateUserRequest {
             "name": "experiments",
             "baseName": "experiments",
             "type": "Array<string>"
+        },
+        {
+            "name": "projectsSortOrder",
+            "baseName": "projectsSortOrder",
+            "type": "UserProjectsSortOrder"
         }    ];
 
     static getAttributeTypeMap() {

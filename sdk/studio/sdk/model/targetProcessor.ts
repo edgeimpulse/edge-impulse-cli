@@ -19,17 +19,21 @@ export class TargetProcessor {
     */
     'part'?: string;
     /**
-    * Performance category of the processor
-    */
-    'performance'?: string;
-    /**
     * Processor type, serving as a broad descriptor for the intended use-case
     */
     'format'?: string;
     /**
-    * Processor architecture, informing about the processor\'s instruction set and core design
+    * Processor family, informing about the processor\'s instruction set and core design
     */
     'architecture'?: string;
+    /**
+    * Processor architecture, informing about the specific processor, if known
+    */
+    'specificArchitecture'?: string;
+    /**
+    * Target accelerator, if any
+    */
+    'accelerator'?: string;
     /**
     * Does the target processor have a floating point unit
     */
@@ -46,11 +50,6 @@ export class TargetProcessor {
             "type": "string"
         },
         {
-            "name": "performance",
-            "baseName": "performance",
-            "type": "string"
-        },
-        {
             "name": "format",
             "baseName": "format",
             "type": "string"
@@ -58,6 +57,16 @@ export class TargetProcessor {
         {
             "name": "architecture",
             "baseName": "architecture",
+            "type": "string"
+        },
+        {
+            "name": "specificArchitecture",
+            "baseName": "specificArchitecture",
+            "type": "string"
+        },
+        {
+            "name": "accelerator",
+            "baseName": "accelerator",
             "type": "string"
         },
         {

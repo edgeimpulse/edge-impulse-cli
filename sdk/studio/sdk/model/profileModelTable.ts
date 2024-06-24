@@ -13,6 +13,9 @@
 import { ProfileModelTableMcu } from './profileModelTableMcu';
 import { ProfileModelTableMpu } from './profileModelTableMpu';
 
+/**
+* Performance for a range of device types. Note that MPU is referred to as CPU in Studio, as MPU and CPU are treated equivalent for performance estimation.
+*/
 export class ProfileModelTable {
     'variant': ProfileModelTableVariantEnum;
     'lowEndMcu': ProfileModelTableMcu;

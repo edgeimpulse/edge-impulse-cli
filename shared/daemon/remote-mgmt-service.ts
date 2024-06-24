@@ -1,21 +1,25 @@
-// tslint:disable: unified-signatures
-// tslint:disable: no-console
+/* eslint-disable no-console */
 
 import TypedEmitter from "typed-emitter";
 import {
-    MgmtInterfaceHelloResponse, MgmtInterfaceHelloV3, MgmtInterfaceSampleFinishedResponse,
+    MgmtInterfaceHelloResponse, MgmtInterfaceHelloV4, MgmtInterfaceSampleFinishedResponse,
     MgmtInterfaceSampleProcessingResponse,
     MgmtInterfaceSampleReadingResponse, MgmtInterfaceSampleRequest,
     MgmtInterfaceSampleRequestSample,
     MgmtInterfaceSampleResponse,
     MgmtInterfaceSampleStartedResponse,
     MgmtInterfaceSampleUploadingResponse,
-    MgmtInterfaceSnapshotFailedResponse,
+    MgmtInterfaceSnapshotStreamFailedResponse,
     MgmtInterfaceSnapshotResponse,
-    MgmtInterfaceSnapshotStartedResponse,
-    MgmtInterfaceSnapshotStoppedResponse,
-    MgmtInterfaceStartSnapshotRequest,
-    MgmtInterfaceStopSnapshotRequest
+    MgmtInterfaceSnapshotStreamStartedResponse,
+    MgmtInterfaceSnapshotStreamStoppedResponse,
+    MgmtInterfaceStartSnapshotStreamRequest,
+    MgmtInterfaceStopSnapshotStreamRequest,
+    MgmtInterfaceInferenceStreamStartedResponse,
+    MgmtInterfaceStartInferenceStreamRequest,
+    MgmtInterfaceInferenceStreamFailedResponse,
+    MgmtInterfaceStopInferenceStreamRequest,
+    MgmtInterfaceInferenceStreamStoppedResponse
 } from "../MgmtInterfaceTypes";
 import { IWebsocket } from "./iwebsocket";
 
@@ -60,26 +64,29 @@ export interface RemoteMgmtConfig {
     };
     api: {
         projects: {
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             getProjectInfo(projectId: number): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
         };
         devices: {
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ success: boolean, error?: string }>;
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ success: boolean, error?: string }>;
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             getDevice(projectId: number, deviceId: string): Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
         };
         whitelabels: {
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
+            // eslint-disable-next-line max-len
             getWhitelabelDomain(whitelabelId: number | null): Promise<{ success: boolean, domain?: string }>;
         }
     };
 }
 
 type RemoteMgmtState = 'snapshot-stream-requested' | 'snapshot-stream-started' |
-                       'snapshot-stream-stopping' | 'sampling' | 'idle';
+                       'snapshot-stream-stopping' | 'sampling' | 'idle' |
+                       'inference-stream-requested' | 'inference-stream-started' |
+                       'inference-stream-stopping';
 
 export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     authenticationFailed: () => void,
@@ -101,6 +108,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 createWebsocket: (url: string) => IWebsocket,
                 checkNameCb: (currName: string) => Promise<string>) {
 
+        // eslint-disable-next-line constructor-super
         super();
 
         this._projectId = projectId;
@@ -141,7 +149,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             console.error(TCP_PREFIX, 'Failed to connect to', this._eiConfig.endpoints.internal.ws, ex);
             if (reconnectOnFailure) {
                 setTimeout(() => {
-                    // tslint:disable-next-line: no-floating-promises
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     this.connect();
                 }, 1000);
             }
@@ -185,9 +193,11 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             let d;
             try {
                 if (typeof data === 'string') {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     d = JSON.parse(data);
                 }
                 else {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     d = JSON.parse(data.toString('utf-8'));
                 }
             }
@@ -195,8 +205,10 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 return;
             }
             // hello messages are handled in sendHello()
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
             if (typeof (<any>d).hello !== 'undefined') return;
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
@@ -335,14 +347,14 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 return;
             }
 
-            if (typeof (<MgmtInterfaceStartSnapshotRequest>d).startSnapshot !== 'undefined') {
-                let req = <MgmtInterfaceStartSnapshotRequest>d;
+            if (typeof (<MgmtInterfaceStartSnapshotStreamRequest>d).startSnapshot !== 'undefined') {
+                let req = <MgmtInterfaceStartSnapshotStreamRequest>d;
                 if (!req.resolution) {
                     req.resolution = 'low';
                 }
 
                 if (!this._device.supportsSnapshotStreaming()) {
-                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                    let res1: MgmtInterfaceSnapshotStreamFailedResponse = {
                         snapshotFailed: true,
                         error: 'Device does not support snapshot streaming'
                     };
@@ -353,7 +365,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 }
 
                 if (this._state === 'sampling') {
-                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                    let res1: MgmtInterfaceSnapshotStreamFailedResponse = {
                         snapshotFailed: true,
                         error: 'Device is sampling, cannot start snapshot stream'
                     };
@@ -372,7 +384,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 // already started? then send the OK message nonetheless
                 if (this._state === 'snapshot-stream-started') {
                     // already in snapshot mode...
-                    let res3: MgmtInterfaceSnapshotStartedResponse = {
+                    let res3: MgmtInterfaceSnapshotStreamStartedResponse = {
                         snapshotStarted: true
                     };
                     if (this._ws) {
@@ -386,7 +398,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                     await this._device.startSnapshotStreaming(req.resolution);
                     this._state = 'snapshot-stream-started';
                     this._snapshotStreamResolution = req.resolution;
-                    let res2: MgmtInterfaceSnapshotStartedResponse = {
+                    let res2: MgmtInterfaceSnapshotStreamStartedResponse = {
                         snapshotStarted: true
                     };
                     if (this._ws) {
@@ -395,7 +407,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 }
                 catch (ex2) {
                     let ex = <Error>ex2;
-                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                    let res1: MgmtInterfaceSnapshotStreamFailedResponse = {
                         snapshotFailed: true,
                         error: ex.message || ex.toString()
                     };
@@ -410,9 +422,9 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 return;
             }
 
-            if (typeof (<MgmtInterfaceStopSnapshotRequest>d).stopSnapshot !== 'undefined') {
+            if (typeof (<MgmtInterfaceStopSnapshotStreamRequest>d).stopSnapshot !== 'undefined') {
                 if (!this._device.supportsSnapshotStreaming()) {
-                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                    let res1: MgmtInterfaceSnapshotStreamFailedResponse = {
                         snapshotFailed: true,
                         error: 'Device does not support snapshot streaming'
                     };
@@ -434,7 +446,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                     this._state = 'snapshot-stream-stopping';
                     await this._device.stopSnapshotStreaming();
                     this._state = 'idle';
-                    let res2: MgmtInterfaceSnapshotStoppedResponse = {
+                    let res2: MgmtInterfaceSnapshotStreamStoppedResponse = {
                         snapshotStopped: true
                     };
                     if (this._ws) {
@@ -443,7 +455,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 }
                 catch (ex2) {
                     let ex = <Error>ex2;
-                    let res1: MgmtInterfaceSnapshotFailedResponse = {
+                    let res1: MgmtInterfaceSnapshotStreamFailedResponse = {
                         snapshotFailed: true,
                         error: ex.message || ex.toString()
                     };
@@ -473,6 +485,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         this._ws.on('error', err => {
             console.error(TCP_PREFIX,
                 `Error connecting to ${this._eiConfig.endpoints.internal.ws}`,
+                // eslint-disable-next-line
                 (<any>err).code || err);
         });
 
@@ -506,15 +519,16 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
         let deviceId = await this._device.getDeviceId();
 
-        let req: MgmtInterfaceHelloV3 = {
+        let req: MgmtInterfaceHelloV4 = {
             hello: {
-                version: 3,
+                version: 4,
                 apiKey: this._devKeys.apiKey,
                 deviceId: deviceId,
                 deviceType: this._device.getDeviceType(),
                 connection: 'daemon',
                 sensors: this._device.getSensors(),
-                supportsSnapshotStreaming: this._device.supportsSnapshotStreaming()
+                supportsSnapshotStreaming: this._device.supportsSnapshotStreaming(),
+                mode: 'ingestion',
             }
         };
         this._ws.once('message', async (helloResponse: Buffer) => {
@@ -603,6 +617,19 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             }
             await this.sleep(200);
             if (this._state === 'snapshot-stream-started' || this._state === 'idle') {
+                return;
+            }
+        }
+    }
+
+    private async waitForInferenceStreamStartedOrIdle() {
+        let max = Date.now() + (5 * 1000);
+        while (1) {
+            if (Date.now() > max) {
+                throw new Error('Timeout when waiting for inference stream to be started or idle');
+            }
+            await this.sleep(200);
+            if (this._state === 'inference-stream-started' || this._state === 'idle') {
                 return;
             }
         }

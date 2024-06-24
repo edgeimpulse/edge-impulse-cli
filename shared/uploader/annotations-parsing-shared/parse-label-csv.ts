@@ -65,7 +65,8 @@ export function parseCsvLabelsFile(csvFile: string[][], format: SupportedLabelFo
                 type: 'object-detection',
                 labels: res.bboxes,
             };
-        } else {
+        }
+        else {
             return {
                 success: true,
                 match: csvFormat.info,
@@ -73,7 +74,8 @@ export function parseCsvLabelsFile(csvFile: string[][], format: SupportedLabelFo
                 labels: res.labels,
             };
         }
-    } catch (ex) {
+    }
+    catch (ex) {
         return {
             success: false,
             reason: `Error parsing type '${csvFormat.info.name}'; ${(<Error>ex).message}`

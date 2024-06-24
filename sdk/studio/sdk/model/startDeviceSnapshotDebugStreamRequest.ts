@@ -10,22 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { EnterpriseTrial } from './enterpriseTrial';
 
-export class AdminGetUserTrialResponseAllOf {
-    'trial': EnterpriseTrial;
+export class StartDeviceSnapshotDebugStreamRequest {
+    'resolution': StartDeviceSnapshotDebugStreamRequestResolutionEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "trial",
-            "baseName": "trial",
-            "type": "EnterpriseTrial"
+            "name": "resolution",
+            "baseName": "resolution",
+            "type": "StartDeviceSnapshotDebugStreamRequestResolutionEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetUserTrialResponseAllOf.attributeTypeMap;
+        return StartDeviceSnapshotDebugStreamRequest.attributeTypeMap;
     }
 }
 
+
+export type StartDeviceSnapshotDebugStreamRequestResolutionEnum = 'high' | 'low';
+export const StartDeviceSnapshotDebugStreamRequestResolutionEnumValues: string[] = ['high', 'low'];

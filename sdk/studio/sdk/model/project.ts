@@ -11,6 +11,7 @@
  */
 
 import { ProjectCollaborator } from './projectCollaborator';
+import { ProjectTierEnum } from './projectTierEnum';
 
 export class Project {
     'id': number;
@@ -230,6 +231,3 @@ export class Project {
 
 export type ProjectLabelingMethodEnum = 'single_label' | 'object_detection';
 export const ProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
-
-export type ProjectTierEnum = 'free' | 'pro' | 'enterprise';
-export const ProjectTierEnumValues: string[] = ['free', 'pro', 'enterprise'];

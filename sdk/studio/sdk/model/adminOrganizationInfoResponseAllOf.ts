@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DailyMetricsRecord } from './dailyMetricsRecord';
 import { EntitlementLimits } from './entitlementLimits';
 
 export class AdminOrganizationInfoResponseAllOf {
@@ -23,6 +24,10 @@ export class AdminOrganizationInfoResponseAllOf {
     * Total storage used by the organization.
     */
     'totalStorage'?: number;
+    /**
+    * Metrics for the last 365 days
+    */
+    'dailyMetrics'?: Array<DailyMetricsRecord>;
 
     static discriminator: string | undefined = undefined;
 
@@ -46,6 +51,11 @@ export class AdminOrganizationInfoResponseAllOf {
             "name": "totalStorage",
             "baseName": "totalStorage",
             "type": "number"
+        },
+        {
+            "name": "dailyMetrics",
+            "baseName": "dailyMetrics",
+            "type": "Array<DailyMetricsRecord>"
         }    ];
 
     static getAttributeTypeMap() {

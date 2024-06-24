@@ -21,6 +21,7 @@ export class Organization {
     'name': string;
     'logo'?: string;
     'headerImg'?: string;
+    'showHeaderImgMask': boolean;
     'users': Array<OrganizationUser>;
     'isDeveloperProfile': boolean;
     /**
@@ -75,6 +76,11 @@ export class Organization {
             "name": "headerImg",
             "baseName": "headerImg",
             "type": "string"
+        },
+        {
+            "name": "showHeaderImgMask",
+            "baseName": "showHeaderImgMask",
+            "type": "boolean"
         },
         {
             "name": "users",

@@ -52,6 +52,10 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     * Number of grid columns in detailed view
     */
     'gridColumnCountDetailed': number;
+    /**
+    * If enabled, does not round sample length to hours/minutes/seconds, but always displays sample length in milliseconds. E.g. instead of 1m 32s, this\'ll say 92,142ms.
+    */
+    'showExactSampleLength': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -105,6 +109,11 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
             "name": "gridColumnCountDetailed",
             "baseName": "gridColumnCountDetailed",
             "type": "number"
+        },
+        {
+            "name": "showExactSampleLength",
+            "baseName": "showExactSampleLength",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

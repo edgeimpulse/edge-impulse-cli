@@ -19,11 +19,11 @@ export class EnterpriseTrial {
     /**
     * ID of the user who created the trial.
     */
-    'userId'?: number;
+    'userId': number;
     /**
     * ID of the organization created for the trial.
     */
-    'organizationId'?: number;
+    'organizationId': number;
     /**
     * Date when the trial was created. Trials start immediately on creation.
     */

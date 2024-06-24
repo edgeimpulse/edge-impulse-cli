@@ -91,7 +91,7 @@ export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCo
     for (let ix = 0; ix < labels.length; ix++) {
         const l = labels[ix];
         if (typeof l.label !== 'string') {
-            throw new Error(`${source} (index ${ix}) "label" is required`);
+            throw new Error(`${source} (index ${ix}) "label" is required and should be string. Type is ${typeof l.label}`);
         }
         if (typeof l.startIndex !== 'number') {
             throw new Error(`${source} (index ${ix}) "startIndex" is required and should be numeric`);

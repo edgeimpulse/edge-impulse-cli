@@ -4,23 +4,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line
-const serialPort = require('serialport');
+import { SerialPort } from 'serialport';
+import { PortInfo as SerialPortListItem } from '@serialport/bindings-interface';
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import { ISerialConnector } from '../shared/daemon/iserialconnector';
 
 // Don't open same port twice
-let serialPorts: { [index: string]: { message: typeof serialPort } } = { };
-
-interface SerialPortListItem {
-    path: string;
-    manufacturer: string;
-    serialNumber: string;
-    pnpId: string;
-    locationId: string;
-    vendorId: string;
-    productId: string;
-}
+let serialPorts: { [index: string]: SerialPort } = { };
 
 export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     connected: () => void;
@@ -29,14 +20,14 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     close: () => void;
 }>) implements ISerialConnector {
     static async list() {
-        return (await serialPort.list()) as SerialPortListItem[];
+        return (await SerialPort.list()) as SerialPortListItem[];
     }
 
     private _connected: boolean;
     private _echoSerial: boolean;
     private _path: string;
     private _baudrate: number;
-    private _serial: typeof serialPort;
+    private _serial: SerialPort | null = null;
     private _dataHandler: (a: Buffer) => void;
 
     constructor(path: string, baudrate: number, echoSerial: boolean = false) {
@@ -72,7 +63,7 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
             this._serial = serialPorts[this._path];
         }
         else {
-            this._serial = new serialPort(this._path, { baudRate: this._baudrate });
+            this._serial = new SerialPort({ path: this._path, baudRate: this._baudrate });
             serialPorts[this._path] = this._serial;
 
             this._serial.on('close', () => {
@@ -91,17 +82,17 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
 
         // otherwise wait for either error or open event
         return new Promise<void>((resolve, reject) => {
-            this._serial.once('error', (ex: any) => {
+            this._serial?.once('error', (ex: any) => {
                 this._serial = null;
                 delete serialPorts[this._path];
                 reject(ex);
             });
-            this._serial.once('open', () => {
+            this._serial?.once('open', () => {
                 this._connected = true;
 
                 this.emit('connected');
 
-                this._serial.on('error', (ex: any) => this.emit('error', ex));
+                this._serial?.on('error', (ex: any) => this.emit('error', ex));
 
                 resolve();
             });
@@ -123,7 +114,7 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     }
 
     async setBaudRate(baudRate: number) {
-        await this._serial.update({
+        await this._serial?.update({
             baudRate: baudRate
         });
         this._baudrate = baudRate;
@@ -134,6 +125,7 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     }
 
     async disconnect() {
+        if (!this._serial) throw new Error('Serial is null');
         this._serial.off('data', this._dataHandler);
         return true;
     }
@@ -141,7 +133,7 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     async getMACAddress() {
         let list = await SerialConnector.list();
         let l = list.find(j => j.path === this._path);
-        return l ? l.serialNumber : null;
+        return l?.serialNumber ?? null;
     }
 
     async hasSerial() {

@@ -12,11 +12,23 @@
 
 
 export class GetAutoLabelerResponseAllOfItems {
+    'sampleId': number;
+    'maskId': number;
     'imageUrl': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "sampleId",
+            "baseName": "sampleId",
+            "type": "number"
+        },
+        {
+            "name": "maskId",
+            "baseName": "maskId",
+            "type": "number"
+        },
         {
             "name": "imageUrl",
             "baseName": "imageUrl",

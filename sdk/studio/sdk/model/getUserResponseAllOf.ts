@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { EnterpriseTrial } from './enterpriseTrial';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
 import { UserExperiment } from './userExperiment';
 import { UserOrganization } from './userOrganization';
+import { UserProjectsSortOrder } from './userProjectsSortOrder';
 
 export class GetUserResponseAllOf {
     'email': string;
@@ -36,10 +38,6 @@ export class GetUserResponseAllOf {
     */
     'ambassador'?: boolean;
     /**
-    * The user account tier.
-    */
-    'tier': GetUserResponseAllOfTierEnum;
-    /**
     * List of white labels the user is a member of
     */
     'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
@@ -48,9 +46,27 @@ export class GetUserResponseAllOf {
     */
     'suspended': boolean;
     /**
-    * List of notifications to show to the user
+    * List of notifications to show to the user.
     */
     'notifications': Array<string>;
+    /**
+    * The date at which the user\'s subscription will be downgraded due to cancellation.
+    */
+    'subscriptionDowngradeDate'?: Date;
+    /**
+    * The date at which the user\'s subscription will be automatically terminated due to failed payments.
+    */
+    'subscriptionTerminationDate'?: Date;
+    /**
+    * Whether the user has configured a password
+    */
+    'passwordConfigured': boolean;
+    'projectsSortOrder': UserProjectsSortOrder;
+    'activeEnterpriseTrial'?: EnterpriseTrial;
+    /**
+    * Whether the current user has access to enterprise features. This is true if the user is an enterprise user, or has an active enterprise trial.
+    */
+    'hasEnterpriseFeaturesAccess': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,11 +107,6 @@ export class GetUserResponseAllOf {
             "type": "boolean"
         },
         {
-            "name": "tier",
-            "baseName": "tier",
-            "type": "GetUserResponseAllOfTierEnum"
-        },
-        {
             "name": "whitelabels",
             "baseName": "whitelabels",
             "type": "Array<GetUserResponseAllOfWhitelabels>"
@@ -109,6 +120,36 @@ export class GetUserResponseAllOf {
             "name": "notifications",
             "baseName": "notifications",
             "type": "Array<string>"
+        },
+        {
+            "name": "subscriptionDowngradeDate",
+            "baseName": "subscriptionDowngradeDate",
+            "type": "Date"
+        },
+        {
+            "name": "subscriptionTerminationDate",
+            "baseName": "subscriptionTerminationDate",
+            "type": "Date"
+        },
+        {
+            "name": "passwordConfigured",
+            "baseName": "passwordConfigured",
+            "type": "boolean"
+        },
+        {
+            "name": "projectsSortOrder",
+            "baseName": "projectsSortOrder",
+            "type": "UserProjectsSortOrder"
+        },
+        {
+            "name": "activeEnterpriseTrial",
+            "baseName": "activeEnterpriseTrial",
+            "type": "EnterpriseTrial"
+        },
+        {
+            "name": "hasEnterpriseFeaturesAccess",
+            "baseName": "hasEnterpriseFeaturesAccess",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -116,6 +157,3 @@ export class GetUserResponseAllOf {
     }
 }
 
-
-export type GetUserResponseAllOfTierEnum = 'free' | 'pro';
-export const GetUserResponseAllOfTierEnumValues: string[] = ['free', 'pro'];

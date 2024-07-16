@@ -15,14 +15,7 @@ import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
 import util from 'util';
 import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
-import {
-    AddOrganizationTransferLearningBlockRequest,
-    AddOrganizationTransformationBlockRequest,
-    ListOrganizationDspBlocksResponse,
-    ObjectDetectionLastLayer, OrganizationInfoResponse, OrganizationTransferLearningOperatesOn,
-    UploadCustomBlockRequestTypeEnum,
-    UploadCustomBlockRequestTypeEnumValues
-} from '../sdk/studio';
+import * as models from  '../sdk/studio/sdk/model/models';
 import { ips } from './get-ips';
 import { spawnHelper } from './spawn-helper';
 import { ImageInputScaling, RequestDetailedFile, UpdateOrganizationTransferLearningBlockRequest,
@@ -35,18 +28,18 @@ export type BlockConfigItem = {
     description: string,
     id?: number,
     organizationId: number,
-    type: UploadCustomBlockRequestTypeEnum,
+    type: models.UploadCustomBlockRequestTypeEnum,
 } & ({
     type: 'transform',
-    operatesOn: 'file' | 'dataitem' | 'standalone' | undefined,
+    operatesOn: 'file' | 'directory' | 'standalone' | undefined,
     transformMountpoints: {
         bucketId: number;
         mountPoint: string;
     }[] | undefined,
 } | {
     type: 'transferLearning',
-    tlOperatesOn?: OrganizationTransferLearningOperatesOn,
-    tlObjectDetectionLastLayer?: ObjectDetectionLastLayer,
+    tlOperatesOn?: models.OrganizationTransferLearningOperatesOn,
+    tlObjectDetectionLastLayer?: models.ObjectDetectionLastLayer,
     tlImageInputScaling?: ImageInputScaling,
     tlIndRequiresGpu?: boolean,
     repositoryUrl?: string;
@@ -157,7 +150,7 @@ let globalCurrentBlockConfig: BlockConfigV1 | undefined;
 
 let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     console.log('Edge Impulse Blocks v' + version);
 
@@ -207,8 +200,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
     }
     catch (ex2) {
         let ex = <Error>ex2;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse',
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {
@@ -337,7 +332,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             ];
 
         // Select the type of block
-        let blockType: UploadCustomBlockRequestTypeEnum;
+        let blockType: models.UploadCustomBlockRequestTypeEnum;
         let blockTypeInqRes = await inquirer.prompt([{
             type: 'list',
             choices: blockList,
@@ -349,14 +344,14 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     ''),
             pageSize: 20
         }]);
-        blockType = <UploadCustomBlockRequestTypeEnum>blockTypeInqRes.type;
+        blockType = <models.UploadCustomBlockRequestTypeEnum>blockTypeInqRes.type;
 
         let blockId: number | undefined;
         let blockName: string | undefined;
         let blockDescription: string | undefined;
-        let blockOperatesOn: 'file' | 'dataitem' | 'standalone' | undefined;
-        let blockTlOperatesOn: OrganizationTransferLearningOperatesOn | undefined;
-        let blockTlObjectDetectionLastLayer: ObjectDetectionLastLayer | undefined;
+        let blockOperatesOn: 'file' | 'directory' | 'standalone' | undefined;
+        let blockTlOperatesOn: models.OrganizationTransferLearningOperatesOn | undefined;
+        let blockTlObjectDetectionLastLayer: models.ObjectDetectionLastLayer | undefined;
         let blockTlImageInputScaling: ImageInputScaling | undefined;
         let blockTlCanRunWhere: 'gpu' | 'cpu-or-gpu' | undefined;
         let transformMountpoints: {
@@ -369,7 +364,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         // Fetch all relevant existing blocks so the user can select an existing block to update
         let existingBlocks: {
             name: string, value: number, block: {
-                description: string, name: string, operatesOn: 'file' | 'dataitem' | 'standalone' | undefined }
+                description: string, name: string, operatesOn: 'file' | 'directory' | 'standalone' | undefined }
             }[] = [];
         if (blockType === 'transform') {
             let blocks = await config.api.organizationBlocks.listOrganizationTransformationBlocks(organizationId);
@@ -425,6 +420,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         // If no blocks exist, force create
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let createOrUpdateInqRes = existingBlocks.length > 0 ? (await inquirer.prompt([{
             type: 'list',
             choices: [
@@ -509,7 +505,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         if (createOrUpdateInqRes === 'create' && blockType === 'transform') {
-            blockOperatesOn = <'file' | 'dataitem' | 'standalone'>(await inquirer.prompt([{
+            blockOperatesOn = <'file' | 'directory' | 'standalone'>(await inquirer.prompt([{
                 type: 'list',
                 name: 'operatesOn',
                 choices: [
@@ -518,11 +514,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         value: 'file'
                     },
                     {
-                        name: 'Data item (--in-directory passed into the block)',
-                        value: 'dataitem'
+                        name: 'Directory (--in-directory passed into the block)',
+                        value: 'directory'
                     },
                     {
-                        name: 'Standalone (runs the container, but no files / data items passed in)',
+                        name: 'Standalone (runs the container, but no files / directories passed in)',
                         value: 'standalone'
                     }
                 ],
@@ -553,7 +549,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         if (createOrUpdateInqRes === 'create' && blockType === 'transferLearning') {
-            blockTlOperatesOn = <OrganizationTransferLearningOperatesOn>(await inquirer.prompt([{
+            blockTlOperatesOn = <models.OrganizationTransferLearningOperatesOn>(await inquirer.prompt([{
                 type: 'list',
                 name: 'operatesOn',
                 choices: [
@@ -597,7 +593,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }
 
             if (blockTlOperatesOn === 'object_detection') {
-                blockTlObjectDetectionLastLayer = <ObjectDetectionLastLayer>
+                blockTlObjectDetectionLastLayer = <models.ObjectDetectionLastLayer>
                     (await inquirer.prompt([{
                         type: 'list',
                         name: 'lastLayer',
@@ -721,7 +717,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             let subdirectories = entry.path.split('/');
                             // Ignore folders
                             if (subdirectories[subdirectories.length - 1] === '') {
-                                // tslint:disable-next-line: no-unsafe-any
+                                // eslint-disable-next-line
                                 entry.autodrain();
                             }
                             else {
@@ -731,7 +727,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                     const newDirectory = subdirectories.join('/');
                                     await fs.promises.mkdir(newDirectory, { recursive: true });
                                 }
-                                // tslint:disable-next-line: no-unsafe-any
+                                // eslint-disable-next-line
                                 entry.pipe(fs.createWriteStream(newFilename));
                             }
                         })
@@ -742,7 +738,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     console.warn('Unable to fetch the repository:', e);
                     console.log('You can fetch the template later from', templateSourcePath);
                 }
-            } else {
+            }
+            else {
                 console.log('You can fetch the template later from', templateSourcePath);
             }
         }
@@ -767,7 +764,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             process.exit(1);
         }
 
-        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+        if (!models.UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
             console.error(`Unable to upload your block - unknown block type: ${currentBlockConfig.type}`);
             process.exit(1);
         }
@@ -779,7 +776,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         const organizationId = currentBlockConfig.organizationId;
 
         // Get the organization name
-        let organizationNameResponse: OrganizationInfoResponse;
+        let organizationNameResponse: models.OrganizationInfoResponse;
         try {
             organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
         }
@@ -796,10 +793,17 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         const studioUrl = await configFactory.getStudioUrl(organizationWhitelabelId);
 
         try {
+            // Some blocks (e.g. custom learn blocks or transform blocks) have JSON parameters.
+            // We should update these AFTER pushing the block.
+            let shouldOverwriteParamsAfterPush = false;
+            let blockParameters: { }[] | undefined;
+
             if (!currentBlockConfig.id)  {
 
                 let blockName = currentBlockConfig.name;
                 let blockDescription = currentBlockConfig.description;
+
+                let repoUrl = await guessRepoUrl();
 
                 // Enter block name
                 if (!blockName || blockName.length < 2) {
@@ -837,7 +841,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
                     }
 
-                    const newBlockObject: AddOrganizationTransformationBlockRequest = {
+                    const newBlockObject: models.AddOrganizationTransformationBlockRequest = {
                         name: blockName,
                         description: blockDescription,
                         dockerContainer: '',
@@ -853,6 +857,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             };
                         }),
                         parameters: parameters,
+                        repositoryUrl: repoUrl,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newBlockObject);
@@ -930,9 +935,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
                     }
 
-                    let repoUrl = await guessRepoUrl();
-
-                    const newBlockObject: AddOrganizationTransferLearningBlockRequest = {
+                    const newBlockObject: models.AddOrganizationTransferLearningBlockRequest = {
                         name: blockName,
                         description: blockDescription,
                         dockerContainer: '',
@@ -969,6 +972,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 }
                 else {
                     console.error(`Unable to upload your block - unknown block type: ` +
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         `${(<any>currentBlockConfig).type}`);
                     process.exit(1);
                 }
@@ -982,38 +986,33 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }
             else {
                 if (currentBlockConfig.type === 'transferLearning' || currentBlockConfig.type === 'transform') {
-                    // Validation is done on the server, so just cast to whatever is needed to bypass
-                    // the TypeScript check
-                    let parameters: { }[] | undefined;
-
                     const paramsFile = Path.join(Path.dirname(dockerfilePath), 'parameters.json');
                     if (await exists(paramsFile)) {
-                        parameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
+                        blockParameters = <{ }[]>JSON.parse(await fs.promises.readFile(paramsFile, 'utf-8'));
                     }
 
-                    if (parameters) {
+                    if (blockParameters) {
                         let currParams: { }[] | undefined;
                         if (currentBlockConfig.type === 'transferLearning') {
-                            currParams = (await config.api.organizationBlocks.listOrganizationTransferLearningBlocks(
-                                organizationId)).transferLearningBlocks
-                                    .find(x => x.id === currentBlockConfig?.id)?.parameters;
+                            currParams = (await config.api.organizationBlocks.getOrganizationTransferLearningBlock(
+                                organizationId, currentBlockConfig.id)).transferLearningBlock.parameters;
                         }
                         else if (currentBlockConfig.type === 'transform') {
-                            currParams = (await config.api.organizationBlocks.listOrganizationTransformationBlocks(
-                                organizationId)).transformationBlocks
-                                    .find(x => x.id === currentBlockConfig?.id)?.parameters;
+                            currParams = (await config.api.organizationBlocks.getOrganizationTransformationBlock(
+                                organizationId, currentBlockConfig.id)).transformationBlock.parameters;
                         }
 
                         let shouldOverwrite = true;
 
-                        if (parameters && currParams && currParams.length !== 0) {
-                            if (!deepCompare(parameters, currParams)) {
+                        if (blockParameters && currParams && currParams.length !== 0) {
+                            if (!deepCompare(blockParameters, currParams)) {
                                 console.log('');
                                 console.log('Your current parameters.json differs from the parameters for this block.');
                                 console.log('Remote block config:');
                                 console.log(JSON.stringify(currParams, null, 4).split('\n').map(x => '    ' + x).join('\n'));
                                 console.log('Local parameters.json:');
-                                console.log(JSON.stringify(parameters, null, 4).split('\n').map(x => '    ' + x).join('\n'));
+                                console.log(JSON.stringify(blockParameters, null, 4)
+                                    .split('\n').map(x => '    ' + x).join('\n'));
                                 console.log('');
                                 shouldOverwrite = <boolean>(await inquirer.prompt([{
                                     type: 'confirm',
@@ -1022,27 +1021,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 }])).overwrite;
                             }
                         }
-
-                        if (shouldOverwrite) {
-                            console.log('');
-                            console.log(`INFO: Found parameters.json file, updating parameters for this block`);
-                            console.log('');
-
-                            if (currentBlockConfig.type === 'transferLearning') {
-                                const newBlockObject: UpdateOrganizationTransferLearningBlockRequest = {
-                                    parameters: parameters,
-                                };
-                                await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
-                                    organizationId, currentBlockConfig.id, newBlockObject);
-                            }
-                            else if (currentBlockConfig.type === 'transform') {
-                                const newBlockObject: UpdateOrganizationTransformationBlockRequest = {
-                                    parameters: parameters,
-                                };
-                                await config.api.organizationBlocks.updateOrganizationTransformationBlock(
-                                    organizationId, currentBlockConfig.id, newBlockObject);
-                            }
-                        }
+                        shouldOverwriteParamsAfterPush = shouldOverwrite;
                     }
                 }
             }
@@ -1069,7 +1048,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }
             const compressCurrentDirectory = new Promise((resolve, reject) => {
                 tar.c({ gzip: true, follow: true, filter: (path) => {
-                    if (ignore.ignores(path)) {
+                    const relativePath = Path.relative('.', path);
+                    if (relativePath && ignore.ignores(relativePath)) {
                         return false;
                     }
 
@@ -1144,6 +1124,28 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${currentBlockConfig.name}' OK`);
             console.log('');
 
+            // Now update any block parameters
+            if (shouldOverwriteParamsAfterPush) {
+                console.log('');
+                console.log(`INFO: Found parameters.json file, updating parameters for this block`);
+                console.log('');
+
+                if (currentBlockConfig.type === 'transferLearning') {
+                    const newBlockObject: UpdateOrganizationTransferLearningBlockRequest = {
+                        parameters: blockParameters,
+                    };
+                    await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
+                        organizationId, currentBlockConfig.id, newBlockObject);
+                }
+                else if (currentBlockConfig.type === 'transform') {
+                    const newBlockObject: UpdateOrganizationTransformationBlockRequest = {
+                        parameters: blockParameters,
+                    };
+                    await config.api.organizationBlocks.updateOrganizationTransformationBlock(
+                        organizationId, currentBlockConfig.id, newBlockObject);
+                }
+            }
+
             if (currentBlockConfig.type === 'transform') {
                 const organizationStudioPath = studioUrl + '/organization/' + organizationId + '/data';
                 console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
@@ -1161,10 +1163,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 let spinIv = spinner();
 
                 while (1) {
-                    let dspStatusRes: ListOrganizationDspBlocksResponse;
+                    let dspStatusRes: models.GetOrganizationDspBlockResponse;
                     try {
-                        dspStatusRes = await config.api.organizationBlocks.listOrganizationDspBlocks(
-                            currentBlockConfig.organizationId);
+                        dspStatusRes = await config.api.organizationBlocks.getOrganizationDspBlock(
+                            currentBlockConfig.organizationId, currentBlockConfig.id);
                     }
                     catch (ex2) {
                         let ex = <Error>ex2;
@@ -1174,12 +1176,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         return process.exit(1);
                     }
 
-                    let block = dspStatusRes.dspBlocks.find(d => d.id === currentBlockConfig?.id);
-                    if (!block) {
-                        process.stdout.write('\n');
-                        console.log('Failed to find DSP block with ID ' + currentBlockConfig.id);
-                        process.exit(1);
-                    }
+                    let block = dspStatusRes.dspBlock;
                     if (block.isConnected) {
                         break;
                     }
@@ -1223,7 +1220,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             process.exit(1);
         }
 
-        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+        if (!models.UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
             console.error(`Unable to run your block - unknown block type: ${currentBlockConfig.type}`);
             process.exit(1);
         }
@@ -1235,7 +1232,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         const organizationId = currentBlockConfig.organizationId;
 
         // Get the organization name
-        let organizationNameResponse: OrganizationInfoResponse;
+        let organizationNameResponse: models.OrganizationInfoResponse;
         try {
             organizationNameResponse = await config.api.organizations.getOrganizationInfo(organizationId);
         }
@@ -1285,7 +1282,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             process.exit(1);
         }
 
-        if (!UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
+        if (!models.UploadCustomBlockRequestTypeEnumValues.includes(currentBlockConfig.type)) {
             console.error(`Unable to parse your block - unknown block type: ${currentBlockConfig.type}`);
             process.exit(1);
         }
@@ -1354,6 +1351,7 @@ async function checkConfigFile(host: string): Promise<boolean> {
         let config = <BlockConfigV1>JSON.parse(file);
 
         // old format, no hostnames here?
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (typeof config.version === 'undefined' && typeof (<any>config).name === 'string') {
             let c: BlockConfigV1 = {
                 version: 1,
@@ -1365,6 +1363,14 @@ async function checkConfigFile(host: string): Promise<boolean> {
 
         if (config.version !== 1) {
             throw new Error('Invalid version, expected "1" but received "' + config.version + '"');
+        }
+
+        // Migrate transformation blocks to refer to 'directory' rather than 'dataitem' for operatesOn
+        for (const hostConfig of Object.values(config.config)) {
+            if (hostConfig.type !== 'transform') continue;
+            if (<string>hostConfig.operatesOn === 'dataitem') {
+                hostConfig.operatesOn = 'directory';
+            }
         }
 
         // Store the config
@@ -1424,7 +1430,7 @@ function spinner() {
     }, 250);
 }
 
-function blockTypeToString(blockType: UploadCustomBlockRequestTypeEnum): string {
+function blockTypeToString(blockType: models.UploadCustomBlockRequestTypeEnum): string {
     if (blockType === 'transferLearning') {
         return 'machine learning';
     }
@@ -1486,6 +1492,7 @@ function deepCompare(obj1: { [k: string]: any } | any, obj2: { [k: string]: any 
     const orderObject = (unordered: { [k: string]: any }) => {
         const ordered = Object.keys(unordered).sort().reduce(
             (curr: { [k: string]: any }, key) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 curr[key] = unordered[key];
                 return curr;
             },
@@ -1505,12 +1512,14 @@ function deepCompare(obj1: { [k: string]: any } | any, obj2: { [k: string]: any 
         return ordered;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let obj1Ordered = obj1 instanceof Object ?
-        // tslint:disable-next-line: no-unsafe-any
+        // eslint-disable-next-line
         orderObject(obj1) :
         obj1;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let obj2Ordered = obj1 instanceof Object ?
-        // tslint:disable-next-line: no-unsafe-any
+        // eslint-disable-next-line
         orderObject(obj2) :
         obj2;
 

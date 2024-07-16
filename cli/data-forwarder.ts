@@ -6,7 +6,7 @@ import cbor from 'cbor';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import {
-    MgmtInterfaceHelloV3, MgmtInterfaceHelloResponse,
+    MgmtInterfaceHelloV4, MgmtInterfaceHelloResponse,
     MgmtInterfaceSampleRequest, MgmtInterfaceSampleResponse,
     MgmtInterfaceSampleFinishedResponse,
     MgmtInterfaceSampleUploadingResponse,
@@ -49,7 +49,7 @@ const cliOptions = {
 };
 
 let configFactory: Config;
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -126,7 +126,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
         try {
             if (!ws) {
-                // tslint:disable-next-line:no-floating-promises
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 ws_connect();
             }
             else {
@@ -179,9 +179,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             dataForwarderConfig.samplingFreq = frequencyArgv;
         }
 
-        let req: MgmtInterfaceHelloV3 = {
+        let req: MgmtInterfaceHelloV4 = {
             hello: {
-                version: 3,
+                version: 4,
                 apiKey: dataForwarderConfig.apiKey,
                 deviceId: macAddress,
                 deviceType: 'DATA_FORWARDER',
@@ -192,7 +192,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     maxSampleLengthS: 5 * 60 * 1000,
                     frequencies: [ dataForwarderConfig.samplingFreq ]
                 }],
-                supportsSnapshotStreaming: false
+                supportsSnapshotStreaming: false,
+                mode: 'ingestion',
             }
         };
         ws.once('message', async (helloResponse: Buffer) => {
@@ -263,7 +264,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
     console.log(SERIAL_PREFIX, 'Connecting to', serialPath);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 
     function attachWsHandlers() {
@@ -272,11 +273,14 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         }
 
         ws.on('message', async (data: Buffer) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             let d = cbor.decode(data);
 
             // hello messages are handled in sendHello()
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).hello !== 'undefined') return;
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
@@ -457,6 +461,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         });
 
         ws.on('error', err => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             console.error(TCP_PREFIX, `Error connecting to ${eiConfig.endpoints.internal.ws}`, (<any>err).code || err);
         });
 

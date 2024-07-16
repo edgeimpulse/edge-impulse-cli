@@ -10,10 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { BoundingBoxWithScore } from './boundingBoxWithScore';
 
 export class AnomalyResult {
     /**
-    * Raw anomaly scores. For visual anomaly detection, the scores corresponds to each grid cell in the image\'s spatial matrix.
+    * For visual anomaly detection. An array of bounding box objects, (x, y, width, height, score, label), one per detection in the image. Filtered by the minimum confidence rating of the learn block.
+    */
+    'boxes'?: Array<BoundingBoxWithScore>;
+    /**
+    * 2D array of shape (n, n) with raw anomaly scores for visual anomaly detection, where n can be calculated as ((1/8 of image input size)/2 - 1). The scores corresponds to each grid cell in the image\'s spatial matrix.
     */
     'scores'?: Array<Array<number>>;
     /**
@@ -28,6 +33,11 @@ export class AnomalyResult {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "boxes",
+            "baseName": "boxes",
+            "type": "Array<BoundingBoxWithScore>"
+        },
         {
             "name": "scores",
             "baseName": "scores",

@@ -11,6 +11,7 @@
  */
 
 import { AdminApiUserAllOf } from './adminApiUserAllOf';
+import { DailyMetricsRecord } from './dailyMetricsRecord';
 import { EnterpriseTrial } from './enterpriseTrial';
 import { Permission } from './permission';
 import { Project } from './project';
@@ -18,6 +19,7 @@ import { StaffInfo } from './staffInfo';
 import { User } from './user';
 import { UserExperiment } from './userExperiment';
 import { UserOrganization } from './userOrganization';
+import { UserTierEnum } from './userTierEnum';
 
 export class AdminApiUser {
     'id': number;
@@ -38,6 +40,19 @@ export class AdminApiUser {
     'companyName'?: string;
     'activated': boolean;
     /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier': UserTierEnum;
+    /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
     'organizations': Array<UserOrganization>;
@@ -55,10 +70,6 @@ export class AdminApiUser {
     */
     'ambassador'?: boolean;
     /**
-    * The user account tier.
-    */
-    'tier': AdminApiUserTierEnum;
-    /**
     * Whether the user is suspended.
     */
     'suspended': boolean;
@@ -66,6 +77,10 @@ export class AdminApiUser {
     * Current or past enterprise trials.
     */
     'trials': Array<EnterpriseTrial>;
+    /**
+    * Metrics for the last 365 days
+    */
+    'dailyMetrics'?: Array<DailyMetricsRecord>;
 
     static discriminator: string | undefined = undefined;
 
@@ -141,6 +156,26 @@ export class AdminApiUser {
             "type": "boolean"
         },
         {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
+            "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
+        },
+        {
             "name": "organizations",
             "baseName": "organizations",
             "type": "Array<UserOrganization>"
@@ -166,11 +201,6 @@ export class AdminApiUser {
             "type": "boolean"
         },
         {
-            "name": "tier",
-            "baseName": "tier",
-            "type": "AdminApiUserTierEnum"
-        },
-        {
             "name": "suspended",
             "baseName": "suspended",
             "type": "boolean"
@@ -179,6 +209,11 @@ export class AdminApiUser {
             "name": "trials",
             "baseName": "trials",
             "type": "Array<EnterpriseTrial>"
+        },
+        {
+            "name": "dailyMetrics",
+            "baseName": "dailyMetrics",
+            "type": "Array<DailyMetricsRecord>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -186,6 +221,3 @@ export class AdminApiUser {
     }
 }
 
-
-export type AdminApiUserTierEnum = 'free' | 'pro';
-export const AdminApiUserTierEnumValues: string[] = ['free', 'pro'];

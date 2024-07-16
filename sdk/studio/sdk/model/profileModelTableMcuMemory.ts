@@ -15,6 +15,7 @@ import { ProfileModelInfoMemoryEon } from './profileModelInfoMemoryEon';
 export class ProfileModelTableMcuMemory {
     'tflite'?: ProfileModelInfoMemoryEon;
     'eon'?: ProfileModelInfoMemoryEon;
+    'eonRamOptimized'?: ProfileModelInfoMemoryEon;
 
     static discriminator: string | undefined = undefined;
 
@@ -27,6 +28,11 @@ export class ProfileModelTableMcuMemory {
         {
             "name": "eon",
             "baseName": "eon",
+            "type": "ProfileModelInfoMemoryEon"
+        },
+        {
+            "name": "eonRamOptimized",
+            "baseName": "eonRamOptimized",
             "type": "ProfileModelInfoMemoryEon"
         }    ];
 

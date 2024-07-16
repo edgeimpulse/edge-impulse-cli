@@ -25,6 +25,10 @@ export class DSPGroupItem {
     'shouldShow': boolean;
     'showIf'?: DSPGroupItemShowIf;
     'invalidText'?: string;
+    /**
+    * Interface section to render parameter in.
+    */
+    'section'?: DSPGroupItemSectionEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -83,6 +87,11 @@ export class DSPGroupItem {
             "name": "invalidText",
             "baseName": "invalidText",
             "type": "string"
+        },
+        {
+            "name": "section",
+            "baseName": "section",
+            "type": "DSPGroupItemSectionEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -90,3 +99,6 @@ export class DSPGroupItem {
     }
 }
 
+
+export type DSPGroupItemSectionEnum = 'advanced' | 'augmentation';
+export const DSPGroupItemSectionEnumValues: string[] = ['advanced', 'augmentation'];

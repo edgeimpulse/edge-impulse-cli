@@ -10,9 +10,9 @@
  * Do not edit the class manually.
  */
 
-import { DspTrainedFeaturesResponseAllOfData } from './dspTrainedFeaturesResponseAllOfData';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetDataExplorerFeaturesResponseAllOf } from './getDataExplorerFeaturesResponseAllOf';
+import { GetDataExplorerFeaturesResponseAllOfData } from './getDataExplorerFeaturesResponseAllOfData';
 import { ImpulseInputBlock } from './impulseInputBlock';
 
 export class GetDataExplorerFeaturesResponse {
@@ -25,7 +25,7 @@ export class GetDataExplorerFeaturesResponse {
     */
     'error'?: string;
     'hasFeatures': boolean;
-    'data': Array<DspTrainedFeaturesResponseAllOfData>;
+    'data': Array<GetDataExplorerFeaturesResponseAllOfData>;
     'inputBlock'?: ImpulseInputBlock;
 
     static discriminator: string | undefined = undefined;
@@ -49,7 +49,7 @@ export class GetDataExplorerFeaturesResponse {
         {
             "name": "data",
             "baseName": "data",
-            "type": "Array<DspTrainedFeaturesResponseAllOfData>"
+            "type": "Array<GetDataExplorerFeaturesResponseAllOfData>"
         },
         {
             "name": "inputBlock",

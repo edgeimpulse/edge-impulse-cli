@@ -59,5 +59,5 @@ export class ListApiKeysResponseAllOfApiKeys {
 }
 
 
-export type ListApiKeysResponseAllOfApiKeysRoleEnum = 'admin' | 'readonly' | 'ingestiononly';
-export const ListApiKeysResponseAllOfApiKeysRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly'];
+export type ListApiKeysResponseAllOfApiKeysRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'wladmin';
+export const ListApiKeysResponseAllOfApiKeysRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'wladmin'];

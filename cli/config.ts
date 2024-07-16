@@ -5,12 +5,15 @@ import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
 import { EdgeImpulseApi } from '../sdk/studio/api';
+import { GetJWTResponse } from '../sdk/studio';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 
 export interface RunnerConfig {
     projectId: number | undefined;
     blockId: number | undefined;
+    storageIndex: number | undefined;
+    storagePath: string;
 }
 
 export interface SerialConfig {
@@ -93,6 +96,14 @@ export class Config {
         if (await Config.exists(this._filename)) {
             await util.promisify(fs.unlink)(this._filename);
         }
+    }
+
+    async removeProjectReferences() {
+        let config = await this.load();
+        delete config.apiKey;
+        delete config.linuxProjectId;
+        delete config.uploaderProjectId;
+        await this.store(config);
     }
 
     async getUploaderProjectId() {
@@ -288,16 +299,49 @@ export class Config {
                     message: `What is your password?`
                 });
 
-                let res = (await this._api.login.login({
-                    username: username.username,
-                    password: password.password,
-                }));
+                let res: GetJWTResponse;
+                try {
+                    res = (await this._api.login.login({
+                        username: username.username,
+                        password: password.password,
+                    }));
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    if ((ex.message || ex.toString()).startsWith('ERR_TOTP_TOKEN IS REQUIRED')) {
 
-                if (!res.token) {
+                        // For TOTP allow the user to enter another one if it's invalid (so run in a loop)
+                        while (1) {
+                            try {
+                                const totpToken = <{ totpToken: string }>await inquirer.prompt({
+                                    type: 'input',
+                                    name: 'totpToken',
+                                    message: `Enter a code from your authenticator app`
+                                });
+
+                                res = (await this._api.login.login({
+                                    username: username.username,
+                                    password: password.password,
+                                    totpToken: totpToken.totpToken,
+                                }));
+                                break;
+                            }
+                            catch (ex3) {
+                                let totpEx = <Error>ex3;
+                                console.warn('Failed to log in:', totpEx.message || totpEx.toString());
+                            }
+                        }
+                    }
+                    else {
+                        throw ex;
+                    }
+                }
+
+                if (!res!.token) {
                     throw new Error('Authentication did not return a token');
                 }
 
-                config.jwtToken = res.token;
+                config.jwtToken = res!.token;
             }
 
             await this._api.authenticate({
@@ -405,6 +449,28 @@ export class Config {
         return config.runner;
     }
 
+    async storeStoragePath(path: string) {
+        let config = await this.load();
+        config.runner.storagePath = path;
+        await this.store(config);
+    }
+
+    async getStoragePath(): Promise<string> {
+        let config = await this.load();
+        return config.runner.storagePath || this.getDefaultStoragePath();
+    }
+
+    async getStorageIndex(): Promise<number> {
+        let config = await this.load();
+        return config.runner.storageIndex || 0;
+    }
+
+    async storeStorageIndex(index: number) {
+        let config = await this.load();
+        config.runner.storageIndex = index;
+        await this.store(config);
+    }
+
     async storeProjectId(projectId: number) {
         let config = await this.load();
         config.runner.projectId = projectId;
@@ -428,6 +494,18 @@ export class Config {
         return this._endpoints?.internal.api.replace('/v1', '');
     }
 
+    getDefaultModelsPath() {
+        return Path.join(this.getDefaultRunnerPath(), 'models');
+    }
+
+    getDefaultStoragePath() {
+        return Path.join(this.getDefaultRunnerPath(), 'storage');
+    }
+
+    private getDefaultRunnerPath() {
+        return Path.join(os.homedir(), '.ei-linux-runner');
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -443,7 +521,9 @@ export class Config {
                 linuxProjectId: undefined,
                 runner: {
                     projectId: undefined,
-                    blockId: undefined
+                    blockId: undefined,
+                    storageIndex: undefined,
+                    storagePath: this.getDefaultStoragePath()
                 }
             };
         }

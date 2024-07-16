@@ -10,10 +10,16 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationCreateProjectOutputDatasetPathRule } from './organizationCreateProjectOutputDatasetPathRule';
+import { OrganizationCreateProjectPathFilter } from './organizationCreateProjectPathFilter';
 
 export class OrganizationPipelineStep {
     'name': string;
     'filter'?: string;
+    /**
+    * Set of paths to apply the transformation to, used for creating transformation jobs on default datasets. This option is experimental and may change in the future.
+    */
+    'pathFilters'?: Array<OrganizationCreateProjectPathFilter>;
     'uploadType'?: OrganizationPipelineStepUploadTypeEnum;
     'projectId'?: number;
     'newProjectName'?: string;
@@ -25,6 +31,11 @@ export class OrganizationPipelineStep {
     'outputDatasetName'?: string;
     'outputDatasetBucketId'?: number;
     'outputDatasetBucketPath'?: string;
+    /**
+    * Path within the selected dataset to upload transformed files into. Used only when uploading into a default (non-clinical) dataset.
+    */
+    'outputPathInDataset'?: string;
+    'outputDatasetPathRule'?: OrganizationCreateProjectOutputDatasetPathRule;
     'label'?: string;
     'transformationParallel'?: number;
     'extraCliArguments'?: string;
@@ -42,6 +53,11 @@ export class OrganizationPipelineStep {
             "name": "filter",
             "baseName": "filter",
             "type": "string"
+        },
+        {
+            "name": "pathFilters",
+            "baseName": "pathFilters",
+            "type": "Array<OrganizationCreateProjectPathFilter>"
         },
         {
             "name": "uploadType",
@@ -97,6 +113,16 @@ export class OrganizationPipelineStep {
             "name": "outputDatasetBucketPath",
             "baseName": "outputDatasetBucketPath",
             "type": "string"
+        },
+        {
+            "name": "outputPathInDataset",
+            "baseName": "outputPathInDataset",
+            "type": "string"
+        },
+        {
+            "name": "outputDatasetPathRule",
+            "baseName": "outputDatasetPathRule",
+            "type": "OrganizationCreateProjectOutputDatasetPathRule"
         },
         {
             "name": "label",

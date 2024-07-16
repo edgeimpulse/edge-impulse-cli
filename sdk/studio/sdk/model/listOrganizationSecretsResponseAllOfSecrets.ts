@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 
 export class ListOrganizationSecretsResponseAllOfSecrets {
     'id': number;
     'name': string;
     'description': string;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +41,11 @@ export class ListOrganizationSecretsResponseAllOfSecrets {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
         }    ];
 
     static getAttributeTypeMap() {

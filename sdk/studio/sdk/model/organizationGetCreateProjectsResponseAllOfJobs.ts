@@ -10,7 +10,8 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationCreateProjectCreatedByUser } from './organizationCreateProjectCreatedByUser';
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
+import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationGetCreateProjectsResponseAllOfJobs {
@@ -27,7 +28,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     'transformationBlockId'?: number;
     'builtinTransformationBlock'?: object;
     'transformationBlockName'?: string;
-    'transformationOperatesOn'?: OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum;
+    'transformationOperatesOn'?: TransformationJobOperatesOnEnum;
     'created': Date;
     'outputDatasetName'?: string;
     'outputDatasetBucketId'?: number;
@@ -44,7 +45,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
     * Total amount of compute used (friendly string)
     */
     'totalTimeSpentString': string;
-    'createdByUser'?: OrganizationCreateProjectCreatedByUser;
+    'createdByUser'?: CreatedUpdatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -117,7 +118,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
         {
             "name": "transformationOperatesOn",
             "baseName": "transformationOperatesOn",
-            "type": "OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum"
+            "type": "TransformationJobOperatesOnEnum"
         },
         {
             "name": "created",
@@ -172,7 +173,7 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
         {
             "name": "createdByUser",
             "baseName": "createdByUser",
-            "type": "OrganizationCreateProjectCreatedByUser"
+            "type": "CreatedUpdatedByUser"
         }    ];
 
     static getAttributeTypeMap() {
@@ -183,6 +184,3 @@ export class OrganizationGetCreateProjectsResponseAllOfJobs {
 
 export type OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnum = 'dataset' | 'project';
 export const OrganizationGetCreateProjectsResponseAllOfJobsUploadTypeEnumValues: string[] = ['dataset', 'project'];
-
-export type OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
-export const OrganizationGetCreateProjectsResponseAllOfJobsTransformationOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

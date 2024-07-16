@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { ProjectVisibility } from './projectVisibility';
 
 export class AdminCreateProjectRequest {
     /**
     * The name of the project.
     */
     'projectName': string;
+    'projectVisibility'?: ProjectVisibility;
     /**
     * Unique identifier of the owner of the new project. Either this parameter or ownerEmail must be set.
     */
@@ -32,6 +34,11 @@ export class AdminCreateProjectRequest {
             "name": "projectName",
             "baseName": "projectName",
             "type": "string"
+        },
+        {
+            "name": "projectVisibility",
+            "baseName": "projectVisibility",
+            "type": "ProjectVisibility"
         },
         {
             "name": "ownerId",

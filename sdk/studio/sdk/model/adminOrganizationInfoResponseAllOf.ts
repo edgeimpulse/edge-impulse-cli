@@ -10,23 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { DailyMetricsRecord } from './dailyMetricsRecord';
 import { EntitlementLimits } from './entitlementLimits';
 
 export class AdminOrganizationInfoResponseAllOf {
     'billable'?: boolean;
     'entitlementLimits'?: EntitlementLimits;
-    /**
-    * CPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
-    */
-    'cpuComputeTimeCurrentContract'?: number;
-    /**
-    * GPU compute time in seconds of all jobs in the organization in the current contract (including organizational project jobs).
-    */
-    'gpuComputeTimeCurrentContract'?: number;
-    /**
-    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over a 12 month period, calculated as 1 x CPU + 3 x GPU minutes.
-    */
-    'totalComputeTimeCurrentContract'?: number;
     /**
     * The date from which the compute time for the running contract is calculated.
     */
@@ -35,6 +24,10 @@ export class AdminOrganizationInfoResponseAllOf {
     * Total storage used by the organization.
     */
     'totalStorage'?: number;
+    /**
+    * Metrics for the last 365 days
+    */
+    'dailyMetrics'?: Array<DailyMetricsRecord>;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,21 +43,6 @@ export class AdminOrganizationInfoResponseAllOf {
             "type": "EntitlementLimits"
         },
         {
-            "name": "cpuComputeTimeCurrentContract",
-            "baseName": "cpuComputeTimeCurrentContract",
-            "type": "number"
-        },
-        {
-            "name": "gpuComputeTimeCurrentContract",
-            "baseName": "gpuComputeTimeCurrentContract",
-            "type": "number"
-        },
-        {
-            "name": "totalComputeTimeCurrentContract",
-            "baseName": "totalComputeTimeCurrentContract",
-            "type": "number"
-        },
-        {
             "name": "computeTimeCurrentContractSince",
             "baseName": "computeTimeCurrentContractSince",
             "type": "Date"
@@ -73,6 +51,11 @@ export class AdminOrganizationInfoResponseAllOf {
             "name": "totalStorage",
             "baseName": "totalStorage",
             "type": "number"
+        },
+        {
+            "name": "dailyMetrics",
+            "baseName": "dailyMetrics",
+            "type": "Array<DailyMetricsRecord>"
         }    ];
 
     static getAttributeTypeMap() {

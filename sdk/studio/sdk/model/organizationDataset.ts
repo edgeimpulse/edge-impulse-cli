@@ -24,6 +24,10 @@ export class OrganizationDataset {
     'category'?: string;
     'bucket'?: OrganizationDatasetBucket;
     'type': OrganizationDatasetTypeEnum;
+    /**
+    * Location of the dataset within the bucket
+    */
+    'bucketPath'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -82,6 +86,11 @@ export class OrganizationDataset {
             "name": "type",
             "baseName": "type",
             "type": "OrganizationDatasetTypeEnum"
+        },
+        {
+            "name": "bucketPath",
+            "baseName": "bucketPath",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

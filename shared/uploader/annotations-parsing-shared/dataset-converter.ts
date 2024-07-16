@@ -59,7 +59,8 @@ export abstract class DatasetConverterHelper {
         let annotationsKey: 'training' | 'testing' | undefined;
         if (directoryCategory) {
             annotationsKey = directoryCategory;
-        } else if (fileCategory) {
+        }
+        else if (fileCategory) {
             annotationsKey = fileCategory;
         }
 
@@ -67,7 +68,8 @@ export abstract class DatasetConverterHelper {
             // Store these annotations against a global scope for a particular category
             this._categoryAnnotations[annotationsKey] =
                 this.mergeAnnotations(this._categoryAnnotations[annotationsKey], annotations);
-        } else {
+        }
+        else {
             // Store these annotations against the current directory
             this._directoryAnnotations[dirPath] =
                 this.mergeAnnotations(this._directoryAnnotations[dirPath], annotations);
@@ -116,7 +118,8 @@ export abstract class DatasetConverterHelper {
                 if (newAnnotation) {
                     annotation = newAnnotation;
                 }
-            } else if (this._datasetFormat.type === 'object-detection') {
+            }
+            else if (this._datasetFormat.type === 'object-detection') {
                 let newAnnotations: ExportInputBoundingBox[] = [];
                 for (const box of annotation as ExportInputBoundingBox[]) {
                     const newBoxLabel = this._labelmap[box.label];

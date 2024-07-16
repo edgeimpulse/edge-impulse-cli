@@ -10,9 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class UpdateOrganizationTransferLearningBlockRequest {
     'name'?: string;
@@ -29,10 +31,7 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     * If `isPublic` is true, the list of devices (from latencyDevices) for which this model can be shown.
     */
     'isPublicForDevices'?: Array<string>;
-    /**
-    * Whether this block is publicly available to Edge Impulse only to enterprise users
-    */
-    'isPublicEnterpriseOnly'?: boolean;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
     * URL to the source code of this custom learn block.
     */
@@ -46,6 +45,7 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     * If set, requires this block to be scheduled on GPU.
     */
     'indRequiresGpu'?: boolean;
+    'displayCategory'?: BlockDisplayCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -91,9 +91,9 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "type": "Array<string>"
         },
         {
-            "name": "isPublicEnterpriseOnly",
-            "baseName": "isPublicEnterpriseOnly",
-            "type": "boolean"
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
         },
         {
             "name": "repositoryUrl",
@@ -114,6 +114,11 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "name": "indRequiresGpu",
             "baseName": "indRequiresGpu",
             "type": "boolean"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
         }    ];
 
     static getAttributeTypeMap() {

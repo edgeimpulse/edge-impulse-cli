@@ -48,6 +48,10 @@ export class CreateEnterpriseTrialUserRequestAllOf {
     * Query parameters to be appended to the redirect URL returned as result of creating the trial user.
     */
     'redirectUrlQueryParams'?: string;
+    /**
+    * List of UTM parameters.
+    */
+    'utmParams'?: Array<any>;
 
     static discriminator: string | undefined = undefined;
 
@@ -96,6 +100,11 @@ export class CreateEnterpriseTrialUserRequestAllOf {
             "name": "redirectUrlQueryParams",
             "baseName": "redirectUrlQueryParams",
             "type": "string"
+        },
+        {
+            "name": "utmParams",
+            "baseName": "utmParams",
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

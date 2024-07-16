@@ -23,6 +23,7 @@ export class AdminApiOrganization {
     'name': string;
     'logo'?: string;
     'headerImg'?: string;
+    'showHeaderImgMask': boolean;
     'users': Array<OrganizationUser>;
     'isDeveloperProfile': boolean;
     /**
@@ -53,6 +54,10 @@ export class AdminApiOrganization {
     * Date when the current contract started, if any.
     */
     'contractStartDate'?: Date | null;
+    /**
+    * The date in which the organization was deleted. If the organization is not deleted, this field is not set.
+    */
+    'deletedDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +81,11 @@ export class AdminApiOrganization {
             "name": "headerImg",
             "baseName": "headerImg",
             "type": "string"
+        },
+        {
+            "name": "showHeaderImgMask",
+            "baseName": "showHeaderImgMask",
+            "type": "boolean"
         },
         {
             "name": "users",
@@ -120,6 +130,11 @@ export class AdminApiOrganization {
         {
             "name": "contractStartDate",
             "baseName": "contractStartDate",
+            "type": "Date"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
             "type": "Date"
         }    ];
 

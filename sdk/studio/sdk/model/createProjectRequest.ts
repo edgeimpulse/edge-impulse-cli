@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { ProjectVisibility } from './projectVisibility';
 
 export class CreateProjectRequest {
     /**
     * The name of the first project.
     */
     'projectName': string;
+    'projectVisibility'?: ProjectVisibility;
     /**
     * The ID of the version that was used to restore this project.
     */
@@ -28,6 +30,11 @@ export class CreateProjectRequest {
             "name": "projectName",
             "baseName": "projectName",
             "type": "string"
+        },
+        {
+            "name": "projectVisibility",
+            "baseName": "projectVisibility",
+            "type": "ProjectVisibility"
         },
         {
             "name": "originalProjectVersionId",

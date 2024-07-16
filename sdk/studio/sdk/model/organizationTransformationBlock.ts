@@ -10,8 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { DSPGroupItem } from './dSPGroupItem';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
+import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 
 export class OrganizationTransformationBlock {
     'id': number;
@@ -19,6 +21,9 @@ export class OrganizationTransformationBlock {
     'dockerContainer': string;
     'dockerContainerManagedByEdgeImpulse': boolean;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUpdated'?: Date;
+    'lastUpdatedByUser'?: CreatedUpdatedByUser;
     'userId'?: number;
     'userName'?: string;
     'description': string;
@@ -32,7 +37,7 @@ export class OrganizationTransformationBlock {
     'limitsCpu'?: number;
     'limitsMemory'?: number;
     'additionalMountPoints': Array<TransformationBlockAdditionalMountPoint>;
-    'operatesOn': OrganizationTransformationBlockOperatesOnEnum;
+    'operatesOn': TransformationJobOperatesOnEnum;
     'allowExtraCliArguments': boolean;
     /**
     * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
@@ -46,6 +51,23 @@ export class OrganizationTransformationBlock {
     * 15m for 15 minutes, 2h for 2 hours, 1d for 1 day. If not set, the default is 8 hours.
     */
     'maxRunningTimeStr'?: string;
+    'sourceCodeAvailable': boolean;
+    /**
+    * URL to the source code of this custom learn block.
+    */
+    'repositoryUrl'?: string;
+    /**
+    * Whether this block is publicly available to Edge Impulse users (if false, then only for members of the owning organization)
+    */
+    'isPublic': boolean;
+    /**
+    * Whether to show this block in \'Data sources\'. Only applies for standalone blocks.
+    */
+    'showInDataSources': boolean;
+    /**
+    * Whether to show this block in \'Create transformation job\'. Only applies for standalone blocks.
+    */
+    'showInCreateTransformationJob': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,6 +96,21 @@ export class OrganizationTransformationBlock {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUpdated",
+            "baseName": "lastUpdated",
+            "type": "Date"
+        },
+        {
+            "name": "lastUpdatedByUser",
+            "baseName": "lastUpdatedByUser",
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "userId",
@@ -128,7 +165,7 @@ export class OrganizationTransformationBlock {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "OrganizationTransformationBlockOperatesOnEnum"
+            "type": "TransformationJobOperatesOnEnum"
         },
         {
             "name": "allowExtraCliArguments",
@@ -149,6 +186,31 @@ export class OrganizationTransformationBlock {
             "name": "maxRunningTimeStr",
             "baseName": "maxRunningTimeStr",
             "type": "string"
+        },
+        {
+            "name": "sourceCodeAvailable",
+            "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "repositoryUrl",
+            "baseName": "repositoryUrl",
+            "type": "string"
+        },
+        {
+            "name": "isPublic",
+            "baseName": "isPublic",
+            "type": "boolean"
+        },
+        {
+            "name": "showInDataSources",
+            "baseName": "showInDataSources",
+            "type": "boolean"
+        },
+        {
+            "name": "showInCreateTransformationJob",
+            "baseName": "showInCreateTransformationJob",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -156,6 +218,3 @@ export class OrganizationTransformationBlock {
     }
 }
 
-
-export type OrganizationTransformationBlockOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
-export const OrganizationTransformationBlockOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

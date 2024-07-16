@@ -22,6 +22,10 @@ export class ModelPrediction {
     * Only set for object detection projects
     */
     'f1Score'?: number;
+    /**
+    * Only set for visual anomaly projects. 2D array of shape (n, n) with raw anomaly scores, where n can be calculated as ((1/8 of image input size)/2 - 1). The scores corresponds to each grid cell in the image\'s spatial matrix.
+    */
+    'anomalyScores'?: Array<Array<number>>;
 
     static discriminator: string | undefined = undefined;
 
@@ -60,6 +64,11 @@ export class ModelPrediction {
             "name": "f1Score",
             "baseName": "f1Score",
             "type": "number"
+        },
+        {
+            "name": "anomalyScores",
+            "baseName": "anomalyScores",
+            "type": "Array<Array<number>>"
         }    ];
 
     static getAttributeTypeMap() {

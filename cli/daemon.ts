@@ -78,6 +78,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
     constructor(config: EdgeImpulseConfig, serialConnector: SerialConnector, serialProtocol: EiSerialProtocol,
                 deviceConfig: EiSerialDeviceConfig) {
+        // eslint-disable-next-line constructor-super
         super();
 
         this._config = config;
@@ -452,7 +453,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
     }
 }
 
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -648,7 +649,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
     console.log(SERIAL_PREFIX, 'Connecting to', deviceId);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 }
 

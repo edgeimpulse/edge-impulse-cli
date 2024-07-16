@@ -659,7 +659,7 @@ export class UploadPortalApi {
     }
 
     /**
-     * View a file that\'s located in an upload portal (requires JWT auth).
+     * View a file that\'s located in an upload portal (requires JWT auth). File might be converted (e.g. Parquet) or truncated (e.g. CSV).
      * @summary View file from portal
      * @param portalId Portal ID
      * @param path Path to file in portal

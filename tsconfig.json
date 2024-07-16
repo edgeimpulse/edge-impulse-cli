@@ -6,7 +6,8 @@
         "outDir": "./build",
         "strict": true,
         "sourceMap": true,
-        "allowJs": true
+        "allowJs": true,
+        "skipLibCheck": true
     },
     "include": [
         "**/*"

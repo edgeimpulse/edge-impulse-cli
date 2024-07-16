@@ -17,13 +17,13 @@ export class ListPortalFilesInFolderRequest {
     */
     'prefix': string;
     /**
-    * If set, then only fetch folders - no files
-    */
-    'onlyFetchFolders'?: boolean;
-    /**
     * Only one S3 page (1000 items typically) is returned. Pass in the continuationToken on the next request to receive the next page.
     */
     'continuationToken'?: string;
+    /**
+    * If set, then no files will be returned
+    */
+    'onlyFetchFolders'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,14 +34,14 @@ export class ListPortalFilesInFolderRequest {
             "type": "string"
         },
         {
-            "name": "onlyFetchFolders",
-            "baseName": "onlyFetchFolders",
-            "type": "boolean"
-        },
-        {
             "name": "continuationToken",
             "baseName": "continuationToken",
             "type": "string"
+        },
+        {
+            "name": "onlyFetchFolders",
+            "baseName": "onlyFetchFolders",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -1,6 +1,9 @@
-// tslint:disable: no-unsafe-any
-
-// tslint:disable-next-line
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line
 import { SerialPort } from 'serialport';
 import { PortInfo as SerialPortListItem } from '@serialport/bindings-interface';
 import { EventEmitter } from 'events';
@@ -28,6 +31,7 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     private _dataHandler: (a: Buffer) => void;
 
     constructor(path: string, baudrate: number, echoSerial: boolean = false) {
+        // eslint-disable-next-line constructor-super
         super();
 
         this._echoSerial = echoSerial;

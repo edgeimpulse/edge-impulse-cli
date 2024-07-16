@@ -36,6 +36,26 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     * Whether to auto-shift segments
     */
     'segmentShift': boolean;
+    /**
+    * Default page size on data acquisition
+    */
+    'defaultPageSize': number;
+    /**
+    * Default view type on data acquisition
+    */
+    'viewType': ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum;
+    /**
+    * Number of grid columns in non-detailed view
+    */
+    'gridColumnCount': number;
+    /**
+    * Number of grid columns in detailed view
+    */
+    'gridColumnCountDetailed': number;
+    /**
+    * If enabled, does not round sample length to hours/minutes/seconds, but always displays sample length in milliseconds. E.g. instead of 1m 32s, this\'ll say 92,142ms.
+    */
+    'showExactSampleLength': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +89,31 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
             "name": "segmentShift",
             "baseName": "segmentShift",
             "type": "boolean"
+        },
+        {
+            "name": "defaultPageSize",
+            "baseName": "defaultPageSize",
+            "type": "number"
+        },
+        {
+            "name": "viewType",
+            "baseName": "viewType",
+            "type": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum"
+        },
+        {
+            "name": "gridColumnCount",
+            "baseName": "gridColumnCount",
+            "type": "number"
+        },
+        {
+            "name": "gridColumnCountDetailed",
+            "baseName": "gridColumnCountDetailed",
+            "type": "number"
+        },
+        {
+            "name": "showExactSampleLength",
+            "baseName": "showExactSampleLength",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -76,3 +121,6 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     }
 }
 
+
+export type ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum = 'list' | 'grid';
+export const ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnumValues: string[] = ['list', 'grid'];

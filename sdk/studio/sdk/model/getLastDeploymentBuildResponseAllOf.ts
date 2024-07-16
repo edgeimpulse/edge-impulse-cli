@@ -11,6 +11,7 @@
  */
 
 import { GetLastDeploymentBuildResponseAllOfLastBuild } from './getLastDeploymentBuildResponseAllOfLastBuild';
+import { ProjectDeploymentTarget } from './projectDeploymentTarget';
 
 export class GetLastDeploymentBuildResponseAllOf {
     /**
@@ -18,6 +19,7 @@ export class GetLastDeploymentBuildResponseAllOf {
     */
     'hasBuild': boolean;
     'lastBuild'?: GetLastDeploymentBuildResponseAllOfLastBuild;
+    'lastDeploymentTarget'?: ProjectDeploymentTarget;
 
     static discriminator: string | undefined = undefined;
 
@@ -31,6 +33,11 @@ export class GetLastDeploymentBuildResponseAllOf {
             "name": "lastBuild",
             "baseName": "lastBuild",
             "type": "GetLastDeploymentBuildResponseAllOfLastBuild"
+        },
+        {
+            "name": "lastDeploymentTarget",
+            "baseName": "lastDeploymentTarget",
+            "type": "ProjectDeploymentTarget"
         }    ];
 
     static getAttributeTypeMap() {

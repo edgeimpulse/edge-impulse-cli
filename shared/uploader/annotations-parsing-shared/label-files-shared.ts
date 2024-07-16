@@ -42,7 +42,8 @@ export function findCategoryMatch(name: string): 'training' | 'testing' | undefi
     name = name.toLowerCase();
     if (name.includes('val') || name.includes('test')) {
         return 'testing';
-    } else if (name.includes('train')) {
+    }
+    else if (name.includes('train')) {
         return 'training';
     }
     return undefined;

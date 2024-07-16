@@ -236,7 +236,8 @@ export const supportedJsonLabelFormats: SupportedLabelFormatJson[] = [
                     if (!Array.isArray(annotation.bbox[0])) {
                         const box = <[number, number, number, number]>annotation.bbox;
                         allBoxes.push(box);
-                    } else {
+                    }
+                    else {
                         allBoxes = <[number, number, number, number][]>annotation.bbox;
                     }
 
@@ -254,7 +255,8 @@ export const supportedJsonLabelFormats: SupportedLabelFormatJson[] = [
                     });
                     if (bboxes[filename]) {
                         bboxes[filename] = [...bboxes[filename], ...parsedBoxes];
-                    } else {
+                    }
+                    else {
                         bboxes[filename] = parsedBoxes;
                     }
                 }
@@ -567,7 +569,7 @@ export const supportedTxtLabelFormats: SupportedLabelFormatTxt[] = [
                     fileType: 'yaml',
                     conversionFunction: (yamlContents) => {
                         let labelMap: LabelMapType = { };
-                        // tslint:disable-next-line: no-unsafe-any
+                        // eslint-disable-next-line
                         const yamlNames = yamlContents.names;
                         if (typeof yamlNames === 'undefined') {
                             throw new Error('File contains no "names" entry');

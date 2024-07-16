@@ -92,5 +92,5 @@ export class SendUserFeedbackRequest {
 }
 
 
-export type SendUserFeedbackRequestTypeEnum = 'feedback' | 'sales';
-export const SendUserFeedbackRequestTypeEnumValues: string[] = ['feedback', 'sales'];
+export type SendUserFeedbackRequestTypeEnum = 'feedback';
+export const SendUserFeedbackRequestTypeEnumValues: string[] = ['feedback'];

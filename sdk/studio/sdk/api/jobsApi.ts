@@ -39,6 +39,7 @@ import { ProjectVersionRequest } from '../model/projectVersionRequest';
 import { RestoreProjectFromPublicRequest } from '../model/restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from '../model/restoreProjectRequest';
 import { SetKerasParameterRequest } from '../model/setKerasParameterRequest';
+import { StartClassifyJobRequest } from '../model/startClassifyJobRequest';
 import { StartJobResponse } from '../model/startJobResponse';
 import { StartPerformanceCalibrationRequest } from '../model/startPerformanceCalibrationRequest';
 import { StartTrainingRequestAnomaly } from '../model/startTrainingRequestAnomaly';
@@ -94,6 +95,7 @@ type listAllJobsQueryParams = {
     limit?: number,
     offset?: number,
     rootOnly?: boolean,
+    key?: string,
 };
 
 type listFinishedJobsQueryParams = {
@@ -1694,6 +1696,7 @@ export class JobsApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
+     * @param key Job key to filter on
      */
     public async listAllJobs (projectId: number, queryParams: listAllJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/all'
@@ -1736,6 +1739,10 @@ export class JobsApi {
 
         if (queryParams.rootOnly !== undefined) {
             localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
+        }
+
+        if (queryParams.key !== undefined) {
+            localVarQueryParameters['key'] = ObjectSerializer.serialize(queryParams.key, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1905,9 +1912,8 @@ export class JobsApi {
      * Evaluates optimal model architecture
      * @summary Optimize model
      * @param projectId Project ID
-     * @param setKerasParameterRequest 
      */
-    public async optimizeJob (projectId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async optimizeJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1930,13 +1936,6 @@ export class JobsApi {
             throw new Error('Required parameter projectId was null or undefined when calling optimizeJob.');
         }
 
-        // verify required parameter 'setKerasParameterRequest' is not null or undefined
-
-
-        if (setKerasParameterRequest === null || setKerasParameterRequest === undefined) {
-            throw new Error('Required parameter setKerasParameterRequest was null or undefined when calling optimizeJob.');
-        }
-
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1950,7 +1949,6 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(setKerasParameterRequest, "SetKerasParameterRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -2092,8 +2090,9 @@ export class JobsApi {
      * Classifies all items in the testing dataset against the current impulse. Updates are streamed over the websocket API.
      * @summary Classify
      * @param projectId Project ID
+     * @param startClassifyJobRequest 
      */
-    public async startClassifyJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startClassifyJob (projectId: number, startClassifyJobRequest?: StartClassifyJobRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/classify'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2129,6 +2128,7 @@ export class JobsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(startClassifyJobRequest, "StartClassifyJobRequest")
         };
 
         let authenticationPromise = Promise.resolve();

@@ -15,6 +15,7 @@ import { Organization } from './organization';
 import { OrganizationDataset } from './organizationDataset';
 import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
+import { OrganizationInfoResponseAllOfPerformance } from './organizationInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
@@ -30,6 +31,7 @@ export class OrganizationInfoResponseAllOf {
     'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
     'cliLists': OrganizationInfoResponseAllOfCliLists;
+    'performance': OrganizationInfoResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -73,6 +75,11 @@ export class OrganizationInfoResponseAllOf {
             "name": "cliLists",
             "baseName": "cliLists",
             "type": "OrganizationInfoResponseAllOfCliLists"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "OrganizationInfoResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

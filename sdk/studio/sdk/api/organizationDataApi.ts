@@ -26,6 +26,7 @@ import { DeletePortalFileRequest } from '../model/deletePortalFileRequest';
 import { DownloadPortalFileRequest } from '../model/downloadPortalFileRequest';
 import { DownloadPortalFileResponse } from '../model/downloadPortalFileResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetOrganizationBucketResponse } from '../model/getOrganizationBucketResponse';
 import { GetOrganizationDataItemResponse } from '../model/getOrganizationDataItemResponse';
 import { GetOrganizationDataItemTransformJobsResponse } from '../model/getOrganizationDataItemTransformJobsResponse';
 import { GetOrganizationDatasetResponse } from '../model/getOrganizationDatasetResponse';
@@ -41,6 +42,8 @@ import { OrganizationAddDatasetRequest } from '../model/organizationAddDatasetRe
 import { OrganizationProjectsDataBatchDisableResponse } from '../model/organizationProjectsDataBatchDisableResponse';
 import { OrganizationProjectsDataBatchEnableResponse } from '../model/organizationProjectsDataBatchEnableResponse';
 import { OrganizationProjectsDataBatchRequest } from '../model/organizationProjectsDataBatchRequest';
+import { PreviewDefaultFilesInFolderRequest } from '../model/previewDefaultFilesInFolderRequest';
+import { PreviewDefaultFilesInFolderResponse } from '../model/previewDefaultFilesInFolderResponse';
 import { RenamePortalFileRequest } from '../model/renamePortalFileRequest';
 import { SetOrganizationDataDatasetRequest } from '../model/setOrganizationDataDatasetRequest';
 import { StartJobResponse } from '../model/startJobResponse';
@@ -107,6 +110,10 @@ type deleteOrganizationDataItemsQueryParams = {
 type deleteOrganizationProjectsDataQueryParams = {
     projectId?: number,
     ids?: string,
+};
+
+type downloadDatasetFolderQueryParams = {
+    path: string,
 };
 
 type downloadOrganizationDataFileQueryParams = {
@@ -1696,6 +1703,110 @@ export class OrganizationDataApi {
     }
 
     /**
+     * Download all files in the given folder in a dataset, ignoring any subdirectories.
+     * @summary Download folder from dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     * @param path Path, relative to dataset
+     */
+    public async downloadDatasetFolder (organizationId: number, dataset: string, queryParams: downloadDatasetFolderQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/download-folder'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/zip'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling downloadDatasetFolder.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling downloadDatasetFolder.');
+        }
+
+        // verify required parameter 'path' is not null or undefined
+
+        if (queryParams.path === null || queryParams.path === undefined) {
+            throw new Error('Required parameter queryParams.path was null or undefined when calling downloadDatasetFolder.');
+        }
+
+
+        if (queryParams.path !== undefined) {
+            localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Download a single file from a data item.
      * @summary Download file
      * @param organizationId Organization ID
@@ -2076,6 +2187,98 @@ export class OrganizationDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get storage bucket details.
+     * @summary Get storage bucket
+     * @param organizationId Organization ID
+     * @param bucketId Bucket ID
+     */
+    public async getOrganizationBucket (organizationId: number, bucketId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationBucketResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/{bucketId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'bucketId' + '}', encodeURIComponent(String(bucketId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationBucket.');
+        }
+
+        // verify required parameter 'bucketId' is not null or undefined
+
+
+        if (bucketId === null || bucketId === undefined) {
+            throw new Error('Required parameter bucketId was null or undefined when calling getOrganizationBucket.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationBucketResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationBucketResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -3467,7 +3670,108 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Preview a single file from a data item (same as downloadOrganizationDataFile but w/ content-disposition inline).
+     * Preview files and directories in a default dataset for the given prefix, with support for wildcards. This is an internal API used when starting a transformation job.
+     * @summary Preview files in a default dataset
+     * @param organizationId Organization ID
+     * @param dataset Dataset name
+     * @param previewDefaultFilesInFolderRequest 
+     */
+    public async previewDefaultFilesInFolder (organizationId: number, dataset: string, previewDefaultFilesInFolderRequest: PreviewDefaultFilesInFolderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PreviewDefaultFilesInFolderResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/preview'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling previewDefaultFilesInFolder.');
+        }
+
+        // verify required parameter 'dataset' is not null or undefined
+
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling previewDefaultFilesInFolder.');
+        }
+
+        // verify required parameter 'previewDefaultFilesInFolderRequest' is not null or undefined
+
+
+        if (previewDefaultFilesInFolderRequest === null || previewDefaultFilesInFolderRequest === undefined) {
+            throw new Error('Required parameter previewDefaultFilesInFolderRequest was null or undefined when calling previewDefaultFilesInFolder.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(previewDefaultFilesInFolderRequest, "PreviewDefaultFilesInFolderRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<PreviewDefaultFilesInFolderResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "PreviewDefaultFilesInFolderResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Preview a single file from a data item (same as downloadOrganizationDataFile but w/ content-disposition inline and could be truncated).
      * @summary Preview file
      * @param organizationId Organization ID
      * @param dataId Data ID
@@ -4447,7 +4751,7 @@ export class OrganizationDataApi {
     }
 
     /**
-     * View a file that\'s located in a dataset (requires JWT auth).
+     * View a file that\'s located in a dataset (requires JWT auth). File might be converted (e.g. Parquet) or truncated (e.g. CSV).
      * @summary View file from dataset
      * @param organizationId Organization ID
      * @param dataset Dataset name

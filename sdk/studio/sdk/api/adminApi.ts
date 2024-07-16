@@ -24,27 +24,33 @@ import { AdminAddOrUpdateSSODomainIdPsRequest } from '../model/adminAddOrUpdateS
 import { AdminAddOrganizationUserRequest } from '../model/adminAddOrganizationUserRequest';
 import { AdminAddProjectUserRequest } from '../model/adminAddProjectUserRequest';
 import { AdminAddUserRequest } from '../model/adminAddUserRequest';
+import { AdminCreateOrganizationDataExportRequest } from '../model/adminCreateOrganizationDataExportRequest';
 import { AdminCreateOrganizationRequest } from '../model/adminCreateOrganizationRequest';
 import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
 import { AdminGetDataMigrationResponse } from '../model/adminGetDataMigrationResponse';
 import { AdminGetDataMigrationsResponse } from '../model/adminGetDataMigrationsResponse';
 import { AdminGetDisallowedEmailDomainsResponse } from '../model/adminGetDisallowedEmailDomainsResponse';
 import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
+import { AdminGetOrganizationComputeTimeUsageResponse } from '../model/adminGetOrganizationComputeTimeUsageResponse';
+import { AdminGetOrganizationUsageReportResponse } from '../model/adminGetOrganizationUsageReportResponse';
+import { AdminGetOrganizationUsageReportsResponse } from '../model/adminGetOrganizationUsageReportsResponse';
 import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
 import { AdminGetSSODomainIdPsResponse } from '../model/adminGetSSODomainIdPsResponse';
 import { AdminGetSSOSettingsResponse } from '../model/adminGetSSOSettingsResponse';
+import { AdminGetTrialResponse } from '../model/adminGetTrialResponse';
 import { AdminGetUserIdsResponse } from '../model/adminGetUserIdsResponse';
 import { AdminGetUserMetricsResponse } from '../model/adminGetUserMetricsResponse';
 import { AdminGetUserResponse } from '../model/adminGetUserResponse';
-import { AdminGetUserTrialResponse } from '../model/adminGetUserTrialResponse';
 import { AdminGetUsersResponse } from '../model/adminGetUsersResponse';
 import { AdminListProjectsResponse } from '../model/adminListProjectsResponse';
 import { AdminOrganizationInfoResponse } from '../model/adminOrganizationInfoResponse';
+import { AdminStartEnterpriseTrialRequest } from '../model/adminStartEnterpriseTrialRequest';
 import { AdminToggleDataMigrationRequest } from '../model/adminToggleDataMigrationRequest';
+import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
 import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
+import { AdminUpdateTrialRequest } from '../model/adminUpdateTrialRequest';
 import { AdminUpdateUserPermissionsRequest } from '../model/adminUpdateUserPermissionsRequest';
 import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
-import { AdminUpdateUserTrialRequest } from '../model/adminUpdateUserTrialRequest';
 import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
 import { CreateProjectResponse } from '../model/createProjectResponse';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
@@ -53,13 +59,16 @@ import { FindUserResponse } from '../model/findUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetEmailVerificationCodeResponse } from '../model/getEmailVerificationCodeResponse';
 import { GetFeatureFlagsResponse } from '../model/getFeatureFlagsResponse';
+import { GetOrganizationDataExportResponse } from '../model/getOrganizationDataExportResponse';
+import { GetOrganizationDataExportsResponse } from '../model/getOrganizationDataExportsResponse';
 import { JobDetailsResponse } from '../model/jobDetailsResponse';
 import { JobLogsResponse } from '../model/jobLogsResponse';
 import { JobMetricsResponse } from '../model/jobMetricsResponse';
 import { JobParentTypeEnum } from '../model/jobParentTypeEnum';
 import { ProjectInfoResponse } from '../model/projectInfoResponse';
-import { StartEnterpriseTrialRequest } from '../model/startEnterpriseTrialRequest';
+import { StartJobResponse } from '../model/startJobResponse';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
+import { UserTierEnum } from '../model/userTierEnum';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -78,11 +87,12 @@ export enum AdminApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type adminDeleteOrganizationQueryParams = {
-    fullDeletion?: boolean,
+type adminCreateOrganizationUsageReportQueryParams = {
+    startDate: Date,
+    endDate: Date,
 };
 
-type adminDeleteUserQueryParams = {
+type adminDeleteOrganizationQueryParams = {
     fullDeletion?: boolean,
 };
 
@@ -105,8 +115,28 @@ type adminGetJobsMetricsQueryParams = {
     parentType: JobParentTypeEnum,
 };
 
+type adminGetOrganizationComputeTimeUsageQueryParams = {
+    startDate: Date,
+    endDate: Date,
+};
+
+type adminGetOrganizationDataExportsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
+type adminGetOrganizationInfoQueryParams = {
+    includeDeleted?: boolean,
+};
+
+type adminGetOrganizationUsageReportsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type adminGetOrganizationsQueryParams = {
     active?: number,
+    includeDeleted?: boolean,
     sort?: string,
     limit?: number,
     offset?: number,
@@ -123,7 +153,7 @@ type adminGetProjectsQueryParams = {
 
 type adminGetUsersQueryParams = {
     active?: number,
-    tier?: 'free' | 'pro' | 'enterprise',
+    tier?: UserTierEnum,
     fields?: string,
     sort?: string,
     limit?: number,
@@ -707,6 +737,98 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to create a new data export for an organization. A job is created to process the export request and the job details are returned in the response. 
+     * @summary Create a new organization data export
+     * @param organizationId Organization ID
+     * @param adminCreateOrganizationDataExportRequest 
+     */
+    public async adminCreateOrganizationDataExport (organizationId: number, adminCreateOrganizationDataExportRequest: AdminCreateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminCreateOrganizationDataExport.');
+        }
+
+        // verify required parameter 'adminCreateOrganizationDataExportRequest' is not null or undefined
+
+
+        if (adminCreateOrganizationDataExportRequest === null || adminCreateOrganizationDataExportRequest === undefined) {
+            throw new Error('Required parameter adminCreateOrganizationDataExportRequest was null or undefined when calling adminCreateOrganizationDataExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminCreateOrganizationDataExportRequest, "AdminCreateOrganizationDataExportRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to create a new project for an organization.
      * @summary Create a new organization project
      * @param organizationId Organization ID
@@ -780,6 +902,113 @@ export class AdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to create a new usage report for an organization. A job is created to process the report request and the job details are returned in the response.
+     * @summary Creates a new usage report
+     * @param organizationId Organization ID
+     * @param startDate Start date
+     * @param endDate End date
+     */
+    public async adminCreateOrganizationUsageReport (organizationId: number, queryParams: adminCreateOrganizationUsageReportQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminCreateOrganizationUsageReport.');
+        }
+
+        // verify required parameter 'startDate' is not null or undefined
+
+        if (queryParams.startDate === null || queryParams.startDate === undefined) {
+            throw new Error('Required parameter queryParams.startDate was null or undefined when calling adminCreateOrganizationUsageReport.');
+        }
+
+
+        // verify required parameter 'endDate' is not null or undefined
+
+        if (queryParams.endDate === null || queryParams.endDate === undefined) {
+            throw new Error('Required parameter queryParams.endDate was null or undefined when calling adminCreateOrganizationUsageReport.');
+        }
+
+
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
+        }
+
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -884,12 +1113,10 @@ export class AdminApi {
     /**
      * Admin-only API to create an enterprise trial for a user.
      * @summary Create user enterprise trial
-     * @param userId User ID
-     * @param startEnterpriseTrialRequest 
+     * @param adminStartEnterpriseTrialRequest 
      */
-    public async adminCreateUserTrial (userId: number, startEnterpriseTrialRequest: StartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}/trials'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+    public async adminCreateTrial (adminStartEnterpriseTrialRequest: AdminStartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+        const localVarPath = this.basePath + '/api/admin/trials';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -903,18 +1130,11 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'userId' is not null or undefined
+        // verify required parameter 'adminStartEnterpriseTrialRequest' is not null or undefined
 
 
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminCreateUserTrial.');
-        }
-
-        // verify required parameter 'startEnterpriseTrialRequest' is not null or undefined
-
-
-        if (startEnterpriseTrialRequest === null || startEnterpriseTrialRequest === undefined) {
-            throw new Error('Required parameter startEnterpriseTrialRequest was null or undefined when calling adminCreateUserTrial.');
+        if (adminStartEnterpriseTrialRequest === null || adminStartEnterpriseTrialRequest === undefined) {
+            throw new Error('Required parameter adminStartEnterpriseTrialRequest was null or undefined when calling adminCreateTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -930,7 +1150,7 @@ export class AdminApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(startEnterpriseTrialRequest, "StartEnterpriseTrialRequest")
+            body: ObjectSerializer.serialize(adminStartEnterpriseTrialRequest, "AdminStartEnterpriseTrialRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -1087,6 +1307,190 @@ export class AdminApi {
 
         if (queryParams.fullDeletion !== undefined) {
             localVarQueryParameters['fullDeletion'] = ObjectSerializer.serialize(queryParams.fullDeletion, "boolean");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to delete a data export for an organization.
+     * @summary Delete organization data export
+     * @param organizationId Organization ID
+     * @param exportId Export ID
+     */
+    public async adminDeleteOrganizationDataExport (organizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminDeleteOrganizationDataExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling adminDeleteOrganizationDataExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to delete a usage report for an organization.
+     * @summary Delete usage report
+     * @param organizationId Organization ID
+     * @param usageReportId Usage report ID
+     */
+    public async adminDeleteOrganizationUsageReport (organizationId: number, usageReportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{usageReportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'usageReportId' + '}', encodeURIComponent(String(usageReportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminDeleteOrganizationUsageReport.');
+        }
+
+        // verify required parameter 'usageReportId' is not null or undefined
+
+
+        if (usageReportId === null || usageReportId === undefined) {
+            throw new Error('Required parameter usageReportId was null or undefined when calling adminDeleteOrganizationUsageReport.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1311,14 +1715,13 @@ export class AdminApi {
     }
 
     /**
-     * Admin-only API to delete a user. If `fullDeletion` is set, it deletes the user\'s identifiable information and files. Otherwise, it soft deletes the user by setting it\'s `delete_date` value.
-     * @summary Delete a user
-     * @param userId User ID
-     * @param fullDeletion Set to true for full deletion
+     * Admin-only API to delete an enterprise trial.
+     * @summary Delete enterprise trial
+     * @param enterpriseTrialId Enterprise trial ID
      */
-    public async adminDeleteUser (userId: number, queryParams: adminDeleteUserQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+    public async adminDeleteTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
+            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -1332,15 +1735,11 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'userId' is not null or undefined
+        // verify required parameter 'enterpriseTrialId' is not null or undefined
 
 
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminDeleteUser.');
-        }
-
-        if (queryParams.fullDeletion !== undefined) {
-            localVarQueryParameters['fullDeletion'] = ObjectSerializer.serialize(queryParams.fullDeletion, "boolean");
+        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
+            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminDeleteTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1399,15 +1798,13 @@ export class AdminApi {
     }
 
     /**
-     * Admin-only API to delete an enterprise trial for a user.
-     * @summary Delete user enterprise trial
+     * Admin-only API to delete a user.
+     * @summary Delete a user
      * @param userId User ID
-     * @param enterpriseTrialId Enterprise trial ID
      */
-    public async adminDeleteUserTrial (userId: number, enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}/trials/{enterpriseTrialId}'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)))
-            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
+    public async adminDeleteUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/admin/users/{userId}'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -1425,14 +1822,7 @@ export class AdminApi {
 
 
         if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminDeleteUserTrial.');
-        }
-
-        // verify required parameter 'enterpriseTrialId' is not null or undefined
-
-
-        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
-            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminDeleteUserTrial.');
+            throw new Error('Required parameter userId was null or undefined when calling adminDeleteUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1466,12 +1856,12 @@ export class AdminApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1555,6 +1945,90 @@ export class AdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to download a usage report for an organization.
+     * @summary Download usage report
+     * @param organizationId Organization ID
+     * @param usageReportId Usage report ID
+     */
+    public async adminDownloadOrganizationUsageReport (organizationId: number, usageReportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{usageReportId}/download'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'usageReportId' + '}', encodeURIComponent(String(usageReportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminDownloadOrganizationUsageReport.');
+        }
+
+        // verify required parameter 'usageReportId' is not null or undefined
+
+
+        if (usageReportId === null || usageReportId === undefined) {
+            throw new Error('Required parameter usageReportId was null or undefined when calling adminDownloadOrganizationUsageReport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<any>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2282,7 +2756,7 @@ export class AdminApi {
      * Get the job execution details including inner jobs
      * @summary Get job execution details
      * @param jobId Job ID
-     * @param parentType Job parent type (project or organization)
+     * @param parentType Job parent type (project, organization, or standalone)
      * @param includeChildrenJobs Include the details of each of the children jobs (recursively)
      */
     public async adminGetJobDetails (jobId: number, queryParams: adminGetJobDetailsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobDetailsResponse> {
@@ -2382,7 +2856,7 @@ export class AdminApi {
      * Get the logs for a job.
      * @summary Get job logs
      * @param jobId Job ID
-     * @param parentType Job parent type (project or organization)
+     * @param parentType Job parent type (project, organization, or standalone)
      * @param limit Maximum number of logs
      * @param offset Start fetching logs from this offset
      */
@@ -2501,7 +2975,7 @@ export class AdminApi {
      * Get cpu/memory usage metrics, if the job is a Kubernetes job
      * @summary Get job usage metrics
      * @param jobId Job ID
-     * @param parentType Job parent type (project or organization)
+     * @param parentType Job parent type (project, organization, or standalone)
      */
     public async adminGetJobsMetrics (jobId: number, queryParams: adminGetJobsMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobMetricsResponse> {
         const localVarPath = this.basePath + '/api/admin/jobs/{jobId}/metrics'
@@ -2667,11 +3141,304 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to get compute time usage for an organization over a period of time.
+     * @summary Get organization compute time usage
+     * @param organizationId Organization ID
+     * @param startDate Start date
+     * @param endDate End date
+     */
+    public async adminGetOrganizationComputeTimeUsage (organizationId: number, queryParams: adminGetOrganizationComputeTimeUsageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationComputeTimeUsageResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/computeTime'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationComputeTimeUsage.');
+        }
+
+        // verify required parameter 'startDate' is not null or undefined
+
+        if (queryParams.startDate === null || queryParams.startDate === undefined) {
+            throw new Error('Required parameter queryParams.startDate was null or undefined when calling adminGetOrganizationComputeTimeUsage.');
+        }
+
+
+        // verify required parameter 'endDate' is not null or undefined
+
+        if (queryParams.endDate === null || queryParams.endDate === undefined) {
+            throw new Error('Required parameter queryParams.endDate was null or undefined when calling adminGetOrganizationComputeTimeUsage.');
+        }
+
+
+        if (queryParams.startDate !== undefined) {
+            localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
+        }
+
+        if (queryParams.endDate !== undefined) {
+            localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<AdminGetOrganizationComputeTimeUsageResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AdminGetOrganizationComputeTimeUsageResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to get a data export for an organization.
+     * @summary Get organization data export
+     * @param organizationId Organization ID
+     * @param exportId Export ID
+     */
+    public async adminGetOrganizationDataExport (organizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationDataExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling adminGetOrganizationDataExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationDataExportResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDataExportResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to get the list of all data exports for an organization.
+     * @summary Get all organization data exports
+     * @param organizationId Organization ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async adminGetOrganizationDataExports (organizationId: number, queryParams: adminGetOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationDataExports.');
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetOrganizationDataExportsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetOrganizationDataExportsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to list all information about this organization.
      * @summary Organization information
      * @param organizationId Organization ID
+     * @param includeDeleted Whether to include deleted entities (users, projects, orgs)
      */
-    public async adminGetOrganizationInfo (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
+    public async adminGetOrganizationInfo (organizationId: number, queryParams: adminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2692,6 +3459,10 @@ export class AdminApi {
 
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationInfo.');
+        }
+
+        if (queryParams.includeDeleted !== undefined) {
+            localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2750,9 +3521,195 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to get a usage report for an organization.
+     * @summary Get usage report
+     * @param organizationId Organization ID
+     * @param usageReportId Usage report ID
+     */
+    public async adminGetOrganizationUsageReport (organizationId: number, usageReportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{usageReportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'usageReportId' + '}', encodeURIComponent(String(usageReportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationUsageReport.');
+        }
+
+        // verify required parameter 'usageReportId' is not null or undefined
+
+
+        if (usageReportId === null || usageReportId === undefined) {
+            throw new Error('Required parameter usageReportId was null or undefined when calling adminGetOrganizationUsageReport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<AdminGetOrganizationUsageReportResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AdminGetOrganizationUsageReportResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to get all usage reports for an organization.
+     * @summary Get all usage reports
+     * @param organizationId Organization ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async adminGetOrganizationUsageReports (organizationId: number, queryParams: adminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportsResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationUsageReports.');
+        }
+
+        if (queryParams.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<AdminGetOrganizationUsageReportsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AdminGetOrganizationUsageReportsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to get the list of all organizations.
      * @summary Get all organizations
      * @param active Whether to search for entities (users, orgs) active in the last X days
+     * @param includeDeleted Whether to include deleted entities (users, projects, orgs)
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
@@ -2775,6 +3732,10 @@ export class AdminApi {
 
         if (queryParams.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
+        }
+
+        if (queryParams.includeDeleted !== undefined) {
+            localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
         if (queryParams.sort !== undefined) {
@@ -3188,6 +4149,89 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to get a specific enterprise trial.
+     * @summary Get enterprise trial
+     * @param enterpriseTrialId Enterprise trial ID
+     */
+    public async adminGetTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetTrialResponse> {
+        const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
+            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'enterpriseTrialId' is not null or undefined
+
+
+        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
+            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminGetTrial.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<AdminGetTrialResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AdminGetTrialResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to get information about a user.
      * @summary Get user
      * @param userId User ID
@@ -3354,102 +4398,10 @@ export class AdminApi {
     }
 
     /**
-     * Admin-only API to get a specific enterprise trial.
-     * @summary Get user enterprise trial
-     * @param userId User ID
-     * @param enterpriseTrialId Enterprise trial ID
-     */
-    public async adminGetUserTrial (userId: number, enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUserTrialResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}/trials/{enterpriseTrialId}'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)))
-            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'userId' is not null or undefined
-
-
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminGetUserTrial.');
-        }
-
-        // verify required parameter 'enterpriseTrialId' is not null or undefined
-
-
-        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
-            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminGetUserTrial.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<AdminGetUserTrialResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "AdminGetUserTrialResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Admin-only API to get the list of all registered users.
      * @summary Get all users
      * @param active Whether to search for entities (users, orgs) active in the last X days
-     * @param tier Whether to search for free, pro or enterprise entities (users, projects)
+     * @param tier Whether to search for free, community plus, professional, or enterprise entities (users, projects)
      * @param fields Comma separated list of fields to fetch in a query
      * @param sort Fields and order to sort query by
      * @param limit Maximum number of results
@@ -3476,7 +4428,7 @@ export class AdminApi {
         }
 
         if (queryParams.tier !== undefined) {
-            localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "'free' | 'pro' | 'enterprise'");
+            localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "UserTierEnum");
         }
 
         if (queryParams.fields !== undefined) {
@@ -3822,6 +4774,89 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to restore a soft deleted organization. All organization projects sharing the same deletion date as that of the organization will also be restored. If this is a trial organization that was never upgraded to a paid plan then the organization will be restored to its original trial state. 
+     * @summary Restore an organization
+     * @param organizationId Organization ID
+     */
+    public async adminRestoreOrganization (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/restore'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminRestoreOrganization.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to run or pause a data migration.
      * @summary Run or pause a data migration
      * @param migrationId Data migration ID
@@ -4006,6 +5041,107 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to update a data export for an organization.
+     * @summary Update organization data export
+     * @param organizationId Organization ID
+     * @param exportId Export ID
+     * @param adminUpdateOrganizationDataExportRequest 
+     */
+    public async adminUpdateOrganizationDataExport (organizationId: number, exportId: number, adminUpdateOrganizationDataExportRequest: AdminUpdateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminUpdateOrganizationDataExport.');
+        }
+
+        // verify required parameter 'exportId' is not null or undefined
+
+
+        if (exportId === null || exportId === undefined) {
+            throw new Error('Required parameter exportId was null or undefined when calling adminUpdateOrganizationDataExport.');
+        }
+
+        // verify required parameter 'adminUpdateOrganizationDataExportRequest' is not null or undefined
+
+
+        if (adminUpdateOrganizationDataExportRequest === null || adminUpdateOrganizationDataExportRequest === undefined) {
+            throw new Error('Required parameter adminUpdateOrganizationDataExportRequest was null or undefined when calling adminUpdateOrganizationDataExport.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminUpdateOrganizationDataExportRequest, "AdminUpdateOrganizationDataExportRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to update project properties.
      * @summary Update project
      * @param projectId Project ID
@@ -4055,6 +5191,98 @@ export class AdminApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateProjectRequest, "UpdateProjectRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to update an enterprise trial.
+     * @summary Update enterprise trial
+     * @param enterpriseTrialId Enterprise trial ID
+     * @param adminUpdateTrialRequest 
+     */
+    public async adminUpdateTrial (enterpriseTrialId: number, adminUpdateTrialRequest: AdminUpdateTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
+            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'enterpriseTrialId' is not null or undefined
+
+
+        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
+            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminUpdateTrial.');
+        }
+
+        // verify required parameter 'adminUpdateTrialRequest' is not null or undefined
+
+
+        if (adminUpdateTrialRequest === null || adminUpdateTrialRequest === undefined) {
+            throw new Error('Required parameter adminUpdateTrialRequest was null or undefined when calling adminUpdateTrial.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(adminUpdateTrialRequest, "AdminUpdateTrialRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -4282,15 +5510,12 @@ export class AdminApi {
     }
 
     /**
-     * Admin-only API to update an enterprise trial for a user.
-     * @summary Update user enterprise trial
-     * @param userId User ID
+     * Admin-only API to upgrade a specific enterprise trial to a full enterprise account.
+     * @summary Upgrade enterprise trial to a full enterprise account
      * @param enterpriseTrialId Enterprise trial ID
-     * @param adminUpdateUserTrialRequest 
      */
-    public async adminUpdateUserTrial (userId: number, enterpriseTrialId: number, adminUpdateUserTrialRequest: AdminUpdateUserTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}/trials/{enterpriseTrialId}'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)))
+    public async adminUpgradeTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}/upgrade'
             .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -4305,118 +5530,11 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'userId' is not null or undefined
-
-
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminUpdateUserTrial.');
-        }
-
         // verify required parameter 'enterpriseTrialId' is not null or undefined
 
 
         if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
-            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminUpdateUserTrial.');
-        }
-
-        // verify required parameter 'adminUpdateUserTrialRequest' is not null or undefined
-
-
-        if (adminUpdateUserTrialRequest === null || adminUpdateUserTrialRequest === undefined) {
-            throw new Error('Required parameter adminUpdateUserTrialRequest was null or undefined when calling adminUpdateUserTrial.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'PUT',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(adminUpdateUserTrialRequest, "AdminUpdateUserTrialRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Admin-only API to upgrade a specific enterprise trial for a user to a full enterprise account.
-     * @summary Upgrade user enterprise trial to a full enterprise account
-     * @param userId User ID
-     * @param enterpriseTrialId Enterprise trial ID
-     */
-    public async adminUpgradeUserTrial (userId: number, enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/admin/users/{userId}/trials/{enterpriseTrialId}/upgrade'
-            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)))
-            .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'userId' is not null or undefined
-
-
-        if (userId === null || userId === undefined) {
-            throw new Error('Required parameter userId was null or undefined when calling adminUpgradeUserTrial.');
-        }
-
-        // verify required parameter 'enterpriseTrialId' is not null or undefined
-
-
-        if (enterpriseTrialId === null || enterpriseTrialId === undefined) {
-            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminUpgradeUserTrial.');
+            throw new Error('Required parameter enterpriseTrialId was null or undefined when calling adminUpgradeTrial.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

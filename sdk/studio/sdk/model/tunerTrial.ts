@@ -12,22 +12,24 @@
 
 import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialDspJobId } from './tunerTrialDspJobId';
+import { TunerTrialImpulse } from './tunerTrialImpulse';
 
 export class TunerTrial {
     'id': string;
-    'status': string;
+    'status': TunerTrialStatusEnum;
     'lastCompletedEpoch'?: Date;
     'lastCompletedTraining'?: Date;
     'retries'?: number;
     'currentEpoch'?: number;
     'workerId'?: string;
-    'blocks'?: Array<TunerTrialBlocks>;
-    'impulse'?: object;
+    'blocks': Array<TunerTrialBlocks>;
+    'impulse': TunerTrialImpulse;
     'experiment'?: string;
     'originalTrialId'?: string;
     'model'?: { [key: string]: object; };
     'dspJobId'?: TunerTrialDspJobId;
     'learnJobId'?: number;
+    'devicePerformance'?: { [key: string]: object; };
 
     static discriminator: string | undefined = undefined;
 
@@ -40,7 +42,7 @@ export class TunerTrial {
         {
             "name": "status",
             "baseName": "status",
-            "type": "string"
+            "type": "TunerTrialStatusEnum"
         },
         {
             "name": "lastCompletedEpoch",
@@ -75,7 +77,7 @@ export class TunerTrial {
         {
             "name": "impulse",
             "baseName": "impulse",
-            "type": "object"
+            "type": "TunerTrialImpulse"
         },
         {
             "name": "experiment",
@@ -101,6 +103,11 @@ export class TunerTrial {
             "name": "learnJobId",
             "baseName": "learnJobId",
             "type": "number"
+        },
+        {
+            "name": "devicePerformance",
+            "baseName": "devicePerformance",
+            "type": "{ [key: string]: object; }"
         }    ];
 
     static getAttributeTypeMap() {
@@ -108,3 +115,6 @@ export class TunerTrial {
     }
 }
 
+
+export type TunerTrialStatusEnum = 'pending' | 'running' | 'completed' | 'failed';
+export const TunerTrialStatusEnumValues: string[] = ['pending', 'running', 'completed', 'failed'];

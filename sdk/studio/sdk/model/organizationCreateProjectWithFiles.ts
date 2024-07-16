@@ -10,11 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { OrganizationCreateProject } from './organizationCreateProject';
-import { OrganizationCreateProjectCreatedByUser } from './organizationCreateProjectCreatedByUser';
 import { OrganizationCreateProjectTransformationSummary } from './organizationCreateProjectTransformationSummary';
 import { OrganizationCreateProjectWithFilesAllOf } from './organizationCreateProjectWithFilesAllOf';
 import { OrganizationCreateProjectWithFilesAllOfFiles } from './organizationCreateProjectWithFilesAllOfFiles';
+import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationCreateProjectWithFiles {
@@ -55,7 +56,7 @@ export class OrganizationCreateProjectWithFiles {
     'pipelineName'?: string;
     'pipelineRunId'?: number;
     'pipelineStep'?: number;
-    'operatesOn': OrganizationCreateProjectWithFilesOperatesOnEnum;
+    'operatesOn': TransformationJobOperatesOnEnum;
     /**
     * Total amount of compute used for this job (in seconds)
     */
@@ -64,7 +65,7 @@ export class OrganizationCreateProjectWithFiles {
     * Total amount of compute used (friendly string)
     */
     'totalTimeSpentString': string;
-    'createdByUser'?: OrganizationCreateProjectCreatedByUser;
+    'createdByUser'?: CreatedUpdatedByUser;
     'files': Array<OrganizationCreateProjectWithFilesAllOfFiles>;
     'fileCountForFilter': number;
 
@@ -244,7 +245,7 @@ export class OrganizationCreateProjectWithFiles {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "OrganizationCreateProjectWithFilesOperatesOnEnum"
+            "type": "TransformationJobOperatesOnEnum"
         },
         {
             "name": "totalTimeSpentSeconds",
@@ -259,7 +260,7 @@ export class OrganizationCreateProjectWithFiles {
         {
             "name": "createdByUser",
             "baseName": "createdByUser",
-            "type": "OrganizationCreateProjectCreatedByUser"
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "files",
@@ -283,6 +284,3 @@ export const OrganizationCreateProjectWithFilesUploadTypeEnumValues: string[] = 
 
 export type OrganizationCreateProjectWithFilesCategoryEnum = 'training' | 'testing' | 'split';
 export const OrganizationCreateProjectWithFilesCategoryEnumValues: string[] = ['training', 'testing', 'split'];
-
-export type OrganizationCreateProjectWithFilesOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
-export const OrganizationCreateProjectWithFilesOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

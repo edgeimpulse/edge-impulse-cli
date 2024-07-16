@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { JobCreatedByUser } from './jobCreatedByUser';
 
 export class Job {
     /**
@@ -49,6 +50,7 @@ export class Job {
     * Job duration time in seconds from start to finished, measured by k8s job watcher.
     */
     'computeTime'?: number;
+    'createdByUser'?: JobCreatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -102,6 +104,11 @@ export class Job {
             "name": "computeTime",
             "baseName": "computeTime",
             "type": "number"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "JobCreatedByUser"
         }    ];
 
     static getAttributeTypeMap() {

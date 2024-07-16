@@ -1,10 +1,13 @@
-// tslint:disable-next-line: variable-name, no-var-requires
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
 const PATH = require('path');
-// tslint:disable-next-line: no-unsafe-any
 module.paths.push(PATH.join(process.cwd(), 'node_modules'));
 
 import {
-    AuthApi, CDNApi, ClassifyApi, DSPApi,
+    AuthApi, ClassifyApi, DSPApi,
     DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi,
     OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi,
     OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi,
@@ -446,12 +449,9 @@ export class EdgeImpulseApi {
             socket.onmessage = (msg) => {
                 try {
                     let m = JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                    // tslint:disable-next-line: no-unsafe-any
                     if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) return;
-                    // tslint:disable-next-line: no-unsafe-any
                     if (m[1].data) {
                         if (dataCallback) {
-                            // tslint:disable-next-line: no-unsafe-any
                             dataCallback(m[1].data);
                         }
                     }
@@ -460,7 +460,7 @@ export class EdgeImpulseApi {
                     /* noop */
                 }
             };
-
+            // eslint-disable-next-line
             socket.onclose = async () => {
                 clearInterval(pingIv);
 
@@ -550,7 +550,6 @@ export class EdgeImpulseApi {
                 try {
                     let m = <any[]>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
                     if (m[0] === 'hello') {
-                        // tslint:disable-next-line: no-unsafe-any
                         if (m[1].hello && m[1].hello.version === 1) {
                             clearTimeout(rejectTimeout);
                             // console.log('Connected to job websocket');

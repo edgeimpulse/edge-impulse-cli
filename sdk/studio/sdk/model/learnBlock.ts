@@ -10,6 +10,9 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
+import { BlockType } from './blockType';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class LearnBlock {
     'type': string;
@@ -19,10 +22,13 @@ export class LearnBlock {
     'name': string;
     'recommended'?: boolean;
     'organizationModelId'?: number;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
-    * Whether this block is publicly available to Edge Impulse only to enterprise users
+    * Whether this block is publicly available to only enterprise users
     */
     'isPublicEnterpriseOnly'?: boolean;
+    'blockType': BlockType;
+    'displayCategory'?: BlockDisplayCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,9 +69,24 @@ export class LearnBlock {
             "type": "number"
         },
         {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
+        },
+        {
             "name": "isPublicEnterpriseOnly",
             "baseName": "isPublicEnterpriseOnly",
             "type": "boolean"
+        },
+        {
+            "name": "blockType",
+            "baseName": "blockType",
+            "type": "BlockType"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
         }    ];
 
     static getAttributeTypeMap() {

@@ -15,7 +15,7 @@
 * Target device
 */
 export class OptimizeConfigTargetDevice {
-    'name'?: string;
+    'name': string;
     'ram'?: number;
     'rom'?: number;
 

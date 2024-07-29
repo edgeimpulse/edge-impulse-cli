@@ -30,6 +30,7 @@ import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
 import { GetNotesResponse } from '../model/getNotesResponse';
+import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
 import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
 import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
 import { ListApiKeysResponse } from '../model/listApiKeysResponse';
@@ -74,9 +75,17 @@ export enum ProjectsApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type getModelVariantsQueryParams = {
+    impulseId?: number,
+};
+
 type getProjectDataAxesSummaryQueryParams = {
     includeDisabled?: boolean,
     includeNotProcessed?: boolean,
+};
+
+type getProjectInfoQueryParams = {
+    impulseId?: number,
 };
 
 type getProjectTrainingDataSummaryQueryParams = {
@@ -949,8 +958,9 @@ export class ProjectsApi {
      * Get a list of model variants applicable to all trained learn blocks in this project.
      * @summary Get a list of all model variants available for this project
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getModelVariants (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetModelVariantsResponse> {
+    public async getModelVariants (projectId: number, queryParams?: getModelVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetModelVariantsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/model-variants'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -971,6 +981,10 @@ export class ProjectsApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getModelVariants.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1118,7 +1132,7 @@ export class ProjectsApi {
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
      */
-    public async getProjectDataAxesSummary (projectId: number, queryParams: getProjectDataAxesSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataAxesSummaryResponse> {
+    public async getProjectDataAxesSummary (projectId: number, queryParams?: getProjectDataAxesSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataAxesSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-axes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1141,11 +1155,11 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling getProjectDataAxesSummary.');
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "boolean");
         }
 
-        if (queryParams.includeNotProcessed !== undefined) {
+        if (queryParams?.includeNotProcessed !== undefined) {
             localVarQueryParameters['includeNotProcessed'] = ObjectSerializer.serialize(queryParams.includeNotProcessed, "boolean");
         }
 
@@ -1208,8 +1222,9 @@ export class ProjectsApi {
      * List all information about this project.
      * @summary Project information
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getProjectInfo (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectInfoResponse> {
+    public async getProjectInfo (projectId: number, queryParams?: getProjectInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectInfoResponse> {
         const localVarPath = this.basePath + '/api/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1230,6 +1245,10 @@ export class ProjectsApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getProjectInfo.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1543,7 +1562,7 @@ export class ProjectsApi {
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
      */
-    public async getProjectTrainingDataSummary (projectId: number, queryParams: getProjectTrainingDataSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectTrainingDataSummaryResponse> {
+    public async getProjectTrainingDataSummary (projectId: number, queryParams?: getProjectTrainingDataSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectTrainingDataSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-summary'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1566,11 +1585,11 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling getProjectTrainingDataSummary.');
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "boolean");
         }
 
-        if (queryParams.includeNotProcessed !== undefined) {
+        if (queryParams?.includeNotProcessed !== undefined) {
             localVarQueryParameters['includeNotProcessed'] = ObjectSerializer.serialize(queryParams.includeNotProcessed, "boolean");
         }
 
@@ -1694,6 +1713,89 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "SocketTokenResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get the last used synthetic data config
+     * @summary Get synthetic data config
+     * @param projectId Project ID
+     */
+    public async getSyntheticDataConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSyntheticDataConfigResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/synthetic-data'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getSyntheticDataConfig.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetSyntheticDataConfigResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetSyntheticDataConfigResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2457,7 +2559,7 @@ export class ProjectsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param project Only include projects that contain this string
      */
-    public async listPublicProjects (queryParams: listPublicProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectsResponse> {
+    public async listPublicProjects (queryParams?: listPublicProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectsResponse> {
         const localVarPath = this.basePath + '/api/projects/public';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -2472,15 +2574,15 @@ export class ProjectsApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.project !== undefined) {
+        if (queryParams?.project !== undefined) {
             localVarQueryParameters['project'] = ObjectSerializer.serialize(queryParams.project, "string");
         }
 

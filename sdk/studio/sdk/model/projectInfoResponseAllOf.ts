@@ -86,6 +86,10 @@ export class ProjectInfoResponseAllOf {
     * List of notifications to show within the project
     */
     'notifications': Array<string>;
+    /**
+    * Default selected impulse (by ID).
+    */
+    'defaultImpulseId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -239,6 +243,11 @@ export class ProjectInfoResponseAllOf {
             "name": "notifications",
             "baseName": "notifications",
             "type": "Array<string>"
+        },
+        {
+            "name": "defaultImpulseId",
+            "baseName": "defaultImpulseId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

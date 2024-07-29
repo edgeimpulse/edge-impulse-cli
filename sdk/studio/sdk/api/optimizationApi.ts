@@ -430,11 +430,11 @@ export class OptimizationApi {
         }
 
 
-        if (queryParams.organizationId !== undefined) {
+        if (queryParams?.organizationId !== undefined) {
             localVarQueryParameters['organizationId'] = ObjectSerializer.serialize(queryParams.organizationId, "number");
         }
 
-        if (queryParams.organizationDspId !== undefined) {
+        if (queryParams?.organizationDspId !== undefined) {
             localVarQueryParameters['organizationDspId'] = ObjectSerializer.serialize(queryParams.organizationDspId, "number");
         }
 

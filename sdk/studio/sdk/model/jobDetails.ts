@@ -55,6 +55,10 @@ export class JobDetails {
     'computeTime'?: number;
     'createdByUser'?: JobCreatedByUser;
     /**
+    * Some job categories keep a counter on the job number, e.g. in synthetic data, so we know what the 1st, 2nd etc. job was in the UI.
+    */
+    'categoryCount'?: number;
+    /**
     * List of jobs children isd triggered by this job
     */
     'childrenIds'?: Array<number>;
@@ -124,6 +128,11 @@ export class JobDetails {
             "name": "createdByUser",
             "baseName": "createdByUser",
             "type": "JobCreatedByUser"
+        },
+        {
+            "name": "categoryCount",
+            "baseName": "categoryCount",
+            "type": "number"
         },
         {
             "name": "childrenIds",

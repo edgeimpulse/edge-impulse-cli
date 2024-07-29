@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { CreateBlockVersionResponseAllOf } from './createBlockVersionResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetNewBlockIdResponseAllOf } from './getNewBlockIdResponseAllOf';
 
-export class CreateBlockVersionResponse {
+export class GetNewBlockIdResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,10 +22,7 @@ export class CreateBlockVersionResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * ID of the new block
-    */
-    'id': number;
+    'blockId': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,13 +38,13 @@ export class CreateBlockVersionResponse {
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
+            "name": "blockId",
+            "baseName": "blockId",
             "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateBlockVersionResponse.attributeTypeMap;
+        return GetNewBlockIdResponse.attributeTypeMap;
     }
 }
 

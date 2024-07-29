@@ -10,35 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { DSPGroup } from './dSPGroup';
-import { DSPInfo } from './dSPInfo';
 
-export class DSPConfigResponseAllOf {
-    'dsp'?: DSPInfo;
-    'config'?: Array<DSPGroup>;
-    'configError'?: string;
+export class DetailedImpulsePretrainedModelInfo {
+    'fileName': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "dsp",
-            "baseName": "dsp",
-            "type": "DSPInfo"
-        },
-        {
-            "name": "config",
-            "baseName": "config",
-            "type": "Array<DSPGroup>"
-        },
-        {
-            "name": "configError",
-            "baseName": "configError",
+            "name": "fileName",
+            "baseName": "fileName",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return DSPConfigResponseAllOf.attributeTypeMap;
+        return DetailedImpulsePretrainedModelInfo.attributeTypeMap;
     }
 }
 

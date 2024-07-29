@@ -352,7 +352,7 @@ export class DSPApi {
      * @param category Which of the three acquisition categories to download data from
      * @param raw Whether to download raw data or processed data. Processed data is the default.
      */
-    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams?: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/x/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -391,7 +391,7 @@ export class DSPApi {
             throw new Error('Required parameter category was null or undefined when calling downloadDspData.');
         }
 
-        if (queryParams.raw !== undefined) {
+        if (queryParams?.raw !== undefined) {
             localVarQueryParameters['raw'] = ObjectSerializer.serialize(queryParams.raw, "boolean");
         }
 
@@ -722,15 +722,15 @@ export class DSPApi {
             throw new Error('Required parameter category was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
-        if (queryParams.featureAx1 !== undefined) {
+        if (queryParams?.featureAx1 !== undefined) {
             localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(queryParams.featureAx1, "number");
         }
 
-        if (queryParams.featureAx2 !== undefined) {
+        if (queryParams?.featureAx2 !== undefined) {
             localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(queryParams.featureAx2, "number");
         }
 
-        if (queryParams.featureAx3 !== undefined) {
+        if (queryParams?.featureAx3 !== undefined) {
             localVarQueryParameters['featureAx3'] = ObjectSerializer.serialize(queryParams.featureAx3, "number");
         }
 
@@ -1164,7 +1164,7 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
      */
-    public async getDspMetadata (projectId: number, dspId: number, queryParams: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
+    public async getDspMetadata (projectId: number, dspId: number, queryParams?: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1195,7 +1195,7 @@ export class DSPApi {
             throw new Error('Required parameter dspId was null or undefined when calling getDspMetadata.');
         }
 
-        if (queryParams.excludeIncludedSamples !== undefined) {
+        if (queryParams?.excludeIncludedSamples !== undefined) {
             localVarQueryParameters['excludeIncludedSamples'] = ObjectSerializer.serialize(queryParams.excludeIncludedSamples, "boolean");
         }
 
@@ -1262,7 +1262,7 @@ export class DSPApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      */
-    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1301,7 +1301,7 @@ export class DSPApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getDspRawSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
@@ -1415,11 +1415,11 @@ export class DSPApi {
         }
 
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
@@ -1734,11 +1734,11 @@ export class DSPApi {
             throw new Error('Required parameter dspRunRequestWithoutFeatures was null or undefined when calling runDspSampleSlice.');
         }
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
@@ -1853,11 +1853,11 @@ export class DSPApi {
         }
 
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 

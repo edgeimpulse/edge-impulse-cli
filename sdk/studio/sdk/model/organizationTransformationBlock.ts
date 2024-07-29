@@ -68,6 +68,10 @@ export class OrganizationTransformationBlock {
     * Whether to show this block in \'Create transformation job\'. Only applies for standalone blocks.
     */
     'showInCreateTransformationJob': boolean;
+    /**
+    * Whether to show this block in \'Synthetic data\'. Only applies for standalone blocks.
+    */
+    'showInSyntheticData': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -210,6 +214,11 @@ export class OrganizationTransformationBlock {
         {
             "name": "showInCreateTransformationJob",
             "baseName": "showInCreateTransformationJob",
+            "type": "boolean"
+        },
+        {
+            "name": "showInSyntheticData",
+            "baseName": "showInSyntheticData",
             "type": "boolean"
         }    ];
 

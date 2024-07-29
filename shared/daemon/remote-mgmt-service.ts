@@ -65,7 +65,7 @@ export interface RemoteMgmtConfig {
     api: {
         projects: {
             // eslint-disable-next-line max-len
-            getProjectInfo(projectId: number): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
+            getProjectInfo(projectId: number, queryParams: { impulseId?: number }): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
         };
         devices: {
             // eslint-disable-next-line max-len
@@ -600,7 +600,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
     private async getProjectInfo() {
         try {
-            let projectBody = (await this._eiConfig.api.projects.getProjectInfo(this._projectId));
+            let projectBody = (await this._eiConfig.api.projects.getProjectInfo(this._projectId, { }));
             return projectBody.project;
         }
         catch (ex2) {

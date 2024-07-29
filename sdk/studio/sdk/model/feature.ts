@@ -15,5 +15,5 @@
 * Known feature identifiers.
 */
 
-export type Feature = 'signup-thank-you-page' | 'professional-tier' | 'stripe-live-mode';
-export const FeatureValues: string[] = ['signup-thank-you-page', 'professional-tier', 'stripe-live-mode'];
+export type Feature = 'signup-thank-you-page' | 'stripe-live-mode';
+export const FeatureValues: string[] = ['signup-thank-you-page', 'stripe-live-mode'];

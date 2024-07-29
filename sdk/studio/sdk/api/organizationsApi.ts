@@ -53,6 +53,7 @@ import { GetOrganizationDataExportResponse } from '../model/getOrganizationDataE
 import { GetOrganizationDataExportsResponse } from '../model/getOrganizationDataExportsResponse';
 import { GetWhitelabelResponse } from '../model/getWhitelabelResponse';
 import { InviteOrganizationMemberRequest } from '../model/inviteOrganizationMemberRequest';
+import { ListJobsResponse } from '../model/listJobsResponse';
 import { ListOrganizationApiKeysResponse } from '../model/listOrganizationApiKeysResponse';
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
 import { ListProjectsResponse } from '../model/listProjectsResponse';
@@ -135,6 +136,11 @@ type whitelabelAdminGetOrganizationInfoQueryParams = {
     includeDeleted?: boolean,
 };
 
+type whitelabelAdminGetOrganizationJobsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type whitelabelAdminGetOrganizationUsageReportsQueryParams = {
     limit?: number,
     offset?: number,
@@ -149,12 +155,22 @@ type whitelabelAdminGetOrganizationsQueryParams = {
     search?: string,
 };
 
+type whitelabelAdminGetProjectJobsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type whitelabelAdminGetProjectsQueryParams = {
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
     search?: string,
+};
+
+type whitelabelAdminGetUserJobsQueryParams = {
+    limit?: number,
+    offset?: number,
 };
 
 type whitelabelAdminGetUsersQueryParams = {
@@ -780,7 +796,7 @@ export class OrganizationsApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getOrganizationDataExports (organizationId: number, queryParams: getOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+    public async getOrganizationDataExports (organizationId: number, queryParams?: getOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/exports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -803,11 +819,11 @@ export class OrganizationsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationDataExports.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -956,7 +972,7 @@ export class OrganizationsApi {
      * @param excludeEdgeImpulseUsers Whether to exclude Edge Impulse users when counting enterprise entitlements usage
      * @param projectVisibility What project visibility type to include when counting enterprise entitlements usage
      */
-    public async getOrganizationMetrics (organizationId: number, queryParams: getOrganizationMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationMetricsResponse> {
+    public async getOrganizationMetrics (organizationId: number, queryParams?: getOrganizationMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationMetricsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/metrics'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -979,11 +995,11 @@ export class OrganizationsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationMetrics.');
         }
 
-        if (queryParams.excludeEdgeImpulseUsers !== undefined) {
+        if (queryParams?.excludeEdgeImpulseUsers !== undefined) {
             localVarQueryParameters['excludeEdgeImpulseUsers'] = ObjectSerializer.serialize(queryParams.excludeEdgeImpulseUsers, "boolean");
         }
 
-        if (queryParams.projectVisibility !== undefined) {
+        if (queryParams?.projectVisibility !== undefined) {
             localVarQueryParameters['projectVisibility'] = ObjectSerializer.serialize(queryParams.projectVisibility, "ProjectVisibility");
         }
 
@@ -2399,7 +2415,7 @@ export class OrganizationsApi {
      * @param organizationId Organization ID
      * @param developmentBoardRequest 
      */
-    public async whitelabelAdminAddDevelopmentBoard (organizationId: number, developmentBoardRequest?: DevelopmentBoardRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DevelopmentBoardCreatedResponse> {
+    public async whitelabelAdminAddDevelopmentBoard (organizationId: number, developmentBoardRequest: DevelopmentBoardRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DevelopmentBoardCreatedResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2420,6 +2436,13 @@ export class OrganizationsApi {
 
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminAddDevelopmentBoard.');
+        }
+
+        // verify required parameter 'developmentBoardRequest' is not null or undefined
+
+
+        if (developmentBoardRequest === null || developmentBoardRequest === undefined) {
+            throw new Error('Required parameter developmentBoardRequest was null or undefined when calling whitelabelAdminAddDevelopmentBoard.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2687,7 +2710,7 @@ export class OrganizationsApi {
      * @param innerOrganizationId Organization ID within the context of a white label
      * @param adminAddOrganizationUserRequest 
      */
-    public async whitelabelAdminAddUserToOrganization (organizationId: number, innerOrganizationId: number, adminAddOrganizationUserRequest?: AdminAddOrganizationUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async whitelabelAdminAddUserToOrganization (organizationId: number, innerOrganizationId: number, adminAddOrganizationUserRequest: AdminAddOrganizationUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/members'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
@@ -2716,6 +2739,13 @@ export class OrganizationsApi {
 
         if (innerOrganizationId === null || innerOrganizationId === undefined) {
             throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminAddUserToOrganization.');
+        }
+
+        // verify required parameter 'adminAddOrganizationUserRequest' is not null or undefined
+
+
+        if (adminAddOrganizationUserRequest === null || adminAddOrganizationUserRequest === undefined) {
+            throw new Error('Required parameter adminAddOrganizationUserRequest was null or undefined when calling whitelabelAdminAddUserToOrganization.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2781,7 +2811,7 @@ export class OrganizationsApi {
      * @param projectId Project ID
      * @param adminAddProjectUserRequest 
      */
-    public async whitelabelAdminAddUserToProject (organizationId: number, projectId: number, adminAddProjectUserRequest?: AdminAddProjectUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async whitelabelAdminAddUserToProject (organizationId: number, projectId: number, adminAddProjectUserRequest: AdminAddProjectUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects/{projectId}/members'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
@@ -2810,6 +2840,13 @@ export class OrganizationsApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling whitelabelAdminAddUserToProject.');
+        }
+
+        // verify required parameter 'adminAddProjectUserRequest' is not null or undefined
+
+
+        if (adminAddProjectUserRequest === null || adminAddProjectUserRequest === undefined) {
+            throw new Error('Required parameter adminAddProjectUserRequest was null or undefined when calling whitelabelAdminAddUserToProject.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3215,11 +3252,11 @@ export class OrganizationsApi {
         }
 
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
@@ -4160,11 +4197,11 @@ export class OrganizationsApi {
         }
 
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
@@ -4332,7 +4369,7 @@ export class OrganizationsApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async whitelabelAdminGetOrganizationExports (organizationId: number, innerOrganizationId: number, queryParams: whitelabelAdminGetOrganizationExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+    public async whitelabelAdminGetOrganizationExports (organizationId: number, innerOrganizationId: number, queryParams?: whitelabelAdminGetOrganizationExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/exports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
@@ -4363,11 +4400,11 @@ export class OrganizationsApi {
             throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationExports.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -4433,7 +4470,7 @@ export class OrganizationsApi {
      * @param innerOrganizationId Organization ID within the context of a white label
      * @param includeDeleted Whether to include deleted entities (users, projects, orgs)
      */
-    public async whitelabelAdminGetOrganizationInfo (organizationId: number, innerOrganizationId: number, queryParams: whitelabelAdminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
+    public async whitelabelAdminGetOrganizationInfo (organizationId: number, innerOrganizationId: number, queryParams?: whitelabelAdminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
@@ -4464,7 +4501,7 @@ export class OrganizationsApi {
             throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationInfo.');
         }
 
-        if (queryParams.includeDeleted !== undefined) {
+        if (queryParams?.includeDeleted !== undefined) {
             localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
@@ -4505,6 +4542,108 @@ export class OrganizationsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "AdminOrganizationInfoResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * White label admin only API to get the list of all jobs for a organization.
+     * @summary White Label Admin - Get organization jobs
+     * @param organizationId Organization ID
+     * @param innerOrganizationId Organization ID within the context of a white label
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async whitelabelAdminGetOrganizationJobs (organizationId: number, innerOrganizationId: number, queryParams?: whitelabelAdminGetOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/jobs'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetOrganizationJobs.');
+        }
+
+        // verify required parameter 'innerOrganizationId' is not null or undefined
+
+
+        if (innerOrganizationId === null || innerOrganizationId === undefined) {
+            throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -4632,7 +4771,7 @@ export class OrganizationsApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async whitelabelAdminGetOrganizationUsageReports (organizationId: number, innerOrganizationId: number, queryParams: whitelabelAdminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportsResponse> {
+    public async whitelabelAdminGetOrganizationUsageReports (organizationId: number, innerOrganizationId: number, queryParams?: whitelabelAdminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations/{innerOrganizationId}/usage/reports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'innerOrganizationId' + '}', encodeURIComponent(String(innerOrganizationId)));
@@ -4663,11 +4802,11 @@ export class OrganizationsApi {
             throw new Error('Required parameter innerOrganizationId was null or undefined when calling whitelabelAdminGetOrganizationUsageReports.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -4737,7 +4876,7 @@ export class OrganizationsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async whitelabelAdminGetOrganizations (organizationId: number, queryParams: whitelabelAdminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
+    public async whitelabelAdminGetOrganizations (organizationId: number, queryParams?: whitelabelAdminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/organizations'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -4760,27 +4899,27 @@ export class OrganizationsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetOrganizations.');
         }
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.includeDeleted !== undefined) {
+        if (queryParams?.includeDeleted !== undefined) {
             localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -4932,6 +5071,108 @@ export class OrganizationsApi {
     }
 
     /**
+     * White label admin only API to get the list of all jobs for a project.
+     * @summary White Label Admin - Get project jobs
+     * @param organizationId Organization ID
+     * @param projectId Project ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async whitelabelAdminGetProjectJobs (organizationId: number, projectId: number, queryParams?: whitelabelAdminGetProjectJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects/{projectId}/jobs'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetProjectJobs.');
+        }
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling whitelabelAdminGetProjectJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to get the list of all projects.
      * @summary White Label Admin - Get all white label projects
      * @param organizationId Organization ID
@@ -4941,7 +5182,7 @@ export class OrganizationsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async whitelabelAdminGetProjects (organizationId: number, queryParams: whitelabelAdminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
+    public async whitelabelAdminGetProjects (organizationId: number, queryParams?: whitelabelAdminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/projects'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -4964,23 +5205,23 @@ export class OrganizationsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetProjects.');
         }
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -5132,6 +5373,108 @@ export class OrganizationsApi {
     }
 
     /**
+     * White label admin only  API to get the list of all project jobs for a user.
+     * @summary White Label Admin - Get user jobs
+     * @param organizationId Organization ID
+     * @param userId User ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async whitelabelAdminGetUserJobs (organizationId: number, userId: number, queryParams?: whitelabelAdminGetUserJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/users/{userId}/jobs'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetUserJobs.');
+        }
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling whitelabelAdminGetUserJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * White label admin only API to get marketing metrics about a user.
      * @summary White Label Admin - Get white label user metrics
      * @param organizationId Organization ID
@@ -5235,7 +5578,7 @@ export class OrganizationsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async whitelabelAdminGetUsers (organizationId: number, queryParams: whitelabelAdminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
+    public async whitelabelAdminGetUsers (organizationId: number, queryParams?: whitelabelAdminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/users'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -5258,31 +5601,31 @@ export class OrganizationsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling whitelabelAdminGetUsers.');
         }
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.tier !== undefined) {
+        if (queryParams?.tier !== undefined) {
             localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "UserTierEnum");
         }
 
-        if (queryParams.fields !== undefined) {
+        if (queryParams?.fields !== undefined) {
             localVarQueryParameters['fields'] = ObjectSerializer.serialize(queryParams.fields, "string");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -6010,7 +6353,7 @@ export class OrganizationsApi {
      * @param developmentBoardId Development board ID.
      * @param developmentBoardRequestUpdate 
      */
-    public async whitelabelAdminUpdateDevelopmentBoard (organizationId: number, developmentBoardId: number, developmentBoardRequestUpdate?: DevelopmentBoardRequestUpdate, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async whitelabelAdminUpdateDevelopmentBoard (organizationId: number, developmentBoardId: number, developmentBoardRequestUpdate: DevelopmentBoardRequestUpdate, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/whitelabel/development-boards/{developmentBoardId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'developmentBoardId' + '}', encodeURIComponent(String(developmentBoardId)));
@@ -6039,6 +6382,13 @@ export class OrganizationsApi {
 
         if (developmentBoardId === null || developmentBoardId === undefined) {
             throw new Error('Required parameter developmentBoardId was null or undefined when calling whitelabelAdminUpdateDevelopmentBoard.');
+        }
+
+        // verify required parameter 'developmentBoardRequestUpdate' is not null or undefined
+
+
+        if (developmentBoardRequestUpdate === null || developmentBoardRequestUpdate === undefined) {
+            throw new Error('Required parameter developmentBoardRequestUpdate was null or undefined when calling whitelabelAdminUpdateDevelopmentBoard.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

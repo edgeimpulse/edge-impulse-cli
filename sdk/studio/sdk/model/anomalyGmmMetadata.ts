@@ -10,18 +10,8 @@
  * Do not edit the class manually.
  */
 
-import { AnomalyGmmMetadataAllOf } from './anomalyGmmMetadataAllOf';
-import { GenericApiResponse } from './genericApiResponse';
 
 export class AnomalyGmmMetadata {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
     /**
     * 2D array of shape (n, m)
     */
@@ -38,16 +28,6 @@ export class AnomalyGmmMetadata {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "means",
             "baseName": "means",

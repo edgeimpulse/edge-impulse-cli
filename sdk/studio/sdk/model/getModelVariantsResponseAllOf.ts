@@ -16,7 +16,7 @@ export class GetModelVariantsResponseAllOf {
     /**
     * All model variants relevant for all learn blocks in the project
     */
-    'modelVariants'?: Array<ProjectModelVariant>;
+    'modelVariants': Array<ProjectModelVariant>;
 
     static discriminator: string | undefined = undefined;
 

@@ -31,7 +31,7 @@ export class AdminGetOrganizationComputeTimeUsageResponse {
     */
     'gpuComputeTime'?: number;
     /**
-    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as 1 x CPU + 3 x GPU minutes.
+    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as CPU + GPU minutes.
     */
     'totalComputeTime'?: number;
 

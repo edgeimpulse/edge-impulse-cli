@@ -11,12 +11,13 @@
  */
 
 import { OrganizationAddDatasetRequestBucket } from './organizationAddDatasetRequestBucket';
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 
 export class OrganizationAddDatasetRequest {
     'dataset': string;
     'tags': Array<string>;
     'category': string;
-    'type': OrganizationAddDatasetRequestTypeEnum;
+    'type': OrganizationDatasetTypeEnum;
     'bucket': OrganizationAddDatasetRequestBucket;
 
     static discriminator: string | undefined = undefined;
@@ -40,7 +41,7 @@ export class OrganizationAddDatasetRequest {
         {
             "name": "type",
             "baseName": "type",
-            "type": "OrganizationAddDatasetRequestTypeEnum"
+            "type": "OrganizationDatasetTypeEnum"
         },
         {
             "name": "bucket",
@@ -53,6 +54,3 @@ export class OrganizationAddDatasetRequest {
     }
 }
 
-
-export type OrganizationAddDatasetRequestTypeEnum = 'files' | 'clinical';
-export const OrganizationAddDatasetRequestTypeEnumValues: string[] = ['files', 'clinical'];

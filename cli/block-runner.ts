@@ -1083,13 +1083,13 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             this._projectId = runner.projectId;
         }
 
-        const projectInfo = await this._eiConfig.api.projects.getProjectInfo(this._projectId);
+        const projectInfo = await this._eiConfig.api.projects.getProjectInfo(this._projectId, { });
 
         console.log(CON_PREFIX, `Loading data from project "${projectInfo.project.owner} / ${projectInfo.project.name}" (ID: ${this._projectId}) ` +
             `(run with --clean to switch projects)`);
 
         let impulseRes = (
-            await this._eiConfig.api.impulse.getImpulse(this._projectId)
+            await this._eiConfig.api.impulse.getImpulse(this._projectId, { })
         );
 
         if (!impulseRes.success) {
@@ -1121,7 +1121,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         }
 
         if (!runner.blockId) {
-            let learnBlocks = impulseRes.impulse.learnBlocks.filter(x => x.primaryVersion);
+            let learnBlocks = impulseRes.impulse.learnBlocks;
 
             if (learnBlocks.length === 1) {
                 learnBlockId = learnBlocks[0].id;
@@ -1407,7 +1407,7 @@ export class BlockRunnerDeploy extends BlockRunner {
         }
 
         let projectInfo = (
-            await this._eiConfig.api.projects.getProjectInfo(this._projectId)
+            await this._eiConfig.api.projects.getProjectInfo(this._projectId, { })
         );
 
         if (!projectInfo.success) {

@@ -12,6 +12,7 @@
 
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
@@ -44,6 +45,10 @@ export class AddOrganizationTransferLearningBlockRequest {
     * If set, requires this block to be scheduled on GPU.
     */
     'indRequiresGpu'?: boolean;
+    /**
+    * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
+    */
+    'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -112,6 +117,11 @@ export class AddOrganizationTransferLearningBlockRequest {
             "name": "indRequiresGpu",
             "baseName": "indRequiresGpu",
             "type": "boolean"
+        },
+        {
+            "name": "customModelVariants",
+            "baseName": "customModelVariants",
+            "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
         }    ];
 
     static getAttributeTypeMap() {

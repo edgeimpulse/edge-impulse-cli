@@ -175,8 +175,8 @@ export class OptimizeConfigResponse {
 export type OptimizeConfigResponseDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection_bounding_boxes' | 'object_detection_centroids' | 'visual_ad';
 export const OptimizeConfigResponseDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection_bounding_boxes', 'object_detection_centroids', 'visual_ad'];
 
-export type OptimizeConfigResponseClassificationTypeEnum = 'classification' | 'regression';
-export const OptimizeConfigResponseClassificationTypeEnumValues: string[] = ['classification', 'regression'];
+export type OptimizeConfigResponseClassificationTypeEnum = 'classification' | 'regression' | 'anomaly' | 'object_detection';
+export const OptimizeConfigResponseClassificationTypeEnumValues: string[] = ['classification', 'regression', 'anomaly', 'object_detection'];
 
 export type OptimizeConfigResponseTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian' | 'custom';
 export const OptimizeConfigResponseTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian', 'custom'];

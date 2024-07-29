@@ -134,11 +134,11 @@ export class AuthApi {
         }
 
 
-        if (queryParams.sso !== undefined) {
+        if (queryParams?.sso !== undefined) {
             localVarQueryParameters['sso'] = ObjectSerializer.serialize(queryParams.sso, "string");
         }
 
-        if (queryParams.sig !== undefined) {
+        if (queryParams?.sig !== undefined) {
             localVarQueryParameters['sig'] = ObjectSerializer.serialize(queryParams.sig, "string");
         }
 

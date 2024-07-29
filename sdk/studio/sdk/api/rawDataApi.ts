@@ -176,6 +176,7 @@ type getAutoLabelerImageQueryParams = {
 type getSampleQueryParams = {
     limitPayloadValues?: number,
     cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleAsAudioQueryParams = {
@@ -188,11 +189,13 @@ type getSampleAsAudioQueryParams = {
 type getSampleAsImageQueryParams = {
     afterInputBlock?: boolean,
     cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleAsVideoQueryParams = {
     afterInputBlock?: boolean,
     cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleMetadataQueryParams = {
@@ -202,12 +205,14 @@ type getSampleMetadataQueryParams = {
 type getSampleSliceQueryParams = {
     sliceStart: number,
     sliceEnd?: number,
+    impulseId?: number,
 };
 
 type getUncroppedDownsampledSampleQueryParams = {
     limitPayloadValues?: number,
     zoomStart?: number,
     zoomEnd?: number,
+    impulseId?: number,
 };
 
 type listSamplesQueryParams = {
@@ -341,51 +346,51 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.excludeIds !== undefined) {
+        if (queryParams?.excludeIds !== undefined) {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -491,51 +496,51 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.excludeIds !== undefined) {
+        if (queryParams?.excludeIds !== undefined) {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -649,51 +654,51 @@ export class RawDataApi {
             throw new Error('Required parameter editSampleLabelRequest was null or undefined when calling batchEditLabels.');
         }
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.excludeIds !== undefined) {
+        if (queryParams?.excludeIds !== undefined) {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -800,51 +805,51 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.excludeIds !== undefined) {
+        if (queryParams?.excludeIds !== undefined) {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -958,51 +963,51 @@ export class RawDataApi {
             throw new Error('Required parameter moveRawDataRequest was null or undefined when calling batchMove.');
         }
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.excludeIds !== undefined) {
+        if (queryParams?.excludeIds !== undefined) {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -1374,43 +1379,43 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -2230,7 +2235,7 @@ export class RawDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getAllImportedFrom (projectId: number, queryParams: getAllImportedFromQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImportedFromResponse> {
+    public async getAllImportedFrom (projectId: number, queryParams?: getAllImportedFromQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImportedFromResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/imported-from'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2253,11 +2258,11 @@ export class RawDataApi {
             throw new Error('Required parameter projectId was null or undefined when calling getAllImportedFrom.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -2435,7 +2440,7 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.image !== undefined) {
+        if (queryParams?.image !== undefined) {
             localVarQueryParameters['image'] = ObjectSerializer.serialize(queryParams.image, "string");
         }
 
@@ -3174,8 +3179,9 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSample (projectId: number, sampleId: number, queryParams: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3206,12 +3212,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
-        if (queryParams.cacheKey !== undefined) {
+        if (queryParams?.cacheKey !== undefined) {
             localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3317,19 +3327,19 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.axisIx !== undefined) {
+        if (queryParams?.axisIx !== undefined) {
             localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(queryParams.axisIx, "number");
         }
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
-        if (queryParams.cacheKey !== undefined) {
+        if (queryParams?.cacheKey !== undefined) {
             localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
         }
 
@@ -3395,8 +3405,9 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSampleAsImage (projectId: number, sampleId: number, queryParams: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3427,12 +3438,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsImage.');
         }
 
-        if (queryParams.afterInputBlock !== undefined) {
+        if (queryParams?.afterInputBlock !== undefined) {
             localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
         }
 
-        if (queryParams.cacheKey !== undefined) {
+        if (queryParams?.cacheKey !== undefined) {
             localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3589,8 +3604,9 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3621,12 +3637,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsVideo.');
         }
 
-        if (queryParams.afterInputBlock !== undefined) {
+        if (queryParams?.afterInputBlock !== undefined) {
             localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
         }
 
-        if (queryParams.cacheKey !== undefined) {
+        if (queryParams?.cacheKey !== undefined) {
             localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3720,7 +3740,7 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
@@ -3786,6 +3806,7 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
     public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
@@ -3825,12 +3846,16 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3896,8 +3921,9 @@ export class RawDataApi {
      * @param limitPayloadValues Limit the number of payload values in the response
      * @param zoomStart Zoom into the sample, with the focus starting at this index
      * @param zoomEnd Zoom into the sample, with the focus ending at this index
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3928,16 +3954,20 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getUncroppedDownsampledSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
-        if (queryParams.zoomStart !== undefined) {
+        if (queryParams?.zoomStart !== undefined) {
             localVarQueryParameters['zoomStart'] = ObjectSerializer.serialize(queryParams.zoomStart, "number");
         }
 
-        if (queryParams.zoomEnd !== undefined) {
+        if (queryParams?.zoomEnd !== undefined) {
             localVarQueryParameters['zoomEnd'] = ObjectSerializer.serialize(queryParams.zoomEnd, "number");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4292,55 +4322,55 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.excludeSensors !== undefined) {
+        if (queryParams?.excludeSensors !== undefined) {
             localVarQueryParameters['excludeSensors'] = ObjectSerializer.serialize(queryParams.excludeSensors, "boolean");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 

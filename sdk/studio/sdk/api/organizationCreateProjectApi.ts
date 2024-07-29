@@ -468,15 +468,15 @@ export class OrganizationCreateProjectApi {
         }
 
 
-        if (queryParams.transformLimit !== undefined) {
+        if (queryParams?.transformLimit !== undefined) {
             localVarQueryParameters['transformLimit'] = ObjectSerializer.serialize(queryParams.transformLimit, "number");
         }
 
-        if (queryParams.transformOffset !== undefined) {
+        if (queryParams?.transformOffset !== undefined) {
             localVarQueryParameters['transformOffset'] = ObjectSerializer.serialize(queryParams.transformOffset, "number");
         }
 
-        if (queryParams.selection !== undefined) {
+        if (queryParams?.selection !== undefined) {
             localVarQueryParameters['selection'] = ObjectSerializer.serialize(queryParams.selection, "string");
         }
 
@@ -543,7 +543,7 @@ export class OrganizationCreateProjectApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param includePipelineJobs If enabled, also includes jobs that are part of a pipeline
      */
-    public async getOrganizationCreateProjects (organizationId: number, queryParams: getOrganizationCreateProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationGetCreateProjectsResponse> {
+    public async getOrganizationCreateProjects (organizationId: number, queryParams?: getOrganizationCreateProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationGetCreateProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -566,15 +566,15 @@ export class OrganizationCreateProjectApi {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationCreateProjects.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.includePipelineJobs !== undefined) {
+        if (queryParams?.includePipelineJobs !== undefined) {
             localVarQueryParameters['includePipelineJobs'] = ObjectSerializer.serialize(queryParams.includePipelineJobs, "boolean");
         }
 

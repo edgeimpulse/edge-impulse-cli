@@ -10,8 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyGmmMetadata } from './anomalyGmmMetadata';
+import { GenericApiResponse } from './genericApiResponse';
 
-export class AnomalyGmmMetadataAllOf {
+export class AnomalyGmmMetadataResponse {
+    /**
+    * Whether the operation succeeded
+    */
+    'success': boolean;
+    /**
+    * Optional error description (set if \'success\' was false)
+    */
+    'error'?: string;
     /**
     * 2D array of shape (n, m)
     */
@@ -29,6 +39,16 @@ export class AnomalyGmmMetadataAllOf {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        },
+        {
             "name": "means",
             "baseName": "means",
             "type": "Array<Array<number>>"
@@ -45,7 +65,7 @@ export class AnomalyGmmMetadataAllOf {
         }    ];
 
     static getAttributeTypeMap() {
-        return AnomalyGmmMetadataAllOf.attributeTypeMap;
+        return AnomalyGmmMetadataResponse.attributeTypeMap;
     }
 }
 

@@ -16,7 +16,7 @@ export class StartClassifyJobRequest {
     /**
     * Set of model variants to run the classify job against.
     */
-    'modelVariants': Array<KerasModelVariantEnum>;
+    'modelVariants'?: Array<KerasModelVariantEnum>;
 
     static discriminator: string | undefined = undefined;
 

@@ -35,6 +35,7 @@ export class OptimizeStateResponseAllOf {
     'jobError'?: string;
     'workers': Array<OptimizeStateResponseAllOfWorkers>;
     'nextRunIndex': number;
+    'isWhitelabel': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -88,6 +89,11 @@ export class OptimizeStateResponseAllOf {
             "name": "nextRunIndex",
             "baseName": "nextRunIndex",
             "type": "number"
+        },
+        {
+            "name": "isWhitelabel",
+            "baseName": "isWhitelabel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

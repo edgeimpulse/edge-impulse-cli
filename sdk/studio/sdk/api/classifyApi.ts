@@ -47,6 +47,7 @@ export enum ClassifyApiApiKeys {
 
 type classifySampleQueryParams = {
     includeDebugInfo?: boolean,
+    impulseId?: number,
 };
 
 type classifySampleByLearnBlockV2QueryParams = {
@@ -56,22 +57,34 @@ type classifySampleByLearnBlockV2QueryParams = {
 type classifySampleForVariantsQueryParams = {
     includeDebugInfo?: boolean,
     variants: string,
+    impulseId?: number,
 };
 
 type classifySampleV2QueryParams = {
     includeDebugInfo?: boolean,
     variant?: KerasModelVariantEnum,
+    impulseId?: number,
 };
 
 type getClassifyJobResultQueryParams = {
     featureExplorerOnly?: boolean,
     variant?: KerasModelVariantEnum,
+    impulseId?: number,
 };
 
 type getClassifyJobResultPageQueryParams = {
     limit?: number,
     offset?: number,
     variant?: KerasModelVariantEnum,
+    impulseId?: number,
+};
+
+type getClassifyMetricsAllVariantsQueryParams = {
+    impulseId?: number,
+};
+
+type getSampleWindowFromCacheQueryParams = {
+    impulseId?: number,
 };
 
 
@@ -144,8 +157,9 @@ export class ClassifyApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async classifySample (projectId: number, sampleId: number, queryParams: classifySampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
+    public async classifySample (projectId: number, sampleId: number, queryParams?: classifySampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -176,8 +190,12 @@ export class ClassifyApi {
             throw new Error('Required parameter sampleId was null or undefined when calling classifySample.');
         }
 
-        if (queryParams.includeDebugInfo !== undefined) {
+        if (queryParams?.includeDebugInfo !== undefined) {
             localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -344,7 +362,7 @@ export class ClassifyApi {
      * @param blockId Block ID
      * @param variant Keras model variant
      */
-    public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams: classifySampleByLearnBlockV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+    public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams?: classifySampleByLearnBlockV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/anomaly-gmm/v2/{blockId}/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -383,7 +401,7 @@ export class ClassifyApi {
             throw new Error('Required parameter blockId was null or undefined when calling classifySampleByLearnBlockV2.');
         }
 
-        if (queryParams.variant !== undefined) {
+        if (queryParams?.variant !== undefined) {
             localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
         }
 
@@ -449,6 +467,7 @@ export class ClassifyApi {
      * @param sampleId Sample ID
      * @param variants List of keras model variants, given as a JSON string
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
     public async classifySampleForVariants (projectId: number, sampleId: number, queryParams: classifySampleForVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponseMultipleVariants | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/variants'
@@ -488,12 +507,16 @@ export class ClassifyApi {
         }
 
 
-        if (queryParams.includeDebugInfo !== undefined) {
+        if (queryParams?.includeDebugInfo !== undefined) {
             localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
         }
 
-        if (queryParams.variants !== undefined) {
+        if (queryParams?.variants !== undefined) {
             localVarQueryParameters['variants'] = ObjectSerializer.serialize(queryParams.variants, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -558,8 +581,9 @@ export class ClassifyApi {
      * @param sampleId Sample ID
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
      * @param variant Keras model variant
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async classifySampleV2 (projectId: number, sampleId: number, queryParams: classifySampleV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+    public async classifySampleV2 (projectId: number, sampleId: number, queryParams?: classifySampleV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -590,12 +614,16 @@ export class ClassifyApi {
             throw new Error('Required parameter sampleId was null or undefined when calling classifySampleV2.');
         }
 
-        if (queryParams.includeDebugInfo !== undefined) {
+        if (queryParams?.includeDebugInfo !== undefined) {
             localVarQueryParameters['includeDebugInfo'] = ObjectSerializer.serialize(queryParams.includeDebugInfo, "boolean");
         }
 
-        if (queryParams.variant !== undefined) {
+        if (queryParams?.variant !== undefined) {
             localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -659,8 +687,9 @@ export class ClassifyApi {
      * @param projectId Project ID
      * @param featureExplorerOnly Whether to get only the classification results relevant to the feature explorer.
      * @param variant Keras model variant
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getClassifyJobResult (projectId: number, queryParams: getClassifyJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
+    public async getClassifyJobResult (projectId: number, queryParams?: getClassifyJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -683,12 +712,16 @@ export class ClassifyApi {
             throw new Error('Required parameter projectId was null or undefined when calling getClassifyJobResult.');
         }
 
-        if (queryParams.featureExplorerOnly !== undefined) {
+        if (queryParams?.featureExplorerOnly !== undefined) {
             localVarQueryParameters['featureExplorerOnly'] = ObjectSerializer.serialize(queryParams.featureExplorerOnly, "boolean");
         }
 
-        if (queryParams.variant !== undefined) {
+        if (queryParams?.variant !== undefined) {
             localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -753,8 +786,9 @@ export class ClassifyApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param variant Keras model variant
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getClassifyJobResultPage (projectId: number, queryParams: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
+    public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result/page'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -777,16 +811,20 @@ export class ClassifyApi {
             throw new Error('Required parameter projectId was null or undefined when calling getClassifyJobResultPage.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.variant !== undefined) {
+        if (queryParams?.variant !== undefined) {
             localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -848,8 +886,9 @@ export class ClassifyApi {
      * Get metrics, calculated during a classify all job, for all available model variants. This is experimental and may change in the future.
      * @summary Get metrics for all available model variants
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getClassifyMetricsAllVariants (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<MetricsAllVariantsResponse> {
+    public async getClassifyMetricsAllVariants (projectId: number, queryParams?: getClassifyMetricsAllVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<MetricsAllVariantsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/metrics'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -870,6 +909,10 @@ export class ClassifyApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getClassifyMetricsAllVariants.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -933,8 +976,9 @@ export class ClassifyApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param windowIndex Sample window index
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/raw-data/{windowIndex}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -971,6 +1015,10 @@ export class ClassifyApi {
 
         if (windowIndex === null || windowIndex === undefined) {
             throw new Error('Required parameter windowIndex was null or undefined when calling getSampleWindowFromCache.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

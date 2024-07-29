@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationCreateProjectWithFilesAllOfFiles {
@@ -23,7 +24,7 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     * Only set after job was finished
     */
     'lengthString': string;
-    'sourceDatasetType': OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum;
+    'sourceDatasetType': OrganizationDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,7 +67,7 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
         {
             "name": "sourceDatasetType",
             "baseName": "sourceDatasetType",
-            "type": "OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum"
+            "type": "OrganizationDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -74,6 +75,3 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
     }
 }
 
-
-export type OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnum = 'files' | 'clinical';
-export const OrganizationCreateProjectWithFilesAllOfFilesSourceDatasetTypeEnumValues: string[] = ['files', 'clinical'];

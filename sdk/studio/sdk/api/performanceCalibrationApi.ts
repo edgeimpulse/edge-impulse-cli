@@ -45,8 +45,48 @@ export enum PerformanceCalibrationApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type clearPerformanceCalibrationStateQueryParams = {
+    impulseId?: number,
+};
+
+type deletePerformanceCalibrationSavedParametersQueryParams = {
+    impulseId?: number,
+};
+
+type getPerformanceCalibrationGroundTruthQueryParams = {
+    impulseId?: number,
+};
+
+type getPerformanceCalibrationParameterSetsQueryParams = {
+    impulseId?: number,
+};
+
+type getPerformanceCalibrationRawResultQueryParams = {
+    impulseId?: number,
+};
+
+type getPerformanceCalibrationSavedParametersQueryParams = {
+    impulseId?: number,
+};
+
+type getPerformanceCalibrationStatusQueryParams = {
+    impulseId?: number,
+};
+
+type getWavFileQueryParams = {
+    impulseId?: number,
+};
+
+type setPerformanceCalibrationSavedParametersQueryParams = {
+    impulseId?: number,
+};
+
 type uploadLabeledAudioFormParams = {
     zip: RequestFile,
+};
+
+type uploadLabeledAudioQueryParams = {
+    impulseId?: number,
 };
 
 
@@ -117,8 +157,9 @@ export class PerformanceCalibrationApi {
      * Deletes all state related to performance calibration (used in tests for example).
      * @summary Clear Performance Calibration state
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async clearPerformanceCalibrationState (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearPerformanceCalibrationState (projectId: number, queryParams?: clearPerformanceCalibrationStateQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/clear'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -139,6 +180,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling clearPerformanceCalibrationState.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -200,8 +245,9 @@ export class PerformanceCalibrationApi {
      * Clears the current performance calibration parameters
      * @summary Clear performance calibration parameters
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async deletePerformanceCalibrationSavedParameters (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deletePerformanceCalibrationSavedParameters (projectId: number, queryParams?: deletePerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -222,6 +268,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deletePerformanceCalibrationSavedParameters.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -283,8 +333,9 @@ export class PerformanceCalibrationApi {
      * Get performance calibration ground truth data
      * @summary Get ground truth
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationGroundTruth (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationGroundTruthResponse> {
+    public async getPerformanceCalibrationGroundTruth (projectId: number, queryParams?: getPerformanceCalibrationGroundTruthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationGroundTruthResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/ground-truth'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -305,6 +356,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationGroundTruth.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -366,8 +421,9 @@ export class PerformanceCalibrationApi {
      * Get performance calibration parameter sets
      * @summary Get parameter sets
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationParameterSets (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParameterSetsResponse> {
+    public async getPerformanceCalibrationParameterSets (projectId: number, queryParams?: getPerformanceCalibrationParameterSetsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParameterSetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameter-sets'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -388,6 +444,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationParameterSets.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -449,8 +509,9 @@ export class PerformanceCalibrationApi {
      * Get performance calibration raw result
      * @summary Get raw result
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationRawResult (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationRawResultResponse> {
+    public async getPerformanceCalibrationRawResult (projectId: number, queryParams?: getPerformanceCalibrationRawResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationRawResultResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/raw-result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -471,6 +532,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationRawResult.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -532,8 +597,9 @@ export class PerformanceCalibrationApi {
      * Get performance calibration stored parameters
      * @summary Get parameters
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationSavedParameters (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParametersResponse> {
+    public async getPerformanceCalibrationSavedParameters (projectId: number, queryParams?: getPerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParametersResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -554,6 +620,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationSavedParameters.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -615,8 +685,9 @@ export class PerformanceCalibrationApi {
      * Get performance calibration status
      * @summary Get status
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationStatus (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationStatusResponse> {
+    public async getPerformanceCalibrationStatus (projectId: number, queryParams?: getPerformanceCalibrationStatusQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationStatusResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/status'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -637,6 +708,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPerformanceCalibrationStatus.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -698,8 +773,9 @@ export class PerformanceCalibrationApi {
      * Get the synthetic sample as a WAV file
      * @summary Get WAV file
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getWavFile (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getWavFile (projectId: number, queryParams?: getWavFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -720,6 +796,10 @@ export class PerformanceCalibrationApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getWavFile.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -782,8 +862,9 @@ export class PerformanceCalibrationApi {
      * @summary Save performance calibration parameters
      * @param projectId Project ID
      * @param performanceCalibrationSaveParameterSetRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async setPerformanceCalibrationSavedParameters (projectId: number, performanceCalibrationSaveParameterSetRequest: PerformanceCalibrationSaveParameterSetRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setPerformanceCalibrationSavedParameters (projectId: number, performanceCalibrationSaveParameterSetRequest: PerformanceCalibrationSaveParameterSetRequest, queryParams?: setPerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -811,6 +892,10 @@ export class PerformanceCalibrationApi {
 
         if (performanceCalibrationSaveParameterSetRequest === null || performanceCalibrationSaveParameterSetRequest === undefined) {
             throw new Error('Required parameter performanceCalibrationSaveParameterSetRequest was null or undefined when calling setPerformanceCalibrationSavedParameters.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -874,8 +959,9 @@ export class PerformanceCalibrationApi {
      * @summary Upload Performance Calibration Audio files
      * @param projectId Project ID
      * @param zip 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async uploadLabeledAudio (projectId: number, params: uploadLabeledAudioFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
+    public async uploadLabeledAudio (projectId: number, params: uploadLabeledAudioFormParams, queryParams?: uploadLabeledAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -904,6 +990,10 @@ export class PerformanceCalibrationApi {
         }
 
 
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);

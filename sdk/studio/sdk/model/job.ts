@@ -51,6 +51,10 @@ export class Job {
     */
     'computeTime'?: number;
     'createdByUser'?: JobCreatedByUser;
+    /**
+    * Some job categories keep a counter on the job number, e.g. in synthetic data, so we know what the 1st, 2nd etc. job was in the UI.
+    */
+    'categoryCount'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -109,6 +113,11 @@ export class Job {
             "name": "createdByUser",
             "baseName": "createdByUser",
             "type": "JobCreatedByUser"
+        },
+        {
+            "name": "categoryCount",
+            "baseName": "categoryCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

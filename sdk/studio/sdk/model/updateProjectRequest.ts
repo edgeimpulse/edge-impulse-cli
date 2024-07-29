@@ -150,6 +150,14 @@ export class UpdateProjectRequest {
     * Set of model variants enabled by default on the model testing and live classification pages.
     */
     'enabledModelProfilingVariants'?: Array<KerasModelVariantEnum>;
+    /**
+    * Which core metrics should be hidden in the impulse list. See \'GetAllDetailedImpulsesResponse\' for a list of all metrics.
+    */
+    'impulseListCoreMetricsHiddenColumns'?: Array<string>;
+    /**
+    * Which additional metrics should be shown in the impulse list. See \'GetAllDetailedImpulsesResponse\' for a list of all metrics.
+    */
+    'impulseListAdditionalMetricsShownColumns'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -348,6 +356,16 @@ export class UpdateProjectRequest {
             "name": "enabledModelProfilingVariants",
             "baseName": "enabledModelProfilingVariants",
             "type": "Array<KerasModelVariantEnum>"
+        },
+        {
+            "name": "impulseListCoreMetricsHiddenColumns",
+            "baseName": "impulseListCoreMetricsHiddenColumns",
+            "type": "Array<string>"
+        },
+        {
+            "name": "impulseListAdditionalMetricsShownColumns",
+            "baseName": "impulseListAdditionalMetricsShownColumns",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -832,15 +832,15 @@ export class OrganizationDataApi {
             throw new Error('Required parameter setOrganizationDataDatasetRequest was null or undefined when calling changeDatasetOrganizationDataItems.');
         }
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.dataIds !== undefined) {
+        if (queryParams?.dataIds !== undefined) {
             localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -938,15 +938,15 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.dataIds !== undefined) {
+        if (queryParams?.dataIds !== undefined) {
             localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -1252,7 +1252,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.fileName !== undefined) {
+        if (queryParams?.fileName !== undefined) {
             localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
@@ -1441,15 +1441,15 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.dataIds !== undefined) {
+        if (queryParams?.dataIds !== undefined) {
             localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -1515,7 +1515,7 @@ export class OrganizationDataApi {
      * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async deleteOrganizationProjectsData (organizationId: number, queryParams: deleteOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationProjectsData (organizationId: number, queryParams?: deleteOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1538,11 +1538,11 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationProjectsData.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
@@ -1747,7 +1747,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.path !== undefined) {
+        if (queryParams?.path !== undefined) {
             localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 
@@ -1851,7 +1851,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.fileName !== undefined) {
+        if (queryParams?.fileName !== undefined) {
             localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
@@ -1948,15 +1948,15 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.dataIds !== undefined) {
+        if (queryParams?.dataIds !== undefined) {
             localVarQueryParameters['dataIds'] = ObjectSerializer.serialize(queryParams.dataIds, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -2022,7 +2022,7 @@ export class OrganizationDataApi {
      * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async downloadOrganizationProjectsData (organizationId: number, queryParams: downloadOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationProjectsData (organizationId: number, queryParams?: downloadOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2045,11 +2045,11 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationProjectsData.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
@@ -2115,7 +2115,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, queryParams: downloadOrganizationSingleDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, queryParams?: downloadOrganizationSingleDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2146,7 +2146,7 @@ export class OrganizationDataApi {
             throw new Error('Required parameter dataId was null or undefined when calling downloadOrganizationSingleDataItem.');
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -2304,7 +2304,7 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async getOrganizationDataItem (organizationId: number, dataId: number, queryParams: getOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemResponse> {
+    public async getOrganizationDataItem (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2335,7 +2335,7 @@ export class OrganizationDataApi {
             throw new Error('Required parameter dataId was null or undefined when calling getOrganizationDataItem.');
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
@@ -2402,7 +2402,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getOrganizationDataItemTransformJobs (organizationId: number, dataId: number, queryParams: getOrganizationDataItemTransformJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemTransformJobsResponse> {
+    public async getOrganizationDataItemTransformJobs (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemTransformJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemTransformJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/transformation-jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2433,11 +2433,11 @@ export class OrganizationDataApi {
             throw new Error('Required parameter dataId was null or undefined when calling getOrganizationDataItemTransformJobs.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -2596,7 +2596,7 @@ export class OrganizationDataApi {
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;filename\&#39;, \&#39;label\&#39;, \&#39;project_name\&#39;, \&#39;category\&#39;, \&#39;sensors\&#39;, \&#39;frequency\&#39;, and any metadata through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      */
-    public async getOrganizationProjectsDataCount (organizationId: number, queryParams: getOrganizationProjectsDataCountQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationProjectsDataCountResponse> {
+    public async getOrganizationProjectsDataCount (organizationId: number, queryParams?: getOrganizationProjectsDataCountQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationProjectsDataCountResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/count'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2619,15 +2619,15 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationProjectsDataCount.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
@@ -2971,7 +2971,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationData (organizationId: number, queryParams: listOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
+    public async listOrganizationData (organizationId: number, queryParams?: listOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -2994,19 +2994,19 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationData.');
         }
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3074,7 +3074,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationFiles (organizationId: number, queryParams: listOrganizationFilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationFilesResponse> {
+    public async listOrganizationFiles (organizationId: number, queryParams?: listOrganizationFilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationFilesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/files'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3097,19 +3097,19 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationFiles.');
         }
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3178,7 +3178,7 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationProjectsData (organizationId: number, queryParams: listOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationProjectsDataResponse> {
+    public async listOrganizationProjectsData (organizationId: number, queryParams?: listOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationProjectsDataResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3201,23 +3201,23 @@ export class OrganizationDataApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationProjectsData.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
-        if (queryParams.filter !== undefined) {
+        if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3815,7 +3815,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.fileName !== undefined) {
+        if (queryParams?.fileName !== undefined) {
             localVarQueryParameters['fileName'] = ObjectSerializer.serialize(queryParams.fileName, "string");
         }
 
@@ -3910,7 +3910,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.dataset !== undefined) {
+        if (queryParams?.dataset !== undefined) {
             localVarQueryParameters['dataset'] = ObjectSerializer.serialize(queryParams.dataset, "string");
         }
 
@@ -4795,7 +4795,7 @@ export class OrganizationDataApi {
         }
 
 
-        if (queryParams.path !== undefined) {
+        if (queryParams?.path !== undefined) {
             localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 

@@ -11,32 +11,20 @@
  */
 
 
-export class AnomalyModelMetadataAllOfClusters {
-    /**
-    * Center of each cluster (one value per axis)
-    */
-    'center': Array<number>;
-    /**
-    * Size of the cluster
-    */
-    'maxError': number;
+export class UpdateImpulseRequest {
+    'name'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "center",
-            "baseName": "center",
-            "type": "Array<number>"
-        },
-        {
-            "name": "maxError",
-            "baseName": "maxError",
-            "type": "number"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AnomalyModelMetadataAllOfClusters.attributeTypeMap;
+        return UpdateImpulseRequest.attributeTypeMap;
     }
 }
 

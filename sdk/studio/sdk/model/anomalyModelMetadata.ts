@@ -10,21 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AnomalyModelMetadataAllOf } from './anomalyModelMetadataAllOf';
-import { AnomalyModelMetadataAllOfClusters } from './anomalyModelMetadataAllOfClusters';
-import { GenericApiResponse } from './genericApiResponse';
+import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class AnomalyModelMetadata {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
     /**
     * Date when the model was trained
     */
@@ -40,7 +30,7 @@ export class AnomalyModelMetadata {
     /**
     * Trained K-means clusters
     */
-    'clusters': Array<AnomalyModelMetadataAllOfClusters>;
+    'clusters': Array<AnomalyModelMetadataClusters>;
     /**
     * Which axes were included during training (by index)
     */
@@ -64,16 +54,6 @@ export class AnomalyModelMetadata {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
-        {
             "name": "created",
             "baseName": "created",
             "type": "Date"
@@ -91,7 +71,7 @@ export class AnomalyModelMetadata {
         {
             "name": "clusters",
             "baseName": "clusters",
-            "type": "Array<AnomalyModelMetadataAllOfClusters>"
+            "type": "Array<AnomalyModelMetadataClusters>"
         },
         {
             "name": "axes",

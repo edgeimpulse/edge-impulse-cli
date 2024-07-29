@@ -14,6 +14,7 @@ import { BlockDisplayCategory } from './blockDisplayCategory';
 import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
 import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
 import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
@@ -64,6 +65,10 @@ export class OrganizationTransferLearningBlock {
     'indRequiresGpu': boolean;
     'sourceCodeAvailable': boolean;
     'displayCategory'?: BlockDisplayCategory;
+    /**
+    * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
+    */
+    'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -192,6 +197,11 @@ export class OrganizationTransferLearningBlock {
             "name": "displayCategory",
             "baseName": "displayCategory",
             "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "customModelVariants",
+            "baseName": "customModelVariants",
+            "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
         }    ];
 
     static getAttributeTypeMap() {

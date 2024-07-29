@@ -231,7 +231,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 let name = await checkName(eiConfig, dataForwarderConfig.projectId, macAddress);
 
                 let whitelabelId = null;
-                const projectResponse = await eiConfig.api.projects.getProjectInfo(dataForwarderConfig.projectId);
+                const projectResponse = await eiConfig.api.projects.getProjectInfo(dataForwarderConfig.projectId, { });
                 if (projectResponse?.success && projectResponse?.project) {
                     whitelabelId = projectResponse.project.whitelabelId;
                 }
@@ -583,7 +583,7 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
 
 async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
     try {
-        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId));
+        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId, { }));
         return projectBody.project.name;
     }
     catch (ex2) {

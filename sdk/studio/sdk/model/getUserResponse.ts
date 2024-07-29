@@ -109,6 +109,10 @@ export class GetUserResponse {
     * Whether the current user has access to enterprise features. This is true if the user is an enterprise user, or has an active enterprise trial.
     */
     'hasEnterpriseFeaturesAccess': boolean;
+    /**
+    * Timezone for the user (or undefined if not specified).
+    */
+    'timezone'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -282,6 +286,11 @@ export class GetUserResponse {
             "name": "hasEnterpriseFeaturesAccess",
             "baseName": "hasEnterpriseFeaturesAccess",
             "type": "boolean"
+        },
+        {
+            "name": "timezone",
+            "baseName": "timezone",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

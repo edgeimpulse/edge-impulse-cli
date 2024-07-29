@@ -14,6 +14,8 @@ export interface RunnerConfig {
     blockId: number | undefined;
     storageIndex: number | undefined;
     storagePath: string;
+    // key = projectId
+    impulseIdsForProjectId: { [k: string ]: { impulseId: number } } | undefined;
 }
 
 export interface SerialConfig {
@@ -483,6 +485,23 @@ export class Config {
         await this.store(config);
     }
 
+    async setRunnerImpulseIdForProjectId(projectId: number, impulseId: number) {
+        let config = await this.load();
+        config.runner.impulseIdsForProjectId = config.runner.impulseIdsForProjectId || { };
+        config.runner.impulseIdsForProjectId[projectId.toString()] = { impulseId };
+        await this.store(config);
+    }
+
+    async getRunnerImpulseIdForProjectId(projectId: number) {
+        let config = await this.load();
+        if (!config.runner.impulseIdsForProjectId) {
+            return null;
+        }
+
+        let ret = <{ impulseId: number } | undefined>config.runner.impulseIdsForProjectId[projectId.toString()];
+        return ret ? ret.impulseId : null;
+    }
+
     async getStudioUrl(whitelabelId: number | null) {
         if (whitelabelId !== null) {
             const whitelabelRequest = await this._api?.whitelabels.getWhitelabelDomain(whitelabelId);
@@ -523,7 +542,8 @@ export class Config {
                     projectId: undefined,
                     blockId: undefined,
                     storageIndex: undefined,
-                    storagePath: this.getDefaultStoragePath()
+                    storagePath: this.getDefaultStoragePath(),
+                    impulseIdsForProjectId: undefined,
                 }
             };
         }

@@ -292,15 +292,15 @@ async function startWebServer(config: EiSerialDeviceConfig) {
             let modeLines = lines.filter(x => x.startsWith('#'));
 
             for (let element of modeLines) {
-                switch (element) {
-                    case '#Regression results:\r':
-                    case '#Classification results:\r':
+                switch (element.trim()) {
+                    case '#Regression results:':
+                    case '#Classification results:':
                         modes.push('classification');
                         break;
-                    case '#Object detection results:\r':
+                    case '#Object detection results:':
                         modes.push('object_detection');
                         break;
-                    case '#Visual anomaly grid results:\r':
+                    case '#Visual anomaly grid results:':
                         modes.push('visual_ad');
                         break;
                     default:

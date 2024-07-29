@@ -19,12 +19,18 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { CreateBlockVersionResponse } from '../model/createBlockVersionResponse';
+import { CloneImpulseRequest } from '../model/cloneImpulseRequest';
+import { CreateImpulseRequest } from '../model/createImpulseRequest';
+import { CreateImpulseResponse } from '../model/createImpulseResponse';
+import { CreateNewEmptyImpulseResponse } from '../model/createNewEmptyImpulseResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetAllDetailedImpulsesResponse } from '../model/getAllDetailedImpulsesResponse';
+import { GetAllImpulsesResponse } from '../model/getAllImpulsesResponse';
 import { GetImpulseBlocksResponse } from '../model/getImpulseBlocksResponse';
 import { GetImpulseResponse } from '../model/getImpulseResponse';
-import { Impulse } from '../model/impulse';
-import { ImpulseBlockVersion } from '../model/impulseBlockVersion';
+import { GetNewBlockIdResponse } from '../model/getNewBlockIdResponse';
+import { StartJobResponse } from '../model/startJobResponse';
+import { UpdateImpulseRequest } from '../model/updateImpulseRequest';
 import { VerifyDspBlockUrlRequest } from '../model/verifyDspBlockUrlRequest';
 import { VerifyDspBlockUrlResponse } from '../model/verifyDspBlockUrlResponse';
 
@@ -44,6 +50,32 @@ export enum ImpulseApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+type createImpulseQueryParams = {
+    impulseId?: number,
+};
+
+type deleteImpulseQueryParams = {
+    impulseId?: number,
+};
+
+type getImpulseQueryParams = {
+    impulseId?: number,
+};
+
+type getImpulseAllQueryParams = {
+    impulseId?: number,
+};
+
+type setLegacyImpulseStateInternalFormParams = {
+    zip: RequestFile,
+    impulse: RequestFile,
+    config: RequestFile,
+};
+
+type updateImpulseQueryParams = {
+    impulseId?: number,
+};
 
 
 export type ImpulseApiOpts = {
@@ -110,17 +142,16 @@ export class ImpulseApi {
 
 
     /**
-     * Create a new version of a given block
-     * @summary Create new block version
+     * Clones the complete impulse (incl. config and data) of an existing impulse.
+     * @summary Clone impulse (complete)
      * @param projectId Project ID
-     * @param blockType Type of block
-     * @param blockId Block ID
+     * @param impulseId Impulse ID
+     * @param cloneImpulseRequest 
      */
-    public async createBlockVersion (projectId: number, blockType: string, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateBlockVersionResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/impulse/block-versions/{blockType}/{blockId}'
+    public async cloneImpulseComplete (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/clone/complete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'blockType' + '}', encodeURIComponent(String(blockType)))
-            .replace('{' + 'blockId' + '}', encodeURIComponent(String(blockId)));
+            .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -138,21 +169,21 @@ export class ImpulseApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling createBlockVersion.');
+            throw new Error('Required parameter projectId was null or undefined when calling cloneImpulseComplete.');
         }
 
-        // verify required parameter 'blockType' is not null or undefined
+        // verify required parameter 'impulseId' is not null or undefined
 
 
-        if (blockType === null || blockType === undefined) {
-            throw new Error('Required parameter blockType was null or undefined when calling createBlockVersion.');
+        if (impulseId === null || impulseId === undefined) {
+            throw new Error('Required parameter impulseId was null or undefined when calling cloneImpulseComplete.');
         }
 
-        // verify required parameter 'blockId' is not null or undefined
+        // verify required parameter 'cloneImpulseRequest' is not null or undefined
 
 
-        if (blockId === null || blockId === undefined) {
-            throw new Error('Required parameter blockId was null or undefined when calling createBlockVersion.');
+        if (cloneImpulseRequest === null || cloneImpulseRequest === undefined) {
+            throw new Error('Required parameter cloneImpulseRequest was null or undefined when calling cloneImpulseComplete.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -168,6 +199,7 @@ export class ImpulseApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(cloneImpulseRequest, "CloneImpulseRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -186,12 +218,12 @@ export class ImpulseApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<CreateBlockVersionResponse>((resolve, reject) => {
+            return new Promise<StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "CreateBlockVersionResponse");
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -211,12 +243,114 @@ export class ImpulseApi {
     }
 
     /**
-     * Sets the impulse for this project.
+     * Clones the complete structure (incl. config) of an impulse. Does not copy data.
+     * @summary Clone impulse (structure)
+     * @param projectId Project ID
+     * @param impulseId Impulse ID
+     * @param cloneImpulseRequest 
+     */
+    public async cloneImpulseStructure (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateImpulseResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/clone/structure'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling cloneImpulseStructure.');
+        }
+
+        // verify required parameter 'impulseId' is not null or undefined
+
+
+        if (impulseId === null || impulseId === undefined) {
+            throw new Error('Required parameter impulseId was null or undefined when calling cloneImpulseStructure.');
+        }
+
+        // verify required parameter 'cloneImpulseRequest' is not null or undefined
+
+
+        if (cloneImpulseRequest === null || cloneImpulseRequest === undefined) {
+            throw new Error('Required parameter cloneImpulseRequest was null or undefined when calling cloneImpulseStructure.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(cloneImpulseRequest, "CloneImpulseRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateImpulseResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateImpulseResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Sets the impulse for this project.  If you specify `impulseId` then that impulse is created/updated, otherwise the default impulse is created/updated.
      * @summary Create impulse
      * @param projectId Project ID
-     * @param impulse 
+     * @param createImpulseRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async createImpulse (projectId: number, impulse: Impulse, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async createImpulse (projectId: number, createImpulseRequest: CreateImpulseRequest, queryParams?: createImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -239,11 +373,15 @@ export class ImpulseApi {
             throw new Error('Required parameter projectId was null or undefined when calling createImpulse.');
         }
 
-        // verify required parameter 'impulse' is not null or undefined
+        // verify required parameter 'createImpulseRequest' is not null or undefined
 
 
-        if (impulse === null || impulse === undefined) {
-            throw new Error('Required parameter impulse was null or undefined when calling createImpulse.');
+        if (createImpulseRequest === null || createImpulseRequest === undefined) {
+            throw new Error('Required parameter createImpulseRequest was null or undefined when calling createImpulse.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -259,7 +397,7 @@ export class ImpulseApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(impulse, "Impulse")
+            body: ObjectSerializer.serialize(createImpulseRequest, "CreateImpulseRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -278,12 +416,12 @@ export class ImpulseApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<CreateImpulseResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "CreateImpulseResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -303,11 +441,95 @@ export class ImpulseApi {
     }
 
     /**
-     * Completely clears the impulse for this project.
-     * @summary Delete impulse
+     * Create a new empty impulse, and return the ID.
+     * @summary Create new empty impulse
      * @param projectId Project ID
      */
-    public async deleteImpulse (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async createNewEmptyImpulse (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateNewEmptyImpulseResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/new'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createNewEmptyImpulse.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateNewEmptyImpulseResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateNewEmptyImpulseResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Clears the impulse and all associated blocks for this project.  If you specify `impulseId` then that impulse is cleared, otherwise the default impulse is cleared.
+     * @summary Delete impulse
+     * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async deleteImpulse (projectId: number, queryParams?: deleteImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -328,6 +550,10 @@ export class ImpulseApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling deleteImpulse.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -386,11 +612,178 @@ export class ImpulseApi {
     }
 
     /**
-     * Retrieve the impulse for this project
-     * @summary Get impulse
+     * Retrieve all impulse for a project, including accuracy and performance metrics.
+     * @summary Get all impulses (incl. metrics)
      * @param projectId Project ID
      */
-    public async getImpulse (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
+    public async getAllDetailedImpulses (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllDetailedImpulsesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulses-detailed'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAllDetailedImpulses.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAllDetailedImpulsesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAllDetailedImpulsesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve all impulse for a project
+     * @summary Get all impulses
+     * @param projectId Project ID
+     */
+    public async getAllImpulses (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImpulsesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulses'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAllImpulses.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAllImpulsesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAllImpulsesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve the impulse for this project. If you specify `impulseId` then that impulse is returned, otherwise the default impulse is returned.
+     * @summary Get impulse
+     * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async getImpulse (projectId: number, queryParams?: getImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -411,6 +804,10 @@ export class ImpulseApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getImpulse.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -469,11 +866,12 @@ export class ImpulseApi {
     }
 
     /**
-     * Retrieve the impulse for this project including disabled blocks
+     * Retrieve the impulse for this project including disabled blocks. If you specify `impulseId` then that impulse is returned, otherwise the default impulse is returned.
      * @summary Get impulse including disabled blocks
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getImpulseAll (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
+    public async getImpulseAll (projectId: number, queryParams?: getImpulseAllQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/all'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -494,6 +892,10 @@ export class ImpulseApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getImpulseAll.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -635,18 +1037,13 @@ export class ImpulseApi {
     }
 
     /**
-     * Update the details of a block version
-     * @summary Update block version details
+     * Returns an unused block ID. Use this function to determine new block IDs when you construct an impulse; so you won\'t accidentally re-use block IDs.
+     * @summary Get new block ID
      * @param projectId Project ID
-     * @param blockType Type of block
-     * @param blockId Block ID
-     * @param impulseBlockVersion 
      */
-    public async updateBlockVersion (projectId: number, blockType: string, blockId: number, impulseBlockVersion: ImpulseBlockVersion, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/impulse/block-versions/{blockType}/{blockId}'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'blockType' + '}', encodeURIComponent(String(blockType)))
-            .replace('{' + 'blockId' + '}', encodeURIComponent(String(blockId)));
+    public async getNewBlockId (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetNewBlockIdResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/get-new-block-id'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -664,28 +1061,7 @@ export class ImpulseApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling updateBlockVersion.');
-        }
-
-        // verify required parameter 'blockType' is not null or undefined
-
-
-        if (blockType === null || blockType === undefined) {
-            throw new Error('Required parameter blockType was null or undefined when calling updateBlockVersion.');
-        }
-
-        // verify required parameter 'blockId' is not null or undefined
-
-
-        if (blockId === null || blockId === undefined) {
-            throw new Error('Required parameter blockId was null or undefined when calling updateBlockVersion.');
-        }
-
-        // verify required parameter 'impulseBlockVersion' is not null or undefined
-
-
-        if (impulseBlockVersion === null || impulseBlockVersion === undefined) {
-            throw new Error('Required parameter impulseBlockVersion was null or undefined when calling updateBlockVersion.');
+            throw new Error('Required parameter projectId was null or undefined when calling getNewBlockId.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -694,14 +1070,232 @@ export class ImpulseApi {
         let localVarUseFormData = false;
 
         let localVarRequestOptions: localVarRequest.Options = {
-            method: 'PUT',
+            method: 'POST',
             qs: localVarQueryParameters,
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(impulseBlockVersion, "ImpulseBlockVersion")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetNewBlockIdResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetNewBlockIdResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Set the complete impulse state for a project, writing impulses in the old (pre-impulse experiments) format. This completely clears out all files on FSx for this project. This is an internal API.
+     * @summary Set legacy impulse
+     * @param projectId Project ID
+     * @param zip 
+     * @param impulse 
+     * @param config 
+     */
+    public async setLegacyImpulseStateInternal (projectId: number, params: setLegacyImpulseStateInternalFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/legacy-set-impulse'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setLegacyImpulseStateInternal.');
+        }
+
+        // verify required parameter 'zip' is not null or undefined
+        if (params.zip === null || params.zip === undefined) {
+            throw new Error('Required parameter params.zip was null or undefined when calling setLegacyImpulseStateInternal.');
+        }
+
+
+
+        // verify required parameter 'impulse' is not null or undefined
+        if (params.impulse === null || params.impulse === undefined) {
+            throw new Error('Required parameter params.impulse was null or undefined when calling setLegacyImpulseStateInternal.');
+        }
+
+
+
+        // verify required parameter 'config' is not null or undefined
+        if (params.config === null || params.config === undefined) {
+            throw new Error('Required parameter params.config was null or undefined when calling setLegacyImpulseStateInternal.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.zip !== undefined) {
+            localVarFormParams['zip'] = params.zip;
+        }
+        localVarUseFormData = true;
+
+        if (params.impulse !== undefined) {
+            localVarFormParams['impulse'] = params.impulse;
+        }
+        localVarUseFormData = true;
+
+        if (params.config !== undefined) {
+            localVarFormParams['config'] = params.config;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Update the impulse for this project.  If you specify `impulseId` then that impulse is created/updated, otherwise the default impulse is created/updated.
+     * @summary Update impulse
+     * @param projectId Project ID
+     * @param updateImpulseRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async updateImpulse (projectId: number, updateImpulseRequest: UpdateImpulseRequest, queryParams?: updateImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/impulse/update'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateImpulse.');
+        }
+
+        // verify required parameter 'updateImpulseRequest' is not null or undefined
+
+
+        if (updateImpulseRequest === null || updateImpulseRequest === undefined) {
+            throw new Error('Required parameter updateImpulseRequest was null or undefined when calling updateImpulse.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(updateImpulseRequest, "UpdateImpulseRequest")
         };
 
         let authenticationPromise = Promise.resolve();

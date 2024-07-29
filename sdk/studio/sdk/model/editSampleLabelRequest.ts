@@ -15,7 +15,7 @@ export class EditSampleLabelRequest {
     /**
     * New label for this sample
     */
-    'label': string;
+    'label'?: string;
 
     static discriminator: string | undefined = undefined;
 

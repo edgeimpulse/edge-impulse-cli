@@ -138,7 +138,7 @@ async function connectToSerial(deviceId: string) {
                 console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax WE-I now');
             }
             else if(deviceType === HimaxDeviceTypes.WiseEye2) {
-                console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax Grove Vision AI Module V2 now');
+                console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Seeed Grove Vision AI Module V2 now');
             }
             else {
                 console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax device now');

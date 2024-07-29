@@ -22,7 +22,7 @@ import { LearnBlockType } from './learnBlockType';
 import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { TransferLearningModel } from './transferLearningModel';
 
-export class KerasResponseAllOf {
+export class KerasConfig {
     'dependencies': DependencyData;
     /**
     * Whether the block is trained
@@ -42,7 +42,7 @@ export class KerasResponseAllOf {
     /**
     * The mode (visual or expert) to use for editing this network.
     */
-    'mode': KerasResponseAllOfModeEnum;
+    'mode': KerasConfigModeEnum;
     /**
     * The visual layers (if in visual mode) for the neural network. This will be an empty array when in expert mode.
     */
@@ -152,7 +152,7 @@ export class KerasResponseAllOf {
         {
             "name": "mode",
             "baseName": "mode",
-            "type": "KerasResponseAllOfModeEnum"
+            "type": "KerasConfigModeEnum"
         },
         {
             "name": "visualLayers",
@@ -266,10 +266,10 @@ export class KerasResponseAllOf {
         }    ];
 
     static getAttributeTypeMap() {
-        return KerasResponseAllOf.attributeTypeMap;
+        return KerasConfig.attributeTypeMap;
     }
 }
 
 
-export type KerasResponseAllOfModeEnum = 'visual' | 'expert';
-export const KerasResponseAllOfModeEnumValues: string[] = ['visual', 'expert'];
+export type KerasConfigModeEnum = 'visual' | 'expert';
+export const KerasConfigModeEnumValues: string[] = ['visual', 'expert'];

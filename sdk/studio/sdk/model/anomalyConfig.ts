@@ -10,16 +10,16 @@
  * Do not edit the class manually.
  */
 
-import { AnomalyResponseAllOfAxes } from './anomalyResponseAllOfAxes';
+import { AnomalyConfigAxes } from './anomalyConfigAxes';
 import { DependencyData } from './dependencyData';
 
-export class AnomalyResponseAllOf {
+export class AnomalyConfig {
     'dependencies': DependencyData;
     'name': string;
     /**
     * Selectable axes for the anomaly detection block
     */
-    'axes': Array<AnomalyResponseAllOfAxes>;
+    'axes': Array<AnomalyConfigAxes>;
     /**
     * Whether the block is trained
     */
@@ -53,7 +53,7 @@ export class AnomalyResponseAllOf {
         {
             "name": "axes",
             "baseName": "axes",
-            "type": "Array<AnomalyResponseAllOfAxes>"
+            "type": "Array<AnomalyConfigAxes>"
         },
         {
             "name": "trained",
@@ -77,7 +77,7 @@ export class AnomalyResponseAllOf {
         }    ];
 
     static getAttributeTypeMap() {
-        return AnomalyResponseAllOf.attributeTypeMap;
+        return AnomalyConfig.attributeTypeMap;
     }
 }
 

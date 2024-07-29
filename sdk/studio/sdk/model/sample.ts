@@ -123,6 +123,10 @@ export class Sample {
     'sha256Hash': string;
     'structuredLabels'?: Array<StructuredLabel>;
     'structuredLabelsList'?: Array<string>;
+    /**
+    * If this sample was created by a synthetic data job, it\'s referenced here.
+    */
+    'createdBySyntheticDataJobId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -321,6 +325,11 @@ export class Sample {
             "name": "structuredLabelsList",
             "baseName": "structuredLabelsList",
             "type": "Array<string>"
+        },
+        {
+            "name": "createdBySyntheticDataJobId",
+            "baseName": "createdBySyntheticDataJobId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

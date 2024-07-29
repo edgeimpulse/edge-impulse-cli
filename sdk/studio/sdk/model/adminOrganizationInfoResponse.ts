@@ -34,7 +34,7 @@ export class AdminOrganizationInfoResponse {
     */
     'gpuComputeTime'?: number;
     /**
-    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as 1 x CPU + 3 x GPU minutes.
+    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as CPU + GPU minutes.
     */
     'totalComputeTime'?: number;
     'billable'?: boolean;
@@ -50,7 +50,7 @@ export class AdminOrganizationInfoResponse {
     /**
     * Metrics for the last 365 days
     */
-    'dailyMetrics'?: Array<DailyMetricsRecord>;
+    'dailyMetrics'?: Array<DailyMetricsRecord> | null;
 
     static discriminator: string | undefined = undefined;
 

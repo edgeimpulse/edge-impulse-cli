@@ -10,33 +10,29 @@
  * Do not edit the class manually.
  */
 
+import { Job } from './job';
+import { Sample } from './sample';
 
-export class AnomalyResponseAllOfAxes {
-    'label': string;
-    'selected': boolean;
-    'favourite': boolean;
+export class GetSyntheticDataConfigResponseAllOfRecentJobs {
+    'job': Job;
+    'samples': Array<Sample>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "label",
-            "baseName": "label",
-            "type": "string"
+            "name": "job",
+            "baseName": "job",
+            "type": "Job"
         },
         {
-            "name": "selected",
-            "baseName": "selected",
-            "type": "boolean"
-        },
-        {
-            "name": "favourite",
-            "baseName": "favourite",
-            "type": "boolean"
+            "name": "samples",
+            "baseName": "samples",
+            "type": "Array<Sample>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AnomalyResponseAllOfAxes.attributeTypeMap;
+        return GetSyntheticDataConfigResponseAllOfRecentJobs.attributeTypeMap;
     }
 }
 

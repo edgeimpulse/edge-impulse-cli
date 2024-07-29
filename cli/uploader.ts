@@ -424,7 +424,7 @@ const logAllAnnotationFormats = () => {
         await configFactory.setUploaderProjectId(projectId);
 
         if (!silentArgv) {
-            const projectInfo = await config.api.projects.getProjectInfo(projectId);
+            const projectInfo = await config.api.projects.getProjectInfo(projectId, { });
             let studioUrl = config.endpoints.internal.api.replace('/v1', '');
             if (projectInfo.project.whitelabelId) {
                 const whitelabelRes = await config.api.whitelabels.getWhitelabelDomain(

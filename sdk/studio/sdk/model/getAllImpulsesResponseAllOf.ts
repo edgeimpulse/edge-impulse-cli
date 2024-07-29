@@ -10,24 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { Impulse } from './impulse';
 
-export class CreateBlockVersionResponseAllOf {
-    /**
-    * ID of the new block
-    */
-    'id': number;
+export class GetAllImpulsesResponseAllOf {
+    'impulses': Array<Impulse>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "impulses",
+            "baseName": "impulses",
+            "type": "Array<Impulse>"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateBlockVersionResponseAllOf.attributeTypeMap;
+        return GetAllImpulsesResponseAllOf.attributeTypeMap;
     }
 }
 

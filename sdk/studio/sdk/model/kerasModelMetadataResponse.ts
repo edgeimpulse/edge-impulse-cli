@@ -10,14 +10,23 @@
  * Do not edit the class manually.
  */
 
+import { GenericApiResponse } from './genericApiResponse';
 import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
+import { KerasModelMetadata } from './kerasModelMetadata';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
-import { KerasModelMode } from './kerasModelMode';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
-export class KerasModelMetadataAllOf {
+export class KerasModelMetadataResponse {
+    /**
+    * Whether the operation succeeded
+    */
+    'success': boolean;
+    /**
+    * Optional error description (set if \'success\' was false)
+    */
+    'error'?: string;
     /**
     * Date when the model was trained
     */
@@ -44,13 +53,23 @@ export class KerasModelMetadataAllOf {
     */
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
     'hasTrainedModel': boolean;
-    'mode': KerasModelMode;
+    'mode': KerasModelMetadataResponseModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'imageInputScaling': ImageInputScaling;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        },
         {
             "name": "created",
             "baseName": "created",
@@ -94,7 +113,7 @@ export class KerasModelMetadataAllOf {
         {
             "name": "mode",
             "baseName": "mode",
-            "type": "KerasModelMode"
+            "type": "KerasModelMetadataResponseModeEnum"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -108,7 +127,10 @@ export class KerasModelMetadataAllOf {
         }    ];
 
     static getAttributeTypeMap() {
-        return KerasModelMetadataAllOf.attributeTypeMap;
+        return KerasModelMetadataResponse.attributeTypeMap;
     }
 }
 
+
+export type KerasModelMetadataResponseModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm';
+export const KerasModelMetadataResponseModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm'];

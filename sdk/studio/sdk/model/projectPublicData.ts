@@ -34,7 +34,13 @@ export class ProjectPublicData {
     'pageViewCount': number;
     'cloneCount': number;
     'totalSamplesCount'?: string;
+    /**
+    * Accuracy on training set.
+    */
     'trainingAccuracy'?: number;
+    /**
+    * Accuracy on test set.
+    */
     'testAccuracy'?: number;
     'readme'?: ProjectPublicDataReadme;
     /**

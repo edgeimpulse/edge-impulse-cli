@@ -19,6 +19,7 @@ import { LearnBlockType } from './learnBlockType';
 export class TransferLearningModel {
     'name': string;
     'shortName': string;
+    'abbreviatedName'?: string;
     'description': string;
     'hasNeurons': boolean;
     'hasDropout': boolean;
@@ -51,6 +52,11 @@ export class TransferLearningModel {
         {
             "name": "shortName",
             "baseName": "shortName",
+            "type": "string"
+        },
+        {
+            "name": "abbreviatedName",
+            "baseName": "abbreviatedName",
             "type": "string"
         },
         {

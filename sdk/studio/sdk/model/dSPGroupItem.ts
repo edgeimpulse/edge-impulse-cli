@@ -29,6 +29,10 @@ export class DSPGroupItem {
     * Interface section to render parameter in.
     */
     'section'?: DSPGroupItemSectionEnum;
+    /**
+    * Only valid for type \"string\". Will render a multiline text area.
+    */
+    'multiline'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -92,6 +96,11 @@ export class DSPGroupItem {
             "name": "section",
             "baseName": "section",
             "type": "DSPGroupItemSectionEnum"
+        },
+        {
+            "name": "multiline",
+            "baseName": "multiline",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

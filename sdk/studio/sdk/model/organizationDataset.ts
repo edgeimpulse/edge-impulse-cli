@@ -11,6 +11,7 @@
  */
 
 import { OrganizationDatasetBucket } from './organizationDatasetBucket';
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 
 export class OrganizationDataset {
     'dataset': string;
@@ -98,6 +99,3 @@ export class OrganizationDataset {
     }
 }
 
-
-export type OrganizationDatasetTypeEnum = 'files' | 'clinical';
-export const OrganizationDatasetTypeEnumValues: string[] = ['files', 'clinical'];

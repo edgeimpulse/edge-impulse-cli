@@ -16,6 +16,14 @@ import { ImpulseLearnBlock } from './impulseLearnBlock';
 
 export class Impulse {
     /**
+    * ID for this impulse.
+    */
+    'id': number;
+    /**
+    * Name for this impulse.
+    */
+    'name': string;
+    /**
     * Input Blocks that are part of this impulse
     */
     'inputBlocks': Array<ImpulseInputBlock>;
@@ -31,6 +39,16 @@ export class Impulse {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
         {
             "name": "inputBlocks",
             "baseName": "inputBlocks",

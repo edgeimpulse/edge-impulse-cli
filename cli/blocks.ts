@@ -9,7 +9,7 @@ import checkNewVersions from './check-new-version';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import unzip from 'unzipper';
-import tar from 'tar';
+import { c as compress } from 'tar';
 import crypto from 'crypto';
 import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from './init-cli-app';
@@ -24,31 +24,32 @@ import { ImageInputScaling, RequestDetailedFile, UpdateOrganizationTransferLearn
 const version = getCliVersion();
 
 export type BlockConfigItem = {
-    name: string,
-    description: string,
-    id?: number,
-    organizationId: number,
-    type: models.UploadCustomBlockRequestTypeEnum,
+    name: string;
+    description: string;
+    id?: number;
+    organizationId: number;
+    type: models.UploadCustomBlockRequestTypeEnum;
 } & ({
-    type: 'transform',
-    operatesOn: 'file' | 'directory' | 'standalone' | undefined,
+    type: 'transform';
+    operatesOn: 'file' | 'directory' | 'standalone' | undefined;
     transformMountpoints: {
         bucketId: number;
         mountPoint: string;
-    }[] | undefined,
+    }[] | undefined;
 } | {
-    type: 'transferLearning',
-    tlOperatesOn?: models.OrganizationTransferLearningOperatesOn,
-    tlObjectDetectionLastLayer?: models.ObjectDetectionLastLayer,
-    tlImageInputScaling?: ImageInputScaling,
+    type: 'transferLearning';
+    tlOperatesOn?: models.OrganizationTransferLearningOperatesOn;
+    tlObjectDetectionLastLayer?: models.ObjectDetectionLastLayer;
+    tlImageInputScaling?: ImageInputScaling;
     tlIndRequiresGpu?: boolean,
     repositoryUrl?: string;
+    tlCustomModelVariants?: models.OrganizationTransferLearningBlockCustomVariant[];
 } | {
-    type: 'deploy',
-    deployCategory?: 'library' | 'firmware',
+    type: 'deploy';
+    deployCategory?: 'library' | 'firmware';
 } | {
-    type: 'dsp',
-    port?: number,
+    type: 'dsp';
+    port?: number;
 });
 
 type BlockConfigV1 = {
@@ -946,6 +947,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         repositoryUrl: repoUrl,
                         implementationVersion,
                         parameters: parameters,
+                        customModelVariants: currentBlockConfig.tlCustomModelVariants,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newBlockObject);
@@ -1047,7 +1049,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 }
             }
             const compressCurrentDirectory = new Promise((resolve, reject) => {
-                tar.c({ gzip: true, follow: true, filter: (path) => {
+                compress({ gzip: true, follow: true, filter: (path) => {
                     const relativePath = Path.relative('.', path);
                     if (relativePath && ignore.ignores(relativePath)) {
                         return false;

@@ -27,7 +27,7 @@ export class AdminOrganizationInfoResponseAllOf {
     /**
     * Metrics for the last 365 days
     */
-    'dailyMetrics'?: Array<DailyMetricsRecord>;
+    'dailyMetrics'?: Array<DailyMetricsRecord> | null;
 
     static discriminator: string | undefined = undefined;
 

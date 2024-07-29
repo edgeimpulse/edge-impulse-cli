@@ -33,6 +33,10 @@ export class UpdateUserRequest {
     */
     'experiments'?: Array<string>;
     'projectsSortOrder'?: UserProjectsSortOrder;
+    /**
+    * User timezone.
+    */
+    'timezone'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -61,6 +65,11 @@ export class UpdateUserRequest {
             "name": "projectsSortOrder",
             "baseName": "projectsSortOrder",
             "type": "UserProjectsSortOrder"
+        },
+        {
+            "name": "timezone",
+            "baseName": "timezone",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -102,7 +102,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
 
     if (projectId) {
         try {
-            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
+            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId, { }));
             if (!opts.silentArgv) {
                 console.log('    Project:    ', projectInfoReq.project.name + ' (ID: ' + projectId + ')');
                 console.log('');

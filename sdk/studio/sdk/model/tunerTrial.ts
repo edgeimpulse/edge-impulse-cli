@@ -13,9 +13,11 @@
 import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialDspJobId } from './tunerTrialDspJobId';
 import { TunerTrialImpulse } from './tunerTrialImpulse';
+import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProject';
 
 export class TunerTrial {
     'id': string;
+    'name': string;
     'status': TunerTrialStatusEnum;
     'lastCompletedEpoch'?: Date;
     'lastCompletedTraining'?: Date;
@@ -30,6 +32,7 @@ export class TunerTrial {
     'dspJobId'?: TunerTrialDspJobId;
     'learnJobId'?: number;
     'devicePerformance'?: { [key: string]: object; };
+    'impulseAddedToProject'?: TunerTrialImpulseAddedToProject;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,6 +40,11 @@ export class TunerTrial {
         {
             "name": "id",
             "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         },
         {
@@ -108,6 +116,11 @@ export class TunerTrial {
             "name": "devicePerformance",
             "baseName": "devicePerformance",
             "type": "{ [key: string]: object; }"
+        },
+        {
+            "name": "impulseAddedToProject",
+            "baseName": "impulseAddedToProject",
+            "type": "TunerTrialImpulseAddedToProject"
         }    ];
 
     static getAttributeTypeMap() {

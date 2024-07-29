@@ -401,7 +401,7 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listArchivedOrganizationPipelines (organizationId: number, queryParams: listArchivedOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listArchivedOrganizationPipelines (organizationId: number, queryParams?: listArchivedOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/archived'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -424,7 +424,7 @@ export class OrganizationPipelinesApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listArchivedOrganizationPipelines.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
@@ -489,7 +489,7 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listOrganizationPipelines (organizationId: number, queryParams: listOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listOrganizationPipelines (organizationId: number, queryParams?: listOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -512,7 +512,7 @@ export class OrganizationPipelinesApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationPipelines.');
         }
 
-        if (queryParams.projectId !== undefined) {
+        if (queryParams?.projectId !== undefined) {
             localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
         }
 
@@ -578,7 +578,7 @@ export class OrganizationPipelinesApi {
      * @param pipelineId Pipeline ID
      * @param ignoreLastSuccessfulRun If set then &#x60;EI_LAST_SUCCESSFUL_RUN&#x60; is not set. You can use this to re-run a pipeline from scratch.
      */
-    public async runOrganizationPipeline (organizationId: number, pipelineId: number, queryParams: runOrganizationPipelineQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
+    public async runOrganizationPipeline (organizationId: number, pipelineId: number, queryParams?: runOrganizationPipelineQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}/run'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -609,7 +609,7 @@ export class OrganizationPipelinesApi {
             throw new Error('Required parameter pipelineId was null or undefined when calling runOrganizationPipeline.');
         }
 
-        if (queryParams.ignoreLastSuccessfulRun !== undefined) {
+        if (queryParams?.ignoreLastSuccessfulRun !== undefined) {
             localVarQueryParameters['ignoreLastSuccessfulRun'] = ObjectSerializer.serialize(queryParams.ignoreLastSuccessfulRun, "boolean");
         }
 

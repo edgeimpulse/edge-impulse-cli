@@ -65,6 +65,7 @@ import { JobDetailsResponse } from '../model/jobDetailsResponse';
 import { JobLogsResponse } from '../model/jobLogsResponse';
 import { JobMetricsResponse } from '../model/jobMetricsResponse';
 import { JobParentTypeEnum } from '../model/jobParentTypeEnum';
+import { ListJobsResponse } from '../model/listJobsResponse';
 import { ProjectInfoResponse } from '../model/projectInfoResponse';
 import { StartJobResponse } from '../model/startJobResponse';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
@@ -129,6 +130,11 @@ type adminGetOrganizationInfoQueryParams = {
     includeDeleted?: boolean,
 };
 
+type adminGetOrganizationJobsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type adminGetOrganizationUsageReportsQueryParams = {
     limit?: number,
     offset?: number,
@@ -143,12 +149,22 @@ type adminGetOrganizationsQueryParams = {
     search?: string,
 };
 
+type adminGetProjectJobsQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
 type adminGetProjectsQueryParams = {
     active?: number,
     sort?: string,
     limit?: number,
     offset?: number,
     search?: string,
+};
+
+type adminGetUserJobsQueryParams = {
+    limit?: number,
+    offset?: number,
 };
 
 type adminGetUsersQueryParams = {
@@ -406,7 +422,7 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param adminAddOrganizationUserRequest 
      */
-    public async adminAddUserToOrganization (organizationId: number, adminAddOrganizationUserRequest?: AdminAddOrganizationUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddUserToOrganization (organizationId: number, adminAddOrganizationUserRequest: AdminAddOrganizationUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/members'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -427,6 +443,13 @@ export class AdminApi {
 
         if (organizationId === null || organizationId === undefined) {
             throw new Error('Required parameter organizationId was null or undefined when calling adminAddUserToOrganization.');
+        }
+
+        // verify required parameter 'adminAddOrganizationUserRequest' is not null or undefined
+
+
+        if (adminAddOrganizationUserRequest === null || adminAddOrganizationUserRequest === undefined) {
+            throw new Error('Required parameter adminAddOrganizationUserRequest was null or undefined when calling adminAddUserToOrganization.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -491,7 +514,7 @@ export class AdminApi {
      * @param projectId Project ID
      * @param adminAddProjectUserRequest 
      */
-    public async adminAddUserToProject (projectId: number, adminAddProjectUserRequest?: AdminAddProjectUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddUserToProject (projectId: number, adminAddProjectUserRequest: AdminAddProjectUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/members'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -512,6 +535,13 @@ export class AdminApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling adminAddUserToProject.');
+        }
+
+        // verify required parameter 'adminAddProjectUserRequest' is not null or undefined
+
+
+        if (adminAddProjectUserRequest === null || adminAddProjectUserRequest === undefined) {
+            throw new Error('Required parameter adminAddProjectUserRequest was null or undefined when calling adminAddUserToProject.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -964,11 +994,11 @@ export class AdminApi {
         }
 
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
@@ -1282,7 +1312,7 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param fullDeletion Set to true for full deletion
      */
-    public async adminDeleteOrganization (organizationId: number, queryParams: adminDeleteOrganizationQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteOrganization (organizationId: number, queryParams?: adminDeleteOrganizationQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -1305,7 +1335,7 @@ export class AdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling adminDeleteOrganization.');
         }
 
-        if (queryParams.fullDeletion !== undefined) {
+        if (queryParams?.fullDeletion !== undefined) {
             localVarQueryParameters['fullDeletion'] = ObjectSerializer.serialize(queryParams.fullDeletion, "boolean");
         }
 
@@ -2157,7 +2187,7 @@ export class AdminApi {
         }
 
 
-        if (queryParams.query !== undefined) {
+        if (queryParams?.query !== undefined) {
             localVarQueryParameters['query'] = ObjectSerializer.serialize(queryParams.query, "string");
         }
 
@@ -2789,11 +2819,11 @@ export class AdminApi {
         }
 
 
-        if (queryParams.parentType !== undefined) {
+        if (queryParams?.parentType !== undefined) {
             localVarQueryParameters['parentType'] = ObjectSerializer.serialize(queryParams.parentType, "JobParentTypeEnum");
         }
 
-        if (queryParams.includeChildrenJobs !== undefined) {
+        if (queryParams?.includeChildrenJobs !== undefined) {
             localVarQueryParameters['includeChildrenJobs'] = ObjectSerializer.serialize(queryParams.includeChildrenJobs, "boolean");
         }
 
@@ -2904,15 +2934,15 @@ export class AdminApi {
         }
 
 
-        if (queryParams.parentType !== undefined) {
+        if (queryParams?.parentType !== undefined) {
             localVarQueryParameters['parentType'] = ObjectSerializer.serialize(queryParams.parentType, "JobParentTypeEnum");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3007,7 +3037,7 @@ export class AdminApi {
         }
 
 
-        if (queryParams.parentType !== undefined) {
+        if (queryParams?.parentType !== undefined) {
             localVarQueryParameters['parentType'] = ObjectSerializer.serialize(queryParams.parentType, "JobParentTypeEnum");
         }
 
@@ -3184,11 +3214,11 @@ export class AdminApi {
         }
 
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
@@ -3346,7 +3376,7 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetOrganizationDataExports (organizationId: number, queryParams: adminGetOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+    public async adminGetOrganizationDataExports (organizationId: number, queryParams?: adminGetOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3369,11 +3399,11 @@ export class AdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationDataExports.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3438,7 +3468,7 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param includeDeleted Whether to include deleted entities (users, projects, orgs)
      */
-    public async adminGetOrganizationInfo (organizationId: number, queryParams: adminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
+    public async adminGetOrganizationInfo (organizationId: number, queryParams?: adminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3461,7 +3491,7 @@ export class AdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationInfo.');
         }
 
-        if (queryParams.includeDeleted !== undefined) {
+        if (queryParams?.includeDeleted !== undefined) {
             localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
@@ -3502,6 +3532,99 @@ export class AdminApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "AdminOrganizationInfoResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to get the list of all jobs for a organization.
+     * @summary Get organization jobs
+     * @param organizationId Organization ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async adminGetOrganizationJobs (organizationId: number, queryParams?: adminGetOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/jobs'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -3619,7 +3742,7 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetOrganizationUsageReports (organizationId: number, queryParams: adminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportsResponse> {
+    public async adminGetOrganizationUsageReports (organizationId: number, queryParams?: adminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationUsageReportsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
@@ -3642,11 +3765,11 @@ export class AdminApi {
             throw new Error('Required parameter organizationId was null or undefined when calling adminGetOrganizationUsageReports.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
@@ -3715,7 +3838,7 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetOrganizations (queryParams: adminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
+    public async adminGetOrganizations (queryParams?: adminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -3730,27 +3853,27 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.includeDeleted !== undefined) {
+        if (queryParams?.includeDeleted !== undefined) {
             localVarQueryParameters['includeDeleted'] = ObjectSerializer.serialize(queryParams.includeDeleted, "boolean");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -3893,6 +4016,99 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to get the list of all jobs for a project.
+     * @summary Get project jobs
+     * @param projectId Project ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async adminGetProjectJobs (projectId: number, queryParams?: adminGetProjectJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/admin/projects/{projectId}/jobs'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling adminGetProjectJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to get the list of all projects.
      * @summary Get all projects
      * @param active Whether to search for entities (users, orgs) active in the last X days
@@ -3901,7 +4117,7 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetProjects (queryParams: adminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
+    public async adminGetProjects (queryParams?: adminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
         const localVarPath = this.basePath + '/api/admin/projects';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -3916,23 +4132,23 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
@@ -4315,6 +4531,99 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to get the list of all project jobs for a user.
+     * @summary Get user jobs
+     * @param userId User ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async adminGetUserJobs (userId: number, queryParams?: adminGetUserJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+        const localVarPath = this.basePath + '/api/admin/users/{userId}/jobs'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling adminGetUserJobs.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListJobsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListJobsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Admin-only API to get marketing metrics about a user.
      * @summary Get user metrics
      * @param userId User ID
@@ -4408,7 +4717,7 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetUsers (queryParams: adminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
+    public async adminGetUsers (queryParams?: adminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
         const localVarPath = this.basePath + '/api/admin/users';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -4423,31 +4732,31 @@ export class AdminApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.active !== undefined) {
+        if (queryParams?.active !== undefined) {
             localVarQueryParameters['active'] = ObjectSerializer.serialize(queryParams.active, "number");
         }
 
-        if (queryParams.tier !== undefined) {
+        if (queryParams?.tier !== undefined) {
             localVarQueryParameters['tier'] = ObjectSerializer.serialize(queryParams.tier, "UserTierEnum");
         }
 
-        if (queryParams.fields !== undefined) {
+        if (queryParams?.fields !== undefined) {
             localVarQueryParameters['fields'] = ObjectSerializer.serialize(queryParams.fields, "string");
         }
 
-        if (queryParams.sort !== undefined) {
+        if (queryParams?.sort !== undefined) {
             localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.search !== undefined) {
+        if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 

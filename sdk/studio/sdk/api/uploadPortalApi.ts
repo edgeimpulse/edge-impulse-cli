@@ -694,7 +694,7 @@ export class UploadPortalApi {
         }
 
 
-        if (queryParams.path !== undefined) {
+        if (queryParams?.path !== undefined) {
             localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 

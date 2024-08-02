@@ -7,7 +7,7 @@ function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
-export async function findSerial() {
+export async function findSerial(whichDeviceIndex: number | undefined) {
     let filteredDevices;
     while (1) {
         let allDevices = await SerialConnector.list();
@@ -39,6 +39,13 @@ export async function findSerial() {
     let deviceId = filteredDevices[0].path;
 
     if (filteredDevices.length > 1) {
+        if (typeof whichDeviceIndex === 'number') {
+            if (!filteredDevices[whichDeviceIndex]) {
+                throw new Error('--which-device index was not found');
+            }
+            return filteredDevices[whichDeviceIndex].path;
+        }
+
         let deviceRes = <{ device: string }>await inquirer.prompt([{
             type: 'list',
             choices: filteredDevices.map(d => ({

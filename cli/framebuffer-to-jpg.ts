@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-bitwise */
 import program from 'commander';
 import fs from 'fs';
 import Path from 'path';
@@ -60,11 +61,11 @@ const outputFile = <string | undefined>program.outputFile;
         snapshot = Buffer.alloc(width * height * 3);
         let six = 0;
         for (let f of features) {
-            // tslint:disable-next-line: no-bitwise
+            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 16 & 0xff;
-            // tslint:disable-next-line: no-bitwise
+            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 8 & 0xff;
-            // tslint:disable-next-line: no-bitwise
+            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 0 & 0xff;
         }
     }

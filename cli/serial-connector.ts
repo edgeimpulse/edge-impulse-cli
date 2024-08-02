@@ -1,6 +1,9 @@
-// tslint:disable: no-unsafe-any
-
-// tslint:disable-next-line
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line
 const serialPort = require('serialport');
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
@@ -30,17 +33,24 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     }
 
     private _connected: boolean;
+    private _echoSerial: boolean;
     private _path: string;
     private _baudrate: number;
     private _serial: typeof serialPort;
     private _dataHandler: (a: Buffer) => void;
 
-    constructor(path: string, baudrate: number) {
+    constructor(path: string, baudrate: number, echoSerial: boolean = false) {
+        // eslint-disable-next-line constructor-super
         super();
 
+        this._echoSerial = echoSerial;
         this._path = path;
         this._baudrate = baudrate;
         this._dataHandler = (d: Buffer) => {
+            if (this._echoSerial) {
+                const CON_PREFIX = '\x1b[36m[Rx ]\x1b[0m';
+                console.log(CON_PREFIX, d.toString('ascii'));
+            }
             this.emit('data', d);
         };
         this._connected = false;
@@ -101,7 +111,10 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
     async write(buffer: Buffer) {
         return new Promise<void>((res, rej) => {
             if (!this._serial) return rej('Serial is null');
-
+            if (this._echoSerial) {
+                const CON_PREFIX = '\x1b[35m[Tx ]\x1b[0m';
+                console.log(CON_PREFIX, buffer.toString('ascii'));
+            }
             this._serial.write(buffer, (err: any) => {
                 if (err) return rej(err);
                 res();
@@ -113,6 +126,11 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
         await this._serial.update({
             baudRate: baudRate
         });
+        this._baudrate = baudRate;
+    }
+
+    getBaudRate() {
+        return this._baudrate;
     }
 
     async disconnect() {

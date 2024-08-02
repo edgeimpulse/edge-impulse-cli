@@ -4,18 +4,19 @@ import fs from 'fs';
 import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
-import {
-    LoginApi,
-    DevicesApi, DevicesApiApiKeys,
-    ProjectsApi, ProjectsApiApiKeys,
-    OrganizationsApi, OrganizationsApiApiKeys,
-    OrganizationCreateProjectApi, OrganizationCreateProjectApiApiKeys,
-    OrganizationJobsApi, OrganizationJobsApiApiKeys, OrganizationBlocksApi,
-    OrganizationBlocksApiApiKeys, DeploymentApi, ImpulseApi, LearnApi,
-    JobsApi, ImpulseApiApiKeys, LearnApiApiKeys, JobsApiApiKeys, DeploymentApiApiKeys
-} from '../sdk/studio/api';
+import { EdgeImpulseApi } from '../sdk/studio/api';
+import { GetJWTResponse } from '../sdk/studio';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
+
+export interface RunnerConfig {
+    projectId: number | undefined;
+    blockId: number | undefined;
+    storageIndex: number | undefined;
+    storagePath: string;
+    // key = projectId
+    impulseIdsForProjectId: { [k: string ]: { impulseId: number } } | undefined;
+}
 
 export interface SerialConfig {
     host: string;
@@ -40,20 +41,7 @@ export interface SerialConfig {
     linuxProjectId: number | undefined;
     camera: string | undefined;
     audio: string | undefined;
-}
-
-export interface EdgeImpulseAPI {
-    login: LoginApi;
-    devices: DevicesApi;
-    projects: ProjectsApi;
-    impulse: ImpulseApi;
-    learn: LearnApi;
-    jobs: JobsApi;
-    deploy: DeploymentApi;
-    organizations: OrganizationsApi;
-    organizationCreateProject: OrganizationCreateProjectApi;
-    organizationBlocks: OrganizationBlocksApi;
-    organizationJobs: OrganizationJobsApi;
+    runner: RunnerConfig;
 }
 
 export interface EdgeImpulseEndpoints {
@@ -71,9 +59,10 @@ export interface EdgeImpulseEndpoints {
 }
 
 export interface EdgeImpulseConfig {
-    api: EdgeImpulseAPI;
+    api: EdgeImpulseApi;
     endpoints: EdgeImpulseEndpoints;
     setDeviceUpload: boolean;
+    host: string;
 }
 
 export class Config {
@@ -94,7 +83,7 @@ export class Config {
     }
 
     private _filename: string;
-    private _api: EdgeImpulseAPI | undefined;
+    private _api: EdgeImpulseApi | undefined;
     private _endpoints: EdgeImpulseEndpoints | undefined;
     private _configured = false;
 
@@ -109,6 +98,14 @@ export class Config {
         if (await Config.exists(this._filename)) {
             await util.promisify(fs.unlink)(this._filename);
         }
+    }
+
+    async removeProjectReferences() {
+        let config = await this.load();
+        delete config.apiKey;
+        delete config.linuxProjectId;
+        delete config.uploaderProjectId;
+        await this.store(config);
     }
 
     async getUploaderProjectId() {
@@ -232,22 +229,10 @@ export class Config {
             'http://localhost:4810'
             : hostIsIP ? `${httpProtocol}://${host}:4810` : `${httpProtocol}://ingestion.${host}`;
 
-        apiEndpointInternal += '/v1';
-        apiEndpointExternal += '/v1';
-
-        this._api = {
-            login: new LoginApi(apiEndpointInternal),
-            devices: new DevicesApi(apiEndpointInternal),
-            projects: new ProjectsApi(apiEndpointInternal),
-            impulse: new ImpulseApi(apiEndpointInternal),
-            learn: new LearnApi(apiEndpointInternal),
-            jobs: new JobsApi(apiEndpointInternal),
-            deploy: new DeploymentApi(apiEndpointInternal),
-            organizations: new OrganizationsApi(apiEndpointInternal),
-            organizationCreateProject: new OrganizationCreateProjectApi(apiEndpointInternal),
-            organizationBlocks: new OrganizationBlocksApi(apiEndpointInternal),
-            organizationJobs: new OrganizationJobsApi(apiEndpointInternal),
-        };
+        this._api = new EdgeImpulseApi({
+            endpoint: apiEndpointInternal,
+            extraHeaders: { 'User-Agent': 'EDGE_IMPULSE_CLI' },
+        });
 
         this._endpoints = {
             device: {
@@ -265,68 +250,123 @@ export class Config {
 
         if (apiKey) {
             // try and authenticate...
-            this._api.devices.setApiKey(DevicesApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.projects.setApiKey(ProjectsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.impulse.setApiKey(ImpulseApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.learn.setApiKey(LearnApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.jobs.setApiKey(JobsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.deploy.setApiKey(DeploymentApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizations.setApiKey(OrganizationsApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.ApiKeyAuthentication,
-                apiKey);
-            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.ApiKeyAuthentication, apiKey);
-            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.ApiKeyAuthentication, apiKey);
+            await this._api.authenticate({
+                method: 'apiKey',
+                apiKey: apiKey
+            });
+
             config.apiKey = apiKey;
         }
         else {
             if (!config.jwtToken) {
-                let inq = <{ username: string, password: string }>await inquirer.prompt([{
+                const username = <{ username: string }>await inquirer.prompt({
                     type: 'input',
                     name: 'username',
                     message: `What is your user name or e-mail address (${host})?`
-                }, {
+                });
+
+                const { needPassword, email, whitelabels } =
+                    await this._api.user.getUserNeedToSetPassword(username.username);
+
+                if (needPassword) {
+                    const protocol = `http${
+                        config.host === 'localhost' ? '' : 's'
+                    }://`;
+                    const port = `${
+                        config.host === 'localhost' ? ':4800' : ''
+                    }`;
+                    const encodedEmail = encodeURIComponent(`${email}`);
+                    let resetUrl;
+                    if (whitelabels && whitelabels.length === 1) {
+                        resetUrl =
+                            `${protocol}${whitelabels[0] || config.host}${port}/set-password?email=${encodedEmail}`;
+                    }
+                    // Some users may be part of different white labels. In these cases, we cannot provide an
+                    // URL for them to set the password, so we invite them to visit their user profile.
+
+                    let errorMsg = 'To use the CLI you will need to set a password. ';
+                    errorMsg +=
+                        resetUrl ?
+                        `Go to ${resetUrl} to set one.` :
+                        'Go to your user profile settings in Studio to set one.';
+
+                    throw new Error(
+                        errorMsg,
+                    );
+                }
+
+                const password = <{ password: string }>await inquirer.prompt({
                     type: 'password',
                     name: 'password',
                     message: `What is your password?`
-                }]);
+                });
 
-                let res = (await this._api.login.login({
-                    username: inq.username,
-                    password: inq.password
-                })).body;
+                let res: GetJWTResponse;
+                try {
+                    res = (await this._api.login.login({
+                        username: username.username,
+                        password: password.password,
+                    }));
+                }
+                catch (ex2) {
+                    let ex = <Error>ex2;
+                    if ((ex.message || ex.toString()).startsWith('ERR_TOTP_TOKEN IS REQUIRED')) {
 
-                if (!res.success || !res.token) {
-                    throw new Error('Failed to login: ' + res.error);
+                        // For TOTP allow the user to enter another one if it's invalid (so run in a loop)
+                        while (1) {
+                            try {
+                                const totpToken = <{ totpToken: string }>await inquirer.prompt({
+                                    type: 'input',
+                                    name: 'totpToken',
+                                    message: `Enter a code from your authenticator app`
+                                });
+
+                                res = (await this._api.login.login({
+                                    username: username.username,
+                                    password: password.password,
+                                    totpToken: totpToken.totpToken,
+                                }));
+                                break;
+                            }
+                            catch (ex3) {
+                                let totpEx = <Error>ex3;
+                                console.warn('Failed to log in:', totpEx.message || totpEx.toString());
+                            }
+                        }
+                    }
+                    else {
+                        throw ex;
+                    }
                 }
 
-                config.jwtToken = res.token;
+                if (!res!.token) {
+                    throw new Error('Authentication did not return a token');
+                }
+
+                config.jwtToken = res!.token;
             }
 
-            // try and authenticate...
-            this._api.devices.setApiKey(DevicesApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.projects.setApiKey(ProjectsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.impulse.setApiKey(ImpulseApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.learn.setApiKey(LearnApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.jobs.setApiKey(JobsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.deploy.setApiKey(DeploymentApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.organizations.setApiKey(OrganizationsApiApiKeys.JWTAuthentication, config.jwtToken);
-            this._api.organizationCreateProject.setApiKey(OrganizationCreateProjectApiApiKeys.JWTAuthentication,
-                config.jwtToken);
-            this._api.organizationBlocks.setApiKey(OrganizationBlocksApiApiKeys.JWTAuthentication,
-                config.jwtToken);
-            this._api.organizationJobs.setApiKey(OrganizationJobsApiApiKeys.JWTAuthentication, config.jwtToken);
+            await this._api.authenticate({
+                method: 'jwtToken',
+                jwtToken: config.jwtToken,
+            });
         }
 
         if (verifyType === 'project') {
-            let projects = await this._api.projects.listProjects();
-            if (!projects.body.success) {
-                throw new Error('Invalid JWT token, cannot retrieve projects: ' + projects.body.error);
-            }
+            await this._api.projects.listProjects();
         }
         else {
-            let orgs = await this._api.organizations.listOrganizations();
-            if (!orgs.body.success) {
-                throw new Error('Invalid JWT token, cannot retrieve organizations: ' + orgs.body.error);
+            await this._api.organizations.listOrganizations();
+        }
+
+        // fetch user...
+        if (config.jwtToken) {
+            let user = await this._api.user.getCurrentUser();
+            // check if has developer profile...
+            if (!user.organizations.find(x => x.isDeveloperProfile)) {
+                console.log(PREFIX, 'Creating developer profile...');
+                await this._api.user.createDeveloperProfile();
+                console.log(PREFIX, 'Creating developer profile OK');
             }
         }
 
@@ -338,6 +378,7 @@ export class Config {
             api: this._api,
             endpoints: this._endpoints,
             setDeviceUpload: setDeviceUpload,
+            host: host,
         };
     }
 
@@ -405,6 +446,85 @@ export class Config {
         await this.store(config);
     }
 
+    async getRunner(): Promise<RunnerConfig> {
+        let config = await this.load();
+        return config.runner;
+    }
+
+    async storeStoragePath(path: string) {
+        let config = await this.load();
+        config.runner.storagePath = path;
+        await this.store(config);
+    }
+
+    async getStoragePath(): Promise<string> {
+        let config = await this.load();
+        return config.runner.storagePath || this.getDefaultStoragePath();
+    }
+
+    async getStorageIndex(): Promise<number> {
+        let config = await this.load();
+        return config.runner.storageIndex || 0;
+    }
+
+    async storeStorageIndex(index: number) {
+        let config = await this.load();
+        config.runner.storageIndex = index;
+        await this.store(config);
+    }
+
+    async storeProjectId(projectId: number) {
+        let config = await this.load();
+        config.runner.projectId = projectId;
+        await this.store(config);
+    }
+
+    async storeBlockId(blockId: number) {
+        let config = await this.load();
+        config.runner.blockId = blockId;
+        await this.store(config);
+    }
+
+    async setRunnerImpulseIdForProjectId(projectId: number, impulseId: number) {
+        let config = await this.load();
+        config.runner.impulseIdsForProjectId = config.runner.impulseIdsForProjectId || { };
+        config.runner.impulseIdsForProjectId[projectId.toString()] = { impulseId };
+        await this.store(config);
+    }
+
+    async getRunnerImpulseIdForProjectId(projectId: number) {
+        let config = await this.load();
+        if (!config.runner.impulseIdsForProjectId) {
+            return null;
+        }
+
+        let ret = <{ impulseId: number } | undefined>config.runner.impulseIdsForProjectId[projectId.toString()];
+        return ret ? ret.impulseId : null;
+    }
+
+    async getStudioUrl(whitelabelId: number | null) {
+        if (whitelabelId !== null) {
+            const whitelabelRequest = await this._api?.whitelabels.getWhitelabelDomain(whitelabelId);
+            if (whitelabelRequest && whitelabelRequest.success && whitelabelRequest.domain) {
+                const protocol = this._endpoints?.internal.api.startsWith('https') ? 'https' : 'http';
+                return `${protocol}://${whitelabelRequest.domain}`;
+            }
+        }
+        return this._endpoints?.internal.api.replace('/v1', '');
+    }
+
+    getDefaultModelsPath() {
+        return Path.join(this.getDefaultRunnerPath(), 'models');
+    }
+
+    getDefaultStoragePath() {
+        return Path.join(this.getDefaultRunnerPath(), 'storage');
+    }
+
+    private getDefaultRunnerPath() {
+        return Path.join(os.homedir(), '.ei-linux-runner');
+    }
+
     private async load(): Promise<SerialConfig> {
         if (!await Config.exists(this._filename)) {
             return {
@@ -417,7 +537,14 @@ export class Config {
                 daemonDevices: { },
                 camera: undefined,
                 audio: undefined,
-                linuxProjectId: undefined
+                linuxProjectId: undefined,
+                runner: {
+                    projectId: undefined,
+                    blockId: undefined,
+                    storageIndex: undefined,
+                    storagePath: this.getDefaultStoragePath(),
+                    impulseIdsForProjectId: undefined,
+                }
             };
         }
 

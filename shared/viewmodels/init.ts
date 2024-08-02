@@ -30,6 +30,32 @@ export enum PageType {
     Tuner = 28,
     LabelObjectDetection = 29,
     SelectProjectThirdParty = 30,
+    PerformanceCalibration = 31,
+    Jobs = 32,
+    ActivationRequired = 33,
+    Redirect = 34,
+    DataExplorer = 35,
+    SetPasswordSuccess = 36,
+    DataSources = 37,
+    CreateDeveloperProfile = 38,
+    DeveloperProfile = 39,
+    UploadCsv = 41,
+    PretrainedModel = 42,
+    AutoSegmenter = 44,
+    Scratchpad = 45,
+    TrialSignup = 46,
+    ThankYou = 47,
+    CommunityProSignUp = 48,
+    SyntheticData = 49,
+    MigrateImpulse = 50,
+    ImpulseList = 51,
+    AccountSettingsAccountInfo = 60,
+    AccountSettingsAuthentication = 61,
+    AccountSettingsOrganizations = 62,
+    AccountSettingsExperiments = 63,
+    AccountSettingsMfa = 64,
+    AccountSettingsSubscription = 65,
+    AccountSettingsSecrets = 66,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -42,98 +68,16 @@ export enum PageType {
     OrganizationProjects = 99,
     OrganizationDeploy = 100,
     OrganizationPortals = 101,
+    OrganizationDataPipelines = 102,
+    OrganizationDsp = 103,
+    OrganizationTransferLearning = 104,
+    OrganizationSettings = 105,
+    OrganizationDatasets = 106,
+    OrganizationJobs = 107,
+    OrganizationDataHub = 108,
+    OrganizationDataCampaignsDashboard = 109,
+    OrganizationDataFiles = 110,
+    OrganizationExports = 111,
     UploadPortal = 200,
-}
-
-export type ClientConnectionType = 'ip' | 'daemon';
-
-export interface ClientConnectedDevice {
-    deviceId: string;
-    connection: ClientConnectionType;
-    sensors: {
-        name: string;
-        maxSampleLengthS: number;
-        frequencies: number[];
-    }[];
-    deviceType: string;
-    deviceName: string;
-    supportsSnapshotStreaming: boolean;
-}
-
-export interface ClientStudioWebsocketHello {
-    hello: { version: number };
-    devices: ClientConnectedDevice[];
-    activeTunerJobId?: number;
-}
-
-export interface ClientInitUser {
-    id: number;
-    name: string;
-    photo?: string;
-}
-
-export interface ClientInitStudioOptions {
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    projectId: number;
-    baseUrl: string;
-    projectName: string;
-    socketToken: string;
-    connectedDevices: ClientConnectedDevice[];
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    gitCommitHash: string;
-    isAdmin: boolean;
-    isObjectDetection: boolean;
-    user: ClientInitUser | undefined;
-}
-
-export interface ClientInitOrganizationOptions {
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    organizationId: number;
-    socketToken: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    user: ClientInitUser | undefined;
-}
-
-export interface ClientInitOrganizationPortalOptions {
-    pageType: PageType;
-    portalId: number;
-    baseUrl: string;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    authToken: string;
-}
-
-export interface ClientInitFormOptions {
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    user: ClientInitUser | undefined;
-}
-
-export interface ClientInitPublicOptions {
-    pageType: PageType;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-}
-
-export interface OrganizationWebsocketHello {
-    hello: { version: number };
+    Announcement = 201,
 }

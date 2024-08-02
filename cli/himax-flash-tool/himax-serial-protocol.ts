@@ -1,11 +1,18 @@
+import e from "express";
 import { SerialConnector } from "../serial-connector";
 
 const CON_PREFIX = '\x1b[34m[SER]\x1b[0m';
 
-export default class HimaxSerialProtocol {
+export enum HimaxDeviceTypes {
+    WEIPlus = 'WE-I-Plus',
+    WiseEye2 = 'WiseEye2'
+}
+
+export class HimaxSerialProtocol {
     private _serial: SerialConnector;
     private _writePacing: boolean;
     private _debug: boolean;
+    private _deviceType: HimaxDeviceTypes;
 
     /**
      *
@@ -14,9 +21,10 @@ export default class HimaxSerialProtocol {
      *                    with the demo AT command firmware.
      *                    Hummingbird can have this disabled.
      */
-    constructor(serial: SerialConnector, writePacing: boolean, debug: boolean) {
+    constructor(serial: SerialConnector, writePacing: boolean, deviceType: HimaxDeviceTypes, debug: boolean) {
         this._serial = serial;
         this._writePacing = writePacing;
+        this._deviceType = deviceType;
         this._debug = debug;
     }
 
@@ -26,17 +34,34 @@ export default class HimaxSerialProtocol {
     }
 
     async onConnected() {
-        await this.waitForSerialSequence(Buffer.from('wake up evt:4', 'ascii'), 60000, true, false);
+        if (this._deviceType === HimaxDeviceTypes.WEIPlus) {
+            await this.waitForSerialSequence(Buffer.from('wake up evt:4', 'ascii'), 60000, true, false);
+        }
+        else if (this._deviceType === HimaxDeviceTypes.WiseEye2) {
+            await this.waitForSerialSequence(Buffer.from(
+                'Please input any key to enter X-Modem mode in 100 ms', 'ascii'), 60000, true, false);
+        }
+        else {
+            throw new Error('Unknown device type');
+        }
         await this.execCommand('1', 1000, 'Xmodem download and burn', true);
         await this.execCommand('1', 1000, 'Send data using the xmodem protocol from your terminal', true);
     }
 
     async isBootSuccessful() {
         return new Promise((resolve, reject) => {
-            // tslint:disable-next-line: no-floating-promises
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             (async () => {
                 try {
-                    await this.waitForSerialSequence(Buffer.from('1st APPLICATION', 'ascii'), 60000);
+                    if (this._deviceType === HimaxDeviceTypes.WEIPlus) {
+                        await this.waitForSerialSequence(Buffer.from('1st APPLICATION', 'ascii'), 10000);
+                    }
+                    else if (this._deviceType === HimaxDeviceTypes.WiseEye2) {
+                        await this.waitForSerialSequence(Buffer.from('Compiler Version', 'ascii'), 10000);
+                    }
+                    else {
+                        throw new Error('Unknown device type');
+                    }
                     resolve(true);
                 }
                 catch (ex) {
@@ -44,7 +69,7 @@ export default class HimaxSerialProtocol {
                 }
             })();
 
-            // tslint:disable-next-line: no-floating-promises
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             (async () => {
                 try {
                     await this.waitForSerialSequence(Buffer.from('BOOT_FAIL', 'ascii'), 60000);
@@ -58,7 +83,15 @@ export default class HimaxSerialProtocol {
     }
 
     async waitForBurnApplicationDone() {
-        await this.waitForSerialSequence(Buffer.from('burn application done', 'ascii'), 10000);
+        if (this._deviceType === HimaxDeviceTypes.WEIPlus) {
+            await this.waitForSerialSequence(Buffer.from('burn application done', 'ascii'), 10000);
+        }
+        else if (this._deviceType === HimaxDeviceTypes.WiseEye2) {
+            await this.execCommand('y', 1000, 'Do you want to end file transmission and reboot system? (y)', true);
+        }
+        else {
+            throw new Error('Unknown device type');
+        }
     }
 
     private sleep(ms: number) {

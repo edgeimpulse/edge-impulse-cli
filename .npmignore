@@ -2,7 +2,8 @@ sdk/
 *.ts
 *.sh
 tsconfig.json
-tslint.json
+.eslintrc.json
+.eslintignore
 README-internal.md
 *.tgz
 out/

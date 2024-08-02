@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import TypedEmitter from 'typed-emitter';
 import { ISerialConnector } from './iserialconnector';
 import { EventEmitter } from './events';
@@ -17,6 +19,15 @@ export enum EiSerialWifiSecurity {
     EI_SECURITY_UNKNOWN      = 0xFF,     /*!< unknown/unsupported security in scan results */
 }
 
+export enum EiSerialSensor {
+    EI_CLASSIFIER_SENSOR_UNKNOWN             = -1,
+    EI_CLASSIFIER_SENSOR_MICROPHONE          = 1,
+    EI_CLASSIFIER_SENSOR_ACCELEROMETER       = 2,
+    EI_CLASSIFIER_SENSOR_CAMERA              = 3,
+    EI_CLASSIFIER_SENSOR_9DOF                = 4,
+    EI_CLASSIFIER_SENSOR_ENVIRONMENTAL       = 5,
+}
+
 export interface EiSerialDeviceConfig {
     info: {
         id: string;
@@ -33,6 +44,10 @@ export interface EiSerialDeviceConfig {
         maxSampleLengthS: number;
         frequencies: number[];
     }[];
+    inference: {
+        sensor: EiSerialSensor;
+        modelType: 'classification' | 'constrained_object_detection';
+    };
     snapshot: {
         hasSnapshot: boolean;
         supportsStreaming: boolean;
@@ -114,7 +129,7 @@ export default class EiSerialProtocol {
     }
 
     async onConnected() {
-        // tslint:disable-next-line:no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this._serial.write(Buffer.from('b\r', 'ascii'));
 
         await this.waitForSerialSequence('onConnected', Buffer.from([ 0x3e, 0x20 ]), 5000);
@@ -131,6 +146,11 @@ export default class EiSerialProtocol {
         config.sensors = [];
         config.info.atCommandVersion = { major: 1, minor: 0, patch: 0 };
         config.wifi.present = true;
+        // new in 1.6.1 (so fall back to unknown for earlier versions)
+        config.inference = {
+            sensor: EiSerialSensor.EI_CLASSIFIER_SENSOR_UNKNOWN,
+            modelType: 'classification',
+        };
         config.snapshot = {
             hasSnapshot: false,
             supportsStreaming: false,
@@ -138,7 +158,8 @@ export default class EiSerialProtocol {
             resolutions: []
         };
 
-        let section: 'info' | 'sensors' | 'wifi' | 'sampling' | 'upload' | 'management' | 'snapshot' | undefined;
+        let section: 'info' | 'sensors' | 'wifi' | 'inference' | 'sampling' | 'upload' |
+                     'management' | 'snapshot' | undefined;
 
         for (let line of data.split('\n').map(l => l.trim()).filter(l => !!l)) {
             if (line.indexOf('= Device info =') > -1) {
@@ -151,6 +172,10 @@ export default class EiSerialProtocol {
             }
             if (line.indexOf('= Snapshot =') > -1) {
                 section = 'snapshot';
+                continue;
+            }
+            if (line.indexOf('= Inference =') > -1) {
+                section = 'inference';
                 continue;
             }
             if (line.indexOf('= WIFI =') > -1) {
@@ -233,6 +258,14 @@ export default class EiSerialProtocol {
                     }
                 }
                 continue;
+            }
+            if (section === 'inference') {
+                if (key === 'sensor') {
+                    config.inference.sensor = <EiSerialSensor>Number(value); continue;
+                }
+                if (key === 'model type') {
+                    config.inference.modelType = <'classification' | 'constrained_object_detection'>value; continue;
+                }
             }
             if (section === 'snapshot') {
                 if (key === 'has snapshot') {
@@ -439,7 +472,7 @@ export default class EiSerialProtocol {
             }),
         ];
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
             try {
                 let res = await this.execCommand(cmd, length * 10);
@@ -583,7 +616,7 @@ export default class EiSerialProtocol {
             error: (ex: string) => void
         }>;
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
 
             let bytesReceived = 0;
@@ -636,16 +669,32 @@ export default class EiSerialProtocol {
     async stopInference() {
         await this._serial.write(Buffer.from('b\r', 'ascii'));
 
+        if (this._serial.getBaudRate() !== 115200) {
+            await this._serial.setBaudRate(115200);
+        }
+
         await this.waitForSerialSequence('Stop inference', Buffer.from([ 0x3e, 0x20 ]), 5000);
     }
 
     async startInference(mode: 'normal' | 'debug' | 'continuous') {
+        if (!this._config) {
+            throw new Error('Does not have config');
+        }
+
         let command = 'AT+RUNIMPULSE';
         if (mode === 'debug') {
             command += 'DEBUG';
         }
         else if (mode === 'continuous') {
             command += 'CONT';
+        }
+
+        let useMaxBaudRate = false;
+        if (mode === 'debug') {
+            let x = this.shouldUseMaxBaudrate(command);
+
+            command = x.updatedCommand;
+            useMaxBaudRate = x.useMaxBaudRate;
         }
 
         command += '\r';
@@ -659,9 +708,13 @@ export default class EiSerialProtocol {
 
             await this._serial.write(Buffer.from(command.substr(ix, 5), 'ascii'));
         }
+
+        if (useMaxBaudRate && this._config.info.transferBaudRate) {
+            await this._serial.setBaudRate(this._config.info.transferBaudRate);
+        }
     }
 
-    async startSnapshotStream() {
+    async startSnapshotStream(resolution: 'low' | 'high') {
         if (!this._config || !this._config.snapshot.supportsStreaming) {
             throw new Error('Device does not support snapshot streaming');
         }
@@ -689,7 +742,7 @@ export default class EiSerialProtocol {
                     this._serial.off('data', onData);
                 }
 
-                // tslint:disable-next-line:no-floating-promises
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 await this._serial.write(Buffer.from('b\r', 'ascii'));
 
                 if (useMaxBaudRate) {
@@ -719,7 +772,7 @@ export default class EiSerialProtocol {
             await this._serial.setBaudRate(this._config.info.transferBaudRate);
         }
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
             let currDataLine = '';
 
@@ -760,7 +813,7 @@ export default class EiSerialProtocol {
         return new Promise((res) => setTimeout(res, ms));
     }
 
-    private async execCommand(command: string, timeout: number = 1000, logProgress: boolean = false) {
+    private async execCommand(command: string, timeout: number = 2000, logProgress: boolean = false) {
         command = command + '\r';
 
         // split it up a bit for pacing
@@ -828,7 +881,9 @@ export default class EiSerialProtocol {
                     res(Buffer.concat(allBuffers));
                 }
                 // cut the find sequence buffer
-                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+                if (checkSeqBuffer.length > seq.length) {
+                    checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+                }
             };
             this._serial.on('data', fn);
         });
@@ -859,7 +914,10 @@ export default class EiSerialProtocol {
                 callback(Buffer.concat(allBuffers));
             }
 
-            checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            // cut the find sequence buffer
+            if (checkSeqBuffer.length > seq.length) {
+                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            }
         };
         this._serial.on('data', fn);
 
@@ -874,7 +932,7 @@ export default class EiSerialProtocol {
      */
     private parseSerialResponse(data: Buffer) {
         // some devices only print \n, not \r\n
-        let b = [];
+        let b: number[] = [];
         if (data[0] === 0xa) {
             b.push(0xd);
             b.push(0xa);
@@ -1018,6 +1076,14 @@ export default class EiSerialProtocol {
         else {
             useMaxBaudRate = true;
             command += ',y';
+        }
+
+        if (command.indexOf('=') === -1) {
+            command = command.replace(',', '=');
+        }
+
+        if (command.indexOf('=,') > -1) {
+            command = command.replace('=,', '=');
         }
 
         return {

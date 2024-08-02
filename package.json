@@ -41,7 +41,7 @@
     "jpeg-js": "0.4.4",
     "js-yaml": "4.1.0",
     "node-fetch": "2.6.7",
-    "npm-registry-fetch": "5.0.0",
+    "npm-registry-fetch": "17.1.0",
     "papaparse": "5.4.0",
     "request": "2.88.0",
     "request-promise": "4.2.4",

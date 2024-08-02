@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 
 export class OrganizationDspBlock {
     'id': number;
@@ -17,6 +18,9 @@ export class OrganizationDspBlock {
     'dockerContainer': string;
     'dockerContainerManagedByEdgeImpulse': boolean;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUpdated'?: Date;
+    'lastUpdatedByUser'?: CreatedUpdatedByUser;
     'userId'?: number;
     'userName'?: string;
     'description': string;
@@ -27,6 +31,7 @@ export class OrganizationDspBlock {
     'port': number;
     'isConnected': boolean;
     'error'?: string;
+    'sourceCodeAvailable': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -55,6 +60,21 @@ export class OrganizationDspBlock {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUpdated",
+            "baseName": "lastUpdated",
+            "type": "Date"
+        },
+        {
+            "name": "lastUpdatedByUser",
+            "baseName": "lastUpdatedByUser",
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "userId",
@@ -105,6 +125,11 @@ export class OrganizationDspBlock {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "sourceCodeAvailable",
+            "baseName": "sourceCodeAvailable",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

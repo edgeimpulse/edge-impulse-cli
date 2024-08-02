@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { UserProjectsSortOrder } from './userProjectsSortOrder';
 
 /**
 * Only fields set in this object will be updated.
@@ -20,13 +21,22 @@ export class UpdateUserRequest {
     */
     'name'?: string;
     /**
-    * Whether to show the Imagine 2022 banner
+    * New job title
     */
-    'showImagine2022'?: boolean;
+    'jobTitle'?: string;
+    /**
+    * New company name
+    */
+    'companyName'?: string;
     /**
     * List of user experiments
     */
     'experiments'?: Array<string>;
+    'projectsSortOrder'?: UserProjectsSortOrder;
+    /**
+    * User timezone.
+    */
+    'timezone'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -37,14 +47,29 @@ export class UpdateUserRequest {
             "type": "string"
         },
         {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
-            "type": "boolean"
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
+            "type": "string"
         },
         {
             "name": "experiments",
             "baseName": "experiments",
             "type": "Array<string>"
+        },
+        {
+            "name": "projectsSortOrder",
+            "baseName": "projectsSortOrder",
+            "type": "UserProjectsSortOrder"
+        },
+        {
+            "name": "timezone",
+            "baseName": "timezone",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

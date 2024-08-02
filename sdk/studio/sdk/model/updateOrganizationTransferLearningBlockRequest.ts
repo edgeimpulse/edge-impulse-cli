@@ -10,13 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
+import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
+import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class UpdateOrganizationTransferLearningBlockRequest {
     'name'?: string;
     'dockerContainer'?: string;
     'description'?: string;
-    'operatesOn'?: UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum;
+    'operatesOn'?: OrganizationTransferLearningOperatesOn;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'implementationVersion'?: number;
     /**
@@ -27,10 +32,25 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     * If `isPublic` is true, the list of devices (from latencyDevices) for which this model can be shown.
     */
     'isPublicForDevices'?: Array<string>;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
     * URL to the source code of this custom learn block.
     */
     'repositoryUrl'?: string;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters'?: Array<object>;
+    'imageInputScaling'?: ImageInputScaling;
+    /**
+    * If set, requires this block to be scheduled on GPU.
+    */
+    'indRequiresGpu'?: boolean;
+    'displayCategory'?: BlockDisplayCategory;
+    /**
+    * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
+    */
+    'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,7 +73,7 @@ export class UpdateOrganizationTransferLearningBlockRequest {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum"
+            "type": "OrganizationTransferLearningOperatesOn"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -76,9 +96,39 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "type": "Array<string>"
         },
         {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
+        },
+        {
             "name": "repositoryUrl",
             "baseName": "repositoryUrl",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
+        },
+        {
+            "name": "indRequiresGpu",
+            "baseName": "indRequiresGpu",
+            "type": "boolean"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "customModelVariants",
+            "baseName": "customModelVariants",
+            "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -86,6 +136,3 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     }
 }
 
-
-export type UpdateOrganizationTransferLearningBlockRequestOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
-export const UpdateOrganizationTransferLearningBlockRequestOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];

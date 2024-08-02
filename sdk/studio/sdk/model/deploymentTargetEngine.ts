@@ -12,5 +12,5 @@
 
 
 
-export type DeploymentTargetEngine = 'tflite' | 'tflite-eon' | 'tensorrt' | 'tensaiflow' | 'drp-ai' | 'tidl' | 'akida';
-export const DeploymentTargetEngineValues: string[] = ['tflite', 'tflite-eon', 'tensorrt', 'tensaiflow', 'drp-ai', 'tidl', 'akida'];
+export type DeploymentTargetEngine = 'tflite' | 'tflite-eon' | 'tflite-eon-ram-optimized' | 'tensorrt' | 'tensaiflow' | 'drp-ai' | 'tidl' | 'akida' | 'syntiant' | 'memryx' | 'neox';
+export const DeploymentTargetEngineValues: string[] = ['tflite', 'tflite-eon', 'tflite-eon-ram-optimized', 'tensorrt', 'tensaiflow', 'drp-ai', 'tidl', 'akida', 'syntiant', 'memryx', 'neox'];

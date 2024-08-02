@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { JobCreatedByUser } from './jobCreatedByUser';
 
 export class Job {
     /**
@@ -41,6 +42,19 @@ export class Job {
     * The IDs of users who should be notified when a job is finished.
     */
     'jobNotificationUids': Array<number>;
+    /**
+    * Additional metadata associated with this job.
+    */
+    'additionalInfo'?: string;
+    /**
+    * Job duration time in seconds from start to finished, measured by k8s job watcher.
+    */
+    'computeTime'?: number;
+    'createdByUser'?: JobCreatedByUser;
+    /**
+    * Some job categories keep a counter on the job number, e.g. in synthetic data, so we know what the 1st, 2nd etc. job was in the UI.
+    */
+    'categoryCount'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -84,6 +98,26 @@ export class Job {
             "name": "jobNotificationUids",
             "baseName": "jobNotificationUids",
             "type": "Array<number>"
+        },
+        {
+            "name": "additionalInfo",
+            "baseName": "additionalInfo",
+            "type": "string"
+        },
+        {
+            "name": "computeTime",
+            "baseName": "computeTime",
+            "type": "number"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "JobCreatedByUser"
+        },
+        {
+            "name": "categoryCount",
+            "baseName": "categoryCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

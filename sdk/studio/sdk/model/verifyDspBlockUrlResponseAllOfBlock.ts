@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPNamedAxis } from './dSPNamedAxis';
 
 export class VerifyDspBlockUrlResponseAllOfBlock {
     'title': string;
@@ -17,6 +18,7 @@ export class VerifyDspBlockUrlResponseAllOfBlock {
     'description': string;
     'name': string;
     'latestImplementationVersion': number;
+    'namedAxes'?: Array<DSPNamedAxis>;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +47,11 @@ export class VerifyDspBlockUrlResponseAllOfBlock {
             "name": "latestImplementationVersion",
             "baseName": "latestImplementationVersion",
             "type": "number"
+        },
+        {
+            "name": "namedAxes",
+            "baseName": "namedAxes",
+            "type": "Array<DSPNamedAxis>"
         }    ];
 
     static getAttributeTypeMap() {

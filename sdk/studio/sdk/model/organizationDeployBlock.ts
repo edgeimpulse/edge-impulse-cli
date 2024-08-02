@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 
 export class OrganizationDeployBlock {
     'id': number;
@@ -17,6 +18,9 @@ export class OrganizationDeployBlock {
     'dockerContainer': string;
     'dockerContainerManagedByEdgeImpulse': boolean;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUpdated'?: Date;
+    'lastUpdatedByUser'?: CreatedUpdatedByUser;
     'userId'?: number;
     'userName'?: string;
     'description': string;
@@ -35,6 +39,7 @@ export class OrganizationDeployBlock {
     'supportsEonCompiler': boolean;
     'showOptimizations': boolean;
     'category': OrganizationDeployBlockCategoryEnum;
+    'sourceCodeAvailable': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +68,21 @@ export class OrganizationDeployBlock {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUpdated",
+            "baseName": "lastUpdated",
+            "type": "Date"
+        },
+        {
+            "name": "lastUpdatedByUser",
+            "baseName": "lastUpdatedByUser",
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "userId",
@@ -138,6 +158,11 @@ export class OrganizationDeployBlock {
             "name": "category",
             "baseName": "category",
             "type": "OrganizationDeployBlockCategoryEnum"
+        },
+        {
+            "name": "sourceCodeAvailable",
+            "baseName": "sourceCodeAvailable",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

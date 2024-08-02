@@ -13,6 +13,8 @@
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
 import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
 import { GenericApiResponse } from './genericApiResponse';
+import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class AnomalyModelMetadataResponse {
     /**
@@ -47,6 +49,16 @@ export class AnomalyModelMetadataResponse {
     * Default minimum confidence rating required before tagging as anomaly, based on scores of training data (GMM only).
     */
     'defaultMinimumConfidenceRating'?: number;
+    /**
+    * The types of model that are available
+    */
+    'availableModelTypes'?: Array<KerasModelTypeEnum>;
+    'recommendedModelType'?: KerasModelTypeEnum;
+    /**
+    * Metrics for each of the available model types
+    */
+    'modelValidationMetrics'?: Array<KerasModelMetadataMetrics>;
+    'hasTrainedModel'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -90,6 +102,26 @@ export class AnomalyModelMetadataResponse {
             "name": "defaultMinimumConfidenceRating",
             "baseName": "defaultMinimumConfidenceRating",
             "type": "number"
+        },
+        {
+            "name": "availableModelTypes",
+            "baseName": "availableModelTypes",
+            "type": "Array<KerasModelTypeEnum>"
+        },
+        {
+            "name": "recommendedModelType",
+            "baseName": "recommendedModelType",
+            "type": "KerasModelTypeEnum"
+        },
+        {
+            "name": "modelValidationMetrics",
+            "baseName": "modelValidationMetrics",
+            "type": "Array<KerasModelMetadataMetrics>"
+        },
+        {
+            "name": "hasTrainedModel",
+            "baseName": "hasTrainedModel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

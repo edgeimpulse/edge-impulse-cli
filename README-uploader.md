@@ -33,10 +33,24 @@ Or set the category to `split` to automatically split data between training and 
 
 ### Labeling
 
-A label is automatically infered from the file name, see the [Ingestion service documentation](https://docs.edgeimpulse.com/reference/data-ingestion/new-ingestion-api). You can override this with the `--label` option. E.g.:
+A label is automatically inferred from the file name, see the [Ingestion service documentation](https://docs.edgeimpulse.com/reference/data-ingestion/new-ingestion-api). You can override this with the `--label` option. E.g.:
 
 ```
 $ edge-impulse-uploader --label noise path/to/a/file.wav
+```
+
+### Uploading datasets
+
+You can upload a directory (containing `training` and `testing` data) with the `--directory` option. E.g.:
+
+```
+$ edge-impulse-uploader --directory path/to/a/directory
+```
+
+We support uploading image datasets in a range of different formats. If your data directory contains labels in one of these supported formats, we'll try to automatically detect the format of this directory and convert it to a format supported by the Studio on upload. You can also manually specify the format of your dataset with the `--dataset-format` option. E.g.:
+
+```
+$ edge-impulse-uploader --directory path/to/a/directory --dataset-format yolov5
 ```
 
 ### Clearing configuration

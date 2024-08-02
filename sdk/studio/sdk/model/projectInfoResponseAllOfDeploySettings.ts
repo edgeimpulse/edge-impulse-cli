@@ -10,12 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { ModelEngineShortEnum } from './modelEngineShortEnum';
 
 export class ProjectInfoResponseAllOfDeploySettings {
     'eonCompiler': boolean;
     'sensor': ProjectInfoResponseAllOfDeploySettingsSensorEnum;
     'arduinoLibraryName': string;
     'tinkergenLibraryName': string;
+    'particleLibraryName': string;
+    'lastDeployModelEngine'?: ModelEngineShortEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +42,16 @@ export class ProjectInfoResponseAllOfDeploySettings {
             "name": "tinkergenLibraryName",
             "baseName": "tinkergenLibraryName",
             "type": "string"
+        },
+        {
+            "name": "particleLibraryName",
+            "baseName": "particleLibraryName",
+            "type": "string"
+        },
+        {
+            "name": "lastDeployModelEngine",
+            "baseName": "lastDeployModelEngine",
+            "type": "ModelEngineShortEnum"
         }    ];
 
     static getAttributeTypeMap() {

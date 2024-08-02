@@ -13,7 +13,7 @@
 import { Job } from './job';
 
 export class GetJobResponseAllOf {
-    'job'?: Job;
+    'job': Job;
 
     static discriminator: string | undefined = undefined;
 

@@ -23,7 +23,7 @@ export class OptimizeTransferLearningModelsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'models'?: OptimizeTransferLearningModelsResponseAllOfModels;
+    'models': OptimizeTransferLearningModelsResponseAllOfModels;
 
     static discriminator: string | undefined = undefined;
 

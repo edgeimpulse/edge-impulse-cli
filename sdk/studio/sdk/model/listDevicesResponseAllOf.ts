@@ -13,7 +13,7 @@
 import { Device } from './device';
 
 export class ListDevicesResponseAllOf {
-    'devices'?: Array<Device>;
+    'devices': Array<Device>;
 
     static discriminator: string | undefined = undefined;
 

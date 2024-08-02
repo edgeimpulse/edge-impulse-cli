@@ -15,6 +15,11 @@ export class UploadPretrainedModelRequest {
     'modelFile':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
     'modelFileName': string;
     'modelFileType': UploadPretrainedModelRequestModelFileTypeEnum;
+    'representativeFeatures'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+    /**
+    * MCU used for calculating latency, query `latencyDevices` in `listProject` for a list of supported devices (and use the \"mcu\" property here). If this is kept empty then we\'ll show an overview of multiple devices.
+    */
+    'device'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +38,16 @@ export class UploadPretrainedModelRequest {
             "name": "modelFileType",
             "baseName": "modelFileType",
             "type": "UploadPretrainedModelRequestModelFileTypeEnum"
+        },
+        {
+            "name": "representativeFeatures",
+            "baseName": "representativeFeatures",
+            "type": "RequestFile"
+        },
+        {
+            "name": "device",
+            "baseName": "device",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
@@ -41,5 +56,5 @@ export class UploadPretrainedModelRequest {
 }
 
 
-export type UploadPretrainedModelRequestModelFileTypeEnum = 'tflite';
-export const UploadPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite'];
+export type UploadPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';
+export const UploadPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model'];

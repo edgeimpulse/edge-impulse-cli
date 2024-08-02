@@ -1,5 +1,5 @@
 import { SerialConnector } from "./serial-connector";
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 // const drivelist = require('drivelist');
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -30,7 +30,7 @@ export async function canFlashSerial(deviceId: string) {
         console.log(SERIAL_PREFIX, '4. Restart this application.');
         console.log('');
 
-        // tslint:disable-next-line: max-line-length
+        // eslint-disable-next-line max-len
         // let drives: { description: string, mountpoints: { label: string, path: string }[] }[] = await drivelist.list();
         // let d = drives.find(l => l.mountpoints.some(m => m.label === 'DIS_L4IOT'));
         // if (!d) {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { KerasCustomMetric } from './kerasCustomMetric';
 import { KerasModelMetadataMetricsTflite } from './kerasModelMetadataMetricsTflite';
 
 export class KerasModelMetadataMetricsOnDevicePerformance {
@@ -19,6 +20,11 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
     'latency': number;
     'tflite': KerasModelMetadataMetricsTflite;
     'eon': KerasModelMetadataMetricsTflite;
+    'eonRamOptimized'?: KerasModelMetadataMetricsTflite;
+    /**
+    * Custom, device-specific performance metrics
+    */
+    'customMetrics'?: Array<KerasCustomMetric>;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,6 +58,16 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
             "name": "eon",
             "baseName": "eon",
             "type": "KerasModelMetadataMetricsTflite"
+        },
+        {
+            "name": "eonRamOptimized",
+            "baseName": "eon_ram_optimized",
+            "type": "KerasModelMetadataMetricsTflite"
+        },
+        {
+            "name": "customMetrics",
+            "baseName": "customMetrics",
+            "type": "Array<KerasCustomMetric>"
         }    ];
 
     static getAttributeTypeMap() {

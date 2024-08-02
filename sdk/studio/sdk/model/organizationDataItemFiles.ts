@@ -15,6 +15,7 @@ export class OrganizationDataItemFiles {
     'name': string;
     'bucketPath': string;
     'size': number;
+    'lastModified'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +34,11 @@ export class OrganizationDataItemFiles {
             "name": "size",
             "baseName": "size",
             "type": "number"
+        },
+        {
+            "name": "lastModified",
+            "baseName": "lastModified",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

@@ -23,8 +23,18 @@ export class ListVersionsResponseAllOfVersions {
     'userPhoto'?: string;
     'publicProjectId'?: number;
     'publicProjectUrl'?: string;
+    /**
+    * Accuracy on training set.
+    */
     'trainingAccuracy'?: number;
+    /**
+    * Accuracy on test set.
+    */
     'testAccuracy'?: number;
+    /**
+    * If your project had multiple impulses, this field indicates which impulse was used to calculate the accuracy metrics.
+    */
+    'accuracyBasedOnImpulse'?: string;
     'totalSamplesCount'?: string;
     'license'?: string;
 
@@ -90,6 +100,11 @@ export class ListVersionsResponseAllOfVersions {
             "name": "testAccuracy",
             "baseName": "testAccuracy",
             "type": "number"
+        },
+        {
+            "name": "accuracyBasedOnImpulse",
+            "baseName": "accuracyBasedOnImpulse",
+            "type": "string"
         },
         {
             "name": "totalSamplesCount",

@@ -20,11 +20,6 @@ export class AddApiKeyRequest {
     * API key. This needs to start with `ei_` and will need to be at least 32 characters long.
     */
     'apiKey': string;
-    /**
-    * Whether this key should be used as a development key.
-    */
-    'isDevelopmentKey': boolean;
-    'role': AddApiKeyRequestRoleEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,16 +33,6 @@ export class AddApiKeyRequest {
             "name": "apiKey",
             "baseName": "apiKey",
             "type": "string"
-        },
-        {
-            "name": "isDevelopmentKey",
-            "baseName": "isDevelopmentKey",
-            "type": "boolean"
-        },
-        {
-            "name": "role",
-            "baseName": "role",
-            "type": "AddApiKeyRequestRoleEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -55,6 +40,3 @@ export class AddApiKeyRequest {
     }
 }
 
-
-export type AddApiKeyRequestRoleEnum = 'admin' | 'readonly' | 'ingestiononly';
-export const AddApiKeyRequestRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly'];

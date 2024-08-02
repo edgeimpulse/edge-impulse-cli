@@ -111,7 +111,9 @@ export class ExportApi {
         const localVarPath = this.basePath + '/api/{projectId}/export/get-url'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

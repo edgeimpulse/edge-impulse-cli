@@ -28,6 +28,10 @@ export class ClassifySampleResponseClassificationDetails {
     * For object detection, the COCO mAP computed for the predictions on this image
     */
     'mAP'?: number;
+    /**
+    * For FOMO, the F1 score computed for the predictions on this image
+    */
+    'f1'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,6 +54,11 @@ export class ClassifySampleResponseClassificationDetails {
         {
             "name": "mAP",
             "baseName": "mAP",
+            "type": "number"
+        },
+        {
+            "name": "f1",
+            "baseName": "f1",
             "type": "number"
         }    ];
 

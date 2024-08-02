@@ -10,8 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { DeployPretrainedModelInputTimeSeries } from './deployPretrainedModelInputTimeSeries';
+import { DeployPretrainedModelInputAudio } from './deployPretrainedModelInputAudio';
+import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputImage';
+import { DeployPretrainedModelInputOther } from './deployPretrainedModelInputOther';
+import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
+import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
+import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 
-import { DeployPretrainedModelInputTimeSeries, DeployPretrainedModelInputAudio, DeployPretrainedModelInputImage, DeployPretrainedModelInputOther } from './models'; import { DeployPretrainedModelModelClassification, DeployPretrainedModelModelRegression, DeployPretrainedModelModelObjectDetection } from './models'; export class DeployPretrainedModelRequestModelInfo {
+export class DeployPretrainedModelRequestModelInfo {
     'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
     'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection;
 
@@ -21,12 +28,12 @@ import { DeployPretrainedModelInputTimeSeries, DeployPretrainedModelInputAudio, 
         {
             "name": "input",
             "baseName": "input",
-            "type": "object"
+            "type": "DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther"
         },
         {
             "name": "model",
             "baseName": "model",
-            "type": "object"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection"
         }    ];
 
     static getAttributeTypeMap() {

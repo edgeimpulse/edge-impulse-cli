@@ -24,6 +24,7 @@ export default async function(config: Config) {
     const packageJson = <{ version: string, name: string }>JSON.parse(
         await util.promisify(fs.readFile)(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'));
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let pkg: { versions: { [k: string]: { } } } = <any>await npmFetch.json(`/${packageJson.name}/`, {
         timeout: 3000
     });
@@ -41,7 +42,7 @@ export default async function(config: Config) {
 // from https://github.com/omichelsen/compare-versions#readme
 // licensed under the MIT
 function createCompareVersions() {
-    // tslint:disable-next-line: max-line-length
+    // eslint-disable-next-line max-len
     let semver = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
 
     function indexOrEnd(str: string, q: string) {
@@ -97,7 +98,8 @@ function createCompareVersions() {
                 if (p1[i] > p2[i]) return 1;
                 if (p2[i] > p1[i]) return -1;
             }
-        } else if (sp1 || sp2) {
+        }
+        else if (sp1 || sp2) {
             return sp1 ? -1 : 1;
         }
 

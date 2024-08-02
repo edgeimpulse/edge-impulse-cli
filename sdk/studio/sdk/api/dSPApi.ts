@@ -25,8 +25,11 @@ import { DSPMetadataResponse } from '../model/dSPMetadataResponse';
 import { DspAutotunerResults } from '../model/dspAutotunerResults';
 import { DspFeatureImportanceResponse } from '../model/dspFeatureImportanceResponse';
 import { DspFeatureLabelsResponse } from '../model/dspFeatureLabelsResponse';
+import { DspPerformanceAllVariantsResponse } from '../model/dspPerformanceAllVariantsResponse';
+import { DspRunRequestWithFeatures } from '../model/dspRunRequestWithFeatures';
 import { DspRunRequestWithoutFeatures } from '../model/dspRunRequestWithoutFeatures';
 import { DspRunRequestWithoutFeaturesReadOnly } from '../model/dspRunRequestWithoutFeaturesReadOnly';
+import { DspRunResponse } from '../model/dspRunResponse';
 import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
 import { DspSampleFeaturesResponse } from '../model/dspSampleFeaturesResponse';
 import { DspTrainedFeaturesResponse } from '../model/dspTrainedFeaturesResponse';
@@ -61,23 +64,27 @@ type dspSampleTrainedFeaturesQueryParams = {
     featureAx3: number,
 };
 
+type getDspMetadataQueryParams = {
+    excludeIncludedSamples?: boolean,
+};
+
 type getDspRawSampleQueryParams = {
     limitPayloadValues?: number,
 };
 
 type getDspSampleSliceQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 type runDspSampleSliceQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 type runDspSampleSliceReadOnlyQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
 };
 
 
@@ -155,7 +162,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -235,6 +244,107 @@ export class DSPApi {
     }
 
     /**
+     * Download an artifact from a DSP block for debugging. This is an internal API.
+     * @summary Download a DSP artifact
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param key DSP artifact file key
+     */
+    public async downloadDspArtifact (projectId: number, dspId: number, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/artifact/{key}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
+            .replace('{' + 'key' + '}', encodeURIComponent(String(key)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadDspArtifact.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling downloadDspArtifact.');
+        }
+
+        // verify required parameter 'key' is not null or undefined
+
+
+        if (key === null || key === undefined) {
+            throw new Error('Required parameter key was null or undefined when calling downloadDspArtifact.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Download output from a DSP block over all data in the training set, already sliced in windows. In Numpy binary format.
      * @summary Download DSP data
      * @param projectId Project ID
@@ -242,13 +352,15 @@ export class DSPApi {
      * @param category Which of the three acquisition categories to download data from
      * @param raw Whether to download raw data or processed data. Processed data is the default.
      */
-    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspData (projectId: number, dspId: number, category: 'training' | 'testing' | 'anomaly', queryParams?: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/x/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -279,7 +391,7 @@ export class DSPApi {
             throw new Error('Required parameter category was null or undefined when calling downloadDspData.');
         }
 
-        if (queryParams.raw !== undefined) {
+        if (queryParams?.raw !== undefined) {
             localVarQueryParameters['raw'] = ObjectSerializer.serialize(queryParams.raw, "boolean");
         }
 
@@ -351,7 +463,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -450,7 +564,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -552,7 +668,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -604,15 +722,15 @@ export class DSPApi {
             throw new Error('Required parameter category was null or undefined when calling dspSampleTrainedFeatures.');
         }
 
-        if (queryParams.featureAx1 !== undefined) {
+        if (queryParams?.featureAx1 !== undefined) {
             localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(queryParams.featureAx1, "number");
         }
 
-        if (queryParams.featureAx2 !== undefined) {
+        if (queryParams?.featureAx2 !== undefined) {
             localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(queryParams.featureAx2, "number");
         }
 
-        if (queryParams.featureAx3 !== undefined) {
+        if (queryParams?.featureAx3 !== undefined) {
             localVarQueryParameters['featureAx3'] = ObjectSerializer.serialize(queryParams.featureAx3, "number");
         }
 
@@ -682,7 +800,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -772,7 +892,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -862,7 +984,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -952,7 +1076,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1036,13 +1162,16 @@ export class DSPApi {
      * @summary Get metadata
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
      */
-    public async getDspMetadata (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
+    public async getDspMetadata (projectId: number, dspId: number, queryParams?: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1064,6 +1193,10 @@ export class DSPApi {
 
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling getDspMetadata.');
+        }
+
+        if (queryParams?.excludeIncludedSamples !== undefined) {
+            localVarQueryParameters['excludeIncludedSamples'] = ObjectSerializer.serialize(queryParams.excludeIncludedSamples, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1129,13 +1262,15 @@ export class DSPApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      */
-    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1166,7 +1301,7 @@ export class DSPApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getDspRawSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
@@ -1232,7 +1367,7 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice'
@@ -1240,7 +1375,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1278,18 +1415,11 @@ export class DSPApi {
         }
 
 
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling getDspSampleSlice.');
-        }
-
-
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
@@ -1349,14 +1479,207 @@ export class DSPApi {
     }
 
     /**
+     * Get estimated performance (latency and RAM) for the DSP block, for all supported project latency devices.
+     * @summary Get DSP block performance for all latency devices
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     */
+    public async getPerformanceAllVariants (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspPerformanceAllVariantsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/performance'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getPerformanceAllVariants.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling getPerformanceAllVariants.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<DspPerformanceAllVariantsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DspPerformanceAllVariantsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Takes in a features array and runs it through the DSP block. This data should have the same frequency as set in the input block in your impulse.
+     * @summary Get processed sample (from features array)
+     * @param projectId Project ID
+     * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
+     * @param dspRunRequestWithFeatures 
+     */
+    public async runDspOnFeaturesArray (projectId: number, dspId: number, dspRunRequestWithFeatures: DspRunRequestWithFeatures, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/run'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        // verify required parameter 'dspId' is not null or undefined
+
+
+        if (dspId === null || dspId === undefined) {
+            throw new Error('Required parameter dspId was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        // verify required parameter 'dspRunRequestWithFeatures' is not null or undefined
+
+
+        if (dspRunRequestWithFeatures === null || dspRunRequestWithFeatures === undefined) {
+            throw new Error('Required parameter dspRunRequestWithFeatures was null or undefined when calling runDspOnFeaturesArray.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(dspRunRequestWithFeatures, "DspRunRequestWithFeatures")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<DspRunResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "DspRunResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get slice of sample data, and run it through the DSP block. This only the axes selected by the DSP block. E.g. if you have selected only accX and accY as inputs for the DSP block, but the raw sample also contains accZ, accZ is filtered out.
      * @summary Get processed sample (slice)
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
      * @param dspRunRequestWithoutFeatures 
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, queryParams: runDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run'
@@ -1364,7 +1687,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1402,13 +1727,6 @@ export class DSPApi {
         }
 
 
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSlice.');
-        }
-
-
         // verify required parameter 'dspRunRequestWithoutFeatures' is not null or undefined
 
 
@@ -1416,11 +1734,11 @@ export class DSPApi {
             throw new Error('Required parameter dspRunRequestWithoutFeatures was null or undefined when calling runDspSampleSlice.');
         }
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
@@ -1487,7 +1805,7 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
     public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, queryParams: runDspSampleSliceReadOnlyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run/readonly'
@@ -1495,7 +1813,9 @@ export class DSPApi {
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1533,18 +1853,11 @@ export class DSPApi {
         }
 
 
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling runDspSampleSliceReadOnly.');
-        }
-
-
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
         }
 
@@ -1615,7 +1928,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1714,7 +2029,9 @@ export class DSPApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

@@ -1,10 +1,13 @@
-// tslint:disable-next-line: variable-name, no-var-requires
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
 const PATH = require('path');
-// tslint:disable-next-line: no-unsafe-any
 module.paths.push(PATH.join(process.cwd(), 'node_modules'));
 
 import {
-    AuthApi, CDNApi, ClassifyApi, DSPApi,
+    AuthApi, ClassifyApi, DSPApi,
     DeploymentApi, DevicesApi, ExportApi, HealthApi, ImpulseApi, JobsApi, LearnApi, LoginApi,
     OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi,
     OrganizationDataApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi,
@@ -18,6 +21,7 @@ import {
     MetricsApi,
     GetJobResponse,
     SocketTokenResponse,
+    OrganizationDataCampaignsApi,
 } from './sdk/api';
 import WebSocket from 'ws';
 
@@ -59,6 +63,7 @@ export class EdgeImpulseApi {
     organizationBlocks: OrganizationBlocksApi;
     organizationCreateProject: OrganizationCreateProjectApi;
     organizationData: OrganizationDataApi;
+    organizationDataCampaigns: OrganizationDataCampaignsApi;
     organizationJobs: OrganizationJobsApi;
     organizationPipelines: OrganizationPipelinesApi;
     organizationPortals: OrganizationPortalsApi;
@@ -125,6 +130,8 @@ export class EdgeImpulseApi {
             { extraHeaders: this._opts.extraHeaders });
         this.organizationData = new OrganizationDataApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
+        this.organizationDataCampaigns = new OrganizationDataCampaignsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
         this.organizationJobs = new OrganizationJobsApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.organizationPipelines = new OrganizationPipelinesApi(this._opts.endpoint + '/v1',
@@ -190,6 +197,7 @@ export class EdgeImpulseApi {
             this.organizationBlocks.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizationCreateProject.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizationData.setApiKey(apiKeyAuthId, opts.apiKey);
+            this.organizationDataCampaigns.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizationJobs.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizationPipelines.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizationPortals.setApiKey(apiKeyAuthId, opts.apiKey);
@@ -217,6 +225,7 @@ export class EdgeImpulseApi {
             this.organizationBlocks.setApiKey(jwtTokenAuthId, undefined);
             this.organizationCreateProject.setApiKey(jwtTokenAuthId, undefined);
             this.organizationData.setApiKey(jwtTokenAuthId, undefined);
+            this.organizationDataCampaigns.setApiKey(jwtTokenAuthId, undefined);
             this.organizationJobs.setApiKey(jwtTokenAuthId, undefined);
             this.organizationPipelines.setApiKey(jwtTokenAuthId, undefined);
             this.organizationPortals.setApiKey(jwtTokenAuthId, undefined);
@@ -247,6 +256,7 @@ export class EdgeImpulseApi {
             this.organizationBlocks.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizationCreateProject.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizationData.setApiKey(jwtTokenAuthId, jwtToken);
+            this.organizationDataCampaigns.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizationJobs.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizationPipelines.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizationPortals.setApiKey(jwtTokenAuthId, jwtToken);
@@ -274,6 +284,7 @@ export class EdgeImpulseApi {
             this.organizationBlocks.setApiKey(apiKeyAuthId, undefined);
             this.organizationCreateProject.setApiKey(apiKeyAuthId, undefined);
             this.organizationData.setApiKey(apiKeyAuthId, undefined);
+            this.organizationDataCampaigns.setApiKey(apiKeyAuthId, undefined);
             this.organizationJobs.setApiKey(apiKeyAuthId, undefined);
             this.organizationPipelines.setApiKey(apiKeyAuthId, undefined);
             this.organizationPortals.setApiKey(apiKeyAuthId, undefined);
@@ -438,12 +449,9 @@ export class EdgeImpulseApi {
             socket.onmessage = (msg) => {
                 try {
                     let m = JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
-                    // tslint:disable-next-line: no-unsafe-any
                     if (m[0] !== `job-data-${jobId}` && m[0] !== `job-finished-${jobId}`) return;
-                    // tslint:disable-next-line: no-unsafe-any
                     if (m[1].data) {
                         if (dataCallback) {
-                            // tslint:disable-next-line: no-unsafe-any
                             dataCallback(m[1].data);
                         }
                     }
@@ -452,7 +460,7 @@ export class EdgeImpulseApi {
                     /* noop */
                 }
             };
-
+            // eslint-disable-next-line
             socket.onclose = async () => {
                 clearInterval(pingIv);
 
@@ -542,7 +550,6 @@ export class EdgeImpulseApi {
                 try {
                     let m = <any[]>JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
                     if (m[0] === 'hello') {
-                        // tslint:disable-next-line: no-unsafe-any
                         if (m[1].hello && m[1].hello.version === 1) {
                             clearTimeout(rejectTimeout);
                             // console.log('Connected to job websocket');

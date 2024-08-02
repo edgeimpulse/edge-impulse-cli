@@ -24,8 +24,10 @@ import { DeploymentTargetsResponse } from '../model/deploymentTargetsResponse';
 import { EvaluateJobResponse } from '../model/evaluateJobResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDeploymentResponse } from '../model/getDeploymentResponse';
+import { GetLastDeploymentBuildResponse } from '../model/getLastDeploymentBuildResponse';
 import { GetSyntiantPosteriorResponse } from '../model/getSyntiantPosteriorResponse';
 import { KerasModelTypeEnum } from '../model/kerasModelTypeEnum';
+import { ProjectDeploymentTargetsResponse } from '../model/projectDeploymentTargetsResponse';
 import { SetSyntiantPosteriorRequest } from '../model/setSyntiantPosteriorRequest';
 import { StartJobResponse } from '../model/startJobResponse';
 
@@ -50,6 +52,7 @@ type downloadBuildQueryParams = {
     type: string,
     modelType?: KerasModelTypeEnum,
     engine?: DeploymentTargetEngine,
+    impulseId?: number,
 };
 
 type findSyntiantPosteriorFormParams = {
@@ -60,10 +63,43 @@ type findSyntiantPosteriorFormParams = {
     deploymentTarget?: string,
 };
 
+type findSyntiantPosteriorQueryParams = {
+    impulseId?: number,
+};
+
 type getDeploymentQueryParams = {
     type: string,
     modelType?: KerasModelTypeEnum,
     engine?: DeploymentTargetEngine,
+    impulseId?: number,
+};
+
+type getEvaluateJobResultQueryParams = {
+    impulseId?: number,
+};
+
+type getEvaluateJobResultCacheQueryParams = {
+    impulseId?: number,
+};
+
+type getLastDeploymentBuildQueryParams = {
+    impulseId?: number,
+};
+
+type getSyntiantPosteriorQueryParams = {
+    impulseId?: number,
+};
+
+type listDeploymentTargetsForProjectQueryParams = {
+    impulseId?: number,
+};
+
+type listDeploymentTargetsForProjectDataSourcesQueryParams = {
+    impulseId?: number,
+};
+
+type setSyntiantPosteriorQueryParams = {
+    impulseId?: number,
 };
 
 
@@ -137,12 +173,15 @@ export class DeploymentApi {
      * @param type The name of the built target. You can find this by listing all deployment targets through &#x60;listDeploymentTargetsForProject&#x60; (via &#x60;GET /v1/api/{projectId}/deployment/targets&#x60;) and see the &#x60;format&#x60; type.
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
     public async downloadBuild (projectId: number, queryParams: downloadBuildQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/zip'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -166,16 +205,20 @@ export class DeploymentApi {
         }
 
 
-        if (queryParams.type !== undefined) {
+        if (queryParams?.type !== undefined) {
             localVarQueryParameters['type'] = ObjectSerializer.serialize(queryParams.type, "string");
         }
 
-        if (queryParams.modelType !== undefined) {
+        if (queryParams?.modelType !== undefined) {
             localVarQueryParameters['modelType'] = ObjectSerializer.serialize(queryParams.modelType, "KerasModelTypeEnum");
         }
 
-        if (queryParams.engine !== undefined) {
+        if (queryParams?.engine !== undefined) {
             localVarQueryParameters['engine'] = ObjectSerializer.serialize(queryParams.engine, "DeploymentTargetEngine");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -239,15 +282,18 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param targetWords 
      * @param referenceSet 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param wavFile 
      * @param metaCsvFile 
      * @param deploymentTarget 
      */
-    public async findSyntiantPosterior (projectId: number, params: findSyntiantPosteriorFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async findSyntiantPosterior (projectId: number, params: findSyntiantPosteriorFormParams, queryParams?: findSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/find-syntiant-posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -277,6 +323,10 @@ export class DeploymentApi {
         }
 
 
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
@@ -362,12 +412,15 @@ export class DeploymentApi {
      * @param type The name of the built target. You can find this by listing all deployment targets through &#x60;listDeploymentTargetsForProject&#x60; (via &#x60;GET /v1/api/{projectId}/deployment/targets&#x60;) and see the &#x60;format&#x60; type.
      * @param modelType Optional model type of the build (if not, it uses the settings in the Keras block)
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
     public async getDeployment (projectId: number, queryParams: getDeploymentQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -391,16 +444,20 @@ export class DeploymentApi {
         }
 
 
-        if (queryParams.type !== undefined) {
+        if (queryParams?.type !== undefined) {
             localVarQueryParameters['type'] = ObjectSerializer.serialize(queryParams.type, "string");
         }
 
-        if (queryParams.modelType !== undefined) {
+        if (queryParams?.modelType !== undefined) {
             localVarQueryParameters['modelType'] = ObjectSerializer.serialize(queryParams.modelType, "KerasModelTypeEnum");
         }
 
-        if (queryParams.engine !== undefined) {
+        if (queryParams?.engine !== undefined) {
             localVarQueryParameters['engine'] = ObjectSerializer.serialize(queryParams.engine, "DeploymentTargetEngine");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -462,12 +519,15 @@ export class DeploymentApi {
      * Get evaluate job result, containing detailed performance statistics for every possible variant of the impulse.
      * @summary Evaluate job result
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getEvaluateJobResult (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
+    public async getEvaluateJobResult (projectId: number, queryParams?: getEvaluateJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -482,6 +542,10 @@ export class DeploymentApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getEvaluateJobResult.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -543,12 +607,15 @@ export class DeploymentApi {
      * Get evaluate job result, containing detailed performance statistics for every possible variant of the impulse. This only checks cache, and throws an error if there is no data in cache.
      * @summary Check evaluate job result (cache)
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getEvaluateJobResultCache (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
+    public async getEvaluateJobResultCache (projectId: number, queryParams?: getEvaluateJobResultCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate/cache'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -563,6 +630,10 @@ export class DeploymentApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getEvaluateJobResultCache.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -621,15 +692,106 @@ export class DeploymentApi {
     }
 
     /**
+     * Get information on the result of the last successful deployment job, including info on the build e.g. whether it is still valid.
+     * @summary Get information on the last deployment build
+     * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async getLastDeploymentBuild (projectId: number, queryParams?: getLastDeploymentBuildQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetLastDeploymentBuildResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/deployment/last'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getLastDeploymentBuild.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetLastDeploymentBuildResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetLastDeploymentBuildResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get the current posterior parameters for the Syntiant deployment target
      * @summary Get Syntiant posterior parameters
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSyntiantPosterior (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSyntiantPosteriorResponse> {
+    public async getSyntiantPosterior (projectId: number, queryParams?: getSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSyntiantPosteriorResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -644,6 +806,10 @@ export class DeploymentApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getSyntiantPosterior.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -708,7 +874,9 @@ export class DeploymentApi {
     public async listAllDeploymentTargets (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/deployment/targets';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -777,12 +945,15 @@ export class DeploymentApi {
      * List deployment targets for a project
      * @summary Deployment targets
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDeploymentTargetsForProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
+    public async listDeploymentTargetsForProject (projectId: number, queryParams?: listDeploymentTargetsForProjectQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -797,6 +968,10 @@ export class DeploymentApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDeploymentTargetsForProject.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -830,12 +1005,12 @@ export class DeploymentApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<DeploymentTargetsResponse>((resolve, reject) => {
+            return new Promise<ProjectDeploymentTargetsResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "DeploymentTargetsResponse");
+                        body = ObjectSerializer.deserialize(body, "ProjectDeploymentTargetsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -858,12 +1033,15 @@ export class DeploymentApi {
      * List deployment targets for a project from data sources page  (it shows some things like all Linux deploys, and hides \'fake\' deploy targets like mobile phone / computer)
      * @summary Deployment targets (data sources)
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDeploymentTargetsForProjectDataSources (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
+    public async listDeploymentTargetsForProjectDataSources (projectId: number, queryParams?: listDeploymentTargetsForProjectDataSourcesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets/data-sources'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -878,6 +1056,10 @@ export class DeploymentApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDeploymentTargetsForProjectDataSources.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -940,12 +1122,15 @@ export class DeploymentApi {
      * @summary Set Syntiant posterior parameters
      * @param projectId Project ID
      * @param setSyntiantPosteriorRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async setSyntiantPosterior (projectId: number, setSyntiantPosteriorRequest: SetSyntiantPosteriorRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSyntiantPosterior (projectId: number, setSyntiantPosteriorRequest: SetSyntiantPosteriorRequest, queryParams?: setSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -967,6 +1152,10 @@ export class DeploymentApi {
 
         if (setSyntiantPosteriorRequest === null || setSyntiantPosteriorRequest === undefined) {
             throw new Error('Required parameter setSyntiantPosteriorRequest was null or undefined when calling setSyntiantPosterior.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

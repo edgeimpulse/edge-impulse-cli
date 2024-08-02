@@ -12,14 +12,33 @@
 
 import { DeployPretrainedModelRequestModelInfo } from './deployPretrainedModelRequestModelInfo';
 import { GetPretrainedModelResponseAllOfModel } from './getPretrainedModelResponseAllOfModel';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class GetPretrainedModelResponseAllOf {
+    /**
+    * Whether a specific device was selected for performance profiling
+    */
+    'specificDeviceSelected': boolean;
+    /**
+    * The types of model that are available
+    */
+    'availableModelTypes': Array<KerasModelTypeEnum>;
     'model'?: GetPretrainedModelResponseAllOfModel;
     'modelInfo'?: DeployPretrainedModelRequestModelInfo;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "specificDeviceSelected",
+            "baseName": "specificDeviceSelected",
+            "type": "boolean"
+        },
+        {
+            "name": "availableModelTypes",
+            "baseName": "availableModelTypes",
+            "type": "Array<KerasModelTypeEnum>"
+        },
         {
             "name": "model",
             "baseName": "model",

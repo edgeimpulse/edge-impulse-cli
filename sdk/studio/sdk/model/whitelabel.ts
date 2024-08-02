@@ -10,6 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { DevelopmentBoardResponse } from './developmentBoardResponse';
+import { ProjectType } from './projectType';
+import { Theme } from './theme';
+import { WhitelabelAllLearningBlocks } from './whitelabelAllLearningBlocks';
+import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
 
 export class Whitelabel {
     'id': number;
@@ -17,12 +22,51 @@ export class Whitelabel {
     'domain': string;
     'ownerOrganizationId'?: number;
     'themeId': number;
+    'theme'?: Theme;
     'identityProviders': Array<string>;
     'allowPasswordAuth': boolean;
+    /**
+    * List of deployment targets enabled for this white label
+    */
     'deploymentTargets': Array<string>;
+    /**
+    * List of all supported deployment targets
+    */
+    'allDeploymentTargets': Array<string>;
+    /**
+    * List of custom deployment blocks available to this white label
+    */
+    'customDeploymentBlocks'?: Array<WhitelabelCustomDeploymentBlocks>;
+    /**
+    * Optional attribute allowing a whitelabel to customize the order of deployment options in the deployment view, given as an in-order list of deployment options.
+    */
+    'deploymentOptionsOrder'?: Array<string>;
     'allowSignup': boolean;
     'allowFreeProjects': boolean;
     'exposePublicProjects'?: boolean;
+    /**
+    * The name of the default deployment target for this white label
+    */
+    'defaultDeploymentTarget'?: string | null;
+    'supportedProjectTypes': Array<ProjectType>;
+    /**
+    * Whether the new project UI should be enabled for this white label or not.
+    */
+    'allowNewProjectUi': boolean;
+    /**
+    * List of learning blocks enabled for this white label
+    */
+    'learningBlocks': Array<string>;
+    /**
+    * List of all supported learning blocks
+    */
+    'allLearningBlocks': Array<WhitelabelAllLearningBlocks>;
+    'developmentBoards': Array<DevelopmentBoardResponse>;
+    'allDevelopmentBoards': Array<DevelopmentBoardResponse>;
+    /**
+    * The maximum number of organizations that can be created under this white label.
+    */
+    'organizationsLimit'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +97,11 @@ export class Whitelabel {
             "type": "number"
         },
         {
+            "name": "theme",
+            "baseName": "theme",
+            "type": "Theme"
+        },
+        {
             "name": "identityProviders",
             "baseName": "identityProviders",
             "type": "Array<string>"
@@ -65,6 +114,21 @@ export class Whitelabel {
         {
             "name": "deploymentTargets",
             "baseName": "deploymentTargets",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allDeploymentTargets",
+            "baseName": "allDeploymentTargets",
+            "type": "Array<string>"
+        },
+        {
+            "name": "customDeploymentBlocks",
+            "baseName": "customDeploymentBlocks",
+            "type": "Array<WhitelabelCustomDeploymentBlocks>"
+        },
+        {
+            "name": "deploymentOptionsOrder",
+            "baseName": "deploymentOptionsOrder",
             "type": "Array<string>"
         },
         {
@@ -81,6 +145,46 @@ export class Whitelabel {
             "name": "exposePublicProjects",
             "baseName": "exposePublicProjects",
             "type": "boolean"
+        },
+        {
+            "name": "defaultDeploymentTarget",
+            "baseName": "defaultDeploymentTarget",
+            "type": "string"
+        },
+        {
+            "name": "supportedProjectTypes",
+            "baseName": "supportedProjectTypes",
+            "type": "Array<ProjectType>"
+        },
+        {
+            "name": "allowNewProjectUi",
+            "baseName": "allowNewProjectUi",
+            "type": "boolean"
+        },
+        {
+            "name": "learningBlocks",
+            "baseName": "learningBlocks",
+            "type": "Array<string>"
+        },
+        {
+            "name": "allLearningBlocks",
+            "baseName": "allLearningBlocks",
+            "type": "Array<WhitelabelAllLearningBlocks>"
+        },
+        {
+            "name": "developmentBoards",
+            "baseName": "developmentBoards",
+            "type": "Array<DevelopmentBoardResponse>"
+        },
+        {
+            "name": "allDevelopmentBoards",
+            "baseName": "allDevelopmentBoards",
+            "type": "Array<DevelopmentBoardResponse>"
+        },
+        {
+            "name": "organizationsLimit",
+            "baseName": "organizationsLimit",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

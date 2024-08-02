@@ -27,6 +27,7 @@ import { GetImpulseBlocksResponse } from '../model/getImpulseBlocksResponse';
 import { GetWhitelabelDomainResponse } from '../model/getWhitelabelDomainResponse';
 import { GetWhitelabelResponse } from '../model/getWhitelabelResponse';
 import { UpdateWhitelabelDeploymentTargetsRequest } from '../model/updateWhitelabelDeploymentTargetsRequest';
+import { UpdateWhitelabelInternalRequest } from '../model/updateWhitelabelInternalRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -117,7 +118,9 @@ export class WhitelabelsApi {
     public async createWhitelabel (createWhitelabelRequest: CreateWhitelabelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateWhitelabelResponse> {
         const localVarPath = this.basePath + '/api/whitelabels';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -199,7 +202,9 @@ export class WhitelabelsApi {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -280,7 +285,9 @@ export class WhitelabelsApi {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/impulse/blocks'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -359,7 +366,9 @@ export class WhitelabelsApi {
     public async getAllWhitelabels (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllWhitelabelsResponse> {
         const localVarPath = this.basePath + '/api/whitelabels';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -433,7 +442,9 @@ export class WhitelabelsApi {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -514,7 +525,9 @@ export class WhitelabelsApi {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/domain'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -590,7 +603,9 @@ export class WhitelabelsApi {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/deploymentTargets'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -628,6 +643,98 @@ export class WhitelabelsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(updateWhitelabelDeploymentTargetsRequest, "UpdateWhitelabelDeploymentTargetsRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Update the white label with the given id.
+     * @summary Update white label
+     * @param whitelabelIdentifier Whitelabel ID
+     * @param updateWhitelabelInternalRequest 
+     */
+    public async updateWhitelabel (whitelabelIdentifier: number, updateWhitelabelInternalRequest: UpdateWhitelabelInternalRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
+            .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'whitelabelIdentifier' is not null or undefined
+
+
+        if (whitelabelIdentifier === null || whitelabelIdentifier === undefined) {
+            throw new Error('Required parameter whitelabelIdentifier was null or undefined when calling updateWhitelabel.');
+        }
+
+        // verify required parameter 'updateWhitelabelInternalRequest' is not null or undefined
+
+
+        if (updateWhitelabelInternalRequest === null || updateWhitelabelInternalRequest === undefined) {
+            throw new Error('Required parameter updateWhitelabelInternalRequest was null or undefined when calling updateWhitelabel.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PUT',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(updateWhitelabelInternalRequest, "UpdateWhitelabelInternalRequest")
         };
 
         let authenticationPromise = Promise.resolve();

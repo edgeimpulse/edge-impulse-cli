@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 
 export class OrganizationPipelineFeedingIntoDataset {
     'dataset': string;
@@ -17,6 +18,7 @@ export class OrganizationPipelineFeedingIntoDataset {
     'itemCount': number;
     'itemCountChecklistOK': number;
     'itemCountChecklistError': number;
+    'datasetType'?: OrganizationDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +47,11 @@ export class OrganizationPipelineFeedingIntoDataset {
             "name": "itemCountChecklistError",
             "baseName": "itemCountChecklistError",
             "type": "number"
+        },
+        {
+            "name": "datasetType",
+            "baseName": "datasetType",
+            "type": "OrganizationDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {

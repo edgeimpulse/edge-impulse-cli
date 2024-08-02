@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AdditionalMetric } from './additionalMetric';
 import { KerasModelMetadataMetricsOnDevicePerformance } from './kerasModelMetadataMetricsOnDevicePerformance';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ModelPrediction } from './modelPrediction';
@@ -32,6 +33,17 @@ export class KerasModelMetadataMetrics {
     'onDevicePerformance': Array<KerasModelMetadataMetricsOnDevicePerformance>;
     'predictions'?: Array<ModelPrediction>;
     'visualization': KerasModelMetadataMetricsVisualizationEnum;
+    'isSupportedOnMcu': boolean;
+    'mcuSupportError'?: string;
+    /**
+    * If this is set, then we\'re still profiling this model. Subscribe to job updates to see when it\'s done (afterward the metadata will be updated).
+    */
+    'profilingJobId'?: number;
+    /**
+    * If this is set, then the profiling job failed (get the status by getting the job logs for \'profilingJobId\').
+    */
+    'profilingJobFailed'?: boolean;
+    'additionalMetrics': Array<AdditionalMetric>;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +87,31 @@ export class KerasModelMetadataMetrics {
             "name": "visualization",
             "baseName": "visualization",
             "type": "KerasModelMetadataMetricsVisualizationEnum"
+        },
+        {
+            "name": "isSupportedOnMcu",
+            "baseName": "isSupportedOnMcu",
+            "type": "boolean"
+        },
+        {
+            "name": "mcuSupportError",
+            "baseName": "mcuSupportError",
+            "type": "string"
+        },
+        {
+            "name": "profilingJobId",
+            "baseName": "profilingJobId",
+            "type": "number"
+        },
+        {
+            "name": "profilingJobFailed",
+            "baseName": "profilingJobFailed",
+            "type": "boolean"
+        },
+        {
+            "name": "additionalMetrics",
+            "baseName": "additionalMetrics",
+            "type": "Array<AdditionalMetric>"
         }    ];
 
     static getAttributeTypeMap() {

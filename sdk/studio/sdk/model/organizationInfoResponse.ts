@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 import { GenericApiResponse } from './genericApiResponse';
 import { Organization } from './organization';
 import { OrganizationDataset } from './organizationDataset';
 import { OrganizationInfoResponseAllOf } from './organizationInfoResponseAllOf';
+import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
+import { OrganizationInfoResponseAllOfPerformance } from './organizationInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
@@ -31,13 +33,15 @@ export class OrganizationInfoResponse {
     'organization': Organization;
     'datasets': Array<OrganizationDataset>;
     'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
-    'entitlementLimits'?: OrganizationInfoResponseAllOfEntitlementLimits;
+    'entitlementLimits'?: EntitlementLimits;
     /**
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments'?: Array<ProjectInfoResponseAllOfExperiments>;
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
+    'cliLists': OrganizationInfoResponseAllOfCliLists;
+    'performance': OrganizationInfoResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -70,7 +74,7 @@ export class OrganizationInfoResponse {
         {
             "name": "entitlementLimits",
             "baseName": "entitlementLimits",
-            "type": "OrganizationInfoResponseAllOfEntitlementLimits"
+            "type": "EntitlementLimits"
         },
         {
             "name": "experiments",
@@ -86,6 +90,16 @@ export class OrganizationInfoResponse {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "cliLists",
+            "baseName": "cliLists",
+            "type": "OrganizationInfoResponseAllOfCliLists"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "OrganizationInfoResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

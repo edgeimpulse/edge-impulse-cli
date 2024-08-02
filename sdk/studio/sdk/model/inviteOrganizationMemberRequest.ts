@@ -10,13 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationMemberRole } from './organizationMemberRole';
 
 export class InviteOrganizationMemberRequest {
     /**
     * E-mail address
     */
     'email': string;
-    'role': InviteOrganizationMemberRequestRoleEnum;
+    'role': OrganizationMemberRole;
     /**
     * Only used for \'guest\' users. Limits the datasets the user has access to.
     */
@@ -33,7 +34,7 @@ export class InviteOrganizationMemberRequest {
         {
             "name": "role",
             "baseName": "role",
-            "type": "InviteOrganizationMemberRequestRoleEnum"
+            "type": "OrganizationMemberRole"
         },
         {
             "name": "datasets",
@@ -46,6 +47,3 @@ export class InviteOrganizationMemberRequest {
     }
 }
 
-
-export type InviteOrganizationMemberRequestRoleEnum = 'admin' | 'member' | 'guest';
-export const InviteOrganizationMemberRequestRoleEnumValues: string[] = ['admin', 'member', 'guest'];

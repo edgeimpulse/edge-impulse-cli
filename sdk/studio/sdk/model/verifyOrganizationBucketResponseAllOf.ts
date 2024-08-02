@@ -17,6 +17,14 @@ export class VerifyOrganizationBucketResponseAllOf {
     * 20 random files from the bucket.
     */
     'files': Array<VerifyOrganizationBucketResponseAllOfFiles>;
+    /**
+    * Indicates whether there are any info.labels files in this bucket. If so, those are used for category/labels.
+    */
+    'hasInfoLabelsFile': boolean;
+    /**
+    * A signed URL that allows you to PUT an item, to check whether CORS headers are set up correctly for this bucket.
+    */
+    'signedUrl': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -25,6 +33,16 @@ export class VerifyOrganizationBucketResponseAllOf {
             "name": "files",
             "baseName": "files",
             "type": "Array<VerifyOrganizationBucketResponseAllOfFiles>"
+        },
+        {
+            "name": "hasInfoLabelsFile",
+            "baseName": "hasInfoLabelsFile",
+            "type": "boolean"
+        },
+        {
+            "name": "signedUrl",
+            "baseName": "signedUrl",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

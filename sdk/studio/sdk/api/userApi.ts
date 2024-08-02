@@ -20,26 +20,41 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { ActivateUserByThirdPartyActivationCodeRequest } from '../model/activateUserByThirdPartyActivationCodeRequest';
-import { ActivateUserRequest } from '../model/activateUserRequest';
+import { ActivateUserOrVerifyEmailRequest } from '../model/activateUserOrVerifyEmailRequest';
 import { ChangePasswordRequest } from '../model/changePasswordRequest';
 import { ConvertUserRequest } from '../model/convertUserRequest';
 import { CreateDeveloperProfileResponse } from '../model/createDeveloperProfileResponse';
+import { CreateEnterpriseTrialResponse } from '../model/createEnterpriseTrialResponse';
+import { CreateEnterpriseTrialUserRequest } from '../model/createEnterpriseTrialUserRequest';
 import { CreateEvaluationUserResponse } from '../model/createEvaluationUserResponse';
+import { CreateProTierUserRequest } from '../model/createProTierUserRequest';
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
+import { DeleteUserRequest } from '../model/deleteUserRequest';
+import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetJWTTokenResponse } from '../model/getJWTTokenResponse';
+import { GetJWTResponse } from '../model/getJWTResponse';
 import { GetUserNeedToSetPasswordResponse } from '../model/getUserNeedToSetPasswordResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
+import { ListEnterpriseTrialsResponse } from '../model/listEnterpriseTrialsResponse';
 import { ListOrganizationBucketsUserResponse } from '../model/listOrganizationBucketsUserResponse';
 import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
 import { RequestResetPasswordRequest } from '../model/requestResetPasswordRequest';
 import { ResetPasswordRequest } from '../model/resetPasswordRequest';
+import { SendUserFeedbackRequest } from '../model/sendUserFeedbackRequest';
 import { SetUserPasswordRequest } from '../model/setUserPasswordRequest';
+import { StartEnterpriseTrialRequest } from '../model/startEnterpriseTrialRequest';
 import { UpdateUserRequest } from '../model/updateUserRequest';
+import { UpgradeSubscriptionRequest } from '../model/upgradeSubscriptionRequest';
 import { UploadUserPhotoResponse } from '../model/uploadUserPhotoResponse';
 import { UserByThirdPartyActivationRequest } from '../model/userByThirdPartyActivationRequest';
+import { UserDeleteTotpMfaKeyRequest } from '../model/userDeleteTotpMfaKeyRequest';
+import { UserDismissNotificationRequest } from '../model/userDismissNotificationRequest';
+import { UserGenerateNewMfaKeyResponse } from '../model/userGenerateNewMfaKeyResponse';
+import { UserSetTotpMfaKeyRequest } from '../model/userSetTotpMfaKeyRequest';
+import { UserSetTotpMfaKeyResponse } from '../model/userSetTotpMfaKeyResponse';
+import { UserSubscriptionMetricsResponse } from '../model/userSubscriptionMetricsResponse';
 import { VerifyResetPasswordRequest } from '../model/verifyResetPasswordRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -138,7 +153,9 @@ export class UserApi {
     public async acceptTermsOfService (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/accept-tos';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -206,12 +223,14 @@ export class UserApi {
     /**
      * Activate the current user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate current user
-     * @param activateUserRequest 
+     * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateCurrentUser (activateUserRequest: ActivateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateCurrentUser (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/activate';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -221,11 +240,11 @@ export class UserApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'activateUserRequest' is not null or undefined
+        // verify required parameter 'activateUserOrVerifyEmailRequest' is not null or undefined
 
 
-        if (activateUserRequest === null || activateUserRequest === undefined) {
-            throw new Error('Required parameter activateUserRequest was null or undefined when calling activateCurrentUser.');
+        if (activateUserOrVerifyEmailRequest === null || activateUserOrVerifyEmailRequest === undefined) {
+            throw new Error('Required parameter activateUserOrVerifyEmailRequest was null or undefined when calling activateCurrentUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -241,7 +260,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(activateUserRequest, "ActivateUserRequest")
+            body: ObjectSerializer.serialize(activateUserOrVerifyEmailRequest, "ActivateUserOrVerifyEmailRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -288,13 +307,15 @@ export class UserApi {
      * Activate a user account (requires an activation code). This function is only available through a JWT token.
      * @summary Activate user
      * @param userId User ID
-     * @param activateUserRequest 
+     * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateUser (userId: number, activateUserRequest: ActivateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateUser (userId: number, activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/activate'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -311,11 +332,11 @@ export class UserApi {
             throw new Error('Required parameter userId was null or undefined when calling activateUser.');
         }
 
-        // verify required parameter 'activateUserRequest' is not null or undefined
+        // verify required parameter 'activateUserOrVerifyEmailRequest' is not null or undefined
 
 
-        if (activateUserRequest === null || activateUserRequest === undefined) {
-            throw new Error('Required parameter activateUserRequest was null or undefined when calling activateUser.');
+        if (activateUserOrVerifyEmailRequest === null || activateUserOrVerifyEmailRequest === undefined) {
+            throw new Error('Required parameter activateUserOrVerifyEmailRequest was null or undefined when calling activateUser.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -331,7 +352,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(activateUserRequest, "ActivateUserRequest")
+            body: ObjectSerializer.serialize(activateUserOrVerifyEmailRequest, "ActivateUserOrVerifyEmailRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -379,10 +400,12 @@ export class UserApi {
      * @summary Activate user by third party activation code
      * @param activateUserByThirdPartyActivationCodeRequest 
      */
-    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTTokenResponse> {
+    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTResponse> {
         const localVarPath = this.basePath + '/api/user/activate-by-third-party-activation-code';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -431,12 +454,12 @@ export class UserApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetJWTTokenResponse>((resolve, reject) => {
+            return new Promise<GetJWTResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetJWTTokenResponse");
+                        body = ObjectSerializer.deserialize(body, "GetJWTResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -463,7 +486,9 @@ export class UserApi {
     public async changePasswordCurrentUser (changePasswordRequest: ChangePasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/change-password';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -546,7 +571,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/change-password'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -634,7 +661,9 @@ export class UserApi {
     public async convertCurrentUser (convertUserRequest: ConvertUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/convert';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -714,7 +743,9 @@ export class UserApi {
     public async createDeveloperProfile (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateDeveloperProfileResponse> {
         const localVarPath = this.basePath + '/api/user/create-developer-profile';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -780,13 +811,92 @@ export class UserApi {
     }
 
     /**
+     * Creates an enterprise trial user and a new trial organization, and redirects the user to the new organization.
+     * @summary Create enterprise trial user
+     * @param createEnterpriseTrialUserRequest Trial request
+     */
+    public async createEnterpriseTrialUser (createEnterpriseTrialUserRequest: CreateEnterpriseTrialUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+        const localVarPath = this.basePath + '/api-user-create-enterprise-trial';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'createEnterpriseTrialUserRequest' is not null or undefined
+
+
+        if (createEnterpriseTrialUserRequest === null || createEnterpriseTrialUserRequest === undefined) {
+            throw new Error('Required parameter createEnterpriseTrialUserRequest was null or undefined when calling createEnterpriseTrialUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(createEnterpriseTrialUserRequest, "CreateEnterpriseTrialUserRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateEnterpriseTrialResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateEnterpriseTrialResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Creates an evaluation user and a new project, and redirects the user to the new project.
      * @summary Create evaluation user
      */
     public async createEvaluationUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEvaluationUserResponse> {
         const localVarPath = this.basePath + '/api-user-create-evaluate';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -846,6 +956,83 @@ export class UserApi {
     }
 
     /**
+     * Create a new user for the Professional Plan and a new project. Note that the Professional plan will not be enabled until the payment is successful.
+     * @summary Create Professional Tier user
+     * @param createProTierUserRequest 
+     */
+    public async createProTierUser (createProTierUserRequest: CreateProTierUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateUserResponse> {
+        const localVarPath = this.basePath + '/api-create-pro-user';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'createProTierUserRequest' is not null or undefined
+
+
+        if (createProTierUserRequest === null || createProTierUserRequest === undefined) {
+            throw new Error('Required parameter createProTierUserRequest was null or undefined when calling createProTierUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(createProTierUserRequest, "CreateProTierUserRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateUserResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateUserResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Create a new user and project
      * @summary Create user
      * @param createUserRequest 
@@ -853,7 +1040,9 @@ export class UserApi {
     public async createUser (createUserRequest: CreateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateUserResponse> {
         const localVarPath = this.basePath + '/api-user-create';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -923,11 +1112,14 @@ export class UserApi {
     /**
      * Delete a user. This function is only available through a JWT token, and can only remove the current user.
      * @summary Delete current user
+     * @param deleteUserRequest 
      */
-    public async deleteCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteCurrentUser (deleteUserRequest: DeleteUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -936,6 +1128,13 @@ export class UserApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
+
+        // verify required parameter 'deleteUserRequest' is not null or undefined
+
+
+        if (deleteUserRequest === null || deleteUserRequest === undefined) {
+            throw new Error('Required parameter deleteUserRequest was null or undefined when calling deleteCurrentUser.');
+        }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
@@ -950,6 +1149,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(deleteUserRequest, "DeleteUserRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -999,7 +1199,9 @@ export class UserApi {
     public async deletePhotoCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/photo';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1068,12 +1270,15 @@ export class UserApi {
      * Delete a user. This function is only available through a JWT token, and can only remove the current user.
      * @summary Delete user
      * @param userId User ID
+     * @param deleteUserRequest 
      */
-    public async deleteUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteUser (userId: number, deleteUserRequest: DeleteUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1090,6 +1295,13 @@ export class UserApi {
             throw new Error('Required parameter userId was null or undefined when calling deleteUser.');
         }
 
+        // verify required parameter 'deleteUserRequest' is not null or undefined
+
+
+        if (deleteUserRequest === null || deleteUserRequest === undefined) {
+            throw new Error('Required parameter deleteUserRequest was null or undefined when calling deleteUser.');
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1103,6 +1315,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(deleteUserRequest, "DeleteUserRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -1152,7 +1365,9 @@ export class UserApi {
     public async getCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/user';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1226,7 +1441,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1306,7 +1523,9 @@ export class UserApi {
     public async getUserByThirdPartyActivationCode (userByThirdPartyActivationRequest: UserByThirdPartyActivationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/user/by-third-party-activation-code';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1380,15 +1599,17 @@ export class UserApi {
     }
 
     /**
-     * Tells whether the user needs to set its password.
-     * @summary Get user password state
+     * Tells whether a user is registered and whether it needs to set its password.
+     * @summary Get user registration state
      * @param usernameOrEmail Username or email
      */
     public async getUserNeedToSetPassword (usernameOrEmail: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserNeedToSetPasswordResponse> {
         const localVarPath = this.basePath + '/api-user-need-to-set-password/{usernameOrEmail}'
             .replace('{' + 'usernameOrEmail' + '}', encodeURIComponent(String(usernameOrEmail)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1461,7 +1682,9 @@ export class UserApi {
     public async listEmailsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEmailResponse> {
         const localVarPath = this.basePath + '/api/user/emails';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1535,7 +1758,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/emails'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1608,13 +1833,98 @@ export class UserApi {
     }
 
     /**
+     * Get a list of all enterprise trials for a user. This function is only available through a JWT token.
+     * @summary Get enterprise trials
+     * @param userId User ID
+     */
+    public async listEnterpriseTrialsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEnterpriseTrialsResponse> {
+        const localVarPath = this.basePath + '/api/users/{userId}/trials'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling listEnterpriseTrialsUser.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListEnterpriseTrialsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListEnterpriseTrialsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * List all organizational storage buckets that the current user has access to. This function is only available through a JWT token.
      * @summary Get buckets current user
      */
     public async listOrganizationBucketsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationBucketsUserResponse> {
         const localVarPath = this.basePath + '/api/users/buckets';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1688,7 +1998,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/buckets'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1767,7 +2079,9 @@ export class UserApi {
     public async listOrganizationsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/user/organizations';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1841,7 +2155,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/organizations'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1920,7 +2236,9 @@ export class UserApi {
     public async requestActivationCodeCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/request-activation';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1994,7 +2312,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/request-activation'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2074,7 +2394,9 @@ export class UserApi {
     public async requestResetPassword (requestResetPasswordRequest: RequestResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-request-reset-password';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2149,7 +2471,9 @@ export class UserApi {
     public async resetPassword (resetPasswordRequest: ResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-reset-password';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2217,6 +2541,190 @@ export class UserApi {
     }
 
     /**
+     * Send feedback to Edge Impulse or get in touch with sales.
+     * @summary Send feedback
+     * @param userId User ID
+     * @param sendUserFeedbackRequest 
+     */
+    public async sendUserFeedback (userId: number, sendUserFeedbackRequest: SendUserFeedbackRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/users/{userId}/feedback'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling sendUserFeedback.');
+        }
+
+        // verify required parameter 'sendUserFeedbackRequest' is not null or undefined
+
+
+        if (sendUserFeedbackRequest === null || sendUserFeedbackRequest === undefined) {
+            throw new Error('Required parameter sendUserFeedbackRequest was null or undefined when calling sendUserFeedback.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(sendUserFeedbackRequest, "SendUserFeedbackRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Send an upgrade to Enterprise request to Edge Impulse.
+     * @summary Send upgrade request
+     * @param userId User ID
+     * @param enterpriseUpgradeOrTrialExtensionRequest 
+     */
+    public async sendUserUpgradeRequest (userId: number, enterpriseUpgradeOrTrialExtensionRequest: EnterpriseUpgradeOrTrialExtensionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/users/{userId}/upgrade'
+            .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userId' is not null or undefined
+
+
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling sendUserUpgradeRequest.');
+        }
+
+        // verify required parameter 'enterpriseUpgradeOrTrialExtensionRequest' is not null or undefined
+
+
+        if (enterpriseUpgradeOrTrialExtensionRequest === null || enterpriseUpgradeOrTrialExtensionRequest === undefined) {
+            throw new Error('Required parameter enterpriseUpgradeOrTrialExtensionRequest was null or undefined when calling sendUserUpgradeRequest.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(enterpriseUpgradeOrTrialExtensionRequest, "EnterpriseUpgradeOrTrialExtensionRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Set the password for a new SSO user. This function is only available through an SSO access token.
      * @summary Set password for SSO user
      * @param userId User ID
@@ -2226,7 +2734,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/set-password'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2301,6 +2811,89 @@ export class UserApi {
     }
 
     /**
+     * Create an enterprise trial for the current user. Users can only go through a trial once.
+     * @summary Start enterprise trial
+     * @param startEnterpriseTrialRequest 
+     */
+    public async startEnterpriseTrial (startEnterpriseTrialRequest: StartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+        const localVarPath = this.basePath + '/api/user/trial';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'startEnterpriseTrialRequest' is not null or undefined
+
+
+        if (startEnterpriseTrialRequest === null || startEnterpriseTrialRequest === undefined) {
+            throw new Error('Required parameter startEnterpriseTrialRequest was null or undefined when calling startEnterpriseTrial.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(startEnterpriseTrialRequest, "StartEnterpriseTrialRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateEnterpriseTrialResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateEnterpriseTrialResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Update user properties such as name. This function is only available through a JWT token.
      * @summary Update current user
      * @param updateUserRequest 
@@ -2308,7 +2901,9 @@ export class UserApi {
     public async updateCurrentUser (updateUserRequest: UpdateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2391,7 +2986,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2479,7 +3076,9 @@ export class UserApi {
     public async uploadPhotoCurrentUser (params: uploadPhotoCurrentUserFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
         const localVarPath = this.basePath + '/api/user/photo';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2566,7 +3165,9 @@ export class UserApi {
         const localVarPath = this.basePath + '/api/users/{userId}/photo'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2651,6 +3252,626 @@ export class UserApi {
     }
 
     /**
+     * Cancel the current subscription.
+     * @summary Cancel subscription
+     */
+    public async userCancelSubscription (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/user/subscription/cancel';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Disable MFA on this account using an TOTP token.
+     * @summary Remove TOTP MFA key
+     * @param userDeleteTotpMfaKeyRequest 
+     */
+    public async userDeleteTotpMfaKey (userDeleteTotpMfaKeyRequest: UserDeleteTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/clear';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userDeleteTotpMfaKeyRequest' is not null or undefined
+
+
+        if (userDeleteTotpMfaKeyRequest === null || userDeleteTotpMfaKeyRequest === undefined) {
+            throw new Error('Required parameter userDeleteTotpMfaKeyRequest was null or undefined when calling userDeleteTotpMfaKey.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(userDeleteTotpMfaKeyRequest, "UserDeleteTotpMfaKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Dismiss a notification
+     * @summary Dismiss a notification
+     * @param userDismissNotificationRequest 
+     */
+    public async userDismissNotification (userDismissNotificationRequest: UserDismissNotificationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/user/dismiss-notification';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userDismissNotificationRequest' is not null or undefined
+
+
+        if (userDismissNotificationRequest === null || userDismissNotificationRequest === undefined) {
+            throw new Error('Required parameter userDismissNotificationRequest was null or undefined when calling userDismissNotification.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(userDismissNotificationRequest, "UserDismissNotificationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Creates a new MFA key, only allowed if the user has no MFA configured. TOTP tokens use SHA-1 algorithm.
+     * @summary Generate a new TOTP MFA key
+     */
+    public async userGenerateNewTotpMfaKey (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserGenerateNewMfaKeyResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/create-key';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UserGenerateNewMfaKeyResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UserGenerateNewMfaKeyResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get billable compute metrics for a user. This function is only available to users with an active subscription.
+     * @summary Get user billable compute metrics
+     */
+    public async userGetSubscriptionMetrics (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserSubscriptionMetricsResponse> {
+        const localVarPath = this.basePath + '/api/user/subscription/metrics';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UserSubscriptionMetricsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UserSubscriptionMetricsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Enable MFA on this account using an TOTP token. First create a new key via `userGenerateNewTotpMfaKey`.
+     * @summary Set TOTP MFA key
+     * @param userSetTotpMfaKeyRequest 
+     */
+    public async userSetTotpMfaKey (userSetTotpMfaKeyRequest: UserSetTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserSetTotpMfaKeyResponse> {
+        const localVarPath = this.basePath + '/api/user/mfa/totp/set-key';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'userSetTotpMfaKeyRequest' is not null or undefined
+
+
+        if (userSetTotpMfaKeyRequest === null || userSetTotpMfaKeyRequest === undefined) {
+            throw new Error('Required parameter userSetTotpMfaKeyRequest was null or undefined when calling userSetTotpMfaKey.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(userSetTotpMfaKeyRequest, "UserSetTotpMfaKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<UserSetTotpMfaKeyResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "UserSetTotpMfaKeyResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Stop a pending cancellation. If you schedule a subscription to be canceled, and the subscription hasn\'t yet reached the end of the billing period, you can stop the cancellation. After a subscription has been canceled, you can\'t reactivate it. 
+     * @summary Undo subscription cancellation
+     */
+    public async userUndoCancelSubscription (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/user/subscription/undo-cancel';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Upgrade the current subscription.
+     * @summary Upgrade subscription
+     * @param upgradeSubscriptionRequest 
+     */
+    public async userUpgradeSubscription (upgradeSubscriptionRequest: UpgradeSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+        const localVarPath = this.basePath + '/api/user/subscription/upgrade';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'upgradeSubscriptionRequest' is not null or undefined
+
+
+        if (upgradeSubscriptionRequest === null || upgradeSubscriptionRequest === undefined) {
+            throw new Error('Required parameter upgradeSubscriptionRequest was null or undefined when calling userUpgradeSubscription.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(upgradeSubscriptionRequest, "UpgradeSubscriptionRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<any>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Verify whether the reset password code for the user is valid.
      * @summary Verify reset password code
      * @param verifyResetPasswordRequest 
@@ -2658,7 +3879,9 @@ export class UserApi {
     public async verifyResetPassword (verifyResetPasswordRequest: VerifyResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-verify-reset-password-code';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

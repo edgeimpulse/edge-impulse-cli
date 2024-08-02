@@ -2,6 +2,13 @@ import util from 'util';
 import fs from 'fs';
 import Path from 'path';
 
+export type FileInFolder = {
+    filename: string;
+    path: string;
+};
+
+type FileCallback = (file: FileInFolder) => void;
+
 export class FSHelpers {
     static async exists(path: string) {
         let fx = false;
@@ -45,5 +52,36 @@ export class FSHelpers {
         catch (ex) {
             /* noop */
         }
+    }
+
+    /**
+     * Recursively parse all sub-folders in a given folder, calling the given callback for any files
+     * @param rootPath Folder to parse
+     * @param callback Callback to call for each file
+     */
+    static readAllFiles(rootPath: string, callback: FileCallback) {
+        const parseRecursively = (path: string) => {
+            for (const filename of fs.readdirSync(path)) {
+                // Ignore any files beginning with . e.g. .DS_Store, as well as any readme files
+                if (filename.startsWith('.') || filename.toLowerCase().includes('readme')) {
+                    continue;
+                }
+
+                const filePath = Path.join(path, filename);
+
+                if (fs.statSync(filePath).isDirectory()) {
+                    // Recursively parse any directories
+                    parseRecursively(filePath);
+                }
+                else {
+                    // Process a file
+                    callback({
+                        filename,
+                        path,
+                    });
+                }
+            }
+        };
+        parseRecursively(rootPath);
     }
 }

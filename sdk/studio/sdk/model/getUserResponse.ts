@@ -10,13 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { EnterpriseTrial } from './enterpriseTrial';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
+import { Permission } from './permission';
 import { Project } from './project';
 import { StaffInfo } from './staffInfo';
 import { User } from './user';
 import { UserExperiment } from './userExperiment';
 import { UserOrganization } from './userOrganization';
+import { UserProjectsSortOrder } from './userProjectsSortOrder';
+import { UserTierEnum } from './userTierEnum';
 
 export class GetUserResponse {
     /**
@@ -30,14 +35,33 @@ export class GetUserResponse {
     'id': number;
     'username': string;
     'name': string;
+    'email': string;
     'photo'?: string;
     'created': Date;
     'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
     'lastTosAcceptanceDate'?: Date;
-    'email': string;
+    'jobTitle'?: string;
+    /**
+    * List of permissions the user has
+    */
+    'permissions'?: Array<Permission>;
+    'companyName'?: string;
     'activated': boolean;
+    /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier': UserTierEnum;
     /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
@@ -56,13 +80,39 @@ export class GetUserResponse {
     */
     'ambassador'?: boolean;
     /**
-    * Whether to show the Imagine 2022 banner.
+    * List of white labels the user is a member of
     */
-    'showImagine2022': boolean;
+    'whitelabels'?: Array<GetUserResponseAllOfWhitelabels>;
     /**
-    * The user account tier.
+    * Whether the user is suspended.
     */
-    'tier': GetUserResponseTierEnum;
+    'suspended': boolean;
+    /**
+    * List of notifications to show to the user.
+    */
+    'notifications': Array<string>;
+    /**
+    * The date at which the user\'s subscription will be downgraded due to cancellation.
+    */
+    'subscriptionDowngradeDate'?: Date;
+    /**
+    * The date at which the user\'s subscription will be automatically terminated due to failed payments.
+    */
+    'subscriptionTerminationDate'?: Date;
+    /**
+    * Whether the user has configured a password
+    */
+    'passwordConfigured': boolean;
+    'projectsSortOrder': UserProjectsSortOrder;
+    'activeEnterpriseTrial'?: EnterpriseTrial;
+    /**
+    * Whether the current user has access to enterprise features. This is true if the user is an enterprise user, or has an active enterprise trial.
+    */
+    'hasEnterpriseFeaturesAccess': boolean;
+    /**
+    * Timezone for the user (or undefined if not specified).
+    */
+    'timezone'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -90,6 +140,11 @@ export class GetUserResponse {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "baseName": "email",
             "type": "string"
         },
         {
@@ -123,14 +178,44 @@ export class GetUserResponse {
             "type": "Date"
         },
         {
-            "name": "email",
-            "baseName": "email",
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "permissions",
+            "baseName": "permissions",
+            "type": "Array<Permission>"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
             "type": "string"
         },
         {
             "name": "activated",
             "baseName": "activated",
             "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
+            "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
         },
         {
             "name": "organizations",
@@ -158,14 +243,54 @@ export class GetUserResponse {
             "type": "boolean"
         },
         {
-            "name": "showImagine2022",
-            "baseName": "showImagine2022",
+            "name": "whitelabels",
+            "baseName": "whitelabels",
+            "type": "Array<GetUserResponseAllOfWhitelabels>"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
             "type": "boolean"
         },
         {
-            "name": "tier",
-            "baseName": "tier",
-            "type": "GetUserResponseTierEnum"
+            "name": "notifications",
+            "baseName": "notifications",
+            "type": "Array<string>"
+        },
+        {
+            "name": "subscriptionDowngradeDate",
+            "baseName": "subscriptionDowngradeDate",
+            "type": "Date"
+        },
+        {
+            "name": "subscriptionTerminationDate",
+            "baseName": "subscriptionTerminationDate",
+            "type": "Date"
+        },
+        {
+            "name": "passwordConfigured",
+            "baseName": "passwordConfigured",
+            "type": "boolean"
+        },
+        {
+            "name": "projectsSortOrder",
+            "baseName": "projectsSortOrder",
+            "type": "UserProjectsSortOrder"
+        },
+        {
+            "name": "activeEnterpriseTrial",
+            "baseName": "activeEnterpriseTrial",
+            "type": "EnterpriseTrial"
+        },
+        {
+            "name": "hasEnterpriseFeaturesAccess",
+            "baseName": "hasEnterpriseFeaturesAccess",
+            "type": "boolean"
+        },
+        {
+            "name": "timezone",
+            "baseName": "timezone",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
@@ -173,6 +298,3 @@ export class GetUserResponse {
     }
 }
 
-
-export type GetUserResponseTierEnum = 'free' | 'pro';
-export const GetUserResponseTierEnumValues: string[] = ['free', 'pro'];

@@ -22,7 +22,8 @@ export class GetWhitelabelDomainResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'domain'?: string;
+    'domain': string;
+    'logo'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,6 +41,11 @@ export class GetWhitelabelDomainResponse {
         {
             "name": "domain",
             "baseName": "domain",
+            "type": "string"
+        },
+        {
+            "name": "logo",
+            "baseName": "logo",
             "type": "string"
         }    ];
 

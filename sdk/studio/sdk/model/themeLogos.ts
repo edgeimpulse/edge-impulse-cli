@@ -19,6 +19,7 @@ export class ThemeLogos {
     'loginLogoWhite'?: string;
     'mark'?: string;
     'markWhite'?: string;
+    'deviceLogo'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,6 +57,11 @@ export class ThemeLogos {
         {
             "name": "markWhite",
             "baseName": "markWhite",
+            "type": "string"
+        },
+        {
+            "name": "deviceLogo",
+            "baseName": "deviceLogo",
             "type": "string"
         }    ];
 

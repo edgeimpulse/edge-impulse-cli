@@ -24,6 +24,10 @@ export class StartTrainingRequestAnomaly {
     * Minimum confidence rating required before tagging as anomaly
     */
     'minimumConfidenceRating': number;
+    /**
+    * If set, skips creating embeddings and measuring memory (used in tests)
+    */
+    'skipEmbeddingsAndMemory'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +46,11 @@ export class StartTrainingRequestAnomaly {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
             "type": "number"
+        },
+        {
+            "name": "skipEmbeddingsAndMemory",
+            "baseName": "skipEmbeddingsAndMemory",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

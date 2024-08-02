@@ -12,7 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ListOrganizationBucketsResponseAllOf } from './listOrganizationBucketsResponseAllOf';
-import { ListOrganizationBucketsResponseAllOfBuckets } from './listOrganizationBucketsResponseAllOfBuckets';
+import { OrganizationBucket } from './organizationBucket';
 
 export class ListOrganizationBucketsResponse {
     /**
@@ -23,7 +23,7 @@ export class ListOrganizationBucketsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'buckets': Array<ListOrganizationBucketsResponseAllOfBuckets>;
+    'buckets': Array<OrganizationBucket>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class ListOrganizationBucketsResponse {
         {
             "name": "buckets",
             "baseName": "buckets",
-            "type": "Array<ListOrganizationBucketsResponseAllOfBuckets>"
+            "type": "Array<OrganizationBucket>"
         }    ];
 
     static getAttributeTypeMap() {

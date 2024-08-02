@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyResult } from './anomalyResult';
 import { ClassifySampleResponseClassificationDetails } from './classifySampleResponseClassificationDetails';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { StructuredClassifyResult } from './structuredClassifyResult';
+import { StructuredLabel } from './structuredLabel';
 
 export class ClassifySampleResponseClassification {
     'learnBlock': ImpulseLearnBlock;
@@ -21,6 +23,10 @@ export class ClassifySampleResponseClassification {
     * Classification result, one item per window.
     */
     'result': Array<{ [key: string]: number; }>;
+    /**
+    * Anomaly scores and computed metrics for GMM anomaly detection, one item per window.
+    */
+    'anomalyResult'?: Array<AnomalyResult>;
     /**
     * Results of inferencing that returns structured data, such as object detection
     */
@@ -34,6 +40,10 @@ export class ClassifySampleResponseClassification {
     */
     'details'?: Array<ClassifySampleResponseClassificationDetails>;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
+    /**
+    * An array with an expected label per window.
+    */
+    'expectedLabels': Array<StructuredLabel>;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,6 +57,11 @@ export class ClassifySampleResponseClassification {
             "name": "result",
             "baseName": "result",
             "type": "Array<{ [key: string]: number; }>"
+        },
+        {
+            "name": "anomalyResult",
+            "baseName": "anomalyResult",
+            "type": "Array<AnomalyResult>"
         },
         {
             "name": "structuredResult",
@@ -67,6 +82,11 @@ export class ClassifySampleResponseClassification {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
             "type": "ObjectDetectionLastLayer"
+        },
+        {
+            "name": "expectedLabels",
+            "baseName": "expectedLabels",
+            "type": "Array<StructuredLabel>"
         }    ];
 
     static getAttributeTypeMap() {

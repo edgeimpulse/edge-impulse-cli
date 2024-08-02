@@ -26,7 +26,15 @@ export class DspRunResponseWithSampleAllOf {
     /**
     * Labels of the feature axes
     */
-    'labels': Array<string>;
+    'labels'?: Array<string>;
+    /**
+    * String representation of the DSP state returned
+    */
+    'stateString'?: string;
+    /**
+    * Label for the window (only present for time-series data)
+    */
+    'labelAtEndOfWindow'?: string;
     'sample': RawSampleData;
     'performance'?: DspRunResponseAllOfPerformance;
     'canProfilePerformance': boolean;
@@ -48,6 +56,16 @@ export class DspRunResponseWithSampleAllOf {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "stateString",
+            "baseName": "state_string",
+            "type": "string"
+        },
+        {
+            "name": "labelAtEndOfWindow",
+            "baseName": "labelAtEndOfWindow",
+            "type": "string"
         },
         {
             "name": "sample",

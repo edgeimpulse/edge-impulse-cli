@@ -10,9 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationMemberRole } from './organizationMemberRole';
 
 export class SetMemberRoleRequest {
-    'role': SetMemberRoleRequestRoleEnum;
+    'role': OrganizationMemberRole;
 
     static discriminator: string | undefined = undefined;
 
@@ -20,7 +21,7 @@ export class SetMemberRoleRequest {
         {
             "name": "role",
             "baseName": "role",
-            "type": "SetMemberRoleRequestRoleEnum"
+            "type": "OrganizationMemberRole"
         }    ];
 
     static getAttributeTypeMap() {
@@ -28,6 +29,3 @@ export class SetMemberRoleRequest {
     }
 }
 
-
-export type SetMemberRoleRequestRoleEnum = 'admin' | 'member' | 'guest';
-export const SetMemberRoleRequestRoleEnumValues: string[] = ['admin', 'member', 'guest'];

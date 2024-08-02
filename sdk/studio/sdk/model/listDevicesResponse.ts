@@ -23,7 +23,7 @@ export class ListDevicesResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'devices'?: Array<Device>;
+    'devices': Array<Device>;
 
     static discriminator: string | undefined = undefined;
 

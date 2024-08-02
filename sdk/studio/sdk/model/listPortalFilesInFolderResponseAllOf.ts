@@ -13,7 +13,8 @@
 import { PortalFile } from './portalFile';
 
 export class ListPortalFilesInFolderResponseAllOf {
-    'files'?: Array<PortalFile>;
+    'files': Array<PortalFile>;
+    'continuationToken'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -22,6 +23,11 @@ export class ListPortalFilesInFolderResponseAllOf {
             "name": "files",
             "baseName": "files",
             "type": "Array<PortalFile>"
+        },
+        {
+            "name": "continuationToken",
+            "baseName": "continuationToken",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -19,13 +19,14 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { AnomalyConfigResponse } from '../model/anomalyConfigResponse';
+import { AnomalyGmmMetadataResponse } from '../model/anomalyGmmMetadataResponse';
 import { AnomalyModelMetadataResponse } from '../model/anomalyModelMetadataResponse';
-import { AnomalyResponse } from '../model/anomalyResponse';
 import { AnomalyTrainedFeaturesResponse } from '../model/anomalyTrainedFeaturesResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetPretrainedModelResponse } from '../model/getPretrainedModelResponse';
-import { KerasModelMetadata } from '../model/kerasModelMetadata';
+import { KerasModelMetadataResponse } from '../model/kerasModelMetadataResponse';
 import { KerasResponse } from '../model/kerasResponse';
 import { SavePretrainedModelRequest } from '../model/savePretrainedModelRequest';
 import { SetAnomalyParameterRequest } from '../model/setAnomalyParameterRequest';
@@ -51,9 +52,33 @@ export enum LearnApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type addKerasFilesFormParams = {
+    zip: RequestFile,
+};
+
 type anomalyTrainedFeaturesQueryParams = {
     featureAx1: number,
     featureAx2: number,
+};
+
+type downloadPretrainedModelQueryParams = {
+    impulseId?: number,
+};
+
+type getPretrainedModelInfoQueryParams = {
+    impulseId?: number,
+};
+
+type profilePretrainedModelQueryParams = {
+    impulseId?: number,
+};
+
+type savePretrainedModelParametersQueryParams = {
+    impulseId?: number,
+};
+
+type testPretrainedModelQueryParams = {
+    impulseId?: number,
 };
 
 type uploadKerasFilesFormParams = {
@@ -64,6 +89,12 @@ type uploadPretrainedModelFormParams = {
     modelFile: RequestFile,
     modelFileName: string,
     modelFileType: string,
+    representativeFeatures?: RequestFile,
+    device?: string,
+};
+
+type uploadPretrainedModelQueryParams = {
+    impulseId?: number,
 };
 
 
@@ -131,6 +162,111 @@ export class LearnApi {
 
 
     /**
+     * Add Keras block files with the contents of a zip. This is an internal API.
+     * @summary Add Keras files
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param zip 
+     */
+    public async addKerasFiles (projectId: number, learnId: number, params: addKerasFilesFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/addFiles'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling addKerasFiles.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+
+
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling addKerasFiles.');
+        }
+
+        // verify required parameter 'zip' is not null or undefined
+        if (params.zip === null || params.zip === undefined) {
+            throw new Error('Required parameter params.zip was null or undefined when calling addKerasFiles.');
+        }
+
+
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.zip !== undefined) {
+            localVarFormParams['zip'] = params.zip;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get a sample of trained features, this extracts a number of samples and their features.
      * @summary Trained features
      * @param projectId Project ID
@@ -143,7 +279,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -181,11 +319,11 @@ export class LearnApi {
         }
 
 
-        if (queryParams.featureAx1 !== undefined) {
+        if (queryParams?.featureAx1 !== undefined) {
             localVarQueryParameters['featureAx1'] = ObjectSerializer.serialize(queryParams.featureAx1, "number");
         }
 
-        if (queryParams.featureAx2 !== undefined) {
+        if (queryParams?.featureAx2 !== undefined) {
             localVarQueryParameters['featureAx2'] = ObjectSerializer.serialize(queryParams.featureAx2, "number");
         }
 
@@ -257,7 +395,9 @@ export class LearnApi {
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -354,7 +494,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/zip'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -444,7 +586,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/zip'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -536,7 +680,9 @@ export class LearnApi {
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
             .replace('{' + 'modelDownloadId' + '}', encodeURIComponent(String(modelDownloadId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -623,17 +769,116 @@ export class LearnApi {
     }
 
     /**
+     * Download a pretrained model file
+     * @summary Download pretrained model
+     * @param projectId Project ID
+     * @param pretrainedModelDownloadType 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async downloadPretrainedModel (projectId: number, pretrainedModelDownloadType: 'tflite_float32' | 'tflite_int8' | 'onnx' | 'saved_model', queryParams?: downloadPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/download/{pretrainedModelDownloadType}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'pretrainedModelDownloadType' + '}', encodeURIComponent(String(pretrainedModelDownloadType)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadPretrainedModel.');
+        }
+
+        // verify required parameter 'pretrainedModelDownloadType' is not null or undefined
+
+
+        if (pretrainedModelDownloadType === null || pretrainedModelDownloadType === undefined) {
+            throw new Error('Required parameter pretrainedModelDownloadType was null or undefined when calling downloadPretrainedModel.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get information about an anomaly block, such as its dependencies. Use the impulse blocks to find the learnId.
      * @summary Anomaly information
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAnomaly (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyResponse> {
+    public async getAnomaly (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -688,12 +933,12 @@ export class LearnApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<AnomalyResponse>((resolve, reject) => {
+            return new Promise<AnomalyConfigResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "AnomalyResponse");
+                        body = ObjectSerializer.deserialize(body, "AnomalyConfigResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -723,7 +968,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -803,6 +1050,98 @@ export class LearnApi {
     }
 
     /**
+     * Get raw model metadata of the Gaussian mixture model (GMM) for a trained anomaly block. Use the impulse blocks to find the learnId.
+     * @summary Anomaly GMM metadata
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     */
+    public async getGmmMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyGmmMetadataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/gmm/metadata'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getGmmMetadata.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+
+
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling getGmmMetadata.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<AnomalyGmmMetadataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "AnomalyGmmMetadataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get information about a Keras block, such as its dependencies. Use the impulse blocks to find the learnId.
      * @summary Keras information
      * @param projectId Project ID
@@ -813,7 +1152,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -903,7 +1244,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -988,12 +1331,14 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getKerasMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<KerasModelMetadata> {
+    public async getKerasMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<KerasModelMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1048,12 +1393,12 @@ export class LearnApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<KerasModelMetadata>((resolve, reject) => {
+            return new Promise<KerasModelMetadataResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "KerasModelMetadata");
+                        body = ObjectSerializer.deserialize(body, "KerasModelMetadataResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1083,7 +1428,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1173,7 +1520,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1256,12 +1605,15 @@ export class LearnApi {
      * Receive info back about the earlier uploaded pretrained model (via `uploadPretrainedModel`) input/output tensors. If you want to deploy a pretrained model from the API, see `startDeployPretrainedModelJob`.
      * @summary Get pretrained model
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPretrainedModelInfo (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
+    public async getPretrainedModelInfo (projectId: number, queryParams?: getPretrainedModelInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1276,6 +1628,10 @@ export class LearnApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling getPretrainedModelInfo.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1337,12 +1693,15 @@ export class LearnApi {
      * Returns the latency, RAM and ROM used for the pretrained model - upload first via  `uploadPretrainedModel`. This is using the project\'s selected latency device. Updates are streamed over the websocket API (or can be retrieved through the /stdout endpoint). Use getProfileTfliteJobResult to get the results when the job is completed.
      * @summary Profile pretrained model
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async profilePretrainedModel (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async profilePretrainedModel (projectId: number, queryParams?: profilePretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/profile'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1357,6 +1716,10 @@ export class LearnApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling profilePretrainedModel.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1419,12 +1782,15 @@ export class LearnApi {
      * @summary Save parameters for pretrained model
      * @param projectId Project ID
      * @param savePretrainedModelRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async savePretrainedModelParameters (projectId: number, savePretrainedModelRequest?: SavePretrainedModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async savePretrainedModelParameters (projectId: number, savePretrainedModelRequest: SavePretrainedModelRequest, queryParams?: savePretrainedModelParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/save'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1439,6 +1805,17 @@ export class LearnApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling savePretrainedModelParameters.');
+        }
+
+        // verify required parameter 'savePretrainedModelRequest' is not null or undefined
+
+
+        if (savePretrainedModelRequest === null || savePretrainedModelRequest === undefined) {
+            throw new Error('Required parameter savePretrainedModelRequest was null or undefined when calling savePretrainedModelParameters.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1509,7 +1886,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1608,7 +1987,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1700,12 +2081,15 @@ export class LearnApi {
      * @summary Test pretrained model
      * @param projectId Project ID
      * @param testPretrainedModelRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async testPretrainedModel (projectId: number, testPretrainedModelRequest?: TestPretrainedModelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+    public async testPretrainedModel (projectId: number, testPretrainedModelRequest: TestPretrainedModelRequest, queryParams?: testPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/test'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1720,6 +2104,17 @@ export class LearnApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling testPretrainedModel.');
+        }
+
+        // verify required parameter 'testPretrainedModelRequest' is not null or undefined
+
+
+        if (testPretrainedModelRequest === null || testPretrainedModelRequest === undefined) {
+            throw new Error('Required parameter testPretrainedModelRequest was null or undefined when calling testPretrainedModel.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1790,7 +2185,9 @@ export class LearnApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1888,12 +2285,17 @@ export class LearnApi {
      * @param modelFile 
      * @param modelFileName 
      * @param modelFileType 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param representativeFeatures 
+     * @param device MCU used for calculating latency, query &#x60;latencyDevices&#x60; in &#x60;listProject&#x60; for a list of supported devices (and use the \\\&quot;mcu\\\&quot; property here). If this is kept empty then we\\\&#39;ll show an overview of multiple devices.
      */
-    public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
+    public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, queryParams?: uploadPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/upload'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1931,6 +2333,10 @@ export class LearnApi {
 
 
 
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1947,6 +2353,15 @@ export class LearnApi {
 
         if (params.modelFileType !== undefined) {
             localVarFormParams['modelFileType'] = ObjectSerializer.serialize(params.modelFileType, "string");
+        }
+
+        if (params.representativeFeatures !== undefined) {
+            localVarFormParams['representativeFeatures'] = params.representativeFeatures;
+        }
+        localVarUseFormData = true;
+
+        if (params.device !== undefined) {
+            localVarFormParams['device'] = ObjectSerializer.serialize(params.device, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -1975,12 +2390,12 @@ export class LearnApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetPretrainedModelResponse>((resolve, reject) => {
+            return new Promise<StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetPretrainedModelResponse");
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

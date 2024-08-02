@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { ListOrganizationBucketsResponseAllOfBuckets } from './listOrganizationBucketsResponseAllOfBuckets';
+import { OrganizationBucket } from './organizationBucket';
 
 export class ListOrganizationBucketsResponseAllOf {
-    'buckets': Array<ListOrganizationBucketsResponseAllOfBuckets>;
+    'buckets': Array<OrganizationBucket>;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class ListOrganizationBucketsResponseAllOf {
         {
             "name": "buckets",
             "baseName": "buckets",
-            "type": "Array<ListOrganizationBucketsResponseAllOfBuckets>"
+            "type": "Array<OrganizationBucket>"
         }    ];
 
     static getAttributeTypeMap() {

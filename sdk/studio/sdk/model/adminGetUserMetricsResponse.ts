@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetUserMetricsResponseAllOf } from './adminGetUserMetricsResponseAllOf';
+import { AdminGetMetricsResponseAllOf } from './adminGetMetricsResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
 export class AdminGetUserMetricsResponse {

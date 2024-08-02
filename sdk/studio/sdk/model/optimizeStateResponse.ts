@@ -28,11 +28,24 @@ export class OptimizeStateResponse {
     'error'?: string;
     'config': OptimizeConfig;
     'status': OptimizeStateResponseAllOfStatus;
-    'activeTunerJobId'?: number;
+    /**
+    * Actual tuner process, job message events will be tagged with this ID
+    */
+    'tunerJobId'?: number;
+    /**
+    * The coordinator pod, attach the job runner to this process for finished events
+    */
+    'tunerCoordinatorJobId'?: number;
+    /**
+    * Whether the job is active (if false => finished)
+    */
+    'tunerJobIsRunning': boolean;
     'trials': Array<TunerTrial>;
-    'projectDataType'?: OptimizeStateResponseProjectDataTypeEnum;
+    'projectDataType': OptimizeStateResponseProjectDataTypeEnum;
     'jobError'?: string;
     'workers': Array<OptimizeStateResponseAllOfWorkers>;
+    'nextRunIndex': number;
+    'isWhitelabel': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -58,9 +71,19 @@ export class OptimizeStateResponse {
             "type": "OptimizeStateResponseAllOfStatus"
         },
         {
-            "name": "activeTunerJobId",
-            "baseName": "activeTunerJobId",
+            "name": "tunerJobId",
+            "baseName": "tunerJobId",
             "type": "number"
+        },
+        {
+            "name": "tunerCoordinatorJobId",
+            "baseName": "tunerCoordinatorJobId",
+            "type": "number"
+        },
+        {
+            "name": "tunerJobIsRunning",
+            "baseName": "tunerJobIsRunning",
+            "type": "boolean"
         },
         {
             "name": "trials",
@@ -81,6 +104,16 @@ export class OptimizeStateResponse {
             "name": "workers",
             "baseName": "workers",
             "type": "Array<OptimizeStateResponseAllOfWorkers>"
+        },
+        {
+            "name": "nextRunIndex",
+            "baseName": "nextRunIndex",
+            "type": "number"
+        },
+        {
+            "name": "isWhitelabel",
+            "baseName": "isWhitelabel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

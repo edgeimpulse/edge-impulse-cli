@@ -16,6 +16,7 @@ export class ListOrganizationPortalsResponseAllOfPortals {
     'name': string;
     'description'?: string;
     'url': string;
+    'bucketId': number;
     'bucketName': string;
     'bucketPath': string;
     'bucketUrl': string;
@@ -43,6 +44,11 @@ export class ListOrganizationPortalsResponseAllOfPortals {
             "name": "url",
             "baseName": "url",
             "type": "string"
+        },
+        {
+            "name": "bucketId",
+            "baseName": "bucketId",
+            "type": "number"
         },
         {
             "name": "bucketName",

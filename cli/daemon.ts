@@ -16,12 +16,13 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import jpegjs from 'jpeg-js';
-import { makeImage } from './make-image';
 import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../shared/daemon/remote-mgmt-service';
 import { EventEmitter } from "tsee";
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
+import encodeLabel from '../shared/encoding';
+import { upload } from './make-image';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -30,10 +31,13 @@ const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
+const verboseArgv = process.argv.indexOf('--verbose') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
+const whichDeviceArgvIx = process.argv.indexOf('--which-device');
+const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
 
 let configFactory: Config;
 let serial: SerialConnector | undefined;
@@ -45,6 +49,7 @@ const cliOptions = {
     devArgv: devArgv,
     hmacKeyArgv: undefined,
     silentArgv: silentArgv,
+    verboseArgv: verboseArgv,
     connectProjectMsg: 'To which project do you want to connect this device?',
     getProjectFromConfig: async (deviceId: string | undefined) => {
         if (!deviceId) return undefined;
@@ -53,7 +58,7 @@ const cliOptions = {
 };
 
 class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
-    snapshot: (buffer: Buffer) => void
+    snapshot: (buffer: Buffer, filename: string) => void
 }>) implements RemoteMgmtDevice  {
     private _config: EdgeImpulseConfig;
     private _serial: SerialConnector;
@@ -73,6 +78,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
     constructor(config: EdgeImpulseConfig, serialConnector: SerialConnector, serialProtocol: EiSerialProtocol,
                 deviceConfig: EiSerialDeviceConfig) {
+        // eslint-disable-next-line constructor-super
         super();
 
         this._config = config;
@@ -114,6 +120,10 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
     supportsSnapshotStreaming() {
         return this._deviceConfig.snapshot.supportsStreaming;
+    }
+
+    supportsSnapshotStreamingWhileCapturing() {
+        return false;
     }
 
     async stopSnapshotStreamFromSignal() {
@@ -162,7 +172,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         this._waitingForSnapshotToStart = true;
 
         try {
-            this._snapshotStream = await this._serialProtocol.startSnapshotStream();
+            this._snapshotStream = await this._serialProtocol.startSnapshotStream('low');
         }
         finally {
             this._waitingForSnapshotToStart = false;
@@ -180,38 +190,44 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
             try {
                 if (Date.now() - +this._lastSnapshot > 200 &&
                     id === this._snapshotId) {
+                    let jpegImage: Buffer;
 
                     let depth = buffer.length / (width * height);
-                    if (depth !== 1 && depth !== 3) {
-                        throw new Error('Invalid length for snapshot, expected ' +
-                            (width * height) + ' or ' + (width * height * 3) + ' values, but got ' +
-                            buffer.length);
+                    if (depth === 1 || depth === 3) {
+                        let frameData = Buffer.alloc(width * height * 4);
+                        let frameDataIx = 0;
+                        for (let ix = 0; ix < buffer.length; ix += depth) {
+                            if (depth === 1) {
+                                frameData[frameDataIx++] = buffer[ix]; // r
+                                frameData[frameDataIx++] = buffer[ix]; // g
+                                frameData[frameDataIx++] = buffer[ix]; // b
+                                frameData[frameDataIx++] = 255;
+                            }
+                            else {
+                                frameData[frameDataIx++] = buffer[ix + 0]; // r
+                                frameData[frameDataIx++] = buffer[ix + 1]; // g
+                                frameData[frameDataIx++] = buffer[ix + 2]; // b
+                                frameData[frameDataIx++] = 255;
+                            }
+                        }
+
+                        let jpegImageData = jpegjs.encode({
+                            data: frameData,
+                            width: width,
+                            height: height,
+                        }, 80);
+                        jpegImage = jpegImageData.data;
+                    }
+                    else if(isJpeg(buffer)) {
+                        jpegImage = buffer;
+                    }
+                    else {
+                        throw new Error('Received snapshot is not a RAW or JPEG image. ' +
+                            'For RAW expected ' + (width * height) + ' or ' +
+                            (width * height * 3) + ' values, but got ' + buffer.length);
                     }
 
-                    let frameData = Buffer.alloc(width * height * 4);
-                    let frameDataIx = 0;
-                    for (let ix = 0; ix < buffer.length; ix += depth) {
-                        if (depth === 1) {
-                            frameData[frameDataIx++] = buffer[ix]; // r
-                            frameData[frameDataIx++] = buffer[ix]; // g
-                            frameData[frameDataIx++] = buffer[ix]; // b
-                            frameData[frameDataIx++] = 255;
-                        }
-                        else {
-                            frameData[frameDataIx++] = buffer[ix + 0]; // r
-                            frameData[frameDataIx++] = buffer[ix + 1]; // g
-                            frameData[frameDataIx++] = buffer[ix + 2]; // b
-                            frameData[frameDataIx++] = 255;
-                        }
-                    }
-
-                    let jpegImageData = jpegjs.encode({
-                        data: frameData,
-                        width: width,
-                        height: height,
-                    }, 80);
-
-                    this.emit('snapshot', jpegImageData.data);
+                    this.emit('snapshot', jpegImage, '');
                     this._lastSnapshot = new Date();
                 }
             }
@@ -315,68 +331,59 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
 
             ee.emit('processing');
 
+            let jpegImage: Buffer;
             let depth = snapshot.length / (width * height);
-            if (depth !== 1 && depth !== 3) {
-                throw new Error('Invalid length for snapshot, expected ' +
-                    (width * height) + ' or ' + (width * height * 3) + ' values, but got ' +
-                    snapshot.length);
-            }
+            if (depth === 1 || depth === 3) {
 
-            let frameData = Buffer.alloc(width * height * 4);
-            let frameDataIx = 0;
-            for (let ix = 0; ix < snapshot.length; ix += depth) {
-                if (depth === 1) {
-                    frameData[frameDataIx++] = snapshot[ix]; // r
-                    frameData[frameDataIx++] = snapshot[ix]; // g
-                    frameData[frameDataIx++] = snapshot[ix]; // b
-                    frameData[frameDataIx++] = 255;
+                let frameData = Buffer.alloc(width * height * 4);
+                let frameDataIx = 0;
+                for (let ix = 0; ix < snapshot.length; ix += depth) {
+                    if (depth === 1) {
+                        frameData[frameDataIx++] = snapshot[ix]; // r
+                        frameData[frameDataIx++] = snapshot[ix]; // g
+                        frameData[frameDataIx++] = snapshot[ix]; // b
+                        frameData[frameDataIx++] = 255;
+                    }
+                    else {
+                        frameData[frameDataIx++] = snapshot[ix + 0]; // r
+                        frameData[frameDataIx++] = snapshot[ix + 1]; // g
+                        frameData[frameDataIx++] = snapshot[ix + 2]; // b
+                        frameData[frameDataIx++] = 255;
+                    }
                 }
-                else {
-                    frameData[frameDataIx++] = snapshot[ix + 0]; // r
-                    frameData[frameDataIx++] = snapshot[ix + 1]; // g
-                    frameData[frameDataIx++] = snapshot[ix + 2]; // b
-                    frameData[frameDataIx++] = 255;
-                }
+
+                let jpegImageData = jpegjs.encode({
+                    data: frameData,
+                    width: width,
+                    height: height,
+                }, 100);
+                jpegImage = jpegImageData.data;
             }
-
-            let jpegImageData = jpegjs.encode({
-                data: frameData,
-                width: width,
-                height: height,
-            }, 100);
-
-            let filename = s.label + '.jpg';
-            let processed = makeImage(jpegImageData.data, this._deviceConfig.sampling.hmacKey, filename);
-
-            let headers: { [k: string]: string} = {
-                'x-api-key': this._deviceConfig.upload.apiKey,
-                'x-file-name': filename,
-                'Content-Type': (!processed.attachments ? processed.contentType : 'multipart/form-data'),
-                'Connection': 'keep-alive'
-            };
-            headers['x-label'] = s.label;
-
+            else if(isJpeg(snapshot)) {
+                jpegImage = snapshot;
+            }
+            else {
+                throw new Error('Received snapshot is not a RAW or JPEG image. ' +
+                    'For RAW expected ' + (width * height) + ' or ' +
+                    (width * height * 3) + ' values, but got ' + snapshot.length);
+            }
             let url = this._config.endpoints.internal.ingestion + s.path;
             console.log(SERIAL_PREFIX, 'Uploading to', url);
 
             ee.emit('uploading');
 
-            await request.post(
-                this._config.endpoints.internal.ingestion + s.path, {
-                    headers: headers,
-                    body: (!processed.attachments ? processed.encoded : undefined),
-                    formData: (processed.attachments ? {
-                        body: {
-                            value: processed.encoded,
-                            options: {
-                                filename: filename,
-                                contentType: processed.contentType
-                            }
-                        },
-                        attachments: processed.attachments
-                    } : undefined),
-                    encoding: null,
-                });
+            await upload({
+                filename: s.label + '.jpg',
+                allowDuplicates: false,
+                apiKey: this._deviceConfig.upload.apiKey,
+                buffer: jpegImage,
+                category: s.path.indexOf('training') > -1 ? 'training' : 'testing',
+                config: this._config,
+                label: { label: s.label, type: 'label' },
+                boundingBoxes: undefined,
+                metadata: undefined,
+                addDateId: true,
+            });
 
             console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
         }
@@ -427,8 +434,8 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
-                                'x-label': dr.label,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
+                                'x-label': encodeLabel(dr.label),
                                 'Content-Type': 'application/octet-stream'
                             },
                             body: deviceResponse.file,
@@ -439,7 +446,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         await request.post(url, {
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
-                                'x-file-name': deviceResponse.filename,
+                                'x-file-name': encodeLabel(deviceResponse.filename),
                                 'Content-Type': 'application/cbor'
                             },
                             body: deviceResponse.file,
@@ -458,7 +465,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
     }
 }
 
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -482,7 +489,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         console.log('    Ingestion:', config.endpoints.internal.ingestion);
         console.log('');
 
-        let deviceId = await findSerial();
+        let deviceId = await findSerial(whichDeviceArgv);
         await connectToSerial(config, deviceId, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {
@@ -499,7 +506,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
     let config: EiSerialDeviceConfig | undefined;
     let remoteMgmt: RemoteMgmt | undefined;
 
-    serial = new SerialConnector(deviceId, baudRate);
+    serial = new SerialConnector(deviceId, baudRate, cliOptions.verboseArgv);
     const serialProtocol = new EiSerialProtocol(serial);
 
     serial.on('error', err => {
@@ -542,10 +549,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.6.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 6) {
+            // we support devices with version 1.8.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 8) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.6.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.8.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,
@@ -590,7 +597,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
             if (!remoteMgmt) {
                 const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
-                remoteMgmt = new RemoteMgmt(projectId, devKeys, eiConfig, device,
+                remoteMgmt = new RemoteMgmt(projectId, devKeys, Object.assign({
+                    command: <'edge-impulse-daemon'>'edge-impulse-daemon'
+                }, eiConfig), device,
                     url => new WebSocket(url),
                     async (currName) => {
                         let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
@@ -652,7 +661,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
     console.log(SERIAL_PREFIX, 'Connecting to', deviceId);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 }
 
@@ -666,7 +675,7 @@ async function serial_connect() {
         let ex = <Error>ex2;
         console.error(SERIAL_PREFIX, 'Failed to connect to', serial.getPath(),
             'retrying in 5 seconds', ex.message || ex);
-        if (ex.message && ex.message.indexOf('Permission denied')) {
+        if (ex.message && ex.message.indexOf('Permission denied') > -1) {
             console.error(SERIAL_PREFIX, 'You might need `sudo` or set up the right udev rules');
         }
         setTimeout(serial_connect, 5000);
@@ -795,4 +804,18 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
     }
 
     return ret;
+}
+
+function isJpeg(buffer: Buffer): boolean {
+    // According to the SO threads below, we can check if the buffer is a JPEG image by checking
+    // the first 2 bytes (SOI) and length (which should be at least 125 bytes)
+    // eslint-disable-next-line max-len
+    // https://stackoverflow.com/questions/5413022/is-the-2nd-and-3rd-byte-of-a-jpeg-image-always-the-app0-or-app1-marker
+    // eslint-disable-next-line max-len
+    // https://stackoverflow.com/questions/2253404/what-is-the-smallest-valid-jpeg-file-size-in-bytes
+	if (!buffer || buffer.length < 125) {
+		return false;
+	}
+
+	return buffer[0] === 0xff && buffer[1] === 0xd8;
 }

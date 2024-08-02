@@ -6,7 +6,7 @@ import cbor from 'cbor';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import {
-    MgmtInterfaceHelloV3, MgmtInterfaceHelloResponse,
+    MgmtInterfaceHelloV4, MgmtInterfaceHelloResponse,
     MgmtInterfaceSampleRequest, MgmtInterfaceSampleResponse,
     MgmtInterfaceSampleFinishedResponse,
     MgmtInterfaceSampleUploadingResponse,
@@ -16,6 +16,7 @@ import { Config, EdgeImpulseConfig } from './config';
 import { findSerial } from './find-serial';
 import crypto from 'crypto';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
+import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -30,6 +31,8 @@ const frequencyArgvIx = process.argv.indexOf('--frequency');
 const frequencyArgv = frequencyArgvIx !== -1 ? Number(process.argv[frequencyArgvIx + 1]) : undefined;
 const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
+const whichDeviceArgvIx = process.argv.indexOf('--which-device');
+const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
 
 const cliOptions = {
     appName: 'Edge Impulse data forwarder',
@@ -46,7 +49,7 @@ const cliOptions = {
 };
 
 let configFactory: Config;
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -75,7 +78,7 @@ let configFactory: Config;
         console.log('    Ingestion:', config.endpoints.internal.ingestion);
         console.log('');
 
-        let serialPath = await findSerial();
+        let serialPath = await findSerial(whichDeviceArgv);
         await connectToSerial(config, serialPath, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
     }
     catch (ex) {
@@ -123,7 +126,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
         try {
             if (!ws) {
-                // tslint:disable-next-line:no-floating-promises
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 ws_connect();
             }
             else {
@@ -176,9 +179,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
             dataForwarderConfig.samplingFreq = frequencyArgv;
         }
 
-        let req: MgmtInterfaceHelloV3 = {
+        let req: MgmtInterfaceHelloV4 = {
             hello: {
-                version: 3,
+                version: 4,
                 apiKey: dataForwarderConfig.apiKey,
                 deviceId: macAddress,
                 deviceType: 'DATA_FORWARDER',
@@ -189,7 +192,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     maxSampleLengthS: 5 * 60 * 1000,
                     frequencies: [ dataForwarderConfig.samplingFreq ]
                 }],
-                supportsSnapshotStreaming: false
+                supportsSnapshotStreaming: false,
+                mode: 'ingestion',
             }
         };
         ws.once('message', async (helloResponse: Buffer) => {
@@ -226,10 +230,18 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 }
                 let name = await checkName(eiConfig, dataForwarderConfig.projectId, macAddress);
 
+                let whitelabelId = null;
+                const projectResponse = await eiConfig.api.projects.getProjectInfo(dataForwarderConfig.projectId, { });
+                if (projectResponse?.success && projectResponse?.project) {
+                    whitelabelId = projectResponse.project.whitelabelId;
+                }
+                const studioUrl = await configFactory.getStudioUrl(whitelabelId);
+
                 console.log(TCP_PREFIX, 'Device "' + name + '" is now connected to project ' +
-                    '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '"');
+                    '"' + (await getProjectName(eiConfig, dataForwarderConfig.projectId)) + '". ' +
+                    'To connect to another project, run `edge-impulse-data-forwarder --clean`.');
                 console.log(TCP_PREFIX,
-                    `Go to ${eiConfig.endpoints.internal.api.replace('/v1', '')}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
+                    `Go to ${studioUrl}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
                     `to build your machine learning model!`);
             }
         });
@@ -252,7 +264,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
     console.log(SERIAL_PREFIX, 'Connecting to', serialPath);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 
     function attachWsHandlers() {
@@ -261,11 +273,14 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         }
 
         ws.on('message', async (data: Buffer) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             let d = cbor.decode(data);
 
             // hello messages are handled in sendHello()
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).hello !== 'undefined') return;
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
@@ -312,9 +327,17 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     serial.off('data', onData);
 
                     let dataBuffer = Buffer.concat(allDataBuffers);
-                    let lines = dataBuffer.toString('ascii').split('\n').map(n => n.trim()).map(n => {
+                    let rawLines = dataBuffer.toString('ascii').split('\n').map(n => n.trim());
+
+                    let errLine = rawLines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
+                    if (errLine) {
+                        throw new Error(errLine);
+                    }
+
+                    let lines = rawLines.map(n => {
                         return n.split(/[,\t\s]/).filter(f => !!f.trim()).map(x => Number(x.trim()));
                     });
+
                     // skip over the first item
                     let values = lines.slice(1, (dataForwarderConfig.samplingFreq * (s.length / 1000) + 1));
 
@@ -357,7 +380,15 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                             device_type: 'DATA_FORWARDER',
                             interval_ms: 1000 / dataForwarderConfig.samplingFreq,
                             sensors: dataForwarderConfig.sensors.map(z => {
-                                return { name: z, units: z.startsWith('acc') ? 'm/s2' : 'N/A' };
+                                let units = 'N/A';
+                                if (z.startsWith('acc')) {
+                                    units = 'm/s2';
+                                }
+                                else if (z === 'audio') {
+                                    units = 'wav';
+                                }
+
+                                return { name: z, units: units };
                             }),
                             values: values
                         }
@@ -385,8 +416,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                     await request.post(eiConfig.endpoints.internal.ingestion + s.path, {
                         headers: {
                             'x-api-key': dataForwarderConfig.apiKey,
-                            'x-file-name': s.label + '.json',
-                            'x-label': s.label,
+                            'x-file-name': encodeLabel(s.label + '.json'),
+                            'x-label': encodeLabel(s.label),
+                            'x-upload-source': 'EDGE_IMPULSE_CLI_FORWARDER',
                             'Content-Type': 'application/json'
                         },
                         body: encoded,
@@ -429,6 +461,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         });
 
         ws.on('error', err => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             console.error(TCP_PREFIX, `Error connecting to ${eiConfig.endpoints.internal.ws}`, (<any>err).code || err);
         });
 
@@ -525,7 +558,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
 
 async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceId: string) {
     try {
-        let device = (await eiConfig.api.devices.getDevice(projectId, deviceId)).body.device;
+        let device = (await eiConfig.api.devices.getDevice(projectId, deviceId)).device;
 
         let currName = device ? device.name : deviceId;
         if (currName !== deviceId) return currName;
@@ -537,12 +570,8 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
             default: currName
         }]);
         if (nameDevice.nameDevice !== currName) {
-            let rename = (await eiConfig.api.devices.renameDevice(
-                projectId, deviceId, { name: nameDevice.nameDevice })).body;
-
-            if (!rename.success) {
-                throw new Error('Failed to rename device... ' + rename.error);
-            }
+            (await eiConfig.api.devices.renameDevice(
+                projectId, deviceId, { name: nameDevice.nameDevice }));
         }
         return nameDevice.nameDevice;
     }
@@ -554,11 +583,7 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
 
 async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
     try {
-        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId)).body;
-        if (!projectBody.success) {
-            throw projectBody.error;
-        }
-
+        let projectBody = (await eiConfig.api.projects.getProjectInfo(projectId, { }));
         return projectBody.project.name;
     }
     catch (ex2) {
@@ -598,6 +623,11 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
 
     const data = Buffer.concat(dataBuffers.map(d => d.buffer));
     let lines = data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => !!d);
+
+    let errLine = lines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
+    if (errLine) {
+        throw new Error(errLine);
+    }
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated
     if (!l) {

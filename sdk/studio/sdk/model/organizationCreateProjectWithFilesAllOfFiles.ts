@@ -10,15 +10,21 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationCreateProjectWithFilesAllOfFiles {
     'id': number;
     'fileName': string;
-    'dataItemId': number;
-    'dataItemName': string;
+    'bucketPath': string;
     'transformationJobId'?: number;
     'transformationJobStatus': TransformationJobStatusEnum;
+    'linkToDataItem': string;
+    /**
+    * Only set after job was finished
+    */
+    'lengthString': string;
+    'sourceDatasetType': OrganizationDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,13 +40,8 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
             "type": "string"
         },
         {
-            "name": "dataItemId",
-            "baseName": "dataItemId",
-            "type": "number"
-        },
-        {
-            "name": "dataItemName",
-            "baseName": "dataItemName",
+            "name": "bucketPath",
+            "baseName": "bucketPath",
             "type": "string"
         },
         {
@@ -52,6 +53,21 @@ export class OrganizationCreateProjectWithFilesAllOfFiles {
             "name": "transformationJobStatus",
             "baseName": "transformationJobStatus",
             "type": "TransformationJobStatusEnum"
+        },
+        {
+            "name": "linkToDataItem",
+            "baseName": "linkToDataItem",
+            "type": "string"
+        },
+        {
+            "name": "lengthString",
+            "baseName": "lengthString",
+            "type": "string"
+        },
+        {
+            "name": "sourceDatasetType",
+            "baseName": "sourceDatasetType",
+            "type": "OrganizationDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {

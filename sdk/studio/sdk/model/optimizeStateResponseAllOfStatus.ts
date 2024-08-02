@@ -12,14 +12,14 @@
 
 
 export class OptimizeStateResponseAllOfStatus {
-    'numPendingTrials'?: number;
-    'numRunningTrials'?: number;
-    'numCompletedTrials'?: number;
-    'numFailedTrials'?: number;
-    'numReadyWorkers'?: number;
-    'numBusyWorkers'?: number;
-    'numPendingWorkers'?: number;
-    'status'?: OptimizeStateResponseAllOfStatusStatusEnum;
+    'numPendingTrials': number;
+    'numRunningTrials': number;
+    'numCompletedTrials': number;
+    'numFailedTrials': number;
+    'numReadyWorkers': number;
+    'numBusyWorkers': number;
+    'numPendingWorkers': number;
+    'status': OptimizeStateResponseAllOfStatusStatusEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -71,5 +71,5 @@ export class OptimizeStateResponseAllOfStatus {
 }
 
 
-export type OptimizeStateResponseAllOfStatusStatusEnum = 'ready' | 'running' | 'completed';
-export const OptimizeStateResponseAllOfStatusStatusEnumValues: string[] = ['ready', 'running', 'completed'];
+export type OptimizeStateResponseAllOfStatusStatusEnum = 'creating' | 'ready' | 'running' | 'completed';
+export const OptimizeStateResponseAllOfStatusStatusEnumValues: string[] = ['creating', 'ready', 'running', 'completed'];

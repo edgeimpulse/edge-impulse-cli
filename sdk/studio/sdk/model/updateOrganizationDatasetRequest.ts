@@ -10,14 +10,24 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
+import { UpdateOrganizationDatasetRequestBucket } from './updateOrganizationDatasetRequestBucket';
 
 export class UpdateOrganizationDatasetRequest {
+    'dataset'?: string;
     'tags'?: Array<string>;
     'category'?: string;
+    'type'?: OrganizationDatasetTypeEnum;
+    'bucket'?: UpdateOrganizationDatasetRequestBucket;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "dataset",
+            "baseName": "dataset",
+            "type": "string"
+        },
         {
             "name": "tags",
             "baseName": "tags",
@@ -27,6 +37,16 @@ export class UpdateOrganizationDatasetRequest {
             "name": "category",
             "baseName": "category",
             "type": "string"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "OrganizationDatasetTypeEnum"
+        },
+        {
+            "name": "bucket",
+            "baseName": "bucket",
+            "type": "UpdateOrganizationDatasetRequestBucket"
         }    ];
 
     static getAttributeTypeMap() {

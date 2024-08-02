@@ -23,7 +23,7 @@ export class GetJobResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'job'?: Job;
+    'job': Job;
 
     static discriminator: string | undefined = undefined;
 

@@ -25,8 +25,11 @@ export class OrganizationPipelineRunStep {
     'builtinTransformationBlock'?: object;
     'category'?: OrganizationPipelineRunStepCategoryEnum;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'label'?: string;
     'extraCliArguments'?: string;
+    'parameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -92,6 +95,16 @@ export class OrganizationPipelineRunStep {
             "type": "string"
         },
         {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
+            "type": "string"
+        },
+        {
             "name": "label",
             "baseName": "label",
             "type": "string"
@@ -100,6 +113,11 @@ export class OrganizationPipelineRunStep {
             "name": "extraCliArguments",
             "baseName": "extraCliArguments",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

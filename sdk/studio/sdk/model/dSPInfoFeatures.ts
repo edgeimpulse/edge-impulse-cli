@@ -24,6 +24,10 @@ export class DSPInfoFeatures {
     * Names of the features
     */
     'labels'?: Array<string>;
+    /**
+    * Classes that the features were generated on
+    */
+    'classes'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,6 +45,11 @@ export class DSPInfoFeatures {
         {
             "name": "labels",
             "baseName": "labels",
+            "type": "Array<string>"
+        },
+        {
+            "name": "classes",
+            "baseName": "classes",
             "type": "Array<string>"
         }    ];
 

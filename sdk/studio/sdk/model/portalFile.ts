@@ -17,6 +17,7 @@ export class PortalFile {
     'size'?: number;
     'eTag'?: string;
     'path': string;
+    'type': PortalFileTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class PortalFile {
             "name": "path",
             "baseName": "path",
             "type": "string"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "PortalFileTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -52,3 +58,6 @@ export class PortalFile {
     }
 }
 
+
+export type PortalFileTypeEnum = 'folder' | 'file';
+export const PortalFileTypeEnumValues: string[] = ['folder', 'file'];

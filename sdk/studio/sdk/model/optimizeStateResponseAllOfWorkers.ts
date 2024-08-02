@@ -12,8 +12,8 @@
 
 
 export class OptimizeStateResponseAllOfWorkers {
-    'workerId'?: string;
-    'status'?: OptimizeStateResponseAllOfWorkersStatusEnum;
+    'workerId': string;
+    'status': OptimizeStateResponseAllOfWorkersStatusEnum;
 
     static discriminator: string | undefined = undefined;
 

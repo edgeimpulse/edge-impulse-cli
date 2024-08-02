@@ -10,10 +10,17 @@
  * Do not edit the class manually.
  */
 
+import { DeployPretrainedModelInputTimeSeries } from './deployPretrainedModelInputTimeSeries';
+import { DeployPretrainedModelInputAudio } from './deployPretrainedModelInputAudio';
+import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputImage';
+import { DeployPretrainedModelInputOther } from './deployPretrainedModelInputOther';
+import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
+import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
+import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 
 export class SavePretrainedModelRequest {
-    'input': object;
-    'model': object;
+    'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,12 +28,12 @@ export class SavePretrainedModelRequest {
         {
             "name": "input",
             "baseName": "input",
-            "type": "object"
+            "type": "DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther"
         },
         {
             "name": "model",
             "baseName": "model",
-            "type": "object"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection"
         }    ];
 
     static getAttributeTypeMap() {

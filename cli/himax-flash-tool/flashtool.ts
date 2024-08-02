@@ -4,7 +4,7 @@ import { SerialConnector } from '../serial-connector';
 import fs from 'fs';
 import Path from 'path';
 import WebSocket from 'ws';
-import HimaxSerialProtocol from './himax-serial-protocol';
+import { HimaxSerialProtocol, HimaxDeviceTypes } from './himax-serial-protocol';
 import { findSerial } from '../find-serial';
 import crc32 from 'crc-32';
 import program from 'commander';
@@ -15,16 +15,19 @@ import { Xmodem } from './xmodem';
 
 const SERIAL_PREFIX = '\x1b[33m[HMX]\x1b[0m';
 
-const APP_BAUD_RATE = 115200;
-
+const defaultBaudRates: { [key in HimaxDeviceTypes]: number } = {
+    [HimaxDeviceTypes.WEIPlus]: 115200,
+    [HimaxDeviceTypes.WiseEye2]: 921600
+};
 const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
     Path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8'))).version;
 
 program
-    .description('Himax WE-I flash tool')
+    .description('Himax WE-I and WiseEye2 flash tool')
     .version(packageVersion)
     .option('-f --firmware-path <file>', 'Firmware path (required)')
-    .option('--baud-rate <n>', 'Bootloader baud rate (default: 115200)')
+    .option('-d --device <device>', 'Device type: "WE-I-Plus" (default) or "WiseEye2"')
+    .option('--baud-rate <n>', 'Bootloader baud rate (default: 115200 for WE-I-Plus and 921600 for WiseEye2)')
     .option('--skip-reset', 'Skip the reset procedure (in case the device is already in bootloader mode)')
     .option('--verbose', 'Enable debug logs')
     .allowUnknownOption(true)
@@ -35,9 +38,10 @@ const baudRateArgv: string = <string>program.baudRate;
 const serialWritePacing: boolean = !!program.serialWritePacing;
 const debug: boolean = !!program.verbose;
 const skipReset: boolean = !!program.skipReset;
+const deviceTypeArg: string = <string>program.device || 'WE-I-Plus';
 
 let configFactory = new Config();
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (!firmwarePathArgv) {
@@ -70,7 +74,29 @@ function sleep(ms: number) {
 }
 
 async function connectToSerial(deviceId: string) {
-    const bootloaderBaudRate = baudRateArgv ? Number(baudRateArgv) : 115200;
+    let bootloaderBaudRate: number | undefined;
+    let deviceType: HimaxDeviceTypes;
+
+    try {
+        deviceType = deviceTypeArg as HimaxDeviceTypes;
+        bootloaderBaudRate = defaultBaudRates[deviceType];
+    }
+    catch (ex) {
+        throw new Error('Unknown device type ' + deviceTypeArg);
+    }
+
+    // override the default baud rate if the user specified one
+    if (baudRateArgv) {
+        bootloaderBaudRate = Number(baudRateArgv);
+        if (!bootloaderBaudRate) {
+            throw new Error('Baud rate is invalid (' + baudRateArgv + ', via --baud-rate)');
+        }
+    }
+
+    if (!bootloaderBaudRate) {
+        throw new Error('Unknown baud rate ' + bootloaderBaudRate);
+    }
+
     if (isNaN(bootloaderBaudRate)) {
         throw new Error('Baud rate is invalid (' + baudRateArgv + ', via --baud-rate)');
     }
@@ -79,8 +105,8 @@ async function connectToSerial(deviceId: string) {
     let ws: WebSocket | undefined;
 
     console.log(SERIAL_PREFIX, 'Connecting to ' + deviceId + '...');
-    const serial = new SerialConnector(deviceId, APP_BAUD_RATE);
-    const serialProtocol = new HimaxSerialProtocol(serial, serialWritePacing, debug);
+    const serial = new SerialConnector(deviceId, bootloaderBaudRate);
+    const serialProtocol = new HimaxSerialProtocol(serial, serialWritePacing, deviceType, debug);
     serial.on('error', (err: Error) => {
         console.log(SERIAL_PREFIX, 'Serial error - retrying in 5 seconds', err.message || err.toString());
         setTimeout(serial_connect, 5000);
@@ -108,7 +134,15 @@ async function connectToSerial(deviceId: string) {
         const progressBar = new cliProgress.SingleBar({ }, cliProgress.Presets.shades_classic);
 
         try {
-            console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax WE-I now');
+            if (deviceType === HimaxDeviceTypes.WEIPlus) {
+                console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax WE-I now');
+            }
+            else if(deviceType === HimaxDeviceTypes.WiseEye2) {
+                console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Seeed Grove Vision AI Module V2 now');
+            }
+            else {
+                console.log(SERIAL_PREFIX, 'Connected, press the **RESET** button on your Himax device now');
+            }
             await serialProtocol.onConnected();
             console.log(SERIAL_PREFIX, 'Restarted into bootloader. Sending file.');
 
@@ -197,6 +231,6 @@ async function connectToSerial(deviceId: string) {
         }
     }
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 }

@@ -28,8 +28,13 @@ import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
+import { GetAutoLabelerResponse } from '../model/getAutoLabelerResponse';
+import { GetAutoLabelerSegmentInfoResponse } from '../model/getAutoLabelerSegmentInfoResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
+import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
+import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
@@ -41,10 +46,15 @@ import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetection
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
+import { RunAutoLabelerRequest } from '../model/runAutoLabelerRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
+import { SaveAutoLabelerClustersRequest } from '../model/saveAutoLabelerClustersRequest';
+import { SaveAutoLabelerClustersResponse } from '../model/saveAutoLabelerClustersResponse';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
+import { SetSampleStructuredLabelsRequest } from '../model/setSampleStructuredLabelsRequest';
 import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
+import { StartJobResponse } from '../model/startJobResponse';
 import { StoreSegmentLengthRequest } from '../model/storeSegmentLengthRequest';
 import { TrackObjectsRequest } from '../model/trackObjectsRequest';
 import { TrackObjectsResponse } from '../model/trackObjectsResponse';
@@ -77,6 +87,8 @@ type batchDeleteQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
+    excludeIds?: string,
+    search?: string,
 };
 
 type batchDisableQueryParams = {
@@ -90,6 +102,8 @@ type batchDisableQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
+    excludeIds?: string,
+    search?: string,
 };
 
 type batchEditLabelsQueryParams = {
@@ -103,6 +117,8 @@ type batchEditLabelsQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
+    excludeIds?: string,
+    search?: string,
 };
 
 type batchEnableQueryParams = {
@@ -116,6 +132,8 @@ type batchEnableQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
+    excludeIds?: string,
+    search?: string,
 };
 
 type batchMoveQueryParams = {
@@ -129,6 +147,8 @@ type batchMoveQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
+    excludeIds?: string,
+    search?: string,
 };
 
 type countSamplesQueryParams = {
@@ -141,24 +161,41 @@ type countSamplesQueryParams = {
     maxFrequency?: number,
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
+    search?: string,
+};
+
+type getAllImportedFromQueryParams = {
+    limit?: number,
+    offset?: number,
+};
+
+type getAutoLabelerImageQueryParams = {
+    image: string,
 };
 
 type getSampleQueryParams = {
     limitPayloadValues?: number,
+    cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleAsAudioQueryParams = {
     axisIx: number,
     sliceStart?: number,
     sliceEnd?: number,
+    cacheKey?: string,
 };
 
 type getSampleAsImageQueryParams = {
     afterInputBlock?: boolean,
+    cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleAsVideoQueryParams = {
     afterInputBlock?: boolean,
+    cacheKey?: string,
+    impulseId?: number,
 };
 
 type getSampleMetadataQueryParams = {
@@ -167,13 +204,15 @@ type getSampleMetadataQueryParams = {
 
 type getSampleSliceQueryParams = {
     sliceStart: number,
-    sliceEnd: number,
+    sliceEnd?: number,
+    impulseId?: number,
 };
 
 type getUncroppedDownsampledSampleQueryParams = {
     limitPayloadValues?: number,
     zoomStart?: number,
     zoomEnd?: number,
+    impulseId?: number,
 };
 
 type listSamplesQueryParams = {
@@ -189,6 +228,7 @@ type listSamplesQueryParams = {
     maxFrequency?: number,
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
+    search?: string,
 };
 
 type uploadDataExplorerScreenshotFormParams = {
@@ -273,12 +313,16 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
      */
     public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -302,44 +346,52 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -411,12 +463,16 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
      */
     public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -440,44 +496,52 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -550,12 +614,16 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
      */
     public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -586,44 +654,52 @@ export class RawDataApi {
             throw new Error('Required parameter editSampleLabelRequest was null or undefined when calling batchEditLabels.');
         }
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -696,12 +772,16 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
      */
     public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -725,44 +805,52 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -835,12 +923,16 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
      */
     public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -871,44 +963,52 @@ export class RawDataApi {
             throw new Error('Required parameter moveRawDataRequest was null or undefined when calling batchMove.');
         }
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
-        if (queryParams.ids !== undefined) {
+        if (queryParams?.ids !== undefined) {
             localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -979,7 +1079,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1067,6 +1169,89 @@ export class RawDataApi {
     }
 
     /**
+     * Clears all object detection labels for this dataset, and places all images back in the labeling queue.
+     * @summary Clear all object detection labels
+     * @param projectId Project ID
+     */
+    public async clearAllObjectDetectionLabels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/clear-all-object-detection-labels'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling clearAllObjectDetectionLabels.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Remove the current data explorer state
      * @summary Clear data explorer
      * @param projectId Project ID
@@ -1075,7 +1260,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/clear'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1160,12 +1347,15 @@ export class RawDataApi {
      * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param search Search query
      */
     public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1189,40 +1379,44 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -1292,7 +1486,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1388,7 +1584,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/delete-all'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1471,7 +1669,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1561,7 +1761,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1651,7 +1853,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1742,7 +1946,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1840,7 +2046,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -1931,7 +2139,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2019,6 +2229,369 @@ export class RawDataApi {
     }
 
     /**
+     * Lists all data with an \'imported from\' metadata key. Used to check in a data source which items are already in a project.
+     * @summary List data with \"imported from\" metadata key
+     * @param projectId Project ID
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async getAllImportedFrom (projectId: number, queryParams?: getAllImportedFromQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImportedFromResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/imported-from'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAllImportedFrom.');
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAllImportedFromResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAllImportedFromResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve the results of the auto-labeler (after running `StartJobResponse`)
+     * @summary Get auto-labeler results
+     * @param projectId Project ID
+     */
+    public async getAutoLabeler (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoLabelerResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabeler.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAutoLabelerResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAutoLabelerResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Grab a segment image from the auto-labeler
+     * @summary Get auto-labeler image
+     * @param projectId Project ID
+     * @param image Which image to receive from the auto-labeler
+     */
+    public async getAutoLabelerImage (projectId: number, queryParams: getAutoLabelerImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/image'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabelerImage.');
+        }
+
+        // verify required parameter 'image' is not null or undefined
+
+        if (queryParams.image === null || queryParams.image === undefined) {
+            throw new Error('Required parameter queryParams.image was null or undefined when calling getAutoLabelerImage.');
+        }
+
+
+        if (queryParams?.image !== undefined) {
+            localVarQueryParameters['image'] = ObjectSerializer.serialize(queryParams.image, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get info from a specific segment in an image. Pass in both sampleId and segmentId in the URL.
+     * @summary View auto-labeler segment info
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     */
+    public async getAutoLabelerSegmentInfo (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoLabelerSegmentInfoResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/samples/{sampleId}/segments'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabelerSegmentInfo.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling getAutoLabelerSegmentInfo.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAutoLabelerSegmentInfoResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAutoLabelerSegmentInfoResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * t-SNE2 output of the raw dataset
      * @summary Get data explorer features
      * @param projectId Project ID
@@ -2027,7 +2600,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2108,7 +2683,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/predictions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2189,7 +2766,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/settings'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2262,6 +2841,172 @@ export class RawDataApi {
     }
 
     /**
+     * Obtain metrics that describe the similarity and diversity of a dataset. To calculate these metrics, use the `calculateDataQualityMetrics` endpoint.
+     * @summary Get diversity metrics data
+     * @param projectId Project ID
+     */
+    public async getDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDiversityDataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDiversityData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetDiversityDataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetDiversityDataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Obtain metrics that describe potential label noise issues in the dataset. To calculate these metrics, use the `calculateDataQualityMetrics` endpoint.
+     * @summary Get label noise data
+     * @param projectId Project ID
+     */
+    public async getLabelNoiseData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetLabelNoiseDataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/label-noise'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getLabelNoiseData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetLabelNoiseDataResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetLabelNoiseDataResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Get all unlabeled items from the object detection queue.
      * @summary Object detection label queue
      * @param projectId Project ID
@@ -2270,7 +3015,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/label-object-detection-queue'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2351,7 +3098,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/label-object-detection-queue/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2429,13 +3178,17 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
+     * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSample (projectId: number, sampleId: number, queryParams: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2459,8 +3212,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
+        }
+
+        if (queryParams?.cacheKey !== undefined) {
+            localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2524,15 +3285,18 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param axisIx Axis index
-     * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceStart Begin index of the slice. If not given, the whole sample is used.
+     * @param sliceEnd End index of the slice. If not given, the whole sample is used.
+     * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      */
     public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['audio/wav'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2563,16 +3327,20 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.axisIx !== undefined) {
+        if (queryParams?.axisIx !== undefined) {
             localVarQueryParameters['axisIx'] = ObjectSerializer.serialize(queryParams.axisIx, "number");
         }
 
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
+        }
+
+        if (queryParams?.cacheKey !== undefined) {
+            localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2636,13 +3404,17 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
+     * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSampleAsImage (projectId: number, sampleId: number, queryParams: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['image/jpeg'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2666,8 +3438,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsImage.');
         }
 
-        if (queryParams.afterInputBlock !== undefined) {
+        if (queryParams?.afterInputBlock !== undefined) {
             localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
+        }
+
+        if (queryParams?.cacheKey !== undefined) {
+            localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2736,7 +3516,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/octet-stream'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2821,13 +3603,17 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param afterInputBlock Whether to process the image through the input block first
+     * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['video/mp4'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2851,8 +3637,16 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsVideo.');
         }
 
-        if (queryParams.afterInputBlock !== undefined) {
+        if (queryParams?.afterInputBlock !== undefined) {
             localVarQueryParameters['afterInputBlock'] = ObjectSerializer.serialize(queryParams.afterInputBlock, "boolean");
+        }
+
+        if (queryParams?.cacheKey !== undefined) {
+            localVarQueryParameters['cacheKey'] = ObjectSerializer.serialize(queryParams.cacheKey, "string");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2920,7 +3714,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -2944,7 +3740,7 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
@@ -3009,14 +3805,17 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
-     * @param sliceEnd End index of the slice
+     * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
     public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3047,19 +3846,16 @@ export class RawDataApi {
         }
 
 
-        // verify required parameter 'sliceEnd' is not null or undefined
-
-        if (queryParams.sliceEnd === null || queryParams.sliceEnd === undefined) {
-            throw new Error('Required parameter queryParams.sliceEnd was null or undefined when calling getSampleSlice.');
-        }
-
-
-        if (queryParams.sliceStart !== undefined) {
+        if (queryParams?.sliceStart !== undefined) {
             localVarQueryParameters['sliceStart'] = ObjectSerializer.serialize(queryParams.sliceStart, "number");
         }
 
-        if (queryParams.sliceEnd !== undefined) {
+        if (queryParams?.sliceEnd !== undefined) {
             localVarQueryParameters['sliceEnd'] = ObjectSerializer.serialize(queryParams.sliceEnd, "number");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3125,13 +3921,16 @@ export class RawDataApi {
      * @param limitPayloadValues Limit the number of payload values in the response
      * @param zoomStart Zoom into the sample, with the focus starting at this index
      * @param zoomEnd Zoom into the sample, with the focus ending at this index
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3155,16 +3954,20 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getUncroppedDownsampledSample.');
         }
 
-        if (queryParams.limitPayloadValues !== undefined) {
+        if (queryParams?.limitPayloadValues !== undefined) {
             localVarQueryParameters['limitPayloadValues'] = ObjectSerializer.serialize(queryParams.limitPayloadValues, "number");
         }
 
-        if (queryParams.zoomStart !== undefined) {
+        if (queryParams?.zoomStart !== undefined) {
             localVarQueryParameters['zoomStart'] = ObjectSerializer.serialize(queryParams.zoomStart, "number");
         }
 
-        if (queryParams.zoomEnd !== undefined) {
+        if (queryParams?.zoomEnd !== undefined) {
             localVarQueryParameters['zoomEnd'] = ObjectSerializer.serialize(queryParams.zoomEnd, "number");
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3231,7 +4034,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/has-features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3246,6 +4051,172 @@ export class RawDataApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling hasDataExplorerFeatures.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<HasDataExplorerFeaturesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Determine if data diversity metrics have been calculated. To calculate these metrics, use the `calculateDataQualityMetrics` endpoint.
+     * @summary Check if data diversity metrics exist
+     * @param projectId Project ID
+     */
+    public async hasDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity/exists'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling hasDiversityData.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<HasDataExplorerFeaturesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Determine if label noise metrics have been calculated. To calculate these metrics, use the `calculateDataQualityMetrics` endpoint.
+     * @summary Check if label noise metrics exist
+     * @param projectId Project ID
+     */
+    public async hasLabelNoiseData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/label-noise/exists'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling hasLabelNoiseData.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3319,12 +4290,15 @@ export class RawDataApi {
      * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param search Search query
      */
     public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3348,52 +4322,56 @@ export class RawDataApi {
         }
 
 
-        if (queryParams.category !== undefined) {
+        if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.excludeSensors !== undefined) {
+        if (queryParams?.excludeSensors !== undefined) {
             localVarQueryParameters['excludeSensors'] = ObjectSerializer.serialize(queryParams.excludeSensors, "boolean");
         }
 
-        if (queryParams.labels !== undefined) {
+        if (queryParams?.labels !== undefined) {
             localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
         }
 
-        if (queryParams.filename !== undefined) {
+        if (queryParams?.filename !== undefined) {
             localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
         }
 
-        if (queryParams.maxLength !== undefined) {
+        if (queryParams?.maxLength !== undefined) {
             localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
         }
 
-        if (queryParams.minLength !== undefined) {
+        if (queryParams?.minLength !== undefined) {
             localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
         }
 
-        if (queryParams.minFrequency !== undefined) {
+        if (queryParams?.minFrequency !== undefined) {
             localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
         }
 
-        if (queryParams.maxFrequency !== undefined) {
+        if (queryParams?.maxFrequency !== undefined) {
             localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
         }
 
-        if (queryParams.signatureValidity !== undefined) {
+        if (queryParams?.signatureValidity !== undefined) {
             localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
         }
 
-        if (queryParams.includeDisabled !== undefined) {
+        if (queryParams?.includeDisabled !== undefined) {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3463,7 +4441,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3551,6 +4531,98 @@ export class RawDataApi {
     }
 
     /**
+     * Clears the bounding box labels and moves item back to labeling queue
+     * @summary Move sample to labeling queue
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     */
+    public async moveToLabelingQueue (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/to-labeling-queue'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling moveToLabelingQueue.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling moveToLabelingQueue.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
      * @summary Rebalance dataset
      * @param projectId Project ID
@@ -3559,7 +4631,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/rebalance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3643,7 +4717,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3741,7 +4817,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3821,6 +4899,190 @@ export class RawDataApi {
     }
 
     /**
+     * Run the auto-labeler over all unlabeled data.
+     * @summary Run auto-labeler job
+     * @param projectId Project ID
+     * @param runAutoLabelerRequest 
+     */
+    public async runAutoLabeler (projectId: number, runAutoLabelerRequest: RunAutoLabelerRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/run'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling runAutoLabeler.');
+        }
+
+        // verify required parameter 'runAutoLabelerRequest' is not null or undefined
+
+
+        if (runAutoLabelerRequest === null || runAutoLabelerRequest === undefined) {
+            throw new Error('Required parameter runAutoLabelerRequest was null or undefined when calling runAutoLabeler.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(runAutoLabelerRequest, "RunAutoLabelerRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Set labels for all auto-segment clusters.
+     * @summary Save auto-labeler clusters
+     * @param projectId Project ID
+     * @param saveAutoLabelerClustersRequest 
+     */
+    public async saveAutoLabelerClusters (projectId: number, saveAutoLabelerClustersRequest: SaveAutoLabelerClustersRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SaveAutoLabelerClustersResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/save'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling saveAutoLabelerClusters.');
+        }
+
+        // verify required parameter 'saveAutoLabelerClustersRequest' is not null or undefined
+
+
+        if (saveAutoLabelerClustersRequest === null || saveAutoLabelerClustersRequest === undefined) {
+            throw new Error('Required parameter saveAutoLabelerClustersRequest was null or undefined when calling saveAutoLabelerClusters.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(saveAutoLabelerClustersRequest, "SaveAutoLabelerClustersRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<SaveAutoLabelerClustersResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "SaveAutoLabelerClustersResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Slice a sample into multiple segments. The original file will be marked as deleted, but you can crop any created segment to retrieve the original file.
      * @summary Segment sample
      * @param projectId Project ID
@@ -3832,7 +5094,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -3929,7 +5193,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/settings'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4021,7 +5287,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4120,7 +5388,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4208,6 +5478,107 @@ export class RawDataApi {
     }
 
     /**
+     * Set structured labels for a sample. If a sample has structured labels the `label` column is ignored, and the sample is allowed to have multiple labels. An array of { startIndex, endIndex, label } needs to be passed in with labels for the complete sample (see `valuesCount` to get the upper bound). endIndex is _inclusive_. If you pass in an incorrect array (e.g. missing values) you\'ll get an error back.
+     * @summary Update structured labels
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param setSampleStructuredLabelsRequest 
+     */
+    public async setSampleStructuredLabels (projectId: number, sampleId: number, setSampleStructuredLabelsRequest: SetSampleStructuredLabelsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/structured-labels'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setSampleStructuredLabels.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling setSampleStructuredLabels.');
+        }
+
+        // verify required parameter 'setSampleStructuredLabelsRequest' is not null or undefined
+
+
+        if (setSampleStructuredLabelsRequest === null || setSampleStructuredLabelsRequest === undefined) {
+            throw new Error('Required parameter setSampleStructuredLabelsRequest was null or undefined when calling setSampleStructuredLabels.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(setSampleStructuredLabelsRequest, "SetSampleStructuredLabelsRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Split a video sample into individual frames.
      * @summary Split sample into frames
      * @param projectId Project ID
@@ -4219,7 +5590,9 @@ export class RawDataApi {
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4313,10 +5686,12 @@ export class RawDataApi {
      * @param storeSegmentLengthRequest 
      */
     public async storeSegmentLength (projectId: number, storeSegmentLengthRequest: StoreSegmentLengthRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/store-segment-length'
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/store-segment-length'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4406,7 +5781,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/track-objects'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -4496,7 +5873,9 @@ export class RawDataApi {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/screenshot'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

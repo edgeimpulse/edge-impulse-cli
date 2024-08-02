@@ -18,7 +18,8 @@ Object.keys(ifaces).forEach(ifname => {
         if (alias >= 1) {
             // this single interface has multiple ipv4 addresses
             ret.push({ ifname: ifname + ':' + alias, address: iface.address, mac: iface.mac });
-        } else {
+        }
+        else {
             // this interface has only one ipv4 adress
             ret.push({ ifname: ifname, address: iface.address, mac: iface.mac });
         }

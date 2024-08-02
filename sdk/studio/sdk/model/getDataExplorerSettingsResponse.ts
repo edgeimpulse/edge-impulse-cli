@@ -28,6 +28,10 @@ export class GetDataExplorerSettingsResponse {
     */
     'preset'?: GetDataExplorerSettingsResponsePresetEnum;
     'dimensionalityReductionTechnique'?: GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum;
+    /**
+    * Which impulse to use (if preset is either \'current-impulse\' or \'current-impulse-embeddings\'). If this is undefined then \'defaultImpulseId\' is used.
+    */
+    'impulseId'?: number;
     'dimensionalityReductionRecommendation': GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum;
 
     static discriminator: string | undefined = undefined;
@@ -52,6 +56,11 @@ export class GetDataExplorerSettingsResponse {
             "name": "dimensionalityReductionTechnique",
             "baseName": "dimensionalityReductionTechnique",
             "type": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum"
+        },
+        {
+            "name": "impulseId",
+            "baseName": "impulseId",
+            "type": "number"
         },
         {
             "name": "dimensionalityReductionRecommendation",

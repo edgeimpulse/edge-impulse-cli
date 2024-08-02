@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 import { Organization } from './organization';
 import { OrganizationDataset } from './organizationDataset';
+import { OrganizationInfoResponseAllOfCliLists } from './organizationInfoResponseAllOfCliLists';
 import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
+import { OrganizationInfoResponseAllOfPerformance } from './organizationInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
 
@@ -21,13 +23,15 @@ export class OrganizationInfoResponseAllOf {
     'organization': Organization;
     'datasets': Array<OrganizationDataset>;
     'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
-    'entitlementLimits'?: OrganizationInfoResponseAllOfEntitlementLimits;
+    'entitlementLimits'?: EntitlementLimits;
     /**
     * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
     */
-    'experiments'?: Array<ProjectInfoResponseAllOfExperiments>;
+    'experiments': Array<ProjectInfoResponseAllOfExperiments>;
     'readme'?: ProjectPublicDataReadme;
     'whitelabelId'?: number;
+    'cliLists': OrganizationInfoResponseAllOfCliLists;
+    'performance': OrganizationInfoResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,7 +54,7 @@ export class OrganizationInfoResponseAllOf {
         {
             "name": "entitlementLimits",
             "baseName": "entitlementLimits",
-            "type": "OrganizationInfoResponseAllOfEntitlementLimits"
+            "type": "EntitlementLimits"
         },
         {
             "name": "experiments",
@@ -66,6 +70,16 @@ export class OrganizationInfoResponseAllOf {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "cliLists",
+            "baseName": "cliLists",
+            "type": "OrganizationInfoResponseAllOfCliLists"
+        },
+        {
+            "name": "performance",
+            "baseName": "performance",
+            "type": "OrganizationInfoResponseAllOfPerformance"
         }    ];
 
     static getAttributeTypeMap() {

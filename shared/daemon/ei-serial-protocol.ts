@@ -1,4 +1,4 @@
-// tslint:disable: no-console
+/* eslint-disable no-console */
 
 import TypedEmitter from 'typed-emitter';
 import { ISerialConnector } from './iserialconnector';
@@ -129,7 +129,7 @@ export default class EiSerialProtocol {
     }
 
     async onConnected() {
-        // tslint:disable-next-line:no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this._serial.write(Buffer.from('b\r', 'ascii'));
 
         await this.waitForSerialSequence('onConnected', Buffer.from([ 0x3e, 0x20 ]), 5000);
@@ -472,7 +472,7 @@ export default class EiSerialProtocol {
             }),
         ];
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
             try {
                 let res = await this.execCommand(cmd, length * 10);
@@ -616,7 +616,7 @@ export default class EiSerialProtocol {
             error: (ex: string) => void
         }>;
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
 
             let bytesReceived = 0;
@@ -742,7 +742,7 @@ export default class EiSerialProtocol {
                     this._serial.off('data', onData);
                 }
 
-                // tslint:disable-next-line:no-floating-promises
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 await this._serial.write(Buffer.from('b\r', 'ascii'));
 
                 if (useMaxBaudRate) {
@@ -772,7 +772,7 @@ export default class EiSerialProtocol {
             await this._serial.setBaudRate(this._config.info.transferBaudRate);
         }
 
-        // tslint:disable-next-line: no-floating-promises
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         (async () => {
             let currDataLine = '';
 
@@ -914,7 +914,10 @@ export default class EiSerialProtocol {
                 callback(Buffer.concat(allBuffers));
             }
 
-            checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            // cut the find sequence buffer
+            if (checkSeqBuffer.length > seq.length) {
+                checkSeqBuffer = checkSeqBuffer.slice(checkSeqBuffer.length - seq.length);
+            }
         };
         this._serial.on('data', fn);
 
@@ -929,7 +932,7 @@ export default class EiSerialProtocol {
      */
     private parseSerialResponse(data: Buffer) {
         // some devices only print \n, not \r\n
-        let b = [];
+        let b: number[] = [];
         if (data[0] === 0xa) {
             b.push(0xd);
             b.push(0xa);

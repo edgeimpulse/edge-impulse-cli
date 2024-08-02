@@ -6,7 +6,8 @@ import http from 'http';
 import https from 'https';
 import encodeLabel from '../shared/encoding';
 import Path from 'path';
-import { ExportInputBoundingBox, ExportUploaderInfoFileCategory } from '../shared/bounding-box-file-types';
+import { ExportInputBoundingBox, ExportStructuredLabelsFileV1,
+    ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from '../shared/bounding-box-file-types';
 
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
 const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
@@ -29,7 +30,7 @@ export const VALID_EXTENSIONS = Object.keys(EXTENSION_MAPPING);
 export async function upload(opts: {
     filename: string,
     buffer: Buffer,
-    label: { type: 'unlabeled' } | { type: 'infer'} | { type: 'label', label: string },
+    label: { type: 'infer'} | ExportUploaderInfoFileLabel,
     allowDuplicates: boolean,
     apiKey: string,
     config: EdgeImpulseConfig,
@@ -56,6 +57,9 @@ export async function upload(opts: {
     else if (opts.label.type === 'unlabeled') {
         headers['x-label'] = encodeLabel('');
         headers['x-no-label'] = '1';
+    }
+    else if (opts.label.type === 'multi-label') {
+        // gets set with a separate file, see below
     }
 
     if (!opts.allowDuplicates) {
@@ -84,6 +88,18 @@ export async function upload(opts: {
         filename: opts.filename,
         contentType: EXTENSION_MAPPING[ext] || 'application/octet-stream',
     });
+    if (opts.label.type === 'multi-label') {
+        let labelsFile: ExportStructuredLabelsFileV1 = {
+            type: 'structured-labels',
+            version: 1,
+            structuredLabels: { }
+        };
+        labelsFile.structuredLabels[opts.filename] = opts.label.labels;
+        form.append('data', Buffer.from(JSON.stringify(labelsFile), 'utf-8'), {
+            filename: 'structured_labels.labels',
+            contentType: 'application/json',
+        });
+    }
 
     let res = await fetch(opts.config.endpoints.internal.ingestion + '/api/' + category + '/files', {
         method: 'POST',

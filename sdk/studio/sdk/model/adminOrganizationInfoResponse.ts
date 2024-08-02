@@ -11,13 +11,10 @@
  */
 
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
-import { Organization } from './organization';
-import { OrganizationDataset } from './organizationDataset';
-import { OrganizationInfoResponse } from './organizationInfoResponse';
-import { OrganizationInfoResponseAllOfDefaultComputeLimits } from './organizationInfoResponseAllOfDefaultComputeLimits';
-import { OrganizationInfoResponseAllOfEntitlementLimits } from './organizationInfoResponseAllOfEntitlementLimits';
-import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
-import { ProjectPublicDataReadme } from './projectPublicDataReadme';
+import { DailyMetricsRecord } from './dailyMetricsRecord';
+import { EntitlementLimits } from './entitlementLimits';
+import { GenericApiResponse } from './genericApiResponse';
+import { OrganizationComputeTimeUsage } from './organizationComputeTimeUsage';
 
 export class AdminOrganizationInfoResponse {
     /**
@@ -28,17 +25,32 @@ export class AdminOrganizationInfoResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'organization': Organization;
-    'datasets': Array<OrganizationDataset>;
-    'defaultComputeLimits': OrganizationInfoResponseAllOfDefaultComputeLimits;
-    'entitlementLimits'?: OrganizationInfoResponseAllOfEntitlementLimits;
     /**
-    * Experiments that the organization has access to. Enabling experiments can only be done through a JWT token.
+    * CPU compute time in seconds of all jobs in the organization (including organizational project jobs).
     */
-    'experiments'?: Array<ProjectInfoResponseAllOfExperiments>;
-    'readme'?: ProjectPublicDataReadme;
-    'whitelabelId'?: number;
+    'cpuComputeTime'?: number;
+    /**
+    * GPU compute time in seconds of all jobs in the organization (including organizational project jobs).
+    */
+    'gpuComputeTime'?: number;
+    /**
+    * Total compute time is the amount of computation time spent in jobs, in minutes used by an organization over the given period, calculated as CPU + GPU minutes.
+    */
+    'totalComputeTime'?: number;
     'billable'?: boolean;
+    'entitlementLimits'?: EntitlementLimits;
+    /**
+    * The date from which the compute time for the running contract is calculated.
+    */
+    'computeTimeCurrentContractSince'?: Date;
+    /**
+    * Total storage used by the organization.
+    */
+    'totalStorage'?: number;
+    /**
+    * Metrics for the last 365 days
+    */
+    'dailyMetrics'?: Array<DailyMetricsRecord> | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -54,44 +66,44 @@ export class AdminOrganizationInfoResponse {
             "type": "string"
         },
         {
-            "name": "organization",
-            "baseName": "organization",
-            "type": "Organization"
+            "name": "cpuComputeTime",
+            "baseName": "cpuComputeTime",
+            "type": "number"
         },
         {
-            "name": "datasets",
-            "baseName": "datasets",
-            "type": "Array<OrganizationDataset>"
+            "name": "gpuComputeTime",
+            "baseName": "gpuComputeTime",
+            "type": "number"
         },
         {
-            "name": "defaultComputeLimits",
-            "baseName": "defaultComputeLimits",
-            "type": "OrganizationInfoResponseAllOfDefaultComputeLimits"
-        },
-        {
-            "name": "entitlementLimits",
-            "baseName": "entitlementLimits",
-            "type": "OrganizationInfoResponseAllOfEntitlementLimits"
-        },
-        {
-            "name": "experiments",
-            "baseName": "experiments",
-            "type": "Array<ProjectInfoResponseAllOfExperiments>"
-        },
-        {
-            "name": "readme",
-            "baseName": "readme",
-            "type": "ProjectPublicDataReadme"
-        },
-        {
-            "name": "whitelabelId",
-            "baseName": "whitelabelId",
+            "name": "totalComputeTime",
+            "baseName": "totalComputeTime",
             "type": "number"
         },
         {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
+        },
+        {
+            "name": "computeTimeCurrentContractSince",
+            "baseName": "computeTimeCurrentContractSince",
+            "type": "Date"
+        },
+        {
+            "name": "totalStorage",
+            "baseName": "totalStorage",
+            "type": "number"
+        },
+        {
+            "name": "dailyMetrics",
+            "baseName": "dailyMetrics",
+            "type": "Array<DailyMetricsRecord>"
         }    ];
 
     static getAttributeTypeMap() {

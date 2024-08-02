@@ -12,6 +12,7 @@
 
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
+import { LatencyDevice } from './latencyDevice';
 import { Project } from './project';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectInfoResponseAllOfAcquisitionSettings } from './projectInfoResponseAllOfAcquisitionSettings';
@@ -20,11 +21,11 @@ import { ProjectInfoResponseAllOfDataSummaryPerCategory } from './projectInfoRes
 import { ProjectInfoResponseAllOfDeploySettings } from './projectInfoResponseAllOfDeploySettings';
 import { ProjectInfoResponseAllOfExperiments } from './projectInfoResponseAllOfExperiments';
 import { ProjectInfoResponseAllOfImpulse } from './projectInfoResponseAllOfImpulse';
-import { ProjectInfoResponseAllOfLatencyDevices } from './projectInfoResponseAllOfLatencyDevices';
 import { ProjectInfoResponseAllOfPerformance } from './projectInfoResponseAllOfPerformance';
 import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoResponseAllOfShowGettingStartedWizard';
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
+import { TargetConstraints } from './targetConstraints';
 import { User } from './user';
 
 export class ProjectInfoResponseAllOf {
@@ -33,7 +34,6 @@ export class ProjectInfoResponseAllOf {
     'impulse': ProjectInfoResponseAllOfImpulse;
     'devices': Array<Device>;
     'dataSummary': ProjectDataSummary;
-    'dataSummaryProcessedData': ProjectDataSummary;
     'dataSummaryPerCategory': ProjectInfoResponseAllOfDataSummaryPerCategory;
     'computeTime': ProjectInfoResponseAllOfComputeTime;
     'acquisitionSettings': ProjectInfoResponseAllOfAcquisitionSettings;
@@ -43,10 +43,9 @@ export class ProjectInfoResponseAllOf {
     * Experiments that the project has access to. Enabling experiments can only be done through a JWT token.
     */
     'experiments': Array<ProjectInfoResponseAllOfExperiments>;
-    'latencyDevices': Array<ProjectInfoResponseAllOfLatencyDevices>;
+    'latencyDevices': Array<LatencyDevice>;
     'urls': ProjectInfoResponseAllOfUrls;
     'showCreateFirstImpulse': boolean;
-    'showProjectTypeWizard': boolean;
     'showGettingStartedWizard': ProjectInfoResponseAllOfShowGettingStartedWizard;
     'performance': ProjectInfoResponseAllOfPerformance;
     'readme'?: ProjectPublicDataReadme;
@@ -63,6 +62,10 @@ export class ProjectInfoResponseAllOf {
     */
     'modelTestingJobNotificationUids': Array<number>;
     /**
+    * The IDs of users who should be notified when an auto segmentation job is finished.
+    */
+    'autoSegmenterJobNotificationUids': Array<number>;
+    /**
     * The IDs of users who should be notified when an export job is finished.
     */
     'exportJobNotificationUids': Array<number>;
@@ -72,6 +75,21 @@ export class ProjectInfoResponseAllOf {
     */
     'csvImportConfig'?: object;
     'studioUrl': string;
+    'inPretrainedModelFlow': boolean;
+    'dspPageSize'?: number;
+    /**
+    * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
+    */
+    'showSensorDataInAcquisitionGraph': boolean;
+    'targetConstraints'?: TargetConstraints;
+    /**
+    * List of notifications to show within the project
+    */
+    'notifications': Array<string>;
+    /**
+    * Default selected impulse (by ID).
+    */
+    'defaultImpulseId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -99,11 +117,6 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "dataSummary",
             "baseName": "dataSummary",
-            "type": "ProjectDataSummary"
-        },
-        {
-            "name": "dataSummaryProcessedData",
-            "baseName": "dataSummaryProcessedData",
             "type": "ProjectDataSummary"
         },
         {
@@ -139,7 +152,7 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "latencyDevices",
             "baseName": "latencyDevices",
-            "type": "Array<ProjectInfoResponseAllOfLatencyDevices>"
+            "type": "Array<LatencyDevice>"
         },
         {
             "name": "urls",
@@ -149,11 +162,6 @@ export class ProjectInfoResponseAllOf {
         {
             "name": "showCreateFirstImpulse",
             "baseName": "showCreateFirstImpulse",
-            "type": "boolean"
-        },
-        {
-            "name": "showProjectTypeWizard",
-            "baseName": "showProjectTypeWizard",
             "type": "boolean"
         },
         {
@@ -187,6 +195,11 @@ export class ProjectInfoResponseAllOf {
             "type": "Array<number>"
         },
         {
+            "name": "autoSegmenterJobNotificationUids",
+            "baseName": "autoSegmenterJobNotificationUids",
+            "type": "Array<number>"
+        },
+        {
             "name": "exportJobNotificationUids",
             "baseName": "exportJobNotificationUids",
             "type": "Array<number>"
@@ -205,6 +218,36 @@ export class ProjectInfoResponseAllOf {
             "name": "studioUrl",
             "baseName": "studioUrl",
             "type": "string"
+        },
+        {
+            "name": "inPretrainedModelFlow",
+            "baseName": "inPretrainedModelFlow",
+            "type": "boolean"
+        },
+        {
+            "name": "dspPageSize",
+            "baseName": "dspPageSize",
+            "type": "number"
+        },
+        {
+            "name": "showSensorDataInAcquisitionGraph",
+            "baseName": "showSensorDataInAcquisitionGraph",
+            "type": "boolean"
+        },
+        {
+            "name": "targetConstraints",
+            "baseName": "targetConstraints",
+            "type": "TargetConstraints"
+        },
+        {
+            "name": "notifications",
+            "baseName": "notifications",
+            "type": "Array<string>"
+        },
+        {
+            "name": "defaultImpulseId",
+            "baseName": "defaultImpulseId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

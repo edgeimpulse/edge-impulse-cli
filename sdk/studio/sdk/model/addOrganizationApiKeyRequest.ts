@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { AddApiKeyRequest } from './addApiKeyRequest';
+import { AddOrganizationApiKeyRequestAllOf } from './addOrganizationApiKeyRequestAllOf';
 
 export class AddOrganizationApiKeyRequest {
     /**

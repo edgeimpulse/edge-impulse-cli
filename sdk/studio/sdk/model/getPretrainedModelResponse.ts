@@ -14,6 +14,7 @@ import { DeployPretrainedModelRequestModelInfo } from './deployPretrainedModelRe
 import { GenericApiResponse } from './genericApiResponse';
 import { GetPretrainedModelResponseAllOf } from './getPretrainedModelResponseAllOf';
 import { GetPretrainedModelResponseAllOfModel } from './getPretrainedModelResponseAllOfModel';
+import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 
 export class GetPretrainedModelResponse {
     /**
@@ -24,6 +25,14 @@ export class GetPretrainedModelResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
+    /**
+    * Whether a specific device was selected for performance profiling
+    */
+    'specificDeviceSelected': boolean;
+    /**
+    * The types of model that are available
+    */
+    'availableModelTypes': Array<KerasModelTypeEnum>;
     'model'?: GetPretrainedModelResponseAllOfModel;
     'modelInfo'?: DeployPretrainedModelRequestModelInfo;
 
@@ -39,6 +48,16 @@ export class GetPretrainedModelResponse {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "specificDeviceSelected",
+            "baseName": "specificDeviceSelected",
+            "type": "boolean"
+        },
+        {
+            "name": "availableModelTypes",
+            "baseName": "availableModelTypes",
+            "type": "Array<KerasModelTypeEnum>"
         },
         {
             "name": "model",

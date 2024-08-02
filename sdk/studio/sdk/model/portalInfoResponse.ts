@@ -17,6 +17,7 @@ export class PortalInfoResponse {
     'organizationId': number;
     'organizationName': string;
     'organizationLogo'?: string;
+    'bucketName': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,6 +45,11 @@ export class PortalInfoResponse {
         {
             "name": "organizationLogo",
             "baseName": "organizationLogo",
+            "type": "string"
+        },
+        {
+            "name": "bucketName",
+            "baseName": "bucketName",
             "type": "string"
         }    ];
 

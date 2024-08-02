@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ProjectTierEnum } from './projectTierEnum';
 
 export class AdminApiProject {
     'id': number;
@@ -27,7 +28,7 @@ export class AdminApiProject {
     * Unique identifier of the white label this project belongs to, if any.
     */
     'whitelabelId'?: number | null;
-    'tier'?: AdminApiProjectTierEnum;
+    'tier'?: ProjectTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -80,7 +81,7 @@ export class AdminApiProject {
         {
             "name": "tier",
             "baseName": "tier",
-            "type": "AdminApiProjectTierEnum"
+            "type": "ProjectTierEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -88,6 +89,3 @@ export class AdminApiProject {
     }
 }
 
-
-export type AdminApiProjectTierEnum = 'free' | 'pro' | 'enterprise';
-export const AdminApiProjectTierEnumValues: string[] = ['free', 'pro', 'enterprise'];

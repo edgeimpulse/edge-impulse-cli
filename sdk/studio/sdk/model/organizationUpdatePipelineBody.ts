@@ -18,7 +18,7 @@ export class OrganizationUpdatePipelineBody {
     /**
     * 15m for every 15 minutes, 2h for every 2 hours, 1d for every 1 day
     */
-    'intervalStr': string;
+    'intervalStr'?: string;
     'steps': Array<OrganizationPipelineStep>;
     'dataset'?: string;
     'projectId'?: number;
@@ -87,5 +87,5 @@ export class OrganizationUpdatePipelineBody {
 }
 
 
-export type OrganizationUpdatePipelineBodyWhenToEmailEnum = 'always' | 'on_new_data';
-export const OrganizationUpdatePipelineBodyWhenToEmailEnumValues: string[] = ['always', 'on_new_data'];
+export type OrganizationUpdatePipelineBodyWhenToEmailEnum = 'always' | 'on_new_data' | 'never';
+export const OrganizationUpdatePipelineBodyWhenToEmailEnumValues: string[] = ['always', 'on_new_data', 'never'];

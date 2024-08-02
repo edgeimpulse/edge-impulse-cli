@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { UserTierEnum } from './userTierEnum';
 
 export class AdminGetUsersResponseAllOfUsers {
     'id': number;
@@ -21,7 +22,7 @@ export class AdminGetUsersResponseAllOfUsers {
     'lastSeen'?: Date;
     'activated'?: boolean;
     'fromEvaluation'?: boolean;
-    'tier'?: AdminGetUsersResponseAllOfUsersTierEnum;
+    'tier'?: UserTierEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,7 +75,7 @@ export class AdminGetUsersResponseAllOfUsers {
         {
             "name": "tier",
             "baseName": "tier",
-            "type": "AdminGetUsersResponseAllOfUsersTierEnum"
+            "type": "UserTierEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -82,6 +83,3 @@ export class AdminGetUsersResponseAllOfUsers {
     }
 }
 
-
-export type AdminGetUsersResponseAllOfUsersTierEnum = 'free' | 'pro' | 'enterprise';
-export const AdminGetUsersResponseAllOfUsersTierEnumValues: string[] = ['free', 'pro', 'enterprise'];

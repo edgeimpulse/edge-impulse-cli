@@ -11,9 +11,12 @@
  */
 
 import { ClassifyJobResponseAllOf } from './classifyJobResponseAllOf';
-import { ClassifyJobResponseAllOfResult } from './classifyJobResponseAllOfResult';
+import { ClassifyJobResponseAllOfAccuracy } from './classifyJobResponseAllOfAccuracy';
+import { ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock } from './classifyJobResponseAllOfAdditionalMetricsByLearnBlock';
 import { GenericApiResponse } from './genericApiResponse';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ModelPrediction } from './modelPrediction';
+import { ModelResult } from './modelResult';
 
 export class ClassifyJobResponse {
     /**
@@ -24,8 +27,14 @@ export class ClassifyJobResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'result': Array<ClassifyJobResponseAllOfResult>;
+    'result': Array<ModelResult>;
     'predictions': Array<ModelPrediction>;
+    'accuracy': ClassifyJobResponseAllOfAccuracy;
+    'additionalMetricsByLearnBlock': Array<ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock>;
+    /**
+    * List of all model variants for which classification results exist
+    */
+    'availableVariants': Array<KerasModelVariantEnum>;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,12 +52,27 @@ export class ClassifyJobResponse {
         {
             "name": "result",
             "baseName": "result",
-            "type": "Array<ClassifyJobResponseAllOfResult>"
+            "type": "Array<ModelResult>"
         },
         {
             "name": "predictions",
             "baseName": "predictions",
             "type": "Array<ModelPrediction>"
+        },
+        {
+            "name": "accuracy",
+            "baseName": "accuracy",
+            "type": "ClassifyJobResponseAllOfAccuracy"
+        },
+        {
+            "name": "additionalMetricsByLearnBlock",
+            "baseName": "additionalMetricsByLearnBlock",
+            "type": "Array<ClassifyJobResponseAllOfAdditionalMetricsByLearnBlock>"
+        },
+        {
+            "name": "availableVariants",
+            "baseName": "availableVariants",
+            "type": "Array<KerasModelVariantEnum>"
         }    ];
 
     static getAttributeTypeMap() {

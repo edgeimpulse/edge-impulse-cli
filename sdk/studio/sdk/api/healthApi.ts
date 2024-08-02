@@ -108,10 +108,12 @@ export class HealthApi {
      * @summary Get studio api containers health
      * @param requester Health check requester
      */
-    public async apiHealth (queryParams: apiHealthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async apiHealth (queryParams?: apiHealthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/api-health';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -121,7 +123,7 @@ export class HealthApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.requester !== undefined) {
+        if (queryParams?.requester !== undefined) {
             localVarQueryParameters['requester'] = ObjectSerializer.serialize(queryParams.requester, "string");
         }
 
@@ -179,10 +181,12 @@ export class HealthApi {
      * @summary Get studio web containers health
      * @param requester Health check requester
      */
-    public async health (queryParams: healthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async health (queryParams?: healthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-health';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -192,7 +196,7 @@ export class HealthApi {
         }
         let localVarFormParams: any = {};
 
-        if (queryParams.requester !== undefined) {
+        if (queryParams?.requester !== undefined) {
             localVarQueryParameters['requester'] = ObjectSerializer.serialize(queryParams.requester, "string");
         }
 

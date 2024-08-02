@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { EnterpriseTrial } from './enterpriseTrial';
 
 export class GetUserNeedToSetPasswordResponseAllOf {
     /**
@@ -24,6 +25,14 @@ export class GetUserNeedToSetPasswordResponseAllOf {
     * White label domains the user belongs to, if any
     */
     'whitelabels'?: Array<string>;
+    /**
+    * Current or past enterprise trials.
+    */
+    'trials'?: Array<EnterpriseTrial>;
+    /**
+    * Whether the user has verified its email address or not
+    */
+    'emailVerified'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +51,16 @@ export class GetUserNeedToSetPasswordResponseAllOf {
             "name": "whitelabels",
             "baseName": "whitelabels",
             "type": "Array<string>"
+        },
+        {
+            "name": "trials",
+            "baseName": "trials",
+            "type": "Array<EnterpriseTrial>"
+        },
+        {
+            "name": "emailVerified",
+            "baseName": "emailVerified",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

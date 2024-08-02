@@ -67,6 +67,7 @@ type listAllOrganizationJobsQueryParams = {
     offset?: number,
     excludePipelineTransformJobs?: boolean,
     rootOnly?: boolean,
+    key?: string,
 };
 
 type listFinishedOrganizationJobsQueryParams = {
@@ -148,12 +149,14 @@ export class OrganizationJobsApi {
      * @param jobId Job ID
      * @param forceCancel If set to \&#39;true\&#39;, we won\&#39;t wait for the job cluster to cancel the job, and will mark the job as finished.
      */
-    public async cancelOrganizationJob (organizationId: number, jobId: number, queryParams: cancelOrganizationJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async cancelOrganizationJob (organizationId: number, jobId: number, queryParams?: cancelOrganizationJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/cancel'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -177,7 +180,7 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter jobId was null or undefined when calling cancelOrganizationJob.');
         }
 
-        if (queryParams.forceCancel !== undefined) {
+        if (queryParams?.forceCancel !== undefined) {
             localVarQueryParameters['forceCancel'] = ObjectSerializer.serialize(queryParams.forceCancel, "string");
         }
 
@@ -244,12 +247,14 @@ export class OrganizationJobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: downloadOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async downloadOrganizationJobsLogs (organizationId: number, jobId: number, queryParams?: downloadOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['text/plain'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -273,11 +278,11 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter jobId was null or undefined when calling downloadOrganizationJobsLogs.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.logLevel !== undefined) {
+        if (queryParams?.logLevel !== undefined) {
             localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
@@ -347,7 +352,9 @@ export class OrganizationJobsApi {
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -434,12 +441,14 @@ export class OrganizationJobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getOrganizationJobsLogs (organizationId: number, jobId: number, queryParams: getOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getOrganizationJobsLogs (organizationId: number, jobId: number, queryParams?: getOrganizationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/{jobId}/stdout'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -463,11 +472,11 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter jobId was null or undefined when calling getOrganizationJobsLogs.');
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.logLevel !== undefined) {
+        if (queryParams?.logLevel !== undefined) {
             localVarQueryParameters['logLevel'] = ObjectSerializer.serialize(queryParams.logLevel, "'error' | 'warn' | 'info' | 'debug'");
         }
 
@@ -535,7 +544,9 @@ export class OrganizationJobsApi {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/socket-token'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -613,11 +624,13 @@ export class OrganizationJobsApi {
      * @param organizationId Organization ID
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listActiveOrganizationJobs (organizationId: number, queryParams: listActiveOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listActiveOrganizationJobs (organizationId: number, queryParams?: listActiveOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -634,7 +647,7 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listActiveOrganizationJobs.');
         }
 
-        if (queryParams.rootOnly !== undefined) {
+        if (queryParams?.rootOnly !== undefined) {
             localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 
@@ -703,12 +716,15 @@ export class OrganizationJobsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param excludePipelineTransformJobs Whether to exclude pipeline / transformation jobs
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
+     * @param key Job key to filter on
      */
-    public async listAllOrganizationJobs (organizationId: number, queryParams: listAllOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listAllOrganizationJobs (organizationId: number, queryParams?: listAllOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/all'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -725,28 +741,32 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listAllOrganizationJobs.');
         }
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.excludePipelineTransformJobs !== undefined) {
+        if (queryParams?.excludePipelineTransformJobs !== undefined) {
             localVarQueryParameters['excludePipelineTransformJobs'] = ObjectSerializer.serialize(queryParams.excludePipelineTransformJobs, "boolean");
         }
 
-        if (queryParams.rootOnly !== undefined) {
+        if (queryParams?.rootOnly !== undefined) {
             localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
+        }
+
+        if (queryParams?.key !== undefined) {
+            localVarQueryParameters['key'] = ObjectSerializer.serialize(queryParams.key, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -814,11 +834,13 @@ export class OrganizationJobsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listFinishedOrganizationJobs (organizationId: number, queryParams: listFinishedOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listFinishedOrganizationJobs (organizationId: number, queryParams?: listFinishedOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/history'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -835,23 +857,23 @@ export class OrganizationJobsApi {
             throw new Error('Required parameter organizationId was null or undefined when calling listFinishedOrganizationJobs.');
         }
 
-        if (queryParams.startDate !== undefined) {
+        if (queryParams?.startDate !== undefined) {
             localVarQueryParameters['startDate'] = ObjectSerializer.serialize(queryParams.startDate, "Date");
         }
 
-        if (queryParams.endDate !== undefined) {
+        if (queryParams?.endDate !== undefined) {
             localVarQueryParameters['endDate'] = ObjectSerializer.serialize(queryParams.endDate, "Date");
         }
 
-        if (queryParams.limit !== undefined) {
+        if (queryParams?.limit !== undefined) {
             localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
         }
 
-        if (queryParams.offset !== undefined) {
+        if (queryParams?.offset !== undefined) {
             localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
         }
 
-        if (queryParams.rootOnly !== undefined) {
+        if (queryParams?.rootOnly !== undefined) {
             localVarQueryParameters['rootOnly'] = ObjectSerializer.serialize(queryParams.rootOnly, "boolean");
         }
 

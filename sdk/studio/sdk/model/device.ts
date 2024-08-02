@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DeviceInferenceInfo } from './deviceInferenceInfo';
 import { DeviceSensors } from './deviceSensors';
 
 export class Device {
@@ -27,7 +28,7 @@ export class Device {
     'deviceType': string;
     'sensors': Array<DeviceSensors>;
     /**
-    * Whether the device is connected to the remote management interface
+    * Whether the device is connected to the remote management interface. This property is deprecated, use `remoteMgmtMode` instead.
     */
     'remoteMgmtConnected': boolean;
     /**
@@ -35,6 +36,11 @@ export class Device {
     */
     'remoteMgmtHost'?: string;
     'supportsSnapshotStreaming': boolean;
+    /**
+    * Replaces `remote_mgmt_connected`. Shows whether the device is connected to the remote management interface, and in which mode.
+    */
+    'remoteMgmtMode': DeviceRemoteMgmtModeEnum;
+    'inferenceInfo'?: DeviceInferenceInfo;
 
     static discriminator: string | undefined = undefined;
 
@@ -88,6 +94,16 @@ export class Device {
             "name": "supportsSnapshotStreaming",
             "baseName": "supportsSnapshotStreaming",
             "type": "boolean"
+        },
+        {
+            "name": "remoteMgmtMode",
+            "baseName": "remoteMgmtMode",
+            "type": "DeviceRemoteMgmtModeEnum"
+        },
+        {
+            "name": "inferenceInfo",
+            "baseName": "inferenceInfo",
+            "type": "DeviceInferenceInfo"
         }    ];
 
     static getAttributeTypeMap() {
@@ -95,3 +111,6 @@ export class Device {
     }
 }
 
+
+export type DeviceRemoteMgmtModeEnum = 'disconnected' | 'ingestion' | 'inference';
+export const DeviceRemoteMgmtModeEnumValues: string[] = ['disconnected', 'ingestion', 'inference'];

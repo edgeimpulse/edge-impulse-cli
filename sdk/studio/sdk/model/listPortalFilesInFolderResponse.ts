@@ -23,7 +23,8 @@ export class ListPortalFilesInFolderResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'files'?: Array<PortalFile>;
+    'files': Array<PortalFile>;
+    'continuationToken'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +43,11 @@ export class ListPortalFilesInFolderResponse {
             "name": "files",
             "baseName": "files",
             "type": "Array<PortalFile>"
+        },
+        {
+            "name": "continuationToken",
+            "baseName": "continuationToken",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

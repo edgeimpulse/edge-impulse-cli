@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { OrganizationCreateProject } from './organizationCreateProject';
 import { OrganizationCreateProjectTransformationSummary } from './organizationCreateProjectTransformationSummary';
 import { OrganizationCreateProjectWithFilesAllOf } from './organizationCreateProjectWithFilesAllOf';
 import { OrganizationCreateProjectWithFilesAllOfFiles } from './organizationCreateProjectWithFilesAllOfFiles';
+import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
 
 export class OrganizationCreateProjectWithFiles {
@@ -35,6 +37,8 @@ export class OrganizationCreateProjectWithFiles {
     'category': OrganizationCreateProjectWithFilesCategoryEnum;
     'created': Date;
     'outputDatasetName'?: string;
+    'outputDatasetBucketId'?: number;
+    'outputDatasetBucketPath'?: string;
     'totalDownloadFileCount': number;
     'totalDownloadFileSize': number;
     'totalDownloadFileSizeString': string;
@@ -52,8 +56,18 @@ export class OrganizationCreateProjectWithFiles {
     'pipelineName'?: string;
     'pipelineRunId'?: number;
     'pipelineStep'?: number;
-    'operatesOn': OrganizationCreateProjectWithFilesOperatesOnEnum;
+    'operatesOn': TransformationJobOperatesOnEnum;
+    /**
+    * Total amount of compute used for this job (in seconds)
+    */
+    'totalTimeSpentSeconds': number;
+    /**
+    * Total amount of compute used (friendly string)
+    */
+    'totalTimeSpentString': string;
+    'createdByUser'?: CreatedUpdatedByUser;
     'files': Array<OrganizationCreateProjectWithFilesAllOfFiles>;
+    'fileCountForFilter': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -149,6 +163,16 @@ export class OrganizationCreateProjectWithFiles {
             "type": "string"
         },
         {
+            "name": "outputDatasetBucketId",
+            "baseName": "outputDatasetBucketId",
+            "type": "number"
+        },
+        {
+            "name": "outputDatasetBucketPath",
+            "baseName": "outputDatasetBucketPath",
+            "type": "string"
+        },
+        {
             "name": "totalDownloadFileCount",
             "baseName": "totalDownloadFileCount",
             "type": "number"
@@ -221,12 +245,32 @@ export class OrganizationCreateProjectWithFiles {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "OrganizationCreateProjectWithFilesOperatesOnEnum"
+            "type": "TransformationJobOperatesOnEnum"
+        },
+        {
+            "name": "totalTimeSpentSeconds",
+            "baseName": "totalTimeSpentSeconds",
+            "type": "number"
+        },
+        {
+            "name": "totalTimeSpentString",
+            "baseName": "totalTimeSpentString",
+            "type": "string"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "files",
             "baseName": "files",
             "type": "Array<OrganizationCreateProjectWithFilesAllOfFiles>"
+        },
+        {
+            "name": "fileCountForFilter",
+            "baseName": "fileCountForFilter",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -240,6 +284,3 @@ export const OrganizationCreateProjectWithFilesUploadTypeEnumValues: string[] = 
 
 export type OrganizationCreateProjectWithFilesCategoryEnum = 'training' | 'testing' | 'split';
 export const OrganizationCreateProjectWithFilesCategoryEnumValues: string[] = ['training', 'testing', 'split'];
-
-export type OrganizationCreateProjectWithFilesOperatesOnEnum = 'file' | 'dataitem' | 'standalone';
-export const OrganizationCreateProjectWithFilesOperatesOnEnumValues: string[] = ['file', 'dataitem', 'standalone'];

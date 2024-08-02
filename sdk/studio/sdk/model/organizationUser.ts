@@ -10,21 +10,51 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationMemberRole } from './organizationMemberRole';
+import { OrganizationUserAllOf } from './organizationUserAllOf';
+import { Permission } from './permission';
 import { StaffInfo } from './staffInfo';
+import { User } from './user';
+import { UserTierEnum } from './userTierEnum';
 
 export class OrganizationUser {
     'id': number;
     'username': string;
     'name': string;
+    'email': string;
     'photo'?: string;
     'created': Date;
-    'added': Date;
-    'email': string;
-    'role': OrganizationUserRoleEnum;
+    'lastSeen'?: Date;
     'staffInfo': StaffInfo;
+    'pending': boolean;
+    'lastTosAcceptanceDate'?: Date;
+    'jobTitle'?: string;
+    /**
+    * List of permissions the user has
+    */
+    'permissions'?: Array<Permission>;
+    'companyName'?: string;
+    /**
+    * Whether the user has activated their account or not.
+    */
+    'activated': boolean;
+    /**
+    * Whether the user has configured multi-factor authentication
+    */
+    'mfaConfigured': boolean;
+    /**
+    * Stripe customer ID, if any.
+    */
+    'stripeCustomerId'?: string;
+    /**
+    * Whether the user has pending payments.
+    */
+    'hasPendingPayments'?: boolean;
+    'tier'?: UserTierEnum;
+    'added': Date;
+    'role': OrganizationMemberRole;
     'projectCount': number;
     'datasets': Array<string>;
-    'pending': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +75,11 @@ export class OrganizationUser {
             "type": "string"
         },
         {
+            "name": "email",
+            "baseName": "email",
+            "type": "string"
+        },
+        {
             "name": "photo",
             "baseName": "photo",
             "type": "string"
@@ -55,24 +90,74 @@ export class OrganizationUser {
             "type": "Date"
         },
         {
-            "name": "added",
-            "baseName": "added",
+            "name": "lastSeen",
+            "baseName": "lastSeen",
             "type": "Date"
-        },
-        {
-            "name": "email",
-            "baseName": "email",
-            "type": "string"
-        },
-        {
-            "name": "role",
-            "baseName": "role",
-            "type": "OrganizationUserRoleEnum"
         },
         {
             "name": "staffInfo",
             "baseName": "staffInfo",
             "type": "StaffInfo"
+        },
+        {
+            "name": "pending",
+            "baseName": "pending",
+            "type": "boolean"
+        },
+        {
+            "name": "lastTosAcceptanceDate",
+            "baseName": "lastTosAcceptanceDate",
+            "type": "Date"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "permissions",
+            "baseName": "permissions",
+            "type": "Array<Permission>"
+        },
+        {
+            "name": "companyName",
+            "baseName": "companyName",
+            "type": "string"
+        },
+        {
+            "name": "activated",
+            "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "mfaConfigured",
+            "baseName": "mfaConfigured",
+            "type": "boolean"
+        },
+        {
+            "name": "stripeCustomerId",
+            "baseName": "stripeCustomerId",
+            "type": "string"
+        },
+        {
+            "name": "hasPendingPayments",
+            "baseName": "hasPendingPayments",
+            "type": "boolean"
+        },
+        {
+            "name": "tier",
+            "baseName": "tier",
+            "type": "UserTierEnum"
+        },
+        {
+            "name": "added",
+            "baseName": "added",
+            "type": "Date"
+        },
+        {
+            "name": "role",
+            "baseName": "role",
+            "type": "OrganizationMemberRole"
         },
         {
             "name": "projectCount",
@@ -83,11 +168,6 @@ export class OrganizationUser {
             "name": "datasets",
             "baseName": "datasets",
             "type": "Array<string>"
-        },
-        {
-            "name": "pending",
-            "baseName": "pending",
-            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -95,6 +175,3 @@ export class OrganizationUser {
     }
 }
 
-
-export type OrganizationUserRoleEnum = 'admin' | 'member' | 'guest';
-export const OrganizationUserRoleEnumValues: string[] = ['admin', 'member', 'guest'];

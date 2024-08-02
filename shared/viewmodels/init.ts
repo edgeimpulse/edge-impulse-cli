@@ -39,9 +39,23 @@ export enum PageType {
     DataSources = 37,
     CreateDeveloperProfile = 38,
     DeveloperProfile = 39,
-    AccountSettings = 40,
     UploadCsv = 41,
     PretrainedModel = 42,
+    AutoSegmenter = 44,
+    Scratchpad = 45,
+    TrialSignup = 46,
+    ThankYou = 47,
+    CommunityProSignUp = 48,
+    SyntheticData = 49,
+    MigrateImpulse = 50,
+    ImpulseList = 51,
+    AccountSettingsAccountInfo = 60,
+    AccountSettingsAuthentication = 61,
+    AccountSettingsOrganizations = 62,
+    AccountSettingsExperiments = 63,
+    AccountSettingsMfa = 64,
+    AccountSettingsSubscription = 65,
+    AccountSettingsSecrets = 66,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,
@@ -61,125 +75,9 @@ export enum PageType {
     OrganizationDatasets = 106,
     OrganizationJobs = 107,
     OrganizationDataHub = 108,
+    OrganizationDataCampaignsDashboard = 109,
+    OrganizationDataFiles = 110,
+    OrganizationExports = 111,
     UploadPortal = 200,
-}
-
-export type ClientConnectionType = 'ip' | 'daemon';
-
-export interface ClientConnectedDevice {
-    deviceId: string;
-    connection: ClientConnectionType;
-    sensors: {
-        name: string;
-        maxSampleLengthS: number;
-        frequencies: number[];
-    }[];
-    deviceType: string;
-    deviceName: string;
-    supportsSnapshotStreaming: boolean;
-}
-
-export interface ClientStudioWebsocketHello {
-    hello: { version: number };
-    devices: ClientConnectedDevice[];
-    activeTunerJobId?: number;
-}
-
-export interface ClientInitUser {
-    id: number;
-    name: string;
-    photo?: string;
-    isEvalUser: boolean;
-}
-
-export interface ClientInitStudioOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    projectId: number;
-    baseUrl: string;
-    projectName: string;
-    projectOwnerOrganizationId: number | undefined;
-    projectOwnerOrganizationName: string | undefined;
-    socketToken: string;
-    orgSocketToken: string | undefined;
-    connectedDevices: ClientConnectedDevice[];
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    gitCommitHash: string;
-    isAdmin: boolean;
-    isObjectDetection: boolean;
-    user: ClientInitUser | undefined;
-    docsUrl: string;
-}
-
-export interface ClientInitOrganizationOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    organizationId: number;
-    organizationName: string;
-    socketToken: string;
-    staticAssetsPrefix: string;
-    baseUrl: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    user: ClientInitUser | undefined;
-    themeId: number;
-    whitelabelId: number | undefined;
-    docsUrl: string;
-}
-
-export interface ClientInitOrganizationPortalOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    portalId: number;
-    baseUrl: string;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    errorPage: boolean;
-    authToken: string;
-    isAdmin: boolean;
-}
-
-export interface ClientInitFormOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    userId: number;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    user: ClientInitUser | undefined;
-}
-
-export interface ClientInitPublicOptions {
-    studioHost: string;
-    ingestionHost: string;
-    remoteMgmtHost: string;
-    pageType: PageType;
-    gaId: string;
-    staticAssetsPrefix: string;
-    sentryDSN?: string;
-    sentryEnvironment?: string;
-    ssoWhitelist?: { [domain: string]: string[] };
-}
-
-export interface OrganizationWebsocketHello {
-    hello: { version: number };
+    Announcement = 201,
 }

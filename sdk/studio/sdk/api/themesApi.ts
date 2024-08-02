@@ -119,7 +119,9 @@ export class ThemesApi {
         const localVarPath = this.basePath + '/api/themes/{themeId}'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -200,7 +202,9 @@ export class ThemesApi {
         const localVarPath = this.basePath + '/api/themes/{themeId}'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -279,7 +283,9 @@ export class ThemesApi {
     public async getThemes (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetThemesResponse> {
         const localVarPath = this.basePath + '/api/themes';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -354,7 +360,9 @@ export class ThemesApi {
         const localVarPath = this.basePath + '/api/themes/{themeId}/colors'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -444,7 +452,9 @@ export class ThemesApi {
         const localVarPath = this.basePath + '/api/themes/{themeId}/favicon'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -538,7 +548,9 @@ export class ThemesApi {
         const localVarPath = this.basePath + '/api/themes/{themeId}/logos'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {

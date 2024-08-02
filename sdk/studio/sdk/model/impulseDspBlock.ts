@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImpulseDspBlockNamedAxes } from './impulseDspBlockNamedAxes';
 import { ImpulseDspBlockOrganization } from './impulseDspBlockOrganization';
 
 export class ImpulseDspBlock {
@@ -42,42 +43,6 @@ export class ImpulseDspBlock {
     */
     'input'?: number;
     /**
-    * Whether this block is the primary version of its base block.
-    */
-    'primaryVersion': boolean;
-    /**
-    * The version number of the original block this version was based on. If this is an original block, will be undefined.
-    */
-    'baseBlockId'?: number;
-    /**
-    * The version number of the original tuner block this version was based on. If this is an original tuner block, will be undefined
-    */
-    'tunerBaseBlockId'?: number;
-    /**
-    * The version number of the original tuner template block this version was based on. If this is an original tuner template block, will be undefined
-    */
-    'tunerTemplateId'?: number;
-    /**
-    * Specifies if this block was copied from a tuner block when a tuner model variant was set as primary model
-    */
-    'tunerPrimary'?: boolean;
-    /**
-    * ID of block this block version was cloned from
-    */
-    'clonedFromBlockId'?: number;
-    /**
-    * Specifies if this block was updated after being cloned/created
-    */
-    'mutated'?: boolean;
-    /**
-    * Whether is block is enabled. A block is assumed to be enabled when unset.
-    */
-    'enabled'?: boolean;
-    /**
-    * Whether block is stored in database.
-    */
-    'db'?: boolean;
-    /**
     * A short description of the block version, displayed in the block versioning UI
     */
     'description'?: string;
@@ -94,6 +59,14 @@ export class ImpulseDspBlock {
     */
     'implementationVersion': number;
     'organization'?: ImpulseDspBlockOrganization;
+    /**
+    * Required for type \'custom\'
+    */
+    'customUrl'?: string;
+    /**
+    * Named axes for the block
+    */
+    'namedAxes'?: Array<ImpulseDspBlockNamedAxes>;
 
     static discriminator: string | undefined = undefined;
 
@@ -134,51 +107,6 @@ export class ImpulseDspBlock {
             "type": "number"
         },
         {
-            "name": "primaryVersion",
-            "baseName": "primaryVersion",
-            "type": "boolean"
-        },
-        {
-            "name": "baseBlockId",
-            "baseName": "baseBlockId",
-            "type": "number"
-        },
-        {
-            "name": "tunerBaseBlockId",
-            "baseName": "tunerBaseBlockId",
-            "type": "number"
-        },
-        {
-            "name": "tunerTemplateId",
-            "baseName": "tunerTemplateId",
-            "type": "number"
-        },
-        {
-            "name": "tunerPrimary",
-            "baseName": "tunerPrimary",
-            "type": "boolean"
-        },
-        {
-            "name": "clonedFromBlockId",
-            "baseName": "clonedFromBlockId",
-            "type": "number"
-        },
-        {
-            "name": "mutated",
-            "baseName": "mutated",
-            "type": "boolean"
-        },
-        {
-            "name": "enabled",
-            "baseName": "enabled",
-            "type": "boolean"
-        },
-        {
-            "name": "db",
-            "baseName": "db",
-            "type": "boolean"
-        },
-        {
             "name": "description",
             "baseName": "description",
             "type": "string"
@@ -202,6 +130,16 @@ export class ImpulseDspBlock {
             "name": "organization",
             "baseName": "organization",
             "type": "ImpulseDspBlockOrganization"
+        },
+        {
+            "name": "customUrl",
+            "baseName": "customUrl",
+            "type": "string"
+        },
+        {
+            "name": "namedAxes",
+            "baseName": "namedAxes",
+            "type": "Array<ImpulseDspBlockNamedAxes>"
         }    ];
 
     static getAttributeTypeMap() {

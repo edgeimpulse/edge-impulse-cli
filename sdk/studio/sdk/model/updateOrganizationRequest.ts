@@ -23,6 +23,7 @@ export class UpdateOrganizationRequest {
     * New leader image URL, or set to `null` to remove the leader.
     */
     'headerImg'?: string;
+    'showHeaderImgMask'?: boolean;
     /**
     * New organization name.
     */
@@ -32,6 +33,10 @@ export class UpdateOrganizationRequest {
     * Readme for the organization (in Markdown)
     */
     'readme'?: string;
+    /**
+    * New job limit in seconds.
+    */
+    'jobLimitM'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -47,6 +52,11 @@ export class UpdateOrganizationRequest {
             "type": "string"
         },
         {
+            "name": "showHeaderImgMask",
+            "baseName": "showHeaderImgMask",
+            "type": "boolean"
+        },
+        {
             "name": "name",
             "baseName": "name",
             "type": "string"
@@ -60,6 +70,11 @@ export class UpdateOrganizationRequest {
             "name": "readme",
             "baseName": "readme",
             "type": "string"
+        },
+        {
+            "name": "jobLimitM",
+            "baseName": "jobLimitM",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

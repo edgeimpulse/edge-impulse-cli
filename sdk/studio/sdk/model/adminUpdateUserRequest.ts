@@ -23,6 +23,22 @@ export class AdminUpdateUserRequest {
     * New user full name
     */
     'name'?: string;
+    /**
+    * Whether the user is active or not. Can only go from inactive to active.
+    */
+    'activated'?: boolean;
+    /**
+    * Whether the user is suspended or not.
+    */
+    'suspended'?: boolean;
+    /**
+    * New user job title
+    */
+    'jobTitle'?: string;
+    /**
+    * List of user experiments
+    */
+    'experiments'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +52,26 @@ export class AdminUpdateUserRequest {
             "name": "name",
             "baseName": "name",
             "type": "string"
+        },
+        {
+            "name": "activated",
+            "baseName": "activated",
+            "type": "boolean"
+        },
+        {
+            "name": "suspended",
+            "baseName": "suspended",
+            "type": "boolean"
+        },
+        {
+            "name": "jobTitle",
+            "baseName": "jobTitle",
+            "type": "string"
+        },
+        {
+            "name": "experiments",
+            "baseName": "experiments",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

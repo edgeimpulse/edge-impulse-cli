@@ -35,7 +35,11 @@ export class DspRunResponse {
     /**
     * Labels of the feature axes
     */
-    'labels': Array<string>;
+    'labels'?: Array<string>;
+    /**
+    * String representation of the DSP state returned
+    */
+    'stateString'?: string;
     'performance'?: DspRunResponseAllOfPerformance;
 
     static discriminator: string | undefined = undefined;
@@ -65,6 +69,11 @@ export class DspRunResponse {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "stateString",
+            "baseName": "state_string",
+            "type": "string"
         },
         {
             "name": "performance",

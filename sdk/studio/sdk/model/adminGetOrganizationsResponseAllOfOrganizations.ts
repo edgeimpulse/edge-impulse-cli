@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 
 export class AdminGetOrganizationsResponseAllOfOrganizations {
     'id': number;
@@ -21,6 +22,7 @@ export class AdminGetOrganizationsResponseAllOfOrganizations {
     'domain'?: string;
     'whitelabelId'?: number;
     'billable'?: boolean;
+    'entitlementLimits'?: EntitlementLimits;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +71,11 @@ export class AdminGetOrganizationsResponseAllOfOrganizations {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
         }    ];
 
     static getAttributeTypeMap() {

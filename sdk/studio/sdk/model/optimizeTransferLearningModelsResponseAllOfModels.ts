@@ -29,7 +29,7 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
         },
         {
             "name": "objectDetection",
-            "baseName": "object_detection",
+            "baseName": "objectDetection",
             "type": "Array<TransferLearningModel>"
         },
         {

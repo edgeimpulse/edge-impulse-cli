@@ -39,6 +39,10 @@ export class UpdateThemeLogosRequest {
     * Mark for dark background URL
     */
     'markWhite'?: string;
+    /**
+    * Device logo URL
+    */
+    'deviceLogo'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -71,6 +75,11 @@ export class UpdateThemeLogosRequest {
         {
             "name": "markWhite",
             "baseName": "markWhite",
+            "type": "string"
+        },
+        {
+            "name": "deviceLogo",
+            "baseName": "deviceLogo",
             "type": "string"
         }    ];
 

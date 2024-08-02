@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 
 export class OrganizationAddDataFolderRequest {
     'dataset': string;
     'bucketId': number;
     'bucketPath': string;
     'metadataDataset'?: string;
+    'type'?: OrganizationDatasetTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +41,11 @@ export class OrganizationAddDataFolderRequest {
             "name": "metadataDataset",
             "baseName": "metadataDataset",
             "type": "string"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "OrganizationDatasetTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {

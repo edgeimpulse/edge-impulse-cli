@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { EntitlementLimits } from './entitlementLimits';
 
 export class UserOrganization {
     'id': number;
@@ -24,6 +25,24 @@ export class UserOrganization {
     * Whether the user is admin of this organization or not.
     */
     'isAdmin': boolean;
+    /**
+    * When the organization was created.
+    */
+    'created': Date;
+    /**
+    * Unique identifier of the trial this organization belongs to, if any.
+    */
+    'trialId': number | null;
+    /**
+    * Date when the trial expired, if any. A expired trial has a grace period of 30 days before it\'s associated organization is deleted.
+    */
+    'trialExpiredDate': Date | null;
+    /**
+    * Date when the trial was upgraded to a full enterprise account, if any.
+    */
+    'trialUpgradedDate': Date | null;
+    'entitlementLimits': EntitlementLimits;
+    'userCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +76,36 @@ export class UserOrganization {
             "name": "isAdmin",
             "baseName": "isAdmin",
             "type": "boolean"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "trialId",
+            "baseName": "trialId",
+            "type": "number"
+        },
+        {
+            "name": "trialExpiredDate",
+            "baseName": "trialExpiredDate",
+            "type": "Date"
+        },
+        {
+            "name": "trialUpgradedDate",
+            "baseName": "trialUpgradedDate",
+            "type": "Date"
+        },
+        {
+            "name": "entitlementLimits",
+            "baseName": "entitlementLimits",
+            "type": "EntitlementLimits"
+        },
+        {
+            "name": "userCount",
+            "baseName": "userCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

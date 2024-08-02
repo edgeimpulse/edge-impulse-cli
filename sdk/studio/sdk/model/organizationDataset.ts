@@ -10,14 +10,25 @@
  * Do not edit the class manually.
  */
 
+import { OrganizationDatasetBucket } from './organizationDatasetBucket';
+import { OrganizationDatasetTypeEnum } from './organizationDatasetTypeEnum';
 
 export class OrganizationDataset {
     'dataset': string;
     'lastFileCreated': Date;
     'totalFileSize': number;
     'totalFileCount': number;
+    'totalItemCount': number;
+    'totalItemCountChecklistOK': number;
+    'totalItemCountChecklistFailed': number;
     'tags': Array<string>;
     'category'?: string;
+    'bucket'?: OrganizationDatasetBucket;
+    'type': OrganizationDatasetTypeEnum;
+    /**
+    * Location of the dataset within the bucket
+    */
+    'bucketPath'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,6 +54,21 @@ export class OrganizationDataset {
             "type": "number"
         },
         {
+            "name": "totalItemCount",
+            "baseName": "totalItemCount",
+            "type": "number"
+        },
+        {
+            "name": "totalItemCountChecklistOK",
+            "baseName": "totalItemCountChecklistOK",
+            "type": "number"
+        },
+        {
+            "name": "totalItemCountChecklistFailed",
+            "baseName": "totalItemCountChecklistFailed",
+            "type": "number"
+        },
+        {
             "name": "tags",
             "baseName": "tags",
             "type": "Array<string>"
@@ -50,6 +76,21 @@ export class OrganizationDataset {
         {
             "name": "category",
             "baseName": "category",
+            "type": "string"
+        },
+        {
+            "name": "bucket",
+            "baseName": "bucket",
+            "type": "OrganizationDatasetBucket"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "OrganizationDatasetTypeEnum"
+        },
+        {
+            "name": "bucketPath",
+            "baseName": "bucketPath",
             "type": "string"
         }    ];
 

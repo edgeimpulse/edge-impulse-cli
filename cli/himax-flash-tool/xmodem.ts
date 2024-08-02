@@ -182,7 +182,8 @@ export class Xmodem extends EventEmitter < {
                     });
                     blockNumber++;
                 }
-            } else if (data[0] === NAK && blockNumber === _self.XMODEM_START_BLOCK) {
+            }
+            else if (data[0] === NAK && blockNumber === _self.XMODEM_START_BLOCK) {
                 if (this.debug) {
                     console.log(SERIAL_PREFIX, "[SEND] - received NAK byte for standard checksum transfer!");
                 }
@@ -219,7 +220,8 @@ export class Xmodem extends EventEmitter < {
                         block: blockNumber
                     });
                     blockNumber++;
-                } else if (packagedBuffer.length === blockNumber) {
+                }
+                else if (packagedBuffer.length === blockNumber) {
                     // We are EOT
                     if (sentEof === false) {
                         sentEof = true;
@@ -231,7 +233,8 @@ export class Xmodem extends EventEmitter < {
                             signal: 'EOT'
                         });
                         await socket.write(Buffer.from([EOT]));
-                    } else {
+                    }
+                    else {
                         // We are finished!
                         if (this.debug) {
                             console.log(SERIAL_PREFIX, '[SEND] - Finished!');
@@ -240,7 +243,8 @@ export class Xmodem extends EventEmitter < {
                         socket.removeListener('data', sendData);
                     }
                 }
-            } else if (data[0] === NAK && blockNumber > _self.XMODEM_START_BLOCK) {
+            }
+            else if (data[0] === NAK && blockNumber > _self.XMODEM_START_BLOCK) {
                 if (blockNumber === packagedBuffer.length && sentEof) {
                     if (this.debug) {
                         console.log(SERIAL_PREFIX, '[SEND] - Resending EOT, because receiver responded with NAK.');
@@ -250,7 +254,8 @@ export class Xmodem extends EventEmitter < {
                         signal: 'EOT'
                     });
                     await socket.write(Buffer.from([EOT]));
-                } else {
+                }
+                else {
                     if (this.debug) {
                         console.log(SERIAL_PREFIX, '[SEND] - Packet corruption detected, resending previous block.');
                     }
@@ -269,7 +274,8 @@ export class Xmodem extends EventEmitter < {
                         blockNumber++;
                     }
                 }
-            } else {
+            }
+            else {
                 if (this.debug) {
                     console.log(SERIAL_PREFIX, "GOT SOME UNEXPECTED DATA which was not handled properly!");
                     console.log(SERIAL_PREFIX, "===>");
@@ -305,7 +311,8 @@ export class Xmodem extends EventEmitter < {
                 crcString = '00'.concat(crcString);
             }
             sendBuffer = Buffer.concat([sendBuffer, Buffer.from(crcString, "hex")]);
-        } else {
+        }
+        else {
             // Count only the blockData into the checksum
             for (let i = 3; i < sendBuffer.length; i++) {
                 crcCalc = crcCalc + sendBuffer.readUInt8(i);

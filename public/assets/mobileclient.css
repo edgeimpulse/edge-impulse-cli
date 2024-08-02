@@ -226,6 +226,24 @@ body {
     overflow-x: hidden;
 }
 
+.tooltip-custom {
+    position: absolute;
+    right: 0;
+    top: 1px;
+    z-index: 1000;
+    padding: 0.2rem 0.6rem;
+    margin: -33px -3px 0 -3px;
+    color: #fff;
+    background-color: #333;
+    border-radius: 4px;
+    font-size: 1rem;
+    display: none; /* hide by default */
+}
+
+.tooltip-custom.show {
+    display: inline-block;
+}
+
 .card-icon {
     font-size: 14rem;
 }

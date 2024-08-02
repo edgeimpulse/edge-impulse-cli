@@ -19,8 +19,8 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
-import { GetJWTTokenRequest } from '../model/getJWTTokenRequest';
-import { GetJWTTokenResponse } from '../model/getJWTTokenResponse';
+import { GetJWTRequest } from '../model/getJWTRequest';
+import { GetJWTResponse } from '../model/getJWTResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 
@@ -99,12 +99,14 @@ export class LoginApi {
     /**
      * Get a JWT token to authenticate with the API.
      * @summary Get JWT token
-     * @param getJWTTokenRequest 
+     * @param getJWTRequest 
      */
-    public async login (getJWTTokenRequest: GetJWTTokenRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTTokenResponse> {
+    public async login (getJWTRequest: GetJWTRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTResponse> {
         const localVarPath = this.basePath + '/api-login';
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -114,11 +116,11 @@ export class LoginApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'getJWTTokenRequest' is not null or undefined
+        // verify required parameter 'getJWTRequest' is not null or undefined
 
 
-        if (getJWTTokenRequest === null || getJWTTokenRequest === undefined) {
-            throw new Error('Required parameter getJWTTokenRequest was null or undefined when calling login.');
+        if (getJWTRequest === null || getJWTRequest === undefined) {
+            throw new Error('Required parameter getJWTRequest was null or undefined when calling login.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -134,7 +136,7 @@ export class LoginApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
-            body: ObjectSerializer.serialize(getJWTTokenRequest, "GetJWTTokenRequest")
+            body: ObjectSerializer.serialize(getJWTRequest, "GetJWTRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -147,12 +149,12 @@ export class LoginApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetJWTTokenResponse>((resolve, reject) => {
+            return new Promise<GetJWTResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetJWTTokenResponse");
+                        body = ObjectSerializer.deserialize(body, "GetJWTResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

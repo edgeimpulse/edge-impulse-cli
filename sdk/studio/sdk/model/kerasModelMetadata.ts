@@ -10,22 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { GenericApiResponse } from './genericApiResponse';
+import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
-import { KerasModelMetadataAllOf } from './kerasModelMetadataAllOf';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
 export class KerasModelMetadata {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
     /**
     * Date when the model was trained
     */
@@ -39,6 +30,10 @@ export class KerasModelMetadata {
     */
     'classNames': Array<string>;
     /**
+    * Original labels in the dataset when features were generated, e.g. used to render the feature explorer.
+    */
+    'labels': Array<string>;
+    /**
     * The types of model that are available
     */
     'availableModelTypes': Array<KerasModelTypeEnum>;
@@ -50,20 +45,11 @@ export class KerasModelMetadata {
     'hasTrainedModel': boolean;
     'mode': KerasModelMetadataModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
+    'imageInputScaling': ImageInputScaling;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "created",
             "baseName": "created",
@@ -77,6 +63,11 @@ export class KerasModelMetadata {
         {
             "name": "classNames",
             "baseName": "classNames",
+            "type": "Array<string>"
+        },
+        {
+            "name": "labels",
+            "baseName": "labels",
             "type": "Array<string>"
         },
         {
@@ -108,6 +99,11 @@ export class KerasModelMetadata {
             "name": "objectDetectionLastLayer",
             "baseName": "objectDetectionLastLayer",
             "type": "ObjectDetectionLastLayer"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
         }    ];
 
     static getAttributeTypeMap() {
@@ -116,5 +112,5 @@ export class KerasModelMetadata {
 }
 
 
-export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection';
-export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection'];
+export type KerasModelMetadataModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm';
+export const KerasModelMetadataModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm'];

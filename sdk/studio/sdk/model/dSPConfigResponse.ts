@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { DSPConfigResponseAllOf } from './dSPConfigResponseAllOf';
+import { DSPConfig } from './dSPConfig';
 import { DSPGroup } from './dSPGroup';
 import { DSPInfo } from './dSPInfo';
 import { GenericApiResponse } from './genericApiResponse';

@@ -13,17 +13,25 @@
 
 export class OrganizationMetricsResponseAllOfMetrics {
     /**
-    * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs).
+    * Total compute time of all organizational jobs since the creation of the organization (including organizational project jobs). Compute time is the amount of computation time spent in jobs, in minutes used by an organization over a 12 month period, calculated as CPU + GPU minutes.
     */
-    'totalJobsComputeTime'?: number;
+    'totalJobsComputeTime': number;
     /**
-    * Total compute time of all jobs in the organization in the current year (including organizational project jobs).
+    * Total compute time of all organizational jobs in the current contract (including organizational project jobs). Compute time is the amount of computation time spent in jobs, in minutes used by an organization over a 12 month period, calculated as CPU + GPU minutes.
     */
     'jobsComputeTimeCurrentYear': number;
     /**
-    * The date from which the compute time for the running year is calculated.
+    * The date from which the compute time for the running contract is calculated.
     */
     'jobsComputeTimeCurrentYearSince': Date;
+    /**
+    * CPU compute time of all jobs in the organization in the current contract (including organizational project jobs).
+    */
+    'cpuComputeTimeCurrentContract': number;
+    /**
+    * GPU compute time of all jobs in the organization in the current contract (including organizational project jobs).
+    */
+    'gpuComputeTimeCurrentContract': number;
     /**
     * Total storage used by the organization.
     */
@@ -54,6 +62,16 @@ export class OrganizationMetricsResponseAllOfMetrics {
             "name": "jobsComputeTimeCurrentYearSince",
             "baseName": "jobsComputeTimeCurrentYearSince",
             "type": "Date"
+        },
+        {
+            "name": "cpuComputeTimeCurrentContract",
+            "baseName": "cpuComputeTimeCurrentContract",
+            "type": "number"
+        },
+        {
+            "name": "gpuComputeTimeCurrentContract",
+            "baseName": "gpuComputeTimeCurrentContract",
+            "type": "number"
         },
         {
             "name": "totalStorage",

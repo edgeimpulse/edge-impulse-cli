@@ -13,7 +13,7 @@
 import { OptimizeTransferLearningModelsResponseAllOfModels } from './optimizeTransferLearningModelsResponseAllOfModels';
 
 export class OptimizeTransferLearningModelsResponseAllOf {
-    'models'?: OptimizeTransferLearningModelsResponseAllOfModels;
+    'models': OptimizeTransferLearningModelsResponseAllOfModels;
 
     static discriminator: string | undefined = undefined;
 

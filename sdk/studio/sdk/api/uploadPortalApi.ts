@@ -125,7 +125,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}/upload-link'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -215,7 +217,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/delete'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -305,7 +309,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/download'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -394,7 +400,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -476,7 +484,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -566,7 +576,9 @@ export class UploadPortalApi {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/rename'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
         const produces = ['application/json'];
         // give precedence to 'application/json'
         if (produces.indexOf('application/json') >= 0) {
@@ -647,16 +659,25 @@ export class UploadPortalApi {
     }
 
     /**
-     * View a file that\'s located in an upload portal (requires JWT auth). Will return a signed URL to the bucket.
+     * View a file that\'s located in an upload portal (requires JWT auth). File might be converted (e.g. Parquet) or truncated (e.g. CSV).
      * @summary View file from portal
      * @param portalId Portal ID
      * @param path Path to file in portal
      */
-    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/view'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
         let localVarFormParams: any = {};
 
         // verify required parameter 'portalId' is not null or undefined
@@ -673,7 +694,7 @@ export class UploadPortalApi {
         }
 
 
-        if (queryParams.path !== undefined) {
+        if (queryParams?.path !== undefined) {
             localVarQueryParameters['path'] = ObjectSerializer.serialize(queryParams.path, "string");
         }
 
@@ -689,7 +710,7 @@ export class UploadPortalApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
-            json: true,
+            encoding: null,
         };
 
         let authenticationPromise = Promise.resolve();
@@ -708,11 +729,12 @@ export class UploadPortalApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<any>((resolve, reject) => {
+            return new Promise<Buffer>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

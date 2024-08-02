@@ -10,7 +10,13 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
+import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
+import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
+import { OrganizationTransferLearningOperatesOn } from './organizationTransferLearningOperatesOn';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
 export class OrganizationTransferLearningBlock {
     'id': number;
@@ -18,10 +24,13 @@ export class OrganizationTransferLearningBlock {
     'dockerContainer': string;
     'dockerContainerManagedByEdgeImpulse': boolean;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUpdated'?: Date;
+    'lastUpdatedByUser'?: CreatedUpdatedByUser;
     'description': string;
     'userId'?: number;
     'userName'?: string;
-    'operatesOn': OrganizationTransferLearningBlockOperatesOnEnum;
+    'operatesOn': OrganizationTransferLearningOperatesOn;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'implementationVersion': number;
     /**
@@ -32,10 +41,34 @@ export class OrganizationTransferLearningBlock {
     * If `isPublic` is true, the list of devices (from latencyDevices) for which this model can be shown.
     */
     'isPublicForDevices': Array<string>;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
+    /**
+    * Whether this block is publicly available to only enterprise users
+    */
+    'isPublicEnterpriseOnly': boolean;
+    /**
+    * Whether this block is available to only enterprise users
+    */
+    'enterpriseOnly'?: boolean;
     /**
     * URL to the source code of this custom learn block.
     */
     'repositoryUrl'?: string;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters': Array<object>;
+    'imageInputScaling'?: ImageInputScaling;
+    /**
+    * If set, requires this block to be scheduled on GPU.
+    */
+    'indRequiresGpu': boolean;
+    'sourceCodeAvailable': boolean;
+    'displayCategory'?: BlockDisplayCategory;
+    /**
+    * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
+    */
+    'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,6 +99,21 @@ export class OrganizationTransferLearningBlock {
             "type": "Date"
         },
         {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUpdated",
+            "baseName": "lastUpdated",
+            "type": "Date"
+        },
+        {
+            "name": "lastUpdatedByUser",
+            "baseName": "lastUpdatedByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
             "name": "description",
             "baseName": "description",
             "type": "string"
@@ -83,7 +131,7 @@ export class OrganizationTransferLearningBlock {
         {
             "name": "operatesOn",
             "baseName": "operatesOn",
-            "type": "OrganizationTransferLearningBlockOperatesOnEnum"
+            "type": "OrganizationTransferLearningOperatesOn"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -106,9 +154,54 @@ export class OrganizationTransferLearningBlock {
             "type": "Array<string>"
         },
         {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
+        },
+        {
+            "name": "isPublicEnterpriseOnly",
+            "baseName": "isPublicEnterpriseOnly",
+            "type": "boolean"
+        },
+        {
+            "name": "enterpriseOnly",
+            "baseName": "enterpriseOnly",
+            "type": "boolean"
+        },
+        {
             "name": "repositoryUrl",
             "baseName": "repositoryUrl",
             "type": "string"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
+        },
+        {
+            "name": "imageInputScaling",
+            "baseName": "imageInputScaling",
+            "type": "ImageInputScaling"
+        },
+        {
+            "name": "indRequiresGpu",
+            "baseName": "indRequiresGpu",
+            "type": "boolean"
+        },
+        {
+            "name": "sourceCodeAvailable",
+            "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "customModelVariants",
+            "baseName": "customModelVariants",
+            "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
         }    ];
 
     static getAttributeTypeMap() {
@@ -116,6 +209,3 @@ export class OrganizationTransferLearningBlock {
     }
 }
 
-
-export type OrganizationTransferLearningBlockOperatesOnEnum = 'object_detection' | 'audio' | 'image' | 'regression' | 'other';
-export const OrganizationTransferLearningBlockOperatesOnEnumValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'other'];

@@ -17,6 +17,10 @@ export class DataExplorerSettings {
     */
     'preset'?: DataExplorerSettingsPresetEnum;
     'dimensionalityReductionTechnique'?: DataExplorerSettingsDimensionalityReductionTechniqueEnum;
+    /**
+    * Which impulse to use (if preset is either \'current-impulse\' or \'current-impulse-embeddings\'). If this is undefined then \'defaultImpulseId\' is used.
+    */
+    'impulseId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +34,11 @@ export class DataExplorerSettings {
             "name": "dimensionalityReductionTechnique",
             "baseName": "dimensionalityReductionTechnique",
             "type": "DataExplorerSettingsDimensionalityReductionTechniqueEnum"
+        },
+        {
+            "name": "impulseId",
+            "baseName": "impulseId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

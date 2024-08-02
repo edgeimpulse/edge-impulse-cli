@@ -18,12 +18,21 @@ export class DSPGroupItem {
     'value'?: string;
     'defaultValue': string;
     'type': string;
-    'help': string;
+    'help'?: string;
     'param': string;
     'selectOptions'?: Array<DSPGroupItemSelectOptions>;
     'readonly': boolean;
     'shouldShow': boolean;
     'showIf'?: DSPGroupItemShowIf;
+    'invalidText'?: string;
+    /**
+    * Interface section to render parameter in.
+    */
+    'section'?: DSPGroupItemSectionEnum;
+    /**
+    * Only valid for type \"string\". Will render a multiline text area.
+    */
+    'multiline'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,6 +86,21 @@ export class DSPGroupItem {
             "name": "showIf",
             "baseName": "showIf",
             "type": "DSPGroupItemShowIf"
+        },
+        {
+            "name": "invalidText",
+            "baseName": "invalidText",
+            "type": "string"
+        },
+        {
+            "name": "section",
+            "baseName": "section",
+            "type": "DSPGroupItemSectionEnum"
+        },
+        {
+            "name": "multiline",
+            "baseName": "multiline",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {
@@ -84,3 +108,6 @@ export class DSPGroupItem {
     }
 }
 
+
+export type DSPGroupItemSectionEnum = 'advanced' | 'augmentation';
+export const DSPGroupItemSectionEnumValues: string[] = ['advanced', 'augmentation'];

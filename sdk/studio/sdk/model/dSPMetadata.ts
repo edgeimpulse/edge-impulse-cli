@@ -54,6 +54,10 @@ export class DSPMetadata {
     'frequency': number;
     'outputConfig': DSPMetadataOutputConfig;
     'fftUsed'?: Array<number>;
+    /**
+    * The version number of the resampling algorithm used (for resampled time series data only)
+    */
+    'resamplingAlgorithmVersion'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -122,6 +126,11 @@ export class DSPMetadata {
             "name": "fftUsed",
             "baseName": "fftUsed",
             "type": "Array<number>"
+        },
+        {
+            "name": "resamplingAlgorithmVersion",
+            "baseName": "resamplingAlgorithmVersion",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -14,6 +14,7 @@ import {
     OrganizationTransformationBlock, UpdateProjectRequest,
     UploadCustomBlockRequestTypeEnum
 } from "../sdk/studio";
+import * as models from '../sdk/studio/sdk/model/models';
 
 const CON_PREFIX = '\x1b[34m[BLK]\x1b[0m';
 
@@ -22,48 +23,45 @@ export type DockerBuildParams = {
     containerName: string;
 };
 
-export type DockerRunParams = {
+type DockerRunParams = {
     blockConfig: BlockConfigItem;
     type: UploadCustomBlockRequestTypeEnum;
     containerName: string | undefined;
 } & (
-    | ({
-          type: "transform";
-          operatesOn: "file" | "dataitem" | "standalone" | undefined;
-          metadata?: string;
-          hmacKey?: string;
-      } & (
-          | {
+    (
+        {
+            type: "transform";
+            operatesOn: "file" | "directory" | "standalone" | undefined;
+            metadata?: string;
+            hmacKey?: string;
+        } & (
+            {
                 operatesOn: "standalone";
-            }
-          | {
-                operatesOn: "dataitem";
-                dataItem: string;
+            } | {
+                operatesOn: "directory";
                 // path to directory of dataItem -> $PWD/datafolder/prefix/dataset/dataItem
                 inDir: string;
-            }
-          | {
+            } | {
                 operatesOn: "file";
-                dataItem: string;
                 // path to file from PWD/data/
                 inFileDir: string;
                 filename: string;
             }
-      ))
-    | {
-          type: "transferLearning";
-          epochs: number;
-          learningRate: number;
-          validationSetSize: number;
-          inputShape: string;
-      }
-    | {
-          type: "deploy";
-      }
-    | {
-          type: "dsp";
-          port: number;
-      }
+        )
+    ) | (
+        {
+            type: "transferLearning";
+            epochs: number;
+            learningRate: number;
+            validationSetSize: number;
+            inputShape: string;
+        } | {
+            type: "deploy";
+        } | {
+            type: "dsp";
+            port: number;
+        }
+    )
 );
 
 export type RunnerOptions = {
@@ -71,29 +69,27 @@ export type RunnerOptions = {
     type: UploadCustomBlockRequestTypeEnum;
     extraArgs?: string;
 } & (
-    | {
-          type: "transform";
-          dataset?: string;
-          dataItem?: string;
-          file?: string;
-          skipDownload?: boolean;
-      }
-    | {
-          type: "transferLearning";
-          epochs?: string;
-          learningRate?: string;
-          validationSetSize?: string;
-          inputShape?: string;
-          downloadData?: string | boolean;
-      }
-    | {
-          type: "dsp";
-          port?: string;
-      }
-    | {
-          type: "deploy";
-          downloadData?: string | boolean;
-      }
+    {
+        type: "transform";
+        dataset?: string;
+        dataPath?: string;
+        dataItem?: string;
+        file?: string;
+        skipDownload?: boolean;
+    } | {
+        type: "transferLearning";
+        epochs?: string;
+        learningRate?: string;
+        validationSetSize?: string;
+        inputShape?: string;
+        downloadData?: string | boolean;
+    } | {
+        type: "dsp";
+        port?: string;
+    } | {
+        type: "deploy";
+        downloadData?: string | boolean;
+    }
 );
 
 export interface IRunner {
@@ -214,13 +210,15 @@ export abstract class BlockRunner implements IRunner {
             const p = spawn(opts.command, opts.args, spawnOpts);
 
             if (!forwardStdio) {
-                p.stdout.on("data", (data: Buffer) => {
-                    process.stdout.write(data);
-                });
+                if (p.stdout && p.stderr) {
+                    p.stdout.on("data", (data: Buffer) => {
+                        process.stdout.write(data);
+                    });
 
-                p.stderr.on("data", (data: Buffer) => {
-                    process.stderr.write(data);
-                });
+                    p.stderr.on("data", (data: Buffer) => {
+                        process.stderr.write(data);
+                    });
+                }
             }
 
             p.on("error", (err) => {
@@ -230,9 +228,11 @@ export abstract class BlockRunner implements IRunner {
             p.on("exit", (code, signal) => {
                 if (typeof code === "number" && code !== 0) {
                     reject("Command exited with code " + code);
-                } else if (signal) {
+                }
+                else if (signal) {
                     reject("Terminated with signal " + signal);
-                } else {
+                }
+                else {
                     resolve();
                 }
             });
@@ -252,13 +252,15 @@ export abstract class BlockRunner implements IRunner {
             const p = spawn(opts.command, opts.args, spawnOpts);
 
             if (!forwardStdio) {
-                p.stdout.on("data", (data: Buffer) => {
-                    process.stdout.write(data);
-                });
+                if (p.stdout && p.stderr) {
+                    p.stdout.on("data", (data: Buffer) => {
+                        process.stdout.write(data);
+                    });
 
-                p.stderr.on("data", (data: Buffer) => {
-                    process.stderr.write(data);
-                });
+                    p.stderr.on("data", (data: Buffer) => {
+                        process.stderr.write(data);
+                    });
+                }
             }
 
             p.on("error", (err) => {
@@ -268,9 +270,11 @@ export abstract class BlockRunner implements IRunner {
             p.on("exit", (code, signal) => {
                 if (typeof code === "number" && code !== 0) {
                     reject("Command exited with code " + code);
-                } else if (signal) {
+                }
+                else if (signal) {
                     reject("Terminated with signal " + signal);
-                } else {
+                }
+                else {
                     resolve();
                 }
             });
@@ -389,71 +393,231 @@ export class BlockRunnerTransform extends BlockRunner {
             };
         }
         else {
-            let dataItemName = "";
 
-            if (!this._runnerOpts.dataItem) {
-                let dataItemInq = <{ dataItemName: string }>await inquirer.prompt([
-                    {
-                        type: "input",
-                        name: "dataItemName",
-                        message:
-                            "What is the name of the data item you would like to use?"
-                    }
-                ]);
+            if (this._runnerOpts.dataItem && this._runnerOpts.dataPath) {
+                throw new Error('Either a data item or data path should be specified, not both');
+            }
 
-                dataItemName = dataItemInq.dataItemName;
+            // We can look up data to transform by either data item name (clinical data only),
+            // or path within a dataset (all data).
+            // We first need to check which option the user has specified, and if they haven't specified
+            // an option yet, get them to choose and get any missing values.
+            let lookupOpts: {
+                method: 'dataitem';
+                dataItemName: string;
+            } | {
+                method: 'path';
+                path: string;
+                dataset: string;
+            } | undefined;
+
+            if (this._runnerOpts.dataItem) {
+                lookupOpts = {
+                    method: 'dataitem',
+                    dataItemName: this._runnerOpts.dataItem,
+                };
+            }
+            else if (this._runnerOpts.dataPath) {
+                // We need the dataset name for this option
+                let dataset = this._runnerOpts.dataset;
+                if (!dataset) {
+                    const datasetInqRes = <{ dataset: string }>await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'dataset',
+                            message: 'What is the name of the dataset you would like to use?',
+                        }
+                    ]);
+                    dataset = datasetInqRes.dataset;
+                }
+
+                lookupOpts = {
+                    method: 'path',
+                    path: this._runnerOpts.dataPath,
+                    dataset: dataset,
+                };
             }
             else {
-                dataItemName = this._runnerOpts.dataItem;
+                // Neither path nor a data item has been specified yet.
+                // Ask the user which they would like to specify, and then get a value for this choice.
+                const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([{
+                    type: 'list',
+                    message: 'How should we look up the data to run this transform block against?',
+                    choices: [
+                        {
+                            name: 'By data item name (clinical data only)',
+                            value: 'dataitem',
+                        },
+                        {
+                            name: 'By path (clinical or default data)',
+                            value: 'path',
+                        },
+                    ],
+                    name: 'dataPathMethod'
+                }]);
+
+                if (dataPathMethodInq.dataPathMethod === 'dataitem') {
+                    // Lookup by data item
+                    const dataItemInq = <{ dataItemName: string }>await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'dataItemName',
+                            message: 'What is the name of the data item you would like to use?',
+                        }
+                    ]);
+
+                    lookupOpts = {
+                        method: 'dataitem',
+                        dataItemName: dataItemInq.dataItemName,
+                    };
+                }
+                else {
+                    // First we need the dataset name
+                    let dataset = this._runnerOpts.dataset;
+                    if (!dataset) {
+                        const datasetInqRes = <{ dataset: string }>await inquirer.prompt([
+                            {
+                                type: 'input',
+                                name: 'dataset',
+                                message: 'What is the name of the dataset you would like to use?',
+                            }
+                        ]);
+                        dataset = datasetInqRes.dataset;
+                    }
+
+                    // Lookup by path
+                    const pathInq = <{ path: string }>await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'path',
+                            message: 'Give the path to the data you would like to transform, relative to the root ' +
+                                `path of the parent dataset ("${dataset}")`,
+                        }
+                    ]);
+
+                    lookupOpts = {
+                        method: 'path',
+                        path: pathInq.path,
+                        dataset: dataset,
+                    };
+                }
             }
 
-            this._dataItem = await this.getDataItemByName(
-                this._runnerOpts.dataset,
-                dataItemName,
-                this._blockConfig.organizationId,
-                this._eiConfig
-            );
-
-            if (operatesOn === "dataitem") {
-                let downloadDir = Path.join(
-                    process.cwd(),
-                    'ei-block-data',
+            if (lookupOpts.method === 'dataitem') {
+                this._dataItem = await this.getDataItemByName(
+                    this._runnerOpts.dataset,
+                    lookupOpts.dataItemName,
+                    this._blockConfig.organizationId,
+                    this._eiConfig
                 );
+                if (operatesOn === "directory") {
+                    const downloadDir = Path.join(
+                        process.cwd(),
+                        'ei-block-data',
+                    );
 
-                await this.downloadAndExtractFiles(downloadDir);
+                    await this.downloadAndExtractFiles(downloadDir, {
+                        type: 'dataitem',
+                        bucketPath: this._dataItem.bucketPath,
+                        totalFileSize: this._dataItem.totalFileSize,
+                        id: this._dataItem.id,
+                        name: this._dataItem.name,
+                    });
 
-                this._dockerRunParams = {
-                    blockConfig: this._blockConfig,
-                    containerName: this._dockerBuildParams?.containerName,
-                    type: "transform",
-                    operatesOn: "dataitem",
-                    metadata: JSON.stringify(this._dataItem.metadata),
-                    hmacKey: "0",
-                    dataItem: this._dataItem.name,
-                    inDir: Path.join(downloadDir, this._dataItem.bucketPath)
-                };
+                    this._dockerRunParams = {
+                        blockConfig: this._blockConfig,
+                        containerName: this._dockerBuildParams?.containerName,
+                        type: "transform",
+                        operatesOn: "directory",
+                        metadata: this._dataItem ? JSON.stringify(this._dataItem.metadata) : undefined,
+                        hmacKey: "0",
+                        inDir: Path.join(downloadDir, this._dataItem.bucketPath)
+                    };
+                }
+                else if (operatesOn === "file") {
+                    const downloadDir = Path.join(
+                        process.cwd(),
+                        'ei-block-data',
+                        this._dataItem.dataset.toLowerCase().replace(/\s/g, '-').replace(/[\.]/g, ''),
+                        this._dataItem.name
+                    );
+
+                    const file = await this.downloadFileFromDataItem(downloadDir);
+
+                    this._dockerRunParams = {
+                        blockConfig: this._blockConfig,
+                        containerName: this._dockerBuildParams?.containerName,
+                        type: 'transform',
+                        operatesOn: 'file',
+                        metadata: JSON.stringify(this._dataItem.metadata),
+                        hmacKey: '0',
+                        inFileDir: file.fileDir,
+                        filename: file.filename
+                    };
+                }
             }
-            else if (operatesOn === "file") {
-                let downloadDir = Path.join(
-                    process.cwd(),
-                    'ei-block-data',
-                    this._dataItem.dataset.toLowerCase().replace(/\s/g, '-').replace(/[\.]/g, ''),
-                    this._dataItem.name
-                );
+            else {
+                if (operatesOn === 'directory') {
+                    const downloadDir = Path.join(
+                        process.cwd(),
+                        'ei-block-data',
+                    );
 
-                let file = await this.downloadFile(downloadDir);
+                    // Check the dataset exists and get the bucket path
+                    const datasetInfo = await this._eiConfig.api.organizationData.getOrganizationDataset(
+                        this._blockConfig.organizationId,
+                        lookupOpts.dataset,
+                    );
+                    if (!datasetInfo.success) {
+                        throw new Error('Unable to get dataset: ' + datasetInfo.error);
+                    }
+                    const datasetBucketPath = datasetInfo.dataset.bucketPath;
+                    if (!datasetBucketPath) {
+                        throw new Error('Dataset has no bucket path set');
+                    }
 
-                this._dockerRunParams = {
-                    blockConfig: this._blockConfig,
-                    containerName: this._dockerBuildParams?.containerName,
-                    type: "transform",
-                    operatesOn: "file",
-                    metadata: JSON.stringify(this._dataItem.metadata),
-                    hmacKey: "0",
-                    dataItem: this._dataItem.name,
-                    inFileDir: file.fileDir,
-                    filename: file.filename
-                };
+                    await this.downloadAndExtractFiles(downloadDir, {
+                        type: 'path',
+                        bucketPath: datasetBucketPath,
+                        dataset: lookupOpts.dataset,
+                        dirPath: lookupOpts.path,
+                    });
+
+                    this._dockerRunParams = {
+                        blockConfig: this._blockConfig,
+                        containerName: this._dockerBuildParams?.containerName,
+                        type: 'transform',
+                        operatesOn: 'directory',
+                        metadata: this._dataItem ? JSON.stringify(this._dataItem.metadata) : undefined,
+                        hmacKey: '0',
+                        inDir: Path.join(downloadDir, datasetBucketPath)
+                    };
+                }
+                else if (operatesOn === 'file') {
+                    // Trim the filename from the given path
+                    const pathInDataset = lookupOpts.path.substring(0,
+                        lookupOpts.path.lastIndexOf(Path.basename(lookupOpts.path)));
+
+                    const downloadDir = Path.join(
+                        process.cwd(),
+                        'ei-block-data',
+                        lookupOpts.dataset.toLowerCase().replace(/\s/g, '-').replace(/[\.]/g, ''),
+                        pathInDataset,
+                    );
+
+                    const file = await this.downloadFileByPath(lookupOpts.path, lookupOpts.dataset, downloadDir);
+
+                    this._dockerRunParams = {
+                        blockConfig: this._blockConfig,
+                        containerName: this._dockerBuildParams?.containerName,
+                        type: "transform",
+                        operatesOn: "file",
+                        metadata: undefined,
+                        hmacKey: "0",
+                        inFileDir: file.fileDir,
+                        filename: file.filename
+                    };
+                }
             }
         }
     }
@@ -485,7 +649,7 @@ export class BlockRunnerTransform extends BlockRunner {
             ret.args.push(e);
         }
 
-        if (this._dockerRunParams.operatesOn === "dataitem") {
+        if (this._dockerRunParams.operatesOn === "directory") {
             ret.args = ret.args.concat([
                 "--rm",
                 "-v",
@@ -496,7 +660,8 @@ export class BlockRunnerTransform extends BlockRunner {
                 "--out-directory",
                 "/data/out"
             ]);
-        } else if (this._dockerRunParams.operatesOn === "file") {
+        }
+        else if (this._dockerRunParams.operatesOn === "file") {
             ret.args = ret.args.concat([
                 "--rm",
                 "-v",
@@ -507,7 +672,8 @@ export class BlockRunnerTransform extends BlockRunner {
                 "--out-directory",
                 "/data/out"
             ]);
-        } else if (this._dockerRunParams.operatesOn === "standalone") {
+        }
+        else if (this._dockerRunParams.operatesOn === "standalone") {
             ret.args = ret.args.concat([
                 "--rm",
                 this._dockerRunParams.containerName || ""
@@ -554,7 +720,7 @@ export class BlockRunnerTransform extends BlockRunner {
                     console.log(CON_PREFIX, 'Block output is in:       ',
                         Path.relative(process.cwd(), Path.join(this._dockerRunParams.inFileDir, 'out')));
                 }
-                else if (this._dockerRunParams.operatesOn === 'dataitem') {
+                else if (this._dockerRunParams.operatesOn === 'directory') {
                     console.log('');
                     console.log(CON_PREFIX, 'Data downloaded to:',
                         Path.relative(process.cwd(), this._dockerRunParams.inDir));
@@ -573,20 +739,38 @@ export class BlockRunnerTransform extends BlockRunner {
         }
     }
 
-    private async downloadAndExtractFiles(path: string) {
-        if (!this._dataItem) throw new Error("No data item specified");
+    /**
+     * Download and extract all files from a data item or path within a dataset
+     * @param path Output directory; files will be saved to here
+     * @param sourceData Source data
+     */
+    private async downloadAndExtractFiles(
+        path: string,
+        sourceData: {
+            type: 'dataitem'
+            bucketPath: string,
+            totalFileSize: number,
+            id: number,
+            name: string,
+        } | {
+            type: 'path',
+            bucketPath: string,
+            dataset: string,
+            dirPath: string,
+        }
+    ) {
         if (this._runnerOpts.type === 'transform' && this._runnerOpts.skipDownload) return;
 
         let currentFolderSize = 0;
-        let extractFolder = Path.join(path, this._dataItem.bucketPath);
+        const extractFolder = Path.join(path, sourceData.bucketPath);
 
         await fs.promises.mkdir(extractFolder, { recursive: true });
 
         if (await fileExists(extractFolder)) {
-            let files = await fs.promises.readdir(extractFolder);
+            const files = await fs.promises.readdir(extractFolder);
 
-            for (let filename of files) {
-                let fileInfo = await fs.promises.stat(Path.join(extractFolder, filename));
+            for (const filename of files) {
+                const fileInfo = await fs.promises.stat(Path.join(extractFolder, filename));
 
                 if (fileInfo.isFile()) {
                     currentFolderSize += fileInfo.size;
@@ -594,33 +778,48 @@ export class BlockRunnerTransform extends BlockRunner {
             }
         }
 
-        if (this._dataItem.totalFileSize === currentFolderSize) {
+        if (sourceData.type === 'dataitem' && sourceData.totalFileSize === currentFolderSize) {
             console.log(CON_PREFIX, 'Files already present, skipping download');
             return;
         }
 
         console.log(CON_PREFIX, `Downloading and extracting files to ${Path.relative(process.cwd(), path)}...`);
+        let targetFilePath: string;
 
         // download raw Buffer (a tarball)
-        let fileRes =
-            await this._eiConfig.api.organizationData.downloadOrganizationSingleDataItem(
+        if (sourceData.type === 'dataitem') {
+            const fileRes = await this._eiConfig.api.organizationData.downloadOrganizationSingleDataItem(
                 this._blockConfig.organizationId,
-                this._dataItem.id,
-                { }
+                sourceData.id,
+                { },
             );
 
-        await fs.promises.mkdir(path);
+            targetFilePath = Path.join(
+                path,
+                `data-item-${sourceData.name}.tar`
+            );
 
-        let targetFilePath = Path.join(
-            path,
-            `data-item-${this._dataItem.name}.tar`
-        );
+            const rawBuffer = fileRes;
+            await fs.promises.writeFile(targetFilePath, rawBuffer);
+        }
+        else {
+            const fileRes = await this._eiConfig.api.organizationData.downloadDatasetFolder(
+                this._blockConfig.organizationId,
+                sourceData.dataset,
+                { path: sourceData.dirPath },
+            );
 
-        let rawBuffer = fileRes;
-        await fs.promises.writeFile(targetFilePath, rawBuffer);
+            targetFilePath = Path.join(
+                path,
+                `data-item-${sourceData.dirPath.split('/').join('-')}.tar`
+            );
+
+            const rawBuffer = fileRes;
+            await fs.promises.writeFile(targetFilePath, rawBuffer);
+        }
 
         // extract and save files
-        // path to files is BUCKET_PATH (<PREFIX>/<DATASET>/<DATA_ITEM_NAME>/*)
+        // path to files is BUCKET_PATH (<PREFIX>/<DATASET>/<DIRECTORY_IN_DATASET>/*)
 
         await tar.extract({
             file: targetFilePath,
@@ -630,14 +829,20 @@ export class BlockRunnerTransform extends BlockRunner {
         // delete tarball
         await fs.promises.unlink(targetFilePath);
 
-        await fs.promises.mkdir(
-            Path.join(path, this._dataItem.bucketPath, "out")
-        );
+        // Create the block output directory if it does not already exist
+        const blockOutputDirectoryPath = Path.join(path, sourceData.bucketPath, 'out');
+        if (!await fileExists(blockOutputDirectoryPath)) {
+            await fs.promises.mkdir(blockOutputDirectoryPath);
+        }
 
-        console.log(CON_PREFIX, "Done extracting files");
+        console.log(CON_PREFIX, 'Done extracting files');
     }
 
-    private async downloadFile(fileDir: string): Promise<{ fileDir: string, filename: string }> {
+    /**
+     * Download a file from a data item (clinical data only)
+     * @param fileDir Output directory; file will be saved to here
+     */
+    private async downloadFileFromDataItem(fileDir: string): Promise<{ fileDir: string, filename: string }> {
         if (!this._dataItem) throw new Error("No data item specified");
 
         if (this._runnerOpts.type !== 'transform') {
@@ -727,6 +932,65 @@ export class BlockRunnerTransform extends BlockRunner {
         return { fileDir: fileDir, filename: filename };
     }
 
+    /**
+     * Download a file from an org dataset by path (clinical or default data)
+     * @param sourcePath Source data path, relatively to the root path of the given dataset
+     * @param sourceDataset Source data dataset
+     * @param targetDir Output directory; file will be saved to here
+     */
+    private async downloadFileByPath(
+        sourcePath: string,
+        sourceDataset: string,
+        targetDir: string,
+    ): Promise<{ fileDir: string, filename: string }> {
+        if (this._runnerOpts.type !== 'transform') {
+            throw new Error(`Incompatible block type: ${this._runnerOpts.type}`);
+        }
+
+        const filename = Path.basename(sourcePath);
+
+        if (this._runnerOpts.type === 'transform' && this._runnerOpts.skipDownload) {
+            return { fileDir: targetDir, filename: filename };
+        }
+
+        await fs.promises.mkdir(targetDir, { recursive: true });
+
+        const filePath = Path.join(targetDir, filename);
+
+        // See if file already exists; if it does, do not download
+        if (await fileExists(filePath)) {
+            console.log(CON_PREFIX, 'File already present; skipping download...');
+            return { fileDir: targetDir, filename: filename };
+        }
+
+        console.log(CON_PREFIX, `Downloading file ${filename} to ${targetDir}...`);
+
+        // Get a download link for the file
+        const datasetFilePathRes = await this._eiConfig.api.organizationData.downloadDatasetFile(
+            this._blockConfig.organizationId,
+            sourceDataset,
+            { path: sourcePath },
+        );
+        if (!datasetFilePathRes.success) {
+            throw new Error('Unable to fetch file: ' + datasetFilePathRes.error);
+        }
+
+        // Download the file
+        const writeStream = fs.createWriteStream(filePath);
+        await new Promise<void>((res) => {
+            http.get(datasetFilePathRes.url, (response) => {
+                response.pipe(writeStream);
+                writeStream.on('finish', () => {
+                    res();
+                });
+            });
+        });
+
+        console.log(CON_PREFIX, 'File downloaded successfully');
+
+        return { fileDir: targetDir, filename: filename };
+    }
+
     private async getDataItemByName(
         dataset: string | undefined,
         dataItemName: string,
@@ -779,16 +1043,18 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let runner = await this._cliConfig.getRunner();
 
-        if (!runner.projectId) {
-            // Select a project
-            let projectList = (await this._eiConfig.api.projects.listProjects());
+        let projectList = (await this._eiConfig.api.projects.listProjects());
 
-            if (!projectList.success) {
-                throw new Error(
-                    `Failed to retrieve project list: ${projectList.error}`
-                );
+        if (runner.projectId) {
+            // is this a valid project? do we have access to it?
+            const project = projectList.projects.find(p => p.id === runner.projectId);
+            if (!project) {
+                // if not, let the user choose a new project
+                runner.projectId = undefined;
             }
+        }
 
+        if (!runner.projectId) {
             let projectChoices = (projectList.projects || []).map((p) => ({
                 name: p.owner + " / " + p.name,
                 value: p.id
@@ -817,10 +1083,13 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             this._projectId = runner.projectId;
         }
 
-        console.log(CON_PREFIX, `Selecting project with ID ${this._projectId}`);
+        const projectInfo = await this._eiConfig.api.projects.getProjectInfo(this._projectId, { });
+
+        console.log(CON_PREFIX, `Loading data from project "${projectInfo.project.owner} / ${projectInfo.project.name}" (ID: ${this._projectId}) ` +
+            `(run with --clean to switch projects)`);
 
         let impulseRes = (
-            await this._eiConfig.api.impulse.getImpulse(this._projectId)
+            await this._eiConfig.api.impulse.getImpulse(this._projectId, { })
         );
 
         if (!impulseRes.success) {
@@ -834,19 +1103,30 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         if (!impulseRes.impulse || impulseRes.impulse.learnBlocks.length === 0) {
             console.error(CON_PREFIX,
-                `Unable to find learn blocks for project id '${this._projectId}'`
+                `Unable to find learn blocks for project id '${this._projectId}'. Create an impulse first.`
             );
             process.exit(1);
         }
 
-        let learnBlockId = -1;
+        let learnBlockId: number;
+
+        // https://github.com/edgeimpulse/edgeimpulse/issues/7799
+        // if the learn block is deleted then set blockId back to undefined
+        // so we ask about the block again...
+        if (runner.blockId) {
+            let block = impulseRes.impulse.learnBlocks.find(l => l.id === runner.blockId);
+            if (!block) {
+                runner.blockId = undefined;
+            }
+        }
 
         if (!runner.blockId) {
-            let learnBlocks = impulseRes.impulse.learnBlocks.filter(x => x.primaryVersion);
+            let learnBlocks = impulseRes.impulse.learnBlocks;
 
             if (learnBlocks.length === 1) {
                 learnBlockId = learnBlocks[0].id;
-            } else {
+            }
+            else {
                 let learnInq = await inquirer.prompt([
                     {
                         type: "list",
@@ -870,10 +1150,6 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, learnBlockId));
 
-        if (!learnBlockRes.success) {
-            console.error(CON_PREFIX, 'Unable to retrieve learning block data', learnBlockRes.error);
-        }
-
         try {
             if (await this.checkFilesPresent(this._projectId) && !this._runnerOpts.downloadData) {
                 console.log(CON_PREFIX, "Not downloading new data, " +
@@ -884,9 +1160,9 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                     this._runnerOpts.downloadData :
                     Path.join(process.cwd(), 'ei-block-data', this._projectId.toString());
 
-                console.log(CON_PREFIX, "Downloading files...");
+                console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" (run with --clean to switch blocks)...`);
                 await this.downloadFiles(this._projectId, learnBlockId, targetDir);
-                console.log(CON_PREFIX, `Training files downloaded to`, targetDir);
+                console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" OK (stored in "${targetDir}")`);
 
                 if (this._runnerOpts.downloadData) {
                     process.exit(0);
@@ -930,7 +1206,8 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                 validationSetSize: validationSize,
                 inputShape: inputShape
             };
-        } catch (ex) {
+        }
+        catch (ex) {
             let ex2 = <Error>ex;
             console.error(CON_PREFIX,
                 "Failed to download files for transfer learning block",
@@ -1012,10 +1289,43 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         targetDir: string,
     ): Promise<void> {
 
+        let overrideImageInputScaling: models.ImageInputScaling | undefined;
+
+        if (this._blockConfig.id) {
+            const blocks = (await this._eiConfig.api.organizationBlocks.listOrganizationTransferLearningBlocks(
+                this._blockConfig.organizationId)).transferLearningBlocks;
+            let block = blocks.find(x => x.id === this._blockConfig.id);
+            if (block) {
+                overrideImageInputScaling = block.imageInputScaling;
+                if (overrideImageInputScaling) {
+                    console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                        `(read from block "${block.name}" (ID: ${block.id}) in Edge Impulse)`);
+                }
+            }
+            else {
+                overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
+                    this._blockConfig.tlImageInputScaling : undefined;
+                if (overrideImageInputScaling) {
+                    console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                        '(read from .ei-block-config)');
+                }
+            }
+        }
+        else {
+            overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
+                this._blockConfig.tlImageInputScaling : undefined;
+            if (overrideImageInputScaling) {
+                console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                    '(read from .ei-block-config)');
+            }
+        }
+
         await fs.promises.mkdir(targetDir, { recursive: true });
 
         console.log(CON_PREFIX, 'Creating download job...');
-        let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId);
+        let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId, {
+            overrideImageInputScaling: overrideImageInputScaling,
+        });
         console.log(CON_PREFIX, 'Creating download job OK', job.id);
         await this._eiConfig.api.runJobUntilCompletion({
             type: 'project',
@@ -1097,7 +1407,7 @@ export class BlockRunnerDeploy extends BlockRunner {
         }
 
         let projectInfo = (
-            await this._eiConfig.api.projects.getProjectInfo(this._projectId)
+            await this._eiConfig.api.projects.getProjectInfo(this._projectId, { })
         );
 
         if (!projectInfo.success) {
@@ -1321,7 +1631,7 @@ export class BlockRunnerDSP extends BlockRunner {
 
             await this.runAndWaitForCompletion(buildCommand, true);
 
-            // // tslint:disable-next-line: no-floating-promises
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             this.runAndWaitForCompletion(runCommand, true).catch((err) => {
                 console.error(CON_PREFIX, "Failed to run container", err);
                 process.exit(1);
@@ -1420,12 +1730,12 @@ export class BlockRunnerDSP extends BlockRunner {
                 try {
                     let tunnels = await getTunnels();
 
-                    // tslint:disable-next-line: no-unsafe-any
+                    // eslint-disable-next-line
                     let foundTunnel = (<any>tunnels).tunnels.find((x: any) => x.proto === 'https');
                     if (!foundTunnel) {
                         throw new Error('Failed to find https tunnel');
                     }
-                    // tslint:disable-next-line: no-unsafe-any
+                    // eslint-disable-next-line
                     let url = foundTunnel.public_url;
                     resolve(<string>url);
                 }
@@ -1511,7 +1821,8 @@ async function extractFiles(
                                 }
                             );
                         }
-                    } catch (ex) {
+                    }
+                    catch (ex) {
                         zipFile.close();
                         reject(new Error("Unable to read ZIP file"));
                     }

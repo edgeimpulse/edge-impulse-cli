@@ -21,6 +21,7 @@ export class Organization {
     'name': string;
     'logo'?: string;
     'headerImg'?: string;
+    'showHeaderImgMask': boolean;
     'users': Array<OrganizationUser>;
     'isDeveloperProfile': boolean;
     /**
@@ -28,6 +29,30 @@ export class Organization {
     */
     'whitelabelId': number | null;
     'projects'?: Array<Project>;
+    /**
+    * Unique identifier of the trial this organization belongs to, if any.
+    */
+    'trialId': number | null;
+    /**
+    * Date when the trial expired, if any. A expired trial has a grace period of 30 days before it\'s associated organization is deleted.
+    */
+    'trialExpiredDate': Date | null;
+    /**
+    * Date when the trial was upgraded to a full enterprise account, if any.
+    */
+    'trialUpgradedDate': Date | null;
+    /**
+    * Date when the organization was created.
+    */
+    'created': Date;
+    /**
+    * Date when the current contract started, if any.
+    */
+    'contractStartDate'?: Date | null;
+    /**
+    * The date in which the organization was deleted. If the organization is not deleted, this field is not set.
+    */
+    'deletedDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +78,11 @@ export class Organization {
             "type": "string"
         },
         {
+            "name": "showHeaderImgMask",
+            "baseName": "showHeaderImgMask",
+            "type": "boolean"
+        },
+        {
             "name": "users",
             "baseName": "users",
             "type": "Array<OrganizationUser>"
@@ -71,6 +101,36 @@ export class Organization {
             "name": "projects",
             "baseName": "projects",
             "type": "Array<Project>"
+        },
+        {
+            "name": "trialId",
+            "baseName": "trialId",
+            "type": "number"
+        },
+        {
+            "name": "trialExpiredDate",
+            "baseName": "trialExpiredDate",
+            "type": "Date"
+        },
+        {
+            "name": "trialUpgradedDate",
+            "baseName": "trialUpgradedDate",
+            "type": "Date"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "contractStartDate",
+            "baseName": "contractStartDate",
+            "type": "Date"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

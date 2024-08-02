@@ -12,7 +12,8 @@
 
 
 export class GetWhitelabelDomainResponseAllOf {
-    'domain'?: string;
+    'domain': string;
+    'logo'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -20,6 +21,11 @@ export class GetWhitelabelDomainResponseAllOf {
         {
             "name": "domain",
             "baseName": "domain",
+            "type": "string"
+        },
+        {
+            "name": "logo",
+            "baseName": "logo",
             "type": "string"
         }    ];
 

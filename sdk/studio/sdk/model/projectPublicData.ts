@@ -11,6 +11,7 @@
  */
 
 import { ProjectPublicDataReadme } from './projectPublicDataReadme';
+import { ProjectType } from './projectType';
 
 export class ProjectPublicData {
     'id': number;
@@ -29,11 +30,17 @@ export class ProjectPublicData {
     * URL of the latest public version of the project, if any
     */
     'publicUrl': string;
-    'projectType': ProjectPublicDataProjectTypeEnum;
+    'projectType': ProjectType;
     'pageViewCount': number;
     'cloneCount': number;
     'totalSamplesCount'?: string;
+    /**
+    * Accuracy on training set.
+    */
     'trainingAccuracy'?: number;
+    /**
+    * Accuracy on test set.
+    */
     'testAccuracy'?: number;
     'readme'?: ProjectPublicDataReadme;
     /**
@@ -82,7 +89,7 @@ export class ProjectPublicData {
         {
             "name": "projectType",
             "baseName": "projectType",
-            "type": "ProjectPublicDataProjectTypeEnum"
+            "type": "ProjectType"
         },
         {
             "name": "pageViewCount",
@@ -125,6 +132,3 @@ export class ProjectPublicData {
     }
 }
 
-
-export type ProjectPublicDataProjectTypeEnum = 'kws' | 'audio' | 'object-detection' | 'image' | 'accelerometer' | 'other';
-export const ProjectPublicDataProjectTypeEnumValues: string[] = ['kws', 'audio', 'object-detection', 'image', 'accelerometer', 'other'];

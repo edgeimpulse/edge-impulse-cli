@@ -10,10 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
+import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
+import { ModelEngineShortEnum } from './modelEngineShortEnum';
 
 /**
 * Only fields defined in this object are set
@@ -45,6 +49,10 @@ export class SetKerasParameterRequest {
     */
     'learningRate'?: number;
     /**
+    * Batch size used during training (only in visual mode).
+    */
+    'batchSize'?: number;
+    /**
     * Train/test split (between 0 and 1)
     */
     'trainTestSplit'?: number;
@@ -53,9 +61,9 @@ export class SetKerasParameterRequest {
     */
     'autoClassWeights'?: boolean;
     /**
-    * Automatically select the optimal learning rate for your data set.
+    * Use learned optimizer and ignore learning rate.
     */
-    'findLearningRate'?: boolean;
+    'useLearnedOptimizer'?: boolean;
     'augmentationPolicyImage'?: AugmentationPolicyImageEnum;
     'augmentationPolicySpectrogram'?: AugmentationPolicySpectrogram;
     /**
@@ -66,10 +74,26 @@ export class SetKerasParameterRequest {
     * If set, skips creating embeddings and measuring memory (used in tests)
     */
     'skipEmbeddingsAndMemory'?: boolean;
+    'akidaEdgeLearningConfig'?: AkidaEdgeLearningConfig;
     /**
     * If the \'custom validation split\' experiment is enabled, this metadata key is used to prevent group data leakage between train and validation datasets.
     */
     'customValidationMetadataKey'?: string;
+    /**
+    * Whether the \'Advanced training settings\' UI element should be expanded.
+    */
+    'showAdvancedTrainingSettings'?: boolean;
+    /**
+    * Whether the \'Augmentation training settings\' UI element should be expanded.
+    */
+    'showAugmentationTrainingSettings'?: boolean;
+    /**
+    * Training parameters, this list depends on the list of parameters that the model exposes.
+    */
+    'customParameters'?: { [key: string]: string; };
+    'anomalyCapacity'?: AnomalyCapacity;
+    'lastShownModelVariant'?: KerasModelVariantEnum;
+    'lastShownModelEngine'?: ModelEngineShortEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -110,6 +134,11 @@ export class SetKerasParameterRequest {
             "type": "number"
         },
         {
+            "name": "batchSize",
+            "baseName": "batchSize",
+            "type": "number"
+        },
+        {
             "name": "trainTestSplit",
             "baseName": "trainTestSplit",
             "type": "number"
@@ -120,8 +149,8 @@ export class SetKerasParameterRequest {
             "type": "boolean"
         },
         {
-            "name": "findLearningRate",
-            "baseName": "findLearningRate",
+            "name": "useLearnedOptimizer",
+            "baseName": "useLearnedOptimizer",
             "type": "boolean"
         },
         {
@@ -145,9 +174,44 @@ export class SetKerasParameterRequest {
             "type": "boolean"
         },
         {
+            "name": "akidaEdgeLearningConfig",
+            "baseName": "akidaEdgeLearningConfig",
+            "type": "AkidaEdgeLearningConfig"
+        },
+        {
             "name": "customValidationMetadataKey",
             "baseName": "customValidationMetadataKey",
             "type": "string"
+        },
+        {
+            "name": "showAdvancedTrainingSettings",
+            "baseName": "showAdvancedTrainingSettings",
+            "type": "boolean"
+        },
+        {
+            "name": "showAugmentationTrainingSettings",
+            "baseName": "showAugmentationTrainingSettings",
+            "type": "boolean"
+        },
+        {
+            "name": "customParameters",
+            "baseName": "customParameters",
+            "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "anomalyCapacity",
+            "baseName": "anomalyCapacity",
+            "type": "AnomalyCapacity"
+        },
+        {
+            "name": "lastShownModelVariant",
+            "baseName": "lastShownModelVariant",
+            "type": "KerasModelVariantEnum"
+        },
+        {
+            "name": "lastShownModelEngine",
+            "baseName": "lastShownModelEngine",
+            "type": "ModelEngineShortEnum"
         }    ];
 
     static getAttributeTypeMap() {

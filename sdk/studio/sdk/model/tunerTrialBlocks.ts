@@ -12,11 +12,11 @@
 
 
 export class TunerTrialBlocks {
-    'id'?: number;
+    'id': number;
     'lastActive'?: Date;
-    'retries'?: number;
-    'status'?: string;
-    'type'?: string;
+    'retries': number;
+    'status': TunerTrialBlocksStatusEnum;
+    'type': TunerTrialBlocksTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,12 +39,12 @@ export class TunerTrialBlocks {
         {
             "name": "status",
             "baseName": "status",
-            "type": "string"
+            "type": "TunerTrialBlocksStatusEnum"
         },
         {
             "name": "type",
             "baseName": "type",
-            "type": "string"
+            "type": "TunerTrialBlocksTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -52,3 +52,9 @@ export class TunerTrialBlocks {
     }
 }
 
+
+export type TunerTrialBlocksStatusEnum = 'pending' | 'running' | 'completed' | 'failed';
+export const TunerTrialBlocksStatusEnumValues: string[] = ['pending', 'running', 'completed', 'failed'];
+
+export type TunerTrialBlocksTypeEnum = 'input' | 'dsp' | 'learn';
+export const TunerTrialBlocksTypeEnumValues: string[] = ['input', 'dsp', 'learn'];

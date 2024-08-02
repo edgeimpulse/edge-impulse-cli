@@ -10,12 +10,16 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
+import { BlockType } from './blockType';
+import { DSPGroupItem } from './dSPGroupItem';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LearnBlockType } from './learnBlockType';
 
 export class TransferLearningModel {
     'name': string;
     'shortName': string;
+    'abbreviatedName'?: string;
     'description': string;
     'hasNeurons': boolean;
     'hasDropout': boolean;
@@ -28,9 +32,14 @@ export class TransferLearningModel {
     'learnBlockType'?: LearnBlockType;
     'organizationModelId'?: number;
     'implementationVersion'?: number;
+    /**
+    * URL to the source code of this custom learn block.
+    */
     'repositoryUrl'?: string;
     'author': string;
-    'blockType': TransferLearningModelBlockTypeEnum;
+    'blockType': BlockType;
+    'customParameters'?: Array<DSPGroupItem>;
+    'displayCategory'?: BlockDisplayCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,6 +52,11 @@ export class TransferLearningModel {
         {
             "name": "shortName",
             "baseName": "shortName",
+            "type": "string"
+        },
+        {
+            "name": "abbreviatedName",
+            "baseName": "abbreviatedName",
             "type": "string"
         },
         {
@@ -118,7 +132,17 @@ export class TransferLearningModel {
         {
             "name": "blockType",
             "baseName": "blockType",
-            "type": "TransferLearningModelBlockTypeEnum"
+            "type": "BlockType"
+        },
+        {
+            "name": "customParameters",
+            "baseName": "customParameters",
+            "type": "Array<DSPGroupItem>"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
         }    ];
 
     static getAttributeTypeMap() {
@@ -126,6 +150,3 @@ export class TransferLearningModel {
     }
 }
 
-
-export type TransferLearningModelBlockTypeEnum = 'official' | 'personal' | 'enterprise' | 'community';
-export const TransferLearningModelBlockTypeEnumValues: string[] = ['official', 'personal', 'enterprise', 'community'];

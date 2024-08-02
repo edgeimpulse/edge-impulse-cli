@@ -4,22 +4,39 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { ExportInputBoundingBox, makeCsv, makeImage, makeVideo, makeWav, upload } from './make-image';
+import { upload, VALID_EXTENSIONS } from './make-image';
 import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
 import { Config } from './config';
+import {
+    ExportBoundingBoxesFileV1,
+    ExportInputBoundingBox,
+    ExportUploaderInfoFileCategory,
+    ExportUploaderInfoFileLabel,
+    parseBoundingBoxLabels,
+    parseUploaderInfo
+} from '../shared/bounding-box-file-types';
+import { FSHelpers } from './fs-helpers';
+import {
+    checkDatasetMatchesFormat,
+    DatasetConverterHelperCli,
+    deriveDatasetFormat,
+    getAllFilesInFolder
+} from './dataset-converter-cli';
+import {
+    FormatMetadata,
+    getMetadataForFormat,
+    listAllAnnotationFormats,
+    SupportedLabelType
+} from '../shared/uploader/annotations-parsing-shared/label-file-types';
 
 type UploaderFileType = {
     path: string,
-    category: string,
-    label: string | undefined
+    name: string | undefined;
+    category: ExportUploaderInfoFileCategory,
+    label: { type: 'infer'} | ExportUploaderInfoFileLabel,
+    metadata: { [k: string]: string } | undefined,
+    boundingBoxes: ExportInputBoundingBox[] | undefined,
 };
-
-// These types are shared with jobs-container/node/export/shared/jobs/export.ts
-interface ExportBoundingBoxesFile {
-    version: 1;
-    type: 'bounding-box-labels';
-    boundingBoxes: { [fileName: string]: ExportInputBoundingBox[] };
-}
 
 const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
@@ -45,6 +62,14 @@ const progressIvArgvIx = process.argv.indexOf('--progress-interval');
 const progressIvArgv = progressIvArgvIx !== -1 ? process.argv[progressIvArgvIx + 1] : undefined;
 const allowDuplicatesArgv = process.argv.indexOf('--allow-duplicates') > -1;
 const openmvArgv = process.argv.indexOf('--format-openmv') > -1;
+const infoFileArgvIx = process.argv.indexOf('--info-file');
+const infoFileArgv = infoFileArgvIx !== -1 ? process.argv[infoFileArgvIx + 1] : undefined;
+const metadataArgvIx = process.argv.indexOf('--metadata');
+const metadataArgv = metadataArgvIx !== -1 ? process.argv[metadataArgvIx + 1] : undefined;
+const directoryArgvIx = process.argv.indexOf('--directory');
+const directoryArgv = directoryArgvIx !== -1 ? process.argv[directoryArgvIx + 1] : undefined;
+const annotationFormatArgvIx = process.argv.indexOf('--dataset-format');
+const annotationFormatArgv = annotationFormatArgvIx !== -1 ? process.argv[annotationFormatArgvIx + 1] : undefined;
 
 let configFactory: Config;
 
@@ -65,7 +90,23 @@ const cliOptions = {
     }
 };
 
-// tslint:disable-next-line:no-floating-promises
+const logAllAnnotationFormats = () => {
+    [{
+        name: 'OBJECT DETECTION',
+        key: 'object-detection',
+    }, {
+        name: 'SINGLE LABEL',
+        key: 'single-label',
+    }].forEach(type => {
+        console.log(`${type.name}:`);
+        console.log(listAllAnnotationFormats(type.key as SupportedLabelType)
+            .map(format => `    * ${format.name} (--dataset-format ${format.key})`)
+            .join('\n'));
+        console.log();
+    });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     if (versionArgv) {
         console.log(getCliVersion());
@@ -94,11 +135,19 @@ const cliOptions = {
 
         console.log('Upload configuration:');
         if (openmvArgv) {
-            console.log('    Label:      ', 'Will be infered from folder structure');
-            console.log('    Category:   ', 'Will be infered from folder structure');
+            console.log('    Label:      ', 'Will be inferred from folder structure');
+            console.log('    Category:   ', 'Will be inferred from folder structure');
+        }
+        else if (annotationFormatArgv) {
+            console.log('    Label:      ', 'Will be taken from any label files in the dataset');
+            console.log('    Category:   ', 'Will be inferred from folder structure');
+        }
+        else if (infoFileArgv) {
+            console.log('    Label:      ', 'Will be read from ' + infoFileArgv);
+            console.log('    Category:   ', 'Will be read from ' + infoFileArgv);
         }
         else {
-            console.log('    Label:      ', labelArgv || 'Not set, will be infered from file name');
+            console.log('    Label:      ', labelArgv || 'Not set, will be inferred from file name');
             console.log('    Category:   ', categoryArgv || 'training');
         }
     }
@@ -118,6 +167,9 @@ const cliOptions = {
     if (progressIvArgv) argv += 2;
     if (allowDuplicatesArgv) argv++;
     if (openmvArgv) argv++;
+    if (infoFileArgv) argv += 2;
+    if (metadataArgv) argv += 2;
+    if (annotationFormatArgv) argv += 2;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -126,131 +178,287 @@ const cliOptions = {
             process.exit(1);
         }
 
-        const validExtensions = [
-            '.wav',
-            '.cbor',
-            '.json',
-            '.jpg',
-            '.jpeg',
-            '.png',
-            '.csv',
-            '.mp4',
-            '.avi',
-        ];
-
         let files: UploaderFileType[];
 
-        let fileArgs = process.argv.slice(argv);
+        if (infoFileArgv) {
+            try {
+                let infoFile = parseUploaderInfo(<string>await fs.promises.readFile(infoFileArgv, 'utf-8'));
+                files = [];
+                for (let f of infoFile.files) {
+                    if (!Path.isAbsolute(f.path)) {
+                        f.path = Path.join(Path.dirname(infoFileArgv), f.path);
+                    }
 
-        if (fileArgs.length === 1 && Path.basename(fileArgs[0]) === 'bounding_boxes.labels') {
-            console.log(``);
-            console.log(`You don't need to upload "bounding_boxes.labels". When uploading an image we check whether ` +
-                        `a labels file is present in the same folder, and automatically attach the bounding boxes ` +
-                        `to the image.`);
-            console.log(`So you can just do:`);
-            console.log(`    edge-impulse-uploader yourimage.jpg`);
-            console.log(``);
-            process.exit(1);
-        }
-
-        // exclude 'bounding_boxes.labels'
-        fileArgs = fileArgs.filter(f => Path.basename(f) !== 'bounding_boxes.labels');
-
-        if (!fileArgs[0]) {
-            console.log('Requires at least one argument (a ' +
-                validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' or ' +
-                validExtensions[validExtensions.length - 1] + ' file)');
-            process.exit(1);
-        }
-
-        if (openmvArgv) {
-            if (categoryArgv || labelArgv) {
-                console.log('--format-openmv cannot be used in conjunction with --category or --label');
-                process.exit(1);
-            }
-
-            if (fileArgs.length > 1) {
-                console.log('Requires one argument (the OpenMV dataset directory)');
-                process.exit(1);
-            }
-
-            if (!fs.statSync(fileArgs[0]).isDirectory()) {
-                console.log(fileArgs[0] + ' is not a directory (required for --format-openmv)');
-                process.exit(1);
-            }
-
-            let categoryFolders = fs.readdirSync(fileArgs[0]).filter(d => d.endsWith('.class'));
-            if (categoryFolders.length === 0) {
-                console.log(fileArgs[0] + ' does not seem to be an OpenMV dataset directory, no ' +
-                    'subdirectories found that end with .class');
-                process.exit(1);
-            }
-
-            files = [];
-
-            for (let categoryFolder of categoryFolders) {
-                for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
                     files.push({
-                        path: Path.join(fileArgs[0], categoryFolder, f),
-                        category: 'split',
-                        label: categoryFolder.replace('.class', '')
+                        category: f.category,
+                        name: f.name,
+                        label: f.label,
+                        path: f.path,
+                        metadata: f.metadata,
+                        boundingBoxes: f.boundingBoxes,
                     });
+                }
+            }
+            catch (ex2) {
+                console.error('Failed to parse --info-file', ex2);
+                process.exit(1);
+            }
+        }
+        else if (directoryArgv) {
+            // Check this is actually a directory
+            if (!fs.statSync(directoryArgv).isDirectory()) {
+                console.log(directoryArgv + ' is not a directory');
+                process.exit(1);
+            }
+
+            const allFiles = getAllFilesInFolder(directoryArgv);
+            if (allFiles.length === 0) {
+                console.log(directoryArgv + ' contains no valid files');
+                process.exit(1);
+            }
+
+            // Find the dataset format, if relevant
+            let datasetFormat: FormatMetadata | undefined;
+
+            if (annotationFormatArgv) {
+                // User has specified a dataset format; check it is correct
+                datasetFormat = getMetadataForFormat(annotationFormatArgv);
+                if (!datasetFormat) {
+                    console.log(`\nFormat '${annotationFormatArgv}' was not recognised. Supported formats:\n`);
+                    logAllAnnotationFormats();
+                    process.exit(1);
+                }
+                const formatMatches = datasetFormat.formatStyle !== 'txt' ?
+                    checkDatasetMatchesFormat(allFiles, datasetFormat.key) : true;
+                if (!formatMatches) {
+                    console.log('\nThis directory does not appear to include any annotation files matching format ' +
+                        `'${datasetFormat.key}'. If there are no annotations to convert, do not pass ` +
+                        '--dataset-format when uploading your data.');
+                    process.exit(1);
+                }
+            }
+            else {
+                // Try to work out what format this dataset is in
+                const derivedFormat = deriveDatasetFormat(allFiles);
+                if (derivedFormat) {
+                    datasetFormat = getMetadataForFormat(derivedFormat);
+                }
+            }
+
+            if (datasetFormat) {
+                // Convert the directory into EI dataset
+                try {
+                    const datasetConverter = new DatasetConverterHelperCli(datasetFormat,
+                        { silent: silentArgv, validExtensions: VALID_EXTENSIONS });
+                    await datasetConverter.convertDataset(allFiles);
+
+                    const samples = datasetConverter.getSamples();
+                    if (!samples) {
+                        throw new Error('Could not find any samples in the directory.');
+                    }
+                    files = [];
+
+                    for (const sample of samples) {
+                        const annotations = await datasetConverter.getAnnotationsForSample(sample);
+                        files.push({
+                            path: Path.join(sample.directory, sample.filename),
+                            name: undefined, // infer from filename
+                            category: sample.category || 'training',
+                            metadata: { },
+                            label: annotations.label,
+                            boundingBoxes: annotations.boundingBoxes
+                        });
+                    }
+                }
+                catch (ex) {
+                    console.log(`Could not convert directory: ${ex}`);
+                    process.exit(1);
+                }
+            }
+            else {
+                // Just upload the directory
+                const dir = await fs.promises.realpath(directoryArgv);
+                let dirs = await fs.promises.readdir(dir);
+                if (!dirs.find(x => x === 'training') || !dirs.find(x => x === 'testing')) {
+                    console.log('\nThe format of the dataset in this directory was not recognised. Select a ' +
+                        'directory containing both "training" and "testing" folders, or upload data in ' +
+                        'another supported format:\n');
+                    logAllAnnotationFormats();
+                    process.exit(1);
+                }
+
+                files = [];
+
+                for (let c of [ 'training', 'testing' ]) {
+                    for (let f of await fs.promises.readdir(Path.join(dir, c))) {
+                        let fullPath = Path.join(dir, c, f);
+
+                        if (f.startsWith('.')) continue;
+
+                        files.push({
+                            category: <ExportUploaderInfoFileCategory>c,
+                            name: undefined, // infer from filename
+                            label: { type: 'infer' },
+                            path: fullPath,
+                            metadata: { },
+                            boundingBoxes: [],
+                        });
+                    }
                 }
             }
         }
         else {
-            if (validExtensions.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
-                console.log('Cannot handle this file, only ' + validExtensions.join(', ') + ' supported:', fileArgs[0]);
+
+            let fileArgs = process.argv.slice(argv);
+
+            if (fileArgs.length === 1 && Path.basename(fileArgs[0]) === 'bounding_boxes.labels') {
+                console.log(``);
+                console.log(`You don't need to upload "bounding_boxes.labels". When uploading an image we check ` +
+                            `whether ` +
+                            `a labels file is present in the same folder, and automatically attach the bounding ` +
+                            `boxes to the image.`);
+                console.log(`So you can just do:`);
+                console.log(`    edge-impulse-uploader yourimage.jpg`);
+                console.log(``);
                 process.exit(1);
             }
 
-            // Windows doesn't do expansion like Mac and Linux...
-            if (Path.basename(fileArgs[0], Path.extname(fileArgs[0])) === '*') {
-                fileArgs = (await util.promisify(fs.readdir)(Path.dirname(fileArgs[0]))).filter(v => {
-                    return Path.extname(v) === Path.extname(fileArgs[0]);
-                }).map(f => Path.join(Path.dirname(fileArgs[0]), f));
+            // exclude 'bounding_boxes.labels'
+            fileArgs = fileArgs.filter(f => Path.basename(f) !== 'bounding_boxes.labels');
+
+            if (!fileArgs[0]) {
+                console.log('Requires at least one argument (a ' +
+                    VALID_EXTENSIONS.slice(0, VALID_EXTENSIONS.length - 1).join(', ') + ' or ' +
+                    VALID_EXTENSIONS[VALID_EXTENSIONS.length - 1] + ' file)');
+                process.exit(1);
             }
 
-            files = fileArgs.map(f => {
-                return {
-                    path: f,
-                    category: categoryArgv || 'training',
-                    label: labelArgv || undefined
-                };
-            });
+            let metadata: { [k: string] : string } | undefined;
+            if (metadataArgv) {
+                try {
+                    metadata = <{ [k: string] : string }>JSON.parse(metadataArgv);
+                }
+                catch (ex) {
+                    console.log('--metadata is not valid JSON');
+                    process.exit(1);
+                }
+            }
+
+            if (openmvArgv) {
+                if (categoryArgv || labelArgv) {
+                    console.log('--format-openmv cannot be used in conjunction with --category or --label');
+                    process.exit(1);
+                }
+
+                if (fileArgs.length > 1) {
+                    console.log('Requires one argument (the OpenMV dataset directory)');
+                    process.exit(1);
+                }
+
+                if (!fs.statSync(fileArgs[0]).isDirectory()) {
+                    console.log(fileArgs[0] + ' is not a directory (required for --format-openmv)');
+                    process.exit(1);
+                }
+
+                let categoryFolders = fs.readdirSync(fileArgs[0]).filter(d => d.endsWith('.class'));
+                if (categoryFolders.length === 0) {
+                    console.log(fileArgs[0] + ' does not seem to be an OpenMV dataset directory, no ' +
+                        'subdirectories found that end with .class');
+                    process.exit(1);
+                }
+
+                files = [];
+
+                for (let categoryFolder of categoryFolders) {
+                    for (let f of fs.readdirSync(Path.join(fileArgs[0], categoryFolder))) {
+                        files.push({
+                            path: Path.join(fileArgs[0], categoryFolder, f),
+                            name: undefined, // infer from filename
+                            category: 'split',
+                            label: { type: 'label', label: categoryFolder.replace('.class', '') },
+                            metadata: metadata,
+                            boundingBoxes: undefined,
+                        });
+                    }
+                }
+            }
+            else {
+                // Check if the user passed a directory
+                if (fileArgs.length === 1 && fs.statSync(fileArgs[0]).isDirectory()) {
+                    console.log('Cannot handle file, file is a directory. Please use --directory to upload.');
+                    process.exit(1);
+                }
+
+                // Check extension is valid
+                if (VALID_EXTENSIONS.indexOf(Path.extname(fileArgs[0].toLowerCase())) === -1) {
+                    console.log('Cannot handle this file, only ' +
+                        VALID_EXTENSIONS.join(', ') + ' supported:', fileArgs[0]);
+                    process.exit(1);
+                }
+
+                // Windows doesn't do expansion like Mac and Linux...
+                if (Path.basename(fileArgs[0], Path.extname(fileArgs[0])) === '*') {
+                    fileArgs = (await util.promisify(fs.readdir)(Path.dirname(fileArgs[0]))).filter(v => {
+                        return Path.extname(v) === Path.extname(fileArgs[0]);
+                    }).map(f => Path.join(Path.dirname(fileArgs[0]), f));
+                }
+
+                files = fileArgs.map(f => {
+                    return {
+                        path: f,
+                        name: undefined, // infer from filename
+                        category: (<ExportUploaderInfoFileCategory | undefined>categoryArgv) || 'training',
+                        label: labelArgv ? {
+                            type: 'label',
+                            label: labelArgv
+                        } : { type: 'infer' },
+                        metadata: metadata,
+                        boundingBoxes: undefined,
+                    };
+                });
+            }
         }
 
         const { projectId, devKeys } = await setupCliApp(configFactory, config, cliOptions, undefined);
 
         await configFactory.setUploaderProjectId(projectId);
 
+        if (!silentArgv) {
+            const projectInfo = await config.api.projects.getProjectInfo(projectId, { });
+            let studioUrl = config.endpoints.internal.api.replace('/v1', '');
+            if (projectInfo.project.whitelabelId) {
+                const whitelabelRes = await config.api.whitelabels.getWhitelabelDomain(
+                    projectInfo.project.whitelabelId
+                );
+                if (whitelabelRes.domain) {
+                    const protocol = config.endpoints.internal.api.startsWith('https') ? 'https' : 'http';
+                    studioUrl = `${protocol}://${whitelabelRes.domain}`;
+                }
+            }
+
+            console.log(`Uploading to project "${projectInfo.project.owner} / ${projectInfo.project.name}" ` +
+                `(${studioUrl}/studio/${projectId})`);
+            console.log(``);
+        }
+
         let fileIx = startIxArgv ? Number(startIxArgv) : 0;
         let success = 0;
         let failed = 0;
         let totalFilesLength = endIxArgv ? Number(endIxArgv) : files.length;
 
-        let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFile | undefined } = { };
+        let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFileV1 | undefined } = { };
 
         let allDirectories = [...new Set(files.map(f => Path.resolve(Path.dirname(f.path))))];
         const loadBoundingBoxCache = async (directory: string) => {
             let labelsFile = Path.join(directory, 'bounding_boxes.labels');
 
-            if (!await exists(labelsFile)) {
+            if (!await FSHelpers.exists(labelsFile)) {
                 boundingBoxCache[directory] = undefined;
             }
             else {
                 try {
-                    let data = <ExportBoundingBoxesFile>JSON.parse(<string>await fs.promises.readFile(labelsFile, 'utf-8'));
-                    if (data.version !== 1) {
-                        throw new Error('Invalid version');
-                    }
-                    if (data.type !== 'bounding-box-labels') {
-                        throw new Error('Invalid type');
-                    }
-                    if (typeof data.boundingBoxes !== 'object') {
-                        throw new Error('boundingBoxes is not an object');
-                    }
-                    boundingBoxCache[directory] = data;
+                    boundingBoxCache[directory] = parseBoundingBoxLabels(
+                        <string>await fs.promises.readFile(labelsFile, 'utf-8'));
                 }
                 catch (ex2) {
                     let ex = <Error>ex2;
@@ -263,69 +471,39 @@ const cliOptions = {
 
         const processFile = async (file: UploaderFileType) => {
             const boundingBoxesFile = boundingBoxCache[Path.resolve(Path.dirname(file.path))];
-            const boundingBoxes = boundingBoxesFile ?
+            let boundingBoxes = boundingBoxesFile ?
                 (boundingBoxesFile.boundingBoxes[Path.basename(file.path)] || undefined) :
                 undefined;
-
-            const buffer = await fs.promises.readFile(file.path);
-
-            let processed: { encoded: Buffer, contentType: string,
-                attachments?: { value: Buffer, options: { contentType: string}}[] };
-
-            try {
-                switch (Path.extname(file.path).toLowerCase()) {
-                    case '.wav':
-                        processed = makeWavInternal(buffer, hmacKeyArgv || devKeys.hmacKey);
-                        break;
-                    case '.cbor':
-                        processed = makeCbor(buffer);
-                        break;
-                    case '.json':
-                        processed = makeJson(buffer);
-                        break;
-                    case '.jpg':
-                    case '.jpeg':
-                    case '.png':
-                        processed = makeImage(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path));
-                        break;
-                    case '.mp4':
-                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/mp4');
-                        break;
-                    case '.avi':
-                        processed = makeVideo(buffer, hmacKeyArgv || devKeys.hmacKey, Path.basename(file.path), 'video/avi');
-                        break;
-                    case '.csv':
-                        processed = makeCsv(buffer, hmacKeyArgv || devKeys.hmacKey);
-                        break;
-                    default:
-                        throw new Error('extension not supported (only ' +
-                            validExtensions.slice(0, validExtensions.length - 1).join(', ') + ' and ' +
-                            validExtensions[validExtensions.length - 1] + ' supported)');
-                }
+            if (!boundingBoxes && file.boundingBoxes) {
+                boundingBoxes = file.boundingBoxes;
             }
-            catch (ex2) {
-                let ex = <Error>ex2;
-                let ix = ++fileIx;
-                let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
-                console.error(`[${ixS}/${totalFilesLength}] Failed to process`, file.path, ex.message || ex.toString());
-                failed++;
-                return;
-            }
-
-            let filename = Path.basename(file.path).split('.')[0];
 
             try {
                 let hrstart = Date.now();
+
+                let filename: string;
+                if (file.name) {
+                    filename = file.name;
+                    let ext = Path.extname(file.path);
+                    if (ext) {
+                        filename += ext;
+                    }
+                }
+                else {
+                    filename = Path.basename(file.path);
+                }
+
                 await upload({
-                    apiKey: apiKeyArgv || devKeys.apiKey || '',
                     filename: filename,
-                    processed: processed,
+                    buffer: await fs.promises.readFile(file.path),
+                    apiKey: apiKeyArgv || devKeys.apiKey || '',
                     allowDuplicates: allowDuplicatesArgv,
                     category: file.category,
                     config: config,
-                    dataBuffer: buffer,
                     label: file.label,
-                    boundingBoxes: boundingBoxes
+                    boundingBoxes: boundingBoxes,
+                    metadata: file.metadata,
+                    addDateId: false,
                 });
 
                 let ix = ++fileIx;
@@ -380,39 +558,6 @@ const cliOptions = {
         process.exit(1);
     }
 })();
-
-function makeWavInternal(buffer: Buffer, hmacKey: string | undefined) {
-    if (dontResignArgv) {
-        let isJSON = true;
-        try {
-            JSON.parse(buffer.toString('utf-8'));
-        }
-        catch (ex) {
-            isJSON = false;
-        }
-
-        return {
-            encoded: buffer,
-            contentType: isJSON ? 'application/json' : 'application/cbor'
-        };
-    }
-
-    return makeWav(buffer, hmacKey);
-}
-
-function makeCbor(buffer: Buffer) {
-    return {
-        encoded: buffer,
-        contentType: 'application/cbor',
-    };
-}
-
-function makeJson(buffer: Buffer) {
-    return {
-        encoded: buffer,
-        contentType: 'application/json'
-    };
-}
 
 async function exists(path: string) {
     let fx = false;

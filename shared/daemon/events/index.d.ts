@@ -10,7 +10,7 @@ export class EventEmitter {
   static listenerCount(emitter: EventEmitter, type: string | number): number;
   static defaultMaxListeners: number;
 
-  eventNames(): Array<string | number>;
+  eventNames(): (string | number)[];
   setMaxListeners(n: number): this;
   getMaxListeners(): number;
   emit(type: string | number, ...args: any[]): boolean;

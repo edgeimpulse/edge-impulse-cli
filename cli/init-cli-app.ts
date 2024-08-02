@@ -27,8 +27,11 @@ export async function initCliApp(opts: {
     let config: EdgeImpulseConfig | undefined;
 
     try {
-        if (opts.cleanArgv || opts.apiKeyArgv) {
+        if (opts.cleanArgv) {
             await configFactory.clean();
+        }
+        else if (opts.apiKeyArgv) {
+            await configFactory.removeProjectReferences();
         }
 
         try {
@@ -45,7 +48,7 @@ export async function initCliApp(opts: {
         catch (ex2) {
             let ex = <Error>ex2;
             let msg = ex.message || ex.toString();
-            if (msg.indexOf('need to set an app password') > -1) {
+            if (msg.indexOf('need to set a password') > -1) {
                 console.log('');
                 console.log('\x1b[33mWARN\x1b[0m', ex.message);
                 console.log('');
@@ -58,7 +61,8 @@ export async function initCliApp(opts: {
                 console.log('');
             }
             else {
-                console.log('Stored token seems invalid, clearing cache...', ex);
+                console.log('Stored token seems invalid, clearing cache...');
+                console.log(ex.message);
             }
             await configFactory.clean();
             config = await configFactory.verifyLogin(opts.devArgv, opts.apiKeyArgv);
@@ -66,8 +70,10 @@ export async function initCliApp(opts: {
     }
     catch (ex2) {
         let ex = <Error>ex2;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse',
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {
@@ -95,15 +101,16 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
     let projectId = await configFactory.getUploaderProjectId();
 
     if (projectId) {
-        let projectInfoReq = (await config.api.projects.getProjectInfo(projectId));
-        if (projectInfoReq.body.success && projectInfoReq.body.project) {
+        try {
+            let projectInfoReq = (await config.api.projects.getProjectInfo(projectId, { }));
             if (!opts.silentArgv) {
-                console.log('    Project:    ', projectInfoReq.body.project.name + ' (ID: ' + projectId + ')');
+                console.log('    Project:    ', projectInfoReq.project.name + ' (ID: ' + projectId + ')');
                 console.log('');
             }
         }
-        else {
-            console.warn('Cannot read cached project (' + projectInfoReq.body.error + ')');
+        catch (ex2) {
+            let ex = <Error>ex2;
+            console.warn('Cannot read cached project (' + (ex.message || ex.toString()) + ')');
             projectId = undefined;
         }
     }
@@ -117,12 +124,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
             await opts.getProjectFromConfig(deviceId) :
             undefined;
 
-        let projectList = (await config.api.projects.listProjects()).body;
-
-        if (!projectList.success) {
-            console.error('Failed to retrieve project list...', projectList, projectList.error);
-            process.exit(1);
-        }
+        let projectList = (await config.api.projects.listProjects());
 
         if (!projectList.projects || projectList.projects.length === 0) {
             console.log('This user has no projects, create one before continuing');
@@ -144,6 +146,10 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
             }]);
             projectId = Number(inqRes.project);
         }
+
+        if (!projectId) {
+            throw new Error('projectId is null');
+        }
     }
 
     let devKeys: { apiKey: string, hmacKey: string } = {
@@ -152,7 +158,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
     };
     if (!opts.apiKeyArgv) {
         try {
-            let dk = (await config.api.projects.listDevkeys(projectId)).body;
+            let dk = (await config.api.projects.listDevkeys(projectId));
 
             if (!dk.apiKey) {
                 throw new Error('No API key set (via --api-key), and no development API keys configured for ' +
@@ -172,6 +178,6 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
 
     return {
         projectId,
-        devKeys
+        devKeys,
     };
 }

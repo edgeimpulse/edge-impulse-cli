@@ -32,7 +32,7 @@ let startedWebserver = false;
 let inferenceStarted = false;
 
 const configFactory = new Config();
-// tslint:disable-next-line:no-floating-promises
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
     try {
         if (versionArgv) {
@@ -74,7 +74,7 @@ function sleep(ms: number) {
 function onStdIn(data: Buffer) {
     if (!serial) return;
 
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial.write(Buffer.from(data.toString('ascii').trim() + '\r\n', 'ascii'));
 }
 
@@ -155,10 +155,10 @@ async function connectToSerial(deviceId: string) {
                 config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                 config.info.atCommandVersion.patch);
 
-            // we support devices with version 1.7.x and lower
-            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 7) {
+            // we support devices with version 1.8.x and lower
+            if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 8) {
                 console.error(SERIAL_PREFIX,
-                    'Unsupported AT command version running on this device. Supported version is 1.7.x and lower, ' +
+                    'Unsupported AT command version running on this device. Supported version is 1.8.x and lower, ' +
                     'but found ' + config.info.atCommandVersion.major + '.' + config.info.atCommandVersion.minor + '.' +
                     config.info.atCommandVersion.patch + '.');
                 console.error(SERIAL_PREFIX,
@@ -225,7 +225,7 @@ async function connectToSerial(deviceId: string) {
 
     console.log(SERIAL_PREFIX, 'Connecting to', deviceId);
 
-    // tslint:disable-next-line:no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     serial_connect();
 }
 
@@ -245,65 +245,90 @@ async function startWebServer(config: EiSerialDeviceConfig) {
         // noop
     });
 
-    let currentMsg: string | undefined;
+    let rxMsg: string;
     serial.on('data', (data: Buffer) => {
         let s = data.toString('utf-8');
-        if (s.indexOf('End output') > -1) {
-            if (typeof currentMsg === 'string') {
-                currentMsg += s.substr(0, s.indexOf('End output'));
+        rxMsg += s;
 
-                let lines = currentMsg.split('\n');
-                let fb = lines.find(x => x.startsWith('Framebuffer: '));
+        if (rxMsg.indexOf('Begin output') > -1) {
+            // remove everything before 'Begin output' (and this phrase also)
+            rxMsg = rxMsg.substr(rxMsg.indexOf('Begin output') + 'Begin output'.length);
+        }
 
-                let printMsg = '';
+        if (rxMsg.indexOf('End output') > 1)  {
+            // get everything up to 'End output' (excluding this phrase)
+            let currentMsg = rxMsg.substr(0, rxMsg.indexOf('End output'));
+            // remove everything before 'End output' phrase
+            rxMsg = rxMsg.substr(rxMsg.indexOf('End output'));
 
-                let classifyTime = 0;
-                let timingLine = lines.find(x => x.startsWith('Predictions'));
-                if (timingLine) {
-                    let m = timingLine.match(/Classification: (\d+)/);
-                    if (m) {
-                        classifyTime = Number(m[1]);
-                    }
-                    printMsg += timingLine + '\n';
+            // console.log('msg', currentMsg);
+
+            let lines = currentMsg.split('\n');
+            let fb = lines.find(x => x.startsWith('Framebuffer: '));
+
+            let printMsg = '';
+
+            let classifyTime = 0;
+            let timingLine = lines.find(x => x.startsWith('Predictions'));
+            if (timingLine) {
+                let m = timingLine.match(/Classification: ([\d\.]+)/);
+                if (m) {
+                    classifyTime = Number(m[1]);
                 }
+                printMsg += timingLine + '\n';
+            }
 
-                if (fb) {
-                    fb = fb.replace('Framebuffer: ', '').trim();
+            if (fb) {
+                fb = fb.replace('Framebuffer: ', '').trim();
 
-                    let snapshot = Buffer.from(fb, 'base64');
-                    io.emit('image', {
-                        img: 'data:image/jpeg;base64,' + snapshot.toString('base64')
-                    });
+                let snapshot = Buffer.from(fb, 'base64');
+                io.emit('image', {
+                    img: 'data:image/jpeg;base64,' + snapshot.toString('base64')
+                });
+            }
+
+            type inferencingMode = 'classification' | 'object_detection' | 'visual_ad';
+            let modes: inferencingMode[] = [];
+            let modeLines = lines.filter(x => x.startsWith('#'));
+
+            for (let element of modeLines) {
+                switch (element.trim()) {
+                    case '#Regression results:':
+                    case '#Classification results:':
+                        modes.push('classification');
+                        break;
+                    case '#Object detection results:':
+                        modes.push('object_detection');
+                        break;
+                    case '#Visual anomaly grid results:':
+                        modes.push('visual_ad');
+                        break;
+                    default:
+                        console.warn('Unknown mode, defaulting to classification', element);
+                        modes.push('classification');
+                        break;
                 }
+            }
 
-                let mode: 'classification' | 'object_detection';
-                let firstClassifyLine = lines.find(x => x.startsWith('    '));
-                if (firstClassifyLine && !isNaN(Number(firstClassifyLine.split(':')[1]))) {
-                    mode = 'classification';
+            if (modes.includes('object_detection') || modes.includes('visual_ad')) {
+                let cubes = [];
+                // parse object detection
+                for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
+                    let m = l.trim()
+                        .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
+                    if (!m) continue;
+                    let cube = {
+                        label: m[1],
+                        value: Number(m[2]),
+                        x: Number(m[3]),
+                        y: Number(m[4]),
+                        width: Number(m[5]),
+                        height: Number(m[6]),
+                    };
+                    cubes.push(cube);
+                    printMsg += l + '\n';
                 }
-                else {
-                    mode = 'object_detection';
-                }
-
-                if (mode === 'object_detection') {
-                    let cubes = [];
-                    // parse object detection
-                    for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
-                        let m = l.trim()
-                            .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
-                        if (!m) continue;
-                        let cube = {
-                            label: m[1],
-                            value: Number(m[2]),
-                            x: Number(m[3]),
-                            y: Number(m[4]),
-                            width: Number(m[5]),
-                            height: Number(m[6]),
-                        };
-                        cubes.push(cube);
-                        printMsg += l + '\n';
-                    }
-
+                if (modes.includes('object_detection')) {
                     io.emit('classification', {
                         result: {
                             bounding_boxes: cubes
@@ -311,44 +336,40 @@ async function startWebServer(config: EiSerialDeviceConfig) {
                         timeMs: classifyTime,
                     });
                 }
-                else {
-                    let results: { [k: string]: number } = { };
-                    // parse object detection
-                    for (let l of lines.filter(x => x.startsWith('    '))) {
-                        let m = l.split(':').map(x => x.trim());
-                        if (m.length !== 2) continue;
-                        results[m[0]] = Number(m[1]);
-                        printMsg += l + '\n';
-                    }
-
+                if (modes.includes('visual_ad')) {
+                    let visualAdRes = lines.filter(x => x.startsWith('Visual anomaly values'));
+                    printMsg += visualAdRes + '\n';
                     io.emit('classification', {
                         result: {
-                            classification: results
+                            grid: cubes
                         },
                         timeMs: classifyTime,
                     });
                 }
-
-                if (inferenceStarted) {
-                    console.log(printMsg.trim());
+            }
+            if (modes.includes('classification')) {
+                let results: { [k: string]: number } = { };
+                for (let l of lines.filter(x => x.startsWith('    '))) {
+                    let m = l.split(':').map(x => x.trim());
+                    if (m.length !== 2) continue;
+                    results[m[0]] = Number(m[1]);
+                    printMsg += l + '\n';
                 }
+
+                io.emit('classification', {
+                    result: {
+                        classification: results
+                    },
+                    timeMs: classifyTime,
+                });
             }
 
-            currentMsg = undefined;
-            s = s.substr(s.indexOf('End output'));
+            if (inferenceStarted) {
+                console.log(printMsg.trim());
+            }
         }
 
-        if (s.indexOf('Begin output') > -1) {
-            s = s.substr(s.indexOf('Begin output') + 'Begin output'.length);
-            currentMsg = s;
-            return;
-        }
-
-        if (currentMsg) {
-            currentMsg += s;
-        }
-
-        // console.log('data', data.toString('utf-8');
+        // console.log('data', data.toString('utf-8'));
     });
 
     io.on('connection', socket => {

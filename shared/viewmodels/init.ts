@@ -81,3 +81,10 @@ export enum PageType {
     UploadPortal = 200,
     Announcement = 201,
 }
+
+export const getPageTypeName = (pageTypeValue: number): string | undefined => {
+    if (PageType[pageTypeValue] !== undefined) {
+        return PageType[pageTypeValue];
+    }
+    return undefined;
+};

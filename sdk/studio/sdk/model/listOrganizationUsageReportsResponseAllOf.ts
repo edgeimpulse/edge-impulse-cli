@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationUsageReport } from './organizationUsageReport';
+import { Report } from './report';
 
 export class ListOrganizationUsageReportsResponseAllOf {
     /**
     * List of feature flags.
     */
-    'reports': Array<OrganizationUsageReport>;
+    'reports': Array<Report>;
     'totalCount': number;
 
     static discriminator: string | undefined = undefined;
@@ -25,7 +25,7 @@ export class ListOrganizationUsageReportsResponseAllOf {
         {
             "name": "reports",
             "baseName": "reports",
-            "type": "Array<OrganizationUsageReport>"
+            "type": "Array<Report>"
         },
         {
             "name": "totalCount",

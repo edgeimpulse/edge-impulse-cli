@@ -10,34 +10,14 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetReportResponseAllOf } from './adminGetReportResponseAllOf';
-import { GenericApiResponse } from './genericApiResponse';
 import { Report } from './report';
 
-export class GetOrganizationUsageReportResponse {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
+export class AdminGetReportResponseAllOf {
     'report': Report;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "report",
             "baseName": "report",
@@ -45,7 +25,7 @@ export class GetOrganizationUsageReportResponse {
         }    ];
 
     static getAttributeTypeMap() {
-        return GetOrganizationUsageReportResponse.attributeTypeMap;
+        return AdminGetReportResponseAllOf.attributeTypeMap;
     }
 }
 

@@ -23,6 +23,11 @@ export class Project {
     */
     'owner': string;
     'lastAccessed'?: Date;
+    'lastModified'?: Date;
+    /**
+    * Details about the last modification
+    */
+    'lastModificationDetails'?: string;
     /**
     * Custom logo for this project (not available for all projects)
     */
@@ -116,6 +121,16 @@ export class Project {
             "name": "lastAccessed",
             "baseName": "lastAccessed",
             "type": "Date"
+        },
+        {
+            "name": "lastModified",
+            "baseName": "lastModified",
+            "type": "Date"
+        },
+        {
+            "name": "lastModificationDetails",
+            "baseName": "lastModificationDetails",
+            "type": "string"
         },
         {
             "name": "logo",

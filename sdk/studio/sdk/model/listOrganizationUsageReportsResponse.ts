@@ -12,7 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ListOrganizationUsageReportsResponseAllOf } from './listOrganizationUsageReportsResponseAllOf';
-import { OrganizationUsageReport } from './organizationUsageReport';
+import { Report } from './report';
 
 export class ListOrganizationUsageReportsResponse {
     /**
@@ -26,7 +26,7 @@ export class ListOrganizationUsageReportsResponse {
     /**
     * List of feature flags.
     */
-    'reports': Array<OrganizationUsageReport>;
+    'reports': Array<Report>;
     'totalCount': number;
 
     static discriminator: string | undefined = undefined;
@@ -45,7 +45,7 @@ export class ListOrganizationUsageReportsResponse {
         {
             "name": "reports",
             "baseName": "reports",
-            "type": "Array<OrganizationUsageReport>"
+            "type": "Array<Report>"
         },
         {
             "name": "totalCount",

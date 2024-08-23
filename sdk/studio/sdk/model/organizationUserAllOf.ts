@@ -17,6 +17,14 @@ export class OrganizationUserAllOf {
     'role': OrganizationMemberRole;
     'projectCount': number;
     'datasets': Array<string>;
+    /**
+    * Date when the user last accessed the organization data.
+    */
+    'lastAccessToOrganization'?: Date;
+    /**
+    * ID of the last project accessed by the user in the organization.
+    */
+    'lastOrganizationProjectAccessed'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,6 +48,16 @@ export class OrganizationUserAllOf {
             "name": "datasets",
             "baseName": "datasets",
             "type": "Array<string>"
+        },
+        {
+            "name": "lastAccessToOrganization",
+            "baseName": "lastAccessToOrganization",
+            "type": "Date"
+        },
+        {
+            "name": "lastOrganizationProjectAccessed",
+            "baseName": "lastOrganizationProjectAccessed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

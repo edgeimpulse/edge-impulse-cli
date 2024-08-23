@@ -31,6 +31,7 @@ import { CreateProTierUserRequest } from '../model/createProTierUserRequest';
 import { CreateUserRequest } from '../model/createUserRequest';
 import { CreateUserResponse } from '../model/createUserResponse';
 import { DeleteUserRequest } from '../model/deleteUserRequest';
+import { DowngradeSubscriptionRequest } from '../model/downgradeSubscriptionRequest';
 import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetJWTResponse } from '../model/getJWTResponse';
@@ -3254,8 +3255,9 @@ export class UserApi {
     /**
      * Cancel the current subscription.
      * @summary Cancel subscription
+     * @param downgradeSubscriptionRequest 
      */
-    public async userCancelSubscription (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async userCancelSubscription (downgradeSubscriptionRequest: DowngradeSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/subscription/cancel';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -3270,6 +3272,13 @@ export class UserApi {
         }
         let localVarFormParams: any = {};
 
+        // verify required parameter 'downgradeSubscriptionRequest' is not null or undefined
+
+
+        if (downgradeSubscriptionRequest === null || downgradeSubscriptionRequest === undefined) {
+            throw new Error('Required parameter downgradeSubscriptionRequest was null or undefined when calling userCancelSubscription.');
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -3283,6 +3292,7 @@ export class UserApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(downgradeSubscriptionRequest, "DowngradeSubscriptionRequest")
         };
 
         let authenticationPromise = Promise.resolve();

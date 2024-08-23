@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetOrganizationUsageReportsResponseAllOf } from './adminGetOrganizationUsageReportsResponseAllOf';
+import { AdminGetReportResponseAllOf } from './adminGetReportResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
-import { OrganizationUsageReport } from './organizationUsageReport';
+import { Report } from './report';
 
-export class AdminGetOrganizationUsageReportsResponse {
+export class AdminGetReportResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,11 +23,7 @@ export class AdminGetOrganizationUsageReportsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * List of organization usage reports.
-    */
-    'reports': Array<OrganizationUsageReport>;
-    'totalCount': number;
+    'report': Report;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,18 +39,13 @@ export class AdminGetOrganizationUsageReportsResponse {
             "type": "string"
         },
         {
-            "name": "reports",
-            "baseName": "reports",
-            "type": "Array<OrganizationUsageReport>"
-        },
-        {
-            "name": "totalCount",
-            "baseName": "totalCount",
-            "type": "number"
+            "name": "report",
+            "baseName": "report",
+            "type": "Report"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetOrganizationUsageReportsResponse.attributeTypeMap;
+        return AdminGetReportResponse.attributeTypeMap;
     }
 }
 

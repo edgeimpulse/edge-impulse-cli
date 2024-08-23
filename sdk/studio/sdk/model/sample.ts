@@ -341,8 +341,8 @@ export class Sample {
 export type SampleBoundingBoxesTypeEnum = 'object_detection' | 'constrained_object_detection';
 export const SampleBoundingBoxesTypeEnumValues: string[] = ['object_detection', 'constrained_object_detection'];
 
-export type SampleChartTypeEnum = 'chart' | 'image' | 'video';
-export const SampleChartTypeEnumValues: string[] = ['chart', 'image', 'video'];
+export type SampleChartTypeEnum = 'chart' | 'image' | 'video' | 'table';
+export const SampleChartTypeEnumValues: string[] = ['chart', 'image', 'video', 'table'];
 
 export type SampleProjectLabelingMethodEnum = 'single_label' | 'object_detection';
 export const SampleProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];

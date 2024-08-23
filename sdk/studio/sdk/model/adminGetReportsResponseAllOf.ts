@@ -10,22 +10,31 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationUsageReport } from './organizationUsageReport';
+import { Report } from './report';
 
-export class AdminGetOrganizationUsageReportResponseAllOf {
-    'report': OrganizationUsageReport;
+export class AdminGetReportsResponseAllOf {
+    /**
+    * List of organization usage reports.
+    */
+    'reports': Array<Report>;
+    'totalCount': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "report",
-            "baseName": "report",
-            "type": "OrganizationUsageReport"
+            "name": "reports",
+            "baseName": "reports",
+            "type": "Array<Report>"
+        },
+        {
+            "name": "totalCount",
+            "baseName": "totalCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetOrganizationUsageReportResponseAllOf.attributeTypeMap;
+        return AdminGetReportsResponseAllOf.attributeTypeMap;
     }
 }
 

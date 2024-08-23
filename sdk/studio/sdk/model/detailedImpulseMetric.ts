@@ -11,16 +11,22 @@
  */
 
 import { DetailedImpulseMetricCategory } from './detailedImpulseMetricCategory';
+import { DetailedImpulseMetricFilteringType } from './detailedImpulseMetricFilteringType';
 
 
 export class DetailedImpulseMetric {
     'name': string;
     'type': DetailedImpulseMetricTypeEnum;
+    'filteringType'?: DetailedImpulseMetricFilteringType;
     'category': DetailedImpulseMetricCategory;
     'description': string;
     'value': string | boolean
     'title'?: string;
     'valueForSorting'?: number;
+    /**
+    * Additional help explaining the value for this metric
+    */
+    'valueHint'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,6 +40,11 @@ export class DetailedImpulseMetric {
             "name": "type",
             "baseName": "type",
             "type": "DetailedImpulseMetricTypeEnum"
+        },
+        {
+            "name": "filteringType",
+            "baseName": "filteringType",
+            "type": "DetailedImpulseMetricFilteringType"
         },
         {
             "name": "category",
@@ -59,6 +70,11 @@ export class DetailedImpulseMetric {
             "name": "valueForSorting",
             "baseName": "valueForSorting",
             "type": "number"
+        },
+        {
+            "name": "valueHint",
+            "baseName": "valueHint",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

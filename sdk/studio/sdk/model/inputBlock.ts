@@ -66,5 +66,5 @@ export class InputBlock {
 }
 
 
-export type InputBlockTypeEnum = 'time-series' | 'image';
-export const InputBlockTypeEnumValues: string[] = ['time-series', 'image'];
+export type InputBlockTypeEnum = 'time-series' | 'image' | 'features';
+export const InputBlockTypeEnumValues: string[] = ['time-series', 'image', 'features'];

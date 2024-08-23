@@ -44,6 +44,7 @@ import { SetTunerPrimaryJobRequest } from '../model/setTunerPrimaryJobRequest';
 import { StartClassifyJobRequest } from '../model/startClassifyJobRequest';
 import { StartJobResponse } from '../model/startJobResponse';
 import { StartPerformanceCalibrationRequest } from '../model/startPerformanceCalibrationRequest';
+import { StartPostProcessingRequest } from '../model/startPostProcessingRequest';
 import { StartTrainingRequestAnomaly } from '../model/startTrainingRequestAnomaly';
 import { UpdateJobRequest } from '../model/updateJobRequest';
 
@@ -135,6 +136,10 @@ type startEvaluateJobQueryParams = {
 };
 
 type startPerformanceCalibrationJobQueryParams = {
+    impulseId?: number,
+};
+
+type startPostProcessingJobQueryParams = {
     impulseId?: number,
 };
 
@@ -3092,6 +3097,103 @@ export class JobsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(startPerformanceCalibrationRequest, "StartPerformanceCalibrationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Begins post processing job
+     * @summary Post-processing
+     * @param projectId Project ID
+     * @param startPostProcessingRequest 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async startPostProcessingJob (projectId: number, startPostProcessingRequest: StartPostProcessingRequest, queryParams?: startPostProcessingJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/post-processing'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling startPostProcessingJob.');
+        }
+
+        // verify required parameter 'startPostProcessingRequest' is not null or undefined
+
+
+        if (startPostProcessingRequest === null || startPostProcessingRequest === undefined) {
+            throw new Error('Required parameter startPostProcessingRequest was null or undefined when calling startPostProcessingJob.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(startPostProcessingRequest, "StartPostProcessingRequest")
         };
 
         let authenticationPromise = Promise.resolve();

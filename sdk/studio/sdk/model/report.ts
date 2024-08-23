@@ -12,7 +12,7 @@
 
 import { JobCreatedByUser } from './jobCreatedByUser';
 
-export class OrganizationUsageReport {
+export class Report {
     'id': number;
     'created': Date;
     'createdByUser'?: JobCreatedByUser;
@@ -73,7 +73,7 @@ export class OrganizationUsageReport {
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationUsageReport.attributeTypeMap;
+        return Report.attributeTypeMap;
     }
 }
 

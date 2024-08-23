@@ -24,6 +24,10 @@ export class DetailedImpulse {
     'learnBlockKerasConfigs': Array<DetailedImpulseLearnBlockKerasConfigs>;
     'learnBlockAnomalyConfigs': Array<DetailedImpulseLearnBlockAnomalyConfigs>;
     'pretrainedModelInfo'?: DetailedImpulsePretrainedModelInfo;
+    /**
+    * Whether this impulse contains blocks with \"stale\" features (i.e. the dataset has changed since features were generated)
+    */
+    'isStale': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -57,6 +61,11 @@ export class DetailedImpulse {
             "name": "pretrainedModelInfo",
             "baseName": "pretrainedModelInfo",
             "type": "DetailedImpulsePretrainedModelInfo"
+        },
+        {
+            "name": "isStale",
+            "baseName": "isStale",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

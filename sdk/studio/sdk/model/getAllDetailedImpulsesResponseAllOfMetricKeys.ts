@@ -10,11 +10,13 @@
  * Do not edit the class manually.
  */
 
+import { DetailedImpulseMetricFilteringType } from './detailedImpulseMetricFilteringType';
 
 export class GetAllDetailedImpulsesResponseAllOfMetricKeys {
     'name': string;
     'description': string;
     'type': GetAllDetailedImpulsesResponseAllOfMetricKeysTypeEnum;
+    'filteringType'?: DetailedImpulseMetricFilteringType;
     'showInTable': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -34,6 +36,11 @@ export class GetAllDetailedImpulsesResponseAllOfMetricKeys {
             "name": "type",
             "baseName": "type",
             "type": "GetAllDetailedImpulsesResponseAllOfMetricKeysTypeEnum"
+        },
+        {
+            "name": "filteringType",
+            "baseName": "filteringType",
+            "type": "DetailedImpulseMetricFilteringType"
         },
         {
             "name": "showInTable",

@@ -10,31 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { OrganizationUsageReport } from './organizationUsageReport';
 
-export class AdminGetOrganizationUsageReportsResponseAllOf {
+export class DowngradeSubscriptionRequest {
     /**
-    * List of organization usage reports.
+    * Reason for downgrading the subscription.
     */
-    'reports': Array<OrganizationUsageReport>;
-    'totalCount': number;
+    'downgradeReason'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "reports",
-            "baseName": "reports",
-            "type": "Array<OrganizationUsageReport>"
-        },
-        {
-            "name": "totalCount",
-            "baseName": "totalCount",
-            "type": "number"
+            "name": "downgradeReason",
+            "baseName": "downgradeReason",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetOrganizationUsageReportsResponseAllOf.attributeTypeMap;
+        return DowngradeSubscriptionRequest.attributeTypeMap;
     }
 }
 

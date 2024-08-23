@@ -30,6 +30,10 @@ export class DeployPretrainedModelRequest {
     */
     'representativeFeaturesBase64'?: string;
     'deployModelType'?: DeployPretrainedModelRequestDeployModelTypeEnum;
+    /**
+    * Optional, use a specific converter (only for ONNX models).
+    */
+    'useConverter'?: DeployPretrainedModelRequestUseConverterEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -68,6 +72,11 @@ export class DeployPretrainedModelRequest {
             "name": "deployModelType",
             "baseName": "deployModelType",
             "type": "DeployPretrainedModelRequestDeployModelTypeEnum"
+        },
+        {
+            "name": "useConverter",
+            "baseName": "useConverter",
+            "type": "DeployPretrainedModelRequestUseConverterEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -81,3 +90,6 @@ export const DeployPretrainedModelRequestModelFileTypeEnumValues: string[] = ['t
 
 export type DeployPretrainedModelRequestDeployModelTypeEnum = 'int8' | 'float32';
 export const DeployPretrainedModelRequestDeployModelTypeEnumValues: string[] = ['int8', 'float32'];
+
+export type DeployPretrainedModelRequestUseConverterEnum = 'onnx-tf' | 'onnx2tf';
+export const DeployPretrainedModelRequestUseConverterEnumValues: string[] = ['onnx-tf', 'onnx2tf'];

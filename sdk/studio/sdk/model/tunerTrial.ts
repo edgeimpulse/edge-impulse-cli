@@ -14,6 +14,7 @@ import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialDspJobId } from './tunerTrialDspJobId';
 import { TunerTrialImpulse } from './tunerTrialImpulse';
 import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProject';
+import { TunerTrialMetrics } from './tunerTrialMetrics';
 
 export class TunerTrial {
     'id': string;
@@ -32,6 +33,7 @@ export class TunerTrial {
     'dspJobId'?: TunerTrialDspJobId;
     'learnJobId'?: number;
     'devicePerformance'?: { [key: string]: object; };
+    'metrics'?: TunerTrialMetrics;
     'impulseAddedToProject'?: TunerTrialImpulseAddedToProject;
 
     static discriminator: string | undefined = undefined;
@@ -116,6 +118,11 @@ export class TunerTrial {
             "name": "devicePerformance",
             "baseName": "devicePerformance",
             "type": "{ [key: string]: object; }"
+        },
+        {
+            "name": "metrics",
+            "baseName": "metrics",
+            "type": "TunerTrialMetrics"
         },
         {
             "name": "impulseAddedToProject",

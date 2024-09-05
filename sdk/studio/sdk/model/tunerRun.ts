@@ -11,6 +11,7 @@
  */
 
 import { JobStatus } from './jobStatus';
+import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 
 export class TunerRun {
     'tunerJobId': number;
@@ -19,6 +20,10 @@ export class TunerRun {
     'name'?: string;
     'created': Date;
     'jobStatus': JobStatus;
+    /**
+    * List of impulses specifying the EON Tuner search space
+    */
+    'space'?: Array<TunerSpaceImpulse>;
 
     static discriminator: string | undefined = undefined;
 
@@ -52,6 +57,11 @@ export class TunerRun {
             "name": "jobStatus",
             "baseName": "jobStatus",
             "type": "JobStatus"
+        },
+        {
+            "name": "space",
+            "baseName": "space",
+            "type": "Array<TunerSpaceImpulse>"
         }    ];
 
     static getAttributeTypeMap() {

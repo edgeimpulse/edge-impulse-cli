@@ -42,7 +42,14 @@ export class UserOrganization {
     */
     'trialUpgradedDate': Date | null;
     'entitlementLimits': EntitlementLimits;
+    /**
+    * The total number of users that are a member of this organization.
+    */
     'userCount': number;
+    /**
+    * The number of admin users for this organization.
+    */
+    'adminCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -105,6 +112,11 @@ export class UserOrganization {
         {
             "name": "userCount",
             "baseName": "userCount",
+            "type": "number"
+        },
+        {
+            "name": "adminCount",
+            "baseName": "adminCount",
             "type": "number"
         }    ];
 

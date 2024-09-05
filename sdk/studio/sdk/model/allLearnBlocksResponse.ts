@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { AllLearnBlocksResponseAllOf } from './allLearnBlocksResponseAllOf';
+import { AllLearnBlocksResponseAllOfLearnBlocks } from './allLearnBlocksResponseAllOfLearnBlocks';
 import { GenericApiResponse } from './genericApiResponse';
-import { WindowSettings } from './windowSettings';
-import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
 
-export class WindowSettingsResponse {
+export class AllLearnBlocksResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,8 +23,7 @@ export class WindowSettingsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'windowSettingsEvent': Array<WindowSettings>;
-    'windowSettingsContinuous': Array<WindowSettings>;
+    'learnBlocks': Array<AllLearnBlocksResponseAllOfLearnBlocks>;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,18 +39,13 @@ export class WindowSettingsResponse {
             "type": "string"
         },
         {
-            "name": "windowSettingsEvent",
-            "baseName": "windowSettingsEvent",
-            "type": "Array<WindowSettings>"
-        },
-        {
-            "name": "windowSettingsContinuous",
-            "baseName": "windowSettingsContinuous",
-            "type": "Array<WindowSettings>"
+            "name": "learnBlocks",
+            "baseName": "learnBlocks",
+            "type": "Array<AllLearnBlocksResponseAllOfLearnBlocks>"
         }    ];
 
     static getAttributeTypeMap() {
-        return WindowSettingsResponse.attributeTypeMap;
+        return AllLearnBlocksResponse.attributeTypeMap;
     }
 }
 

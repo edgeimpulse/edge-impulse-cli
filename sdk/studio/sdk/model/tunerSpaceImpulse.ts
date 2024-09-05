@@ -27,7 +27,7 @@ export class TunerSpaceImpulse {
     /**
     * Learning Blocks that are part of this impulse
     */
-    'learnBlocks': Array<any>;
+    'learnBlocks': Array<Array<any>>;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,7 +50,7 @@ export class TunerSpaceImpulse {
         {
             "name": "learnBlocks",
             "baseName": "learnBlocks",
-            "type": "Array<any>"
+            "type": "Array<Array<any>>"
         }    ];
 
     static getAttributeTypeMap() {

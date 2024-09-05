@@ -11,7 +11,7 @@
  */
 
 
-export class WindowSettingsResponseAllOfWindowSettings {
+export class WindowSettings {
     'windowSizeMs': number;
     'windowIncreaseMs': number;
     'windowIncreasePct': number;
@@ -60,7 +60,7 @@ export class WindowSettingsResponseAllOfWindowSettings {
         }    ];
 
     static getAttributeTypeMap() {
-        return WindowSettingsResponseAllOfWindowSettings.attributeTypeMap;
+        return WindowSettings.attributeTypeMap;
     }
 }
 

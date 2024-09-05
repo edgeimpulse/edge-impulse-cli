@@ -10,27 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { AllLearnBlocksResponseAllOfLearnBlocks } from './allLearnBlocksResponseAllOfLearnBlocks';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
+export class AllLearnBlocksResponseAllOf {
+    'learnBlocks': Array<AllLearnBlocksResponseAllOfLearnBlocks>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
+            "name": "learnBlocks",
+            "baseName": "learnBlocks",
+            "type": "Array<AllLearnBlocksResponseAllOfLearnBlocks>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return AllLearnBlocksResponseAllOf.attributeTypeMap;
     }
 }
 

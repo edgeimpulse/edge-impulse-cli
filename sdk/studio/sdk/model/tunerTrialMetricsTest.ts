@@ -10,27 +10,28 @@
  * Do not edit the class manually.
  */
 
+import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
+export class TunerTrialMetricsTest {
+    'float32'?: KerasModelMetadataMetrics;
+    'int8'?: KerasModelMetadataMetrics;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
+            "name": "float32",
+            "baseName": "float32",
+            "type": "KerasModelMetadataMetrics"
         },
         {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
+            "name": "int8",
+            "baseName": "int8",
+            "type": "KerasModelMetadataMetrics"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return TunerTrialMetricsTest.attributeTypeMap;
     }
 }
 

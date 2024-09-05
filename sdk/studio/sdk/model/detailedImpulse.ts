@@ -28,6 +28,10 @@ export class DetailedImpulse {
     * Whether this impulse contains blocks with \"stale\" features (i.e. the dataset has changed since features were generated)
     */
     'isStale': boolean;
+    /**
+    * Tags associated with this impulse
+    */
+    'tags': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -66,6 +70,11 @@ export class DetailedImpulse {
             "name": "isStale",
             "baseName": "isStale",
             "type": "boolean"
+        },
+        {
+            "name": "tags",
+            "baseName": "tags",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

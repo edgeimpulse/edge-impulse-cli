@@ -23,7 +23,7 @@ export class ModelPrediction {
     */
     'f1Score'?: number;
     /**
-    * Only set for visual anomaly projects. 2D array of shape (n, n) with raw anomaly scores, where n can be calculated as ((1/8 of image input size)/2 - 1). The scores corresponds to each grid cell in the image\'s spatial matrix.
+    * Only set for visual anomaly projects. 2D array of shape (n, n) with raw anomaly scores, where n varies based on the image input size and the specific visual anomaly algorithm used. The scores corresponds to each grid cell in the image\'s spatial matrix.
     */
     'anomalyScores'?: Array<Array<number>>;
 

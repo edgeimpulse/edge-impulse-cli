@@ -35,5 +35,5 @@ export class DetailedImpulseMetricFilteringType {
 }
 
 
-export type DetailedImpulseMetricFilteringTypeTypeEnum = 'numeric' | 'string' | 'select' | 'boolean';
-export const DetailedImpulseMetricFilteringTypeTypeEnumValues: string[] = ['numeric', 'string', 'select', 'boolean'];
+export type DetailedImpulseMetricFilteringTypeTypeEnum = 'numeric' | 'string' | 'select' | 'boolean' | 'list';
+export const DetailedImpulseMetricFilteringTypeTypeEnumValues: string[] = ['numeric', 'string', 'select', 'boolean', 'list'];

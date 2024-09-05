@@ -24,7 +24,7 @@ export class ClassifySampleResponseClassification {
     */
     'result': Array<{ [key: string]: number; }>;
     /**
-    * Anomaly scores and computed metrics for GMM anomaly detection, one item per window.
+    * Anomaly scores and computed metrics for visual anomaly detection, one item per window.
     */
     'anomalyResult'?: Array<AnomalyResult>;
     /**

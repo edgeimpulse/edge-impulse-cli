@@ -10,18 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
+import { WindowSettings } from './windowSettings';
 
 export class WindowSettingsResponseAllOf {
-    'windowSettings': Array<WindowSettingsResponseAllOfWindowSettings>;
+    'windowSettingsEvent': Array<WindowSettings>;
+    'windowSettingsContinuous': Array<WindowSettings>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "windowSettings",
-            "baseName": "windowSettings",
-            "type": "Array<WindowSettingsResponseAllOfWindowSettings>"
+            "name": "windowSettingsEvent",
+            "baseName": "windowSettingsEvent",
+            "type": "Array<WindowSettings>"
+        },
+        {
+            "name": "windowSettingsContinuous",
+            "baseName": "windowSettingsContinuous",
+            "type": "Array<WindowSettings>"
         }    ];
 
     static getAttributeTypeMap() {

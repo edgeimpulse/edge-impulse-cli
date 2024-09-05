@@ -11,26 +11,23 @@
  */
 
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
+export class EmailValidationRequest {
+    /**
+    * E-mail address to validate
+    */
+    'email': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
+            "name": "email",
+            "baseName": "email",
             "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return EmailValidationRequest.attributeTypeMap;
     }
 }
 

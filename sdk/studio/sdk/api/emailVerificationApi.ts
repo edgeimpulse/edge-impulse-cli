@@ -20,9 +20,11 @@ import http = require('http');
 
 /* tslint:disable:no-unused-locals */
 import { ActivateUserOrVerifyEmailRequest } from '../model/activateUserOrVerifyEmailRequest';
+import { EmailValidationRequest } from '../model/emailValidationRequest';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { GetEmailVerificationStatusResponse } from '../model/getEmailVerificationStatusResponse';
 import { RequestEmailVerificationRequest } from '../model/requestEmailVerificationRequest';
+import { ValidateEmailResponse } from '../model/validateEmailResponse';
 import { VerifyEmailResponse } from '../model/verifyEmailResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
@@ -244,6 +246,83 @@ export class EmailVerificationApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "EntityCreatedResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Validate whether an email is valid for sign up. Using an email that fails this check can result in the associated account missing communications and features that are distributed through email.
+     * @summary Validate email for account sign-up
+     * @param emailValidationRequest 
+     */
+    public async validateEmail (emailValidationRequest: EmailValidationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ValidateEmailResponse> {
+        const localVarPath = this.basePath + '/api/emails/validate';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'emailValidationRequest' is not null or undefined
+
+
+        if (emailValidationRequest === null || emailValidationRequest === undefined) {
+            throw new Error('Required parameter emailValidationRequest was null or undefined when calling validateEmail.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(emailValidationRequest, "EmailValidationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ValidateEmailResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ValidateEmailResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

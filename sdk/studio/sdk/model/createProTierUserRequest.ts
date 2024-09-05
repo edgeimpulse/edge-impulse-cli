@@ -63,6 +63,10 @@ export class CreateProTierUserRequest {
     */
     'utmParams'?: Array<any>;
     /**
+    * If true, allows signup to proceed despite a potentially invalid email. Note that this will enforce email verification post-signup
+    */
+    'ignoreEmailValidation'?: boolean;
+    /**
     * Origin of the redirect URL returned as result of creating the professional user.
     */
     'redirectUrlOrigin'?: string;
@@ -133,6 +137,11 @@ export class CreateProTierUserRequest {
             "name": "utmParams",
             "baseName": "utmParams",
             "type": "Array<any>"
+        },
+        {
+            "name": "ignoreEmailValidation",
+            "baseName": "ignoreEmailValidation",
+            "type": "boolean"
         },
         {
             "name": "redirectUrlOrigin",

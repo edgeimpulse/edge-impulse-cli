@@ -60,6 +60,10 @@ export class CreateUserRequest {
     * List of UTM parameters.
     */
     'utmParams'?: Array<any>;
+    /**
+    * If true, allows signup to proceed despite a potentially invalid email. Note that this will enforce email verification post-signup
+    */
+    'ignoreEmailValidation'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -123,6 +127,11 @@ export class CreateUserRequest {
             "name": "utmParams",
             "baseName": "utmParams",
             "type": "Array<any>"
+        },
+        {
+            "name": "ignoreEmailValidation",
+            "baseName": "ignoreEmailValidation",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

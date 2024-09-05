@@ -91,6 +91,9 @@ export * from './adminUpdateTrialRequest';
 export * from './adminUpdateUserPermissionsRequest';
 export * from './adminUpdateUserRequest';
 export * from './akidaEdgeLearningConfig';
+export * from './allLearnBlocksResponse';
+export * from './allLearnBlocksResponseAllOf';
+export * from './allLearnBlocksResponseAllOfLearnBlocks';
 export * from './anomalyCapacity';
 export * from './anomalyConfig';
 export * from './anomalyConfigAxes';
@@ -296,6 +299,7 @@ export * from './dspTrainedFeaturesResponseAllOf';
 export * from './dspTrainedFeaturesResponseAllOfData';
 export * from './dspTrainedFeaturesResponseAllOfSample';
 export * from './editSampleLabelRequest';
+export * from './emailValidationRequest';
 export * from './enterpriseTrial';
 export * from './enterpriseUpgradeOrTrialExtensionRequest';
 export * from './entitlementLimits';
@@ -622,6 +626,7 @@ export * from './objectDetectionLastLayer';
 export * from './optimizeConfig';
 export * from './optimizeConfigResponse';
 export * from './optimizeConfigResponseAllOf';
+export * from './optimizeConfigSearchSpaceTemplate';
 export * from './optimizeConfigTargetDevice';
 export * from './optimizeDSPParametersResponse';
 export * from './optimizeDSPParametersResponseAllOf';
@@ -876,6 +881,8 @@ export * from './tunerTrialBlocks';
 export * from './tunerTrialDspJobId';
 export * from './tunerTrialImpulse';
 export * from './tunerTrialImpulseAddedToProject';
+export * from './tunerTrialMetrics';
+export * from './tunerTrialMetricsTest';
 export * from './updateImpulseRequest';
 export * from './updateJobRequest';
 export * from './updateOrganizationAddCollaboratorRequest';
@@ -937,6 +944,8 @@ export * from './userSubscriptionMetricsResponse';
 export * from './userSubscriptionMetricsResponseAllOf';
 export * from './userSubscriptionMetricsResponseAllOfMetrics';
 export * from './userTierEnum';
+export * from './validateEmailResponse';
+export * from './validateEmailResponseAllOf';
 export * from './verifyDspBlockUrlRequest';
 export * from './verifyDspBlockUrlResponse';
 export * from './verifyDspBlockUrlResponseAllOf';
@@ -953,9 +962,9 @@ export * from './whitelabel';
 export * from './whitelabelAdminCreateOrganizationRequest';
 export * from './whitelabelAllLearningBlocks';
 export * from './whitelabelCustomDeploymentBlocks';
+export * from './windowSettings';
 export * from './windowSettingsResponse';
 export * from './windowSettingsResponseAllOf';
-export * from './windowSettingsResponseAllOfWindowSettings';
 
 import localVarRequest = require('request');
 
@@ -1052,6 +1061,9 @@ import { AdminUpdateTrialRequest } from './adminUpdateTrialRequest';
 import { AdminUpdateUserPermissionsRequest } from './adminUpdateUserPermissionsRequest';
 import { AdminUpdateUserRequest } from './adminUpdateUserRequest';
 import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
+import { AllLearnBlocksResponse } from './allLearnBlocksResponse';
+import { AllLearnBlocksResponseAllOf } from './allLearnBlocksResponseAllOf';
+import { AllLearnBlocksResponseAllOfLearnBlocks } from './allLearnBlocksResponseAllOfLearnBlocks';
 import { AnomalyCapacity } from './anomalyCapacity';
 import { AnomalyConfig } from './anomalyConfig';
 import { AnomalyConfigAxes } from './anomalyConfigAxes';
@@ -1257,6 +1269,7 @@ import { DspTrainedFeaturesResponseAllOf } from './dspTrainedFeaturesResponseAll
 import { DspTrainedFeaturesResponseAllOfData } from './dspTrainedFeaturesResponseAllOfData';
 import { DspTrainedFeaturesResponseAllOfSample } from './dspTrainedFeaturesResponseAllOfSample';
 import { EditSampleLabelRequest } from './editSampleLabelRequest';
+import { EmailValidationRequest } from './emailValidationRequest';
 import { EnterpriseTrial } from './enterpriseTrial';
 import { EnterpriseUpgradeOrTrialExtensionRequest } from './enterpriseUpgradeOrTrialExtensionRequest';
 import { EntitlementLimits } from './entitlementLimits';
@@ -1583,6 +1596,7 @@ import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OptimizeConfig } from './optimizeConfig';
 import { OptimizeConfigResponse } from './optimizeConfigResponse';
 import { OptimizeConfigResponseAllOf } from './optimizeConfigResponseAllOf';
+import { OptimizeConfigSearchSpaceTemplate } from './optimizeConfigSearchSpaceTemplate';
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
 import { OptimizeDSPParametersResponse } from './optimizeDSPParametersResponse';
 import { OptimizeDSPParametersResponseAllOf } from './optimizeDSPParametersResponseAllOf';
@@ -1837,6 +1851,8 @@ import { TunerTrialBlocks } from './tunerTrialBlocks';
 import { TunerTrialDspJobId } from './tunerTrialDspJobId';
 import { TunerTrialImpulse } from './tunerTrialImpulse';
 import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProject';
+import { TunerTrialMetrics } from './tunerTrialMetrics';
+import { TunerTrialMetricsTest } from './tunerTrialMetricsTest';
 import { UpdateImpulseRequest } from './updateImpulseRequest';
 import { UpdateJobRequest } from './updateJobRequest';
 import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
@@ -1898,6 +1914,8 @@ import { UserSubscriptionMetricsResponse } from './userSubscriptionMetricsRespon
 import { UserSubscriptionMetricsResponseAllOf } from './userSubscriptionMetricsResponseAllOf';
 import { UserSubscriptionMetricsResponseAllOfMetrics } from './userSubscriptionMetricsResponseAllOfMetrics';
 import { UserTierEnum } from './userTierEnum';
+import { ValidateEmailResponse } from './validateEmailResponse';
+import { ValidateEmailResponseAllOf } from './validateEmailResponseAllOf';
 import { VerifyDspBlockUrlRequest } from './verifyDspBlockUrlRequest';
 import { VerifyDspBlockUrlResponse } from './verifyDspBlockUrlResponse';
 import { VerifyDspBlockUrlResponseAllOf } from './verifyDspBlockUrlResponseAllOf';
@@ -1914,9 +1932,9 @@ import { Whitelabel } from './whitelabel';
 import { WhitelabelAdminCreateOrganizationRequest } from './whitelabelAdminCreateOrganizationRequest';
 import { WhitelabelAllLearningBlocks } from './whitelabelAllLearningBlocks';
 import { WhitelabelCustomDeploymentBlocks } from './whitelabelCustomDeploymentBlocks';
+import { WindowSettings } from './windowSettings';
 import { WindowSettingsResponse } from './windowSettingsResponse';
 import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
-import { WindowSettingsResponseAllOfWindowSettings } from './windowSettingsResponseAllOfWindowSettings';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -2015,12 +2033,9 @@ let enumsMap: {[index: string]: any} = {
     "MoveRawDataRequestNewCategoryEnum": "MoveRawDataRequestNewCategoryEnum",
     "ObjectDetectionAutoLabelRequestNeuralNetworkEnum": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum",
     "ObjectDetectionLastLayer": "ObjectDetectionLastLayer",
-    "OptimizeConfigDatasetCategoryEnum": "OptimizeConfigDatasetCategoryEnum",
-    "OptimizeConfigClassificationTypeEnum": "OptimizeConfigClassificationTypeEnum",
     "OptimizeConfigTuningAlgorithmEnum": "OptimizeConfigTuningAlgorithmEnum",
-    "OptimizeConfigResponseDatasetCategoryEnum": "OptimizeConfigResponseDatasetCategoryEnum",
-    "OptimizeConfigResponseClassificationTypeEnum": "OptimizeConfigResponseClassificationTypeEnum",
     "OptimizeConfigResponseTuningAlgorithmEnum": "OptimizeConfigResponseTuningAlgorithmEnum",
+    "OptimizeConfigSearchSpaceTemplateIdentifierEnum": "OptimizeConfigSearchSpaceTemplateIdentifierEnum",
     "OptimizeStateResponseProjectDataTypeEnum": "OptimizeStateResponseProjectDataTypeEnum",
     "OptimizeStateResponseAllOfProjectDataTypeEnum": "OptimizeStateResponseAllOfProjectDataTypeEnum",
     "OptimizeStateResponseAllOfStatusStatusEnum": "OptimizeStateResponseAllOfStatusStatusEnum",
@@ -2087,6 +2102,8 @@ let enumsMap: {[index: string]: any} = {
     "UploadPretrainedModelRequestModelFileTypeEnum": "UploadPretrainedModelRequestModelFileTypeEnum",
     "UserProjectsSortOrder": "UserProjectsSortOrder",
     "UserTierEnum": "UserTierEnum",
+    "ValidateEmailResponseVerdictEnum": "ValidateEmailResponseVerdictEnum",
+    "ValidateEmailResponseAllOfVerdictEnum": "ValidateEmailResponseAllOfVerdictEnum",
 }
 
 let typeMap: {[index: string]: any} = {
@@ -2183,6 +2200,9 @@ let typeMap: {[index: string]: any} = {
     "AdminUpdateUserPermissionsRequest": AdminUpdateUserPermissionsRequest,
     "AdminUpdateUserRequest": AdminUpdateUserRequest,
     "AkidaEdgeLearningConfig": AkidaEdgeLearningConfig,
+    "AllLearnBlocksResponse": AllLearnBlocksResponse,
+    "AllLearnBlocksResponseAllOf": AllLearnBlocksResponseAllOf,
+    "AllLearnBlocksResponseAllOfLearnBlocks": AllLearnBlocksResponseAllOfLearnBlocks,
     "AnomalyConfig": AnomalyConfig,
     "AnomalyConfigAxes": AnomalyConfigAxes,
     "AnomalyConfigResponse": AnomalyConfigResponse,
@@ -2380,6 +2400,7 @@ let typeMap: {[index: string]: any} = {
     "DspTrainedFeaturesResponseAllOfData": DspTrainedFeaturesResponseAllOfData,
     "DspTrainedFeaturesResponseAllOfSample": DspTrainedFeaturesResponseAllOfSample,
     "EditSampleLabelRequest": EditSampleLabelRequest,
+    "EmailValidationRequest": EmailValidationRequest,
     "EnterpriseTrial": EnterpriseTrial,
     "EnterpriseUpgradeOrTrialExtensionRequest": EnterpriseUpgradeOrTrialExtensionRequest,
     "EntitlementLimits": EntitlementLimits,
@@ -2695,6 +2716,7 @@ let typeMap: {[index: string]: any} = {
     "OptimizeConfig": OptimizeConfig,
     "OptimizeConfigResponse": OptimizeConfigResponse,
     "OptimizeConfigResponseAllOf": OptimizeConfigResponseAllOf,
+    "OptimizeConfigSearchSpaceTemplate": OptimizeConfigSearchSpaceTemplate,
     "OptimizeConfigTargetDevice": OptimizeConfigTargetDevice,
     "OptimizeDSPParametersResponse": OptimizeDSPParametersResponse,
     "OptimizeDSPParametersResponseAllOf": OptimizeDSPParametersResponseAllOf,
@@ -2938,6 +2960,8 @@ let typeMap: {[index: string]: any} = {
     "TunerTrialDspJobId": TunerTrialDspJobId,
     "TunerTrialImpulse": TunerTrialImpulse,
     "TunerTrialImpulseAddedToProject": TunerTrialImpulseAddedToProject,
+    "TunerTrialMetrics": TunerTrialMetrics,
+    "TunerTrialMetricsTest": TunerTrialMetricsTest,
     "UpdateImpulseRequest": UpdateImpulseRequest,
     "UpdateJobRequest": UpdateJobRequest,
     "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,
@@ -2997,6 +3021,8 @@ let typeMap: {[index: string]: any} = {
     "UserSubscriptionMetricsResponse": UserSubscriptionMetricsResponse,
     "UserSubscriptionMetricsResponseAllOf": UserSubscriptionMetricsResponseAllOf,
     "UserSubscriptionMetricsResponseAllOfMetrics": UserSubscriptionMetricsResponseAllOfMetrics,
+    "ValidateEmailResponse": ValidateEmailResponse,
+    "ValidateEmailResponseAllOf": ValidateEmailResponseAllOf,
     "VerifyDspBlockUrlRequest": VerifyDspBlockUrlRequest,
     "VerifyDspBlockUrlResponse": VerifyDspBlockUrlResponse,
     "VerifyDspBlockUrlResponseAllOf": VerifyDspBlockUrlResponseAllOf,
@@ -3013,9 +3039,9 @@ let typeMap: {[index: string]: any} = {
     "WhitelabelAdminCreateOrganizationRequest": WhitelabelAdminCreateOrganizationRequest,
     "WhitelabelAllLearningBlocks": WhitelabelAllLearningBlocks,
     "WhitelabelCustomDeploymentBlocks": WhitelabelCustomDeploymentBlocks,
+    "WindowSettings": WindowSettings,
     "WindowSettingsResponse": WindowSettingsResponse,
     "WindowSettingsResponseAllOf": WindowSettingsResponseAllOf,
-    "WindowSettingsResponseAllOfWindowSettings": WindowSettingsResponseAllOfWindowSettings,
 }
 
 export class ObjectSerializer {

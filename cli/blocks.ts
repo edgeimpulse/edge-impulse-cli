@@ -710,7 +710,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
             if (fetchInqRes.option === 'yes') {
                 try {
-                    const data = await request(templateSourcePath)
+                    const data = request(templateSourcePath)
                         .pipe(unzip.Parse())
                         .on('entry', async (entry: ExtractedFile) => {
                             // To unzip in the current directory:
@@ -731,8 +731,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 // eslint-disable-next-line
                                 entry.pipe(fs.createWriteStream(newFilename));
                             }
-                        })
-                        .promise();
+                        });
                     console.log('Template repository fetched!');
                 }
                 catch (e) {

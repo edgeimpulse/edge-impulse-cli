@@ -17,6 +17,10 @@ export class TunerTrialBlocks {
     'retries': number;
     'status': TunerTrialBlocksStatusEnum;
     'type': TunerTrialBlocksTypeEnum;
+    /**
+    * Index of corresponding DSP/learn block in the impulse model passed to createTrial()
+    */
+    'modelBlockIndex'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +49,11 @@ export class TunerTrialBlocks {
             "name": "type",
             "baseName": "type",
             "type": "TunerTrialBlocksTypeEnum"
+        },
+        {
+            "name": "modelBlockIndex",
+            "baseName": "modelBlockIndex",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

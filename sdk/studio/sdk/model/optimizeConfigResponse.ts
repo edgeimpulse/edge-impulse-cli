@@ -13,6 +13,7 @@
 import { GenericApiResponse } from './genericApiResponse';
 import { OptimizeConfig } from './optimizeConfig';
 import { OptimizeConfigResponseAllOf } from './optimizeConfigResponseAllOf';
+import { OptimizeConfigSearchSpaceTemplate } from './optimizeConfigSearchSpaceTemplate';
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
 
@@ -26,14 +27,6 @@ export class OptimizeConfigResponse {
     */
     'error'?: string;
     'name'?: string;
-    /**
-    * Dataset category
-    */
-    'datasetCategory': OptimizeConfigResponseDatasetCategoryEnum;
-    /**
-    * Classification type
-    */
-    'classificationType': OptimizeConfigResponseClassificationTypeEnum;
     /**
     * Target latency in MS
     */
@@ -65,6 +58,7 @@ export class OptimizeConfigResponse {
     * List of impulses specifying the EON Tuner search space
     */
     'space'?: Array<TunerSpaceImpulse>;
+    'searchSpaceTemplate'?: OptimizeConfigSearchSpaceTemplate;
     'device'?: object;
 
     static discriminator: string | undefined = undefined;
@@ -84,16 +78,6 @@ export class OptimizeConfigResponse {
             "name": "name",
             "baseName": "name",
             "type": "string"
-        },
-        {
-            "name": "datasetCategory",
-            "baseName": "datasetCategory",
-            "type": "OptimizeConfigResponseDatasetCategoryEnum"
-        },
-        {
-            "name": "classificationType",
-            "baseName": "classificationType",
-            "type": "OptimizeConfigResponseClassificationTypeEnum"
         },
         {
             "name": "targetLatency",
@@ -161,6 +145,11 @@ export class OptimizeConfigResponse {
             "type": "Array<TunerSpaceImpulse>"
         },
         {
+            "name": "searchSpaceTemplate",
+            "baseName": "searchSpaceTemplate",
+            "type": "OptimizeConfigSearchSpaceTemplate"
+        },
+        {
             "name": "device",
             "baseName": "device",
             "type": "object"
@@ -171,12 +160,6 @@ export class OptimizeConfigResponse {
     }
 }
 
-
-export type OptimizeConfigResponseDatasetCategoryEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'transfer_learning' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection_bounding_boxes' | 'object_detection_centroids' | 'visual_ad';
-export const OptimizeConfigResponseDatasetCategoryEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'transfer_learning', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection_bounding_boxes', 'object_detection_centroids', 'visual_ad'];
-
-export type OptimizeConfigResponseClassificationTypeEnum = 'classification' | 'regression' | 'anomaly' | 'object_detection';
-export const OptimizeConfigResponseClassificationTypeEnumValues: string[] = ['classification', 'regression', 'anomaly', 'object_detection'];
 
 export type OptimizeConfigResponseTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian' | 'custom';
 export const OptimizeConfigResponseTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian', 'custom'];

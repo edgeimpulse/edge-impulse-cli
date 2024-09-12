@@ -22,6 +22,7 @@ export class AdminGetOrganizationsResponseAllOfOrganizations {
     'domain'?: string;
     'whitelabelId'?: number;
     'billable'?: boolean;
+    'privateProjectCount': number;
     'entitlementLimits'?: EntitlementLimits;
 
     static discriminator: string | undefined = undefined;
@@ -71,6 +72,11 @@ export class AdminGetOrganizationsResponseAllOfOrganizations {
             "name": "billable",
             "baseName": "billable",
             "type": "boolean"
+        },
+        {
+            "name": "privateProjectCount",
+            "baseName": "privateProjectCount",
+            "type": "number"
         },
         {
             "name": "entitlementLimits",

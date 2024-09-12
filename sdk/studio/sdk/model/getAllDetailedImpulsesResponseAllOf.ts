@@ -16,6 +16,10 @@ import { GetAllDetailedImpulsesResponseAllOfMetricKeysByCategory } from './getAl
 export class GetAllDetailedImpulsesResponseAllOf {
     'impulses': Array<DetailedImpulse>;
     'metricKeysByCategory': Array<GetAllDetailedImpulsesResponseAllOfMetricKeysByCategory>;
+    /**
+    * Which extra impulse information should be shown in the impulses table.
+    */
+    'extraTableColumns': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -29,6 +33,11 @@ export class GetAllDetailedImpulsesResponseAllOf {
             "name": "metricKeysByCategory",
             "baseName": "metricKeysByCategory",
             "type": "Array<GetAllDetailedImpulsesResponseAllOfMetricKeysByCategory>"
+        },
+        {
+            "name": "extraTableColumns",
+            "baseName": "extraTableColumns",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

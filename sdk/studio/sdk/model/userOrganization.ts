@@ -50,6 +50,14 @@ export class UserOrganization {
     * The number of admin users for this organization.
     */
     'adminCount': number;
+    /**
+    * The number of private projects for this organization.
+    */
+    'privateProjectCount': number;
+    /**
+    * Last time this user accessed this organization.
+    */
+    'lastAccessed'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -118,6 +126,16 @@ export class UserOrganization {
             "name": "adminCount",
             "baseName": "adminCount",
             "type": "number"
+        },
+        {
+            "name": "privateProjectCount",
+            "baseName": "privateProjectCount",
+            "type": "number"
+        },
+        {
+            "name": "lastAccessed",
+            "baseName": "lastAccessed",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

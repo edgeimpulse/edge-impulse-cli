@@ -158,6 +158,10 @@ export class UpdateProjectRequest {
     * Which additional metrics should be shown in the impulse list. See \'GetAllDetailedImpulsesResponse\' for a list of all metrics.
     */
     'impulseListAdditionalMetricsShownColumns'?: Array<string>;
+    /**
+    * Which extra columns should be shown in the impulse list.
+    */
+    'impulseListExtraColumns'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -365,6 +369,11 @@ export class UpdateProjectRequest {
         {
             "name": "impulseListAdditionalMetricsShownColumns",
             "baseName": "impulseListAdditionalMetricsShownColumns",
+            "type": "Array<string>"
+        },
+        {
+            "name": "impulseListExtraColumns",
+            "baseName": "impulseListExtraColumns",
             "type": "Array<string>"
         }    ];
 

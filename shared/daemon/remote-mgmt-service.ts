@@ -64,20 +64,19 @@ export interface RemoteMgmtConfig {
     };
     api: {
         projects: {
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             getProjectInfo(projectId: number, queryParams: { impulseId?: number }): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
         };
         devices: {
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ success: boolean, error?: string }>;
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ success: boolean, error?: string }>;
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             getDevice(projectId: number, deviceId: string): Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
         };
         whitelabels: {
-            // eslint-disable-next-line max-len
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             getWhitelabelDomain(whitelabelId: number | null): Promise<{ success: boolean, domain?: string }>;
         }
     };

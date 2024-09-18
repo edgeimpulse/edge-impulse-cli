@@ -254,7 +254,7 @@ export const supportedJsonLabelFormats: SupportedLabelFormatJson[] = [
                         };
                     });
                     if (bboxes[filename]) {
-                        bboxes[filename] = [...bboxes[filename], ...parsedBoxes];
+                        bboxes[filename] = [ ...bboxes[filename], ...parsedBoxes ];
                     }
                     else {
                         bboxes[filename] = parsedBoxes;
@@ -333,9 +333,9 @@ export const supportedJsonLabelFormats: SupportedLabelFormatJson[] = [
     },
 ];
 
-const plainCsvObjDetSchema = ['file_name', 'classes', 'xmin', 'ymin', 'xmax', 'ymax'] as const;
-const plainCsvSchema = ['file_name', 'class_name'] as const;
-const openImagesCsvSchema = ['ImageID', 'LabelName', 'XMin', 'XMax', 'YMin', 'YMax'] as const;
+const plainCsvObjDetSchema = [ 'file_name', 'classes', 'xmin', 'ymin', 'xmax', 'ymax' ] as const;
+const plainCsvSchema = [ 'file_name', 'class_name' ] as const;
+const openImagesCsvSchema = [ 'ImageID', 'LabelName', 'XMin', 'XMax', 'YMin', 'YMax' ] as const;
 
 // Supported formats that come in a CSV file
 export const supportedCsvLabelFormats: SupportedLabelFormatCsv[] = [
@@ -475,7 +475,7 @@ export const supportedCsvLabelFormats: SupportedLabelFormatCsv[] = [
                 centeredBoundingBoxes: false,
                 lookupNoExtension: true,
             },
-            labelsFile: [{
+            labelsFile: [ {
                 fileFilter: (name) => {
                     return name.endsWith('class-descriptions.csv');
                 },
@@ -492,7 +492,7 @@ export const supportedCsvLabelFormats: SupportedLabelFormatCsv[] = [
                 },
                 fileDescription: 'class-descriptions.csv',
                 isNumeric: false
-            }]
+            } ]
         }
     }
 ];
@@ -607,7 +607,7 @@ export const supportedXmlLabelFormats: SupportedLabelFormatXml[] = [
                 let bboxes: BoundingBoxesMap = { };
 
                 const boxesToProcess = Array.isArray(jsonParsed.annotation.object)
-                    ? jsonParsed.annotation.object : [jsonParsed.annotation.object];
+                    ? jsonParsed.annotation.object : [ jsonParsed.annotation.object ];
                 let boxes: ExportInputBoundingBox[] = [];
 
                 // Process each box

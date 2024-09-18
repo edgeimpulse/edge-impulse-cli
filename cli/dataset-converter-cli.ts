@@ -182,7 +182,7 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                 else if (this._datasetFormat.formatStyle === 'csv') {
                     // Parse the text (as CSV) into rows and columns
                     const csvParsed = Papa.parse(fileContents, {
-                        delimitersToGuess: [',', '\t', ';'],
+                        delimitersToGuess: [ ',', '\t', ';' ],
                     });
                     const data: string[][] = <string[][]>csvParsed.data;
                     // Check if the columns match any known schema, and parse the rows
@@ -295,7 +295,7 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
                 }
                 else if (labelsFileFormat.fileType === 'csv') {
                     const csvParsed = Papa.parse(fileContents, {
-                        delimitersToGuess: [',', '\t', ';'],
+                        delimitersToGuess: [ ',', '\t', ';' ],
                     });
                     const data: string[][] = <string[][]>csvParsed.data;
                     labelMap = labelsFileFormat.conversionFunction(data);
@@ -413,7 +413,7 @@ export function deriveDatasetFormat(files: FileInFolder[], formatsToTry?: Suppor
         else if (labelFileName.endsWith('.csv')) {
             // Parse the text (as CSV) into rows and columns
             const csvParsed = Papa.parse(labelFileText, {
-                delimitersToGuess: [',', '\t', ';'],
+                delimitersToGuess: [ ',', '\t', ';' ],
             });
             const data: string[][] = <string[][]>csvParsed.data;
             // Look for any CSV format match
@@ -449,7 +449,7 @@ export function deriveDatasetFormat(files: FileInFolder[], formatsToTry?: Suppor
  * @returns True if the dataset matches the format, else false
  */
 export function checkDatasetMatchesFormat(files: FileInFolder[], formatName: SupportedLabelFormatNames): boolean {
-    const format = deriveDatasetFormat(files, [formatName]);
+    const format = deriveDatasetFormat(files, [ formatName ]);
     if (format && format === formatName) {
         return true;
     }

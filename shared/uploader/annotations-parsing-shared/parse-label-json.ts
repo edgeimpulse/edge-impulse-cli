@@ -130,10 +130,10 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
             const rootObj = <{ [k: string]: object | number | string | boolean }>io;
 
             // For each required key/value:
-            for (const [key, value] of Object.entries(constraint.value || [])) {
+            for (const [ key, value ] of Object.entries(constraint.value || [])) {
                 // Examine constraint on the current value
                 const rootObjEntries = Object.entries(rootObj || []);
-                const entry = rootObjEntries.find(([k1, _]) => k1 === key);
+                const entry = rootObjEntries.find(([ k1, _ ]) => k1 === key);
 
                 // Value is required but is missing in target object
                 if (value.required && typeof entry === 'undefined') {
@@ -146,7 +146,7 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
 
                 // Recursively validate this value
                 if (entry) {
-                    const entryIsValid = validateObject(<object>entry[1], value, [...scope, key]);
+                    const entryIsValid = validateObject(<object>entry[1], value, [ ...scope, key ]);
                     if (!entryIsValid.valid) {
                         return entryIsValid;
                     }
@@ -171,8 +171,8 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
             const rootObj = <{ [k: string]: object }>io;
 
             // Recursively validate all values
-            for (const [key, value] of Object.entries(rootObj)) {
-                const entryIsValid = validateObject(value, constraint.values, [...scope, key]);
+            for (const [ key, value ] of Object.entries(rootObj)) {
+                const entryIsValid = validateObject(value, constraint.values, [ ...scope, key ]);
                 if (!entryIsValid.valid) {
                     return entryIsValid;
                 }
@@ -203,7 +203,7 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
             for (let idx = 0; idx < rootArr.length; idx++) {
                 const entryIsValid = validateObject(rootArr[idx],
                     (typeof constraint.values === 'function') ? constraint.values(rootArr[idx]) : constraint.values,
-                    [...scope, idx]);
+                    [ ...scope, idx ]);
                 if (!entryIsValid.valid) {
                     return entryIsValid;
                 }

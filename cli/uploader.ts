@@ -91,13 +91,13 @@ const cliOptions = {
 };
 
 const logAllAnnotationFormats = () => {
-    [{
+    [ {
         name: 'OBJECT DETECTION',
         key: 'object-detection',
     }, {
         name: 'SINGLE LABEL',
         key: 'single-label',
-    }].forEach(type => {
+    } ].forEach(type => {
         console.log(`${type.name}:`);
         console.log(listAllAnnotationFormats(type.key as SupportedLabelType)
             .map(format => `    * ${format.name} (--dataset-format ${format.key})`)
@@ -448,7 +448,7 @@ const logAllAnnotationFormats = () => {
 
         let boundingBoxCache: { [dir: string]: ExportBoundingBoxesFileV1 | undefined } = { };
 
-        let allDirectories = [...new Set(files.map(f => Path.resolve(Path.dirname(f.path))))];
+        let allDirectories = [ ...new Set(files.map(f => Path.resolve(Path.dirname(f.path)))) ];
         const loadBoundingBoxCache = async (directory: string) => {
             let labelsFile = Path.join(directory, 'bounding_boxes.labels');
 

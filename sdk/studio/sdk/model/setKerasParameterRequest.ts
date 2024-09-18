@@ -14,6 +14,7 @@ import { AkidaEdgeLearningConfig } from './akidaEdgeLearningConfig';
 import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
+import { BlockParameters } from './blockParameters';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
@@ -94,6 +95,7 @@ export class SetKerasParameterRequest {
     'anomalyCapacity'?: AnomalyCapacity;
     'lastShownModelVariant'?: KerasModelVariantEnum;
     'lastShownModelEngine'?: ModelEngineShortEnum;
+    'blockParameters'?: BlockParameters;
 
     static discriminator: string | undefined = undefined;
 
@@ -212,6 +214,11 @@ export class SetKerasParameterRequest {
             "name": "lastShownModelEngine",
             "baseName": "lastShownModelEngine",
             "type": "ModelEngineShortEnum"
+        },
+        {
+            "name": "blockParameters",
+            "baseName": "blockParameters",
+            "type": "BlockParameters"
         }    ];
 
     static getAttributeTypeMap() {

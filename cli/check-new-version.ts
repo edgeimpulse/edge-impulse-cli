@@ -42,7 +42,7 @@ export default async function(config: Config) {
 // from https://github.com/omichelsen/compare-versions#readme
 // licensed under the MIT
 function createCompareVersions() {
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     let semver = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
 
     function indexOrEnd(str: string, q: string) {
@@ -71,7 +71,7 @@ function createCompareVersions() {
     }
 
     function compareVersions(v1: string, v2: string) {
-        [v1, v2].forEach(validate);
+        [ v1, v2 ].forEach(validate);
 
         let s1 = split(v1);
         let s2 = split(v2);
@@ -115,11 +115,11 @@ function createCompareVersions() {
     ];
 
     let operatorResMap = {
-        '>': [1],
-        '>=': [0, 1],
-        '=': [0],
-        '<=': [-1, 0],
-        '<': [-1]
+        '>': [ 1 ],
+        '>=': [ 0, 1 ],
+        '=': [ 0 ],
+        '<=': [ -1, 0 ],
+        '<': [ -1 ]
     };
 
     function validateOperator(op: string) {

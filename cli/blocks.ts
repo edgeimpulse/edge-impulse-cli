@@ -282,7 +282,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             organizationId = organizations.organizations[0].id;
         }
         else {
-            let orgInqRes = await inquirer.prompt([{
+            let orgInqRes = await inquirer.prompt([ {
                 type: 'list',
                 choices: (organizations.organizations || []).map(p => {
                     let name = p.name;
@@ -298,7 +298,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 name: 'organization',
                 message: 'In which organization do you want to create this block?',
                 pageSize: 20
-            }]);
+            } ]);
             organizationId = Number(orgInqRes.organization);
         }
         const organization = organizations.organizations.filter(org => org.id === organizationId)[0];
@@ -334,7 +334,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
         // Select the type of block
         let blockType: models.UploadCustomBlockRequestTypeEnum;
-        let blockTypeInqRes = await inquirer.prompt([{
+        let blockTypeInqRes = await inquirer.prompt([ {
             type: 'list',
             choices: blockList,
             name: 'type',
@@ -344,7 +344,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         'pushing to a personal profile)' :
                     ''),
             pageSize: 20
-        }]);
+        } ]);
         blockType = <models.UploadCustomBlockRequestTypeEnum>blockTypeInqRes.type;
 
         let blockId: number | undefined;
@@ -422,7 +422,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
         // If no blocks exist, force create
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        let createOrUpdateInqRes = existingBlocks.length > 0 ? (await inquirer.prompt([{
+        let createOrUpdateInqRes = existingBlocks.length > 0 ? (await inquirer.prompt([ {
             type: 'list',
             choices: [
                 {
@@ -437,18 +437,18 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             name: 'option',
             message: 'Choose an option',
             pageSize: 20
-        }])).option : 'create';
+        } ])).option : 'create';
 
         if (createOrUpdateInqRes === 'update') {
             // Update an existing block
             // Choose a block ID
-            let blockChoiceInqRes = await inquirer.prompt([{
+            let blockChoiceInqRes = await inquirer.prompt([ {
                 type: 'list',
                 choices: existingBlocks,
                 name: 'id',
                 message: 'Choose a block to update',
                 pageSize: 20
-            }]);
+            } ]);
             blockId = Number(blockChoiceInqRes.id);
             const selectedBlock = existingBlocks.filter(block => block.value === blockId)[0];
             if (selectedBlock) {
@@ -482,12 +482,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
         // Enter block name
         if (!blockName || blockName.length < 2) {
-            blockName = <string>(await inquirer.prompt([{
+            blockName = <string>(await inquirer.prompt([ {
                 type: 'input',
                 name: 'name',
                 message: 'Enter the name of your block',
                 default: defaultName
-            }])).name;
+            } ])).name;
             if (blockName.length < 2) {
                 console.error('New block must have a name longer than 2 characters.');
                 process.exit(1);
@@ -496,17 +496,17 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
         // Enter block description
         if (!blockDescription || blockDescription.length < 2) {
-            blockDescription = <string>(await inquirer.prompt([{
+            blockDescription = <string>(await inquirer.prompt([ {
                 type: 'input',
                 name: 'description',
                 message: 'Enter the description of your block',
                 default: defaultDescription
-            }])).description;
+            } ])).description;
             if (blockDescription === '') blockDescription = blockName;
         }
 
         if (createOrUpdateInqRes === 'create' && blockType === 'transform') {
-            blockOperatesOn = <'file' | 'directory' | 'standalone'>(await inquirer.prompt([{
+            blockOperatesOn = <'file' | 'directory' | 'standalone'>(await inquirer.prompt([ {
                 type: 'list',
                 name: 'operatesOn',
                 choices: [
@@ -524,11 +524,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     }
                 ],
                 message: 'What type of data does this block operate on?',
-            }])).operatesOn;
+            } ])).operatesOn;
 
             let buckets = await config.api.organizationData.listOrganizationBuckets(organizationId);
             if (buckets.buckets && buckets.buckets.length > 0) {
-                transformMountpoints = (<string[]>(await inquirer.prompt([{
+                transformMountpoints = (<string[]>(await inquirer.prompt([ {
                     type: 'checkbox',
                     name: 'buckets',
                     choices: buckets.buckets.map(x => {
@@ -539,7 +539,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     }),
                     message: 'Which buckets do you want to mount into this block ' +
                         '(will be mounted under /mnt/s3fs/BUCKET_NAME, you can change these mount points in the Studio)?',
-                }])).buckets).map(y => {
+                } ])).buckets).map(y => {
                     let b = buckets.buckets?.find(z => z.id === Number(y));
                     return {
                         bucketId: Number(y),
@@ -550,7 +550,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         }
 
         if (createOrUpdateInqRes === 'create' && blockType === 'transferLearning') {
-            blockTlOperatesOn = <models.OrganizationTransferLearningOperatesOn>(await inquirer.prompt([{
+            blockTlOperatesOn = <models.OrganizationTransferLearningOperatesOn>(await inquirer.prompt([ {
                 type: 'list',
                 name: 'operatesOn',
                 choices: [
@@ -576,10 +576,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     },
                 ],
                 message: 'What type of data does this model operate on?',
-            }])).operatesOn;
+            } ])).operatesOn;
 
             if (blockTlOperatesOn === 'image' || blockTlOperatesOn === 'object_detection') {
-                blockTlImageInputScaling = <ImageInputScaling>(await inquirer.prompt([{
+                blockTlImageInputScaling = <ImageInputScaling>(await inquirer.prompt([ {
                     type: 'list',
                     name: 'inputScaling',
                     choices: organizationInfo.cliLists.imageInputScalingOptions.map(o => {
@@ -590,12 +590,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     }),
                     message: 'How is your input scaled?',
                     default: '0..1'
-                }])).inputScaling;
+                } ])).inputScaling;
             }
 
             if (blockTlOperatesOn === 'object_detection') {
                 blockTlObjectDetectionLastLayer = <models.ObjectDetectionLastLayer>
-                    (await inquirer.prompt([{
+                    (await inquirer.prompt([ {
                         type: 'list',
                         name: 'lastLayer',
                         choices: organizationInfo.cliLists.objectDetectionLastLayerOptions.map(o => {
@@ -605,10 +605,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             };
                         }),
                         message: `What's the last layer of this object detection model?`,
-                    }])).lastLayer;
+                    } ])).lastLayer;
             }
 
-            blockTlCanRunWhere = <'gpu' | 'cpu-or-gpu'>(await inquirer.prompt([{
+            blockTlCanRunWhere = <'gpu' | 'cpu-or-gpu'>(await inquirer.prompt([ {
                 type: 'list',
                 name: 'canRunWhere',
                 default: 'cpu-or-gpu',
@@ -623,12 +623,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     },
                 ],
                 message: 'Where can your model train?',
-            }])).canRunWhere;
+            } ])).canRunWhere;
         }
 
 
         if (createOrUpdateInqRes === 'create' && blockType === 'deploy') {
-            deployCategory = <'library' | 'firmware'>(await inquirer.prompt([{
+            deployCategory = <'library' | 'firmware'>(await inquirer.prompt([ {
                 type: 'list',
                 name: 'category',
                 choices: [
@@ -642,7 +642,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     }
                 ],
                 message: 'Where to show this deployment block in the UI?',
-            }])).category;
+            } ])).category;
         }
 
         // Create & write the config
@@ -683,13 +683,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             (blockType === 'transform' || blockType === 'deploy')) {
 
             // Fetch the example files
-            let fetchInqRes = await inquirer.prompt([{
+            let fetchInqRes = await inquirer.prompt([ {
                 type: 'list',
-                choices: ['yes', 'no'],
+                choices: [ 'yes', 'no' ],
                 name: 'option',
                 message: 'Would you like to download and load the example repository?',
                 pageSize: 20
-            }]);
+            } ]);
 
             // Get the correct example repository path
             let templateSourcePath: string;
@@ -807,11 +807,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
                 // Enter block name
                 if (!blockName || blockName.length < 2) {
-                    blockName = <string>(await inquirer.prompt([{
+                    blockName = <string>(await inquirer.prompt([ {
                         type: 'input',
                         name: 'name',
                         message: 'Enter the name of your block',
-                    }])).name;
+                    } ])).name;
                     if (blockName.length < 2) {
                         console.error('New block must have a name longer than 2 characters.');
                         process.exit(1);
@@ -820,11 +820,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
                 // Enter block description
                 if (!blockDescription || blockDescription.length < 2) {
-                    blockDescription = <string>(await inquirer.prompt([{
+                    blockDescription = <string>(await inquirer.prompt([ {
                         type: 'input',
                         name: 'description',
                         message: 'Enter the description of your block',
-                    }])).description;
+                    } ])).description;
                     if (blockDescription === '') blockDescription = blockName;
                 }
 
@@ -893,12 +893,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 defaultChoice = exposePort;
                             }
 
-                            let portRes = await inquirer.prompt([{
+                            let portRes = await inquirer.prompt([ {
                                 type: 'number',
                                 name: 'port',
                                 message: 'What port is your block listening on?',
                                 default: defaultChoice
-                            }]);
+                            } ]);
                             port = Number(portRes.port);
                             if (isNaN(port)) {
                                 console.error(`Invalid value for port, should be a number, but was "${portRes.port}"`);
@@ -1015,11 +1015,11 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                                 console.log(JSON.stringify(blockParameters, null, 4)
                                     .split('\n').map(x => '    ' + x).join('\n'));
                                 console.log('');
-                                shouldOverwrite = <boolean>(await inquirer.prompt([{
+                                shouldOverwrite = <boolean>(await inquirer.prompt([ {
                                     type: 'confirm',
                                     name: 'overwrite',
                                     message: 'Do you want to override the parameters?',
-                                }])).overwrite;
+                                } ])).overwrite;
                             }
                         }
                         shouldOverwriteParamsAfterPush = shouldOverwrite;
@@ -1397,7 +1397,7 @@ function sleep(ms: number) {
 }
 
 function bytesToSize(bytes: number) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const sizes = [ 'Bytes', 'KB', 'MB', 'GB', 'TB' ];
     if (bytes === 0) return '0 Bytes';
     let i = Number(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
@@ -1420,7 +1420,7 @@ export async function exists(path: string) {
  * @returns Interval (just call clearInterval to stop the spinner)
  */
 function spinner() {
-    const spinChars = ['-', '\\', '|', '/'];
+    const spinChars = [ '-', '\\', '|', '/' ];
     let spinIx = -1;
 
     return setInterval(() => {

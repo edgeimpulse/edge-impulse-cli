@@ -115,6 +115,9 @@ export * from './autoLabelerSegment';
 export * from './autotuneDspRequest';
 export * from './billingCycle';
 export * from './blockDisplayCategory';
+export * from './blockParameters';
+export * from './blockParamsVisualAnomalyGmm';
+export * from './blockParamsVisualAnomalyPatchcore';
 export * from './blockType';
 export * from './boundingBox';
 export * from './boundingBoxWithScore';
@@ -1085,6 +1088,9 @@ import { AutoLabelerSegment } from './autoLabelerSegment';
 import { AutotuneDspRequest } from './autotuneDspRequest';
 import { BillingCycle } from './billingCycle';
 import { BlockDisplayCategory } from './blockDisplayCategory';
+import { BlockParameters } from './blockParameters';
+import { BlockParamsVisualAnomalyGmm } from './blockParamsVisualAnomalyGmm';
+import { BlockParamsVisualAnomalyPatchcore } from './blockParamsVisualAnomalyPatchcore';
 import { BlockType } from './blockType';
 import { BoundingBox } from './boundingBox';
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
@@ -1965,6 +1971,8 @@ let enumsMap: {[index: string]: any} = {
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
     "BillingCycle": "BillingCycle",
     "BlockDisplayCategory": "BlockDisplayCategory",
+    "BlockParametersResamplingMethodEnum": "BlockParametersResamplingMethodEnum",
+    "BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum": "BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum",
     "BlockType": "BlockType",
     "CalculateDataQualityMetricsRequestRepresentationEnum": "CalculateDataQualityMetricsRequestRepresentationEnum",
     "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum": "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum",
@@ -2220,6 +2228,9 @@ let typeMap: {[index: string]: any} = {
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
     "AutoLabelerSegment": AutoLabelerSegment,
     "AutotuneDspRequest": AutotuneDspRequest,
+    "BlockParameters": BlockParameters,
+    "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
+    "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
     "BoundingBox": BoundingBox,
     "BoundingBoxWithScore": BoundingBoxWithScore,
     "BuildOnDeviceModelRequest": BuildOnDeviceModelRequest,

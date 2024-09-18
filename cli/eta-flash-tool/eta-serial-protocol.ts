@@ -63,7 +63,7 @@ export default class EtaSerialProtocol {
 
         line = line.split('AT+VER=')[1];
 
-        let [major, minor, rev] = line.split('.');
+        let [ major, minor, rev ] = line.split('.');
         return {
             major: Number(major),
             minor: Number(minor),

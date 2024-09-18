@@ -30,8 +30,11 @@ export async function canFlashSerial(deviceId: string) {
         console.log(SERIAL_PREFIX, '4. Restart this application.');
         console.log('');
 
-        // eslint-disable-next-line max-len
-        // let drives: { description: string, mountpoints: { label: string, path: string }[] }[] = await drivelist.list();
+        // eslint-disable-next-line @stylistic/max-len
+        // let drives: {
+        //     description: string;
+        //     mountpoints: { label: string; path: string }[];
+        // }[] = await drivelist.list();
         // let d = drives.find(l => l.mountpoints.some(m => m.label === 'DIS_L4IOT'));
         // if (!d) {
         //     d = drives.find(l => l.description === 'MBED microcontroller USB Device');

@@ -46,7 +46,7 @@ export async function findSerial(whichDeviceIndex: number | undefined) {
             return filteredDevices[whichDeviceIndex].path;
         }
 
-        let deviceRes = <{ device: string }>await inquirer.prompt([{
+        let deviceRes = <{ device: string }>await inquirer.prompt([ {
             type: 'list',
             choices: filteredDevices.map(d => ({
                 value: d.path,
@@ -55,7 +55,7 @@ export async function findSerial(whichDeviceIndex: number | undefined) {
             name: 'device',
             message: 'Which device do you want to connect to?',
             pageSize: 20
-        }]);
+        } ]);
         deviceId = deviceRes.device;
     }
 

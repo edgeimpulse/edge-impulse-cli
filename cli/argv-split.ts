@@ -41,11 +41,11 @@ const MATRIX: {
     [k: string]: (() => void)[]
 } = {
     // object is more readable than multi-dim array.
-    0: [a, suq, a, a, a, EOF],
-    1: [eaue, aue, eaue, aue, aue, ue],
-    2: [e, a, duq, a, a, EOF],
-    3: [eaue, aue, aue, aue, eaue, ue],
-    4: [e, sq, dq, a, tp, EOF]
+    0: [ a, suq, a, a, a, EOF ],
+    1: [ eaue, aue, eaue, aue, aue, ue ],
+    2: [ e, a, duq, a, a, EOF ],
+    3: [ eaue, aue, aue, aue, eaue, ue ],
+    4: [ e, sq, dq, a, tp, EOF ]
 };
 
 // - a: add

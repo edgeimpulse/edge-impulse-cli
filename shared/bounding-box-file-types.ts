@@ -70,8 +70,7 @@ export function validateStructuredLabelsFile(data: ExportStructuredLabelsFileV1)
 export type StructuredLabelSource = 'structured_labels.labels' | 'payload.structured_labels' |
     'labels from csv file' | 'structuredLabels';
 
-export function verifyStructuredLabelsString(json: string, valuesCount: number,
-                                             source: StructuredLabelSource) {
+export function parseStructuredLabelsString(json: string, source: StructuredLabelSource) {
     let labels;
     try {
         labels = <ExportStructuredLabel[]>JSON.parse(json);
@@ -79,6 +78,12 @@ export function verifyStructuredLabelsString(json: string, valuesCount: number,
     catch (ex) {
         throw new Error(source + ' is not valid json');
     }
+    return labels;
+}
+
+export function verifyStructuredLabelsString(json: string, valuesCount: number,
+                                             source: StructuredLabelSource) {
+    const labels = parseStructuredLabelsString(json, source);
     return verifyStructuredLabels(labels, valuesCount, source);
 }
 

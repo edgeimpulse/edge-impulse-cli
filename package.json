@@ -55,7 +55,7 @@
     "yauzl": "2.10.0"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin-ts": "2.1.0",
+    "@stylistic/eslint-plugin": "2.8.0",
     "@types/cbor": "5.0.0",
     "@types/cli-progress": "3.7.0",
     "@types/commander": "2.12.2",

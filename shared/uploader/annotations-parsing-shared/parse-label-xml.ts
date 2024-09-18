@@ -71,7 +71,7 @@ export function xmlToJson(xml: XMLDocument) {
                 }
                 else {
                     // This is the second entry, so create an array
-                    nodeValueParsed[childKey] = [curNodeVal, childValue];
+                    nodeValueParsed[childKey] = [ curNodeVal, childValue ];
                 }
             }
             else {

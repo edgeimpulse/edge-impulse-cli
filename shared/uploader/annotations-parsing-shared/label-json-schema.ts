@@ -5,12 +5,12 @@ export const eiBBoxJsonSchema: JsonSchemaConstraint = {
     value: {
         version: {
             type: 'number',
-            valid: [1],
+            valid: [ 1 ],
             required: true
         },
         type: {
             type: 'string',
-            valid: ['bounding-box-labels'],
+            valid: [ 'bounding-box-labels' ],
             required: true
         },
         boundingBoxes: {
@@ -204,7 +204,7 @@ export const remoSingleLabelSchema: JsonSchemaConstraint = {
             },
             task: {
                 type: 'string',
-                valid: ['Image classification'],
+                valid: [ 'Image classification' ],
                 required: true
             },
             classes: {
@@ -243,7 +243,7 @@ export const remoObjectDetectionSchema: JsonSchemaConstraint = {
             },
             task: {
                 type: 'string',
-                valid: ['Object detection'],
+                valid: [ 'Object detection' ],
                 required: true
             },
             annotations: {

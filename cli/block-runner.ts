@@ -164,7 +164,7 @@ export abstract class BlockRunner implements IRunner {
 
         return {
             command: "docker",
-            args: ["build", "-t", this._dockerBuildParams.containerName, "."]
+            args: [ "build", "-t", this._dockerBuildParams.containerName, "." ]
         };
     }
 
@@ -440,7 +440,7 @@ export class BlockRunnerTransform extends BlockRunner {
             else {
                 // Neither path nor a data item has been specified yet.
                 // Ask the user which they would like to specify, and then get a value for this choice.
-                const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([{
+                const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([ {
                     type: 'list',
                     message: 'How should we look up the data to run this transform block against?',
                     choices: [
@@ -454,7 +454,7 @@ export class BlockRunnerTransform extends BlockRunner {
                         },
                     ],
                     name: 'dataPathMethod'
-                }]);
+                } ]);
 
                 if (dataPathMethodInq.dataPathMethod === 'dataitem') {
                     // Lookup by data item
@@ -627,7 +627,7 @@ export class BlockRunnerTransform extends BlockRunner {
 
         let ret: { command: string; args: string[] } = {
             command: "docker",
-            args: ["run"]
+            args: [ "run" ]
         };
 
         if (this._dockerRunParams.type !== "transform") {
@@ -1223,7 +1223,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let ret: { command: string; args: string[] } = {
             command: "docker",
-            args: ["run"]
+            args: [ "run" ]
         };
 
         if (this._dockerRunParams.type !== "transferLearning") {
@@ -1425,7 +1425,7 @@ export class BlockRunnerDeploy extends BlockRunner {
 
         if (!deployCheckRes.hasDeployment) {
             let projectReq: UpdateProjectRequest = {
-                experiments: ["custom_deploy"]
+                experiments: [ "custom_deploy" ]
             };
 
             let updateProjectRes = (

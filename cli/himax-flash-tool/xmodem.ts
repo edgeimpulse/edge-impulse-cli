@@ -232,7 +232,7 @@ export class Xmodem extends EventEmitter < {
                             action: 'send',
                             signal: 'EOT'
                         });
-                        await socket.write(Buffer.from([EOT]));
+                        await socket.write(Buffer.from([ EOT ]));
                     }
                     else {
                         // We are finished!
@@ -253,7 +253,7 @@ export class Xmodem extends EventEmitter < {
                         action: 'send',
                         signal: 'EOT'
                     });
-                    await socket.write(Buffer.from([EOT]));
+                    await socket.write(Buffer.from([ EOT ]));
                 }
                 else {
                     if (this.debug) {
@@ -291,9 +291,9 @@ export class Xmodem extends EventEmitter < {
 
     private async sendBlock(socket: SerialConnector, blockNr: number, blockData: Buffer, mode: string) {
         let crcCalc = 0;
-        let sendBuffer = Buffer.concat([Buffer.from([SOH]),
-            Buffer.from([blockNr]),
-            Buffer.from([(0xFF - blockNr)]),
+        let sendBuffer = Buffer.concat([ Buffer.from([ SOH ]),
+            Buffer.from([ blockNr ]),
+            Buffer.from([ (0xFF - blockNr) ]),
             blockData
         ]);
         if (this.debug) {
@@ -310,7 +310,7 @@ export class Xmodem extends EventEmitter < {
             if (crcString.length === 2) {
                 crcString = '00'.concat(crcString);
             }
-            sendBuffer = Buffer.concat([sendBuffer, Buffer.from(crcString, "hex")]);
+            sendBuffer = Buffer.concat([ sendBuffer, Buffer.from(crcString, "hex") ]);
         }
         else {
             // Count only the blockData into the checksum
@@ -323,7 +323,7 @@ export class Xmodem extends EventEmitter < {
                 // Add padding for the string to be even
                 crcStr = "0" + crcStr;
             }
-            sendBuffer = Buffer.concat([sendBuffer, Buffer.from(crcStr, "hex")]);
+            sendBuffer = Buffer.concat([ sendBuffer, Buffer.from(crcStr, "hex") ]);
         }
         if (this.debug) {
             console.log(SERIAL_PREFIX, 'Sending buffer with total length: ' + sendBuffer.length);

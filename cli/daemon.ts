@@ -602,12 +602,12 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 }, eiConfig), device,
                     url => new WebSocket(url),
                     async (currName) => {
-                        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
+                        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([ {
                             type: 'input',
                             message: 'What name do you want to give this device?',
                             name: 'nameDevice',
                             default: currName
-                        }]);
+                        } ]);
                         return nameDevice.nameDevice;
                     });
 
@@ -756,34 +756,34 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
         if (!deviceConfig.wifi.connected && credentials.askWifi !== false && deviceConfig.wifi.present &&
             !setupWizardRan) {
 
-            let inqSetup = await inquirer.prompt([{
+            let inqSetup = await inquirer.prompt([ {
                 type: 'confirm',
                 message: 'WiFi is not connected, do you want to set up a WiFi network now?',
                 default: true,
                 name: 'setupWifi'
-            }]);
+            } ]);
             if (inqSetup.setupWifi) {
                 process.stdout.write('Scanning WiFi networks...');
                 let wifi = await serialProtocol.scanWifi();
                 process.stdout.write(' OK\n');
 
-                let inqWifi = await inquirer.prompt([{
+                let inqWifi = await inquirer.prompt([ {
                     type: 'list',
                     choices: wifi.map(w => ({ name: w.line, value: w })),
                     message: 'Select WiFi network',
                     name: 'wifi',
                     pageSize: 20
-                }]);
+                } ]);
 
                 let network = <EiSerialWifiNetwork>inqWifi.wifi;
                 let pass = '';
 
                 if (network.security !== EiSerialWifiSecurity.EI_SECURITY_NONE) {
-                    let inqPass = <{ wifiPass: string }>await inquirer.prompt([{
+                    let inqPass = <{ wifiPass: string }>await inquirer.prompt([ {
                         type: 'input',
                         message: 'Enter password for network "' + network.ssid + '"',
                         name: 'wifiPass'
-                    }]);
+                    } ]);
                     pass = inqPass.wifiPass;
                 }
 
@@ -809,9 +809,9 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
 function isJpeg(buffer: Buffer): boolean {
     // According to the SO threads below, we can check if the buffer is a JPEG image by checking
     // the first 2 bytes (SOI) and length (which should be at least 125 bytes)
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     // https://stackoverflow.com/questions/5413022/is-the-2nd-and-3rd-byte-of-a-jpeg-image-always-the-app0-or-app1-marker
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     // https://stackoverflow.com/questions/2253404/what-is-the-smallest-valid-jpeg-file-size-in-bytes
 	if (!buffer || buffer.length < 125) {
 		return false;

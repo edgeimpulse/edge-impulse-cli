@@ -88,7 +88,9 @@ export class Config {
     private _configured = false;
 
     constructor() {
-        this._filename = Path.join(os.homedir(), 'edge-impulse-config.json');
+        const filename = Path.join(os.homedir(), 'edge-impulse-config.json');
+        const dotfilename = Path.join(os.homedir(), '.edge-impulse-config.json');
+        this._filename = (await Config.exists(dotfilename)) ? dotfilename : filename;
     }
 
     /**

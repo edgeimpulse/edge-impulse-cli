@@ -5,7 +5,6 @@ import tar from "tar";
 import yauzl, { Entry } from "yauzl";
 import { spawn, SpawnOptions } from "child_process";
 import { Config, EdgeImpulseConfig } from "./config";
-import { BlockConfigItem, exists } from "./blocks";
 import inquirer from "inquirer";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
@@ -15,16 +14,19 @@ import {
     UploadCustomBlockRequestTypeEnum
 } from "../sdk/studio";
 import * as models from '../sdk/studio/sdk/model/models';
+import { pathExists } from "./blocks/blocks-helper";
+import { BlockConfig } from "./blocks/block-config-manager";
+import { CLIBlockType } from "../shared/parameters-json-types";
 
 const CON_PREFIX = '\x1b[34m[BLK]\x1b[0m';
 
 export type DockerBuildParams = {
-    blockConfig: BlockConfigItem;
+    blockConfig: BlockConfig;
     containerName: string;
 };
 
 type DockerRunParams = {
-    blockConfig: BlockConfigItem;
+    blockConfig: BlockConfig;
     type: UploadCustomBlockRequestTypeEnum;
     containerName: string | undefined;
 } & (
@@ -66,7 +68,7 @@ type DockerRunParams = {
 
 export type RunnerOptions = {
     container?: string;
-    type: UploadCustomBlockRequestTypeEnum;
+    type: CLIBlockType;
     extraArgs?: string;
 } & (
     {
@@ -77,7 +79,7 @@ export type RunnerOptions = {
         file?: string;
         skipDownload?: boolean;
     } | {
-        type: "transferLearning";
+        type: "machine-learning";
         epochs?: string;
         learningRate?: string;
         validationSetSize?: string;
@@ -89,6 +91,8 @@ export type RunnerOptions = {
     } | {
         type: "deploy";
         downloadData?: string | boolean;
+    } | {
+        type: "synthetic-data";
     }
 );
 
@@ -106,7 +110,7 @@ async function fileExists(filePath: string): Promise<boolean> {
 export abstract class BlockRunner implements IRunner {
     protected _cliConfig: Config;
     protected _eiConfig: EdgeImpulseConfig;
-    protected _blockConfig: BlockConfigItem;
+    protected _blockConfig: BlockConfig;
     protected _runnerOpts: RunnerOptions;
     protected _dockerBuildParams: DockerBuildParams | undefined;
     protected _dockerRunParams: DockerRunParams | undefined;
@@ -114,7 +118,7 @@ export abstract class BlockRunner implements IRunner {
     constructor(
         cliConfig: Config,
         eiConfig: EdgeImpulseConfig,
-        blockConfig: BlockConfigItem,
+        blockConfig: BlockConfig,
         runnerOpts: RunnerOptions
     ) {
         this._cliConfig = cliConfig;
@@ -284,10 +288,10 @@ export abstract class BlockRunner implements IRunner {
 
 export class BlockRunnerFactory {
     static async getRunner(
-        type: UploadCustomBlockRequestTypeEnum,
+        type: CLIBlockType,
         cliConfig: Config,
         eiConfig: EdgeImpulseConfig,
-        blockConfig: BlockConfigItem,
+        blockConfig: BlockConfig,
         runnerOpts: RunnerOptions
     ): Promise<BlockRunner> {
         let runner: BlockRunner;
@@ -320,7 +324,7 @@ export class BlockRunnerFactory {
                 );
                 break;
 
-            case "transferLearning":
+            case "machine-learning":
                 runner = new BlockRunnerTransferLearning(
                     cliConfig,
                     eiConfig,
@@ -328,6 +332,9 @@ export class BlockRunnerFactory {
                     runnerOpts
                 );
                 break;
+
+            case "synthetic-data":
+                throw new Error('Synthetic data blocks are not supported in "edge-impulse-blocks runner"');
 
             default:
                 throw new Error("Invalid BlockRunner type");
@@ -354,16 +361,20 @@ export class BlockRunnerTransform extends BlockRunner {
             );
         }
 
-        let operatesOn = this._blockConfig.operatesOn;
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
+
+        let operatesOn = this._blockConfig.parameters.info.operatesOn;
 
         if (!operatesOn) {
             let transformBlocksRes = (
                 await this._eiConfig.api.organizationBlocks.listOrganizationTransformationBlocks(
-                    this._blockConfig.organizationId
+                    this._blockConfig.config.organizationId
                 )
             );
 
-            if (!this._blockConfig.id) {
+            if (!this._blockConfig.config.id) {
                 throw new Error(
                     "Local block has no ID. Try running `edge-impulse-blocks push` first"
                 );
@@ -371,12 +382,12 @@ export class BlockRunnerTransform extends BlockRunner {
 
             let foundBlock = transformBlocksRes.transformationBlocks.find(
                 (el: OrganizationTransformationBlock) =>
-                    el.id === this._blockConfig.id
+                    el.id === this._blockConfig.config!.id
             );
 
             if (!foundBlock) {
                 throw new Error(
-                    `Unable to retrieve block with id=${this._blockConfig.id} from the server`
+                    `Unable to retrieve block with id=${this._blockConfig.config.id} from the server`
                 );
             }
 
@@ -440,7 +451,7 @@ export class BlockRunnerTransform extends BlockRunner {
             else {
                 // Neither path nor a data item has been specified yet.
                 // Ask the user which they would like to specify, and then get a value for this choice.
-                const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([ {
+                const dataPathMethodInq = <{ dataPathMethod: string }>await inquirer.prompt([{
                     type: 'list',
                     message: 'How should we look up the data to run this transform block against?',
                     choices: [
@@ -454,7 +465,7 @@ export class BlockRunnerTransform extends BlockRunner {
                         },
                     ],
                     name: 'dataPathMethod'
-                } ]);
+                }]);
 
                 if (dataPathMethodInq.dataPathMethod === 'dataitem') {
                     // Lookup by data item
@@ -507,7 +518,7 @@ export class BlockRunnerTransform extends BlockRunner {
                 this._dataItem = await this.getDataItemByName(
                     this._runnerOpts.dataset,
                     lookupOpts.dataItemName,
-                    this._blockConfig.organizationId,
+                    this._blockConfig.config.organizationId,
                     this._eiConfig
                 );
                 if (operatesOn === "directory") {
@@ -565,7 +576,7 @@ export class BlockRunnerTransform extends BlockRunner {
 
                     // Check the dataset exists and get the bucket path
                     const datasetInfo = await this._eiConfig.api.organizationData.getOrganizationDataset(
-                        this._blockConfig.organizationId,
+                        this._blockConfig.config.organizationId,
                         lookupOpts.dataset,
                     );
                     if (!datasetInfo.success) {
@@ -635,9 +646,12 @@ export class BlockRunnerTransform extends BlockRunner {
                 `Invalid type (expected "transform", but received "${this._dockerRunParams.type}")`
             );
         }
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
 
         let env = [
-            `EI_ORGANIZATION_ID=${this._blockConfig.organizationId.toString()}`,
+            `EI_ORGANIZATION_ID=${this._blockConfig.config.organizationId.toString()}`,
         ];
         for (let k of Object.keys(process.env)) {
             if (k.startsWith('EI_')) {
@@ -760,6 +774,9 @@ export class BlockRunnerTransform extends BlockRunner {
         }
     ) {
         if (this._runnerOpts.type === 'transform' && this._runnerOpts.skipDownload) return;
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
 
         let currentFolderSize = 0;
         const extractFolder = Path.join(path, sourceData.bucketPath);
@@ -789,7 +806,7 @@ export class BlockRunnerTransform extends BlockRunner {
         // download raw Buffer (a tarball)
         if (sourceData.type === 'dataitem') {
             const fileRes = await this._eiConfig.api.organizationData.downloadOrganizationSingleDataItem(
-                this._blockConfig.organizationId,
+                this._blockConfig.config.organizationId,
                 sourceData.id,
                 { },
             );
@@ -804,7 +821,7 @@ export class BlockRunnerTransform extends BlockRunner {
         }
         else {
             const fileRes = await this._eiConfig.api.organizationData.downloadDatasetFolder(
-                this._blockConfig.organizationId,
+                this._blockConfig.config.organizationId,
                 sourceData.dataset,
                 { path: sourceData.dirPath },
             );
@@ -848,6 +865,9 @@ export class BlockRunnerTransform extends BlockRunner {
         if (this._runnerOpts.type !== 'transform') {
             throw new Error(`Incompatible block type: ${this._runnerOpts.type}`);
         }
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
 
         let filename = this._runnerOpts.file ? this._runnerOpts.file : "";
 
@@ -860,7 +880,7 @@ export class BlockRunnerTransform extends BlockRunner {
         // grab list of files in data item
         let fileListRes = (
             await this._eiConfig.api.organizationData.getOrganizationDataItem(
-                this._blockConfig.organizationId,
+                this._blockConfig.config.organizationId,
                 this._dataItem.id,
                 { }
             )
@@ -917,7 +937,7 @@ export class BlockRunnerTransform extends BlockRunner {
         // download file
         let file = (
             await this._eiConfig.api.organizationData.downloadOrganizationDataFile(
-                this._blockConfig.organizationId,
+                this._blockConfig.config.organizationId,
                 this._dataItem.id,
                 {
                     fileName: filename
@@ -946,6 +966,9 @@ export class BlockRunnerTransform extends BlockRunner {
         if (this._runnerOpts.type !== 'transform') {
             throw new Error(`Incompatible block type: ${this._runnerOpts.type}`);
         }
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
 
         const filename = Path.basename(sourcePath);
 
@@ -967,7 +990,7 @@ export class BlockRunnerTransform extends BlockRunner {
 
         // Get a download link for the file
         const datasetFilePathRes = await this._eiConfig.api.organizationData.downloadDatasetFile(
-            this._blockConfig.organizationId,
+            this._blockConfig.config.organizationId,
             sourceDataset,
             { path: sourcePath },
         );
@@ -1033,9 +1056,9 @@ export class BlockRunnerTransferLearning extends BlockRunner {
     private _projectId: number = -1;
 
     async setup(): Promise<void> {
-        if (this._runnerOpts.type !== "transferLearning") {
+        if (this._runnerOpts.type !== 'machine-learning') {
             throw new Error(
-                `Block type ${this._runnerOpts.type} is not transferLearning`
+                `Block type ${this._runnerOpts.type} is not "machine-learning"`
             );
         }
 
@@ -1291,10 +1314,14 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let overrideImageInputScaling: models.ImageInputScaling | undefined;
 
-        if (this._blockConfig.id) {
+        if (!this._blockConfig.config) {
+            throw new Error('Block config is null');
+        }
+
+        if (this._blockConfig.config.id) {
             const blocks = (await this._eiConfig.api.organizationBlocks.listOrganizationTransferLearningBlocks(
-                this._blockConfig.organizationId)).transferLearningBlocks;
-            let block = blocks.find(x => x.id === this._blockConfig.id);
+                this._blockConfig.config.organizationId)).transferLearningBlocks;
+            let block = blocks.find(x => x.id === this._blockConfig.config!.id);
             if (block) {
                 overrideImageInputScaling = block.imageInputScaling;
                 if (overrideImageInputScaling) {
@@ -1303,20 +1330,20 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                 }
             }
             else {
-                overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
-                    this._blockConfig.tlImageInputScaling : undefined;
+                overrideImageInputScaling = this._blockConfig.type === 'machine-learning' ?
+                    this._blockConfig.parameters.info.imageInputScaling : undefined;
                 if (overrideImageInputScaling) {
                     console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
-                        '(read from .ei-block-config)');
+                        '(read from parameters.json)');
                 }
             }
         }
         else {
-            overrideImageInputScaling = this._blockConfig.type === 'transferLearning' ?
-                this._blockConfig.tlImageInputScaling : undefined;
+            overrideImageInputScaling = this._blockConfig.type === 'machine-learning' ?
+                this._blockConfig.parameters.info.imageInputScaling : undefined;
             if (overrideImageInputScaling) {
                 console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
-                    '(read from .ei-block-config)');
+                    '(read from parameters.json)');
             }
         }
 
@@ -1559,7 +1586,7 @@ export class BlockRunnerDSP extends BlockRunner {
 
         if (!this._runnerOpts.port) {
             const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
-            if (await exists(dockerfilePath)) {
+            if (await pathExists(dockerfilePath)) {
                 let dockerfileLines = (await fs.promises.readFile(dockerfilePath))
                     .toString('utf-8').split('\n');
                 let exposeLine = dockerfileLines.find(x => x.toLowerCase().startsWith('expose'));

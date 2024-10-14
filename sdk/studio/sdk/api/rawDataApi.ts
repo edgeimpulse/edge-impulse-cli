@@ -231,7 +231,7 @@ type listSamplesQueryParams = {
     search?: string,
 };
 
-type uploadDataExplorerScreenshotFormParams = {
+export type uploadDataExplorerScreenshotFormParams = {
     image: RequestFile,
 };
 

@@ -50,7 +50,7 @@ export enum OrganizationDataCampaignsApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type uploadDashboardScreenshotFormParams = {
+export type uploadDashboardScreenshotFormParams = {
     image: RequestFile,
 };
 

@@ -86,7 +86,7 @@ type setPerformanceCalibrationSavedParametersQueryParams = {
     impulseId?: number,
 };
 
-type uploadLabeledAudioFormParams = {
+export type uploadLabeledAudioFormParams = {
     zip: RequestFile,
 };
 

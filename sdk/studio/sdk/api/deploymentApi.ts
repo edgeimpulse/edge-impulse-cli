@@ -55,7 +55,7 @@ type downloadBuildQueryParams = {
     impulseId?: number,
 };
 
-type findSyntiantPosteriorFormParams = {
+export type findSyntiantPosteriorFormParams = {
     targetWords: Array<string>,
     referenceSet: string,
     wavFile?: RequestFile,
@@ -334,11 +334,11 @@ export class DeploymentApi {
         let localVarUseFormData = false;
 
         if (params.targetWords !== undefined) {
-            localVarFormParams['targetWords'] = ObjectSerializer.serialize(params.targetWords, "Array<string>");
+            localVarFormParams['targetWords'] = ObjectSerializer.serializeFormData(params.targetWords, "Array<string>");
         }
 
         if (params.referenceSet !== undefined) {
-            localVarFormParams['referenceSet'] = ObjectSerializer.serialize(params.referenceSet, "string");
+            localVarFormParams['referenceSet'] = ObjectSerializer.serializeFormData(params.referenceSet, "string");
         }
 
         if (params.wavFile !== undefined) {
@@ -352,7 +352,7 @@ export class DeploymentApi {
         localVarUseFormData = true;
 
         if (params.deploymentTarget !== undefined) {
-            localVarFormParams['deploymentTarget'] = ObjectSerializer.serialize(params.deploymentTarget, "string");
+            localVarFormParams['deploymentTarget'] = ObjectSerializer.serializeFormData(params.deploymentTarget, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

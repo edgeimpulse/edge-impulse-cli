@@ -156,6 +156,9 @@ async function connectToSerial(deviceId: string) {
                 config.info.atCommandVersion.patch);
 
             // we support devices with version 1.8.x and lower
+            // BE CAREFUL! Changing the required AT major/minior version will break the compatibility
+            // with the devices that are already in the field!!! Use wisely!!!
+            // Maybe your change requires optional AT command?
             if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 8) {
                 console.error(SERIAL_PREFIX,
                     'Unsupported AT command version running on this device. Supported version is 1.8.x and lower, ' +

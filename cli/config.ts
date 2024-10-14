@@ -167,7 +167,7 @@ export class Config {
         // no host? ask the user where to connect
         if (!config.host) {
             if (devMode) {
-                let hostRes = <{ host: string}>await inquirer.prompt([ {
+                let hostRes = <{ host: string}>await inquirer.prompt([{
                     type: 'list',
                     choices: [
                         { name: 'edgeimpulse.com (Production)', value: 'edgeimpulse.com' },
@@ -180,7 +180,7 @@ export class Config {
                     message: 'To which server do you want to connect? ' +
                         '(you can override this by setting EI_HOST environmental variable)',
                     pageSize: 20
-                } ]);
+                }]);
                 config.host = hostRes.host;
                 config.jwtToken = '';
             }

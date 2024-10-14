@@ -59,7 +59,7 @@ type getOrganizationCreateProjectsQueryParams = {
     includePipelineJobs?: boolean,
 };
 
-type uploadCustomBlockFormParams = {
+export type uploadCustomBlockFormParams = {
     tar: RequestFile,
     type: string,
     blockId: number,
@@ -1358,11 +1358,11 @@ export class OrganizationCreateProjectApi {
         localVarUseFormData = true;
 
         if (params.type !== undefined) {
-            localVarFormParams['type'] = ObjectSerializer.serialize(params.type, "string");
+            localVarFormParams['type'] = ObjectSerializer.serializeFormData(params.type, "string");
         }
 
         if (params.blockId !== undefined) {
-            localVarFormParams['blockId'] = ObjectSerializer.serialize(params.blockId, "number");
+            localVarFormParams['blockId'] = ObjectSerializer.serializeFormData(params.blockId, "number");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

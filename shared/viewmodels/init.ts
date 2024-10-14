@@ -74,7 +74,6 @@ export enum PageType {
     OrganizationSettings = 105,
     OrganizationDatasets = 106,
     OrganizationJobs = 107,
-    OrganizationDataHub = 108,
     OrganizationDataCampaignsDashboard = 109,
     OrganizationDataFiles = 110,
     OrganizationExports = 111,

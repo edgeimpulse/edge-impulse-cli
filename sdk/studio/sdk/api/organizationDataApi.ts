@@ -30,18 +30,13 @@ import { GetOrganizationBucketResponse } from '../model/getOrganizationBucketRes
 import { GetOrganizationDataItemResponse } from '../model/getOrganizationDataItemResponse';
 import { GetOrganizationDataItemTransformJobsResponse } from '../model/getOrganizationDataItemTransformJobsResponse';
 import { GetOrganizationDatasetResponse } from '../model/getOrganizationDatasetResponse';
-import { GetOrganizationProjectsDataCountResponse } from '../model/getOrganizationProjectsDataCountResponse';
 import { ListOrganizationBucketsResponse } from '../model/listOrganizationBucketsResponse';
 import { ListOrganizationDataResponse } from '../model/listOrganizationDataResponse';
 import { ListOrganizationFilesResponse } from '../model/listOrganizationFilesResponse';
-import { ListOrganizationProjectsDataResponse } from '../model/listOrganizationProjectsDataResponse';
 import { ListPortalFilesInFolderRequest } from '../model/listPortalFilesInFolderRequest';
 import { ListPortalFilesInFolderResponse } from '../model/listPortalFilesInFolderResponse';
 import { OrganizationAddDataFolderRequest } from '../model/organizationAddDataFolderRequest';
 import { OrganizationAddDatasetRequest } from '../model/organizationAddDatasetRequest';
-import { OrganizationProjectsDataBatchDisableResponse } from '../model/organizationProjectsDataBatchDisableResponse';
-import { OrganizationProjectsDataBatchEnableResponse } from '../model/organizationProjectsDataBatchEnableResponse';
-import { OrganizationProjectsDataBatchRequest } from '../model/organizationProjectsDataBatchRequest';
 import { PreviewDefaultFilesInFolderRequest } from '../model/previewDefaultFilesInFolderRequest';
 import { PreviewDefaultFilesInFolderResponse } from '../model/previewDefaultFilesInFolderResponse';
 import { RenamePortalFileRequest } from '../model/renamePortalFileRequest';
@@ -71,11 +66,11 @@ export enum OrganizationDataApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type addOrganizationDataFileFormParams = {
+export type addOrganizationDataFileFormParams = {
     files: Array<RequestFile>,
 };
 
-type addOrganizationDataItemFormParams = {
+export type addOrganizationDataItemFormParams = {
     name: string,
     bucketId?: number,
     bucketName?: string,
@@ -107,11 +102,6 @@ type deleteOrganizationDataItemsQueryParams = {
     filter?: string,
 };
 
-type deleteOrganizationProjectsDataQueryParams = {
-    projectId?: number,
-    ids?: string,
-};
-
 type downloadDatasetFolderQueryParams = {
     path: string,
 };
@@ -126,11 +116,6 @@ type downloadOrganizationDataItemQueryParams = {
     filter?: string,
 };
 
-type downloadOrganizationProjectsDataQueryParams = {
-    projectId?: number,
-    ids?: string,
-};
-
 type downloadOrganizationSingleDataItemQueryParams = {
     filter?: string,
 };
@@ -142,12 +127,6 @@ type getOrganizationDataItemQueryParams = {
 type getOrganizationDataItemTransformJobsQueryParams = {
     limit?: number,
     offset?: number,
-};
-
-type getOrganizationProjectsDataCountQueryParams = {
-    projectId?: number,
-    filter?: string,
-    ids?: string,
 };
 
 type listOrganizationDataQueryParams = {
@@ -164,21 +143,8 @@ type listOrganizationFilesQueryParams = {
     offset?: number,
 };
 
-type listOrganizationProjectsDataQueryParams = {
-    projectId?: number,
-    filter?: string,
-    ids?: string,
-    limit?: number,
-    offset?: number,
-};
-
-type organizationBulkUpdateMetadataFormParams = {
+export type organizationBulkUpdateMetadataFormParams = {
     dataset: string,
-    csvFile: RequestFile,
-};
-
-type organizationProjectsDataBulkUpdateMetadataFormParams = {
-    projectIds?: Array<number>,
     csvFile: RequestFile,
 };
 
@@ -616,27 +582,27 @@ export class OrganizationDataApi {
         let localVarUseFormData = false;
 
         if (params.name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
+            localVarFormParams['name'] = ObjectSerializer.serializeFormData(params.name, "string");
         }
 
         if (params.bucketId !== undefined) {
-            localVarFormParams['bucketId'] = ObjectSerializer.serialize(params.bucketId, "number");
+            localVarFormParams['bucketId'] = ObjectSerializer.serializeFormData(params.bucketId, "number");
         }
 
         if (params.bucketName !== undefined) {
-            localVarFormParams['bucketName'] = ObjectSerializer.serialize(params.bucketName, "string");
+            localVarFormParams['bucketName'] = ObjectSerializer.serializeFormData(params.bucketName, "string");
         }
 
         if (params.dataset !== undefined) {
-            localVarFormParams['dataset'] = ObjectSerializer.serialize(params.dataset, "string");
+            localVarFormParams['dataset'] = ObjectSerializer.serializeFormData(params.dataset, "string");
         }
 
         if (params.bucketPath !== undefined) {
-            localVarFormParams['bucketPath'] = ObjectSerializer.serialize(params.bucketPath, "string");
+            localVarFormParams['bucketPath'] = ObjectSerializer.serializeFormData(params.bucketPath, "string");
         }
 
         if (params.metadata !== undefined) {
-            localVarFormParams['metadata'] = ObjectSerializer.serialize(params.metadata, "string");
+            localVarFormParams['metadata'] = ObjectSerializer.serializeFormData(params.metadata, "string");
         }
 
         if (params.files !== undefined) {
@@ -1509,99 +1475,6 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Delete data samples from organizational projects.
-     * @summary Delete projects data
-     * @param organizationId Organization ID
-     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
-     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
-     */
-    public async deleteOrganizationProjectsData (organizationId: number, queryParams?: deleteOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationProjectsData.');
-        }
-
-        if (queryParams?.projectId !== undefined) {
-            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
-        }
-
-        if (queryParams?.ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'DELETE',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Download a file from a dataset. Will return a signed URL to the bucket.
      * @summary Download file from dataset
      * @param organizationId Organization ID
@@ -1958,99 +1831,6 @@ export class OrganizationDataApi {
 
         if (queryParams?.filter !== undefined) {
             localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            encoding: null,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<Buffer>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "Buffer");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Download all selected project data items.
-     * @summary Download data
-     * @param organizationId Organization ID
-     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
-     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
-     */
-    public async downloadOrganizationProjectsData (organizationId: number, queryParams?: downloadOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/download'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/x-zip'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling downloadOrganizationProjectsData.');
-        }
-
-        if (queryParams?.projectId !== undefined) {
-            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
-        }
-
-        if (queryParams?.ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2589,104 +2369,6 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Get the number of samples for all or for a specific organization project.
-     * @summary Get projects data count
-     * @param organizationId Organization ID
-     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
-     * @param filter Data filter in SQL WHERE format, where you can reference \&#39;filename\&#39;, \&#39;label\&#39;, \&#39;project_name\&#39;, \&#39;category\&#39;, \&#39;sensors\&#39;, \&#39;frequency\&#39;, and any metadata through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
-     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
-     */
-    public async getOrganizationProjectsDataCount (organizationId: number, queryParams?: getOrganizationProjectsDataCountQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationProjectsDataCountResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/count'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationProjectsDataCount.');
-        }
-
-        if (queryParams?.projectId !== undefined) {
-            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
-        }
-
-        if (queryParams?.filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
-        }
-
-        if (queryParams?.ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GetOrganizationProjectsDataCountResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GetOrganizationProjectsDataCountResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Hide a dataset (does not remove underlying data)
      * @summary Hide dataset
      * @param organizationId Organization ID
@@ -3169,114 +2851,6 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Retrieve all the data samples from organizational projects.
-     * @summary Get projects data
-     * @param organizationId Organization ID
-     * @param projectId Unique identifier of the organizational project from where data samples will be fetched.
-     * @param filter Data filter in SQL WHERE format, where you can reference \&#39;filename\&#39;, \&#39;label\&#39;, \&#39;project_name\&#39;, \&#39;category\&#39;, \&#39;sensors\&#39;, \&#39;frequency\&#39;, and any metadata through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
-     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
-     * @param limit Maximum number of results
-     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
-     */
-    public async listOrganizationProjectsData (organizationId: number, queryParams?: listOrganizationProjectsDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationProjectsDataResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationProjectsData.');
-        }
-
-        if (queryParams?.projectId !== undefined) {
-            localVarQueryParameters['projectId'] = ObjectSerializer.serialize(queryParams.projectId, "number");
-        }
-
-        if (queryParams?.filter !== undefined) {
-            localVarQueryParameters['filter'] = ObjectSerializer.serialize(queryParams.filter, "string");
-        }
-
-        if (queryParams?.ids !== undefined) {
-            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
-        }
-
-        if (queryParams?.limit !== undefined) {
-            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
-        }
-
-        if (queryParams?.offset !== undefined) {
-            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<ListOrganizationProjectsDataResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "ListOrganizationProjectsDataResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Bulk update the metadata of many data items in one go. This requires you to submit a CSV file with headers, one of which the columns should be named \'name\'. The other columns are used as metadata keys.
      * @summary Bulk update metadata
      * @param organizationId Organization ID
@@ -3326,292 +2900,7 @@ export class OrganizationDataApi {
         let localVarUseFormData = false;
 
         if (params.dataset !== undefined) {
-            localVarFormParams['dataset'] = ObjectSerializer.serialize(params.dataset, "string");
-        }
-
-        if (params.csvFile !== undefined) {
-            localVarFormParams['csvFile'] = params.csvFile;
-        }
-        localVarUseFormData = true;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<StartJobResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Batch disable project data samples by dataId
-     * @summary Batch disable data
-     * @param organizationId Organization ID
-     * @param organizationProjectsDataBatchRequest 
-     */
-    public async organizationProjectsDataBatchDisable (organizationId: number, organizationProjectsDataBatchRequest: OrganizationProjectsDataBatchRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationProjectsDataBatchDisableResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/disable'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBatchDisable.');
-        }
-
-        // verify required parameter 'organizationProjectsDataBatchRequest' is not null or undefined
-
-
-        if (organizationProjectsDataBatchRequest === null || organizationProjectsDataBatchRequest === undefined) {
-            throw new Error('Required parameter organizationProjectsDataBatchRequest was null or undefined when calling organizationProjectsDataBatchDisable.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(organizationProjectsDataBatchRequest, "OrganizationProjectsDataBatchRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<OrganizationProjectsDataBatchDisableResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "OrganizationProjectsDataBatchDisableResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Batch enable project data samples by dataId
-     * @summary Batch enable data
-     * @param organizationId Organization ID
-     * @param organizationProjectsDataBatchRequest 
-     */
-    public async organizationProjectsDataBatchEnable (organizationId: number, organizationProjectsDataBatchRequest: OrganizationProjectsDataBatchRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationProjectsDataBatchEnableResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/enable'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBatchEnable.');
-        }
-
-        // verify required parameter 'organizationProjectsDataBatchRequest' is not null or undefined
-
-
-        if (organizationProjectsDataBatchRequest === null || organizationProjectsDataBatchRequest === undefined) {
-            throw new Error('Required parameter organizationProjectsDataBatchRequest was null or undefined when calling organizationProjectsDataBatchEnable.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(organizationProjectsDataBatchRequest, "OrganizationProjectsDataBatchRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<OrganizationProjectsDataBatchEnableResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "OrganizationProjectsDataBatchEnableResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Bulk update the metadata of many raw data items in one go. This requires you to submit a CSV file with headers, one of which the columns should be named \'name\'. The other columns are used as metadata keys.
-     * @summary Bulk update metadata
-     * @param organizationId Organization ID
-     * @param csvFile 
-     * @param projectIds 
-     */
-    public async organizationProjectsDataBulkUpdateMetadata (organizationId: number, params: organizationProjectsDataBulkUpdateMetadataFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
-        const localVarPath = this.basePath + '/api/organizations/{organizationId}/projects/data/metadata'
-            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'organizationId' is not null or undefined
-
-
-        if (organizationId === null || organizationId === undefined) {
-            throw new Error('Required parameter organizationId was null or undefined when calling organizationProjectsDataBulkUpdateMetadata.');
-        }
-
-        // verify required parameter 'csvFile' is not null or undefined
-        if (params.csvFile === null || params.csvFile === undefined) {
-            throw new Error('Required parameter params.csvFile was null or undefined when calling organizationProjectsDataBulkUpdateMetadata.');
-        }
-
-
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        if (params.projectIds !== undefined) {
-            localVarFormParams['projectIds'] = ObjectSerializer.serialize(params.projectIds, "Array<number>");
+            localVarFormParams['dataset'] = ObjectSerializer.serializeFormData(params.dataset, "string");
         }
 
         if (params.csvFile !== undefined) {

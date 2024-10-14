@@ -91,13 +91,13 @@ const cliOptions = {
 };
 
 const logAllAnnotationFormats = () => {
-    [ {
+    [{
         name: 'OBJECT DETECTION',
         key: 'object-detection',
     }, {
         name: 'SINGLE LABEL',
         key: 'single-label',
-    } ].forEach(type => {
+    }].forEach(type => {
         console.log(`${type.name}:`);
         console.log(listAllAnnotationFormats(type.key as SupportedLabelType)
             .map(format => `    * ${format.name} (--dataset-format ${format.key})`)

@@ -75,6 +75,11 @@ export interface EiSerialDeviceConfig {
         host: string;
         path: string;
     };
+    ingestion_cycle: {
+        sensor: string;
+        ingestion_cycle_length: number;
+        ingestion_interval: number;
+    };
     management: {
         url: string;
         connected: boolean;
@@ -142,7 +147,8 @@ export default class EiSerialProtocol {
     async getConfig() {
         let data = await this.execCommand('AT+CONFIG?', 2000);
 
-        let config = <EiSerialDeviceConfig>{ info: { }, wifi: { }, sampling: { }, upload: { }, management: { } };
+        let config = <EiSerialDeviceConfig>{ info: { }, wifi: { }, sampling: { }
+            , ingestion_cycle: { }, upload: { }, management: { } };
         config.sensors = [];
         config.info.atCommandVersion = { major: 1, minor: 0, patch: 0 };
         config.wifi.present = true;
@@ -159,7 +165,7 @@ export default class EiSerialProtocol {
         };
 
         let section: 'info' | 'sensors' | 'wifi' | 'inference' | 'sampling' | 'upload' |
-                     'management' | 'snapshot' | undefined;
+                     'management' | 'snapshot' | 'ingestion' | undefined;
 
         for (let line of data.split('\n').map(l => l.trim()).filter(l => !!l)) {
             if (line.indexOf('= Device info =') > -1) {
@@ -184,6 +190,10 @@ export default class EiSerialProtocol {
             }
             if (line.indexOf('= Sampling parameters =') > -1) {
                 section = 'sampling';
+                continue;
+            }
+            if (line.indexOf('= Ingestion parameters =') > -1) {
+                section = 'ingestion';
                 continue;
             }
             if (line.indexOf('= Upload settings =') > -1) {
@@ -333,6 +343,17 @@ export default class EiSerialProtocol {
                     config.sampling.hmacKey = value; continue;
                 }
             }
+            if (section === 'ingestion') {
+                if (key === 'sensor') {
+                    config.ingestion_cycle.sensor = value; continue;
+                }
+                if (key === 'cycle length') {
+                    config.ingestion_cycle.ingestion_cycle_length = Number(value.replace(' ms.', '')); continue;
+                }
+                if (key === 'cycle interval') {
+                    config.ingestion_cycle.ingestion_interval = Number(value.replace(' ms.', '')); continue;
+                }
+            }
             if (section === 'upload') {
                 if (key === 'api key') {
                     config.upload.apiKey = value; continue;
@@ -399,6 +420,19 @@ export default class EiSerialProtocol {
             this._config.sampling.interval = interval;
             this._config.sampling.length = length;
             this._config.sampling.hmacKey = hmacKey;
+        }
+    }
+
+    async setIngestionCycleSettings(sensor_name: string, cycle_length: number, cycle_interval: number) {
+        let res = await this.execCommand(`AT+INGESTIONCYCLESETTINGS=${sensor_name},${cycle_length},${cycle_interval}`);
+        if (res.indexOf('OK') === -1) {
+            throw new Error('Failed to set ingestion cycle settings: ' + res);
+        }
+
+        if (this._config) {
+            this._config.ingestion_cycle.sensor = sensor_name;
+            this._config.ingestion_cycle.ingestion_cycle_length = cycle_length;
+            this._config.ingestion_cycle.ingestion_interval = cycle_interval;
         }
     }
 

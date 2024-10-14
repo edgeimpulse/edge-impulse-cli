@@ -550,6 +550,9 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 config.info.atCommandVersion.patch);
 
             // we support devices with version 1.8.x and lower
+            // BE CAREFUL! Changing the required AT major/minior version will break the compatibility
+            // with the devices that are already in the field!!! Use wisely!!!
+            // Maybe your change requires optional AT command?
             if (config.info.atCommandVersion.major > 1 || config.info.atCommandVersion.minor > 8) {
                 console.error(SERIAL_PREFIX,
                     'Unsupported AT command version running on this device. Supported version is 1.8.x and lower, ' +
@@ -602,12 +605,12 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
                 }, eiConfig), device,
                     url => new WebSocket(url),
                     async (currName) => {
-                        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([ {
+                        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
                             type: 'input',
                             message: 'What name do you want to give this device?',
                             name: 'nameDevice',
                             default: currName
-                        } ]);
+                        }]);
                         return nameDevice.nameDevice;
                     });
 
@@ -756,34 +759,34 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
         if (!deviceConfig.wifi.connected && credentials.askWifi !== false && deviceConfig.wifi.present &&
             !setupWizardRan) {
 
-            let inqSetup = await inquirer.prompt([ {
+            let inqSetup = await inquirer.prompt([{
                 type: 'confirm',
                 message: 'WiFi is not connected, do you want to set up a WiFi network now?',
                 default: true,
                 name: 'setupWifi'
-            } ]);
+            }]);
             if (inqSetup.setupWifi) {
                 process.stdout.write('Scanning WiFi networks...');
                 let wifi = await serialProtocol.scanWifi();
                 process.stdout.write(' OK\n');
 
-                let inqWifi = await inquirer.prompt([ {
+                let inqWifi = await inquirer.prompt([{
                     type: 'list',
                     choices: wifi.map(w => ({ name: w.line, value: w })),
                     message: 'Select WiFi network',
                     name: 'wifi',
                     pageSize: 20
-                } ]);
+                }]);
 
                 let network = <EiSerialWifiNetwork>inqWifi.wifi;
                 let pass = '';
 
                 if (network.security !== EiSerialWifiSecurity.EI_SECURITY_NONE) {
-                    let inqPass = <{ wifiPass: string }>await inquirer.prompt([ {
+                    let inqPass = <{ wifiPass: string }>await inquirer.prompt([{
                         type: 'input',
                         message: 'Enter password for network "' + network.ssid + '"',
                         name: 'wifiPass'
-                    } ]);
+                    }]);
                     pass = inqPass.wifiPass;
                 }
 

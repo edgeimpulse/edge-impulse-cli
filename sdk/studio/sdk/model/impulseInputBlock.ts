@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
 
 export class ImpulseInputBlock {
     /**
@@ -80,6 +81,7 @@ export class ImpulseInputBlock {
     * The datetime that the block version was created. Cannot be set via API.
     */
     'createdAt'?: Date;
+    'datasetSubset'?: ImpulseInputBlockDatasetSubset;
 
     static discriminator: string | undefined = undefined;
 
@@ -168,6 +170,11 @@ export class ImpulseInputBlock {
             "name": "createdAt",
             "baseName": "createdAt",
             "type": "Date"
+        },
+        {
+            "name": "datasetSubset",
+            "baseName": "datasetSubset",
+            "type": "ImpulseInputBlockDatasetSubset"
         }    ];
 
     static getAttributeTypeMap() {

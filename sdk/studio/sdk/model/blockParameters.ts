@@ -30,10 +30,6 @@ export class BlockParameters {
     */
     'poolSize'?: number;
     /**
-    * The method for resampling the input data
-    */
-    'resamplingMethod'?: BlockParametersResamplingMethodEnum;
-    /**
     * The sampling ratio for the coreset, used for anomaly scoring
     */
     'samplingRatio'?: number;
@@ -61,11 +57,6 @@ export class BlockParameters {
             "type": "number"
         },
         {
-            "name": "resamplingMethod",
-            "baseName": "resamplingMethod",
-            "type": "BlockParametersResamplingMethodEnum"
-        },
-        {
             "name": "samplingRatio",
             "baseName": "samplingRatio",
             "type": "number"
@@ -81,6 +72,3 @@ export class BlockParameters {
     }
 }
 
-
-export type BlockParametersResamplingMethodEnum = 'tile' | 'interpolate';
-export const BlockParametersResamplingMethodEnumValues: string[] = ['tile', 'interpolate'];

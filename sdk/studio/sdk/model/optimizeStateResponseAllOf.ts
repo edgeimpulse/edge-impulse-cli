@@ -27,6 +27,10 @@ export class OptimizeStateResponseAllOf {
     */
     'tunerCoordinatorJobId'?: number;
     /**
+    * Job ID for the initial job this job continuous the hyperparameter search process for.
+    */
+    'continuationJobId'?: number;
+    /**
     * Whether the job is active (if false => finished)
     */
     'tunerJobIsRunning': boolean;
@@ -58,6 +62,11 @@ export class OptimizeStateResponseAllOf {
         {
             "name": "tunerCoordinatorJobId",
             "baseName": "tunerCoordinatorJobId",
+            "type": "number"
+        },
+        {
+            "name": "continuationJobId",
+            "baseName": "continuationJobId",
             "type": "number"
         },
         {

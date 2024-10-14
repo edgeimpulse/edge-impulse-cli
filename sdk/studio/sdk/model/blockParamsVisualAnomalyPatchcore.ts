@@ -25,10 +25,6 @@ export class BlockParamsVisualAnomalyPatchcore {
     */
     'poolSize'?: number;
     /**
-    * The method for resampling the input data
-    */
-    'resamplingMethod'?: BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum;
-    /**
     * The sampling ratio for the coreset, used for anomaly scoring
     */
     'samplingRatio'?: number;
@@ -56,11 +52,6 @@ export class BlockParamsVisualAnomalyPatchcore {
             "type": "number"
         },
         {
-            "name": "resamplingMethod",
-            "baseName": "resamplingMethod",
-            "type": "BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum"
-        },
-        {
             "name": "samplingRatio",
             "baseName": "samplingRatio",
             "type": "number"
@@ -76,6 +67,3 @@ export class BlockParamsVisualAnomalyPatchcore {
     }
 }
 
-
-export type BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum = 'tile' | 'interpolate';
-export const BlockParamsVisualAnomalyPatchcoreResamplingMethodEnumValues: string[] = ['tile', 'interpolate'];

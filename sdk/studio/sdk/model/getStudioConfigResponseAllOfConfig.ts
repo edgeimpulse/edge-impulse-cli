@@ -11,20 +11,32 @@
  */
 
 
-export class OrganizationProjectsDataBatchRequest {
-    'sampleIds'?: Array<number>;
+export class GetStudioConfigResponseAllOfConfig {
+    /**
+    * Config key
+    */
+    'key': string;
+    /**
+    * Config value (as JSON string)
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "sampleIds",
-            "baseName": "sampleIds",
-            "type": "Array<number>"
+            "name": "key",
+            "baseName": "key",
+            "type": "string"
+        },
+        {
+            "name": "value",
+            "baseName": "value",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationProjectsDataBatchRequest.attributeTypeMap;
+        return GetStudioConfigResponseAllOfConfig.attributeTypeMap;
     }
 }
 

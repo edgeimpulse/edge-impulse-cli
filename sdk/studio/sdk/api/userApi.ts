@@ -75,11 +75,11 @@ export enum UserApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type uploadPhotoCurrentUserFormParams = {
+export type uploadPhotoCurrentUserFormParams = {
     photo: RequestFile,
 };
 
-type uploadPhotoUserFormParams = {
+export type uploadPhotoUserFormParams = {
     photo: RequestFile,
 };
 

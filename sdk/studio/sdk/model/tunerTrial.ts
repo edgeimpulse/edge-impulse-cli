@@ -15,6 +15,7 @@ import { TunerTrialDspJobId } from './tunerTrialDspJobId';
 import { TunerTrialImpulse } from './tunerTrialImpulse';
 import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProject';
 import { TunerTrialMetrics } from './tunerTrialMetrics';
+import { TunerTrialProgress } from './tunerTrialProgress';
 
 export class TunerTrial {
     'id': string;
@@ -33,6 +34,8 @@ export class TunerTrial {
     'dspJobId'?: TunerTrialDspJobId;
     'learnJobId'?: number;
     'devicePerformance'?: { [key: string]: object; };
+    'optimizationRound'?: number;
+    'progress'?: TunerTrialProgress;
     'metrics'?: TunerTrialMetrics;
     'impulseAddedToProject'?: TunerTrialImpulseAddedToProject;
 
@@ -118,6 +121,16 @@ export class TunerTrial {
             "name": "devicePerformance",
             "baseName": "devicePerformance",
             "type": "{ [key: string]: object; }"
+        },
+        {
+            "name": "optimizationRound",
+            "baseName": "optimizationRound",
+            "type": "number"
+        },
+        {
+            "name": "progress",
+            "baseName": "progress",
+            "type": "TunerTrialProgress"
         },
         {
             "name": "metrics",

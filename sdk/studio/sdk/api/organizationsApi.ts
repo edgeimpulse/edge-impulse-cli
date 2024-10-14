@@ -105,15 +105,15 @@ type getOrganizationMetricsQueryParams = {
     projectVisibility?: ProjectVisibility,
 };
 
-type uploadOrganizationHeaderFormParams = {
+export type uploadOrganizationHeaderFormParams = {
     image?: RequestFile,
 };
 
-type uploadOrganizationLogoFormParams = {
+export type uploadOrganizationLogoFormParams = {
     image?: RequestFile,
 };
 
-type uploadOrganizationReadmeImageFormParams = {
+export type uploadOrganizationReadmeImageFormParams = {
     image: RequestFile,
 };
 
@@ -186,19 +186,19 @@ type whitelabelAdminGetUsersQueryParams = {
     search?: string,
 };
 
-type whitelabelAdminUpdateDevelopmentBoardImageFormParams = {
+export type whitelabelAdminUpdateDevelopmentBoardImageFormParams = {
     image?: RequestFile,
 };
 
-type whitelabelAdminUpdateThemeDeviceLogoFormParams = {
+export type whitelabelAdminUpdateThemeDeviceLogoFormParams = {
     image?: RequestFile,
 };
 
-type whitelabelAdminUpdateThemeFaviconFormParams = {
+export type whitelabelAdminUpdateThemeFaviconFormParams = {
     image: RequestFile,
 };
 
-type whitelabelAdminUpdateThemeLogoFormParams = {
+export type whitelabelAdminUpdateThemeLogoFormParams = {
     image?: RequestFile,
 };
 
@@ -1443,6 +1443,89 @@ export class OrganizationsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(removeMemberRequest, "RemoveMemberRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Request a license required for the deployment of an impulse containing the Edge Impulse HR block.
+     * @summary Request HR block license
+     * @param organizationId Organization ID
+     */
+    public async requestEnterpriseHrBlockLicense (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/request-hr-block-license'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling requestEnterpriseHrBlockLicense.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
         };
 
         let authenticationPromise = Promise.resolve();

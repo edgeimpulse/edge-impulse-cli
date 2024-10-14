@@ -1,9 +1,10 @@
-sdk/
+# we want to ignore top sdk, but not the one in ./build/sdk/
+./sdk/
 *.ts
 *.sh
-tsconfig.json
-.eslintrc.json
-.eslintignore
-README-internal.md
-*.tgz
-out/
+./tsconfig.json
+./.eslintrc.json
+./.eslintignore
+./README-internal.md
+./*.tgz
+./out/

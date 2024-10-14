@@ -42,7 +42,7 @@ export enum ThemesApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type updateThemeFaviconFormParams = {
+export type updateThemeFaviconFormParams = {
     image: RequestFile,
 };
 

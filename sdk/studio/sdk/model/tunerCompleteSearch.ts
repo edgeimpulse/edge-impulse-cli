@@ -10,20 +10,9 @@
  * Do not edit the class manually.
  */
 
-import { GenericApiResponse } from './genericApiResponse';
-import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
-import { Note } from './note';
 
-export class GetNotesResponse {
-    /**
-    * Whether the operation succeeded
-    */
+export class TunerCompleteSearch {
     'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
-    'notes': Array<Note>;
 
     static discriminator: string | undefined = undefined;
 
@@ -32,20 +21,10 @@ export class GetNotesResponse {
             "name": "success",
             "baseName": "success",
             "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
-        {
-            "name": "notes",
-            "baseName": "notes",
-            "type": "Array<Note>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetNotesResponse.attributeTypeMap;
+        return TunerCompleteSearch.attributeTypeMap;
     }
 }
 

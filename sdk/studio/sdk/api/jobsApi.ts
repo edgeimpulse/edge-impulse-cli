@@ -119,6 +119,10 @@ type listFinishedJobsQueryParams = {
     rootOnly?: boolean,
 };
 
+type optimizeJobQueryParams = {
+    continuationJobId?: number,
+};
+
 type setTunerPrimaryJobQueryParams = {
     trialId: string,
 };
@@ -2234,8 +2238,9 @@ export class JobsApi {
      * Evaluates optimal model architecture
      * @summary Optimize model
      * @param projectId Project ID
+     * @param continuationJobId Tuner coordinator job ID
      */
-    public async optimizeJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async optimizeJob (projectId: number, queryParams?: optimizeJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2256,6 +2261,10 @@ export class JobsApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling optimizeJob.');
+        }
+
+        if (queryParams?.continuationJobId !== undefined) {
+            localVarQueryParameters['continuationJobId'] = ObjectSerializer.serialize(queryParams.continuationJobId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

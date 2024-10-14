@@ -137,13 +137,13 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
             projectId = projectList.projects[0].id;
         }
         else {
-            let inqRes = await inquirer.prompt([ {
+            let inqRes = await inquirer.prompt([{
                 type: 'list',
                 choices: (projectList.projects || []).map(p => ({ name: p.owner + ' / ' + p.name, value: p.id })),
                 name: 'project',
                 message: opts.connectProjectMsg,
                 pageSize: 20
-            } ]);
+            }]);
             projectId = Number(inqRes.project);
         }
 

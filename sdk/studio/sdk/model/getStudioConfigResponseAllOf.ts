@@ -10,22 +10,25 @@
  * Do not edit the class manually.
  */
 
-import { Note } from './note';
+import { GetStudioConfigResponseAllOfConfig } from './getStudioConfigResponseAllOfConfig';
 
-export class GetNotesResponseAllOf {
-    'notes': Array<Note>;
+export class GetStudioConfigResponseAllOf {
+    /**
+    * List of config items
+    */
+    'config': Array<GetStudioConfigResponseAllOfConfig>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "notes",
-            "baseName": "notes",
-            "type": "Array<Note>"
+            "name": "config",
+            "baseName": "config",
+            "type": "Array<GetStudioConfigResponseAllOfConfig>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetNotesResponseAllOf.attributeTypeMap;
+        return GetStudioConfigResponseAllOf.attributeTypeMap;
     }
 }
 

@@ -85,6 +85,7 @@ export * from './adminOrganizationInfoResponseAllOf';
 export * from './adminStartEnterpriseTrialRequest';
 export * from './adminStartEnterpriseTrialRequestAllOf';
 export * from './adminToggleDataMigrationRequest';
+export * from './adminUpdateConfigRequest';
 export * from './adminUpdateOrganizationDataExportRequest';
 export * from './adminUpdateOrganizationRequest';
 export * from './adminUpdateTrialRequest';
@@ -391,8 +392,6 @@ export * from './getModelVariantsResponse';
 export * from './getModelVariantsResponseAllOf';
 export * from './getNewBlockIdResponse';
 export * from './getNewBlockIdResponseAllOf';
-export * from './getNotesResponse';
-export * from './getNotesResponseAllOf';
 export * from './getOrganizationBucketResponse';
 export * from './getOrganizationBucketResponseAllOf';
 export * from './getOrganizationDataCampaignDashboardResponse';
@@ -422,7 +421,6 @@ export * from './getOrganizationPipelinesResponse';
 export * from './getOrganizationPipelinesResponseAllOf';
 export * from './getOrganizationPortalResponse';
 export * from './getOrganizationPortalResponseAllOf';
-export * from './getOrganizationProjectsDataCountResponse';
 export * from './getOrganizationTransferLearningBlockResponse';
 export * from './getOrganizationTransferLearningBlockResponseAllOf';
 export * from './getOrganizationTransformationBlockResponse';
@@ -448,6 +446,9 @@ export * from './getPublicMetricsResponse';
 export * from './getPublicMetricsResponseAllOf';
 export * from './getSampleMetadataResponse';
 export * from './getSampleResponse';
+export * from './getStudioConfigResponse';
+export * from './getStudioConfigResponseAllOf';
+export * from './getStudioConfigResponseAllOfConfig';
 export * from './getSyntheticDataConfigResponse';
 export * from './getSyntheticDataConfigResponseAllOf';
 export * from './getSyntheticDataConfigResponseAllOfRecentJobs';
@@ -478,6 +479,7 @@ export * from './impulseDspBlock';
 export * from './impulseDspBlockNamedAxes';
 export * from './impulseDspBlockOrganization';
 export * from './impulseInputBlock';
+export * from './impulseInputBlockDatasetSubset';
 export * from './impulseLearnBlock';
 export * from './inputBlock';
 export * from './inviteOrganizationMemberRequest';
@@ -561,9 +563,6 @@ export * from './listOrganizationPipelinesResponseAllOf';
 export * from './listOrganizationPortalsResponse';
 export * from './listOrganizationPortalsResponseAllOf';
 export * from './listOrganizationPortalsResponseAllOfPortals';
-export * from './listOrganizationProjectsDataResponse';
-export * from './listOrganizationProjectsDataResponseAllOf';
-export * from './listOrganizationProjectsDataResponseAllOfProjects';
 export * from './listOrganizationSecretsResponse';
 export * from './listOrganizationSecretsResponseAllOf';
 export * from './listOrganizationSecretsResponseAllOfSecrets';
@@ -616,7 +615,6 @@ export * from './moveRawDataRequest';
 export * from './neighborsData';
 export * from './neighborsScore';
 export * from './neighborsScoreNeighborWindows';
-export * from './note';
 export * from './objectDetectionAutoLabelRequest';
 export * from './objectDetectionAutoLabelResponse';
 export * from './objectDetectionAutoLabelResponseAllOf';
@@ -699,10 +697,6 @@ export * from './organizationPipelineItemCount';
 export * from './organizationPipelineRun';
 export * from './organizationPipelineRunStep';
 export * from './organizationPipelineStep';
-export * from './organizationProjectsDataBatchDisableResponse';
-export * from './organizationProjectsDataBatchEnableResponse';
-export * from './organizationProjectsDataBatchRequest';
-export * from './organizationProjectsDataBulkMetadataRequest';
 export * from './organizationTransferLearningBlock';
 export * from './organizationTransferLearningBlockCustomVariant';
 export * from './organizationTransferLearningBlockModelFile';
@@ -876,6 +870,7 @@ export * from './transferOwnershipOrganizationRequest';
 export * from './transformationBlockAdditionalMountPoint';
 export * from './transformationJobOperatesOnEnum';
 export * from './transformationJobStatusEnum';
+export * from './tunerCompleteSearch';
 export * from './tunerCreateTrialImpulse';
 export * from './tunerRun';
 export * from './tunerSpaceImpulse';
@@ -886,6 +881,7 @@ export * from './tunerTrialImpulse';
 export * from './tunerTrialImpulseAddedToProject';
 export * from './tunerTrialMetrics';
 export * from './tunerTrialMetricsTest';
+export * from './tunerTrialProgress';
 export * from './updateImpulseRequest';
 export * from './updateJobRequest';
 export * from './updateOrganizationAddCollaboratorRequest';
@@ -1058,6 +1054,7 @@ import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoRespo
 import { AdminStartEnterpriseTrialRequest } from './adminStartEnterpriseTrialRequest';
 import { AdminStartEnterpriseTrialRequestAllOf } from './adminStartEnterpriseTrialRequestAllOf';
 import { AdminToggleDataMigrationRequest } from './adminToggleDataMigrationRequest';
+import { AdminUpdateConfigRequest } from './adminUpdateConfigRequest';
 import { AdminUpdateOrganizationDataExportRequest } from './adminUpdateOrganizationDataExportRequest';
 import { AdminUpdateOrganizationRequest } from './adminUpdateOrganizationRequest';
 import { AdminUpdateTrialRequest } from './adminUpdateTrialRequest';
@@ -1364,8 +1361,6 @@ import { GetModelVariantsResponse } from './getModelVariantsResponse';
 import { GetModelVariantsResponseAllOf } from './getModelVariantsResponseAllOf';
 import { GetNewBlockIdResponse } from './getNewBlockIdResponse';
 import { GetNewBlockIdResponseAllOf } from './getNewBlockIdResponseAllOf';
-import { GetNotesResponse } from './getNotesResponse';
-import { GetNotesResponseAllOf } from './getNotesResponseAllOf';
 import { GetOrganizationBucketResponse } from './getOrganizationBucketResponse';
 import { GetOrganizationBucketResponseAllOf } from './getOrganizationBucketResponseAllOf';
 import { GetOrganizationDataCampaignDashboardResponse } from './getOrganizationDataCampaignDashboardResponse';
@@ -1395,7 +1390,6 @@ import { GetOrganizationPipelinesResponse } from './getOrganizationPipelinesResp
 import { GetOrganizationPipelinesResponseAllOf } from './getOrganizationPipelinesResponseAllOf';
 import { GetOrganizationPortalResponse } from './getOrganizationPortalResponse';
 import { GetOrganizationPortalResponseAllOf } from './getOrganizationPortalResponseAllOf';
-import { GetOrganizationProjectsDataCountResponse } from './getOrganizationProjectsDataCountResponse';
 import { GetOrganizationTransferLearningBlockResponse } from './getOrganizationTransferLearningBlockResponse';
 import { GetOrganizationTransferLearningBlockResponseAllOf } from './getOrganizationTransferLearningBlockResponseAllOf';
 import { GetOrganizationTransformationBlockResponse } from './getOrganizationTransformationBlockResponse';
@@ -1421,6 +1415,9 @@ import { GetPublicMetricsResponse } from './getPublicMetricsResponse';
 import { GetPublicMetricsResponseAllOf } from './getPublicMetricsResponseAllOf';
 import { GetSampleMetadataResponse } from './getSampleMetadataResponse';
 import { GetSampleResponse } from './getSampleResponse';
+import { GetStudioConfigResponse } from './getStudioConfigResponse';
+import { GetStudioConfigResponseAllOf } from './getStudioConfigResponseAllOf';
+import { GetStudioConfigResponseAllOfConfig } from './getStudioConfigResponseAllOfConfig';
 import { GetSyntheticDataConfigResponse } from './getSyntheticDataConfigResponse';
 import { GetSyntheticDataConfigResponseAllOf } from './getSyntheticDataConfigResponseAllOf';
 import { GetSyntheticDataConfigResponseAllOfRecentJobs } from './getSyntheticDataConfigResponseAllOfRecentJobs';
@@ -1451,6 +1448,7 @@ import { ImpulseDspBlock } from './impulseDspBlock';
 import { ImpulseDspBlockNamedAxes } from './impulseDspBlockNamedAxes';
 import { ImpulseDspBlockOrganization } from './impulseDspBlockOrganization';
 import { ImpulseInputBlock } from './impulseInputBlock';
+import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { InputBlock } from './inputBlock';
 import { InviteOrganizationMemberRequest } from './inviteOrganizationMemberRequest';
@@ -1534,9 +1532,6 @@ import { ListOrganizationPipelinesResponseAllOf } from './listOrganizationPipeli
 import { ListOrganizationPortalsResponse } from './listOrganizationPortalsResponse';
 import { ListOrganizationPortalsResponseAllOf } from './listOrganizationPortalsResponseAllOf';
 import { ListOrganizationPortalsResponseAllOfPortals } from './listOrganizationPortalsResponseAllOfPortals';
-import { ListOrganizationProjectsDataResponse } from './listOrganizationProjectsDataResponse';
-import { ListOrganizationProjectsDataResponseAllOf } from './listOrganizationProjectsDataResponseAllOf';
-import { ListOrganizationProjectsDataResponseAllOfProjects } from './listOrganizationProjectsDataResponseAllOfProjects';
 import { ListOrganizationSecretsResponse } from './listOrganizationSecretsResponse';
 import { ListOrganizationSecretsResponseAllOf } from './listOrganizationSecretsResponseAllOf';
 import { ListOrganizationSecretsResponseAllOfSecrets } from './listOrganizationSecretsResponseAllOfSecrets';
@@ -1589,7 +1584,6 @@ import { MoveRawDataRequest } from './moveRawDataRequest';
 import { NeighborsData } from './neighborsData';
 import { NeighborsScore } from './neighborsScore';
 import { NeighborsScoreNeighborWindows } from './neighborsScoreNeighborWindows';
-import { Note } from './note';
 import { ObjectDetectionAutoLabelRequest } from './objectDetectionAutoLabelRequest';
 import { ObjectDetectionAutoLabelResponse } from './objectDetectionAutoLabelResponse';
 import { ObjectDetectionAutoLabelResponseAllOf } from './objectDetectionAutoLabelResponseAllOf';
@@ -1672,10 +1666,6 @@ import { OrganizationPipelineItemCount } from './organizationPipelineItemCount';
 import { OrganizationPipelineRun } from './organizationPipelineRun';
 import { OrganizationPipelineRunStep } from './organizationPipelineRunStep';
 import { OrganizationPipelineStep } from './organizationPipelineStep';
-import { OrganizationProjectsDataBatchDisableResponse } from './organizationProjectsDataBatchDisableResponse';
-import { OrganizationProjectsDataBatchEnableResponse } from './organizationProjectsDataBatchEnableResponse';
-import { OrganizationProjectsDataBatchRequest } from './organizationProjectsDataBatchRequest';
-import { OrganizationProjectsDataBulkMetadataRequest } from './organizationProjectsDataBulkMetadataRequest';
 import { OrganizationTransferLearningBlock } from './organizationTransferLearningBlock';
 import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
 import { OrganizationTransferLearningBlockModelFile } from './organizationTransferLearningBlockModelFile';
@@ -1849,6 +1839,7 @@ import { TransferOwnershipOrganizationRequest } from './transferOwnershipOrganiz
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 import { TransformationJobStatusEnum } from './transformationJobStatusEnum';
+import { TunerCompleteSearch } from './tunerCompleteSearch';
 import { TunerCreateTrialImpulse } from './tunerCreateTrialImpulse';
 import { TunerRun } from './tunerRun';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
@@ -1859,6 +1850,7 @@ import { TunerTrialImpulse } from './tunerTrialImpulse';
 import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProject';
 import { TunerTrialMetrics } from './tunerTrialMetrics';
 import { TunerTrialMetricsTest } from './tunerTrialMetricsTest';
+import { TunerTrialProgress } from './tunerTrialProgress';
 import { UpdateImpulseRequest } from './updateImpulseRequest';
 import { UpdateJobRequest } from './updateJobRequest';
 import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
@@ -1971,8 +1963,6 @@ let enumsMap: {[index: string]: any} = {
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
     "BillingCycle": "BillingCycle",
     "BlockDisplayCategory": "BlockDisplayCategory",
-    "BlockParametersResamplingMethodEnum": "BlockParametersResamplingMethodEnum",
-    "BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum": "BlockParamsVisualAnomalyPatchcoreResamplingMethodEnum",
     "BlockType": "BlockType",
     "CalculateDataQualityMetricsRequestRepresentationEnum": "CalculateDataQualityMetricsRequestRepresentationEnum",
     "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum": "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum",
@@ -2042,7 +2032,11 @@ let enumsMap: {[index: string]: any} = {
     "ObjectDetectionAutoLabelRequestNeuralNetworkEnum": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum",
     "ObjectDetectionLastLayer": "ObjectDetectionLastLayer",
     "OptimizeConfigTuningAlgorithmEnum": "OptimizeConfigTuningAlgorithmEnum",
+    "OptimizeConfigOptimizationObjectiveEnum": "OptimizeConfigOptimizationObjectiveEnum",
+    "OptimizeConfigOptimizationPrecisionEnum": "OptimizeConfigOptimizationPrecisionEnum",
     "OptimizeConfigResponseTuningAlgorithmEnum": "OptimizeConfigResponseTuningAlgorithmEnum",
+    "OptimizeConfigResponseOptimizationObjectiveEnum": "OptimizeConfigResponseOptimizationObjectiveEnum",
+    "OptimizeConfigResponseOptimizationPrecisionEnum": "OptimizeConfigResponseOptimizationPrecisionEnum",
     "OptimizeConfigSearchSpaceTemplateIdentifierEnum": "OptimizeConfigSearchSpaceTemplateIdentifierEnum",
     "OptimizeStateResponseProjectDataTypeEnum": "OptimizeStateResponseProjectDataTypeEnum",
     "OptimizeStateResponseAllOfProjectDataTypeEnum": "OptimizeStateResponseAllOfProjectDataTypeEnum",
@@ -2202,6 +2196,7 @@ let typeMap: {[index: string]: any} = {
     "AdminStartEnterpriseTrialRequest": AdminStartEnterpriseTrialRequest,
     "AdminStartEnterpriseTrialRequestAllOf": AdminStartEnterpriseTrialRequestAllOf,
     "AdminToggleDataMigrationRequest": AdminToggleDataMigrationRequest,
+    "AdminUpdateConfigRequest": AdminUpdateConfigRequest,
     "AdminUpdateOrganizationDataExportRequest": AdminUpdateOrganizationDataExportRequest,
     "AdminUpdateOrganizationRequest": AdminUpdateOrganizationRequest,
     "AdminUpdateTrialRequest": AdminUpdateTrialRequest,
@@ -2499,8 +2494,6 @@ let typeMap: {[index: string]: any} = {
     "GetModelVariantsResponseAllOf": GetModelVariantsResponseAllOf,
     "GetNewBlockIdResponse": GetNewBlockIdResponse,
     "GetNewBlockIdResponseAllOf": GetNewBlockIdResponseAllOf,
-    "GetNotesResponse": GetNotesResponse,
-    "GetNotesResponseAllOf": GetNotesResponseAllOf,
     "GetOrganizationBucketResponse": GetOrganizationBucketResponse,
     "GetOrganizationBucketResponseAllOf": GetOrganizationBucketResponseAllOf,
     "GetOrganizationDataCampaignDashboardResponse": GetOrganizationDataCampaignDashboardResponse,
@@ -2530,7 +2523,6 @@ let typeMap: {[index: string]: any} = {
     "GetOrganizationPipelinesResponseAllOf": GetOrganizationPipelinesResponseAllOf,
     "GetOrganizationPortalResponse": GetOrganizationPortalResponse,
     "GetOrganizationPortalResponseAllOf": GetOrganizationPortalResponseAllOf,
-    "GetOrganizationProjectsDataCountResponse": GetOrganizationProjectsDataCountResponse,
     "GetOrganizationTransferLearningBlockResponse": GetOrganizationTransferLearningBlockResponse,
     "GetOrganizationTransferLearningBlockResponseAllOf": GetOrganizationTransferLearningBlockResponseAllOf,
     "GetOrganizationTransformationBlockResponse": GetOrganizationTransformationBlockResponse,
@@ -2556,6 +2548,9 @@ let typeMap: {[index: string]: any} = {
     "GetPublicMetricsResponseAllOf": GetPublicMetricsResponseAllOf,
     "GetSampleMetadataResponse": GetSampleMetadataResponse,
     "GetSampleResponse": GetSampleResponse,
+    "GetStudioConfigResponse": GetStudioConfigResponse,
+    "GetStudioConfigResponseAllOf": GetStudioConfigResponseAllOf,
+    "GetStudioConfigResponseAllOfConfig": GetStudioConfigResponseAllOfConfig,
     "GetSyntheticDataConfigResponse": GetSyntheticDataConfigResponse,
     "GetSyntheticDataConfigResponseAllOf": GetSyntheticDataConfigResponseAllOf,
     "GetSyntheticDataConfigResponseAllOfRecentJobs": GetSyntheticDataConfigResponseAllOfRecentJobs,
@@ -2585,6 +2580,7 @@ let typeMap: {[index: string]: any} = {
     "ImpulseDspBlockNamedAxes": ImpulseDspBlockNamedAxes,
     "ImpulseDspBlockOrganization": ImpulseDspBlockOrganization,
     "ImpulseInputBlock": ImpulseInputBlock,
+    "ImpulseInputBlockDatasetSubset": ImpulseInputBlockDatasetSubset,
     "ImpulseLearnBlock": ImpulseLearnBlock,
     "InputBlock": InputBlock,
     "InviteOrganizationMemberRequest": InviteOrganizationMemberRequest,
@@ -2661,9 +2657,6 @@ let typeMap: {[index: string]: any} = {
     "ListOrganizationPortalsResponse": ListOrganizationPortalsResponse,
     "ListOrganizationPortalsResponseAllOf": ListOrganizationPortalsResponseAllOf,
     "ListOrganizationPortalsResponseAllOfPortals": ListOrganizationPortalsResponseAllOfPortals,
-    "ListOrganizationProjectsDataResponse": ListOrganizationProjectsDataResponse,
-    "ListOrganizationProjectsDataResponseAllOf": ListOrganizationProjectsDataResponseAllOf,
-    "ListOrganizationProjectsDataResponseAllOfProjects": ListOrganizationProjectsDataResponseAllOfProjects,
     "ListOrganizationSecretsResponse": ListOrganizationSecretsResponse,
     "ListOrganizationSecretsResponseAllOf": ListOrganizationSecretsResponseAllOf,
     "ListOrganizationSecretsResponseAllOfSecrets": ListOrganizationSecretsResponseAllOfSecrets,
@@ -2715,7 +2708,6 @@ let typeMap: {[index: string]: any} = {
     "NeighborsData": NeighborsData,
     "NeighborsScore": NeighborsScore,
     "NeighborsScoreNeighborWindows": NeighborsScoreNeighborWindows,
-    "Note": Note,
     "ObjectDetectionAutoLabelRequest": ObjectDetectionAutoLabelRequest,
     "ObjectDetectionAutoLabelResponse": ObjectDetectionAutoLabelResponse,
     "ObjectDetectionAutoLabelResponseAllOf": ObjectDetectionAutoLabelResponseAllOf,
@@ -2794,10 +2786,6 @@ let typeMap: {[index: string]: any} = {
     "OrganizationPipelineRun": OrganizationPipelineRun,
     "OrganizationPipelineRunStep": OrganizationPipelineRunStep,
     "OrganizationPipelineStep": OrganizationPipelineStep,
-    "OrganizationProjectsDataBatchDisableResponse": OrganizationProjectsDataBatchDisableResponse,
-    "OrganizationProjectsDataBatchEnableResponse": OrganizationProjectsDataBatchEnableResponse,
-    "OrganizationProjectsDataBatchRequest": OrganizationProjectsDataBatchRequest,
-    "OrganizationProjectsDataBulkMetadataRequest": OrganizationProjectsDataBulkMetadataRequest,
     "OrganizationTransferLearningBlock": OrganizationTransferLearningBlock,
     "OrganizationTransferLearningBlockCustomVariant": OrganizationTransferLearningBlockCustomVariant,
     "OrganizationTransferLearningBlockModelFile": OrganizationTransferLearningBlockModelFile,
@@ -2963,6 +2951,7 @@ let typeMap: {[index: string]: any} = {
     "TransferLearningModel": TransferLearningModel,
     "TransferOwnershipOrganizationRequest": TransferOwnershipOrganizationRequest,
     "TransformationBlockAdditionalMountPoint": TransformationBlockAdditionalMountPoint,
+    "TunerCompleteSearch": TunerCompleteSearch,
     "TunerCreateTrialImpulse": TunerCreateTrialImpulse,
     "TunerRun": TunerRun,
     "TunerSpaceImpulse": TunerSpaceImpulse,
@@ -2973,6 +2962,7 @@ let typeMap: {[index: string]: any} = {
     "TunerTrialImpulseAddedToProject": TunerTrialImpulseAddedToProject,
     "TunerTrialMetrics": TunerTrialMetrics,
     "TunerTrialMetricsTest": TunerTrialMetricsTest,
+    "TunerTrialProgress": TunerTrialProgress,
     "UpdateImpulseRequest": UpdateImpulseRequest,
     "UpdateJobRequest": UpdateJobRequest,
     "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,
@@ -3126,6 +3116,16 @@ export class ObjectSerializer {
                 instance[attributeType.baseName] = ObjectSerializer.serialize(data[attributeType.name], attributeType.type);
             }
             return instance;
+        }
+    }
+
+    public static serializeFormData(data: any, type: string) {
+        if (primitives.indexOf(type.toLowerCase()) !== -1) {
+            // e.g. true/false cannot be serialized; need to be stringified
+            return data.toString();
+        }
+        else {
+            return ObjectSerializer.serialize(data, type);
         }
     }
 

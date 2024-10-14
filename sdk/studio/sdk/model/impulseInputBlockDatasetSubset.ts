@@ -11,38 +11,29 @@
  */
 
 
-export class ListOrganizationProjectsDataResponseAllOfProjects {
-    'id': number;
-    'name': string;
-    'owner': string;
-    'description': string;
+/**
+* Only generate features for samples where (sample_id + datasetSubsetSeed) % datasetSubset) == 0
+*/
+export class ImpulseInputBlockDatasetSubset {
+    'subsetModulo'?: number;
+    'subsetSeed'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
+            "name": "subsetModulo",
+            "baseName": "subsetModulo",
             "type": "number"
         },
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "owner",
-            "baseName": "owner",
-            "type": "string"
-        },
-        {
-            "name": "description",
-            "baseName": "description",
-            "type": "string"
+            "name": "subsetSeed",
+            "baseName": "subsetSeed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListOrganizationProjectsDataResponseAllOfProjects.attributeTypeMap;
+        return ImpulseInputBlockDatasetSubset.attributeTypeMap;
     }
 }
 

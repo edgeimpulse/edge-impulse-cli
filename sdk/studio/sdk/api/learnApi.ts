@@ -52,7 +52,7 @@ export enum LearnApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type addKerasFilesFormParams = {
+export type addKerasFilesFormParams = {
     zip: RequestFile,
 };
 
@@ -81,11 +81,11 @@ type testPretrainedModelQueryParams = {
     impulseId?: number,
 };
 
-type uploadKerasFilesFormParams = {
+export type uploadKerasFilesFormParams = {
     zip: RequestFile,
 };
 
-type uploadPretrainedModelFormParams = {
+export type uploadPretrainedModelFormParams = {
     modelFile: RequestFile,
     modelFileName: string,
     modelFileType: string,
@@ -2348,11 +2348,11 @@ export class LearnApi {
         localVarUseFormData = true;
 
         if (params.modelFileName !== undefined) {
-            localVarFormParams['modelFileName'] = ObjectSerializer.serialize(params.modelFileName, "string");
+            localVarFormParams['modelFileName'] = ObjectSerializer.serializeFormData(params.modelFileName, "string");
         }
 
         if (params.modelFileType !== undefined) {
-            localVarFormParams['modelFileType'] = ObjectSerializer.serialize(params.modelFileType, "string");
+            localVarFormParams['modelFileType'] = ObjectSerializer.serializeFormData(params.modelFileType, "string");
         }
 
         if (params.representativeFeatures !== undefined) {
@@ -2361,7 +2361,7 @@ export class LearnApi {
         localVarUseFormData = true;
 
         if (params.device !== undefined) {
-            localVarFormParams['device'] = ObjectSerializer.serialize(params.device, "string");
+            localVarFormParams['device'] = ObjectSerializer.serializeFormData(params.device, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

@@ -61,7 +61,7 @@ export enum OrganizationBlocksApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type addOrganizationDeployBlockFormParams = {
+export type addOrganizationDeployBlockFormParams = {
     name: string,
     dockerContainer: string,
     description: string,
@@ -79,7 +79,7 @@ type addOrganizationDeployBlockFormParams = {
     category?: string,
 };
 
-type updateOrganizationDeployBlockFormParams = {
+export type updateOrganizationDeployBlockFormParams = {
     name?: string,
     dockerContainer?: string,
     description?: string,
@@ -238,35 +238,35 @@ export class OrganizationBlocksApi {
         let localVarUseFormData = false;
 
         if (params.name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
+            localVarFormParams['name'] = ObjectSerializer.serializeFormData(params.name, "string");
         }
 
         if (params.dockerContainer !== undefined) {
-            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(params.dockerContainer, "string");
+            localVarFormParams['dockerContainer'] = ObjectSerializer.serializeFormData(params.dockerContainer, "string");
         }
 
         if (params.description !== undefined) {
-            localVarFormParams['description'] = ObjectSerializer.serialize(params.description, "string");
+            localVarFormParams['description'] = ObjectSerializer.serializeFormData(params.description, "string");
         }
 
         if (params.cliArguments !== undefined) {
-            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(params.cliArguments, "string");
+            localVarFormParams['cliArguments'] = ObjectSerializer.serializeFormData(params.cliArguments, "string");
         }
 
         if (params.requestsCpu !== undefined) {
-            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(params.requestsCpu, "number");
+            localVarFormParams['requestsCpu'] = ObjectSerializer.serializeFormData(params.requestsCpu, "number");
         }
 
         if (params.requestsMemory !== undefined) {
-            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(params.requestsMemory, "number");
+            localVarFormParams['requestsMemory'] = ObjectSerializer.serializeFormData(params.requestsMemory, "number");
         }
 
         if (params.limitsCpu !== undefined) {
-            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(params.limitsCpu, "number");
+            localVarFormParams['limitsCpu'] = ObjectSerializer.serializeFormData(params.limitsCpu, "number");
         }
 
         if (params.limitsMemory !== undefined) {
-            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(params.limitsMemory, "number");
+            localVarFormParams['limitsMemory'] = ObjectSerializer.serializeFormData(params.limitsMemory, "number");
         }
 
         if (params.photo !== undefined) {
@@ -275,27 +275,27 @@ export class OrganizationBlocksApi {
         localVarUseFormData = true;
 
         if (params.integrateUrl !== undefined) {
-            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(params.integrateUrl, "string");
+            localVarFormParams['integrateUrl'] = ObjectSerializer.serializeFormData(params.integrateUrl, "string");
         }
 
         if (params.privileged !== undefined) {
-            localVarFormParams['privileged'] = ObjectSerializer.serialize(params.privileged, "boolean");
+            localVarFormParams['privileged'] = ObjectSerializer.serializeFormData(params.privileged, "boolean");
         }
 
         if (params.mountLearnBlock !== undefined) {
-            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(params.mountLearnBlock, "boolean");
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serializeFormData(params.mountLearnBlock, "boolean");
         }
 
         if (params.supportsEonCompiler !== undefined) {
-            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(params.supportsEonCompiler, "boolean");
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serializeFormData(params.supportsEonCompiler, "boolean");
         }
 
         if (params.showOptimizations !== undefined) {
-            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(params.showOptimizations, "boolean");
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serializeFormData(params.showOptimizations, "boolean");
         }
 
         if (params.category !== undefined) {
-            localVarFormParams['category'] = ObjectSerializer.serialize(params.category, "string");
+            localVarFormParams['category'] = ObjectSerializer.serializeFormData(params.category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -2560,35 +2560,35 @@ export class OrganizationBlocksApi {
         let localVarUseFormData = false;
 
         if (params.name !== undefined) {
-            localVarFormParams['name'] = ObjectSerializer.serialize(params.name, "string");
+            localVarFormParams['name'] = ObjectSerializer.serializeFormData(params.name, "string");
         }
 
         if (params.dockerContainer !== undefined) {
-            localVarFormParams['dockerContainer'] = ObjectSerializer.serialize(params.dockerContainer, "string");
+            localVarFormParams['dockerContainer'] = ObjectSerializer.serializeFormData(params.dockerContainer, "string");
         }
 
         if (params.description !== undefined) {
-            localVarFormParams['description'] = ObjectSerializer.serialize(params.description, "string");
+            localVarFormParams['description'] = ObjectSerializer.serializeFormData(params.description, "string");
         }
 
         if (params.cliArguments !== undefined) {
-            localVarFormParams['cliArguments'] = ObjectSerializer.serialize(params.cliArguments, "string");
+            localVarFormParams['cliArguments'] = ObjectSerializer.serializeFormData(params.cliArguments, "string");
         }
 
         if (params.requestsCpu !== undefined) {
-            localVarFormParams['requestsCpu'] = ObjectSerializer.serialize(params.requestsCpu, "number");
+            localVarFormParams['requestsCpu'] = ObjectSerializer.serializeFormData(params.requestsCpu, "number");
         }
 
         if (params.requestsMemory !== undefined) {
-            localVarFormParams['requestsMemory'] = ObjectSerializer.serialize(params.requestsMemory, "number");
+            localVarFormParams['requestsMemory'] = ObjectSerializer.serializeFormData(params.requestsMemory, "number");
         }
 
         if (params.limitsCpu !== undefined) {
-            localVarFormParams['limitsCpu'] = ObjectSerializer.serialize(params.limitsCpu, "number");
+            localVarFormParams['limitsCpu'] = ObjectSerializer.serializeFormData(params.limitsCpu, "number");
         }
 
         if (params.limitsMemory !== undefined) {
-            localVarFormParams['limitsMemory'] = ObjectSerializer.serialize(params.limitsMemory, "number");
+            localVarFormParams['limitsMemory'] = ObjectSerializer.serializeFormData(params.limitsMemory, "number");
         }
 
         if (params.photo !== undefined) {
@@ -2597,27 +2597,27 @@ export class OrganizationBlocksApi {
         localVarUseFormData = true;
 
         if (params.integrateUrl !== undefined) {
-            localVarFormParams['integrateUrl'] = ObjectSerializer.serialize(params.integrateUrl, "string");
+            localVarFormParams['integrateUrl'] = ObjectSerializer.serializeFormData(params.integrateUrl, "string");
         }
 
         if (params.privileged !== undefined) {
-            localVarFormParams['privileged'] = ObjectSerializer.serialize(params.privileged, "boolean");
+            localVarFormParams['privileged'] = ObjectSerializer.serializeFormData(params.privileged, "boolean");
         }
 
         if (params.mountLearnBlock !== undefined) {
-            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serialize(params.mountLearnBlock, "boolean");
+            localVarFormParams['mountLearnBlock'] = ObjectSerializer.serializeFormData(params.mountLearnBlock, "boolean");
         }
 
         if (params.supportsEonCompiler !== undefined) {
-            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serialize(params.supportsEonCompiler, "boolean");
+            localVarFormParams['supportsEonCompiler'] = ObjectSerializer.serializeFormData(params.supportsEonCompiler, "boolean");
         }
 
         if (params.showOptimizations !== undefined) {
-            localVarFormParams['showOptimizations'] = ObjectSerializer.serialize(params.showOptimizations, "boolean");
+            localVarFormParams['showOptimizations'] = ObjectSerializer.serializeFormData(params.showOptimizations, "boolean");
         }
 
         if (params.category !== undefined) {
-            localVarFormParams['category'] = ObjectSerializer.serialize(params.category, "string");
+            localVarFormParams['category'] = ObjectSerializer.serializeFormData(params.category, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

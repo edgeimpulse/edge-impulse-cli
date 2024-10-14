@@ -186,12 +186,12 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 deviceId: macAddress,
                 deviceType: 'DATA_FORWARDER',
                 connection: 'daemon',
-                sensors: [ {
+                sensors: [{
                     name: 'Sensor with ' + dataForwarderConfig.sensors.length +
                         ' axes (' + dataForwarderConfig.sensors.join(', ') + ')',
                     maxSampleLengthS: 5 * 60 * 1000,
                     frequencies: [ dataForwarderConfig.samplingFreq ]
-                } ],
+                }],
                 supportsSnapshotStreaming: false,
                 mode: 'ingestion',
             }
@@ -531,14 +531,14 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
 
     let axes = '';
     while (axes.split(',').filter(f => !!f.trim()).length !== sensorInfo.sensorCount) {
-        axes = (<{ axes: string }>(await inquirer.prompt([ {
+        axes = (<{ axes: string }>(await inquirer.prompt([{
             type: 'input',
             message: sensorInfo.sensorCount + ' sensor axes detected (example values: ' +
                 JSON.stringify(sensorInfo.example) + '). ' +
                 'What do you want to call them? ' +
                 'Separate the names with \',\':',
             name: 'axes'
-        } ]))).axes;
+        }]))).axes;
 
         if (axes.split(',').length !== sensorInfo.sensorCount) {
             console.log('Invalid input. Got ' + (axes.split(',').length) + ' axes (' +
@@ -563,12 +563,12 @@ async function checkName(eiConfig: EdgeImpulseConfig, projectId: number, deviceI
         let currName = device ? device.name : deviceId;
         if (currName !== deviceId) return currName;
 
-        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([ {
+        let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{
             type: 'input',
             message: 'What name do you want to give this device?',
             name: 'nameDevice',
             default: currName
-        } ]);
+        }]);
         if (nameDevice.nameDevice !== currName) {
             (await eiConfig.api.devices.renameDevice(
                 projectId, deviceId, { name: nameDevice.nameDevice }));

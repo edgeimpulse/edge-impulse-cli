@@ -15,6 +15,7 @@ export class TunerCreateTrialImpulse {
     'id'?: string;
     'experiment'?: string;
     'originalTrialId'?: string;
+    'optimizationRound'?: number;
     'inputBlocks'?: Array<any>;
     'dspBlocks'?: Array<any>;
     'learnBlocks'?: Array<any>;
@@ -36,6 +37,11 @@ export class TunerCreateTrialImpulse {
             "name": "originalTrialId",
             "baseName": "original_trial_id",
             "type": "string"
+        },
+        {
+            "name": "optimizationRound",
+            "baseName": "optimizationRound",
+            "type": "number"
         },
         {
             "name": "inputBlocks",

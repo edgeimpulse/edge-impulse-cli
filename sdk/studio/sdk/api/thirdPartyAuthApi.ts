@@ -45,7 +45,7 @@ export enum ThirdPartyAuthApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type authorizeThirdPartyFormParams = {
+export type authorizeThirdPartyFormParams = {
     nextUrl: string,
 };
 
@@ -157,7 +157,7 @@ export class ThirdPartyAuthApi {
         let localVarUseFormData = false;
 
         if (params.nextUrl !== undefined) {
-            localVarFormParams['nextUrl'] = ObjectSerializer.serialize(params.nextUrl, "string");
+            localVarFormParams['nextUrl'] = ObjectSerializer.serializeFormData(params.nextUrl, "string");
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

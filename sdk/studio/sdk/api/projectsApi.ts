@@ -29,7 +29,6 @@ import { DevelopmentKeysResponse } from '../model/developmentKeysResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
-import { GetNotesResponse } from '../model/getNotesResponse';
 import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
 import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
 import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
@@ -99,11 +98,11 @@ type listPublicProjectsQueryParams = {
     project?: string,
 };
 
-type uploadCsvWizardUploadedFileFormParams = {
+export type uploadCsvWizardUploadedFileFormParams = {
     file: RequestFile,
 };
 
-type uploadReadmeImageFormParams = {
+export type uploadReadmeImageFormParams = {
     image: RequestFile,
 };
 
@@ -1024,89 +1023,6 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetModelVariantsResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Get all notes in project.
-     * @summary Get notes
-     * @param projectId Project ID
-     */
-    public async getNotes (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetNotesResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/notes'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getNotes.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GetNotesResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GetNotesResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

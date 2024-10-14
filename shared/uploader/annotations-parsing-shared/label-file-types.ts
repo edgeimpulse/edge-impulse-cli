@@ -475,7 +475,7 @@ export const supportedCsvLabelFormats: SupportedLabelFormatCsv[] = [
                 centeredBoundingBoxes: false,
                 lookupNoExtension: true,
             },
-            labelsFile: [ {
+            labelsFile: [{
                 fileFilter: (name) => {
                     return name.endsWith('class-descriptions.csv');
                 },
@@ -492,7 +492,7 @@ export const supportedCsvLabelFormats: SupportedLabelFormatCsv[] = [
                 },
                 fileDescription: 'class-descriptions.csv',
                 isNumeric: false
-            } ]
+            }]
         }
     }
 ];

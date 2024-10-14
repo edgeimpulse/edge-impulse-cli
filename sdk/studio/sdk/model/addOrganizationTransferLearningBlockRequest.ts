@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockDisplayCategory } from './blockDisplayCategory';
 import { ImageInputScaling } from './imageInputScaling';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 import { OrganizationTransferLearningBlockCustomVariant } from './organizationTransferLearningBlockCustomVariant';
@@ -49,6 +50,7 @@ export class AddOrganizationTransferLearningBlockRequest {
     * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
     */
     'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
+    'displayCategory'?: BlockDisplayCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -122,6 +124,11 @@ export class AddOrganizationTransferLearningBlockRequest {
             "name": "customModelVariants",
             "baseName": "customModelVariants",
             "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
+        },
+        {
+            "name": "displayCategory",
+            "baseName": "displayCategory",
+            "type": "BlockDisplayCategory"
         }    ];
 
     static getAttributeTypeMap() {

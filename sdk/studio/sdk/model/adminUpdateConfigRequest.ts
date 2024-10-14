@@ -11,26 +11,23 @@
  */
 
 
-export class OrganizationProjectsDataBulkMetadataRequest {
-    'projectIds'?: Array<number>;
-    'csvFile':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+export class AdminUpdateConfigRequest {
+    /**
+    * New config value, given as a JSON string.
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectIds",
-            "baseName": "projectIds",
-            "type": "Array<number>"
-        },
-        {
-            "name": "csvFile",
-            "baseName": "csvFile",
-            "type": "RequestFile"
+            "name": "value",
+            "baseName": "value",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationProjectsDataBulkMetadataRequest.attributeTypeMap;
+        return AdminUpdateConfigRequest.attributeTypeMap;
     }
 }
 

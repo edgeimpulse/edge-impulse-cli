@@ -67,7 +67,7 @@ type getImpulseAllQueryParams = {
     impulseId?: number,
 };
 
-type setLegacyImpulseStateInternalFormParams = {
+export type setLegacyImpulseStateInternalFormParams = {
     zip: RequestFile,
     impulse: RequestFile,
     config: RequestFile,

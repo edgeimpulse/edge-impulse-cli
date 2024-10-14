@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { CountSamplesResponseAllOf } from './countSamplesResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetStudioConfigResponseAllOf } from './getStudioConfigResponseAllOf';
+import { GetStudioConfigResponseAllOfConfig } from './getStudioConfigResponseAllOfConfig';
 
-export class OrganizationProjectsDataBatchEnableResponse {
+export class GetStudioConfigResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +23,10 @@ export class OrganizationProjectsDataBatchEnableResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'count': number;
+    /**
+    * List of config items
+    */
+    'config': Array<GetStudioConfigResponseAllOfConfig>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +42,13 @@ export class OrganizationProjectsDataBatchEnableResponse {
             "type": "string"
         },
         {
-            "name": "count",
-            "baseName": "count",
-            "type": "number"
+            "name": "config",
+            "baseName": "config",
+            "type": "Array<GetStudioConfigResponseAllOfConfig>"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationProjectsDataBatchEnableResponse.attributeTypeMap;
+        return GetStudioConfigResponse.attributeTypeMap;
     }
 }
 

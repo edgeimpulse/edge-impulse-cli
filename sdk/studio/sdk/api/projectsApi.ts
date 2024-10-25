@@ -22,23 +22,28 @@ import http = require('http');
 import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
 import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
 import { AddProjectApiKeyRequest } from '../model/addProjectApiKeyRequest';
+import { CreateAIActionResponse } from '../model/createAIActionResponse';
 import { CreateProjectRequest } from '../model/createProjectRequest';
 import { CreateProjectResponse } from '../model/createProjectResponse';
 import { DevelopmentBoardsResponse } from '../model/developmentBoardsResponse';
 import { DevelopmentKeysResponse } from '../model/developmentKeysResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetAIActionResponse } from '../model/getAIActionResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
 import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
 import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
 import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
+import { ListAIActionsResponse } from '../model/listAIActionsResponse';
 import { ListApiKeysResponse } from '../model/listApiKeysResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListHmacKeysResponse } from '../model/listHmacKeysResponse';
 import { ListProjectsResponse } from '../model/listProjectsResponse';
 import { ListPublicProjectsResponse } from '../model/listPublicProjectsResponse';
 import { ListPublicVersionsResponse } from '../model/listPublicVersionsResponse';
+import { ListSamplesResponse } from '../model/listSamplesResponse';
 import { ListVersionsResponse } from '../model/listVersionsResponse';
+import { PreviewAIActionsSamplesRequest } from '../model/previewAIActionsSamplesRequest';
 import { ProjectDataAxesSummaryResponse } from '../model/projectDataAxesSummaryResponse';
 import { ProjectDataIntervalResponse } from '../model/projectDataIntervalResponse';
 import { ProjectDismissNotificationRequest } from '../model/projectDismissNotificationRequest';
@@ -47,11 +52,13 @@ import { ProjectInfoResponse } from '../model/projectInfoResponse';
 import { ProjectInfoSummaryResponse } from '../model/projectInfoSummaryResponse';
 import { ProjectTrainingDataSummaryResponse } from '../model/projectTrainingDataSummaryResponse';
 import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
+import { SetAIActionsOrderRequest } from '../model/setAIActionsOrderRequest';
 import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
 import { SocketTokenResponse } from '../model/socketTokenResponse';
 import { TargetConstraints } from '../model/targetConstraints';
 import { TransferOwnershipOrganizationRequest } from '../model/transferOwnershipOrganizationRequest';
+import { UpdateAIActionRequest } from '../model/updateAIActionRequest';
 import { UpdateProjectRequest } from '../model/updateProjectRequest';
 import { UpdateProjectTagsRequest } from '../model/updateProjectTagsRequest';
 import { UpdateVersionRequest } from '../model/updateVersionRequest';
@@ -96,6 +103,7 @@ type listPublicProjectsQueryParams = {
     limit?: number,
     offset?: number,
     project?: string,
+    projectTypes?: string,
 };
 
 export type uploadCsvWizardUploadedFileFormParams = {
@@ -447,6 +455,181 @@ export class ProjectsApi {
     }
 
     /**
+     * Remove all proposed changes for an AI Actions job.
+     * @summary Clear AI Actions proposed changes
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     */
+    public async clearAIActionsProposedChanges (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}/clear-proposed-changes'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling clearAIActionsProposedChanges.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling clearAIActionsProposedChanges.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Create a new AI Action.
+     * @summary Create AI Action
+     * @param projectId Project ID
+     */
+    public async createAIAction (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateAIActionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/create'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createAIAction.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<CreateAIActionResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "CreateAIActionResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Create a new project. This API can only be called using a JWT token.
      * @summary Create new project
      * @param createProjectRequest 
@@ -511,6 +694,98 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateProjectResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Deletes an AI Actions.
+     * @summary Delete AI Actions config
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     */
+    public async deleteAIAction (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling deleteAIAction.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling deleteAIAction.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -871,6 +1146,98 @@ export class ProjectsApi {
     }
 
     /**
+     * Get an AI Actions config
+     * @summary Get AI Actions config
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     */
+    public async getAIAction (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAIAction.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling getAIAction.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAIActionResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAIActionResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Returns whether the file that was uploaded when the CSV wizard was configured is available.
      * @summary Get CSV Wizard uploaded file info
      * @param projectId Project ID
@@ -1023,6 +1390,89 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetModelVariantsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get the AI Actions config for a new action
+     * @summary Get new AI Actions config
+     * @param projectId Project ID
+     */
+    public async getNewAIAction (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/new'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getNewAIAction.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAIActionResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAIActionResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1897,6 +2347,89 @@ export class ProjectsApi {
     }
 
     /**
+     * Get all AI actions.
+     * @summary List AI Actions
+     * @param projectId Project ID
+     */
+    public async listAIActions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListAIActionsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listAIActions.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListAIActionsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListAIActionsResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * List all development boards for a project
      * @summary Development boards
      * @param projectId Project ID
@@ -2474,6 +3007,7 @@ export class ProjectsApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param project Only include projects that contain this string
+     * @param projectTypes Comma separated list of project types to filter on. Supported values are \&#39;audio\&#39;, \&#39;object-detection\&#39;, \&#39;image\&#39;, \&#39;accelerometer\&#39;, \&#39;other\&#39;.
      */
     public async listPublicProjects (queryParams?: listPublicProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectsResponse> {
         const localVarPath = this.basePath + '/api/projects/public';
@@ -2500,6 +3034,10 @@ export class ProjectsApi {
 
         if (queryParams?.project !== undefined) {
             localVarQueryParameters['project'] = ObjectSerializer.serialize(queryParams.project, "string");
+        }
+
+        if (queryParams?.projectTypes !== undefined) {
+            localVarQueryParameters['projectTypes'] = ObjectSerializer.serialize(queryParams.projectTypes, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -2785,6 +3323,107 @@ export class ProjectsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get a number of random samples to show in the AI Actions screen. If `saveConfig` is passed in, then a valid actionId is required in the URL. If you don\'t need to save the config (e.g. when creating a new action), you can use -1.
+     * @summary Preview samples for AI Actions
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     * @param previewAIActionsSamplesRequest 
+     */
+    public async previewAIActionsSamples (projectId: number, actionId: number, previewAIActionsSamplesRequest: PreviewAIActionsSamplesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}/preview-samples'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling previewAIActionsSamples.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling previewAIActionsSamples.');
+        }
+
+        // verify required parameter 'previewAIActionsSamplesRequest' is not null or undefined
+
+
+        if (previewAIActionsSamplesRequest === null || previewAIActionsSamplesRequest === undefined) {
+            throw new Error('Required parameter previewAIActionsSamplesRequest was null or undefined when calling previewAIActionsSamples.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(previewAIActionsSamplesRequest, "PreviewAIActionsSamplesRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListSamplesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListSamplesResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -3129,6 +3768,98 @@ export class ProjectsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Change the order of AI actions. Post the new order of all AI Actions by ID. You need to specify _all_ AI Actions here. If not, an error will be thrown.
+     * @summary Set AI Actions order
+     * @param projectId Project ID
+     * @param setAIActionsOrderRequest 
+     */
+    public async setAIActionsOrder (projectId: number, setAIActionsOrderRequest: SetAIActionsOrderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/order'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setAIActionsOrder.');
+        }
+
+        // verify required parameter 'setAIActionsOrderRequest' is not null or undefined
+
+
+        if (setAIActionsOrderRequest === null || setAIActionsOrderRequest === undefined) {
+            throw new Error('Required parameter setAIActionsOrderRequest was null or undefined when calling setAIActionsOrder.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(setAIActionsOrderRequest, "SetAIActionsOrderRequest")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -3589,6 +4320,107 @@ export class ProjectsApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(transferOwnershipOrganizationRequest, "TransferOwnershipOrganizationRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Store an AI Actions config. Use `createAIActionsJob` to run the job. Post the full AI Action here w/ all parameters.
+     * @summary Save AI Actions config
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     * @param updateAIActionRequest 
+     */
+    public async updateAIAction (projectId: number, actionId: number, updateAIActionRequest: UpdateAIActionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling updateAIAction.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling updateAIAction.');
+        }
+
+        // verify required parameter 'updateAIActionRequest' is not null or undefined
+
+
+        if (updateAIActionRequest === null || updateAIActionRequest === undefined) {
+            throw new Error('Required parameter updateAIActionRequest was null or undefined when calling updateAIAction.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(updateAIActionRequest, "UpdateAIActionRequest")
         };
 
         let authenticationPromise = Promise.resolve();

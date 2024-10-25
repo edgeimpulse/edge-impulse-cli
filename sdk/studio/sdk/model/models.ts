@@ -1,3 +1,8 @@
+export * from './aIAction';
+export * from './aIActionLastPreviewState';
+export * from './aIActionLastPreviewStateProposedChanges';
+export * from './aIActionsConfig';
+export * from './aIActionsDataCategory';
 export * from './activateUserByThirdPartyActivationCodeRequest';
 export * from './activateUserOrVerifyEmailRequest';
 export * from './addApiKeyRequest';
@@ -114,6 +119,8 @@ export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
 export * from './autoLabelerSegment';
 export * from './autotuneDspRequest';
+export * from './batchAddMetadataRequest';
+export * from './batchClearMetadataByKeyRequest';
 export * from './billingCycle';
 export * from './blockDisplayCategory';
 export * from './blockParameters';
@@ -150,6 +157,7 @@ export * from './cosineSimilarityIssueIssues';
 export * from './cosineSimilarityIssueWindows';
 export * from './countSamplesResponse';
 export * from './countSamplesResponseAllOf';
+export * from './createAIActionResponse';
 export * from './createDeveloperProfileResponse';
 export * from './createDeveloperProfileResponseAllOf';
 export * from './createDeviceRequest';
@@ -172,6 +180,7 @@ export * from './createOrganizationResponse';
 export * from './createOrganizationResponseAllOf';
 export * from './createOrganizationUsageReportBody';
 export * from './createPipelineResponse';
+export * from './createPreviewAIActionsJobRequest';
 export * from './createProTierUserRequest';
 export * from './createProTierUserRequestAllOf';
 export * from './createProjectRequest';
@@ -309,6 +318,7 @@ export * from './enterpriseUpgradeOrTrialExtensionRequest';
 export * from './entitlementLimits';
 export * from './entityCreatedResponse';
 export * from './entityCreatedResponseAllOf';
+export * from './environmentVariable';
 export * from './evaluateJobResponse';
 export * from './evaluateJobResponseAllOf';
 export * from './evaluateResultValue';
@@ -329,6 +339,10 @@ export * from './findUserResponseAllOf';
 export * from './findUserResponseAllOfUsers';
 export * from './generateFeaturesRequest';
 export * from './genericApiResponse';
+export * from './getAIActionResponse';
+export * from './getAIActionResponseAllOf';
+export * from './getAIActionsProposedChangesResponse';
+export * from './getAIActionsProposedChangesResponseAllOf';
 export * from './getAllDetailedImpulsesResponse';
 export * from './getAllDetailedImpulsesResponseAllOf';
 export * from './getAllDetailedImpulsesResponseAllOfMetricKeys';
@@ -444,6 +458,8 @@ export * from './getPretrainedModelResponseAllOfModel';
 export * from './getPretrainedModelResponseAllOfModelProfileInfo';
 export * from './getPublicMetricsResponse';
 export * from './getPublicMetricsResponseAllOf';
+export * from './getPublicOrganizationTransformationBlockResponse';
+export * from './getPublicOrganizationTransformationBlockResponseAllOf';
 export * from './getSampleMetadataResponse';
 export * from './getSampleResponse';
 export * from './getStudioConfigResponse';
@@ -524,6 +540,8 @@ export * from './lastModificationDateResponseAllOf';
 export * from './latencyDevice';
 export * from './learnBlock';
 export * from './learnBlockType';
+export * from './listAIActionsResponse';
+export * from './listAIActionsResponseAllOf';
 export * from './listApiKeysResponse';
 export * from './listApiKeysResponseAllOf';
 export * from './listApiKeysResponseAllOfApiKeys';
@@ -723,6 +741,7 @@ export * from './permission';
 export * from './portalFile';
 export * from './portalInfoResponse';
 export * from './pretrainedModelTensor';
+export * from './previewAIActionsSamplesRequest';
 export * from './previewDefaultFilesInFolderRequest';
 export * from './previewDefaultFilesInFolderResponse';
 export * from './previewDefaultFilesInFolderResponseAllOf';
@@ -799,6 +818,7 @@ export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
 export * from './sampleMetadata';
+export * from './sampleProposedChanges';
 export * from './saveAutoLabelerClustersRequest';
 export * from './saveAutoLabelerClustersRequestClusters';
 export * from './saveAutoLabelerClustersResponse';
@@ -812,6 +832,7 @@ export * from './segmentSampleRequest';
 export * from './segmentSampleRequestSegments';
 export * from './sendUserFeedbackRequest';
 export * from './sensor';
+export * from './setAIActionsOrderRequest';
 export * from './setAnomalyParameterRequest';
 export * from './setKerasParameterRequest';
 export * from './setLegacyImpulseStateInternalRequest';
@@ -823,6 +844,7 @@ export * from './setOrganizationDataDatasetRequest';
 export * from './setProjectComputeTimeRequest';
 export * from './setProjectDspFileSizeRequest';
 export * from './setSampleMetadataRequest';
+export * from './setSampleProposedChangesRequest';
 export * from './setSampleStructuredLabelsRequest';
 export * from './setSyntiantPosteriorRequest';
 export * from './setTunerPrimaryJobRequest';
@@ -882,6 +904,7 @@ export * from './tunerTrialImpulseAddedToProject';
 export * from './tunerTrialMetrics';
 export * from './tunerTrialMetricsTest';
 export * from './tunerTrialProgress';
+export * from './updateAIActionRequest';
 export * from './updateImpulseRequest';
 export * from './updateJobRequest';
 export * from './updateOrganizationAddCollaboratorRequest';
@@ -967,6 +990,11 @@ export * from './windowSettingsResponseAllOf';
 
 import localVarRequest = require('request');
 
+import { AIAction } from './aIAction';
+import { AIActionLastPreviewState } from './aIActionLastPreviewState';
+import { AIActionLastPreviewStateProposedChanges } from './aIActionLastPreviewStateProposedChanges';
+import { AIActionsConfig } from './aIActionsConfig';
+import { AIActionsDataCategory } from './aIActionsDataCategory';
 import { ActivateUserByThirdPartyActivationCodeRequest } from './activateUserByThirdPartyActivationCodeRequest';
 import { ActivateUserOrVerifyEmailRequest } from './activateUserOrVerifyEmailRequest';
 import { AddApiKeyRequest } from './addApiKeyRequest';
@@ -1083,6 +1111,8 @@ import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
 import { AutoLabelerSegment } from './autoLabelerSegment';
 import { AutotuneDspRequest } from './autotuneDspRequest';
+import { BatchAddMetadataRequest } from './batchAddMetadataRequest';
+import { BatchClearMetadataByKeyRequest } from './batchClearMetadataByKeyRequest';
 import { BillingCycle } from './billingCycle';
 import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockParameters } from './blockParameters';
@@ -1119,6 +1149,7 @@ import { CosineSimilarityIssueIssues } from './cosineSimilarityIssueIssues';
 import { CosineSimilarityIssueWindows } from './cosineSimilarityIssueWindows';
 import { CountSamplesResponse } from './countSamplesResponse';
 import { CountSamplesResponseAllOf } from './countSamplesResponseAllOf';
+import { CreateAIActionResponse } from './createAIActionResponse';
 import { CreateDeveloperProfileResponse } from './createDeveloperProfileResponse';
 import { CreateDeveloperProfileResponseAllOf } from './createDeveloperProfileResponseAllOf';
 import { CreateDeviceRequest } from './createDeviceRequest';
@@ -1141,6 +1172,7 @@ import { CreateOrganizationResponse } from './createOrganizationResponse';
 import { CreateOrganizationResponseAllOf } from './createOrganizationResponseAllOf';
 import { CreateOrganizationUsageReportBody } from './createOrganizationUsageReportBody';
 import { CreatePipelineResponse } from './createPipelineResponse';
+import { CreatePreviewAIActionsJobRequest } from './createPreviewAIActionsJobRequest';
 import { CreateProTierUserRequest } from './createProTierUserRequest';
 import { CreateProTierUserRequestAllOf } from './createProTierUserRequestAllOf';
 import { CreateProjectRequest } from './createProjectRequest';
@@ -1278,6 +1310,7 @@ import { EnterpriseUpgradeOrTrialExtensionRequest } from './enterpriseUpgradeOrT
 import { EntitlementLimits } from './entitlementLimits';
 import { EntityCreatedResponse } from './entityCreatedResponse';
 import { EntityCreatedResponseAllOf } from './entityCreatedResponseAllOf';
+import { EnvironmentVariable } from './environmentVariable';
 import { EvaluateJobResponse } from './evaluateJobResponse';
 import { EvaluateJobResponseAllOf } from './evaluateJobResponseAllOf';
 import { EvaluateResultValue } from './evaluateResultValue';
@@ -1298,6 +1331,10 @@ import { FindUserResponseAllOf } from './findUserResponseAllOf';
 import { FindUserResponseAllOfUsers } from './findUserResponseAllOfUsers';
 import { GenerateFeaturesRequest } from './generateFeaturesRequest';
 import { GenericApiResponse } from './genericApiResponse';
+import { GetAIActionResponse } from './getAIActionResponse';
+import { GetAIActionResponseAllOf } from './getAIActionResponseAllOf';
+import { GetAIActionsProposedChangesResponse } from './getAIActionsProposedChangesResponse';
+import { GetAIActionsProposedChangesResponseAllOf } from './getAIActionsProposedChangesResponseAllOf';
 import { GetAllDetailedImpulsesResponse } from './getAllDetailedImpulsesResponse';
 import { GetAllDetailedImpulsesResponseAllOf } from './getAllDetailedImpulsesResponseAllOf';
 import { GetAllDetailedImpulsesResponseAllOfMetricKeys } from './getAllDetailedImpulsesResponseAllOfMetricKeys';
@@ -1413,6 +1450,8 @@ import { GetPretrainedModelResponseAllOfModel } from './getPretrainedModelRespon
 import { GetPretrainedModelResponseAllOfModelProfileInfo } from './getPretrainedModelResponseAllOfModelProfileInfo';
 import { GetPublicMetricsResponse } from './getPublicMetricsResponse';
 import { GetPublicMetricsResponseAllOf } from './getPublicMetricsResponseAllOf';
+import { GetPublicOrganizationTransformationBlockResponse } from './getPublicOrganizationTransformationBlockResponse';
+import { GetPublicOrganizationTransformationBlockResponseAllOf } from './getPublicOrganizationTransformationBlockResponseAllOf';
 import { GetSampleMetadataResponse } from './getSampleMetadataResponse';
 import { GetSampleResponse } from './getSampleResponse';
 import { GetStudioConfigResponse } from './getStudioConfigResponse';
@@ -1493,6 +1532,8 @@ import { LastModificationDateResponseAllOf } from './lastModificationDateRespons
 import { LatencyDevice } from './latencyDevice';
 import { LearnBlock } from './learnBlock';
 import { LearnBlockType } from './learnBlockType';
+import { ListAIActionsResponse } from './listAIActionsResponse';
+import { ListAIActionsResponseAllOf } from './listAIActionsResponseAllOf';
 import { ListApiKeysResponse } from './listApiKeysResponse';
 import { ListApiKeysResponseAllOf } from './listApiKeysResponseAllOf';
 import { ListApiKeysResponseAllOfApiKeys } from './listApiKeysResponseAllOfApiKeys';
@@ -1692,6 +1733,7 @@ import { Permission } from './permission';
 import { PortalFile } from './portalFile';
 import { PortalInfoResponse } from './portalInfoResponse';
 import { PretrainedModelTensor } from './pretrainedModelTensor';
+import { PreviewAIActionsSamplesRequest } from './previewAIActionsSamplesRequest';
 import { PreviewDefaultFilesInFolderRequest } from './previewDefaultFilesInFolderRequest';
 import { PreviewDefaultFilesInFolderResponse } from './previewDefaultFilesInFolderResponse';
 import { PreviewDefaultFilesInFolderResponseAllOf } from './previewDefaultFilesInFolderResponseAllOf';
@@ -1768,6 +1810,7 @@ import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineR
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
 import { SampleMetadata } from './sampleMetadata';
+import { SampleProposedChanges } from './sampleProposedChanges';
 import { SaveAutoLabelerClustersRequest } from './saveAutoLabelerClustersRequest';
 import { SaveAutoLabelerClustersRequestClusters } from './saveAutoLabelerClustersRequestClusters';
 import { SaveAutoLabelerClustersResponse } from './saveAutoLabelerClustersResponse';
@@ -1781,6 +1824,7 @@ import { SegmentSampleRequest } from './segmentSampleRequest';
 import { SegmentSampleRequestSegments } from './segmentSampleRequestSegments';
 import { SendUserFeedbackRequest } from './sendUserFeedbackRequest';
 import { Sensor } from './sensor';
+import { SetAIActionsOrderRequest } from './setAIActionsOrderRequest';
 import { SetAnomalyParameterRequest } from './setAnomalyParameterRequest';
 import { SetKerasParameterRequest } from './setKerasParameterRequest';
 import { SetLegacyImpulseStateInternalRequest } from './setLegacyImpulseStateInternalRequest';
@@ -1792,6 +1836,7 @@ import { SetOrganizationDataDatasetRequest } from './setOrganizationDataDatasetR
 import { SetProjectComputeTimeRequest } from './setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from './setProjectDspFileSizeRequest';
 import { SetSampleMetadataRequest } from './setSampleMetadataRequest';
+import { SetSampleProposedChangesRequest } from './setSampleProposedChangesRequest';
 import { SetSampleStructuredLabelsRequest } from './setSampleStructuredLabelsRequest';
 import { SetSyntiantPosteriorRequest } from './setSyntiantPosteriorRequest';
 import { SetTunerPrimaryJobRequest } from './setTunerPrimaryJobRequest';
@@ -1851,6 +1896,7 @@ import { TunerTrialImpulseAddedToProject } from './tunerTrialImpulseAddedToProje
 import { TunerTrialMetrics } from './tunerTrialMetrics';
 import { TunerTrialMetricsTest } from './tunerTrialMetricsTest';
 import { TunerTrialProgress } from './tunerTrialProgress';
+import { UpdateAIActionRequest } from './updateAIActionRequest';
 import { UpdateImpulseRequest } from './updateImpulseRequest';
 import { UpdateJobRequest } from './updateJobRequest';
 import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
@@ -1947,6 +1993,7 @@ let primitives = [
                  ];
 
 let enumsMap: {[index: string]: any} = {
+    "AIActionsDataCategory": "AIActionsDataCategory",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
     "AddOrganizationApiKeyRequestAllOfRoleEnum": "AddOrganizationApiKeyRequestAllOfRoleEnum",
     "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
@@ -2032,10 +2079,8 @@ let enumsMap: {[index: string]: any} = {
     "ObjectDetectionAutoLabelRequestNeuralNetworkEnum": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum",
     "ObjectDetectionLastLayer": "ObjectDetectionLastLayer",
     "OptimizeConfigTuningAlgorithmEnum": "OptimizeConfigTuningAlgorithmEnum",
-    "OptimizeConfigOptimizationObjectiveEnum": "OptimizeConfigOptimizationObjectiveEnum",
     "OptimizeConfigOptimizationPrecisionEnum": "OptimizeConfigOptimizationPrecisionEnum",
     "OptimizeConfigResponseTuningAlgorithmEnum": "OptimizeConfigResponseTuningAlgorithmEnum",
-    "OptimizeConfigResponseOptimizationObjectiveEnum": "OptimizeConfigResponseOptimizationObjectiveEnum",
     "OptimizeConfigResponseOptimizationPrecisionEnum": "OptimizeConfigResponseOptimizationPrecisionEnum",
     "OptimizeConfigSearchSpaceTemplateIdentifierEnum": "OptimizeConfigSearchSpaceTemplateIdentifierEnum",
     "OptimizeStateResponseProjectDataTypeEnum": "OptimizeStateResponseProjectDataTypeEnum",
@@ -2109,6 +2154,10 @@ let enumsMap: {[index: string]: any} = {
 }
 
 let typeMap: {[index: string]: any} = {
+    "AIAction": AIAction,
+    "AIActionLastPreviewState": AIActionLastPreviewState,
+    "AIActionLastPreviewStateProposedChanges": AIActionLastPreviewStateProposedChanges,
+    "AIActionsConfig": AIActionsConfig,
     "ActivateUserByThirdPartyActivationCodeRequest": ActivateUserByThirdPartyActivationCodeRequest,
     "ActivateUserOrVerifyEmailRequest": ActivateUserOrVerifyEmailRequest,
     "AddApiKeyRequest": AddApiKeyRequest,
@@ -2223,6 +2272,8 @@ let typeMap: {[index: string]: any} = {
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
     "AutoLabelerSegment": AutoLabelerSegment,
     "AutotuneDspRequest": AutotuneDspRequest,
+    "BatchAddMetadataRequest": BatchAddMetadataRequest,
+    "BatchClearMetadataByKeyRequest": BatchClearMetadataByKeyRequest,
     "BlockParameters": BlockParameters,
     "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
     "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
@@ -2256,6 +2307,7 @@ let typeMap: {[index: string]: any} = {
     "CosineSimilarityIssueWindows": CosineSimilarityIssueWindows,
     "CountSamplesResponse": CountSamplesResponse,
     "CountSamplesResponseAllOf": CountSamplesResponseAllOf,
+    "CreateAIActionResponse": CreateAIActionResponse,
     "CreateDeveloperProfileResponse": CreateDeveloperProfileResponse,
     "CreateDeveloperProfileResponseAllOf": CreateDeveloperProfileResponseAllOf,
     "CreateDeviceRequest": CreateDeviceRequest,
@@ -2278,6 +2330,7 @@ let typeMap: {[index: string]: any} = {
     "CreateOrganizationResponseAllOf": CreateOrganizationResponseAllOf,
     "CreateOrganizationUsageReportBody": CreateOrganizationUsageReportBody,
     "CreatePipelineResponse": CreatePipelineResponse,
+    "CreatePreviewAIActionsJobRequest": CreatePreviewAIActionsJobRequest,
     "CreateProTierUserRequest": CreateProTierUserRequest,
     "CreateProTierUserRequestAllOf": CreateProTierUserRequestAllOf,
     "CreateProjectRequest": CreateProjectRequest,
@@ -2412,6 +2465,7 @@ let typeMap: {[index: string]: any} = {
     "EntitlementLimits": EntitlementLimits,
     "EntityCreatedResponse": EntityCreatedResponse,
     "EntityCreatedResponseAllOf": EntityCreatedResponseAllOf,
+    "EnvironmentVariable": EnvironmentVariable,
     "EvaluateJobResponse": EvaluateJobResponse,
     "EvaluateJobResponseAllOf": EvaluateJobResponseAllOf,
     "EvaluateResultValue": EvaluateResultValue,
@@ -2431,6 +2485,10 @@ let typeMap: {[index: string]: any} = {
     "FindUserResponseAllOfUsers": FindUserResponseAllOfUsers,
     "GenerateFeaturesRequest": GenerateFeaturesRequest,
     "GenericApiResponse": GenericApiResponse,
+    "GetAIActionResponse": GetAIActionResponse,
+    "GetAIActionResponseAllOf": GetAIActionResponseAllOf,
+    "GetAIActionsProposedChangesResponse": GetAIActionsProposedChangesResponse,
+    "GetAIActionsProposedChangesResponseAllOf": GetAIActionsProposedChangesResponseAllOf,
     "GetAllDetailedImpulsesResponse": GetAllDetailedImpulsesResponse,
     "GetAllDetailedImpulsesResponseAllOf": GetAllDetailedImpulsesResponseAllOf,
     "GetAllDetailedImpulsesResponseAllOfMetricKeys": GetAllDetailedImpulsesResponseAllOfMetricKeys,
@@ -2546,6 +2604,8 @@ let typeMap: {[index: string]: any} = {
     "GetPretrainedModelResponseAllOfModelProfileInfo": GetPretrainedModelResponseAllOfModelProfileInfo,
     "GetPublicMetricsResponse": GetPublicMetricsResponse,
     "GetPublicMetricsResponseAllOf": GetPublicMetricsResponseAllOf,
+    "GetPublicOrganizationTransformationBlockResponse": GetPublicOrganizationTransformationBlockResponse,
+    "GetPublicOrganizationTransformationBlockResponseAllOf": GetPublicOrganizationTransformationBlockResponseAllOf,
     "GetSampleMetadataResponse": GetSampleMetadataResponse,
     "GetSampleResponse": GetSampleResponse,
     "GetStudioConfigResponse": GetStudioConfigResponse,
@@ -2618,6 +2678,8 @@ let typeMap: {[index: string]: any} = {
     "LastModificationDateResponseAllOf": LastModificationDateResponseAllOf,
     "LatencyDevice": LatencyDevice,
     "LearnBlock": LearnBlock,
+    "ListAIActionsResponse": ListAIActionsResponse,
+    "ListAIActionsResponseAllOf": ListAIActionsResponseAllOf,
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
     "ListApiKeysResponseAllOfApiKeys": ListApiKeysResponseAllOfApiKeys,
@@ -2810,6 +2872,7 @@ let typeMap: {[index: string]: any} = {
     "PortalFile": PortalFile,
     "PortalInfoResponse": PortalInfoResponse,
     "PretrainedModelTensor": PretrainedModelTensor,
+    "PreviewAIActionsSamplesRequest": PreviewAIActionsSamplesRequest,
     "PreviewDefaultFilesInFolderRequest": PreviewDefaultFilesInFolderRequest,
     "PreviewDefaultFilesInFolderResponse": PreviewDefaultFilesInFolderResponse,
     "PreviewDefaultFilesInFolderResponseAllOf": PreviewDefaultFilesInFolderResponseAllOf,
@@ -2882,6 +2945,7 @@ let typeMap: {[index: string]: any} = {
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
     "SampleMetadata": SampleMetadata,
+    "SampleProposedChanges": SampleProposedChanges,
     "SaveAutoLabelerClustersRequest": SaveAutoLabelerClustersRequest,
     "SaveAutoLabelerClustersRequestClusters": SaveAutoLabelerClustersRequestClusters,
     "SaveAutoLabelerClustersResponse": SaveAutoLabelerClustersResponse,
@@ -2895,6 +2959,7 @@ let typeMap: {[index: string]: any} = {
     "SegmentSampleRequestSegments": SegmentSampleRequestSegments,
     "SendUserFeedbackRequest": SendUserFeedbackRequest,
     "Sensor": Sensor,
+    "SetAIActionsOrderRequest": SetAIActionsOrderRequest,
     "SetAnomalyParameterRequest": SetAnomalyParameterRequest,
     "SetKerasParameterRequest": SetKerasParameterRequest,
     "SetLegacyImpulseStateInternalRequest": SetLegacyImpulseStateInternalRequest,
@@ -2906,6 +2971,7 @@ let typeMap: {[index: string]: any} = {
     "SetProjectComputeTimeRequest": SetProjectComputeTimeRequest,
     "SetProjectDspFileSizeRequest": SetProjectDspFileSizeRequest,
     "SetSampleMetadataRequest": SetSampleMetadataRequest,
+    "SetSampleProposedChangesRequest": SetSampleProposedChangesRequest,
     "SetSampleStructuredLabelsRequest": SetSampleStructuredLabelsRequest,
     "SetSyntiantPosteriorRequest": SetSyntiantPosteriorRequest,
     "SetTunerPrimaryJobRequest": SetTunerPrimaryJobRequest,
@@ -2963,6 +3029,7 @@ let typeMap: {[index: string]: any} = {
     "TunerTrialMetrics": TunerTrialMetrics,
     "TunerTrialMetricsTest": TunerTrialMetricsTest,
     "TunerTrialProgress": TunerTrialProgress,
+    "UpdateAIActionRequest": UpdateAIActionRequest,
     "UpdateImpulseRequest": UpdateImpulseRequest,
     "UpdateJobRequest": UpdateJobRequest,
     "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,

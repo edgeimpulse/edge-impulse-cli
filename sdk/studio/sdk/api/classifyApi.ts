@@ -27,6 +27,7 @@ import { ClassifySampleResponseMultipleVariants } from '../model/classifySampleR
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { KerasModelVariantEnum } from '../model/kerasModelVariantEnum';
 import { MetricsAllVariantsResponse } from '../model/metricsAllVariantsResponse';
+import { TestPretrainedModelResponse } from '../model/testPretrainedModelResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -44,6 +45,14 @@ export enum ClassifyApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+export type classifyImageFormParams = {
+    image: RequestFile,
+};
+
+type classifyImageQueryParams = {
+    impulseId?: number,
+};
 
 type classifySampleQueryParams = {
     includeDebugInfo?: boolean,
@@ -150,6 +159,107 @@ export class ClassifyApi {
         (this.authentications as any)[ClassifyApiApiKeys[key]].apiKey = value;
     }
 
+
+    /**
+     * Test out a trained impulse (using a posted image).
+     * @summary Classify an image
+     * @param projectId Project ID
+     * @param image 
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     */
+    public async classifyImage (projectId: number, params: classifyImageFormParams, queryParams?: classifyImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/classify/image'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling classifyImage.');
+        }
+
+        // verify required parameter 'image' is not null or undefined
+        if (params.image === null || params.image === undefined) {
+            throw new Error('Required parameter params.image was null or undefined when calling classifyImage.');
+        }
+
+
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        if (params.image !== undefined) {
+            localVarFormParams['image'] = params.image;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<TestPretrainedModelResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "TestPretrainedModelResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
 
     /**
      * This API is deprecated, use classifySampleV2 instead (`/v1/api/{projectId}/classify/v2/{sampleId}`). Classify a complete file against the current impulse. This will move the sliding window (dependent on the sliding window length and the sliding window increase parameters in the impulse) over the complete file, and classify for every window that is extracted.

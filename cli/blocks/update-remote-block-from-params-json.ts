@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-unsafe-assignment: 0 */
 
-import { DeployBlockParametersJson, DSPBlockParametersJson,
+import { AIActionBlockParametersJson, DeployBlockParametersJson, DSPBlockParametersJson,
     MachineLearningBlockParametersJson, SyntheticDataBlockParametersJson,
     TransformBlockParametersJson } from "./parameter-types";
 import * as models from  '../../sdk/studio/sdk/model/models';
@@ -91,7 +91,9 @@ export class UpdateRemoteBlockFromParamsJson {
             'maxRunningTimeStr' |
             'isPublic' |
             'repositoryUrl' |
-            'showInSyntheticData'
+            'showInSyntheticData' |
+            'showInAIActions' |
+            'environmentVariables'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             operatesOn: { oldVal: remoteBlock.operatesOn, newVal: params.info.operatesOn },
@@ -168,10 +170,77 @@ export class UpdateRemoteBlockFromParamsJson {
             'isPublic' |
             'repositoryUrl' |
             'showInDataSources' |
-            'showInCreateTransformationJob'
+            'showInCreateTransformationJob' |
+            'showInAIActions' |
+            'environmentVariables'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             showInSyntheticData: { oldVal: remoteBlock.showInSyntheticData, newVal: true },
+        };
+        return <{ [k: string]: { oldVal: any, newVal: any } }>diffCheck;
+    }
+    // End synthetic data blocks
+
+    // Begin AI Action block
+    async getDiffedPropertiesForAIActionBlock(
+        organizationId: number,
+        blockId: number,
+        params: AIActionBlockParametersJson,
+    ) {
+        const remoteBlock = (await this._config.api.organizationBlocks.getOrganizationTransformationBlock(
+            organizationId, blockId)).transformationBlock;
+        const diffCheck = this.aiActionBlockDiffCheck(params, remoteBlock);
+        return this.getDiffedProperties(diffCheck);
+    }
+
+    async updateAIActionBlock(
+        organizationId: number,
+        blockId: number,
+        params: AIActionBlockParametersJson,
+    ) {
+        const remoteBlock = (await this._config.api.organizationBlocks.getOrganizationTransformationBlock(
+            organizationId, blockId)).transformationBlock;
+        const diffCheck = this.aiActionBlockDiffCheck(params, remoteBlock);
+        const { shouldUpdate, updateObj } =
+            this.getUpdatedObject<models.UpdateOrganizationTransformationBlockRequest>(diffCheck, { });
+
+        if (shouldUpdate) {
+            await this._config.api.organizationBlocks.updateOrganizationTransformationBlock(
+                organizationId, blockId, updateObj);
+        }
+        return diffCheck;
+    }
+
+    private aiActionBlockDiffCheck(
+        params: AIActionBlockParametersJson,
+        remoteBlock: models.OrganizationTransformationBlock,
+    ) {
+        // If you get a type error here, it means that a new field was added to the update request
+        // and you need to update the parameters json spec (or ignore the field) here.
+        type TL = Exclude<keyof models.UpdateOrganizationTransformationBlockRequest,
+            'name' |
+            'dockerContainer' |
+            'indMetadata' |
+            'description' |
+            'cliArguments' |
+            'requestsCpu' |
+            'requestsMemory' |
+            'limitsCpu' |
+            'limitsMemory' |
+            'additionalMountPoints' |
+            'allowExtraCliArguments' |
+            'operatesOn' |
+            'parameters' |
+            'maxRunningTimeStr' |
+            'isPublic' |
+            'repositoryUrl' |
+            'showInDataSources' |
+            'showInCreateTransformationJob' |
+            'showInSyntheticData' |
+            'environmentVariables'
+        >;
+        let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
+            showInAIActions: { oldVal: remoteBlock.showInAIActions, newVal: true },
         };
         return <{ [k: string]: { oldVal: any, newVal: any } }>diffCheck;
     }

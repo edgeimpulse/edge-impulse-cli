@@ -45,6 +45,18 @@ export type SyntheticDataBlockParametersJson = {
     info: {
         name: string,
         description: string,
+        requiredEnvVariables: string[] | undefined;
+    },
+    parameters: DSPParameterItem[];
+};
+
+export type AIActionBlockParametersJson = {
+    version: 1,
+    type: 'ai-action',
+    info: {
+        name: string,
+        description: string,
+        requiredEnvVariables: string[] | undefined;
     },
     parameters: DSPParameterItem[];
 };
@@ -65,10 +77,11 @@ export type TransformBlockParametersJson = {
         allowExtraCliArguments: boolean | undefined;
         showInDataSources: boolean | undefined;
         showInCreateTransformationJob: boolean | undefined;
+        requiredEnvVariables: string[] | undefined;
     },
     parameters: DSPParameterItem[];
 };
 
 export type ParametersJsonType = DSPBlockParametersJson | DeployBlockParametersJson |
     MachineLearningBlockParametersJson | SyntheticDataBlockParametersJson |
-    TransformBlockParametersJson;
+    TransformBlockParametersJson | AIActionBlockParametersJson;

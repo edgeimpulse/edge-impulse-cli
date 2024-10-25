@@ -19,6 +19,7 @@ import { BlockConfigManager } from './blocks/block-config-manager';
 import { addOrganizationDeployBlockFormParams, RequestDetailedFile } from '../sdk/studio/sdk/api';
 import { CLIBlockType } from '../shared/parameters-json-types';
 import { TurnOptionalIntoOrUndefined, UpdateRemoteBlockFromParamsJson } from './blocks/update-remote-block-from-params-json';
+import { AIActionBlockParametersJson, SyntheticDataBlockParametersJson, TransformBlockParametersJson } from './blocks/parameter-types';
 
 const version = getCliVersion();
 
@@ -243,6 +244,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         value: 'synthetic-data'
                     },
                     {
+                        name: 'AI action block',
+                        value: 'ai-action'
+                    },
+                    {
                         name: 'Deployment block',
                         value: 'deploy'
                     },
@@ -386,12 +391,14 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             currentBlockConfig.parameters.info.showInCreateTransformationJob :
                             true,
                         showInSyntheticData: false,
+                        showInAIActions: false,
                         isPublic: false,
                         limitsCpu: undefined,
                         limitsMemory: undefined,
                         maxRunningTimeStr: undefined,
                         requestsCpu: undefined,
                         requestsMemory: undefined,
+                        environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -413,12 +420,43 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         showInDataSources: false,
                         showInCreateTransformationJob: false,
                         showInSyntheticData: true,
+                        showInAIActions: false,
                         isPublic: false,
                         limitsCpu: undefined,
                         limitsMemory: undefined,
                         maxRunningTimeStr: undefined,
                         requestsCpu: undefined,
                         requestsMemory: undefined,
+                        environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
+                    };
+                    newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
+                        organizationId, newObj);
+                }
+                else if (currentBlockConfig.type === 'ai-action') {
+                    // If you get a type error here, it means that a new field was added to the add request
+                    // and you need to update the parameters json spec (or set the field to undefined) here.
+                    const newObj: TurnOptionalIntoOrUndefined<models.AddOrganizationTransformationBlockRequest> = {
+                        name: blockName,
+                        description: blockDescription,
+                        dockerContainer: '',
+                        indMetadata: true,
+                        cliArguments: '',
+                        allowExtraCliArguments: false,
+                        operatesOn: 'standalone',
+                        additionalMountPoints: [],
+                        parameters: currentBlockConfig.parameters.parameters,
+                        repositoryUrl: repoUrl,
+                        showInDataSources: false,
+                        showInCreateTransformationJob: false,
+                        showInSyntheticData: false,
+                        showInAIActions: true,
+                        isPublic: false,
+                        limitsCpu: undefined,
+                        limitsMemory: undefined,
+                        maxRunningTimeStr: undefined,
+                        requestsCpu: undefined,
+                        requestsMemory: undefined,
+                        environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -566,15 +604,31 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 await blockConfigManager.saveConfig(currentBlockConfig.config);
             }
             else {
-                if (currentBlockConfig.type === 'machine-learning' || currentBlockConfig.type === 'transform') {
+                if (currentBlockConfig.type === 'machine-learning' || currentBlockConfig.type === 'transform' ||
+                    currentBlockConfig.type === 'ai-action' || currentBlockConfig.type === 'synthetic-data'
+                ) {
                     let currParams: { }[] | undefined;
                     if (currentBlockConfig.type === 'machine-learning') {
                         currParams = (await config.api.organizationBlocks.getOrganizationTransferLearningBlock(
                             organizationId, currentBlockConfig.config.id)).transferLearningBlock.parameters;
                     }
-                    else if (currentBlockConfig.type === 'transform' || currentBlockConfig.type === 'synthetic-data') {
-                        currParams = (await config.api.organizationBlocks.getOrganizationTransformationBlock(
-                            organizationId, currentBlockConfig.config.id)).transformationBlock.parameters;
+                    else if (currentBlockConfig.type === 'transform' ||
+                             currentBlockConfig.type === 'synthetic-data' ||
+                             currentBlockConfig.type === 'ai-action'
+                    ) {
+                        const currBlock = (await config.api.organizationBlocks.getOrganizationTransformationBlock(
+                            organizationId, currentBlockConfig.config.id)).transformationBlock;
+
+                        const newEnvVars = await getEnvVariablesForBlock(currentBlockConfig.parameters, currBlock);
+                        if (newEnvVars) {
+                            await config.api.organizationBlocks.updateOrganizationTransformationBlock(
+                                organizationId, currentBlockConfig.config.id, {
+                                    environmentVariables: newEnvVars,
+                                }
+                            );
+                        }
+
+                        currParams = currBlock.parameters;
                     }
 
                     let shouldOverwrite = true;
@@ -623,6 +677,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 }
                 else if (currentBlockConfig.type === 'synthetic-data') {
                     diffedProps = await updateRemoteBlock.getDiffedPropertiesForSyntheticDataBlock(
+                        organizationId,
+                        currentBlockConfig.config.id,
+                        currentBlockConfig.parameters,
+                    );
+                }
+                else if (currentBlockConfig.type === 'ai-action') {
+                    diffedProps = await updateRemoteBlock.getDiffedPropertiesForAIActionBlock(
                         organizationId,
                         currentBlockConfig.config.id,
                         currentBlockConfig.parameters,
@@ -724,6 +785,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     break;
                 case 'transform':
                 case 'synthetic-data':
+                case 'ai-action':
                     uploadType = 'transform';
                     break;
                 default:
@@ -783,7 +845,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     await config.api.organizationBlocks.updateOrganizationTransferLearningBlock(
                         organizationId, currentBlockConfig.config.id, newBlockObject);
                 }
-                else if (currentBlockConfig.type === 'transform' || currentBlockConfig.type === 'synthetic-data') {
+                else if (currentBlockConfig.type === 'transform' ||
+                         currentBlockConfig.type === 'synthetic-data' ||
+                         currentBlockConfig.type === 'ai-action'
+                ) {
                     const newBlockObject: models.UpdateOrganizationTransformationBlockRequest = {
                         parameters: currentBlockConfig.parameters.parameters,
                     };
@@ -831,6 +896,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         currentBlockConfig.parameters,
                     );
                 }
+                else if (currentBlockConfig.type === 'ai-action') {
+                    await updateRemoteBlock.updateAIActionBlock(
+                        currentBlockConfig.config.organizationId,
+                        currentBlockConfig.config.id,
+                        currentBlockConfig.parameters,
+                    );
+                }
             }
 
             if (currentBlockConfig.type === 'transform') {
@@ -838,7 +910,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 console.log(`Your block has been updated, go to ${organizationStudioPath} to run a new transformation`);
             }
             else if (currentBlockConfig.type === 'synthetic-data') {
-                console.log(`Your block has been updated, go to **Synthetic data** on any project to generate new synthetic data`);
+                console.log(`Your block has been updated, go to **Data acquisition > Synthetic data** on any project to generate new synthetic data`);
+            }
+            else if (currentBlockConfig.type === 'ai-action') {
+                console.log(`Your block has been updated, go to **Data acquisition > AI Actions** on any project to run your action`);
             }
             else if (currentBlockConfig.type === 'deploy') {
                 const organizationStudioPath = studioUrl + '/organization/' + organizationId + '/deployment';
@@ -971,4 +1046,48 @@ function blockTypeToString(blockType: CLIBlockType): string {
     }
 
     return blockType;
+}
+
+async function getEnvVariablesForBlock(
+    block: SyntheticDataBlockParametersJson |
+           TransformBlockParametersJson |
+           AIActionBlockParametersJson,
+    currentBlock: models.OrganizationTransformationBlock | undefined
+): Promise<models.EnvironmentVariable[] | undefined> {
+    if (!block.info.requiredEnvVariables || block.info.requiredEnvVariables.length === 0) {
+        return undefined;
+    }
+
+    let missingEnvVariables: string[] = [];
+    if (currentBlock) {
+        let currEnvVariables = currentBlock.environmentVariables.map(x => x.key);
+
+        // check what env variables we're missing
+        missingEnvVariables = block.info.requiredEnvVariables.filter(x => {
+            return currEnvVariables.indexOf(x) === -1;
+        });
+    }
+    else {
+        missingEnvVariables = block.info.requiredEnvVariables;
+    }
+
+    if (missingEnvVariables.length === 0) return undefined;
+
+    let ret: models.EnvironmentVariable[] = [];
+    // keep existing ones...
+    if (currentBlock) {
+        ret = ret.concat(currentBlock.environmentVariables);
+    }
+
+    for (let key of missingEnvVariables) {
+        let value = (<{ value: string }>await inquirer.prompt([{
+            type: 'input',
+            message: `This block requires a value for environmental variable ${key}:`,
+            name: 'value',
+        }])).value;
+
+        ret.push({ key: key, value: value });
+    }
+
+    return ret;
 }

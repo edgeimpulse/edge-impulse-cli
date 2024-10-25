@@ -33,6 +33,7 @@ export class DSPGroupItem {
     * Only valid for type \"string\". Will render a multiline text area.
     */
     'multiline'?: boolean;
+    'required': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -100,6 +101,11 @@ export class DSPGroupItem {
         {
             "name": "multiline",
             "baseName": "multiline",
+            "type": "boolean"
+        },
+        {
+            "name": "required",
+            "baseName": "required",
             "type": "boolean"
         }    ];
 

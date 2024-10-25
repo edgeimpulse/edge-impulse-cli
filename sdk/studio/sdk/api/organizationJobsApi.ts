@@ -68,6 +68,7 @@ type listAllOrganizationJobsQueryParams = {
     excludePipelineTransformJobs?: boolean,
     rootOnly?: boolean,
     key?: string,
+    category?: string,
 };
 
 type listFinishedOrganizationJobsQueryParams = {
@@ -717,6 +718,7 @@ export class OrganizationJobsApi {
      * @param excludePipelineTransformJobs Whether to exclude pipeline / transformation jobs
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      * @param key Job key to filter on
+     * @param category Job category to filter on
      */
     public async listAllOrganizationJobs (organizationId: number, queryParams?: listAllOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/jobs/all'
@@ -767,6 +769,10 @@ export class OrganizationJobsApi {
 
         if (queryParams?.key !== undefined) {
             localVarQueryParameters['key'] = ObjectSerializer.serialize(queryParams.key, "string");
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

@@ -6,6 +6,7 @@ import fs from 'fs';
 import * as models from  '../../sdk/studio/sdk/model/models';
 import { BlockConfigManager } from "./block-config-manager";
 import {
+    AIActionBlockParametersJson,
     DeployBlockParametersJson, DSPBlockParametersJson,
     MachineLearningBlockParametersJson, SyntheticDataBlockParametersJson,
     TransformBlockParametersJson
@@ -83,6 +84,8 @@ export class InitCLIBlock {
                 return await this.initMachineLearningBlock(organizationInfo);
             case 'synthetic-data':
                 return await this.initSyntheticDataBlock(organizationInfo);
+            case 'ai-action':
+                return await this.initAIActionBlock(organizationInfo);
             case 'transform':
                 return await this.initTransformBlock(organizationInfo);
             default:
@@ -681,6 +684,104 @@ export class InitCLIBlock {
                 info: {
                     name: blockName,
                     description: blockDescription,
+                    requiredEnvVariables: undefined,
+                },
+                parameters: [],
+            };
+        }
+        else {
+            params.info.name = blockName;
+            params.info.description = blockDescription;
+        }
+
+        await this._blockConfigManager.saveParameters(params);
+
+        await this._blockConfigManager.saveConfig({
+            organizationId: organizationId,
+            id: selectedBlock ? selectedBlock.id : undefined,
+        });
+    }
+
+    private async initAIActionBlock(organizationInfo: models.OrganizationInfoResponse) {
+        const organizationId = organizationInfo.organization.id;
+        const api = this._config.api;
+
+        let existingBlocks = (
+            await api.organizationBlocks.listOrganizationTransformationBlocks(organizationId)).transformationBlocks
+                .filter(x => x.showInAIActions);
+
+        let createOrUpdateInqRes = await this.createOrUpdate(existingBlocks);
+
+        let selectedBlock: models.OrganizationTransformationBlock | undefined;
+
+        if (createOrUpdateInqRes === 'update') {
+            selectedBlock = await this.selectExistingBlock(existingBlocks);
+        }
+
+        let params: AIActionBlockParametersJson | undefined;
+        if (await pathExists(this._paths.parametersJson)) {
+            params = <AIActionBlockParametersJson>JSON.parse(
+                await fs.promises.readFile(this._paths.parametersJson, 'utf-8'));
+            if (Array.isArray(params)) {
+                // old version, was only an array of parameters
+                params = {
+                    version: 1,
+                    type: 'ai-action',
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    info: <any>{ }, // <-- will be filled in below, so this is fine
+                    parameters: <DSPParameterItem[]>params,
+                };
+            }
+            else {
+                if (!params.version) {
+                    params.version = 1;
+                }
+                params.type = 'ai-action';
+                params.info = params.info || { };
+            }
+        }
+
+        let blockName: string;
+        if (params?.info?.name) {
+            blockName = params.info.name;
+        }
+        else if (selectedBlock?.name) {
+            blockName = selectedBlock.name;
+        }
+        else {
+            blockName = <string>(await inquirer.prompt([{
+                type: 'input',
+                name: 'name',
+                message: 'Enter the name of your block (min. 2 characters)',
+            }])).name;
+            if (blockName.length < 2) {
+                throw new Error('New block must have a name longer than 2 characters.');
+            }
+        }
+
+        let blockDescription: string;
+        if (params?.info?.description) {
+            blockDescription = params.info.description;
+        }
+        else if (selectedBlock?.description) {
+            blockDescription = selectedBlock.description;
+        }
+        else {
+            blockDescription = <string>(await inquirer.prompt([{
+                type: 'input',
+                name: 'description',
+                message: 'Enter the description of your block',
+            }])).description;
+        }
+
+        if (!params) {
+            params = {
+                version: 1,
+                type: 'ai-action',
+                info: {
+                    name: blockName,
+                    description: blockDescription,
+                    requiredEnvVariables: undefined,
                 },
                 parameters: [],
             };
@@ -895,6 +996,7 @@ export class InitCLIBlock {
                     indMetadata: indMetadata,
                     showInCreateTransformationJob: showInCreateTransformationJob,
                     showInDataSources: showInDataSources,
+                    requiredEnvVariables: undefined,
                 },
                 parameters: [],
             };

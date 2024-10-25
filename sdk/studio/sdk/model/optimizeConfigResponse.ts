@@ -94,9 +94,13 @@ export class OptimizeConfigResponse {
     */
     'latencySEM'?: number;
     /**
-    * Hyperparameter optimization objective
+    * Hyperparameter optimization objectives ordered by priority
     */
-    'optimizationObjective'?: OptimizeConfigResponseOptimizationObjectiveEnum;
+    'optimizationObjectives'?: Array<string>;
+    /**
+    * Hyperparameter optimization objectives + weights in string format
+    */
+    'rawObjectives'?: string;
     /**
     * Model variant to optimize for
     */
@@ -253,9 +257,14 @@ export class OptimizeConfigResponse {
             "type": "number"
         },
         {
-            "name": "optimizationObjective",
-            "baseName": "optimizationObjective",
-            "type": "OptimizeConfigResponseOptimizationObjectiveEnum"
+            "name": "optimizationObjectives",
+            "baseName": "optimizationObjectives",
+            "type": "Array<string>"
+        },
+        {
+            "name": "rawObjectives",
+            "baseName": "rawObjectives",
+            "type": "string"
         },
         {
             "name": "optimizationPrecision",
@@ -316,9 +325,6 @@ export class OptimizeConfigResponse {
 
 export type OptimizeConfigResponseTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian' | 'custom';
 export const OptimizeConfigResponseTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian', 'custom'];
-
-export type OptimizeConfigResponseOptimizationObjectiveEnum = 'accuracy' | 'ram' | 'rom' | 'latency';
-export const OptimizeConfigResponseOptimizationObjectiveEnumValues: string[] = ['accuracy', 'ram', 'rom', 'latency'];
 
 export type OptimizeConfigResponseOptimizationPrecisionEnum = 'float32' | 'int8';
 export const OptimizeConfigResponseOptimizationPrecisionEnumValues: string[] = ['float32', 'int8'];

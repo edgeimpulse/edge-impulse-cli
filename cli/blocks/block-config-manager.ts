@@ -5,6 +5,7 @@ import fs from 'fs';
 import { pathExists } from './blocks-helper';
 import inquirer from 'inquirer';
 import {
+    AIActionBlockParametersJson,
     DeployBlockParametersJson, DSPBlockParametersJson,
     MachineLearningBlockParametersJson, ParametersJsonType,
     SyntheticDataBlockParametersJson, TransformBlockParametersJson
@@ -105,6 +106,10 @@ export type BlockConfig = {
     type: 'synthetic-data',
     config: BlockConfigItemV2 | null,
     parameters: SyntheticDataBlockParametersJson,
+} | {
+    type: 'ai-action',
+    config: BlockConfigItemV2 | null,
+    parameters: AIActionBlockParametersJson,
 };
 
 export class BlockConfigManager {
@@ -115,11 +120,11 @@ export class BlockConfigManager {
         parametersJson: string,
     };
     private _skipConfirmation: boolean;
-    private _transformWhatTypeOfBlockIsThisReply?: 'synthetic-data' | 'transform';
+    private _transformWhatTypeOfBlockIsThisReply?: 'synthetic-data' | 'transform' | 'ai-actions';
 
     constructor(config: EdgeImpulseConfig, folder: string, opts?: {
         skipConfirmation?: boolean,
-        transformWhatTypeOfBlockIsThisReply?: 'synthetic-data' | 'transform',
+        transformWhatTypeOfBlockIsThisReply?: 'synthetic-data' | 'transform' | 'ai-actions',
     }) {
         this._config = config;
         this._folder = folder;
@@ -248,6 +253,16 @@ export class BlockConfigManager {
                     }
                     return {
                         type: 'synthetic-data',
+                        config: config,
+                        parameters: parameters,
+                    };
+                }
+                case 'ai-action': {
+                    if (parameters.version !== 1) {
+                        throw new Error(`Unexpected value for "version" in "parameters.json" (expected 1)`);
+                    }
+                    return {
+                        type: 'ai-action',
                         config: config,
                         parameters: parameters,
                     };
@@ -575,7 +590,7 @@ export class BlockConfigManager {
             return newConfig;
         }
         else if (blockConfigItem.type === 'transform') {
-            let blockType: 'transform' | 'synthetic-data';
+            let blockType: 'transform' | 'synthetic-data' | 'ai-actions';
             let currBlock: models.OrganizationTransformationBlock | undefined;
 
             if (blockConfigItem.id && !overwroteHost) {
@@ -588,6 +603,9 @@ export class BlockConfigManager {
                         blockConfigItem.organizationId, blockConfigItem.id)).transformationBlock;
                     if (currBlock.showInSyntheticData) {
                         blockType = 'synthetic-data';
+                    }
+                    else if (currBlock.showInAIActions) {
+                        blockType = 'ai-actions';
                     }
                     else {
                         blockType = 'transform';
@@ -615,6 +633,10 @@ export class BlockConfigManager {
                                 name: 'Synthetic data block',
                                 value: 'synthetic-data'
                             },
+                            {
+                                name: 'AI actions block',
+                                value: 'ai-actions'
+                            },
                         ];
 
                     // Select the type of block
@@ -625,9 +647,13 @@ export class BlockConfigManager {
                         message: 'What type of block is this?',
                         pageSize: 20
                     }]);
-                    blockType = <'transform' | 'synthetic-data'>blockTypeInqRes.type;
+                    blockType = <'transform' | 'synthetic-data' | 'ai-actions'>blockTypeInqRes.type;
                 }
             }
+
+            const requiredEnvVariables = (currBlock?.environmentVariables || []).length > 0 ?
+                (currBlock?.environmentVariables || []).map(x => x.key) :
+                undefined;
 
             if (blockType === 'synthetic-data') {
                 if (await pathExists(this._paths.parametersJson)) {
@@ -641,6 +667,7 @@ export class BlockConfigManager {
                             info: {
                                 name: blockConfigItem.name,
                                 description: blockConfigItem.description,
+                                requiredEnvVariables: requiredEnvVariables,
                             },
                             parameters: oldParams,
                         };
@@ -657,6 +684,43 @@ export class BlockConfigManager {
                         info: {
                             name: blockConfigItem.name,
                             description: blockConfigItem.description,
+                            requiredEnvVariables: requiredEnvVariables,
+                        },
+                        parameters: [],
+                    };
+                    await this.saveParameters(parameters);
+                }
+            }
+            else if (blockType === 'ai-actions') {
+                if (await pathExists(this._paths.parametersJson)) {
+                    let parameters = <AIActionBlockParametersJson>JSON.parse(await fs.promises.readFile(this._paths.parametersJson, 'utf-8'));
+                    if (Array.isArray(parameters)) {
+                        // old param file
+                        let oldParams: DSPParameterItem[] = <DSPParameterItem[]>parameters;
+                        parameters = {
+                            version: 1,
+                            type: 'ai-action',
+                            info: {
+                                name: blockConfigItem.name,
+                                description: blockConfigItem.description,
+                                requiredEnvVariables: requiredEnvVariables,
+                            },
+                            parameters: oldParams,
+                        };
+                        await this.saveParameters(parameters);
+                    }
+                    else {
+                        // new format... just leave it as-is
+                    }
+                }
+                else {
+                    let parameters: AIActionBlockParametersJson = {
+                        version: 1,
+                        type: 'ai-action',
+                        info: {
+                            name: blockConfigItem.name,
+                            description: blockConfigItem.description,
+                            requiredEnvVariables: requiredEnvVariables,
                         },
                         parameters: [],
                     };
@@ -682,6 +746,7 @@ export class BlockConfigManager {
                                 indMetadata: currBlock?.indMetadata,
                                 showInCreateTransformationJob: currBlock?.showInCreateTransformationJob,
                                 showInDataSources: currBlock?.showInDataSources,
+                                requiredEnvVariables: requiredEnvVariables,
                             },
                             parameters: oldParams,
                         };
@@ -702,6 +767,7 @@ export class BlockConfigManager {
                             indMetadata: currBlock?.indMetadata,
                             showInCreateTransformationJob: currBlock?.showInCreateTransformationJob,
                             showInDataSources: currBlock?.showInDataSources,
+                            requiredEnvVariables: requiredEnvVariables,
                         },
                         parameters: [],
                     };

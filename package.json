@@ -1,6 +1,6 @@
 {
   "name": "edge-impulse-cli",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "Command-line interface tools for Edge Impulse",
   "preferGlobal": true,
   "scripts": {
@@ -36,7 +36,7 @@
     "commander": "5.1.0",
     "crc": "3.8.0",
     "crc-32": "1.2.0",
-    "express": "4.21.0",
+    "express": "4.21.1",
     "form-data": "4.0.0",
     "image-size": "1.0.2",
     "inquirer": "7.0.0",

@@ -12,6 +12,7 @@
 
 import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { DSPGroupItem } from './dSPGroupItem';
+import { EnvironmentVariable } from './environmentVariable';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 
@@ -72,6 +73,14 @@ export class OrganizationTransformationBlock {
     * Whether to show this block in \'Synthetic data\'. Only applies for standalone blocks.
     */
     'showInSyntheticData': boolean;
+    /**
+    * Whether to show this block in \'AI Actions\'. Only applies for standalone blocks.
+    */
+    'showInAIActions': boolean;
+    /**
+    * Extra environmental variables that are passed into the transformation block (key/value pairs).
+    */
+    'environmentVariables': Array<EnvironmentVariable>;
 
     static discriminator: string | undefined = undefined;
 
@@ -220,6 +229,16 @@ export class OrganizationTransformationBlock {
             "name": "showInSyntheticData",
             "baseName": "showInSyntheticData",
             "type": "boolean"
+        },
+        {
+            "name": "showInAIActions",
+            "baseName": "showInAIActions",
+            "type": "boolean"
+        },
+        {
+            "name": "environmentVariables",
+            "baseName": "environmentVariables",
+            "type": "Array<EnvironmentVariable>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -34,6 +34,7 @@ import { GetOrganizationDeployBlockResponse } from '../model/getOrganizationDepl
 import { GetOrganizationDspBlockResponse } from '../model/getOrganizationDspBlockResponse';
 import { GetOrganizationTransferLearningBlockResponse } from '../model/getOrganizationTransferLearningBlockResponse';
 import { GetOrganizationTransformationBlockResponse } from '../model/getOrganizationTransformationBlockResponse';
+import { GetPublicOrganizationTransformationBlockResponse } from '../model/getPublicOrganizationTransformationBlockResponse';
 import { ListOrganizationDeployBlocksResponse } from '../model/listOrganizationDeployBlocksResponse';
 import { ListOrganizationDspBlocksResponse } from '../model/listOrganizationDspBlocksResponse';
 import { ListOrganizationSecretsResponse } from '../model/listOrganizationSecretsResponse';
@@ -1894,6 +1895,98 @@ export class OrganizationBlocksApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetOrganizationTransformationBlockResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve a transformation blocks published by other organizations, available for all organizations.
+     * @summary Get public transformation block
+     * @param organizationId Organization ID
+     * @param transformationId Transformation block ID.
+     */
+    public async getPublicOrganizationTransformationBlock (organizationId: number, transformationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPublicOrganizationTransformationBlockResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/transformation/public/{transformationId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'transformationId' + '}', encodeURIComponent(String(transformationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getPublicOrganizationTransformationBlock.');
+        }
+
+        // verify required parameter 'transformationId' is not null or undefined
+
+
+        if (transformationId === null || transformationId === undefined) {
+            throw new Error('Required parameter transformationId was null or undefined when calling getPublicOrganizationTransformationBlock.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetPublicOrganizationTransformationBlockResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetPublicOrganizationTransformationBlockResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

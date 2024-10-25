@@ -23,6 +23,7 @@ import { AutotuneDspRequest } from '../model/autotuneDspRequest';
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
 import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
 import { CalculateDataQualityMetricsRequest } from '../model/calculateDataQualityMetricsRequest';
+import { CreatePreviewAIActionsJobRequest } from '../model/createPreviewAIActionsJobRequest';
 import { CreateSyntheticDataRequest } from '../model/createSyntheticDataRequest';
 import { DeployPretrainedModelRequest } from '../model/deployPretrainedModelRequest';
 import { ExportKerasBlockDataRequest } from '../model/exportKerasBlockDataRequest';
@@ -109,6 +110,7 @@ type listAllJobsQueryParams = {
     offset?: number,
     rootOnly?: boolean,
     key?: string,
+    category?: string,
 };
 
 type listFinishedJobsQueryParams = {
@@ -684,6 +686,199 @@ export class JobsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Run an AI Actions job over a subset of data. This will instruct the block to apply the changes directly to your dataset. To preview, use \"createPreviewAIActionsJob\". To set the config use `updateAIAction`.
+     * @summary Create AI Actions job
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     */
+    public async createAIActionsJob (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/ai-actions/{actionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createAIActionsJob.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling createAIActionsJob.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Do a dry-run of an AI Actions job over a subset of data. This will instruct the block to propose changes to data items (via \"setSampleProposedChanges\") rather than apply the changes directly.
+     * @summary Create preview AI Actions job
+     * @param projectId Project ID
+     * @param actionId AI Action ID
+     * @param createPreviewAIActionsJobRequest 
+     */
+    public async createPreviewAIActionsJob (projectId: number, actionId: number, createPreviewAIActionsJobRequest: CreatePreviewAIActionsJobRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/jobs/ai-actions/{actionId}/preview'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createPreviewAIActionsJob.');
+        }
+
+        // verify required parameter 'actionId' is not null or undefined
+
+
+        if (actionId === null || actionId === undefined) {
+            throw new Error('Required parameter actionId was null or undefined when calling createPreviewAIActionsJob.');
+        }
+
+        // verify required parameter 'createPreviewAIActionsJobRequest' is not null or undefined
+
+
+        if (createPreviewAIActionsJobRequest === null || createPreviewAIActionsJobRequest === undefined) {
+            throw new Error('Required parameter createPreviewAIActionsJobRequest was null or undefined when calling createPreviewAIActionsJob.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(createPreviewAIActionsJobRequest, "CreatePreviewAIActionsJobRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2023,6 +2218,7 @@ export class JobsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      * @param key Job key to filter on
+     * @param category Job category to filter on
      */
     public async listAllJobs (projectId: number, queryParams?: listAllJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/all'
@@ -2069,6 +2265,10 @@ export class JobsApi {
 
         if (queryParams?.key !== undefined) {
             localVarQueryParameters['key'] = ObjectSerializer.serialize(queryParams.key, "string");
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

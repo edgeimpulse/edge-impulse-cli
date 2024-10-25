@@ -19,6 +19,8 @@ import localVarRequest = require('request');
 import http = require('http');
 
 /* tslint:disable:no-unused-locals */
+import { BatchAddMetadataRequest } from '../model/batchAddMetadataRequest';
+import { BatchClearMetadataByKeyRequest } from '../model/batchClearMetadataByKeyRequest';
 import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
 import { CropSampleResponse } from '../model/cropSampleResponse';
@@ -28,6 +30,7 @@ import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { GetAIActionsProposedChangesResponse } from '../model/getAIActionsProposedChangesResponse';
 import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
 import { GetAutoLabelerResponse } from '../model/getAutoLabelerResponse';
 import { GetAutoLabelerSegmentInfoResponse } from '../model/getAutoLabelerSegmentInfoResponse';
@@ -52,6 +55,7 @@ import { SaveAutoLabelerClustersRequest } from '../model/saveAutoLabelerClusters
 import { SaveAutoLabelerClustersResponse } from '../model/saveAutoLabelerClustersResponse';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
+import { SetSampleProposedChangesRequest } from '../model/setSampleProposedChangesRequest';
 import { SetSampleStructuredLabelsRequest } from '../model/setSampleStructuredLabelsRequest';
 import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
 import { StartJobResponse } from '../model/startJobResponse';
@@ -75,6 +79,51 @@ export enum RawDataApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+type batchAddMetadataQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+    excludeIds?: string,
+    search?: string,
+};
+
+type batchClearMetadataQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+    excludeIds?: string,
+    search?: string,
+};
+
+type batchClearMetadataByKeyQueryParams = {
+    category: 'training' | 'testing' | 'anomaly',
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+    excludeIds?: string,
+    search?: string,
+};
 
 type batchDeleteQueryParams = {
     category: 'training' | 'testing' | 'anomaly',
@@ -298,6 +347,474 @@ export class RawDataApi {
         (this.authentications as any)[RawDataApiApiKeys[key]].apiKey = value;
     }
 
+
+    /**
+     * Add specific metadata for multiple samples.
+     * @summary Add metadata (multiple samples)
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param batchAddMetadataRequest 
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
+     */
+    public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/add-metadata'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchAddMetadata.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchAddMetadata.');
+        }
+
+
+        // verify required parameter 'batchAddMetadataRequest' is not null or undefined
+
+
+        if (batchAddMetadataRequest === null || batchAddMetadataRequest === undefined) {
+            throw new Error('Required parameter batchAddMetadataRequest was null or undefined when calling batchAddMetadata.');
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (queryParams?.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
+        }
+
+        if (queryParams?.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
+        }
+
+        if (queryParams?.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
+        }
+
+        if (queryParams?.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
+        }
+
+        if (queryParams?.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
+        }
+
+        if (queryParams?.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
+        }
+
+        if (queryParams?.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (queryParams?.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(batchAddMetadataRequest, "BatchAddMetadataRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Clears all metadata for multiple samples.
+     * @summary Clear all metadata (multiple samples)
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
+     */
+    public async batchClearMetadata (projectId: number, queryParams: batchClearMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchClearMetadata.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchClearMetadata.');
+        }
+
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (queryParams?.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
+        }
+
+        if (queryParams?.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
+        }
+
+        if (queryParams?.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
+        }
+
+        if (queryParams?.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
+        }
+
+        if (queryParams?.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
+        }
+
+        if (queryParams?.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
+        }
+
+        if (queryParams?.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (queryParams?.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Clears a specific metadata field (by key) for multiple samples.
+     * @summary Clear metadata by key (multiple samples)
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param batchClearMetadataByKeyRequest 
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param search Search query
+     */
+    public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata-by-key'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchClearMetadataByKey.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchClearMetadataByKey.');
+        }
+
+
+        // verify required parameter 'batchClearMetadataByKeyRequest' is not null or undefined
+
+
+        if (batchClearMetadataByKeyRequest === null || batchClearMetadataByKeyRequest === undefined) {
+            throw new Error('Required parameter batchClearMetadataByKeyRequest was null or undefined when calling batchClearMetadataByKey.');
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+        }
+
+        if (queryParams?.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
+        }
+
+        if (queryParams?.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
+        }
+
+        if (queryParams?.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
+        }
+
+        if (queryParams?.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
+        }
+
+        if (queryParams?.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
+        }
+
+        if (queryParams?.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
+        }
+
+        if (queryParams?.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (queryParams?.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(batchClearMetadataByKeyRequest, "BatchClearMetadataByKeyRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
 
     /**
      * Deletes samples. Note that this does not delete the data from cold storage.
@@ -2210,6 +2727,98 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "FindSegmentSampleResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get proposed changes from an AI Actions job.
+     * @summary Get AI Actions proposed changes
+     * @param projectId Project ID
+     * @param jobId Job ID
+     */
+    public async getAIActionsProposedChanges (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionsProposedChangesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/ai-actions-preview/{jobId}/proposed-changes'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getAIActionsProposedChanges.');
+        }
+
+        // verify required parameter 'jobId' is not null or undefined
+
+
+        if (jobId === null || jobId === undefined) {
+            throw new Error('Required parameter jobId was null or undefined when calling getAIActionsProposedChanges.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetAIActionsProposedChangesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetAIActionsProposedChangesResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -5435,6 +6044,107 @@ export class RawDataApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(setSampleMetadataRequest, "SetSampleMetadataRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Queue up changes to an object as part of the AI Actions flow. This overwrites any previous proposed changes.
+     * @summary Propose changes
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param setSampleProposedChangesRequest 
+     */
+    public async setSampleProposedChanges (projectId: number, sampleId: number, setSampleProposedChangesRequest: SetSampleProposedChangesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/propose-changes'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setSampleProposedChanges.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling setSampleProposedChanges.');
+        }
+
+        // verify required parameter 'setSampleProposedChangesRequest' is not null or undefined
+
+
+        if (setSampleProposedChangesRequest === null || setSampleProposedChangesRequest === undefined) {
+            throw new Error('Required parameter setSampleProposedChangesRequest was null or undefined when calling setSampleProposedChanges.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(setSampleProposedChangesRequest, "SetSampleProposedChangesRequest")
         };
 
         let authenticationPromise = Promise.resolve();

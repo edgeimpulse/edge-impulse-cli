@@ -47,6 +47,10 @@ export class PublicOrganizationTransformationBlock {
     * Whether to show this block in \'Synthetic data\'. Only applies for standalone blocks.
     */
     'showInSyntheticData': boolean;
+    /**
+    * Whether to show this block in \'AI Actions\'. Only applies for standalone blocks.
+    */
+    'showInAIActions': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -124,6 +128,11 @@ export class PublicOrganizationTransformationBlock {
         {
             "name": "showInSyntheticData",
             "baseName": "showInSyntheticData",
+            "type": "boolean"
+        },
+        {
+            "name": "showInAIActions",
+            "baseName": "showInAIActions",
             "type": "boolean"
         }    ];
 

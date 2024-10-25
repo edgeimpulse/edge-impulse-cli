@@ -162,6 +162,10 @@ export class UpdateProjectRequest {
     * Which extra columns should be shown in the impulse list.
     */
     'impulseListExtraColumns'?: Array<string>;
+    /**
+    * Number of grid columns in AI Actions
+    */
+    'aiActionsGridColumnCount'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -375,6 +379,11 @@ export class UpdateProjectRequest {
             "name": "impulseListExtraColumns",
             "baseName": "impulseListExtraColumns",
             "type": "Array<string>"
+        },
+        {
+            "name": "aiActionsGridColumnCount",
+            "baseName": "aiActionsGridColumnCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

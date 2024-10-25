@@ -93,6 +93,8 @@ export type RunnerOptions = {
         downloadData?: string | boolean;
     } | {
         type: "synthetic-data";
+    } | {
+        type: "ai-action";
     }
 );
 

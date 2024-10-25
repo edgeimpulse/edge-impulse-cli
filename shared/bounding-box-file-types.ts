@@ -32,6 +32,30 @@ export function validateBoundingBoxLabelsFile(data: ExportBoundingBoxesFileV1) {
     return data;
 }
 
+export function verifyBoundingBoxes(boundingBoxes: ExportInputBoundingBox[]) {
+    if (!Array.isArray(boundingBoxes)) {
+        throw new Error('boundingBoxes should be an array');
+    }
+
+    for (let b of boundingBoxes) {
+        if (typeof b.label !== 'string') {
+            throw new Error('label is not a string in ' + JSON.stringify(b));
+        }
+        if (typeof b.x !== 'number') {
+            throw new Error('x is not a number in ' + JSON.stringify(b));
+        }
+        if (typeof b.y !== 'number') {
+            throw new Error('y is not a number in ' + JSON.stringify(b));
+        }
+        if (typeof b.width !== 'number') {
+            throw new Error('width is not a number in ' + JSON.stringify(b));
+        }
+        if (typeof b.height !== 'number') {
+            throw new Error('height is not a number in ' + JSON.stringify(b));
+        }
+    }
+}
+
 export type ExportStructuredLabelsFileV1 = {
     version: 1;
     type: 'structured-labels';
@@ -130,7 +154,29 @@ export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCo
         valuesCount: valuesCount,
     });
 
-    return labels;
+    // based on the allLabels, reconstruct the structured labels
+    // into new boxes (this'll have no overlap, and will merge labels)
+    let currStartIx = 0;
+    let currLabel = allLabels[0];
+    let ret: ExportStructuredLabel[] = [];
+    for (let ix = 1; ix < valuesCount; ix++) {
+        if (allLabels[ix] !== currLabel) {
+            ret.push({
+                startIndex: currStartIx,
+                endIndex: ix - 1,
+                label: currLabel,
+            });
+            currStartIx = ix;
+        }
+        currLabel = allLabels[ix];
+    }
+    ret.push({
+        startIndex: currStartIx,
+        endIndex: valuesCount - 1,
+        label: currLabel,
+    });
+
+    return ret;
 }
 
 /**

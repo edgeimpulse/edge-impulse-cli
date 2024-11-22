@@ -4,13 +4,13 @@ import program from 'commander';
 import fs from 'fs';
 import Path from 'path';
 import os from 'os';
-import { Config, EdgeImpulseConfig } from './config';
-import checkNewVersions from './check-new-version';
+import { Config, EdgeImpulseConfig } from '../cli-common/config';
+import checkNewVersions from '../cli-common/check-new-version';
 import inquirer from 'inquirer';
 import { c as compress } from 'tar';
 import crypto from 'crypto';
 import dockerignore from '@zeit/dockerignore';
-import { getCliVersion } from './init-cli-app';
+import { getCliVersion } from '../cli-common/init-cli-app';
 import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
 import * as models from  '../sdk/studio/sdk/model/models';
 import { InitCLIBlock } from './blocks/init-cli-block';
@@ -130,6 +130,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 console.log('\x1b[33mWARN\x1b[0m', ex.message);
                 console.log('');
             }
+            else if (msg.indexOf('The API key you provided') > -1) {
+                // immediately jump to the "Failed to authenticate" printing
+                throw ex;
+            }
             else {
                 console.log('Stored token seems invalid, clearing cache...', ex);
             }
@@ -141,12 +145,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         let ex = <Error>ex2;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
-            console.error('Failed to authenticate with Edge Impulse',
+            console.error('Failed to authenticate with Edge Impulse:',
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>ex).statusCode, (<any>(<any>ex).response).body);
         }
         else {
-            console.error('Failed to authenticate with Edge Impulse', ex.message || ex.toString());
+            console.error('Failed to authenticate with Edge Impulse:', ex.message || ex.toString());
         }
         process.exit(1);
     }
@@ -244,7 +248,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         value: 'synthetic-data'
                     },
                     {
-                        name: 'AI action block',
+                        name: 'AI labeling block',
                         value: 'ai-action'
                     },
                     {
@@ -399,6 +403,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsCpu: undefined,
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
+                        aiActionsOperatesOn: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -428,6 +433,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsCpu: undefined,
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
+                        aiActionsOperatesOn: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -457,6 +463,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsCpu: undefined,
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
+                        aiActionsOperatesOn: currentBlockConfig.parameters.info.operatesOn,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);

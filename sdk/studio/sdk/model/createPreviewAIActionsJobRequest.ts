@@ -10,35 +10,33 @@
  * Do not edit the class manually.
  */
 
+import { AIActionsConfigStep } from './aIActionsConfigStep';
 
 export class CreatePreviewAIActionsJobRequest {
-    /**
-    * The ID of an AI Actions transform block ID (public or private)
-    */
-    'transformationBlockId': number;
-    /**
-    * Parameters for the transformation block. These map back to the parameters in OrganizationTransformationBlock \'parameters\' property.
-    */
-    'parameters': { [key: string]: string; };
+    'steps': Array<AIActionsConfigStep>;
     'sampleIds': Array<number>;
+    /**
+    * If enabled, will load cached results from the previous preview job for unchanged jobs. Disable this if you\'re developing your own custom AI Labeling job, and want to always re-run all steps.
+    */
+    'cacheUnchangedSteps': boolean;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "transformationBlockId",
-            "baseName": "transformationBlockId",
-            "type": "number"
-        },
-        {
-            "name": "parameters",
-            "baseName": "parameters",
-            "type": "{ [key: string]: string; }"
+            "name": "steps",
+            "baseName": "steps",
+            "type": "Array<AIActionsConfigStep>"
         },
         {
             "name": "sampleIds",
             "baseName": "sampleIds",
             "type": "Array<number>"
+        },
+        {
+            "name": "cacheUnchangedSteps",
+            "baseName": "cacheUnchangedSteps",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

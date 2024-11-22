@@ -11,20 +11,26 @@
  */
 
 
-export class SaveAutoLabelerClustersResponseAllOf {
-    'updatedItemCount': number;
+export class SampleImageDimensions {
+    'width': number;
+    'height': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "updatedItemCount",
-            "baseName": "updatedItemCount",
+            "name": "width",
+            "baseName": "width",
+            "type": "number"
+        },
+        {
+            "name": "height",
+            "baseName": "height",
             "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoLabelerClustersResponseAllOf.attributeTypeMap;
+        return SampleImageDimensions.attributeTypeMap;
     }
 }
 

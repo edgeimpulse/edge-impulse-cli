@@ -12,10 +12,10 @@ import {
     MgmtInterfaceSampleUploadingResponse,
     MgmtInterfaceSampleStartedResponse,
 } from '../shared/MgmtInterfaceTypes';
-import { Config, EdgeImpulseConfig } from './config';
+import { Config, EdgeImpulseConfig } from '../cli-common/config';
 import { findSerial } from './find-serial';
 import crypto from 'crypto';
-import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
+import { getCliVersion, initCliApp, setupCliApp } from '../cli-common/init-cli-app';
 import encodeLabel from '../shared/encoding';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
@@ -37,6 +37,7 @@ const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDevi
 const cliOptions = {
     appName: 'Edge Impulse data forwarder',
     apiKeyArgv: apiKeyArgv,
+    greengrassArgv: false,
     cleanArgv: cleanArgv,
     devArgv: devArgv,
     hmacKeyArgv: undefined,

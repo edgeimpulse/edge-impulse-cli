@@ -11,6 +11,7 @@
  */
 
 import { ProjectTierEnum } from './projectTierEnum';
+import { ProjectType } from './projectType';
 
 export class AdminApiProject {
     'id': number;
@@ -29,6 +30,7 @@ export class AdminApiProject {
     */
     'whitelabelId'?: number | null;
     'tier'?: ProjectTierEnum;
+    'category'?: ProjectType;
 
     static discriminator: string | undefined = undefined;
 
@@ -82,6 +84,11 @@ export class AdminApiProject {
             "name": "tier",
             "baseName": "tier",
             "type": "ProjectTierEnum"
+        },
+        {
+            "name": "category",
+            "baseName": "category",
+            "type": "ProjectType"
         }    ];
 
     static getAttributeTypeMap() {

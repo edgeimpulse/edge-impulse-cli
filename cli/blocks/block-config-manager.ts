@@ -1,5 +1,5 @@
 import * as models from  '../../sdk/studio/sdk/model/models';
-import { EdgeImpulseConfig } from '../config';
+import { EdgeImpulseConfig } from '../../cli-common/config';
 import Path from 'path';
 import fs from 'fs';
 import { pathExists } from './blocks-helper';
@@ -634,7 +634,7 @@ export class BlockConfigManager {
                                 value: 'synthetic-data'
                             },
                             {
-                                name: 'AI actions block',
+                                name: 'AI labeling block',
                                 value: 'ai-actions'
                             },
                         ];
@@ -704,6 +704,7 @@ export class BlockConfigManager {
                                 name: blockConfigItem.name,
                                 description: blockConfigItem.description,
                                 requiredEnvVariables: requiredEnvVariables,
+                                operatesOn: undefined,
                             },
                             parameters: oldParams,
                         };
@@ -721,6 +722,7 @@ export class BlockConfigManager {
                             name: blockConfigItem.name,
                             description: blockConfigItem.description,
                             requiredEnvVariables: requiredEnvVariables,
+                            operatesOn: undefined,
                         },
                         parameters: [],
                     };

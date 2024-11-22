@@ -11,9 +11,10 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { SaveAutoLabelerClustersResponseAllOf } from './saveAutoLabelerClustersResponseAllOf';
+import { ListPublicProjectTypes } from './listPublicProjectTypes';
+import { ListPublicProjectTypesProjectTypes } from './listPublicProjectTypesProjectTypes';
 
-export class SaveAutoLabelerClustersResponse {
+export class ListPublicProjectTypesResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +23,10 @@ export class SaveAutoLabelerClustersResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'updatedItemCount': number;
+    /**
+    * Array with project types
+    */
+    'projectTypes': Array<ListPublicProjectTypesProjectTypes>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +42,13 @@ export class SaveAutoLabelerClustersResponse {
             "type": "string"
         },
         {
-            "name": "updatedItemCount",
-            "baseName": "updatedItemCount",
-            "type": "number"
+            "name": "projectTypes",
+            "baseName": "projectTypes",
+            "type": "Array<ListPublicProjectTypesProjectTypes>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoLabelerClustersResponse.attributeTypeMap;
+        return ListPublicProjectTypesResponse.attributeTypeMap;
     }
 }
 

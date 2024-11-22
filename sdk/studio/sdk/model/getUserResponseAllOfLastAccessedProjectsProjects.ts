@@ -11,32 +11,38 @@
  */
 
 
-export class ProfileModelInfoMemoryTflite {
-    'ram': number;
-    'rom': number;
-    'arenaSize': number;
+export class GetUserResponseAllOfLastAccessedProjectsProjects {
+    'id': number;
+    'name': string;
+    'created': Date;
+    'lastAccessed'?: Date;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ram",
-            "baseName": "ram",
+            "name": "id",
+            "baseName": "id",
             "type": "number"
         },
         {
-            "name": "rom",
-            "baseName": "rom",
-            "type": "number"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
         },
         {
-            "name": "arenaSize",
-            "baseName": "arenaSize",
-            "type": "number"
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "lastAccessed",
+            "baseName": "lastAccessed",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProfileModelInfoMemoryTflite.attributeTypeMap;
+        return GetUserResponseAllOfLastAccessedProjectsProjects.attributeTypeMap;
     }
 }
 

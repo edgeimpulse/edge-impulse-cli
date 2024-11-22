@@ -10,19 +10,20 @@ import EiSerialProtocol, {
 import inquirer from 'inquirer';
 import request from 'request-promise';
 import {
-    MgmtInterfaceSampleRequestSample
+    MgmtInterfaceSampleRequestSample,
+    ClientConnectionType
 } from '../shared/MgmtInterfaceTypes';
-import { Config, EdgeImpulseConfig } from './config';
+import { Config, EdgeImpulseConfig } from '../cli-common/config';
 import { findSerial } from './find-serial';
 import { canFlashSerial } from './can-flash-serial';
 import jpegjs from 'jpeg-js';
-import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../shared/daemon/remote-mgmt-service';
+import { RemoteMgmt, RemoteMgmtDevice, RemoteMgmtDeviceSampleEmitter } from '../cli-common/remote-mgmt-service';
 import { EventEmitter } from "tsee";
-import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
+import { getCliVersion, initCliApp, setupCliApp } from '../cli-common/init-cli-app';
 import { Mutex } from 'async-mutex';
 import WebSocket from 'ws';
 import encodeLabel from '../shared/encoding';
-import { upload } from './make-image';
+import { upload } from '../cli-common/make-image';
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
@@ -45,6 +46,7 @@ let serial: SerialConnector | undefined;
 const cliOptions = {
     appName: 'Edge Impulse serial daemon',
     apiKeyArgv: apiKeyArgv,
+    greengrassArgv: false,
     cleanArgv: cleanArgv,
     devArgv: devArgv,
     hmacKeyArgv: undefined,
@@ -112,6 +114,10 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         }
 
         return sensors;
+    }
+
+    getConnectionType() {
+        return <ClientConnectionType>'daemon';
     }
 
     isSnapshotStreaming() {
@@ -600,9 +606,13 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
 
             if (!remoteMgmt) {
                 const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
-                remoteMgmt = new RemoteMgmt(projectId, devKeys, Object.assign({
-                    command: <'edge-impulse-daemon'>'edge-impulse-daemon'
-                }, eiConfig), device,
+                remoteMgmt = new RemoteMgmt(projectId,
+                    devKeys,
+                    Object.assign({
+                        command: <'edge-impulse-daemon'>'edge-impulse-daemon'
+                    }, eiConfig),
+                    device,
+                    undefined, // model monitor object
                     url => new WebSocket(url),
                     async (currName) => {
                         let nameDevice = <{ nameDevice: string }>await inquirer.prompt([{

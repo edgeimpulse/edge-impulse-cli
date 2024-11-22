@@ -13,6 +13,7 @@
 import { EnterpriseTrial } from './enterpriseTrial';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Permission } from './permission';
 import { Project } from './project';
@@ -66,6 +67,9 @@ export class GetUserResponse {
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
     'organizations': Array<UserOrganization>;
+    /**
+    * List of all projects. This returns all projects for the user (regardless of whitelabel)
+    */
     'projects': Array<Project>;
     /**
     * Experiments the user has access to. Enabling experiments can only be done through a JWT token.
@@ -113,6 +117,11 @@ export class GetUserResponse {
     * Timezone for the user (or undefined if not specified).
     */
     'timezone'?: string;
+    'lastAccessedProjects': GetUserResponseAllOfLastAccessedProjects;
+    /**
+    * Number of private projects created by the current user.
+    */
+    'privatePersonalProjectsUsed': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -291,6 +300,16 @@ export class GetUserResponse {
             "name": "timezone",
             "baseName": "timezone",
             "type": "string"
+        },
+        {
+            "name": "lastAccessedProjects",
+            "baseName": "lastAccessedProjects",
+            "type": "GetUserResponseAllOfLastAccessedProjects"
+        },
+        {
+            "name": "privatePersonalProjectsUsed",
+            "baseName": "privatePersonalProjectsUsed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

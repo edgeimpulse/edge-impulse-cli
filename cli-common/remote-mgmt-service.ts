@@ -19,11 +19,20 @@ import {
     MgmtInterfaceStartInferenceStreamRequest,
     MgmtInterfaceInferenceStreamFailedResponse,
     MgmtInterfaceStopInferenceStreamRequest,
-    MgmtInterfaceInferenceStreamStoppedResponse
-} from "../MgmtInterfaceTypes";
-import { IWebsocket } from "./iwebsocket";
-
-import { EventEmitter } from './events';
+    MgmtInterfaceInferenceStreamStoppedResponse,
+    MgmtInterfaceInferenceInfo,
+    MgmtInterfaceInferenceSummary,
+    MgmtInterfaceImpulseRecordAck,
+    MgmtInterfaceNewModelAvailable,
+    MgmtInterfaceNewModelUpdated,
+    MgmtInterfaceImpulseRecordsRequest,
+    MgmtInterfaceImpulseRecordsResponse,
+    ClientConnectionType
+} from "../shared/MgmtInterfaceTypes";
+import { IWebsocket } from "../shared/daemon/iwebsocket";
+import { ImpulseRecord, ImpulseRecordError, InferenceMetrics, ModelMonitor } from './model-monitor';
+import { EventEmitter } from '../shared/daemon/events';
+import { ModelInformation } from "../library/classifier/linux-impulse-runner";
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 
@@ -45,6 +54,7 @@ export interface RemoteMgmtDevice extends TypedEmitter<{
         maxSampleLengthS: number;
         frequencies: number[];
     }[];
+    getConnectionType: () => ClientConnectionType;
     sampleRequest: (data: MgmtInterfaceSampleRequestSample, ee: RemoteMgmtDeviceSampleEmitter) => Promise<void>;
     supportsSnapshotStreaming: () => boolean;
     supportsSnapshotStreamingWhileCapturing: () => boolean;
@@ -64,20 +74,20 @@ export interface RemoteMgmtConfig {
     };
     api: {
         projects: {
-            // eslint-disable-next-line @stylistic/max-len
-            getProjectInfo(projectId: number, queryParams: { impulseId?: number }): Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
+            getProjectInfo(projectId: number, queryParams: { impulseId?: number }):
+                Promise<{ success: boolean, error?: string, project: { name: string, whitelabelId: number | null } }>;
         };
         devices: {
-            // eslint-disable-next-line @stylistic/max-len
-            renameDevice(projectId: number, deviceId: string, opts: { name: string }): Promise<{ success: boolean, error?: string }>;
-            // eslint-disable-next-line @stylistic/max-len
-            createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }): Promise<{ success: boolean, error?: string }>;
-            // eslint-disable-next-line @stylistic/max-len
-            getDevice(projectId: number, deviceId: string): Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
+            renameDevice(projectId: number, deviceId: string, opts: { name: string }):
+                Promise<{ success: boolean, error?: string }>;
+            createDevice(projectId: number, opts: { deviceId: string, deviceType: string, ifNotExists: boolean }):
+                Promise<{ success: boolean, error?: string }>;
+            getDevice(projectId: number, deviceId: string):
+                Promise<{ success: boolean, error?: string, device?: { name: string; } }>;
         };
         whitelabels: {
-            // eslint-disable-next-line @stylistic/max-len
-            getWhitelabelDomain(whitelabelId: number | null): Promise<{ success: boolean, domain?: string }>;
+            getWhitelabelDomain(whitelabelId: number | null):
+                Promise<{ success: boolean, domain?: string }>;
         }
     };
 }
@@ -89,6 +99,7 @@ type RemoteMgmtState = 'snapshot-stream-requested' | 'snapshot-stream-started' |
 
 export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     authenticationFailed: () => void,
+    newModelAvailable: () => void,
 }>) {
     private _ws: IWebsocket | undefined;
     private _projectId: number;
@@ -99,11 +110,15 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     private _snapshotStreamResolution: 'low' | 'high' = 'low';
     private _createWebsocket: (url: string) => IWebsocket;
     private _checkNameCb: (currName: string) => Promise<string>;
+    private _monitor: ModelMonitor | undefined;
+    private _isConnected = false;
+    private _inferenceInfo: MgmtInterfaceInferenceInfo | undefined;
 
     constructor(projectId: number,
                 devKeys: { apiKey: string, hmacKey: string },
                 eiConfig: RemoteMgmtConfig,
                 device: RemoteMgmtDevice,
+                monitor: ModelMonitor | undefined,
                 createWebsocket: (url: string) => IWebsocket,
                 checkNameCb: (currName: string) => Promise<string>) {
 
@@ -114,6 +129,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         this._devKeys = devKeys;
         this._eiConfig = eiConfig;
         this._device = device;
+        this._monitor = monitor;
         this._createWebsocket = createWebsocket;
         this._checkNameCb = checkNameCb;
 
@@ -135,8 +151,15 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         });
     }
 
-    async connect(reconnectOnFailure = true) {
+    get isConnected() {
+        return this._isConnected;
+    }
+
+    // TODO: replace inferenceInfo with a model info
+    async connect(reconnectOnFailure = true, inferenceInfo: MgmtInterfaceInferenceInfo | undefined = undefined) {
         await this._device.beforeConnect();
+
+        this._inferenceInfo = inferenceInfo;
 
         console.log(TCP_PREFIX, `Connecting to ${this._eiConfig.endpoints.internal.ws}`);
         try {
@@ -162,6 +185,81 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         if (this._ws) {
             this._ws.terminate();
         }
+    }
+
+    inferenceSummaryListener(ev: InferenceMetrics) {
+        let req: MgmtInterfaceInferenceSummary = {
+            inferenceSummary: {
+                firstIndex: ev.firstIndex,
+                lastIndex: ev.lastIndex,
+                classificationCounter: ev.classificationCounter.map((counter) => {
+                    return { label: counter.label, value: counter.value };
+                }),
+                mean: ev.mean.map((mean) => {
+                    return { label: mean.label, value: mean.value };
+                }),
+                standardDeviation: ev.standardDeviation.map((std) => {
+                    return { label: std.label, value: std.value };
+                }),
+                metrics: ev.metrics.map((metric) => {
+                    return { name: metric.name, value: metric.value };
+                }),
+            }
+        };
+        if (this._ws) {
+            this._ws.send(JSON.stringify(req));
+        }
+    }
+
+    impulseRecordListener(ev: ImpulseRecord) {
+        if (!this._ws) {
+            return console.error(TCP_PREFIX, 'Not connected to remote management service');
+        }
+
+        this._ws.once('message', (data: Buffer) => {
+            let ret = <MgmtInterfaceImpulseRecordAck>JSON.parse(data.toString('utf-8'));
+            if (!ret.impulseRecordAck) {
+                if (this._monitor) {
+                    this._monitor.impulseDebug = false;
+                }
+                console.error(TCP_PREFIX, 'Failed to send record to remote management service', ret.error);
+            }
+        });
+        this._ws.send(JSON.stringify(ev));
+    }
+
+    impulseRecordsResponseListener(ev: ImpulseRecord | ImpulseRecordError) {
+        if (!this._ws) {
+            return console.error(TCP_PREFIX, 'Not connected to remote management service');
+        }
+
+        let resp: MgmtInterfaceImpulseRecordsResponse;
+
+        if (typeof (<ImpulseRecord>ev).impulseRecord !== 'undefined') {
+            resp = {
+                impulseRecordsResponse: true,
+                index: (<ImpulseRecord>ev).index,
+                record: (<ImpulseRecord>ev).impulseRecord,
+                timestamp: (<ImpulseRecord>ev).timestamp,
+                rawData: (<ImpulseRecord>ev).rawData
+            };
+        }
+        else {
+            resp = {
+                impulseRecordsResponse: false,
+                index: (<ImpulseRecordError>ev).index,
+                error: (<ImpulseRecordError>ev).error
+            };
+        }
+
+        this._ws.once('message', (data: Buffer) => {
+            let ret = <MgmtInterfaceImpulseRecordAck>JSON.parse(data.toString('utf-8'));
+            if (!ret.impulseRecordAck) {
+                this._monitor?.abortImpulseRecordsRequest();
+                console.error(TCP_PREFIX, 'Failed to send record to remote management service', ret.error);
+            }
+        });
+        this._ws.send(JSON.stringify(resp));
     }
 
     private registerPingPong() {
@@ -204,10 +302,10 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 return;
             }
             // hello messages are handled in sendHello()
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).hello !== 'undefined') return;
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (typeof (<any>d).sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
@@ -469,6 +567,50 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 return;
             }
 
+            if (typeof (<MgmtInterfaceStartInferenceStreamRequest>d).startInferenceStream !== 'undefined') {
+                let resp: MgmtInterfaceInferenceStreamStartedResponse = {
+                    inferenceStreamStarted: this._monitor ? (this._monitor.impulseDebug = true, true) : false
+                };
+
+                if (this._ws) {
+                    this._ws.send(JSON.stringify(resp));
+                }
+                return;
+            }
+
+            if (typeof (<MgmtInterfaceStopInferenceStreamRequest>d).stopInferenceStream !== 'undefined') {
+                let resp: MgmtInterfaceInferenceStreamStoppedResponse = {
+                    inferenceStreamStopped: this._monitor ? (this._monitor.impulseDebug = false, true) : false
+                };
+
+                if (this._ws) {
+                    this._ws.send(JSON.stringify(resp));
+                }
+                return;
+            }
+
+            if (typeof (<MgmtInterfaceNewModelAvailable>d).newModelAvailable !== 'undefined') {
+                console.log(TCP_PREFIX, 'New model available, requesting download');
+                this.emit('newModelAvailable');
+                return;
+            }
+
+            if (typeof (<MgmtInterfaceImpulseRecordsRequest>d).impulseRecordRequest !== 'undefined') {
+                let req = <MgmtInterfaceImpulseRecordsRequest>d;
+                if (!this._monitor) {
+                    let resp: MgmtInterfaceImpulseRecordsResponse = {
+                        impulseRecordsResponse: false,
+                        error: 'Model monitor not initialized'
+                    };
+                    if (this._ws) {
+                        this._ws.send(JSON.stringify(resp));
+                    }
+                    return;
+                }
+                this._monitor.getImpulseRecords(req.impulseRecordRequest);
+                return;
+            }
+
             console.log(TCP_PREFIX, 'received message', d);
 
             // // let d = data.toString('ascii');
@@ -513,23 +655,79 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         });
     }
 
+    async sendModelUpdateStatus(model: ModelInformation, success: boolean, error?: string) {
+        if (!this._ws) return;
+
+        let req: MgmtInterfaceNewModelUpdated;
+        if (success) {
+            req = {
+                modelUpdateSuccess: true,
+                inferenceInfo: {
+                    projectId: model.project.id,
+                    projectOwner: model.project.owner,
+                    projectName: model.project.name,
+                    deploymentVersion: model.project.deploy_version,
+                    modelType: model.modelParameters.model_type,
+                }
+            };
+        }
+        else {
+            req = {
+                modelUpdateSuccess: false,
+                error: error || 'No error message',
+            };
+        }
+
+        this._ws.send(JSON.stringify(req));
+    }
+
     private async sendHello() {
         if (!this._ws || !this._device.connected()) return;
 
         let deviceId = await this._device.getDeviceId();
+        let storageStatus = await this._monitor?.getStorageStatus();
+        let req: MgmtInterfaceHelloV4;
 
-        let req: MgmtInterfaceHelloV4 = {
-            hello: {
-                version: 4,
-                apiKey: this._devKeys.apiKey,
-                deviceId: deviceId,
-                deviceType: this._device.getDeviceType(),
-                connection: 'daemon',
-                sensors: this._device.getSensors(),
-                supportsSnapshotStreaming: this._device.supportsSnapshotStreaming(),
-                mode: 'ingestion',
-            }
+        const baseHello = {
+            apiKey: this._devKeys.apiKey,
+            deviceId: deviceId,
+            deviceType: this._device.getDeviceType(),
+            connection: this._device.getConnectionType(),
+            sensors: this._device.getSensors(),
+            supportsSnapshotStreaming: this._device.supportsSnapshotStreaming(),
         };
+
+        if (this._inferenceInfo) {
+            req = {
+                hello: {
+                    ...baseHello,
+                    version: 4, // Ensure version is explicitly set to 4
+                    mode: 'inference',
+                    inferenceInfo: this._inferenceInfo,
+                    availableRecords: storageStatus ? {
+                        firstIndex: storageStatus.firstIndex,
+                        firstTimestamp: storageStatus.firstTimestamp,
+                        lastIndex: storageStatus.lastIndex,
+                        lastTimestamp: storageStatus.lastTimestamp
+                    } : {
+                        firstIndex: 0,
+                        firstTimestamp: 0,
+                        lastIndex: 0,
+                        lastTimestamp: 0
+                    }
+                }
+            };
+        }
+        else {
+            req = {
+                hello: {
+                    ...baseHello,
+                    version: 4, // Ensure version is explicitly set to 4
+                    mode: 'ingestion'
+                }
+            };
+        }
+
         this._ws.once('message', async (helloResponse: Buffer) => {
             let ret = <MgmtInterfaceHelloResponse>JSON.parse(helloResponse.toString('utf-8'));
             if (!ret.hello) {
@@ -565,6 +763,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 console.log(TCP_PREFIX,
                     `Go to ${studioUrl}/studio/${this._projectId}/acquisition/training ` +
                     `to build your machine learning model!`);
+                this._isConnected = true;
             }
         });
         this._ws.send(JSON.stringify(req));

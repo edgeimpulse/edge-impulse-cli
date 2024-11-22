@@ -10,18 +10,19 @@
  * Do not edit the class manually.
  */
 
+import { ProjectType } from './projectType';
 
-export class SaveAutoLabelerClustersRequestClusters {
-    'index': number;
+export class ListPublicProjectTypesProjectTypes {
+    'value': ProjectType;
     'label': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "index",
-            "baseName": "index",
-            "type": "number"
+            "name": "value",
+            "baseName": "value",
+            "type": "ProjectType"
         },
         {
             "name": "label",
@@ -30,7 +31,7 @@ export class SaveAutoLabelerClustersRequestClusters {
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoLabelerClustersRequestClusters.attributeTypeMap;
+        return ListPublicProjectTypesProjectTypes.attributeTypeMap;
     }
 }
 

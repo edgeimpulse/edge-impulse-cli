@@ -10,35 +10,31 @@
  * Do not edit the class manually.
  */
 
-import { AutoLabelerSegment } from './autoLabelerSegment';
-import { Sample } from './sample';
+import { EnterpriseLimit } from './enterpriseLimit';
 
-export class GetAutoLabelerSegmentInfoResponseAllOf {
-    'sample': Sample;
-    'imageUrl': string;
-    'segments': Array<AutoLabelerSegment>;
+export class EnterpriseLimitsIncreaseRequest {
+    'limits': Array<EnterpriseLimit>;
+    /**
+    * Additional notes for the request. This is optional.
+    */
+    'reason'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "sample",
-            "baseName": "sample",
-            "type": "Sample"
+            "name": "limits",
+            "baseName": "limits",
+            "type": "Array<EnterpriseLimit>"
         },
         {
-            "name": "imageUrl",
-            "baseName": "imageUrl",
+            "name": "reason",
+            "baseName": "reason",
             "type": "string"
-        },
-        {
-            "name": "segments",
-            "baseName": "segments",
-            "type": "Array<AutoLabelerSegment>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoLabelerSegmentInfoResponseAllOf.attributeTypeMap;
+        return EnterpriseLimitsIncreaseRequest.attributeTypeMap;
     }
 }
 

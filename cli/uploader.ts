@@ -4,9 +4,9 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import asyncpool from 'tiny-async-pool';
-import { upload, VALID_EXTENSIONS } from './make-image';
-import { getCliVersion, initCliApp, setupCliApp } from './init-cli-app';
-import { Config } from './config';
+import { upload, VALID_EXTENSIONS } from '../cli-common/make-image';
+import { getCliVersion, initCliApp, setupCliApp } from '../cli-common/init-cli-app';
+import { Config } from '../cli-common/config';
 import {
     ExportBoundingBoxesFileV1,
     ExportInputBoundingBox,
@@ -70,12 +70,14 @@ const directoryArgvIx = process.argv.indexOf('--directory');
 const directoryArgv = directoryArgvIx !== -1 ? process.argv[directoryArgvIx + 1] : undefined;
 const annotationFormatArgvIx = process.argv.indexOf('--dataset-format');
 const annotationFormatArgv = annotationFormatArgvIx !== -1 ? process.argv[annotationFormatArgvIx + 1] : undefined;
+const greengrassArgv = process.argv.indexOf('--greengrass') > -1;
 
 let configFactory: Config;
 
 const cliOptions = {
     appName: 'Edge Impulse uploader',
     apiKeyArgv: apiKeyArgv,
+    greengrassArgv: greengrassArgv,
     cleanArgv: cleanArgv,
     devArgv: devArgv,
     hmacKeyArgv: hmacKeyArgv,
@@ -157,6 +159,7 @@ const logAllAnnotationFormats = () => {
     if (labelArgv) argv += 2;
     if (categoryArgv) argv += 2;
     if (apiKeyArgv) argv += 2;
+    if (greengrassArgv) argv++;
     if (dontResignArgv) argv++;
     if (devArgv) argv++;
     if (concurrencyArgv) argv += 2;

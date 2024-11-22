@@ -6,14 +6,14 @@ import Path from 'path';
 import EiSerialProtocol, {
     EiSerialDeviceConfig, EiSerialSensor
 } from '../shared/daemon/ei-serial-protocol';
-import { Config } from './config';
+import { Config } from '../cli-common/config';
 import { findSerial } from './find-serial';
-import checkNewVersions from './check-new-version';
-import { getCliVersion } from './init-cli-app';
+import checkNewVersions from '../cli-common/check-new-version';
+import { getCliVersion } from '../cli-common/init-cli-app';
 import express = require('express');
 import http from 'http';
 import socketIO from 'socket.io';
-import { ips } from './get-ips';
+import { ips } from '../cli-common/get-ips';
 
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 

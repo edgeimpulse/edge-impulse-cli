@@ -39,6 +39,7 @@ import { ListApiKeysResponse } from '../model/listApiKeysResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListHmacKeysResponse } from '../model/listHmacKeysResponse';
 import { ListProjectsResponse } from '../model/listProjectsResponse';
+import { ListPublicProjectTypesResponse } from '../model/listPublicProjectTypesResponse';
 import { ListPublicProjectsResponse } from '../model/listPublicProjectsResponse';
 import { ListPublicVersionsResponse } from '../model/listPublicVersionsResponse';
 import { ListSamplesResponse } from '../model/listSamplesResponse';
@@ -99,11 +100,16 @@ type getProjectTrainingDataSummaryQueryParams = {
     includeNotProcessed?: boolean,
 };
 
+type listDownloadsQueryParams = {
+    impulseId?: number,
+};
+
 type listPublicProjectsQueryParams = {
     limit?: number,
     offset?: number,
     project?: string,
     projectTypes?: string,
+    sort?: string,
 };
 
 export type uploadCsvWizardUploadedFileFormParams = {
@@ -2599,8 +2605,9 @@ export class ProjectsApi {
      * Retrieve the downloads for a project.
      * @summary Get downloads
      * @param projectId Project ID
+     * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDownloads (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDownloadsResponse> {
+    public async listDownloads (projectId: number, queryParams?: listDownloadsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDownloadsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/downloads'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -2621,6 +2628,10 @@ export class ProjectsApi {
 
         if (projectId === null || projectId === undefined) {
             throw new Error('Required parameter projectId was null or undefined when calling listDownloads.');
+        }
+
+        if (queryParams?.impulseId !== undefined) {
+            localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -3002,12 +3013,81 @@ export class ProjectsApi {
     }
 
     /**
+     * Retrieve the list of available public project types. You don\'t need any authentication for this method.
+     * @summary List public project types
+     */
+    public async listPublicProjectTypes (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectTypesResponse> {
+        const localVarPath = this.basePath + '/api/projects/types';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<ListPublicProjectTypesResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "ListPublicProjectTypesResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Retrieve the list of all public projects. You don\'t need any authentication for this method.
      * @summary List public projects
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
-     * @param project Only include projects that contain this string
+     * @param project Only include projects where the name or owner contains this string
      * @param projectTypes Comma separated list of project types to filter on. Supported values are \&#39;audio\&#39;, \&#39;object-detection\&#39;, \&#39;image\&#39;, \&#39;accelerometer\&#39;, \&#39;other\&#39;.
+     * @param sort Fields and order to sort query by
      */
     public async listPublicProjects (queryParams?: listPublicProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectsResponse> {
         const localVarPath = this.basePath + '/api/projects/public';
@@ -3038,6 +3118,10 @@ export class ProjectsApi {
 
         if (queryParams?.projectTypes !== undefined) {
             localVarQueryParameters['projectTypes'] = ObjectSerializer.serialize(queryParams.projectTypes, "string");
+        }
+
+        if (queryParams?.sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(queryParams.sort, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

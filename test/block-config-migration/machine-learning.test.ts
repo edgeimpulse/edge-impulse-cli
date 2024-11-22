@@ -2,7 +2,7 @@ import assert from "assert";
 import Path from 'path';
 import fs from 'fs';
 import { BlockConfigManager } from "../../cli/blocks/block-config-manager";
-import { EdgeImpulseConfig } from "../../cli/config";
+import { EdgeImpulseConfig } from "../../cli-common/config";
 import os from 'os';
 import { EdgeImpulseApi } from "../../sdk/studio";
 import { OrganizationBlocksApi } from "../../sdk/studio/sdk/api";

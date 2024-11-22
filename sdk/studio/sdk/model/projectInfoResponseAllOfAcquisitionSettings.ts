@@ -56,6 +56,10 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
     * If enabled, does not round sample length to hours/minutes/seconds, but always displays sample length in milliseconds. E.g. instead of 1m 32s, this\'ll say 92,142ms.
     */
     'showExactSampleLength': boolean;
+    /**
+    * If enabled, allows editing bounding box labels directly from the acquisition UI.
+    */
+    'inlineEditBoundingBoxes': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -113,6 +117,11 @@ export class ProjectInfoResponseAllOfAcquisitionSettings {
         {
             "name": "showExactSampleLength",
             "baseName": "showExactSampleLength",
+            "type": "boolean"
+        },
+        {
+            "name": "inlineEditBoundingBoxes",
+            "baseName": "inlineEditBoundingBoxes",
             "type": "boolean"
         }    ];
 

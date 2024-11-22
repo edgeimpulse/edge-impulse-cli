@@ -9,8 +9,8 @@ import { findSerial } from '../find-serial';
 import crc32 from 'crc-32';
 import program from 'commander';
 import cliProgress from 'cli-progress';
-import checkNewVersions from '../check-new-version';
-import { Config } from '../config';
+import checkNewVersions from '../../cli-common/check-new-version';
+import { Config } from '../../cli-common/config';
 
 const SERIAL_PREFIX = '\x1b[33m[ETA]\x1b[0m';
 

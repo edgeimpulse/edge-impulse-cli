@@ -259,7 +259,7 @@ export type MgmtInterfaceNewModelUpdated = {
 
 export interface MgmtInterfaceImpulseRecordsResponse {
     impulseRecordsResponse: boolean;
-    index: number;
+    index?: number;
     error?: string;
     record?: {
         result: {

@@ -10,22 +10,22 @@
  * Do not edit the class manually.
  */
 
-import { SaveAutoLabelerClustersRequestClusters } from './saveAutoLabelerClustersRequestClusters';
+import { Project } from './project';
 
-export class SaveAutoLabelerClustersRequest {
-    'clusters': Array<SaveAutoLabelerClustersRequestClusters>;
+export class GetUserProjectsResponseAllOf {
+    'projects': Array<Project>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "clusters",
-            "baseName": "clusters",
-            "type": "Array<SaveAutoLabelerClustersRequestClusters>"
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<Project>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SaveAutoLabelerClustersRequest.attributeTypeMap;
+        return GetUserProjectsResponseAllOf.attributeTypeMap;
     }
 }
 

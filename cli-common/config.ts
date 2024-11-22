@@ -259,91 +259,7 @@ export class Config {
         }
         else {
             if (!config.jwtToken) {
-                const username = <{ username: string }>await inquirer.prompt({
-                    type: 'input',
-                    name: 'username',
-                    message: `What is your user name or e-mail address (${host})?`
-                });
-
-                const { needPassword, email, whitelabels } =
-                    await this._api.user.getUserNeedToSetPassword(username.username);
-
-                if (needPassword) {
-                    const protocol = `http${
-                        config.host === 'localhost' ? '' : 's'
-                    }://`;
-                    const port = `${
-                        config.host === 'localhost' ? ':4800' : ''
-                    }`;
-                    const encodedEmail = encodeURIComponent(`${email}`);
-                    let resetUrl;
-                    if (whitelabels && whitelabels.length === 1) {
-                        resetUrl =
-                            `${protocol}${whitelabels[0] || config.host}${port}/set-password?email=${encodedEmail}`;
-                    }
-                    // Some users may be part of different white labels. In these cases, we cannot provide an
-                    // URL for them to set the password, so we invite them to visit their user profile.
-
-                    let errorMsg = 'To use the CLI you will need to set a password. ';
-                    errorMsg +=
-                        resetUrl ?
-                        `Go to ${resetUrl} to set one.` :
-                        'Go to your user profile settings in Studio to set one.';
-
-                    throw new Error(
-                        errorMsg,
-                    );
-                }
-
-                const password = <{ password: string }>await inquirer.prompt({
-                    type: 'password',
-                    name: 'password',
-                    message: `What is your password?`
-                });
-
-                let res: GetJWTResponse;
-                try {
-                    res = (await this._api.login.login({
-                        username: username.username,
-                        password: password.password,
-                    }));
-                }
-                catch (ex2) {
-                    let ex = <Error>ex2;
-                    if ((ex.message || ex.toString()).startsWith('ERR_TOTP_TOKEN IS REQUIRED')) {
-
-                        // For TOTP allow the user to enter another one if it's invalid (so run in a loop)
-                        while (1) {
-                            try {
-                                const totpToken = <{ totpToken: string }>await inquirer.prompt({
-                                    type: 'input',
-                                    name: 'totpToken',
-                                    message: `Enter a code from your authenticator app`
-                                });
-
-                                res = (await this._api.login.login({
-                                    username: username.username,
-                                    password: password.password,
-                                    totpToken: totpToken.totpToken,
-                                }));
-                                break;
-                            }
-                            catch (ex3) {
-                                let totpEx = <Error>ex3;
-                                console.warn('Failed to log in:', totpEx.message || totpEx.toString());
-                            }
-                        }
-                    }
-                    else {
-                        throw ex;
-                    }
-                }
-
-                if (!res!.token) {
-                    throw new Error('Authentication did not return a token');
-                }
-
-                config.jwtToken = res!.token;
+                config.jwtToken = await this.getJWTToken(this._api, config, host);
             }
 
             await this._api.authenticate({
@@ -352,12 +268,7 @@ export class Config {
             });
         }
 
-        if (verifyType === 'project') {
-            await this._api.projects.listProjects();
-        }
-        else {
-            await this._api.organizations.listOrganizations();
-        }
+        await this.verifyAccess(config, verifyType);
 
         // fetch user...
         if (config.jwtToken) {
@@ -566,6 +477,144 @@ export class Config {
             let ex = <Error>ex2;
             throw new Error('Failed to parse config ' + this._filename + ' ' + (ex.message || ex));
         }
+    }
+
+    /**
+     * This'll throw when access failed
+     * @param config
+     * @param verifyType
+     */
+    private async verifyAccess(config: SerialConfig, verifyType: String) {
+        const api = this._api;
+        if (!api) {
+            throw new Error('api is null');
+        }
+
+        if (verifyType === 'project') {
+            try {
+                await api.projects.listProjects();
+            }
+            catch (ex2) {
+                let ex = <Error>ex2;
+
+                if ((ex.message || ex.toString()).indexOf('Invalid API key') > -1) {
+                    await api.organizations.listOrganizations();
+                    throw new Error(`The API key you provided (${(config.apiKey || '').slice(0, 10)}...) ` +
+                        `is an organization API Key. This CLI command requires a project API Key ` +
+                        `(or omit the --api-key argument to log in using a username and password).`);
+                }
+                else {
+                   throw ex;
+                }
+            }
+        }
+        else {
+            try {
+                await api.organizations.listOrganizations();
+            }
+            catch (ex2) {
+                let ex = <Error>ex2;
+
+                if ((ex.message || ex.toString()).indexOf('Invalid API key') > -1) {
+                    await api.projects.listProjects();
+                    throw new Error(`The API key you provided (${(config.apiKey || '').slice(0, 10)}...) ` +
+                        `is a project API Key. This CLI command requires an organization API Key ` +
+                        `(or omit the --api-key argument to log in using a username and password).`);
+                }
+                else {
+                   throw ex;
+                }
+            }
+        }
+    }
+
+    private async getJWTToken(api: EdgeImpulseApi, config: SerialConfig, host: string) : Promise<string> {
+
+        const username = <{ username: string }>await inquirer.prompt({
+            type: 'input',
+            name: 'username',
+            message: `What is your user name or e-mail address (${host})?`
+        });
+
+        const { needPassword, email, whitelabels } =
+            await api.user.getUserNeedToSetPassword(username.username);
+
+        if (needPassword) {
+            const protocol = `http${
+                config.host === 'localhost' ? '' : 's'
+            }://`;
+            const port = `${
+                config.host === 'localhost' ? ':4800' : ''
+            }`;
+            const encodedEmail = encodeURIComponent(`${email}`);
+            let resetUrl;
+            if (whitelabels && whitelabels.length === 1) {
+                resetUrl =
+                    `${protocol}${whitelabels[0] || config.host}${port}/set-password?email=${encodedEmail}`;
+            }
+            // Some users may be part of different white labels. In these cases, we cannot provide an
+            // URL for them to set the password, so we invite them to visit their user profile.
+
+            let errorMsg = 'To use the CLI you will need to set a password. ';
+            errorMsg +=
+                resetUrl ?
+                `Go to ${resetUrl} to set one.` :
+                'Go to your user profile settings in Studio to set one.';
+
+            throw new Error(
+                errorMsg,
+            );
+        }
+
+        const password = <{ password: string }>await inquirer.prompt({
+            type: 'password',
+            name: 'password',
+            message: `What is your password?`
+        });
+
+        let res: GetJWTResponse;
+        try {
+            res = (await api.login.login({
+                username: username.username,
+                password: password.password,
+            }));
+        }
+        catch (ex2) {
+            let ex = <Error>ex2;
+            if ((ex.message || ex.toString()).startsWith('ERR_TOTP_TOKEN IS REQUIRED')) {
+
+                // For TOTP allow the user to enter another one if it's invalid (so run in a loop)
+                while (1) {
+                    try {
+                        const totpToken = <{ totpToken: string }>await inquirer.prompt({
+                            type: 'input',
+                            name: 'totpToken',
+                            message: `Enter a code from your authenticator app`
+                        });
+
+                        res = (await api.login.login({
+                            username: username.username,
+                            password: password.password,
+                            totpToken: totpToken.totpToken,
+                        }));
+                        break;
+                    }
+                    catch (ex3) {
+                        let totpEx = <Error>ex3;
+                        console.warn('Failed to log in:', totpEx.message || totpEx.toString());
+                    }
+                }
+            }
+            else {
+                throw ex;
+            }
+        }
+
+        if (!res!.token) {
+            throw new Error('Authentication did not return a token');
+        }
+
+        return res!.token;
     }
 
     private async store(config: SerialConfig) {

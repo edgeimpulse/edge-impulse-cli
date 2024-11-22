@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { ProfileModelInfoMemoryEon } from './profileModelInfoMemoryEon';
+import { ProfileModelTableMcuMemoryTflite } from './profileModelTableMcuMemoryTflite';
 
 export class ProfileModelTableMcuMemory {
-    'tflite'?: ProfileModelInfoMemoryEon;
-    'eon'?: ProfileModelInfoMemoryEon;
-    'eonRamOptimized'?: ProfileModelInfoMemoryEon;
+    'tflite'?: ProfileModelTableMcuMemoryTflite;
+    'eon'?: ProfileModelTableMcuMemoryTflite;
+    'eonRamOptimized'?: ProfileModelTableMcuMemoryTflite;
 
     static discriminator: string | undefined = undefined;
 
@@ -23,17 +23,17 @@ export class ProfileModelTableMcuMemory {
         {
             "name": "tflite",
             "baseName": "tflite",
-            "type": "ProfileModelInfoMemoryEon"
+            "type": "ProfileModelTableMcuMemoryTflite"
         },
         {
             "name": "eon",
             "baseName": "eon",
-            "type": "ProfileModelInfoMemoryEon"
+            "type": "ProfileModelTableMcuMemoryTflite"
         },
         {
             "name": "eonRamOptimized",
             "baseName": "eonRamOptimized",
-            "type": "ProfileModelInfoMemoryEon"
+            "type": "ProfileModelTableMcuMemoryTflite"
         }    ];
 
     static getAttributeTypeMap() {

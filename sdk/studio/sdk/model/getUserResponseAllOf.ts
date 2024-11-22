@@ -11,6 +11,7 @@
  */
 
 import { EnterpriseTrial } from './enterpriseTrial';
+import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
 import { UserExperiment } from './userExperiment';
@@ -24,6 +25,9 @@ export class GetUserResponseAllOf {
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
     'organizations': Array<UserOrganization>;
+    /**
+    * List of all projects. This returns all projects for the user (regardless of whitelabel)
+    */
     'projects': Array<Project>;
     /**
     * Experiments the user has access to. Enabling experiments can only be done through a JWT token.
@@ -71,6 +75,11 @@ export class GetUserResponseAllOf {
     * Timezone for the user (or undefined if not specified).
     */
     'timezone'?: string;
+    'lastAccessedProjects': GetUserResponseAllOfLastAccessedProjects;
+    /**
+    * Number of private projects created by the current user.
+    */
+    'privatePersonalProjectsUsed': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -159,6 +168,16 @@ export class GetUserResponseAllOf {
             "name": "timezone",
             "baseName": "timezone",
             "type": "string"
+        },
+        {
+            "name": "lastAccessedProjects",
+            "baseName": "lastAccessedProjects",
+            "type": "GetUserResponseAllOfLastAccessedProjects"
+        },
+        {
+            "name": "privatePersonalProjectsUsed",
+            "baseName": "privatePersonalProjectsUsed",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

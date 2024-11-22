@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { DSPGroupItem } from './dSPGroupItem';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 
@@ -48,9 +49,13 @@ export class PublicOrganizationTransformationBlock {
     */
     'showInSyntheticData': boolean;
     /**
-    * Whether to show this block in \'AI Actions\'. Only applies for standalone blocks.
+    * Whether to show this block in \'AI Labeling\'. Only applies for standalone blocks.
     */
     'showInAIActions': boolean;
+    /**
+    * For AI labeling blocks, this lists the data types that the block supports. If this field is empty then there\'s no information about supported data types.
+    */
+    'aiActionsOperatesOn'?: Array<AIActionsOperatesOn>;
 
     static discriminator: string | undefined = undefined;
 
@@ -134,6 +139,11 @@ export class PublicOrganizationTransformationBlock {
             "name": "showInAIActions",
             "baseName": "showInAIActions",
             "type": "boolean"
+        },
+        {
+            "name": "aiActionsOperatesOn",
+            "baseName": "aiActionsOperatesOn",
+            "type": "Array<AIActionsOperatesOn>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -72,10 +72,6 @@ export class ProjectInfoResponse {
     */
     'modelTestingJobNotificationUids': Array<number>;
     /**
-    * The IDs of users who should be notified when an auto segmentation job is finished.
-    */
-    'autoSegmenterJobNotificationUids': Array<number>;
-    /**
     * The IDs of users who should be notified when an export job is finished.
     */
     'exportJobNotificationUids': Array<number>;
@@ -212,11 +208,6 @@ export class ProjectInfoResponse {
         {
             "name": "modelTestingJobNotificationUids",
             "baseName": "modelTestingJobNotificationUids",
-            "type": "Array<number>"
-        },
-        {
-            "name": "autoSegmenterJobNotificationUids",
-            "baseName": "autoSegmenterJobNotificationUids",
             "type": "Array<number>"
         },
         {

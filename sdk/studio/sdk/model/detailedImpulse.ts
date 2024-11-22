@@ -32,6 +32,10 @@ export class DetailedImpulse {
     * Tags associated with this impulse
     */
     'tags': Array<string>;
+    /**
+    * The source EON Tuner trial ID for impulses created from the EON Tuner
+    */
+    'createdFromTunerTrialId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -75,6 +79,11 @@ export class DetailedImpulse {
             "name": "tags",
             "baseName": "tags",
             "type": "Array<string>"
+        },
+        {
+            "name": "createdFromTunerTrialId",
+            "baseName": "createdFromTunerTrialId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

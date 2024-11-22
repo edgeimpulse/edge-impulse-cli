@@ -21,6 +21,10 @@ export class ProjectVersionRequest {
     * Whether to make this version available on a public URL.
     */
     'makePublic': boolean;
+    /**
+    * Whether to run model testing when creating this version (if this value is omitted, it will use the current state of \'runModelTestingWhileVersioning\' that is returned in ListVersionsResponse).
+    */
+    'runModelTestingWhileVersioning'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +42,11 @@ export class ProjectVersionRequest {
         {
             "name": "makePublic",
             "baseName": "makePublic",
+            "type": "boolean"
+        },
+        {
+            "name": "runModelTestingWhileVersioning",
+            "baseName": "runModelTestingWhileVersioning",
             "type": "boolean"
         }    ];
 

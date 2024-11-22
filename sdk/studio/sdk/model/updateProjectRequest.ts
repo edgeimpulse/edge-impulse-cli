@@ -97,10 +97,6 @@ export class UpdateProjectRequest {
     */
     'modelTestingJobNotificationUids'?: Array<number>;
     /**
-    * The IDs of users who should be notified when an auto segmentation job is finished.
-    */
-    'autoSegmenterJobNotificationUids'?: Array<number>;
-    /**
     * The IDs of users who should be notified when an export job is finished.
     */
     'exportJobNotificationUids'?: Array<number>;
@@ -145,6 +141,10 @@ export class UpdateProjectRequest {
     * If enabled, does not round sample length to hours/minutes/seconds, but always displays sample length in milliseconds. E.g. instead of 1m 32s, this\'ll say 92,142ms.
     */
     'showExactSampleLength'?: boolean;
+    /**
+    * If enabled, allows editing bounding box labels directly from the acquisition UI.
+    */
+    'inlineEditBoundingBoxes'?: boolean;
     'defaultProfilingVariant'?: KerasModelVariantEnum;
     /**
     * Set of model variants enabled by default on the model testing and live classification pages.
@@ -291,11 +291,6 @@ export class UpdateProjectRequest {
             "type": "Array<number>"
         },
         {
-            "name": "autoSegmenterJobNotificationUids",
-            "baseName": "autoSegmenterJobNotificationUids",
-            "type": "Array<number>"
-        },
-        {
             "name": "exportJobNotificationUids",
             "baseName": "exportJobNotificationUids",
             "type": "Array<number>"
@@ -353,6 +348,11 @@ export class UpdateProjectRequest {
         {
             "name": "showExactSampleLength",
             "baseName": "showExactSampleLength",
+            "type": "boolean"
+        },
+        {
+            "name": "inlineEditBoundingBoxes",
+            "baseName": "inlineEditBoundingBoxes",
             "type": "boolean"
         },
         {

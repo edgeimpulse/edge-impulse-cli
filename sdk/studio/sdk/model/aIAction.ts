@@ -39,6 +39,10 @@ export class AIAction {
     * After the action runs, add this key/value pair as metadata on the affected samples.
     */
     'setMetadataAfterRunning': Array<DspAutotunerResultsAllOfResults>;
+    /**
+    * If enabled, will load cached results from the previous preview job for unchanged jobs. Disable this if you\'re developing your own custom AI Labeling job, and want to always re-run all steps.
+    */
+    'cacheUnchangedSteps': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +91,11 @@ export class AIAction {
             "name": "setMetadataAfterRunning",
             "baseName": "setMetadataAfterRunning",
             "type": "Array<DspAutotunerResultsAllOfResults>"
+        },
+        {
+            "name": "cacheUnchangedSteps",
+            "baseName": "cacheUnchangedSteps",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

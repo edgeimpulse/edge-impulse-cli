@@ -13,10 +13,11 @@
 
 export class Download {
     'id'?: string;
-    'name'?: string;
-    'type'?: string;
+    'name': string;
+    'type': string;
     'size'?: string;
-    'link'?: string;
+    'link': string;
+    'impulseId'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class Download {
             "name": "link",
             "baseName": "link",
             "type": "string"
+        },
+        {
+            "name": "impulseId",
+            "baseName": "impulseId",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

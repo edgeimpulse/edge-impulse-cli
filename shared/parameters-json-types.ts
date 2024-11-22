@@ -76,6 +76,11 @@ export type DSPParameterItem = {
     section?: 'advanced';
     // Only valid for type "string". If set to true, renders a multi-line text area.
     multiline?: boolean;
+    // If set, shows a hint about the input format below the input. Use this
+    // sparingly, as it clutters the UI.
+    hint?: string;
+    // Sets the placeholder text on the input element (for types "string", "int", "float" and "secret")
+    placeholder?: string;
 };
 
 export type DSPParameterResponse = {

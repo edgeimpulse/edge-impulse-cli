@@ -1,4 +1,4 @@
-import { EdgeImpulseConfig } from "../config";
+import { EdgeImpulseConfig } from '../../cli-common/config';
 import inquirer from 'inquirer';
 import Path from 'path';
 import { guessRepoUrl, pathExists } from "./blocks-helper";
@@ -774,6 +774,34 @@ export class InitCLIBlock {
             }])).description;
         }
 
+        let operatesOn: models.AIActionsOperatesOn[];
+        if (params?.info?.operatesOn) {
+            operatesOn = params.info.operatesOn;
+        }
+        else {
+            let choicesMap: { [k in models.AIActionsOperatesOn ]: string } = {
+                images_object_detection: 'Images (object detection)',
+                images_single_label: 'Images (single label per image)',
+                audio: 'Audio',
+                other: 'Other data',
+            };
+
+            operatesOn = <models.AIActionsOperatesOn[]>(await inquirer.prompt([{
+                type: 'checkbox',
+                name: 'operatesOn',
+                choices: Object.keys(choicesMap).map(k => {
+                    return {
+                        name: (<{ [ k: string ]: string }>choicesMap)[k],
+                        value: k,
+                    };
+                }),
+                message: 'What data does this block operate on (can select multiple)?',
+            }])).operatesOn;
+        }
+        if (operatesOn.length === 0) {
+            operatesOn = [];
+        }
+
         if (!params) {
             params = {
                 version: 1,
@@ -782,6 +810,7 @@ export class InitCLIBlock {
                     name: blockName,
                     description: blockDescription,
                     requiredEnvVariables: undefined,
+                    operatesOn: operatesOn,
                 },
                 parameters: [],
             };
@@ -789,6 +818,7 @@ export class InitCLIBlock {
         else {
             params.info.name = blockName;
             params.info.description = blockDescription;
+            params.info.operatesOn = operatesOn;
         }
 
         await this._blockConfigManager.saveParameters(params);

@@ -10,27 +10,25 @@
  * Do not edit the class manually.
  */
 
+import { ListPublicProjectTypesProjectTypes } from './listPublicProjectTypesProjectTypes';
 
-export class ProfileModelInfoMemoryEon {
-    'ram': number;
-    'rom': number;
+export class ListPublicProjectTypes {
+    /**
+    * Array with project types
+    */
+    'projectTypes': Array<ListPublicProjectTypesProjectTypes>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ram",
-            "baseName": "ram",
-            "type": "number"
-        },
-        {
-            "name": "rom",
-            "baseName": "rom",
-            "type": "number"
+            "name": "projectTypes",
+            "baseName": "projectTypes",
+            "type": "Array<ListPublicProjectTypesProjectTypes>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProfileModelInfoMemoryEon.attributeTypeMap;
+        return ListPublicProjectTypes.attributeTypeMap;
     }
 }
 

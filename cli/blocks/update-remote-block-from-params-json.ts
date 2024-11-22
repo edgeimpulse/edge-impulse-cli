@@ -4,7 +4,7 @@ import { AIActionBlockParametersJson, DeployBlockParametersJson, DSPBlockParamet
     MachineLearningBlockParametersJson, SyntheticDataBlockParametersJson,
     TransformBlockParametersJson } from "./parameter-types";
 import * as models from  '../../sdk/studio/sdk/model/models';
-import { EdgeImpulseConfig } from "../config";
+import { EdgeImpulseConfig } from '../../cli-common/config';
 import { updateOrganizationDeployBlockFormParams } from "../../sdk/studio/sdk/api";
 
 // Here's some crazy TypeScript magic to turn e.g.
@@ -93,7 +93,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'repositoryUrl' |
             'showInSyntheticData' |
             'showInAIActions' |
-            'environmentVariables'
+            'environmentVariables' |
+            'aiActionsOperatesOn'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             operatesOn: { oldVal: remoteBlock.operatesOn, newVal: params.info.operatesOn },
@@ -172,7 +173,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'showInDataSources' |
             'showInCreateTransformationJob' |
             'showInAIActions' |
-            'environmentVariables'
+            'environmentVariables' |
+            'aiActionsOperatesOn'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             showInSyntheticData: { oldVal: remoteBlock.showInSyntheticData, newVal: true },
@@ -241,6 +243,7 @@ export class UpdateRemoteBlockFromParamsJson {
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             showInAIActions: { oldVal: remoteBlock.showInAIActions, newVal: true },
+            aiActionsOperatesOn: { oldVal: remoteBlock.aiActionsOperatesOn, newVal: params.info.operatesOn },
         };
         return <{ [k: string]: { oldVal: any, newVal: any } }>diffCheck;
     }

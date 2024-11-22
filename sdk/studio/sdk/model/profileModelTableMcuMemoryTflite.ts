@@ -11,38 +11,26 @@
  */
 
 
-export class RunAutoLabelerRequest {
-    'simThreshold': number;
-    'minObjectSizePx': number;
-    'maxObjectSizePx'?: number;
-    'whichItemsToInclude': string;
+export class ProfileModelTableMcuMemoryTflite {
+    'ram': number;
+    'rom': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "simThreshold",
-            "baseName": "simThreshold",
+            "name": "ram",
+            "baseName": "ram",
             "type": "number"
         },
         {
-            "name": "minObjectSizePx",
-            "baseName": "minObjectSizePx",
+            "name": "rom",
+            "baseName": "rom",
             "type": "number"
-        },
-        {
-            "name": "maxObjectSizePx",
-            "baseName": "maxObjectSizePx",
-            "type": "number"
-        },
-        {
-            "name": "whichItemsToInclude",
-            "baseName": "whichItemsToInclude",
-            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return RunAutoLabelerRequest.attributeTypeMap;
+        return ProfileModelTableMcuMemoryTflite.attributeTypeMap;
     }
 }
 

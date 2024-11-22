@@ -53,6 +53,15 @@ export function verifyBoundingBoxes(boundingBoxes: ExportInputBoundingBox[]) {
         if (typeof b.height !== 'number') {
             throw new Error('height is not a number in ' + JSON.stringify(b));
         }
+        if (b.width <= 0) {
+            throw new Error('width should be >0 in ' + JSON.stringify(b));
+        }
+        if (b.height <= 0) {
+            throw new Error('height should be >0 in ' + JSON.stringify(b));
+        }
+        // we post this from the UI, we should not save it in the DB
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        delete (<any>b).addedByHand;
     }
 }
 

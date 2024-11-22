@@ -30,10 +30,9 @@ import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
+import { StartJobResponse } from '../model/startJobResponse';
 import { GetAIActionsProposedChangesResponse } from '../model/getAIActionsProposedChangesResponse';
 import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
-import { GetAutoLabelerResponse } from '../model/getAutoLabelerResponse';
-import { GetAutoLabelerSegmentInfoResponse } from '../model/getAutoLabelerSegmentInfoResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
 import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
@@ -49,16 +48,12 @@ import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetection
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
-import { RunAutoLabelerRequest } from '../model/runAutoLabelerRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
-import { SaveAutoLabelerClustersRequest } from '../model/saveAutoLabelerClustersRequest';
-import { SaveAutoLabelerClustersResponse } from '../model/saveAutoLabelerClustersResponse';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
 import { SetSampleProposedChangesRequest } from '../model/setSampleProposedChangesRequest';
 import { SetSampleStructuredLabelsRequest } from '../model/setSampleStructuredLabelsRequest';
 import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
-import { StartJobResponse } from '../model/startJobResponse';
 import { StoreSegmentLengthRequest } from '../model/storeSegmentLengthRequest';
 import { TrackObjectsRequest } from '../model/trackObjectsRequest';
 import { TrackObjectsResponse } from '../model/trackObjectsResponse';
@@ -218,14 +213,11 @@ type getAllImportedFromQueryParams = {
     offset?: number,
 };
 
-type getAutoLabelerImageQueryParams = {
-    image: string,
-};
-
 type getSampleQueryParams = {
     limitPayloadValues?: number,
     cacheKey?: string,
     impulseId?: number,
+    proposedActionsJobId?: number,
 };
 
 type getSampleAsAudioQueryParams = {
@@ -278,6 +270,7 @@ type listSamplesQueryParams = {
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     search?: string,
+    proposedActionsJobId?: number,
 };
 
 export type uploadDataExplorerScreenshotFormParams = {
@@ -366,7 +359,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/add-metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -483,12 +476,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<StartJobResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -675,7 +668,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata-by-key'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -792,12 +785,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<StartJobResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -817,7 +810,7 @@ export class RawDataApi {
     }
 
     /**
-     * Deletes samples. Note that this does not delete the data from cold storage.
+     * Deletes samples. Note that this does not delete the data from cold storage. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Remove multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -833,7 +826,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -942,12 +935,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -967,7 +960,7 @@ export class RawDataApi {
     }
 
     /**
-     * Disables samples, ensuring that they are excluded from the dataset.
+     * Disables samples, ensuring that they are excluded from the dataset. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Disable multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -983,7 +976,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1092,12 +1085,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1117,7 +1110,7 @@ export class RawDataApi {
     }
 
     /**
-     * Sets the label (also known as class) of multiple samples.
+     * Sets the label (also known as class) of multiple samples. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Edit labels for multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -1134,7 +1127,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1251,12 +1244,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1276,7 +1269,7 @@ export class RawDataApi {
     }
 
     /**
-     * Enables samples, ensuring that they are not excluded from the dataset.
+     * Enables samples, ensuring that they are not excluded from the dataset. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Enable multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -1292,7 +1285,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1401,12 +1394,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -1426,7 +1419,7 @@ export class RawDataApi {
     }
 
     /**
-     * Move multiple samples to another category (e.g. from test to training).
+     * Move multiple samples to another category (e.g. from test to training). Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Move multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -1443,7 +1436,7 @@ export class RawDataApi {
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
      * @param search Search query
      */
-    public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -1560,12 +1553,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 
@@ -2931,276 +2924,6 @@ export class RawDataApi {
     }
 
     /**
-     * Retrieve the results of the auto-labeler (after running `StartJobResponse`)
-     * @summary Get auto-labeler results
-     * @param projectId Project ID
-     */
-    public async getAutoLabeler (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoLabelerResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabeler.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GetAutoLabelerResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GetAutoLabelerResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Grab a segment image from the auto-labeler
-     * @summary Get auto-labeler image
-     * @param projectId Project ID
-     * @param image Which image to receive from the auto-labeler
-     */
-    public async getAutoLabelerImage (projectId: number, queryParams: getAutoLabelerImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/image'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/octet-stream'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabelerImage.');
-        }
-
-        // verify required parameter 'image' is not null or undefined
-
-        if (queryParams.image === null || queryParams.image === undefined) {
-            throw new Error('Required parameter queryParams.image was null or undefined when calling getAutoLabelerImage.');
-        }
-
-
-        if (queryParams?.image !== undefined) {
-            localVarQueryParameters['image'] = ObjectSerializer.serialize(queryParams.image, "string");
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            encoding: null,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<Buffer>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "Buffer");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Get info from a specific segment in an image. Pass in both sampleId and segmentId in the URL.
-     * @summary View auto-labeler segment info
-     * @param projectId Project ID
-     * @param sampleId Sample ID
-     */
-    public async getAutoLabelerSegmentInfo (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAutoLabelerSegmentInfoResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/samples/{sampleId}/segments'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getAutoLabelerSegmentInfo.');
-        }
-
-        // verify required parameter 'sampleId' is not null or undefined
-
-
-        if (sampleId === null || sampleId === undefined) {
-            throw new Error('Required parameter sampleId was null or undefined when calling getAutoLabelerSegmentInfo.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<GetAutoLabelerSegmentInfoResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "GetAutoLabelerSegmentInfoResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * t-SNE2 output of the raw dataset
      * @summary Get data explorer features
      * @param projectId Project ID
@@ -3789,6 +3512,7 @@ export class RawDataApi {
      * @param limitPayloadValues Limit the number of payload values in the response
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
      */
     public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
@@ -3831,6 +3555,10 @@ export class RawDataApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.proposedActionsJobId !== undefined) {
+            localVarQueryParameters['proposedActionsJobId'] = ObjectSerializer.serialize(queryParams.proposedActionsJobId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4900,6 +4628,7 @@ export class RawDataApi {
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param search Search query
+     * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
      */
     public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
@@ -4981,6 +4710,10 @@ export class RawDataApi {
 
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        if (queryParams?.proposedActionsJobId !== undefined) {
+            localVarQueryParameters['proposedActionsJobId'] = ObjectSerializer.serialize(queryParams.proposedActionsJobId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -5489,190 +5222,6 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Run the auto-labeler over all unlabeled data.
-     * @summary Run auto-labeler job
-     * @param projectId Project ID
-     * @param runAutoLabelerRequest 
-     */
-    public async runAutoLabeler (projectId: number, runAutoLabelerRequest: RunAutoLabelerRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/run'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling runAutoLabeler.');
-        }
-
-        // verify required parameter 'runAutoLabelerRequest' is not null or undefined
-
-
-        if (runAutoLabelerRequest === null || runAutoLabelerRequest === undefined) {
-            throw new Error('Required parameter runAutoLabelerRequest was null or undefined when calling runAutoLabeler.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(runAutoLabelerRequest, "RunAutoLabelerRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<StartJobResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
-
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Set labels for all auto-segment clusters.
-     * @summary Save auto-labeler clusters
-     * @param projectId Project ID
-     * @param saveAutoLabelerClustersRequest 
-     */
-    public async saveAutoLabelerClusters (projectId: number, saveAutoLabelerClustersRequest: SaveAutoLabelerClustersRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SaveAutoLabelerClustersResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/raw-data/auto-labeler/save'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling saveAutoLabelerClusters.');
-        }
-
-        // verify required parameter 'saveAutoLabelerClustersRequest' is not null or undefined
-
-
-        if (saveAutoLabelerClustersRequest === null || saveAutoLabelerClustersRequest === undefined) {
-            throw new Error('Required parameter saveAutoLabelerClustersRequest was null or undefined when calling saveAutoLabelerClusters.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-            body: ObjectSerializer.serialize(saveAutoLabelerClustersRequest, "SaveAutoLabelerClustersRequest")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<SaveAutoLabelerClustersResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "SaveAutoLabelerClustersResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

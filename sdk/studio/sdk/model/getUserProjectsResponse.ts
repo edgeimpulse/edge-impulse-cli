@@ -10,12 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AutoLabelerSegment } from './autoLabelerSegment';
 import { GenericApiResponse } from './genericApiResponse';
-import { GetAutoLabelerSegmentInfoResponseAllOf } from './getAutoLabelerSegmentInfoResponseAllOf';
-import { Sample } from './sample';
+import { GetUserProjectsResponseAllOf } from './getUserProjectsResponseAllOf';
+import { Project } from './project';
 
-export class GetAutoLabelerSegmentInfoResponse {
+export class GetUserProjectsResponse {
     /**
     * Whether the operation succeeded
     */
@@ -24,9 +23,7 @@ export class GetAutoLabelerSegmentInfoResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'sample': Sample;
-    'imageUrl': string;
-    'segments': Array<AutoLabelerSegment>;
+    'projects': Array<Project>;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,23 +39,13 @@ export class GetAutoLabelerSegmentInfoResponse {
             "type": "string"
         },
         {
-            "name": "sample",
-            "baseName": "sample",
-            "type": "Sample"
-        },
-        {
-            "name": "imageUrl",
-            "baseName": "imageUrl",
-            "type": "string"
-        },
-        {
-            "name": "segments",
-            "baseName": "segments",
-            "type": "Array<AutoLabelerSegment>"
+            "name": "projects",
+            "baseName": "projects",
+            "type": "Array<Project>"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetAutoLabelerSegmentInfoResponse.attributeTypeMap;
+        return GetUserProjectsResponse.attributeTypeMap;
     }
 }
 

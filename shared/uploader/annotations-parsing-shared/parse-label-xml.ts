@@ -44,7 +44,6 @@ export function xmlToJson(xml: XMLDocument) {
 
         // Otherwise we have a node with children; recursively parse it
         let nodeValueParsed: ParsedJSON = { };
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let ix = 0; ix < node.childNodes.length; ix++) {
             const child = node.childNodes[ix];
             const childKey = child.nodeName as string | undefined;

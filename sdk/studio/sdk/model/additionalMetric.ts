@@ -14,6 +14,7 @@
 export class AdditionalMetric {
     'name': string;
     'value': string;
+    'fullPrecisionValue': number;
     'tooltipText'?: string;
     'link'?: string;
 
@@ -29,6 +30,11 @@ export class AdditionalMetric {
             "name": "value",
             "baseName": "value",
             "type": "string"
+        },
+        {
+            "name": "fullPrecisionValue",
+            "baseName": "fullPrecisionValue",
+            "type": "number"
         },
         {
             "name": "tooltipText",

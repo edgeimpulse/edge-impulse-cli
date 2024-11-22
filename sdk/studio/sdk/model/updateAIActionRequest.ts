@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AIActionsConfigStep } from './aIActionsConfigStep';
 import { AIActionsDataCategory } from './aIActionsDataCategory';
 import { DspAutotunerResultsAllOfResults } from './dspAutotunerResultsAllOfResults';
 
@@ -18,14 +19,7 @@ export class UpdateAIActionRequest {
     * User-provided name. If no name is set then displayName on the action will be automatically configured based on the transformation block.
     */
     'name'?: string;
-    /**
-    * The ID of an AI Actions transform block ID (public or private)
-    */
-    'transformationBlockId': number;
-    /**
-    * Parameters for the transformation block. These map back to the parameters in OrganizationTransformationBlock \'parameters\' property.
-    */
-    'parameters': { [key: string]: string; };
+    'steps': Array<AIActionsConfigStep>;
     'dataCategory': AIActionsDataCategory;
     /**
     * Metadata key to filter on. Required if dataCategory is equal to \"dataWithoutMetadataKey\" or \"dataWithMetadata\".
@@ -53,14 +47,9 @@ export class UpdateAIActionRequest {
             "type": "string"
         },
         {
-            "name": "transformationBlockId",
-            "baseName": "transformationBlockId",
-            "type": "number"
-        },
-        {
-            "name": "parameters",
-            "baseName": "parameters",
-            "type": "{ [key: string]: string; }"
+            "name": "steps",
+            "baseName": "steps",
+            "type": "Array<AIActionsConfigStep>"
         },
         {
             "name": "dataCategory",

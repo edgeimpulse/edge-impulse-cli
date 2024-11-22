@@ -4,7 +4,7 @@ import os from "os";
 import tar from "tar";
 import yauzl, { Entry } from "yauzl";
 import { spawn, SpawnOptions } from "child_process";
-import { Config, EdgeImpulseConfig } from "./config";
+import { Config, EdgeImpulseConfig } from "../cli-common/config";
 import inquirer from "inquirer";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
@@ -1833,7 +1833,6 @@ async function extractFiles(
                                     }
 
                                     writeStream.on("finish", () => {
-                                        // @ts-ignore
                                         writeStream.close(() => {
                                             zipFile.readEntry();
                                         });

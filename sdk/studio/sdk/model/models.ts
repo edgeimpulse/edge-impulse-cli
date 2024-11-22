@@ -2,7 +2,9 @@ export * from './aIAction';
 export * from './aIActionLastPreviewState';
 export * from './aIActionLastPreviewStateProposedChanges';
 export * from './aIActionsConfig';
+export * from './aIActionsConfigStep';
 export * from './aIActionsDataCategory';
+export * from './aIActionsOperatesOn';
 export * from './activateUserByThirdPartyActivationCodeRequest';
 export * from './activateUserOrVerifyEmailRequest';
 export * from './addApiKeyRequest';
@@ -117,7 +119,6 @@ export * from './applicationBudget';
 export * from './augmentationPolicyImageEnum';
 export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
-export * from './autoLabelerSegment';
 export * from './autotuneDspRequest';
 export * from './batchAddMetadataRequest';
 export * from './batchClearMetadataByKeyRequest';
@@ -313,6 +314,8 @@ export * from './dspTrainedFeaturesResponseAllOfData';
 export * from './dspTrainedFeaturesResponseAllOfSample';
 export * from './editSampleLabelRequest';
 export * from './emailValidationRequest';
+export * from './enterpriseLimit';
+export * from './enterpriseLimitsIncreaseRequest';
 export * from './enterpriseTrial';
 export * from './enterpriseUpgradeOrTrialExtensionRequest';
 export * from './entitlementLimits';
@@ -360,8 +363,6 @@ export * from './getAutoLabelerResponse';
 export * from './getAutoLabelerResponseAllOf';
 export * from './getAutoLabelerResponseAllOfClusters';
 export * from './getAutoLabelerResponseAllOfItems';
-export * from './getAutoLabelerSegmentInfoResponse';
-export * from './getAutoLabelerSegmentInfoResponseAllOf';
 export * from './getCsvWizardUploadedFileInfo';
 export * from './getCsvWizardUploadedFileInfoAllOf';
 export * from './getDataExplorerFeaturesResponse';
@@ -480,8 +481,12 @@ export * from './getThirdPartyAuthResponse';
 export * from './getThirdPartyAuthResponseAllOf';
 export * from './getUserNeedToSetPasswordResponse';
 export * from './getUserNeedToSetPasswordResponseAllOf';
+export * from './getUserProjectsResponse';
+export * from './getUserProjectsResponseAllOf';
 export * from './getUserResponse';
 export * from './getUserResponseAllOf';
+export * from './getUserResponseAllOfLastAccessedProjects';
+export * from './getUserResponseAllOfLastAccessedProjectsProjects';
 export * from './getUserResponseAllOfWhitelabels';
 export * from './getWhitelabelDomainResponse';
 export * from './getWhitelabelDomainResponseAllOf';
@@ -599,6 +604,9 @@ export * from './listProjects';
 export * from './listProjectsResponse';
 export * from './listPublicOrganizationTransformationBlocksResponse';
 export * from './listPublicOrganizationTransformationBlocksResponseAllOf';
+export * from './listPublicProjectTypes';
+export * from './listPublicProjectTypesProjectTypes';
+export * from './listPublicProjectTypesResponse';
 export * from './listPublicProjects';
 export * from './listPublicProjectsResponse';
 export * from './listPublicVersionsResponse';
@@ -747,11 +755,11 @@ export * from './previewDefaultFilesInFolderResponse';
 export * from './previewDefaultFilesInFolderResponseAllOf';
 export * from './profileModelInfo';
 export * from './profileModelInfoMemory';
-export * from './profileModelInfoMemoryEon';
-export * from './profileModelInfoMemoryTflite';
+export * from './profileModelInfoMemoryDetails';
 export * from './profileModelTable';
 export * from './profileModelTableMcu';
 export * from './profileModelTableMcuMemory';
+export * from './profileModelTableMcuMemoryTflite';
 export * from './profileModelTableMpu';
 export * from './profileTfLiteRequest';
 export * from './profileTfLiteResponse';
@@ -812,17 +820,13 @@ export * from './resetPasswordRequest';
 export * from './resourceRange';
 export * from './restoreProjectFromPublicRequest';
 export * from './restoreProjectRequest';
-export * from './runAutoLabelerRequest';
 export * from './runOrganizationPipelineResponse';
 export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
+export * from './sampleImageDimensions';
 export * from './sampleMetadata';
 export * from './sampleProposedChanges';
-export * from './saveAutoLabelerClustersRequest';
-export * from './saveAutoLabelerClustersRequestClusters';
-export * from './saveAutoLabelerClustersResponse';
-export * from './saveAutoLabelerClustersResponseAllOf';
 export * from './savePretrainedModelRequest';
 export * from './scoreTrialResponse';
 export * from './scoreTrialResponseAllOf';
@@ -994,7 +998,9 @@ import { AIAction } from './aIAction';
 import { AIActionLastPreviewState } from './aIActionLastPreviewState';
 import { AIActionLastPreviewStateProposedChanges } from './aIActionLastPreviewStateProposedChanges';
 import { AIActionsConfig } from './aIActionsConfig';
+import { AIActionsConfigStep } from './aIActionsConfigStep';
 import { AIActionsDataCategory } from './aIActionsDataCategory';
+import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { ActivateUserByThirdPartyActivationCodeRequest } from './activateUserByThirdPartyActivationCodeRequest';
 import { ActivateUserOrVerifyEmailRequest } from './activateUserOrVerifyEmailRequest';
 import { AddApiKeyRequest } from './addApiKeyRequest';
@@ -1109,7 +1115,6 @@ import { ApplicationBudget } from './applicationBudget';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
-import { AutoLabelerSegment } from './autoLabelerSegment';
 import { AutotuneDspRequest } from './autotuneDspRequest';
 import { BatchAddMetadataRequest } from './batchAddMetadataRequest';
 import { BatchClearMetadataByKeyRequest } from './batchClearMetadataByKeyRequest';
@@ -1305,6 +1310,8 @@ import { DspTrainedFeaturesResponseAllOfData } from './dspTrainedFeaturesRespons
 import { DspTrainedFeaturesResponseAllOfSample } from './dspTrainedFeaturesResponseAllOfSample';
 import { EditSampleLabelRequest } from './editSampleLabelRequest';
 import { EmailValidationRequest } from './emailValidationRequest';
+import { EnterpriseLimit } from './enterpriseLimit';
+import { EnterpriseLimitsIncreaseRequest } from './enterpriseLimitsIncreaseRequest';
 import { EnterpriseTrial } from './enterpriseTrial';
 import { EnterpriseUpgradeOrTrialExtensionRequest } from './enterpriseUpgradeOrTrialExtensionRequest';
 import { EntitlementLimits } from './entitlementLimits';
@@ -1352,8 +1359,6 @@ import { GetAutoLabelerResponse } from './getAutoLabelerResponse';
 import { GetAutoLabelerResponseAllOf } from './getAutoLabelerResponseAllOf';
 import { GetAutoLabelerResponseAllOfClusters } from './getAutoLabelerResponseAllOfClusters';
 import { GetAutoLabelerResponseAllOfItems } from './getAutoLabelerResponseAllOfItems';
-import { GetAutoLabelerSegmentInfoResponse } from './getAutoLabelerSegmentInfoResponse';
-import { GetAutoLabelerSegmentInfoResponseAllOf } from './getAutoLabelerSegmentInfoResponseAllOf';
 import { GetCsvWizardUploadedFileInfo } from './getCsvWizardUploadedFileInfo';
 import { GetCsvWizardUploadedFileInfoAllOf } from './getCsvWizardUploadedFileInfoAllOf';
 import { GetDataExplorerFeaturesResponse } from './getDataExplorerFeaturesResponse';
@@ -1472,8 +1477,12 @@ import { GetThirdPartyAuthResponse } from './getThirdPartyAuthResponse';
 import { GetThirdPartyAuthResponseAllOf } from './getThirdPartyAuthResponseAllOf';
 import { GetUserNeedToSetPasswordResponse } from './getUserNeedToSetPasswordResponse';
 import { GetUserNeedToSetPasswordResponseAllOf } from './getUserNeedToSetPasswordResponseAllOf';
+import { GetUserProjectsResponse } from './getUserProjectsResponse';
+import { GetUserProjectsResponseAllOf } from './getUserProjectsResponseAllOf';
 import { GetUserResponse } from './getUserResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
+import { GetUserResponseAllOfLastAccessedProjectsProjects } from './getUserResponseAllOfLastAccessedProjectsProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { GetWhitelabelDomainResponse } from './getWhitelabelDomainResponse';
 import { GetWhitelabelDomainResponseAllOf } from './getWhitelabelDomainResponseAllOf';
@@ -1591,6 +1600,9 @@ import { ListProjects } from './listProjects';
 import { ListProjectsResponse } from './listProjectsResponse';
 import { ListPublicOrganizationTransformationBlocksResponse } from './listPublicOrganizationTransformationBlocksResponse';
 import { ListPublicOrganizationTransformationBlocksResponseAllOf } from './listPublicOrganizationTransformationBlocksResponseAllOf';
+import { ListPublicProjectTypes } from './listPublicProjectTypes';
+import { ListPublicProjectTypesProjectTypes } from './listPublicProjectTypesProjectTypes';
+import { ListPublicProjectTypesResponse } from './listPublicProjectTypesResponse';
 import { ListPublicProjects } from './listPublicProjects';
 import { ListPublicProjectsResponse } from './listPublicProjectsResponse';
 import { ListPublicVersionsResponse } from './listPublicVersionsResponse';
@@ -1739,11 +1751,11 @@ import { PreviewDefaultFilesInFolderResponse } from './previewDefaultFilesInFold
 import { PreviewDefaultFilesInFolderResponseAllOf } from './previewDefaultFilesInFolderResponseAllOf';
 import { ProfileModelInfo } from './profileModelInfo';
 import { ProfileModelInfoMemory } from './profileModelInfoMemory';
-import { ProfileModelInfoMemoryEon } from './profileModelInfoMemoryEon';
-import { ProfileModelInfoMemoryTflite } from './profileModelInfoMemoryTflite';
+import { ProfileModelInfoMemoryDetails } from './profileModelInfoMemoryDetails';
 import { ProfileModelTable } from './profileModelTable';
 import { ProfileModelTableMcu } from './profileModelTableMcu';
 import { ProfileModelTableMcuMemory } from './profileModelTableMcuMemory';
+import { ProfileModelTableMcuMemoryTflite } from './profileModelTableMcuMemoryTflite';
 import { ProfileModelTableMpu } from './profileModelTableMpu';
 import { ProfileTfLiteRequest } from './profileTfLiteRequest';
 import { ProfileTfLiteResponse } from './profileTfLiteResponse';
@@ -1804,17 +1816,13 @@ import { ResetPasswordRequest } from './resetPasswordRequest';
 import { ResourceRange } from './resourceRange';
 import { RestoreProjectFromPublicRequest } from './restoreProjectFromPublicRequest';
 import { RestoreProjectRequest } from './restoreProjectRequest';
-import { RunAutoLabelerRequest } from './runAutoLabelerRequest';
 import { RunOrganizationPipelineResponse } from './runOrganizationPipelineResponse';
 import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineResponseAllOf';
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
+import { SampleImageDimensions } from './sampleImageDimensions';
 import { SampleMetadata } from './sampleMetadata';
 import { SampleProposedChanges } from './sampleProposedChanges';
-import { SaveAutoLabelerClustersRequest } from './saveAutoLabelerClustersRequest';
-import { SaveAutoLabelerClustersRequestClusters } from './saveAutoLabelerClustersRequestClusters';
-import { SaveAutoLabelerClustersResponse } from './saveAutoLabelerClustersResponse';
-import { SaveAutoLabelerClustersResponseAllOf } from './saveAutoLabelerClustersResponseAllOf';
 import { SavePretrainedModelRequest } from './savePretrainedModelRequest';
 import { ScoreTrialResponse } from './scoreTrialResponse';
 import { ScoreTrialResponseAllOf } from './scoreTrialResponseAllOf';
@@ -1994,6 +2002,7 @@ let primitives = [
 
 let enumsMap: {[index: string]: any} = {
     "AIActionsDataCategory": "AIActionsDataCategory",
+    "AIActionsOperatesOn": "AIActionsOperatesOn",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
     "AddOrganizationApiKeyRequestAllOfRoleEnum": "AddOrganizationApiKeyRequestAllOfRoleEnum",
     "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
@@ -2042,6 +2051,7 @@ let enumsMap: {[index: string]: any} = {
     "DeviceRemoteMgmtModeEnum": "DeviceRemoteMgmtModeEnum",
     "DeviceDebugStreamType": "DeviceDebugStreamType",
     "DeviceInferenceInfoModelTypeEnum": "DeviceInferenceInfoModelTypeEnum",
+    "EnterpriseLimit": "EnterpriseLimit",
     "Feature": "Feature",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",
     "FindSyntiantPosteriorRequestDeploymentTargetEnum": "FindSyntiantPosteriorRequestDeploymentTargetEnum",
@@ -2158,6 +2168,7 @@ let typeMap: {[index: string]: any} = {
     "AIActionLastPreviewState": AIActionLastPreviewState,
     "AIActionLastPreviewStateProposedChanges": AIActionLastPreviewStateProposedChanges,
     "AIActionsConfig": AIActionsConfig,
+    "AIActionsConfigStep": AIActionsConfigStep,
     "ActivateUserByThirdPartyActivationCodeRequest": ActivateUserByThirdPartyActivationCodeRequest,
     "ActivateUserOrVerifyEmailRequest": ActivateUserOrVerifyEmailRequest,
     "AddApiKeyRequest": AddApiKeyRequest,
@@ -2270,7 +2281,6 @@ let typeMap: {[index: string]: any} = {
     "ApplicationBudget": ApplicationBudget,
     "AugmentationPolicySpectrogram": AugmentationPolicySpectrogram,
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
-    "AutoLabelerSegment": AutoLabelerSegment,
     "AutotuneDspRequest": AutotuneDspRequest,
     "BatchAddMetadataRequest": BatchAddMetadataRequest,
     "BatchClearMetadataByKeyRequest": BatchClearMetadataByKeyRequest,
@@ -2460,6 +2470,7 @@ let typeMap: {[index: string]: any} = {
     "DspTrainedFeaturesResponseAllOfSample": DspTrainedFeaturesResponseAllOfSample,
     "EditSampleLabelRequest": EditSampleLabelRequest,
     "EmailValidationRequest": EmailValidationRequest,
+    "EnterpriseLimitsIncreaseRequest": EnterpriseLimitsIncreaseRequest,
     "EnterpriseTrial": EnterpriseTrial,
     "EnterpriseUpgradeOrTrialExtensionRequest": EnterpriseUpgradeOrTrialExtensionRequest,
     "EntitlementLimits": EntitlementLimits,
@@ -2506,8 +2517,6 @@ let typeMap: {[index: string]: any} = {
     "GetAutoLabelerResponseAllOf": GetAutoLabelerResponseAllOf,
     "GetAutoLabelerResponseAllOfClusters": GetAutoLabelerResponseAllOfClusters,
     "GetAutoLabelerResponseAllOfItems": GetAutoLabelerResponseAllOfItems,
-    "GetAutoLabelerSegmentInfoResponse": GetAutoLabelerSegmentInfoResponse,
-    "GetAutoLabelerSegmentInfoResponseAllOf": GetAutoLabelerSegmentInfoResponseAllOf,
     "GetCsvWizardUploadedFileInfo": GetCsvWizardUploadedFileInfo,
     "GetCsvWizardUploadedFileInfoAllOf": GetCsvWizardUploadedFileInfoAllOf,
     "GetDataExplorerFeaturesResponse": GetDataExplorerFeaturesResponse,
@@ -2626,8 +2635,12 @@ let typeMap: {[index: string]: any} = {
     "GetThirdPartyAuthResponseAllOf": GetThirdPartyAuthResponseAllOf,
     "GetUserNeedToSetPasswordResponse": GetUserNeedToSetPasswordResponse,
     "GetUserNeedToSetPasswordResponseAllOf": GetUserNeedToSetPasswordResponseAllOf,
+    "GetUserProjectsResponse": GetUserProjectsResponse,
+    "GetUserProjectsResponseAllOf": GetUserProjectsResponseAllOf,
     "GetUserResponse": GetUserResponse,
     "GetUserResponseAllOf": GetUserResponseAllOf,
+    "GetUserResponseAllOfLastAccessedProjects": GetUserResponseAllOfLastAccessedProjects,
+    "GetUserResponseAllOfLastAccessedProjectsProjects": GetUserResponseAllOfLastAccessedProjectsProjects,
     "GetUserResponseAllOfWhitelabels": GetUserResponseAllOfWhitelabels,
     "GetWhitelabelDomainResponse": GetWhitelabelDomainResponse,
     "GetWhitelabelDomainResponseAllOf": GetWhitelabelDomainResponseAllOf,
@@ -2737,6 +2750,9 @@ let typeMap: {[index: string]: any} = {
     "ListProjectsResponse": ListProjectsResponse,
     "ListPublicOrganizationTransformationBlocksResponse": ListPublicOrganizationTransformationBlocksResponse,
     "ListPublicOrganizationTransformationBlocksResponseAllOf": ListPublicOrganizationTransformationBlocksResponseAllOf,
+    "ListPublicProjectTypes": ListPublicProjectTypes,
+    "ListPublicProjectTypesProjectTypes": ListPublicProjectTypesProjectTypes,
+    "ListPublicProjectTypesResponse": ListPublicProjectTypesResponse,
     "ListPublicProjects": ListPublicProjects,
     "ListPublicProjectsResponse": ListPublicProjectsResponse,
     "ListPublicVersionsResponse": ListPublicVersionsResponse,
@@ -2878,11 +2894,11 @@ let typeMap: {[index: string]: any} = {
     "PreviewDefaultFilesInFolderResponseAllOf": PreviewDefaultFilesInFolderResponseAllOf,
     "ProfileModelInfo": ProfileModelInfo,
     "ProfileModelInfoMemory": ProfileModelInfoMemory,
-    "ProfileModelInfoMemoryEon": ProfileModelInfoMemoryEon,
-    "ProfileModelInfoMemoryTflite": ProfileModelInfoMemoryTflite,
+    "ProfileModelInfoMemoryDetails": ProfileModelInfoMemoryDetails,
     "ProfileModelTable": ProfileModelTable,
     "ProfileModelTableMcu": ProfileModelTableMcu,
     "ProfileModelTableMcuMemory": ProfileModelTableMcuMemory,
+    "ProfileModelTableMcuMemoryTflite": ProfileModelTableMcuMemoryTflite,
     "ProfileModelTableMpu": ProfileModelTableMpu,
     "ProfileTfLiteRequest": ProfileTfLiteRequest,
     "ProfileTfLiteResponse": ProfileTfLiteResponse,
@@ -2939,17 +2955,13 @@ let typeMap: {[index: string]: any} = {
     "ResourceRange": ResourceRange,
     "RestoreProjectFromPublicRequest": RestoreProjectFromPublicRequest,
     "RestoreProjectRequest": RestoreProjectRequest,
-    "RunAutoLabelerRequest": RunAutoLabelerRequest,
     "RunOrganizationPipelineResponse": RunOrganizationPipelineResponse,
     "RunOrganizationPipelineResponseAllOf": RunOrganizationPipelineResponseAllOf,
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
+    "SampleImageDimensions": SampleImageDimensions,
     "SampleMetadata": SampleMetadata,
     "SampleProposedChanges": SampleProposedChanges,
-    "SaveAutoLabelerClustersRequest": SaveAutoLabelerClustersRequest,
-    "SaveAutoLabelerClustersRequestClusters": SaveAutoLabelerClustersRequestClusters,
-    "SaveAutoLabelerClustersResponse": SaveAutoLabelerClustersResponse,
-    "SaveAutoLabelerClustersResponseAllOf": SaveAutoLabelerClustersResponseAllOf,
     "SavePretrainedModelRequest": SavePretrainedModelRequest,
     "ScoreTrialResponse": ScoreTrialResponse,
     "ScoreTrialResponseAllOf": ScoreTrialResponseAllOf,

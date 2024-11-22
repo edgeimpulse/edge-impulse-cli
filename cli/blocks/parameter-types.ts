@@ -57,6 +57,7 @@ export type AIActionBlockParametersJson = {
         name: string,
         description: string,
         requiredEnvVariables: string[] | undefined;
+        operatesOn: models.AIActionsOperatesOn[] | undefined;
     },
     parameters: DSPParameterItem[];
 };

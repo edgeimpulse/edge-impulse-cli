@@ -14,6 +14,7 @@ import { SampleProposedChanges } from './sampleProposedChanges';
 
 export class AIActionLastPreviewStateProposedChanges {
     'sampleId': number;
+    'step': number;
     'proposedChanges': SampleProposedChanges;
 
     static discriminator: string | undefined = undefined;
@@ -22,6 +23,11 @@ export class AIActionLastPreviewStateProposedChanges {
         {
             "name": "sampleId",
             "baseName": "sampleId",
+            "type": "number"
+        },
+        {
+            "name": "step",
+            "baseName": "step",
             "type": "number"
         },
         {

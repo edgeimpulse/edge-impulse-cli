@@ -11,7 +11,8 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "@stylistic"
+        "@stylistic",
+        "mocha"
     ],
     "rules": {
         "no-restricted-globals": [
@@ -182,7 +183,6 @@
         "@typescript-eslint/prefer-as-const": "off",
         "no-useless-constructor": "off",
         "@typescript-eslint/no-useless-constructor": "error",
-        "eslint-plugin-unicorn/no-useless-spread": "off",
         "@stylistic/array-bracket-spacing": ["error", "always", { "objectsInArrays": false }],
         "@stylistic/arrow-parens": ["off", "always"],
         "@stylistic/brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
@@ -251,6 +251,14 @@
         "@stylistic/type-named-tuple-spacing": ["error"],
         "use-isnan": "error",
         "valid-typeof": "off",
-        "no-useless-escape": "off"
+        "no-useless-escape": "off",
+        "mocha/no-setup-in-describe": "off",
+        "mocha/no-async-describe": "off",
+        "mocha/no-exclusive-tests": "error",
+        "mocha/no-skipped-tests": "error",
+        "mocha/no-identical-title": "off",
+        "mocha/no-mocha-arrows": "off",
+        "mocha/consistent-spacing-between-blocks": "off",
+        "mocha/no-exports": "off"
     }
 }

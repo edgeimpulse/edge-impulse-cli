@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AIActionsConfigStep } from './aIActionsConfigStep';
 import { AIActionsDataCategory } from './aIActionsDataCategory';
 
 export class AIActionsConfig {
@@ -22,14 +23,7 @@ export class AIActionsConfig {
     * Metadata value to filter on. Required if dataCategory is equal to \"dataWithMetadata\".
     */
     'dataMetadataValue'?: string;
-    /**
-    * The selected transformation block ID.
-    */
-    'lastUsedTransformationBlockId'?: number;
-    /**
-    * Parameters for the transformation block. These map back to the parameters in OrganizationTransformationBlock \'parameters\' property.
-    */
-    'lastUsedParameters'?: { [key: string]: string; };
+    'steps': Array<AIActionsConfigStep>;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,14 +44,9 @@ export class AIActionsConfig {
             "type": "string"
         },
         {
-            "name": "lastUsedTransformationBlockId",
-            "baseName": "lastUsedTransformationBlockId",
-            "type": "number"
-        },
-        {
-            "name": "lastUsedParameters",
-            "baseName": "lastUsedParameters",
-            "type": "{ [key: string]: string; }"
+            "name": "steps",
+            "baseName": "steps",
+            "type": "Array<AIActionsConfigStep>"
         }    ];
 
     static getAttributeTypeMap() {

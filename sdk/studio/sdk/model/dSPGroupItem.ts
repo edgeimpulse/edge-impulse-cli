@@ -34,6 +34,14 @@ export class DSPGroupItem {
     */
     'multiline'?: boolean;
     'required': boolean;
+    /**
+    * If set, shows a hint below the input.
+    */
+    'hint'?: string;
+    /**
+    * Sets the placeholder text on the input element (for types \"string\", \"int\", \"float\" and \"secret\")
+    */
+    'placeholder'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -107,6 +115,16 @@ export class DSPGroupItem {
             "name": "required",
             "baseName": "required",
             "type": "boolean"
+        },
+        {
+            "name": "hint",
+            "baseName": "hint",
+            "type": "string"
+        },
+        {
+            "name": "placeholder",
+            "baseName": "placeholder",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

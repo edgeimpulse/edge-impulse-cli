@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { EnvironmentVariable } from './environmentVariable';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
@@ -56,10 +57,14 @@ export class UpdateOrganizationTransformationBlockRequest {
     */
     'showInSyntheticData'?: boolean;
     /**
-    * Whether to show this block in \'AI Actions\'. Only applies for standalone blocks.
+    * Whether to show this block in \'AI Labeling\'. Only applies for standalone blocks.
     */
     'showInAIActions'?: boolean;
     'environmentVariables'?: Array<EnvironmentVariable>;
+    /**
+    * For AI labeling blocks, this lists the data types that the block supports. If this field is empty then there\'s no information about supported data types.
+    */
+    'aiActionsOperatesOn'?: Array<AIActionsOperatesOn>;
 
     static discriminator: string | undefined = undefined;
 
@@ -168,6 +173,11 @@ export class UpdateOrganizationTransformationBlockRequest {
             "name": "environmentVariables",
             "baseName": "environmentVariables",
             "type": "Array<EnvironmentVariable>"
+        },
+        {
+            "name": "aiActionsOperatesOn",
+            "baseName": "aiActionsOperatesOn",
+            "type": "Array<AIActionsOperatesOn>"
         }    ];
 
     static getAttributeTypeMap() {

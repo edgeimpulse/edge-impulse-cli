@@ -20,6 +20,10 @@ export class ListVersionsResponseAllOf {
     * If you have any custom learn blocks (e.g. blocks you pushed through Bring Your Own Model), then these are listed here. We use these to show a warning in the UI that these blocks will also be available in a public version.
     */
     'customLearnBlocks': Array<ListVersionsResponseAllOfCustomLearnBlocks>;
+    /**
+    * Whether the \'Run model testing while versioning\' checkbox should be enabled.
+    */
+    'runModelTestingWhileVersioning': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +42,11 @@ export class ListVersionsResponseAllOf {
             "name": "customLearnBlocks",
             "baseName": "customLearnBlocks",
             "type": "Array<ListVersionsResponseAllOfCustomLearnBlocks>"
+        },
+        {
+            "name": "runModelTestingWhileVersioning",
+            "baseName": "runModelTestingWhileVersioning",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,6 +11,7 @@
  */
 
 import { BoundingBox } from './boundingBox';
+import { SampleImageDimensions } from './sampleImageDimensions';
 import { Sensor } from './sensor';
 import { StructuredLabel } from './structuredLabel';
 
@@ -127,6 +128,7 @@ export class Sample {
     * If this sample was created by a synthetic data job, it\'s referenced here.
     */
     'createdBySyntheticDataJobId'?: number;
+    'imageDimensions'?: SampleImageDimensions;
 
     static discriminator: string | undefined = undefined;
 
@@ -330,6 +332,11 @@ export class Sample {
             "name": "createdBySyntheticDataJobId",
             "baseName": "createdBySyntheticDataJobId",
             "type": "number"
+        },
+        {
+            "name": "imageDimensions",
+            "baseName": "imageDimensions",
+            "type": "SampleImageDimensions"
         }    ];
 
     static getAttributeTypeMap() {

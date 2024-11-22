@@ -2,9 +2,9 @@
 ./sdk/
 *.ts
 *.sh
-./tsconfig.json
-./.eslintrc.json
-./.eslintignore
-./README-internal.md
-./*.tgz
-./out/
+tsconfig.json
+.eslintrc.json
+.eslintignore
+README-internal.md
+*.tgz
+out/

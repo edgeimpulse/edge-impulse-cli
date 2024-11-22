@@ -776,7 +776,6 @@ export default class EiSerialProtocol {
                     this._serial.off('data', onData);
                 }
 
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises
                 await this._serial.write(Buffer.from('b\r', 'ascii'));
 
                 if (useMaxBaudRate) {

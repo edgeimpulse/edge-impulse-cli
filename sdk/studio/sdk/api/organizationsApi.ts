@@ -47,6 +47,7 @@ import { CreateProjectResponse } from '../model/createProjectResponse';
 import { DevelopmentBoardCreatedResponse } from '../model/developmentBoardCreatedResponse';
 import { DevelopmentBoardRequest } from '../model/developmentBoardRequest';
 import { DevelopmentBoardRequestUpdate } from '../model/developmentBoardRequestUpdate';
+import { EnterpriseLimitsIncreaseRequest } from '../model/enterpriseLimitsIncreaseRequest';
 import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDataExportResponse } from '../model/getOrganizationDataExportResponse';
@@ -1526,6 +1527,98 @@ export class OrganizationsApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Request an increase in the limits for this organization. Available limits are: users, projects, compute, storage.
+     * @summary Request organization limits increase
+     * @param organizationId Organization ID
+     * @param enterpriseLimitsIncreaseRequest 
+     */
+    public async requestEnterpriseLimitsIncrease (organizationId: number, enterpriseLimitsIncreaseRequest: EnterpriseLimitsIncreaseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/limits-request'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling requestEnterpriseLimitsIncrease.');
+        }
+
+        // verify required parameter 'enterpriseLimitsIncreaseRequest' is not null or undefined
+
+
+        if (enterpriseLimitsIncreaseRequest === null || enterpriseLimitsIncreaseRequest === undefined) {
+            throw new Error('Required parameter enterpriseLimitsIncreaseRequest was null or undefined when calling requestEnterpriseLimitsIncrease.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(enterpriseLimitsIncreaseRequest, "EnterpriseLimitsIncreaseRequest")
         };
 
         let authenticationPromise = Promise.resolve();

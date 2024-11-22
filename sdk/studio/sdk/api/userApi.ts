@@ -36,6 +36,7 @@ import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpg
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetJWTResponse } from '../model/getJWTResponse';
 import { GetUserNeedToSetPasswordResponse } from '../model/getUserNeedToSetPasswordResponse';
+import { GetUserProjectsResponse } from '../model/getUserProjectsResponse';
 import { GetUserResponse } from '../model/getUserResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListEnterpriseTrialsResponse } from '../model/listEnterpriseTrialsResponse';
@@ -74,6 +75,10 @@ export enum UserApiApiKeys {
     JWTAuthentication,
     JWTHttpHeaderAuthentication,
 }
+
+type getCurrentUserQueryParams = {
+    excludeProjects?: boolean,
+};
 
 export type uploadPhotoCurrentUserFormParams = {
     photo: RequestFile,
@@ -1362,9 +1367,88 @@ export class UserApi {
     /**
      * Get information about the current user. This function is only available through a JWT token.
      * @summary Get current user
+     * @param excludeProjects If set to \&quot;true\&quot;, the \&quot;projects\&quot; field is left empty (will be faster if you call this function a lot). Use &#x60;getCurrentUserProjects&#x60; to get the project list in a separate call.
      */
-    public async getCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
+    public async getCurrentUser (queryParams?: getCurrentUserQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/user';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        if (queryParams?.excludeProjects !== undefined) {
+            localVarQueryParameters['excludeProjects'] = ObjectSerializer.serialize(queryParams.excludeProjects, "boolean");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetUserResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetUserResponse");
+
+                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get projects for the current user. This returns all projects regardless of whitelabel. This function is only available through a JWT token.
+     * @summary Get current user projects
+     */
+    public async getCurrentUserProjects (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserProjectsResponse> {
+        const localVarPath = this.basePath + '/api/user/projects';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
             'User-Agent': 'edgeimpulse-api nodejs'
@@ -1409,12 +1493,12 @@ export class UserApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GetUserResponse>((resolve, reject) => {
+            return new Promise<GetUserProjectsResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GetUserResponse");
+                        body = ObjectSerializer.deserialize(body, "GetUserProjectsResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

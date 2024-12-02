@@ -10,29 +10,35 @@ export type JsonSchemaConstraint = {
     value: { [k: string]: JsonSchemaConstraint };
     required?: boolean;
     allowAllKeys?: boolean;
+    validationFn?: (o: object) => SchemaValidationOutputOmitScope;
 } | {
     type: 'object';
     isMap: true;
     values: JsonSchemaConstraint;
     required?: boolean;
+    validationFn?: (o: object) => SchemaValidationOutputOmitScope;
 } | {
     type: 'array';
     values: JsonSchemaConstraint | ((o: object) => JsonSchemaConstraint);
     required?: boolean;
     minLength?: number;
     maxLength?: number;
+    validationFn?: (o: any[]) => SchemaValidationOutputOmitScope;
 } | {
     type: 'number';
     valid?: number[];
     required?: boolean;
+    validationFn?: (o: number) => SchemaValidationOutputOmitScope;
 } | {
     type: 'string';
     valid?: string[];
     required?: boolean;
+    validationFn?: (o: string) => SchemaValidationOutputOmitScope;
 } | {
     type: 'boolean';
     valid?: boolean[];
     required?: boolean[];
+    validationFn?: (o: boolean) => SchemaValidationOutputOmitScope;
 } | {
     type: 'any';
     required?: boolean;
@@ -46,6 +52,13 @@ type SchemaValidationOutput = {
     valid: false;
     reason: string;
     scope: (string | number)[];
+} | {
+    valid: true;
+};
+
+type SchemaValidationOutputOmitScope = {
+    valid: false;
+    reason: string;
 } | {
     valid: true;
 };
@@ -165,6 +178,14 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                     }
                 }
             }
+
+            // Check custom validation function
+            if (constraint.validationFn) {
+                const validationRes = constraint.validationFn(rootObj);
+                if (!validationRes.valid) {
+                    return { ...validationRes, scope };
+                }
+            }
         }
         else if (constraint.type === 'object' && constraint.isMap) {
             // Like an 'object', only the keys can be any string, we just enforce types of values
@@ -178,6 +199,13 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                 }
             }
 
+            // Check custom validation function
+            if (constraint.validationFn) {
+                const validationRes = constraint.validationFn(rootObj);
+                if (!validationRes.valid) {
+                    return { ...validationRes, scope };
+                }
+            }
         }
         else if (constraint.type === 'array') {
             // Validate array has correct types for each entry
@@ -212,6 +240,14 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                     break;
                 }
             }
+
+            // Check custom validation function
+            if (constraint.validationFn) {
+                const validationRes = constraint.validationFn(rootArr);
+                if (!validationRes.valid) {
+                    return { ...validationRes, scope };
+                }
+            }
         }
         else {
             // Primitive type
@@ -224,6 +260,23 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                         reason: `Invalid value. Expected value in: ${JSON.stringify(constraint.valid)}, got: ${JSON.stringify(io)}`,
                         scope: scope
                     };
+                }
+            }
+
+            // Check custom validation function
+            if (constraint.validationFn) {
+                let validationRes: SchemaValidationOutputOmitScope | undefined;
+                if (constraint.type === 'string') {
+                    validationRes = constraint.validationFn(io as unknown as string);
+                }
+                else if (constraint.type === 'boolean') {
+                    validationRes = constraint.validationFn(io as unknown as boolean);
+                }
+                else if (constraint.type === 'number') {
+                    validationRes = constraint.validationFn(io as unknown as number);
+                }
+                if (validationRes && !validationRes.valid) {
+                    return { ...validationRes, scope };
                 }
             }
         }

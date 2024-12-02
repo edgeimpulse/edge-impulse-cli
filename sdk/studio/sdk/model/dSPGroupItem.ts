@@ -133,5 +133,5 @@ export class DSPGroupItem {
 }
 
 
-export type DSPGroupItemSectionEnum = 'advanced' | 'augmentation';
-export const DSPGroupItemSectionEnumValues: string[] = ['advanced', 'augmentation'];
+export type DSPGroupItemSectionEnum = 'advanced' | 'augmentation' | 'modelProfiling';
+export const DSPGroupItemSectionEnumValues: string[] = ['advanced', 'augmentation', 'modelProfiling'];

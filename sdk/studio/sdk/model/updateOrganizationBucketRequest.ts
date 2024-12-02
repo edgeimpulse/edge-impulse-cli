@@ -33,9 +33,13 @@ export class UpdateOrganizationBucketRequest {
     */
     'region'?: string;
     /**
-    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket.
+    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket. 
     */
     'checkConnectivityPrefix'?: string;
+    /**
+    * The name of the storage account for Azure Blob Storage
+    */
+    'storageAccountName'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -68,6 +72,11 @@ export class UpdateOrganizationBucketRequest {
         {
             "name": "checkConnectivityPrefix",
             "baseName": "checkConnectivityPrefix",
+            "type": "string"
+        },
+        {
+            "name": "storageAccountName",
+            "baseName": "storageAccountName",
             "type": "string"
         }    ];
 

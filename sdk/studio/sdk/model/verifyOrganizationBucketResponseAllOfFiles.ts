@@ -12,8 +12,17 @@
 
 
 export class VerifyOrganizationBucketResponseAllOfFiles {
+    /**
+    * The name of the file.
+    */
     'name': string;
+    /**
+    * The size of the file in bytes.
+    */
     'size': number;
+    /**
+    * The name of the folder containing the file.
+    */
     'folderName': string;
 
     static discriminator: string | undefined = undefined;

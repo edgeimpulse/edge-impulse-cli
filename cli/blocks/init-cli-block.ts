@@ -835,7 +835,7 @@ export class InitCLIBlock {
 
         let existingBlocks = (
             await api.organizationBlocks.listOrganizationTransformationBlocks(organizationId)).transformationBlocks
-                .filter(x => !x.showInDataSources);
+                .filter(x => !x.showInAIActions && !x.showInSyntheticData);
 
         let createOrUpdateInqRes = await this.createOrUpdate(existingBlocks);
 

@@ -14,6 +14,9 @@ import { GenericApiResponse } from './genericApiResponse';
 import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucketResponseAllOf';
 import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 
+/**
+* Response object for verifying an organization\'s bucket connectivity.  Workflow: 1. The client initiates verification by sending a GET request to /api/organizations/{organizationId}/buckets/verify with bucket and credential details. 2. The server responds with this VerifyOrganizationBucketResponse object. 3. The client checks the connectionStatus:    - If \"connected\": Verification is complete. Other properties (files, hasInfoLabelsFile, signedUrl) are available.    - If \"connecting\": Verification is in progress. The client should continue polling. Other properties are not yet available.    - If \"error\": Verification failed. Check connectionError for details. Other properties are not available. 4. If connectionStatus is \"connecting\", the client should periodically poll the endpoint until the status changes to \"connected\" or \"error\". 
+*/
 export class VerifyOrganizationBucketResponse {
     /**
     * Whether the operation succeeded
@@ -24,17 +27,33 @@ export class VerifyOrganizationBucketResponse {
     */
     'error'?: string;
     /**
-    * 20 random files from the bucket.
+    * Indicates the current state of the connectivity verification process. - \"connected\": Verification successful, other properties are available. - \"connecting\": Verification in progress, continue polling. - \"error\": Verification failed, check connectionError for details. 
     */
-    'files': Array<VerifyOrganizationBucketResponseAllOfFiles>;
+    'connectionStatus': VerifyOrganizationBucketResponseConnectionStatusEnum;
     /**
-    * Indicates whether there are any info.labels files in this bucket. If so, those are used for category/labels.
+    * Provides additional details if connectionStatus is \"error\". Helps diagnose verification failures. 
     */
-    'hasInfoLabelsFile': boolean;
+    'connectionError'?: string | null;
     /**
-    * A signed URL that allows you to PUT an item, to check whether CORS headers are set up correctly for this bucket.
+    * Timestamp of when the connectionStatus last changed. 
     */
-    'signedUrl': string;
+    'connectionStatusSince'?: Date | null;
+    /**
+    * Random files from the bucket. Only available when connectionStatus is \"connected\".
+    */
+    'files'?: Array<VerifyOrganizationBucketResponseAllOfFiles>;
+    /**
+    * Indicates whether there are any info.labels files in this bucket. If so, those are used for category/labels. Only available when connectionStatus is \"connected\". 
+    */
+    'hasInfoLabelsFile'?: boolean;
+    /**
+    * A signed URL that allows you to PUT an item, to check whether CORS headers are set up correctly for this bucket. Only available when connectionStatus is \"connected\". 
+    */
+    'signedUrl'?: string;
+    /**
+    * An alternative endpoint URL. Only returned and required for Azure storage accounts, where the endpoint must be reformatted. This field will be undefined for other storage providers. 
+    */
+    'endpoint'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,6 +69,21 @@ export class VerifyOrganizationBucketResponse {
             "type": "string"
         },
         {
+            "name": "connectionStatus",
+            "baseName": "connectionStatus",
+            "type": "VerifyOrganizationBucketResponseConnectionStatusEnum"
+        },
+        {
+            "name": "connectionError",
+            "baseName": "connectionError",
+            "type": "string"
+        },
+        {
+            "name": "connectionStatusSince",
+            "baseName": "connectionStatusSince",
+            "type": "Date"
+        },
+        {
             "name": "files",
             "baseName": "files",
             "type": "Array<VerifyOrganizationBucketResponseAllOfFiles>"
@@ -63,6 +97,11 @@ export class VerifyOrganizationBucketResponse {
             "name": "signedUrl",
             "baseName": "signedUrl",
             "type": "string"
+        },
+        {
+            "name": "endpoint",
+            "baseName": "endpoint",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
@@ -70,3 +109,6 @@ export class VerifyOrganizationBucketResponse {
     }
 }
 
+
+export type VerifyOrganizationBucketResponseConnectionStatusEnum = 'connected' | 'connecting' | 'error';
+export const VerifyOrganizationBucketResponseConnectionStatusEnumValues: string[] = ['connected', 'connecting', 'error'];

@@ -73,7 +73,7 @@ export type DSPParameterItem = {
     // you can use configType to override the type (used during deployment only)
     configType?: string;
     // (Optional) UX section to show parameter in.
-    section?: 'advanced';
+    section?: 'advanced' | 'modelProfiling';
     // Only valid for type "string". If set to true, renders a multi-line text area.
     multiline?: boolean;
     // If set, shows a hint about the input format below the input. Use this

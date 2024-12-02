@@ -10,23 +10,24 @@
  * Do not edit the class manually.
  */
 
+import { StorageProvider } from './storageProvider';
 
 export class OrganizationBucket {
     'id': number;
     /**
-    * S3 access key
+    * Access key for the storage service
     */
     'accessKey': string;
     /**
-    * S3 endpoint
+    * Endpoint URL for the storage service
     */
     'endpoint': string;
     /**
-    * S3 bucket
+    * Name of the storage bucket
     */
     'bucket': string;
     /**
-    * S3 region
+    * Region of the storage service (if applicable)
     */
     'region': string;
     /**
@@ -34,9 +35,14 @@ export class OrganizationBucket {
     */
     'connected': boolean;
     /**
-    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket.
+    * Optional prefix used for connectivity verification when root bucket access is restricted. 
     */
     'checkConnectivityPrefix'?: string;
+    'storageProvider': StorageProvider;
+    /**
+    * The name of the storage account for Azure Blob Storage
+    */
+    'storageAccountName'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,6 +80,16 @@ export class OrganizationBucket {
         {
             "name": "checkConnectivityPrefix",
             "baseName": "checkConnectivityPrefix",
+            "type": "string"
+        },
+        {
+            "name": "storageProvider",
+            "baseName": "storageProvider",
+            "type": "StorageProvider"
+        },
+        {
+            "name": "storageAccountName",
+            "baseName": "storageAccountName",
             "type": "string"
         }    ];
 

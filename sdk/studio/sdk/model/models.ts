@@ -872,6 +872,7 @@ export * from './startSamplingResponse';
 export * from './startSamplingResponseAllOf';
 export * from './startTrainingRequestAnomaly';
 export * from './stopDeviceDebugStreamRequest';
+export * from './storageProvider';
 export * from './storeSegmentLengthRequest';
 export * from './structuredClassifyResult';
 export * from './structuredLabel';
@@ -1868,6 +1869,7 @@ import { StartSamplingResponse } from './startSamplingResponse';
 import { StartSamplingResponseAllOf } from './startSamplingResponseAllOf';
 import { StartTrainingRequestAnomaly } from './startTrainingRequestAnomaly';
 import { StopDeviceDebugStreamRequest } from './stopDeviceDebugStreamRequest';
+import { StorageProvider } from './storageProvider';
 import { StoreSegmentLengthRequest } from './storeSegmentLengthRequest';
 import { StructuredClassifyResult } from './structuredClassifyResult';
 import { StructuredLabel } from './structuredLabel';
@@ -2143,6 +2145,7 @@ let enumsMap: {[index: string]: any} = {
     "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum": "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum",
     "StartPostProcessingRequestDatasetEnum": "StartPostProcessingRequestDatasetEnum",
     "StartSamplingRequestCategoryEnum": "StartSamplingRequestCategoryEnum",
+    "StorageProvider": "StorageProvider",
     "TargetConstraintsSelectedTargetBasedOnEnum": "TargetConstraintsSelectedTargetBasedOnEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
     "TransformationJobOperatesOnEnum": "TransformationJobOperatesOnEnum",
@@ -2161,6 +2164,8 @@ let enumsMap: {[index: string]: any} = {
     "UserTierEnum": "UserTierEnum",
     "ValidateEmailResponseVerdictEnum": "ValidateEmailResponseVerdictEnum",
     "ValidateEmailResponseAllOfVerdictEnum": "ValidateEmailResponseAllOfVerdictEnum",
+    "VerifyOrganizationBucketResponseConnectionStatusEnum": "VerifyOrganizationBucketResponseConnectionStatusEnum",
+    "VerifyOrganizationBucketResponseAllOfConnectionStatusEnum": "VerifyOrganizationBucketResponseAllOfConnectionStatusEnum",
 }
 
 let typeMap: {[index: string]: any} = {

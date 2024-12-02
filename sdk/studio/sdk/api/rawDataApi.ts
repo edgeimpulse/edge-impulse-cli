@@ -5838,13 +5838,13 @@ export class RawDataApi {
     }
 
     /**
-     * Split a video sample into individual frames.
+     * Split a video sample into individual frames. Depending on the length of the video sample this will either execute immediately or return the ID of a job that will perform this action. 
      * @summary Split sample into frames
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param splitSampleInFramesRequest 
      */
-    public async splitSampleInFrames (projectId: number, sampleId: number, splitSampleInFramesRequest: SplitSampleInFramesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async splitSampleInFrames (projectId: number, sampleId: number, splitSampleInFramesRequest: SplitSampleInFramesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/split'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -5914,12 +5914,12 @@ export class RawDataApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
 

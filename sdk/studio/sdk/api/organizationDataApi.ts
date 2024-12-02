@@ -3452,7 +3452,7 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Updates storage bucket details. This only updates fields that were set in the request body.
+     * Updates storage bucket details. This only updates fields that were set in the request body. Before updating the bucket details, it is required to verify the connection using the POST /api/organizations/{organizationId}/buckets/verify endpoint.  The verification process: 1. Call the verify endpoint with the new bucket details. 2. Poll the verify endpoint until it responds with `connectionStatus: connected`. 3. If the endpoint responds with `connectionStatus: error`, the verification has failed.  Only proceed with updating the bucket details after receiving a `connected` status. The polling interval and timeout should be determined based on your application\'s requirements. 
      * @summary Update storage bucket
      * @param organizationId Organization ID
      * @param bucketId Bucket ID
@@ -3948,7 +3948,7 @@ export class OrganizationDataApi {
     }
 
     /**
-     * Verify whether we can reach a bucket before adding it.
+     * Verify connectivity to a storage bucket and optionally list its contents. This endpoint allows you to: 1. Check if the provided bucket credentials are valid and the bucket is accessible. 2. Optionally list files in the bucket up to a specified limit. 3. Validate the bucket configuration before adding it to the organization.  The request can include details such as the bucket name, region, credentials, and listing options. The response provides information about the bucket\'s accessibility and, if requested, a list of files in the bucket.  Important note on verification process: - For S3-compatible storage backends: Verification is expected to be immediate. - For Azure buckets: Verification takes longer. Users are required to poll this endpoint until the connectionStatus changes from \'connecting\' to \'connected\'.  When dealing with Azure buckets, implement a polling mechanism to check the status periodically until it\'s confirmed as connected. 
      * @summary Verify bucket connectivity
      * @param organizationId Organization ID
      * @param verifyOrganizationBucketRequest 

@@ -21,7 +21,15 @@ export class OrganizationTransferLearningBlockCustomVariant {
     * Custom variant display name
     */
     'name': string;
-    'modelFiles': Array<OrganizationTransferLearningBlockModelFile>;
+    /**
+    * The entrypoint command to run custom inferencing for this model variant, via the learn block container
+    */
+    'inferencingEntrypoint': string;
+    /**
+    * The entrypoint command to run custom profiling for this model variant, via the learn block container
+    */
+    'profilingEntrypoint'?: string;
+    'modelFiles'?: Array<OrganizationTransferLearningBlockModelFile>;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,6 +42,16 @@ export class OrganizationTransferLearningBlockCustomVariant {
         {
             "name": "name",
             "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "inferencingEntrypoint",
+            "baseName": "inferencingEntrypoint",
+            "type": "string"
+        },
+        {
+            "name": "profilingEntrypoint",
+            "baseName": "profilingEntrypoint",
             "type": "string"
         },
         {

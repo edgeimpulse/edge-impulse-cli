@@ -10,36 +10,47 @@
  * Do not edit the class manually.
  */
 
+import { StorageProvider } from './storageProvider';
 
 export class VerifyOrganizationBucketRequest {
+    'storageProvider'?: StorageProvider;
     /**
-    * S3 access key
+    * Access key for the storage service: - For S3 and GCS: Use the access key. - For Azure: Use the Storage Account Name. 
     */
     'accessKey': string;
     /**
-    * S3 secret key
+    * Secret key for the storage service: - For S3 and GCS: Use the secret key. - For Azure: Use the Storage Account Access Key. Note: You should either pass a `secretKey` value or a `bucketId` value. 
     */
-    'secretKey': string;
+    'secretKey'?: string;
     /**
-    * S3 bucket
+    * ID of an existing bucket. If provided, the credentials from this bucket will be used unless overridden by the `secretKey` property. 
+    */
+    'bucketId'?: number;
+    /**
+    * Name of the storage bucket or container.
     */
     'bucket': string;
     /**
-    * S3 endpoint
+    * Endpoint URL for the storage service. For S3-compatible services, Azure, or custom endpoints. 
     */
     'endpoint': string;
     /**
-    * S3 region
+    * Optional region of the storage service (if applicable).
     */
-    'region': string;
+    'region'?: string;
     /**
-    * Optional prefix in the bucket. Set this if you don\'t have access to the full bucket for example.
+    * Optional prefix within the bucket. Set this if you don\'t have access to the full bucket or want to limit the scope. 
     */
     'prefix'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "storageProvider",
+            "baseName": "storageProvider",
+            "type": "StorageProvider"
+        },
         {
             "name": "accessKey",
             "baseName": "accessKey",
@@ -49,6 +60,11 @@ export class VerifyOrganizationBucketRequest {
             "name": "secretKey",
             "baseName": "secretKey",
             "type": "string"
+        },
+        {
+            "name": "bucketId",
+            "baseName": "bucketId",
+            "type": "number"
         },
         {
             "name": "bucket",

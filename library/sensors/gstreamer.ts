@@ -25,11 +25,13 @@ type GStreamerDevice = {
     inCapMode: boolean,
     id: string,
     caps: GStreamerCap[],
+    videoSource: string,
 };
 
 export type GStreamerMode = 'default' | 'rpi' | 'microchip';
 
 const CUSTOM_GST_LAUNCH_COMMAND = 'custom-gst-launch-command';
+const DEFAULT_GST_VIDEO_SOURCE = 'v4l2src';
 
 export class GStreamer extends EventEmitter<{
     snapshot: (buffer: Buffer, filename: string) => void,
@@ -91,7 +93,6 @@ export class GStreamer extends EventEmitter<{
         }
 
         if (osRelease &&
-            // bullseye or bookworm
             ((osRelease.indexOf('bullseye') > -1)
                 || (osRelease.indexOf('bookworm') > -1))) {
 
@@ -319,6 +320,7 @@ export class GStreamer extends EventEmitter<{
         id: string,
         name: string,
         caps: GStreamerCap[],
+        videoSource: string
     }, dimensions: { width: number, height: number }) {
 
         if (device.id === CUSTOM_GST_LAUNCH_COMMAND) {
@@ -367,7 +369,7 @@ export class GStreamer extends EventEmitter<{
             };
         }
 
-        let videoSource = [ 'v4l2src', 'device=' + device.id ];
+        let videoSource = [ device.videoSource, 'device=' + device.id ];
 
         if ((this._mode === 'rpi') || (this._mode === 'microchip')) {
             // Rpi camera
@@ -377,14 +379,7 @@ export class GStreamer extends EventEmitter<{
                 videoSource = [ 'libcamerasrc' ];
                 const hasPlugin = await this.hasGstPlugin('libcamerasrc');
                 if (!hasPlugin) {
-                    throw new Error('Missing "libcamerasrc" gstreamer plugin. Install via `sudo apt install -y gstreamer1.0-libcamera`');
-                }
-            }
-            else {
-                const hasPlugin = await this.hasGstPlugin('uvch264src');
-                // fallback to `v4l2src' if plugin doesn't exist.
-                if (hasPlugin) {
-                    videoSource = [ 'uvch264src', 'device=' + device.id ];
+                    throw new Error('Missing "libcamerasrc" gstreamer element. Install via `sudo apt install -y gstreamer1.0-libcamera`');
                 }
             }
         }
@@ -395,7 +390,7 @@ export class GStreamer extends EventEmitter<{
 
         let invokeProcess: 'spawn' | 'exec';
         let args: string[];
-        if (cap.type === 'video/x-raw') {
+        if ((cap.type === 'video/x-raw') || (cap.type === 'pylonsrc')) {
 
             if (this._mode === 'rpi' && device.name.indexOf('arducam') > -1) {
                 videoSource = videoSource.concat([
@@ -425,20 +420,6 @@ export class GStreamer extends EventEmitter<{
             args = videoSource.concat([
                 `!`,
                 `image/jpeg,width=${cap.width},height=${cap.height}`,
-                `!`,
-                `multifilesink`,
-                `location=test%05d.jpg`
-            ]);
-            invokeProcess = 'spawn';
-        }
-        else if (cap.type === 'pylonsrc') {
-            args = videoSource.concat([
-                `!`,
-                `video/x-raw,width=${cap.width},height=${cap.height}`,
-                `!`,
-                `videoconvert`,
-                `!`,
-                `jpegenc`,
                 `!`,
                 `multifilesink`,
                 `location=test%05d.jpg`
@@ -514,7 +495,8 @@ export class GStreamer extends EventEmitter<{
     async getAllDevices(): Promise<{
         id: string,
         name: string,
-        caps: GStreamerCap[]
+        caps: GStreamerCap[],
+        videoSource: string
     }[]> {
         if (this._customLaunchCommand) {
             let width = 640;
@@ -538,6 +520,7 @@ export class GStreamer extends EventEmitter<{
                     width: width,
                     height: height,
                 }],
+                videoSource: DEFAULT_GST_VIDEO_SOURCE,
             }];
         }
 
@@ -579,6 +562,7 @@ export class GStreamer extends EventEmitter<{
                     rawCaps: [],
                     inCapMode: false,
                     id: '',
+                    videoSource: DEFAULT_GST_VIDEO_SOURCE,
                     caps: []
                 };
                 continue;
@@ -613,6 +597,20 @@ export class GStreamer extends EventEmitter<{
 
             if(l.startsWith('api.v4l2.path =') && currDevice.id === '') {
                 currDevice.id = l.split('=')[1].trim();
+            }
+
+            if (l.startsWith('gst-launch-1.0 ')) {
+                const videoSource = l.split(' ')[1].trim();
+                if (videoSource !== '...') {
+
+                    // Can be in the form a.b,
+                    // e.g uvch264src.vfsrc
+                    currDevice.videoSource = videoSource.split('.')[0].trim();
+
+                    if (currDevice.videoSource === 'pipewiresrc') {
+                        currDevice.videoSource = DEFAULT_GST_VIDEO_SOURCE;
+                    }
+                }
             }
         }
 
@@ -703,11 +701,12 @@ export class GStreamer extends EventEmitter<{
                 id: d.id,
                 name: name,
                 caps: d.caps,
+                videoSource: d.videoSource,
             };
         });
 
         // deduplicate (by id)
-        mapped = mapped.reduce((curr: { id: string, name: string, caps: GStreamerCap[] }[], m) => {
+        mapped = mapped.reduce((curr: { id: string, name: string, caps: GStreamerCap[], videoSource: string}[], m) => {
             if (curr.find(x => x.id === m.id)) return curr;
             curr.push(m);
             return curr;
@@ -823,6 +822,7 @@ export class GStreamer extends EventEmitter<{
                 inCapMode: false,
                 name: 'CSI camera',
                 rawCaps: [],
+                videoSource: 'nvarguscamerasrc',
             };
             return [ d ];
         }
@@ -832,17 +832,8 @@ export class GStreamer extends EventEmitter<{
     }
 
     private async listPylonsrcDevices(): Promise<GStreamerDevice[]> {
-        let hasPlugin: boolean;
-        try {
-            hasPlugin = (await this._spawnHelper('gst-inspect-1.0', [])).indexOf('pylonsrc') > -1;
-        }
-        catch (ex) {
-            if (this._verbose) {
-                console.log(PREFIX, 'Error invoking gst-inspect-1.0:', ex);
-            }
-            hasPlugin = false;
-        }
 
+        const hasPlugin: boolean = await this.hasGstPlugin('pylonsrc');
         if (!hasPlugin) {
             return [];
         }
@@ -1039,6 +1030,7 @@ export class GStreamer extends EventEmitter<{
                 inCapMode: false,
                 name: 'Basler camera',
                 rawCaps: [],
+                videoSource: 'pylonsrc',
             };
             return [ d ];
         }

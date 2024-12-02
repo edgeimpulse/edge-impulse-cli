@@ -10,32 +10,34 @@
  * Do not edit the class manually.
  */
 
+import { StorageProvider } from './storageProvider';
 
 export class AddOrganizationBucketRequest {
     /**
-    * S3 access key
+    * Access key for the storage service (e.g., S3 access key, GCS access key)
     */
     'accessKey': string;
     /**
-    * S3 secret key
+    * Secret key for the storage service (e.g., S3 secret key, GCS secret key)
     */
     'secretKey': string;
     /**
-    * S3 endpoint
+    * Endpoint URL for the storage service (e.g., S3 endpoint, custom endpoint for other services) 
     */
     'endpoint': string;
     /**
-    * S3 bucket
+    * Name of the storage bucket
     */
     'bucket': string;
     /**
-    * S3 region
+    * Region of the storage service (if applicable)
     */
     'region': string;
     /**
-    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket.
+    * Set this if you don\'t have access to the root of this bucket. Only used to verify connectivity to this bucket. 
     */
     'checkConnectivityPrefix'?: string;
+    'storageProvider'?: StorageProvider;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +71,11 @@ export class AddOrganizationBucketRequest {
             "name": "checkConnectivityPrefix",
             "baseName": "checkConnectivityPrefix",
             "type": "string"
+        },
+        {
+            "name": "storageProvider",
+            "baseName": "storageProvider",
+            "type": "StorageProvider"
         }    ];
 
     static getAttributeTypeMap() {

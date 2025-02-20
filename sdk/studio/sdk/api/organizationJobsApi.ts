@@ -223,15 +223,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -325,15 +325,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "string");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -417,15 +417,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -519,15 +519,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "LogStdoutResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -602,15 +602,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "SocketTokenResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -690,15 +690,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListJobsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -813,15 +813,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListJobsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -921,15 +921,15 @@ export class OrganizationJobsApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListJobsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }

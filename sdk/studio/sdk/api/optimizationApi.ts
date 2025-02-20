@@ -205,15 +205,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -306,15 +306,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -389,15 +389,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -490,15 +490,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -573,15 +573,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "AllLearnBlocksResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -656,15 +656,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeConfigResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -763,15 +763,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeDSPParametersResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -846,15 +846,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeSpaceResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -929,15 +929,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeStateResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1012,15 +1012,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeTransferLearningModelsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1104,15 +1104,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "LogStdoutResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1196,15 +1196,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "OptimizeStateResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1279,15 +1279,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "WindowSettingsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1362,15 +1362,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListTunerRunsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1454,15 +1454,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ScoreTrialResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1546,15 +1546,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1647,15 +1647,15 @@ export class OptimizationApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }

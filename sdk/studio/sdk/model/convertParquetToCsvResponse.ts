@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { ConvertParquetToCsvResponseAllOf } from './convertParquetToCsvResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class AddOrganizationDeployBlockResponse {
+export class ConvertParquetToCsvResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +22,7 @@ export class AddOrganizationDeployBlockResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'id': number;
+    'csvFile': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +38,13 @@ export class AddOrganizationDeployBlockResponse {
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "csvFile",
+            "baseName": "csvFile",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationDeployBlockResponse.attributeTypeMap;
+        return ConvertParquetToCsvResponse.attributeTypeMap;
     }
 }
 

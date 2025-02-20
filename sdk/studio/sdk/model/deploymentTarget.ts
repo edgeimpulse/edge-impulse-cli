@@ -12,6 +12,7 @@
 
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
+import { DeploymentTargetVariant } from './deploymentTargetVariant';
 
 export class DeploymentTarget {
     'name': string;
@@ -48,6 +49,10 @@ export class DeploymentTarget {
     * Preferably use supportedEngines / preferredEngine
     */
     'hasMemryx': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasStAton': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
@@ -59,6 +64,7 @@ export class DeploymentTarget {
     'url'?: string;
     'docsUrl': string;
     'firmwareRepoUrl'?: string;
+    'modelVariants': Array<DeploymentTargetVariant>;
 
     static discriminator: string | undefined = undefined;
 
@@ -129,6 +135,11 @@ export class DeploymentTarget {
             "type": "boolean"
         },
         {
+            "name": "hasStAton",
+            "baseName": "hasStAton",
+            "type": "boolean"
+        },
+        {
             "name": "hideOptimizations",
             "baseName": "hideOptimizations",
             "type": "boolean"
@@ -182,6 +193,11 @@ export class DeploymentTarget {
             "name": "firmwareRepoUrl",
             "baseName": "firmwareRepoUrl",
             "type": "string"
+        },
+        {
+            "name": "modelVariants",
+            "baseName": "modelVariants",
+            "type": "Array<DeploymentTargetVariant>"
         }    ];
 
     static getAttributeTypeMap() {

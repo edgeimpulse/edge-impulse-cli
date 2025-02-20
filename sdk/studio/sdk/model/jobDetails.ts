@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { Job } from './job';
-import { JobCreatedByUser } from './jobCreatedByUser';
 import { JobDetailsAllOf } from './jobDetailsAllOf';
 import { JobState } from './jobState';
 
@@ -53,7 +53,7 @@ export class JobDetails {
     * Job duration time in seconds from start to finished, measured by k8s job watcher.
     */
     'computeTime'?: number;
-    'createdByUser'?: JobCreatedByUser;
+    'createdByUser'?: CreatedUpdatedByUser;
     /**
     * Some job categories keep a counter on the job number, e.g. in synthetic data, so we know what the 1st, 2nd etc. job was in the UI.
     */
@@ -127,7 +127,7 @@ export class JobDetails {
         {
             "name": "createdByUser",
             "baseName": "createdByUser",
-            "type": "JobCreatedByUser"
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "categoryCount",

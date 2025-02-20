@@ -36,6 +36,10 @@ export class ConvertUserRequest {
     * Whether the user accepted the privacy policy
     */
     'privacyPolicy': boolean;
+    /**
+    * CloudFlare Turnstile response token
+    */
+    'turnstileResponse': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +73,11 @@ export class ConvertUserRequest {
             "name": "privacyPolicy",
             "baseName": "privacyPolicy",
             "type": "boolean"
+        },
+        {
+            "name": "turnstileResponse",
+            "baseName": "turnstileResponse",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -19,9 +19,9 @@ export class AddOrganizationApiKeyRequest {
     */
     'name': string;
     /**
-    * API key. This needs to start with `ei_` and will need to be at least 32 characters long.
+    * Optional: API key. This needs to start with `ei_` and will need to be at least 32 characters long. If this field is not passed in, a new API key is generated for you.
     */
-    'apiKey': string;
+    'apiKey'?: string;
     'role': AddOrganizationApiKeyRequestRoleEnum;
 
     static discriminator: string | undefined = undefined;

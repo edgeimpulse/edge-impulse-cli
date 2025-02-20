@@ -11,26 +11,26 @@
  */
 
 
-export class DspRunResponseAllOfPerformance {
-    'latency': number;
-    'ram': number;
+export class GetUserResponseAllOfLastAcceptedTermsOfService {
+    'version': string;
+    'acceptanceDate': Date;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "latency",
-            "baseName": "latency",
-            "type": "number"
+            "name": "version",
+            "baseName": "version",
+            "type": "string"
         },
         {
-            "name": "ram",
-            "baseName": "ram",
-            "type": "number"
+            "name": "acceptanceDate",
+            "baseName": "acceptanceDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
-        return DspRunResponseAllOfPerformance.attributeTypeMap;
+        return GetUserResponseAllOfLastAcceptedTermsOfService.attributeTypeMap;
     }
 }
 

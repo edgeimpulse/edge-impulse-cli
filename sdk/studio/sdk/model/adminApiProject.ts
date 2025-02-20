@@ -31,6 +31,7 @@ export class AdminApiProject {
     'whitelabelId'?: number | null;
     'tier'?: ProjectTierEnum;
     'category'?: ProjectType;
+    'deletedDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -89,6 +90,11 @@ export class AdminApiProject {
             "name": "category",
             "baseName": "category",
             "type": "ProjectType"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

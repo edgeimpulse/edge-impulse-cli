@@ -59,6 +59,10 @@ export class Project {
     */
     'whitelabelId': number | null;
     /**
+    * Name of the white label this project belongs to, if any.
+    */
+    'whitelabelName'?: string;
+    /**
     * List of project tags
     */
     'tags'?: Array<string>;
@@ -88,6 +92,9 @@ export class Project {
     * If the project allows public access, whether to list it the public projects overview response. If not listed, the project is still accessible via direct link. If the project does not allow public access, this field has no effect. 
     */
     'publicProjectListed': boolean;
+    'deletedDate'?: Date;
+    'fullDeletionDate'?: Date;
+    'scheduledFullDeletionDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -193,6 +200,11 @@ export class Project {
             "type": "number"
         },
         {
+            "name": "whitelabelName",
+            "baseName": "whitelabelName",
+            "type": "string"
+        },
+        {
             "name": "tags",
             "baseName": "tags",
             "type": "Array<string>"
@@ -236,6 +248,21 @@ export class Project {
             "name": "publicProjectListed",
             "baseName": "publicProjectListed",
             "type": "boolean"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
+            "type": "Date"
+        },
+        {
+            "name": "fullDeletionDate",
+            "baseName": "fullDeletionDate",
+            "type": "Date"
+        },
+        {
+            "name": "scheduledFullDeletionDate",
+            "baseName": "scheduledFullDeletionDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

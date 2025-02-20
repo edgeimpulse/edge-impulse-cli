@@ -18,7 +18,14 @@ export class GetPretrainedModelResponseAllOfModel {
     'profileInfo'?: GetPretrainedModelResponseAllOfModelProfileInfo;
     'inputs': Array<PretrainedModelTensor>;
     'outputs': Array<PretrainedModelTensor>;
+    /**
+    * If this is set, then we\'re still profiling this model. Subscribe to job updates to see when it\'s done (afterward the metadata will be updated).
+    */
     'profileJobId'?: number;
+    /**
+    * If this is set, then the profiling job failed (get the status by getting the job logs for \'profilingJobId\').
+    */
+    'profileJobFailed'?: boolean;
     'supportsTFLite'?: boolean;
 
     static discriminator: string | undefined = undefined;
@@ -48,6 +55,11 @@ export class GetPretrainedModelResponseAllOfModel {
             "name": "profileJobId",
             "baseName": "profileJobId",
             "type": "number"
+        },
+        {
+            "name": "profileJobFailed",
+            "baseName": "profileJobFailed",
+            "type": "boolean"
         },
         {
             "name": "supportsTFLite",

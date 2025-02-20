@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationSecretResponseAllOf } from './addOrganizationSecretResponseAllOf';
+import { AdminProjectInfoResponseAllOf } from './adminProjectInfoResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { Project } from './project';
 
-export class AddOrganizationSecretResponse {
+export class AdminProjectInfoResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,10 +23,7 @@ export class AddOrganizationSecretResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * Secret ID
-    */
-    'id': number;
+    'project': Project;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,13 +39,13 @@ export class AddOrganizationSecretResponse {
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "project",
+            "baseName": "project",
+            "type": "Project"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationSecretResponse.attributeTypeMap;
+        return AdminProjectInfoResponse.attributeTypeMap;
     }
 }
 

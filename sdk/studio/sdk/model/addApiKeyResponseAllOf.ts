@@ -10,41 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
-import { GenericApiResponse } from './genericApiResponse';
 
-export class AddOrganizationDspBlockResponse {
+export class AddApiKeyResponseAllOf {
     /**
-    * Whether the operation succeeded
+    * ID of the new API key
     */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
     'id': number;
+    /**
+    * New API Key (starts with \"ei_...\") - this\'ll be shared only once.
+    */
+    'apiKey': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
-        {
             "name": "id",
             "baseName": "id",
             "type": "number"
+        },
+        {
+            "name": "apiKey",
+            "baseName": "apiKey",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationDspBlockResponse.attributeTypeMap;
+        return AddApiKeyResponseAllOf.attributeTypeMap;
     }
 }
 

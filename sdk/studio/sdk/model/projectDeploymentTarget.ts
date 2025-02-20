@@ -13,6 +13,7 @@
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
+import { DeploymentTargetVariant } from './deploymentTargetVariant';
 import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
 
 export class ProjectDeploymentTarget {
@@ -50,6 +51,10 @@ export class ProjectDeploymentTarget {
     * Preferably use supportedEngines / preferredEngine
     */
     'hasMemryx': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasStAton': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': ProjectDeploymentTargetUiSectionEnum;
@@ -61,6 +66,7 @@ export class ProjectDeploymentTarget {
     'url'?: string;
     'docsUrl': string;
     'firmwareRepoUrl'?: string;
+    'modelVariants': Array<DeploymentTargetVariant>;
     /**
     * Whether this deployment target is recommended for the project based on connected devices.
     */
@@ -143,6 +149,11 @@ export class ProjectDeploymentTarget {
             "type": "boolean"
         },
         {
+            "name": "hasStAton",
+            "baseName": "hasStAton",
+            "type": "boolean"
+        },
+        {
             "name": "hideOptimizations",
             "baseName": "hideOptimizations",
             "type": "boolean"
@@ -196,6 +207,11 @@ export class ProjectDeploymentTarget {
             "name": "firmwareRepoUrl",
             "baseName": "firmwareRepoUrl",
             "type": "string"
+        },
+        {
+            "name": "modelVariants",
+            "baseName": "modelVariants",
+            "type": "Array<DeploymentTargetVariant>"
         },
         {
             "name": "recommendedForProject",

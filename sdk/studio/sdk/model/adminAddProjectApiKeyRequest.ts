@@ -19,9 +19,9 @@ export class AdminAddProjectApiKeyRequest {
     */
     'name': string;
     /**
-    * API key. This needs to start with `ei_` and will need to be at least 32 characters long.
+    * Optional: API key. This needs to start with `ei_` and will need to be at least 32 characters long. If this field is not passed in, a new API key is generated for you.
     */
-    'apiKey': string;
+    'apiKey'?: string;
     /**
     * Time to live in seconds. If not set, the key will expire in 1 minute.
     */

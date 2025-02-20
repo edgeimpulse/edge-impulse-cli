@@ -10,19 +10,39 @@
  * Do not edit the class manually.
  */
 
+import { KerasCustomMetric } from './kerasCustomMetric';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ProfileModelInfoMemory } from './profileModelInfoMemory';
 
 export class ProfileModelInfo {
+    'variant': KerasModelVariantEnum;
     'device': string;
     'tfliteFileSizeBytes': number;
     'isSupportedOnMcu': boolean;
     'memory'?: ProfileModelInfoMemory;
     'timePerInferenceMs'?: number;
     'mcuSupportError'?: string;
+    /**
+    * Custom, device-specific performance metrics
+    */
+    'customMetrics': Array<KerasCustomMetric>;
+    /**
+    * If false, then no metrics are available for this target
+    */
+    'hasPerformance': boolean;
+    /**
+    * Specific error during profiling (e.g. model not supported)
+    */
+    'profilingError'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "variant",
+            "baseName": "variant",
+            "type": "KerasModelVariantEnum"
+        },
         {
             "name": "device",
             "baseName": "device",
@@ -51,6 +71,21 @@ export class ProfileModelInfo {
         {
             "name": "mcuSupportError",
             "baseName": "mcuSupportError",
+            "type": "string"
+        },
+        {
+            "name": "customMetrics",
+            "baseName": "customMetrics",
+            "type": "Array<KerasCustomMetric>"
+        },
+        {
+            "name": "hasPerformance",
+            "baseName": "hasPerformance",
+            "type": "boolean"
+        },
+        {
+            "name": "profilingError",
+            "baseName": "profilingError",
             "type": "string"
         }    ];
 

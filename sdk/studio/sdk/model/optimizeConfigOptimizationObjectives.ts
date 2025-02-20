@@ -10,41 +10,42 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
-import { GenericApiResponse } from './genericApiResponse';
 
-export class AddOrganizationTransformationBlockResponse {
+export class OptimizeConfigOptimizationObjectives {
     /**
-    * Whether the operation succeeded
+    * Objective to optimize
     */
-    'success': boolean;
+    'objective': string;
     /**
-    * Optional error description (set if \'success\' was false)
+    * Label of the objective
     */
-    'error'?: string;
-    'id': number;
+    'label': string;
+    /**
+    * Weight of the objective
+    */
+    'weight': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
+            "name": "objective",
+            "baseName": "objective",
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
+            "name": "label",
+            "baseName": "label",
+            "type": "string"
+        },
+        {
+            "name": "weight",
+            "baseName": "weight",
             "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationTransformationBlockResponse.attributeTypeMap;
+        return OptimizeConfigOptimizationObjectives.attributeTypeMap;
     }
 }
 

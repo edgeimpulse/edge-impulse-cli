@@ -14,6 +14,7 @@ import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
 import { GenericApiResponse } from './genericApiResponse';
 import { LatencyDevice } from './latencyDevice';
+import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { Project } from './project';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectInfoResponseAllOf } from './projectInfoResponseAllOf';
@@ -96,6 +97,7 @@ export class ProjectInfoResponse {
     * Default selected impulse (by ID).
     */
     'defaultImpulseId'?: number;
+    'lastShownModelEngine'?: ModelEngineShortEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -259,6 +261,11 @@ export class ProjectInfoResponse {
             "name": "defaultImpulseId",
             "baseName": "defaultImpulseId",
             "type": "number"
+        },
+        {
+            "name": "lastShownModelEngine",
+            "baseName": "lastShownModelEngine",
+            "type": "ModelEngineShortEnum"
         }    ];
 
     static getAttributeTypeMap() {

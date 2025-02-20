@@ -20,10 +20,15 @@ export class TunerRun {
     'name'?: string;
     'created': Date;
     'jobStatus': JobStatus;
+    'continuationJobId'?: number;
     /**
     * List of impulses specifying the EON Tuner search space
     */
     'space'?: Array<TunerSpaceImpulse>;
+    /**
+    * Whether the run is visible in the UI
+    */
+    'visible': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -59,9 +64,19 @@ export class TunerRun {
             "type": "JobStatus"
         },
         {
+            "name": "continuationJobId",
+            "baseName": "continuationJobId",
+            "type": "number"
+        },
+        {
             "name": "space",
             "baseName": "space",
             "type": "Array<TunerSpaceImpulse>"
+        },
+        {
+            "name": "visible",
+            "baseName": "visible",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

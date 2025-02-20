@@ -23,6 +23,7 @@ export class AdminGetUsersResponseAllOfUsers {
     'activated'?: boolean;
     'fromEvaluation'?: boolean;
     'tier'?: UserTierEnum;
+    'deletedDate'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +77,11 @@ export class AdminGetUsersResponseAllOfUsers {
             "name": "tier",
             "baseName": "tier",
             "type": "UserTierEnum"
+        },
+        {
+            "name": "deletedDate",
+            "baseName": "deletedDate",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

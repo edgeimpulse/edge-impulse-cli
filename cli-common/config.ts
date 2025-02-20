@@ -5,7 +5,7 @@ import util from 'util';
 import inquirer from 'inquirer';
 import { ips } from './get-ips';
 import { EdgeImpulseApi } from '../sdk/studio/api';
-import { GetJWTResponse } from '../sdk/studio';
+import * as models from '../sdk/studio/sdk/model/models';
 
 const PREFIX = '\x1b[34m[CFG]\x1b[0m';
 
@@ -16,6 +16,7 @@ export interface RunnerConfig {
     storagePath: string;
     // key = projectId
     impulseIdsForProjectId: { [k: string ]: { impulseId: number } } | undefined;
+    modelVariantsForProjectId: { [k: string ]: { variant: models.KerasModelVariantEnum } } | undefined;
 }
 
 export interface SerialConfig {
@@ -413,6 +414,24 @@ export class Config {
         return ret ? ret.impulseId : null;
     }
 
+    async setRunnerModelVariantForProjectId(projectId: number, variant: models.KerasModelVariantEnum) {
+        let config = await this.load();
+        config.runner.modelVariantsForProjectId = config.runner.modelVariantsForProjectId || { };
+        config.runner.modelVariantsForProjectId[projectId.toString()] = { variant };
+        await this.store(config);
+    }
+
+    async getRunnerModelVariantForProjectId(projectId: number): Promise<models.KerasModelVariantEnum | null> {
+        let config = await this.load();
+        if (!config.runner.modelVariantsForProjectId) {
+            return null;
+        }
+
+        let ret = <{ variant: models.KerasModelVariantEnum } | undefined>
+            config.runner.modelVariantsForProjectId[projectId.toString()];
+        return ret ? ret.variant : null;
+    }
+
     async getStudioUrl(whitelabelId: number | null) {
         if (whitelabelId !== null) {
             const whitelabelRequest = await this._api?.whitelabels.getWhitelabelDomain(whitelabelId);
@@ -455,6 +474,7 @@ export class Config {
                     storageIndex: undefined,
                     storagePath: this.getDefaultStoragePath(),
                     impulseIdsForProjectId: undefined,
+                    modelVariantsForProjectId: undefined,
                 }
             };
         }
@@ -572,7 +592,7 @@ export class Config {
             message: `What is your password?`
         });
 
-        let res: GetJWTResponse;
+        let res: models.GetJWTResponse;
         try {
             res = (await api.login.login({
                 username: username.username,

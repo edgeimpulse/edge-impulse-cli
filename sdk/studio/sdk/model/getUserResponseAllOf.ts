@@ -11,6 +11,7 @@
  */
 
 import { EnterpriseTrial } from './enterpriseTrial';
+import { GetUserResponseAllOfLastAcceptedTermsOfService } from './getUserResponseAllOfLastAcceptedTermsOfService';
 import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
@@ -50,6 +51,10 @@ export class GetUserResponseAllOf {
     */
     'suspended': boolean;
     /**
+    * Detailed explanation of why the user account was suspended. This could include violations of terms of service, suspicious activity, or administrative actions. 
+    */
+    'suspensionReason'?: string;
+    /**
     * List of notifications to show to the user.
     */
     'notifications': Array<string>;
@@ -80,6 +85,7 @@ export class GetUserResponseAllOf {
     * Number of private projects created by the current user.
     */
     'privatePersonalProjectsUsed': number;
+    'lastAcceptedTermsOfService'?: GetUserResponseAllOfLastAcceptedTermsOfService;
 
     static discriminator: string | undefined = undefined;
 
@@ -130,6 +136,11 @@ export class GetUserResponseAllOf {
             "type": "boolean"
         },
         {
+            "name": "suspensionReason",
+            "baseName": "suspensionReason",
+            "type": "string"
+        },
+        {
             "name": "notifications",
             "baseName": "notifications",
             "type": "Array<string>"
@@ -178,6 +189,11 @@ export class GetUserResponseAllOf {
             "name": "privatePersonalProjectsUsed",
             "baseName": "privatePersonalProjectsUsed",
             "type": "number"
+        },
+        {
+            "name": "lastAcceptedTermsOfService",
+            "baseName": "lastAcceptedTermsOfService",
+            "type": "GetUserResponseAllOfLastAcceptedTermsOfService"
         }    ];
 
     static getAttributeTypeMap() {

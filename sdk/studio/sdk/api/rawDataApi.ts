@@ -87,6 +87,8 @@ type batchAddMetadataQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -102,6 +104,8 @@ type batchClearMetadataQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -117,6 +121,8 @@ type batchClearMetadataByKeyQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -132,6 +138,8 @@ type batchDeleteQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -147,6 +155,8 @@ type batchDisableQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -162,6 +172,8 @@ type batchEditLabelsQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -177,6 +189,8 @@ type batchEnableQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -192,6 +206,8 @@ type batchMoveQueryParams = {
     includeDisabled?: 'both' | 'enabled' | 'disabled',
     ids?: string,
     excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -205,6 +221,8 @@ type countSamplesQueryParams = {
     maxFrequency?: number,
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
 };
 
@@ -218,6 +236,7 @@ type getSampleQueryParams = {
     cacheKey?: string,
     impulseId?: number,
     proposedActionsJobId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type getSampleAsAudioQueryParams = {
@@ -247,6 +266,7 @@ type getSampleSliceQueryParams = {
     sliceStart: number,
     sliceEnd?: number,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type getUncroppedDownsampledSampleQueryParams = {
@@ -254,6 +274,7 @@ type getUncroppedDownsampledSampleQueryParams = {
     zoomStart?: number,
     zoomEnd?: number,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type listSamplesQueryParams = {
@@ -269,8 +290,11 @@ type listSamplesQueryParams = {
     maxFrequency?: number,
     signatureValidity?: 'both' | 'valid' | 'invalid',
     includeDisabled?: 'both' | 'enabled' | 'disabled',
+    minLabel?: number,
+    maxLabel?: number,
     search?: string,
     proposedActionsJobId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 export type uploadDataExplorerScreenshotFormParams = {
@@ -357,6 +381,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -440,6 +466,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -483,15 +517,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -515,6 +549,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchClearMetadata (projectId: number, queryParams: batchClearMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
@@ -591,6 +627,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -633,15 +677,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -666,6 +710,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -749,6 +795,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -792,15 +846,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -824,6 +878,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -900,6 +956,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -942,15 +1006,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -974,6 +1038,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -1050,6 +1116,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -1092,15 +1166,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1125,6 +1199,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -1208,6 +1284,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -1251,15 +1335,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1283,6 +1367,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -1359,6 +1445,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -1401,15 +1495,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1434,6 +1528,8 @@ export class RawDataApi {
      * @param includeDisabled Include only enabled or disabled samples (or both)
      * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
      * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
@@ -1517,6 +1613,14 @@ export class RawDataApi {
             localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -1560,15 +1664,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1661,15 +1765,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ObjectDetectionAutoLabelResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1744,15 +1848,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1827,15 +1931,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1857,6 +1961,8 @@ export class RawDataApi {
      * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      */
     public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
@@ -1925,6 +2031,14 @@ export class RawDataApi {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
@@ -1967,15 +2081,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "CountSamplesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2068,15 +2182,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "CropSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2151,15 +2265,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2243,15 +2357,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2335,15 +2449,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2427,15 +2541,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2528,15 +2642,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2620,15 +2734,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2721,15 +2835,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "FindSegmentSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2813,15 +2927,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetAIActionsProposedChangesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2906,15 +3020,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetAllImportedFromResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -2989,15 +3103,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetDataExplorerFeaturesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3072,15 +3186,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "DataExplorerPredictionsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3155,15 +3269,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetDataExplorerSettingsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3238,15 +3352,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetDiversityDataResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3321,15 +3435,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetLabelNoiseDataResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3404,15 +3518,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ObjectDetectionLabelQueueResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3487,15 +3601,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ObjectDetectionLabelQueueCountResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3513,6 +3627,7 @@ export class RawDataApi {
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
@@ -3561,6 +3676,10 @@ export class RawDataApi {
             localVarQueryParameters['proposedActionsJobId'] = ObjectSerializer.serialize(queryParams.proposedActionsJobId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -3599,15 +3718,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3718,15 +3837,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3825,15 +3944,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -3917,15 +4036,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4024,15 +4143,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4119,15 +4238,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleMetadataResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4144,6 +4263,7 @@ export class RawDataApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
@@ -4195,6 +4315,10 @@ export class RawDataApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -4233,15 +4357,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4259,6 +4383,7 @@ export class RawDataApi {
      * @param zoomStart Zoom into the sample, with the focus starting at this index
      * @param zoomEnd Zoom into the sample, with the focus ending at this index
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
@@ -4307,6 +4432,10 @@ export class RawDataApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -4345,15 +4474,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4428,15 +4557,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4511,15 +4640,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4594,15 +4723,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "HasDataExplorerFeaturesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4627,8 +4756,11 @@ export class RawDataApi {
      * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
      * @param signatureValidity Include samples with either valid or invalid signatures
      * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
      * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
@@ -4708,12 +4840,24 @@ export class RawDataApi {
             localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
         }
 
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
         if (queryParams?.search !== undefined) {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
         if (queryParams?.proposedActionsJobId !== undefined) {
             localVarQueryParameters['proposedActionsJobId'] = ObjectSerializer.serialize(queryParams.proposedActionsJobId, "number");
+        }
+
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4754,15 +4898,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ListSamplesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4855,15 +4999,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -4947,15 +5091,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5030,15 +5174,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "RebalanceDatasetResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5131,15 +5275,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5223,15 +5367,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5324,15 +5468,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5416,15 +5560,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5517,15 +5661,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5618,15 +5762,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5719,15 +5863,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5820,15 +5964,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -5921,15 +6065,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -6013,15 +6157,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -6105,15 +6249,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "TrackObjectsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -6201,15 +6345,15 @@ export class RawDataApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }

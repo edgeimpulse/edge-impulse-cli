@@ -11,6 +11,8 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
+import { KerasCustomMetric } from './kerasCustomMetric';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ProfileModelInfo } from './profileModelInfo';
 import { ProfileModelInfoMemory } from './profileModelInfoMemory';
 
@@ -23,12 +25,25 @@ export class ProfileTfLiteResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
+    'variant': KerasModelVariantEnum;
     'device': string;
     'tfliteFileSizeBytes': number;
     'isSupportedOnMcu': boolean;
     'memory'?: ProfileModelInfoMemory;
     'timePerInferenceMs'?: number;
     'mcuSupportError'?: string;
+    /**
+    * Custom, device-specific performance metrics
+    */
+    'customMetrics': Array<KerasCustomMetric>;
+    /**
+    * If false, then no metrics are available for this target
+    */
+    'hasPerformance': boolean;
+    /**
+    * Specific error during profiling (e.g. model not supported)
+    */
+    'profilingError'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +57,11 @@ export class ProfileTfLiteResponse {
             "name": "error",
             "baseName": "error",
             "type": "string"
+        },
+        {
+            "name": "variant",
+            "baseName": "variant",
+            "type": "KerasModelVariantEnum"
         },
         {
             "name": "device",
@@ -71,6 +91,21 @@ export class ProfileTfLiteResponse {
         {
             "name": "mcuSupportError",
             "baseName": "mcuSupportError",
+            "type": "string"
+        },
+        {
+            "name": "customMetrics",
+            "baseName": "customMetrics",
+            "type": "Array<KerasCustomMetric>"
+        },
+        {
+            "name": "hasPerformance",
+            "baseName": "hasPerformance",
+            "type": "boolean"
+        },
+        {
+            "name": "profilingError",
+            "baseName": "profilingError",
             "type": "string"
         }    ];
 

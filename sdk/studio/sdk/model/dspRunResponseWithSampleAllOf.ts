@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { DspPerformance } from './dspPerformance';
 import { DspRunGraph } from './dspRunGraph';
-import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 import { RawSampleData } from './rawSampleData';
 
 export class DspRunResponseWithSampleAllOf {
@@ -36,7 +36,7 @@ export class DspRunResponseWithSampleAllOf {
     */
     'labelAtEndOfWindow'?: string;
     'sample': RawSampleData;
-    'performance'?: DspRunResponseAllOfPerformance;
+    'performance'?: DspPerformance;
     'canProfilePerformance': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -75,7 +75,7 @@ export class DspRunResponseWithSampleAllOf {
         {
             "name": "performance",
             "baseName": "performance",
-            "type": "DspRunResponseAllOfPerformance"
+            "type": "DspPerformance"
         },
         {
             "name": "canProfilePerformance",

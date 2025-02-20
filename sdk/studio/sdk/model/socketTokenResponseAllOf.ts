@@ -13,7 +13,7 @@
 import { SocketTokenResponseAllOfToken } from './socketTokenResponseAllOfToken';
 
 export class SocketTokenResponseAllOf {
-    'token'?: SocketTokenResponseAllOfToken;
+    'token': SocketTokenResponseAllOfToken;
 
     static discriminator: string | undefined = undefined;
 

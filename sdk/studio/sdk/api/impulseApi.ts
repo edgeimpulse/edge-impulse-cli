@@ -229,15 +229,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -330,15 +330,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateImpulseResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -427,15 +427,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateImpulseResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -510,15 +510,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "CreateNewEmptyImpulseResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -598,15 +598,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -686,15 +686,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "Buffer");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -769,15 +769,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetAllDetailedImpulsesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -852,15 +852,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetAllImpulsesResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -940,15 +940,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetImpulseResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1028,15 +1028,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetImpulseResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1111,15 +1111,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetImpulseBlocksResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1194,15 +1194,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetNewBlockIdResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1316,15 +1316,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1413,15 +1413,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1505,15 +1505,15 @@ export class ImpulseApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "VerifyDspBlockUrlResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }

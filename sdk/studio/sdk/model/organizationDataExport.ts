@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { JobCreatedByUser } from './jobCreatedByUser';
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 
 export class OrganizationDataExport {
     'id': number;
     'created': Date;
-    'createdByUser'?: JobCreatedByUser;
+    'createdByUser'?: CreatedUpdatedByUser;
     'jobId': number;
     'jobFinished': boolean;
     'jobFinishedSuccessful': boolean;
@@ -45,7 +45,7 @@ export class OrganizationDataExport {
         {
             "name": "createdByUser",
             "baseName": "createdByUser",
-            "type": "JobCreatedByUser"
+            "type": "CreatedUpdatedByUser"
         },
         {
             "name": "jobId",

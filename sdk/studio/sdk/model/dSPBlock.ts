@@ -26,6 +26,10 @@ export class DSPBlock {
     'organizationDspId'?: number;
     'blockType': BlockType;
     'namedAxes'?: Array<DSPNamedAxis>;
+    /**
+    * List of target devices that support this DSP block. If undefined this block works on all targets.
+    */
+    'supportedTargets'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -89,6 +93,11 @@ export class DSPBlock {
             "name": "namedAxes",
             "baseName": "namedAxes",
             "type": "Array<DSPNamedAxis>"
+        },
+        {
+            "name": "supportedTargets",
+            "baseName": "supportedTargets",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

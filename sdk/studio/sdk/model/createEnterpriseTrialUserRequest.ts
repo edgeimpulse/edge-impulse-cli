@@ -86,6 +86,10 @@ export class CreateEnterpriseTrialUserRequest {
     * List of UTM parameters.
     */
     'utmParams'?: Array<any>;
+    /**
+    * CloudFlare Turnstile response token
+    */
+    'turnstileResponse': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -179,6 +183,11 @@ export class CreateEnterpriseTrialUserRequest {
             "name": "utmParams",
             "baseName": "utmParams",
             "type": "Array<any>"
+        },
+        {
+            "name": "turnstileResponse",
+            "baseName": "turnstileResponse",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

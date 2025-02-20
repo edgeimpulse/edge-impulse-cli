@@ -14,7 +14,7 @@ import { DSPGroup } from './dSPGroup';
 import { DSPInfo } from './dSPInfo';
 
 export class DSPConfig {
-    'dsp'?: DSPInfo;
+    'dsp': DSPInfo;
     'config'?: Array<DSPGroup>;
     'configError'?: string;
 

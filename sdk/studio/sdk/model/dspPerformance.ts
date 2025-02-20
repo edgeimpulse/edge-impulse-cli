@@ -11,32 +11,35 @@
  */
 
 
-export class AddApiKeyRequest {
+export class DspPerformance {
+    'latency': number;
+    'ram': number;
     /**
-    * Description of the key
+    * If the project latencyDevice has custom DSP hardware, this value contains a device specific latency metric (eg. cycles)
     */
-    'name': string;
-    /**
-    * Optional: API key. This needs to start with `ei_` and will need to be at least 32 characters long. If this field is not passed in, a new API key is generated for you.
-    */
-    'apiKey'?: string;
+    'customDspString'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
+            "name": "latency",
+            "baseName": "latency",
+            "type": "number"
         },
         {
-            "name": "apiKey",
-            "baseName": "apiKey",
+            "name": "ram",
+            "baseName": "ram",
+            "type": "number"
+        },
+        {
+            "name": "customDspString",
+            "baseName": "customDspString",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddApiKeyRequest.attributeTypeMap;
+        return DspPerformance.attributeTypeMap;
     }
 }
 

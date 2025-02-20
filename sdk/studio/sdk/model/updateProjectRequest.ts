@@ -166,6 +166,7 @@ export class UpdateProjectRequest {
     * Number of grid columns in AI Actions
     */
     'aiActionsGridColumnCount'?: number;
+    'lastShownModelEngine'?: ModelEngineShortEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -384,6 +385,11 @@ export class UpdateProjectRequest {
             "name": "aiActionsGridColumnCount",
             "baseName": "aiActionsGridColumnCount",
             "type": "number"
+        },
+        {
+            "name": "lastShownModelEngine",
+            "baseName": "lastShownModelEngine",
+            "type": "ModelEngineShortEnum"
         }    ];
 
     static getAttributeTypeMap() {

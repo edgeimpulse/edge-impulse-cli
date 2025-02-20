@@ -11,7 +11,7 @@
  */
 
 import { DSPInfoFeatures } from './dSPInfoFeatures';
-import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
+import { DspPerformance } from './dspPerformance';
 
 export class DSPInfo {
     'id': number;
@@ -28,7 +28,7 @@ export class DSPInfo {
     * Axes that this block depends on.
     */
     'inputAxes': Array<string>;
-    'performance'?: DspRunResponseAllOfPerformance;
+    'performance'?: DspPerformance;
     'canCalculateFeatureImportance': boolean;
     'calculateFeatureImportance': boolean;
     /**
@@ -94,7 +94,7 @@ export class DSPInfo {
         {
             "name": "performance",
             "baseName": "performance",
-            "type": "DspRunResponseAllOfPerformance"
+            "type": "DspPerformance"
         },
         {
             "name": "canCalculateFeatureImportance",

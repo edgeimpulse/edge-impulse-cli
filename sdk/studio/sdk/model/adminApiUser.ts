@@ -31,7 +31,6 @@ export class AdminApiUser {
     'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
-    'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
     /**
     * List of permissions the user has
@@ -129,11 +128,6 @@ export class AdminApiUser {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
-        },
-        {
-            "name": "lastTosAcceptanceDate",
-            "baseName": "lastTosAcceptanceDate",
-            "type": "Date"
         },
         {
             "name": "jobTitle",

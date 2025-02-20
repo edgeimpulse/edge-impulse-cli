@@ -48,7 +48,7 @@ export interface RemoteMgmtDevice extends TypedEmitter<{
 }>  {
     connected: () => boolean;
     getDeviceId: () => Promise<string>;
-    getDeviceType: () => string;
+    getDeviceType: () => Promise<string>;
     getSensors: () => {
         name: string;
         maxSampleLengthS: number;
@@ -691,7 +691,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         const baseHello = {
             apiKey: this._devKeys.apiKey,
             deviceId: deviceId,
-            deviceType: this._device.getDeviceType(),
+            deviceType: await this._device.getDeviceType(),
             connection: this._device.getConnectionType(),
             sensors: this._device.getSensors(),
             supportsSnapshotStreaming: this._device.supportsSnapshotStreaming(),
@@ -773,7 +773,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         try {
             let create = (await this._eiConfig.api.devices.createDevice(this._projectId, {
                 deviceId: await this._device.getDeviceId(),
-                deviceType: this._device.getDeviceType(),
+                deviceType: await this._device.getDeviceType(),
                 ifNotExists: true
             }));
 

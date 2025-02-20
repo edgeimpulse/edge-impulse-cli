@@ -67,6 +67,10 @@ export class CreateProTierUserRequest {
     */
     'ignoreEmailValidation'?: boolean;
     /**
+    * CloudFlare Turnstile response token
+    */
+    'turnstileResponse': string;
+    /**
     * Origin of the redirect URL returned as result of creating the professional user.
     */
     'redirectUrlOrigin'?: string;
@@ -142,6 +146,11 @@ export class CreateProTierUserRequest {
             "name": "ignoreEmailValidation",
             "baseName": "ignoreEmailValidation",
             "type": "boolean"
+        },
+        {
+            "name": "turnstileResponse",
+            "baseName": "turnstileResponse",
+            "type": "string"
         },
         {
             "name": "redirectUrlOrigin",

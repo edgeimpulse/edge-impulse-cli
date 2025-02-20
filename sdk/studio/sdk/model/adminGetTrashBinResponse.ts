@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { AdminGetTrashBinResponseAllOf } from './adminGetTrashBinResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { TrashBinEntity } from './trashBinEntity';
 
-export class DevelopmentBoardCreatedResponse {
+export class AdminGetTrashBinResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +23,11 @@ export class DevelopmentBoardCreatedResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'id': number;
+    /**
+    * Total number of entities in the trash bin.
+    */
+    'total': number;
+    'trashbin'?: Array<TrashBinEntity>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +43,18 @@ export class DevelopmentBoardCreatedResponse {
             "type": "string"
         },
         {
-            "name": "id",
-            "baseName": "id",
+            "name": "total",
+            "baseName": "total",
             "type": "number"
+        },
+        {
+            "name": "trashbin",
+            "baseName": "trashbin",
+            "type": "Array<TrashBinEntity>"
         }    ];
 
     static getAttributeTypeMap() {
-        return DevelopmentBoardCreatedResponse.attributeTypeMap;
+        return AdminGetTrashBinResponse.attributeTypeMap;
     }
 }
 

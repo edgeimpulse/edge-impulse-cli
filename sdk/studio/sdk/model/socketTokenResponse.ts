@@ -23,7 +23,7 @@ export class SocketTokenResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'token'?: SocketTokenResponseAllOfToken;
+    'token': SocketTokenResponseAllOfToken;
 
     static discriminator: string | undefined = undefined;
 

@@ -27,7 +27,6 @@ export class OrganizationUser {
     'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
-    'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
     /**
     * List of permissions the user has
@@ -111,11 +110,6 @@ export class OrganizationUser {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
-        },
-        {
-            "name": "lastTosAcceptanceDate",
-            "baseName": "lastTosAcceptanceDate",
-            "type": "Date"
         },
         {
             "name": "jobTitle",

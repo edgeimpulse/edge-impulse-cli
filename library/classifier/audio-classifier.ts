@@ -151,4 +151,8 @@ export class AudioClassifier extends EventEmitter<{
             this._runner.stop()
         ]);
     }
+
+    getRunner() {
+        return this._runner;
+    }
 }

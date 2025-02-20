@@ -32,6 +32,10 @@ export class AdminUpdateUserRequest {
     */
     'suspended'?: boolean;
     /**
+    * Reason for suspension
+    */
+    'suspensionReason'?: string;
+    /**
     * New user job title
     */
     'jobTitle'?: string;
@@ -62,6 +66,11 @@ export class AdminUpdateUserRequest {
             "name": "suspended",
             "baseName": "suspended",
             "type": "boolean"
+        },
+        {
+            "name": "suspensionReason",
+            "baseName": "suspensionReason",
+            "type": "string"
         },
         {
             "name": "jobTitle",

@@ -10,33 +10,34 @@
  * Do not edit the class manually.
  */
 
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 
-export class AddApiKeyRequest {
-    /**
-    * Description of the key
-    */
-    'name': string;
-    /**
-    * Optional: API key. This needs to start with `ei_` and will need to be at least 32 characters long. If this field is not passed in, a new API key is generated for you.
-    */
-    'apiKey'?: string;
+export class DeploymentTargetVariant {
+    'variant': KerasModelVariantEnum;
+    'supported': boolean;
+    'hint'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
+            "name": "variant",
+            "baseName": "variant",
+            "type": "KerasModelVariantEnum"
         },
         {
-            "name": "apiKey",
-            "baseName": "apiKey",
+            "name": "supported",
+            "baseName": "supported",
+            "type": "boolean"
+        },
+        {
+            "name": "hint",
+            "baseName": "hint",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddApiKeyRequest.attributeTypeMap;
+        return DeploymentTargetVariant.attributeTypeMap;
     }
 }
 

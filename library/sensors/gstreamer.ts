@@ -92,16 +92,17 @@ export class GStreamer extends EventEmitter<{
             firmwareModel = await fs.promises.readFile('/proc/device-tree/model', 'utf-8');
         }
 
-        if (osRelease &&
-            ((osRelease.indexOf('bullseye') > -1)
-                || (osRelease.indexOf('bookworm') > -1))) {
+        if (osRelease) {
+            if ((osRelease.indexOf('bullseye') > -1)
+                || (osRelease.indexOf('bookworm') > -1)) {
 
-            if (osRelease.indexOf('ID=raspbian') > -1) {
-                this._mode = 'rpi';
-            }
+                if (osRelease.indexOf('ID=raspbian') > -1) {
+                    this._mode = 'rpi';
+                }
 
-            if (firmwareModel && firmwareModel.indexOf('Raspberry Pi') > -1) {
-                this._mode = 'rpi';
+                if (firmwareModel && firmwareModel.indexOf('Raspberry Pi') > -1) {
+                    this._mode = 'rpi';
+                }
             }
         }
 
@@ -386,6 +387,9 @@ export class GStreamer extends EventEmitter<{
 
         if (device.id === 'pylonsrc') {
             videoSource = [ 'pylonsrc' ];
+        }
+        else if (device.id === 'qtiqmmfsrc') {
+            videoSource = [ 'qtiqmmfsrc' ];
         }
 
         let invokeProcess: 'spawn' | 'exec';
@@ -691,6 +695,8 @@ export class GStreamer extends EventEmitter<{
         // NVIDIA has their own plugins, query them too
         devices = devices.concat(await this.listNvarguscamerasrcDevices());
         devices = devices.concat(await this.listPylonsrcDevices());
+        // Qualcomm has their own plugin, query its too
+        devices = devices.concat(await this.listQtiqmmsrcDevices());
 
         let mapped = devices.map(d => {
             let name = devices.filter(x => x.name === d.name).length >= 2 ?
@@ -1037,6 +1043,34 @@ export class GStreamer extends EventEmitter<{
         else {
             return [];
         }
+    }
+
+    private async listQtiqmmsrcDevices(): Promise<GStreamerDevice[]> {
+
+        const hasPlugin: boolean = await this.hasGstPlugin('qtiqmmfsrc');
+        if (!hasPlugin) {
+            return [];
+        }
+
+        let caps: GStreamerCap[] = [];
+        let cap: GStreamerCap = {
+            type: 'video/x-raw',
+            width: 640,
+            height: 480,
+            framerate: 30,
+        };
+        caps.push(cap);
+
+        let d: GStreamerDevice = {
+            caps: caps,
+            deviceClass: '',
+            id: 'qtiqmmfsrc',
+            inCapMode: false,
+            name: 'CSI Camera 0',
+            rawCaps: [],
+            videoSource: 'qtiqmmfsrc',
+        };
+        return [ d ];
     }
 
     getLastOptions() {

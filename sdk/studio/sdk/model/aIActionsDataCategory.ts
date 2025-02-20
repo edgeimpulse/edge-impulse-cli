@@ -12,5 +12,5 @@
 
 
 
-export type AIActionsDataCategory = 'allData' | 'unlabeledData' | 'dataWithoutMetadataKey' | 'dataWithMetadata';
-export const AIActionsDataCategoryValues: string[] = ['allData', 'unlabeledData', 'dataWithoutMetadataKey', 'dataWithMetadata'];
+export type AIActionsDataCategory = 'allData' | 'unlabeledData' | 'enabledData' | 'dataWithoutMetadataKey' | 'dataWithMetadata';
+export const AIActionsDataCategoryValues: string[] = ['allData', 'unlabeledData', 'enabledData', 'dataWithoutMetadataKey', 'dataWithMetadata'];

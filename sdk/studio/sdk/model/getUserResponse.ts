@@ -13,6 +13,7 @@
 import { EnterpriseTrial } from './enterpriseTrial';
 import { GenericApiResponse } from './genericApiResponse';
 import { GetUserResponseAllOf } from './getUserResponseAllOf';
+import { GetUserResponseAllOfLastAcceptedTermsOfService } from './getUserResponseAllOfLastAcceptedTermsOfService';
 import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Permission } from './permission';
@@ -42,7 +43,6 @@ export class GetUserResponse {
     'lastSeen'?: Date;
     'staffInfo': StaffInfo;
     'pending': boolean;
-    'lastTosAcceptanceDate'?: Date;
     'jobTitle'?: string;
     /**
     * List of permissions the user has
@@ -92,6 +92,10 @@ export class GetUserResponse {
     */
     'suspended': boolean;
     /**
+    * Detailed explanation of why the user account was suspended. This could include violations of terms of service, suspicious activity, or administrative actions. 
+    */
+    'suspensionReason'?: string;
+    /**
     * List of notifications to show to the user.
     */
     'notifications': Array<string>;
@@ -122,6 +126,7 @@ export class GetUserResponse {
     * Number of private projects created by the current user.
     */
     'privatePersonalProjectsUsed': number;
+    'lastAcceptedTermsOfService'?: GetUserResponseAllOfLastAcceptedTermsOfService;
 
     static discriminator: string | undefined = undefined;
 
@@ -180,11 +185,6 @@ export class GetUserResponse {
             "name": "pending",
             "baseName": "pending",
             "type": "boolean"
-        },
-        {
-            "name": "lastTosAcceptanceDate",
-            "baseName": "lastTosAcceptanceDate",
-            "type": "Date"
         },
         {
             "name": "jobTitle",
@@ -262,6 +262,11 @@ export class GetUserResponse {
             "type": "boolean"
         },
         {
+            "name": "suspensionReason",
+            "baseName": "suspensionReason",
+            "type": "string"
+        },
+        {
             "name": "notifications",
             "baseName": "notifications",
             "type": "Array<string>"
@@ -310,6 +315,11 @@ export class GetUserResponse {
             "name": "privatePersonalProjectsUsed",
             "baseName": "privatePersonalProjectsUsed",
             "type": "number"
+        },
+        {
+            "name": "lastAcceptedTermsOfService",
+            "baseName": "lastAcceptedTermsOfService",
+            "type": "GetUserResponseAllOfLastAcceptedTermsOfService"
         }    ];
 
     static getAttributeTypeMap() {

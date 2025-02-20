@@ -31,6 +31,10 @@ export class OptimizeStateResponseAllOf {
     */
     'continuationJobId'?: number;
     /**
+    * Tuning algorithm to use to search hyperparameter space
+    */
+    'tuningAlgorithm'?: OptimizeStateResponseAllOfTuningAlgorithmEnum;
+    /**
     * Whether the job is active (if false => finished)
     */
     'tunerJobIsRunning': boolean;
@@ -39,6 +43,7 @@ export class OptimizeStateResponseAllOf {
     'jobError'?: string;
     'workers': Array<OptimizeStateResponseAllOfWorkers>;
     'nextRunIndex': number;
+    'canExtendSearch': boolean;
     'isWhitelabel': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -68,6 +73,11 @@ export class OptimizeStateResponseAllOf {
             "name": "continuationJobId",
             "baseName": "continuationJobId",
             "type": "number"
+        },
+        {
+            "name": "tuningAlgorithm",
+            "baseName": "tuningAlgorithm",
+            "type": "OptimizeStateResponseAllOfTuningAlgorithmEnum"
         },
         {
             "name": "tunerJobIsRunning",
@@ -100,6 +110,11 @@ export class OptimizeStateResponseAllOf {
             "type": "number"
         },
         {
+            "name": "canExtendSearch",
+            "baseName": "canExtendSearch",
+            "type": "boolean"
+        },
+        {
             "name": "isWhitelabel",
             "baseName": "isWhitelabel",
             "type": "boolean"
@@ -110,6 +125,9 @@ export class OptimizeStateResponseAllOf {
     }
 }
 
+
+export type OptimizeStateResponseAllOfTuningAlgorithmEnum = 'random' | 'hyperband' | 'bayesian' | 'custom';
+export const OptimizeStateResponseAllOfTuningAlgorithmEnumValues: string[] = ['random', 'hyperband', 'bayesian', 'custom'];
 
 export type OptimizeStateResponseAllOfProjectDataTypeEnum = 'audio' | 'image' | 'motion' | 'other';
 export const OptimizeStateResponseAllOfProjectDataTypeEnumValues: string[] = ['audio', 'image', 'motion', 'other'];

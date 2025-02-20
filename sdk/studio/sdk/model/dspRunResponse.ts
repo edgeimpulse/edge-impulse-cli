@@ -10,9 +10,9 @@
  * Do not edit the class manually.
  */
 
+import { DspPerformance } from './dspPerformance';
 import { DspRunGraph } from './dspRunGraph';
 import { DspRunResponseAllOf } from './dspRunResponseAllOf';
-import { DspRunResponseAllOfPerformance } from './dspRunResponseAllOfPerformance';
 import { GenericApiResponse } from './genericApiResponse';
 
 export class DspRunResponse {
@@ -40,7 +40,7 @@ export class DspRunResponse {
     * String representation of the DSP state returned
     */
     'stateString'?: string;
-    'performance'?: DspRunResponseAllOfPerformance;
+    'performance'?: DspPerformance;
 
     static discriminator: string | undefined = undefined;
 
@@ -78,7 +78,7 @@ export class DspRunResponse {
         {
             "name": "performance",
             "baseName": "performance",
-            "type": "DspRunResponseAllOfPerformance"
+            "type": "DspPerformance"
         }    ];
 
     static getAttributeTypeMap() {

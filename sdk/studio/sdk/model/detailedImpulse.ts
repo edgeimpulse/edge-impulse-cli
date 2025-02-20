@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { DetailedImpulseDspBlockConfigs } from './detailedImpulseDspBlockConfigs';
 import { DetailedImpulseLearnBlockAnomalyConfigs } from './detailedImpulseLearnBlockAnomalyConfigs';
 import { DetailedImpulseLearnBlockKerasConfigs } from './detailedImpulseLearnBlockKerasConfigs';
@@ -29,6 +30,14 @@ export class DetailedImpulse {
     */
     'isStale': boolean;
     /**
+    * Whether this impulse is configured
+    */
+    'configured': boolean;
+    /**
+    * Whether this impulse is fully trained and configured
+    */
+    'complete': boolean;
+    /**
     * Tags associated with this impulse
     */
     'tags': Array<string>;
@@ -36,6 +45,7 @@ export class DetailedImpulse {
     * The source EON Tuner trial ID for impulses created from the EON Tuner
     */
     'createdFromTunerTrialId'?: number;
+    'createdByUser'?: CreatedUpdatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +86,16 @@ export class DetailedImpulse {
             "type": "boolean"
         },
         {
+            "name": "configured",
+            "baseName": "configured",
+            "type": "boolean"
+        },
+        {
+            "name": "complete",
+            "baseName": "complete",
+            "type": "boolean"
+        },
+        {
             "name": "tags",
             "baseName": "tags",
             "type": "Array<string>"
@@ -84,6 +104,11 @@ export class DetailedImpulse {
             "name": "createdFromTunerTrialId",
             "baseName": "createdFromTunerTrialId",
             "type": "number"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
         }    ];
 
     static getAttributeTypeMap() {

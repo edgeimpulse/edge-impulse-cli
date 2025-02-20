@@ -63,10 +63,13 @@ export async function initCliApp(opts: {
                             // success
                             console.log(opts.appName + ": Connected to IoTCore Successfully!");
 
-                            // launch the command poller
-                            console.log(opts.appName + ": launching command receiver...");
+                            // since we are not running a model, we have to nail/fudge our model info
+                            await awsIOT.initModelInfo(opts.appName.replace(" ", "_"), "v" + version, {});
+
+                            // launch all async tasks
+                            console.log(opts.appName + ": launching async tasks...");
                             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                            awsIOT.launchCommandReceiver();
+                            awsIOT.launchAsyncTasks();
                         }
                         else {
                             // failure

@@ -31,6 +31,10 @@ export class AdminApiOrganization {
     */
     'whitelabelId': number | null;
     /**
+    * Name of the white label this organization belongs to, if any.
+    */
+    'whitelabelName'?: string;
+    /**
     * Array with organizational projects
     */
     'projects': Array<Project>;
@@ -101,6 +105,11 @@ export class AdminApiOrganization {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "whitelabelName",
+            "baseName": "whitelabelName",
+            "type": "string"
         },
         {
             "name": "projects",

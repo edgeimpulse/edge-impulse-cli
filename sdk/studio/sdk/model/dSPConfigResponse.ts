@@ -24,7 +24,7 @@ export class DSPConfigResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'dsp'?: DSPInfo;
+    'dsp': DSPInfo;
     'config'?: Array<DSPGroup>;
     'configError'?: string;
 

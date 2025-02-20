@@ -10,21 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { Project } from './project';
 
-export class AddOrganizationTransformationBlockResponseAllOf {
-    'id': number;
+export class AdminProjectInfoResponseAllOf {
+    'project': Project;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "project",
+            "baseName": "project",
+            "type": "Project"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationTransformationBlockResponseAllOf.attributeTypeMap;
+        return AdminProjectInfoResponseAllOf.attributeTypeMap;
     }
 }
 

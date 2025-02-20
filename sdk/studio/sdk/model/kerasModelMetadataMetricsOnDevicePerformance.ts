@@ -25,6 +25,14 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
     * Custom, device-specific performance metrics
     */
     'customMetrics'?: Array<KerasCustomMetric>;
+    /**
+    * If false, then no metrics are available for this target
+    */
+    'hasPerformance': boolean;
+    /**
+    * Specific error during profiling (e.g. model not supported)
+    */
+    'profilingError'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -68,6 +76,16 @@ export class KerasModelMetadataMetricsOnDevicePerformance {
             "name": "customMetrics",
             "baseName": "customMetrics",
             "type": "Array<KerasCustomMetric>"
+        },
+        {
+            "name": "hasPerformance",
+            "baseName": "hasPerformance",
+            "type": "boolean"
+        },
+        {
+            "name": "profilingError",
+            "baseName": "profilingError",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

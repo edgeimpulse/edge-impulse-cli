@@ -11,38 +11,20 @@
  */
 
 
-export class JobCreatedByUser {
-    'id': number;
-    'name': string;
-    'username': string;
-    'photo'?: string;
+export class ConvertParquetToCsvResponseAllOf {
+    'csvFile': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "username",
-            "baseName": "username",
-            "type": "string"
-        },
-        {
-            "name": "photo",
-            "baseName": "photo",
+            "name": "csvFile",
+            "baseName": "csvFile",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return JobCreatedByUser.attributeTypeMap;
+        return ConvertParquetToCsvResponseAllOf.attributeTypeMap;
     }
 }
 

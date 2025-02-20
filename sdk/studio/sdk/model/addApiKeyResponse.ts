@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { AddApiKeyResponseAllOf } from './addApiKeyResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class AddOrganizationTransferLearningBlockResponse {
+export class AddApiKeyResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +22,14 @@ export class AddOrganizationTransferLearningBlockResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
+    /**
+    * ID of the new API key
+    */
     'id': number;
+    /**
+    * New API Key (starts with \"ei_...\") - this\'ll be shared only once.
+    */
+    'apiKey': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,10 +48,15 @@ export class AddOrganizationTransferLearningBlockResponse {
             "name": "id",
             "baseName": "id",
             "type": "number"
+        },
+        {
+            "name": "apiKey",
+            "baseName": "apiKey",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationTransferLearningBlockResponse.attributeTypeMap;
+        return AddApiKeyResponse.attributeTypeMap;
     }
 }
 

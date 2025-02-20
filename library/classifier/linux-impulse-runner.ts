@@ -55,7 +55,15 @@ export type RunnerHelloResponseModelParameters = {
     slice_size: undefined | number;
     use_continuous_mode: undefined | boolean;
     inferencing_engine?: undefined | RunnerHelloInferencingEngine;
-    threshold: number | undefined;
+    thresholds: ({
+        id: number,
+        type: 'anomaly_gmm',
+        min_anomaly_score: number,
+    } | {
+        id: number,
+        type: 'object_detection',
+        min_score: number,
+    })[] | undefined,
 };
 
 export type RunnerHelloResponseProject = {
@@ -113,6 +121,18 @@ export type RunnerClassifyResponseSuccess = {
 type RunnerClassifyResponse = ({
     success: true;
 } & RunnerClassifyResponseSuccess) | RunnerErrorResponse;
+
+type RunnerSetThresholdRequest = {
+    set_threshold: {
+        id: number,
+        min_anomaly_score: number,
+    } | {
+        id: number,
+        min_score: number,
+    };
+};
+
+type RunnerSetThresholdResponse = { success: true } | RunnerErrorResponse;
 
 export type ModelInformation = {
     project: RunnerHelloResponseProject,
@@ -364,6 +384,37 @@ export class LinuxImpulseRunner {
             timing: resp.timing,
             info: resp.info
         };
+    }
+
+    async setLearnBlockThreshold(obj: {
+        id: number,
+        type: 'anomaly_gmm',
+        min_anomaly_score: number,
+    } | {
+        id: number,
+        type: 'object_detection',
+        min_score: number,
+    }) {
+        let resp: RunnerSetThresholdResponse;
+        if (obj.type === 'anomaly_gmm') {
+            resp = await this.send<RunnerSetThresholdRequest, RunnerSetThresholdResponse>({
+                set_threshold: {
+                    id: obj.id,
+                    min_anomaly_score: obj.min_anomaly_score,
+                }
+            });
+        }
+        else if (obj.type === 'object_detection') {
+            resp = await this.send<RunnerSetThresholdRequest, RunnerSetThresholdResponse>({
+                set_threshold: {
+                    id: obj.id,
+                    min_score: obj.min_score,
+                }
+            });
+        }
+        else {
+            throw new Error(`runner::setLearnBlockThreshold invalid value for type (was "${(<{ type: string }>obj).type}")`);
+        }
     }
 
     private async sendHello() {

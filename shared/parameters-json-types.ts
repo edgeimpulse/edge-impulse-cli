@@ -26,6 +26,8 @@ export type DSPInfo = {
     // Optional: named axes
     axes: DSPInfoNamedAxis[] | undefined;
     port?: number;
+    // List of targets that support this DSP block. If undefined, we assume this block works on all targets.
+    supportedTargets?: string[];
 };
 
 export type DSPParameters = {

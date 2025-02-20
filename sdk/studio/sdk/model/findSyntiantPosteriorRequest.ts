@@ -56,5 +56,5 @@ export class FindSyntiantPosteriorRequest {
 export type FindSyntiantPosteriorRequestReferenceSetEnum = '600_seconds' | 'full' | 'custom' | 'no_calibration';
 export const FindSyntiantPosteriorRequestReferenceSetEnumValues: string[] = ['600_seconds', 'full', 'custom', 'no_calibration'];
 
-export type FindSyntiantPosteriorRequestDeploymentTargetEnum = 'syntiant-ndp101' | 'syntiant-ndp101-lib' | 'syntiant-ndp120-lib' | 'syntiant-ndp120-lib-tdk-v14' | 'syntiant-nicla-ndp120' | 'syntiant-avnet-rasyn';
-export const FindSyntiantPosteriorRequestDeploymentTargetEnumValues: string[] = ['syntiant-ndp101', 'syntiant-ndp101-lib', 'syntiant-ndp120-lib', 'syntiant-ndp120-lib-tdk-v14', 'syntiant-nicla-ndp120', 'syntiant-avnet-rasyn'];
+export type FindSyntiantPosteriorRequestDeploymentTargetEnum = 'syntiant-ndp101' | 'syntiant-ndp101-lib' | 'syntiant-ndp120-lib' | 'syntiant-ndp120-lib-tdk-v14' | 'syntiant-nicla-ndp120' | 'syntiant-avnet-rasyn' | 'syntiant-ndp120-lib-ndp-v1-15-0';
+export const FindSyntiantPosteriorRequestDeploymentTargetEnumValues: string[] = ['syntiant-ndp101', 'syntiant-ndp101-lib', 'syntiant-ndp120-lib', 'syntiant-ndp120-lib-tdk-v14', 'syntiant-nicla-ndp120', 'syntiant-avnet-rasyn', 'syntiant-ndp120-lib-ndp-v1-15-0'];

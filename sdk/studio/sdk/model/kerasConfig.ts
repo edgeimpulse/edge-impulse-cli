@@ -20,7 +20,6 @@ import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
 import { LearnBlockType } from './learnBlockType';
-import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { TransferLearningModel } from './transferLearningModel';
 
 export class KerasConfig {
@@ -110,7 +109,6 @@ export class KerasConfig {
     'customParameters'?: { [key: string]: string; };
     'anomalyCapacity'?: AnomalyCapacity;
     'lastShownModelVariant'?: KerasModelVariantEnum;
-    'lastShownModelEngine'?: ModelEngineShortEnum;
     'blockParameters'?: BlockParameters;
 
     static discriminator: string | undefined = undefined;
@@ -260,11 +258,6 @@ export class KerasConfig {
             "name": "lastShownModelVariant",
             "baseName": "lastShownModelVariant",
             "type": "KerasModelVariantEnum"
-        },
-        {
-            "name": "lastShownModelEngine",
-            "baseName": "lastShownModelEngine",
-            "type": "ModelEngineShortEnum"
         },
         {
             "name": "blockParameters",

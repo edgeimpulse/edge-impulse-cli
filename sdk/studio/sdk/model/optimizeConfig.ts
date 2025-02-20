@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { OptimizeConfigOptimizationObjectives } from './optimizeConfigOptimizationObjectives';
+import { OptimizeConfigSearchSpaceSource } from './optimizeConfigSearchSpaceSource';
 import { OptimizeConfigSearchSpaceTemplate } from './optimizeConfigSearchSpaceTemplate';
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
@@ -83,9 +85,9 @@ export class OptimizeConfig {
     */
     'latencySEM'?: number;
     /**
-    * Hyperparameter optimization objectives ordered by priority
+    * Hyperparameter optimization objectives and corresponding weights
     */
-    'optimizationObjectives'?: Array<string>;
+    'optimizationObjectives'?: Array<OptimizeConfigOptimizationObjectives>;
     /**
     * Hyperparameter optimization objectives + weights in string format
     */
@@ -114,12 +116,21 @@ export class OptimizeConfig {
     * Enable verbose logging
     */
     'verboseLogging'?: boolean;
+    /**
+    * Disable search constraints
+    */
+    'disableConstraints'?: boolean;
+    /**
+    * Disable trial deduplication
+    */
+    'disableDeduplicate'?: boolean;
     'tunerSpaceOptions'?: { [key: string]: Array<string>; };
     /**
     * List of impulses specifying the EON Tuner search space
     */
     'space'?: Array<TunerSpaceImpulse>;
     'searchSpaceTemplate'?: OptimizeConfigSearchSpaceTemplate;
+    'searchSpaceSource'?: OptimizeConfigSearchSpaceSource;
 
     static discriminator: string | undefined = undefined;
 
@@ -237,7 +248,7 @@ export class OptimizeConfig {
         {
             "name": "optimizationObjectives",
             "baseName": "optimizationObjectives",
-            "type": "Array<string>"
+            "type": "Array<OptimizeConfigOptimizationObjectives>"
         },
         {
             "name": "rawObjectives",
@@ -275,6 +286,16 @@ export class OptimizeConfig {
             "type": "boolean"
         },
         {
+            "name": "disableConstraints",
+            "baseName": "disableConstraints",
+            "type": "boolean"
+        },
+        {
+            "name": "disableDeduplicate",
+            "baseName": "disableDeduplicate",
+            "type": "boolean"
+        },
+        {
             "name": "tunerSpaceOptions",
             "baseName": "tunerSpaceOptions",
             "type": "{ [key: string]: Array<string>; }"
@@ -288,6 +309,11 @@ export class OptimizeConfig {
             "name": "searchSpaceTemplate",
             "baseName": "searchSpaceTemplate",
             "type": "OptimizeConfigSearchSpaceTemplate"
+        },
+        {
+            "name": "searchSpaceSource",
+            "baseName": "searchSpaceSource",
+            "type": "OptimizeConfigSearchSpaceSource"
         }    ];
 
     static getAttributeTypeMap() {

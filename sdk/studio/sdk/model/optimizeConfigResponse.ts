@@ -12,7 +12,9 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { OptimizeConfig } from './optimizeConfig';
+import { OptimizeConfigOptimizationObjectives } from './optimizeConfigOptimizationObjectives';
 import { OptimizeConfigResponseAllOf } from './optimizeConfigResponseAllOf';
+import { OptimizeConfigSearchSpaceSource } from './optimizeConfigSearchSpaceSource';
 import { OptimizeConfigSearchSpaceTemplate } from './optimizeConfigSearchSpaceTemplate';
 import { OptimizeConfigTargetDevice } from './optimizeConfigTargetDevice';
 import { TunerSpaceImpulse } from './tunerSpaceImpulse';
@@ -94,9 +96,9 @@ export class OptimizeConfigResponse {
     */
     'latencySEM'?: number;
     /**
-    * Hyperparameter optimization objectives ordered by priority
+    * Hyperparameter optimization objectives and corresponding weights
     */
-    'optimizationObjectives'?: Array<string>;
+    'optimizationObjectives'?: Array<OptimizeConfigOptimizationObjectives>;
     /**
     * Hyperparameter optimization objectives + weights in string format
     */
@@ -125,12 +127,21 @@ export class OptimizeConfigResponse {
     * Enable verbose logging
     */
     'verboseLogging'?: boolean;
+    /**
+    * Disable search constraints
+    */
+    'disableConstraints'?: boolean;
+    /**
+    * Disable trial deduplication
+    */
+    'disableDeduplicate'?: boolean;
     'tunerSpaceOptions'?: { [key: string]: Array<string>; };
     /**
     * List of impulses specifying the EON Tuner search space
     */
     'space'?: Array<TunerSpaceImpulse>;
     'searchSpaceTemplate'?: OptimizeConfigSearchSpaceTemplate;
+    'searchSpaceSource'?: OptimizeConfigSearchSpaceSource;
     'device'?: object;
 
     static discriminator: string | undefined = undefined;
@@ -259,7 +270,7 @@ export class OptimizeConfigResponse {
         {
             "name": "optimizationObjectives",
             "baseName": "optimizationObjectives",
-            "type": "Array<string>"
+            "type": "Array<OptimizeConfigOptimizationObjectives>"
         },
         {
             "name": "rawObjectives",
@@ -297,6 +308,16 @@ export class OptimizeConfigResponse {
             "type": "boolean"
         },
         {
+            "name": "disableConstraints",
+            "baseName": "disableConstraints",
+            "type": "boolean"
+        },
+        {
+            "name": "disableDeduplicate",
+            "baseName": "disableDeduplicate",
+            "type": "boolean"
+        },
+        {
             "name": "tunerSpaceOptions",
             "baseName": "tunerSpaceOptions",
             "type": "{ [key: string]: Array<string>; }"
@@ -310,6 +331,11 @@ export class OptimizeConfigResponse {
             "name": "searchSpaceTemplate",
             "baseName": "searchSpaceTemplate",
             "type": "OptimizeConfigSearchSpaceTemplate"
+        },
+        {
+            "name": "searchSpaceSource",
+            "baseName": "searchSpaceSource",
+            "type": "OptimizeConfigSearchSpaceSource"
         },
         {
             "name": "device",

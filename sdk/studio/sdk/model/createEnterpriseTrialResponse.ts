@@ -23,9 +23,9 @@ export class CreateEnterpriseTrialResponse {
     */
     'error'?: string;
     /**
-    * Unique identifier of the created entity, if any.
+    * Unique identifier of the created entity.
     */
-    'id'?: number | null;
+    'id': number;
     /**
     * ID of the user created for the trial, if the user did not already exist.
     */

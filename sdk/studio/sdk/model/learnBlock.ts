@@ -29,6 +29,10 @@ export class LearnBlock {
     'isPublicEnterpriseOnly'?: boolean;
     'blockType': BlockType;
     'displayCategory'?: BlockDisplayCategory;
+    /**
+    * List of target devices that support this learn block. If undefined this block works on all targets.
+    */
+    'supportedTargets'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +91,11 @@ export class LearnBlock {
             "name": "displayCategory",
             "baseName": "displayCategory",
             "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "supportedTargets",
+            "baseName": "supportedTargets",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

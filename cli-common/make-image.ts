@@ -23,6 +23,7 @@ export const EXTENSION_MAPPING: { [k: string]: string } = {
     '.txt': 'text/plain',
     '.mp4': 'video/mp4',
     '.avi': 'video/avi',
+    '.parquet': 'application/vnd.apache.parquet',
 };
 
 export const VALID_EXTENSIONS = Object.keys(EXTENSION_MAPPING);

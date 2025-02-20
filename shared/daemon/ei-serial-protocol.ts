@@ -7,16 +7,16 @@ import { EventEmitter } from './events';
 const CON_PREFIX = '\x1b[34m[SER]\x1b[0m';
 
 export enum EiSerialWifiSecurity {
-    EI_SECURITY_NONE         = 0x0,      /*!< open access point */
-    EI_SECURITY_WEP          = 0x1,      /*!< phrase conforms to WEP */
-    EI_SECURITY_WPA          = 0x2,      /*!< phrase conforms to WPA */
-    EI_SECURITY_WPA2         = 0x3,      /*!< phrase conforms to WPA2 */
-    EI_SECURITY_WPA_WPA2     = 0x4,      /*!< phrase conforms to WPA/WPA2 */
-    EI_SECURITY_PAP          = 0x5,      /*!< phrase conforms to PPP authentication context */
-    EI_SECURITY_CHAP         = 0x6,      /*!< phrase conforms to PPP authentication context */
-    EI_SECURITY_EAP_TLS      = 0x7,      /*!< phrase conforms to EAP-TLS */
-    EI_SECURITY_PEAP         = 0x8,      /*!< phrase conforms to PEAP */
-    EI_SECURITY_UNKNOWN      = 0xFF,     /*!< unknown/unsupported security in scan results */
+    EI_SECURITY_NONE         = 0x0,      /* open access point */
+    EI_SECURITY_WEP          = 0x1,      /* phrase conforms to WEP */
+    EI_SECURITY_WPA          = 0x2,      /* phrase conforms to WPA */
+    EI_SECURITY_WPA2         = 0x3,      /* phrase conforms to WPA2 */
+    EI_SECURITY_WPA_WPA2     = 0x4,      /* phrase conforms to WPA/WPA2 */
+    EI_SECURITY_PAP          = 0x5,      /* phrase conforms to PPP authentication context */
+    EI_SECURITY_CHAP         = 0x6,      /* phrase conforms to PPP authentication context */
+    EI_SECURITY_EAP_TLS      = 0x7,      /* phrase conforms to EAP-TLS */
+    EI_SECURITY_PEAP         = 0x8,      /* phrase conforms to PEAP */
+    EI_SECURITY_UNKNOWN      = 0xFF,     /* unknown/unsupported security in scan results */
 }
 
 export enum EiSerialSensor {

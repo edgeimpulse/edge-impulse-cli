@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
+import { ObjectDetectionLabelQueueResponseAllOfSamples } from './objectDetectionLabelQueueResponseAllOfSamples';
 
 export class ObjectDetectionLabelQueueResponseAllOf {
-    'samples': Array<AddOrganizationTransformationBlockResponseAllOf>;
+    'samples': Array<ObjectDetectionLabelQueueResponseAllOfSamples>;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,7 +21,7 @@ export class ObjectDetectionLabelQueueResponseAllOf {
         {
             "name": "samples",
             "baseName": "samples",
-            "type": "Array<AddOrganizationTransformationBlockResponseAllOf>"
+            "type": "Array<ObjectDetectionLabelQueueResponseAllOfSamples>"
         }    ];
 
     static getAttributeTypeMap() {

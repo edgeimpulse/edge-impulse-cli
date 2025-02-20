@@ -28,6 +28,10 @@ export class Organization {
     * Unique identifier of the white label this organization belongs to, if any.
     */
     'whitelabelId': number | null;
+    /**
+    * Name of the white label this organization belongs to, if any.
+    */
+    'whitelabelName'?: string;
     'projects'?: Array<Project>;
     /**
     * Unique identifier of the trial this organization belongs to, if any.
@@ -96,6 +100,11 @@ export class Organization {
             "name": "whitelabelId",
             "baseName": "whitelabelId",
             "type": "number"
+        },
+        {
+            "name": "whitelabelName",
+            "baseName": "whitelabelName",
+            "type": "string"
         },
         {
             "name": "projects",

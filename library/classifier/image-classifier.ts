@@ -134,6 +134,10 @@ export class ImageClassifier extends EventEmitter<{
         ]);
     }
 
+    getRunner() {
+        return this._runner;
+    }
+
     static async resizeImage(model: ModelInformation, data: Buffer, fitMethod?: keyof FitEnum) {
         const metadata = await sharp(data).metadata();
         if (!metadata.width) {

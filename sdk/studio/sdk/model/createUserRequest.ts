@@ -64,6 +64,10 @@ export class CreateUserRequest {
     * If true, allows signup to proceed despite a potentially invalid email. Note that this will enforce email verification post-signup
     */
     'ignoreEmailValidation'?: boolean;
+    /**
+    * CloudFlare Turnstile response token
+    */
+    'turnstileResponse': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -132,6 +136,11 @@ export class CreateUserRequest {
             "name": "ignoreEmailValidation",
             "baseName": "ignoreEmailValidation",
             "type": "boolean"
+        },
+        {
+            "name": "turnstileResponse",
+            "baseName": "turnstileResponse",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

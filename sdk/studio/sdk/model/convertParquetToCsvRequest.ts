@@ -11,23 +11,20 @@
  */
 
 
-export class AddOrganizationSecretResponseAllOf {
-    /**
-    * Secret ID
-    */
-    'id': number;
+export class ConvertParquetToCsvRequest {
+    'file':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
-            "type": "number"
+            "name": "file",
+            "baseName": "file",
+            "type": "RequestFile"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddOrganizationSecretResponseAllOf.attributeTypeMap;
+        return ConvertParquetToCsvRequest.attributeTypeMap;
     }
 }
 

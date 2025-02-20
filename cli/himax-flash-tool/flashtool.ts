@@ -6,7 +6,6 @@ import Path from 'path';
 import WebSocket from 'ws';
 import { HimaxSerialProtocol, HimaxDeviceTypes } from './himax-serial-protocol';
 import { findSerial } from '../find-serial';
-import crc32 from 'crc-32';
 import program from 'commander';
 import cliProgress from 'cli-progress';
 import checkNewVersions from '../../cli-common/check-new-version';

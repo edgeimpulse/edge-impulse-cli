@@ -61,24 +61,28 @@ type classifySampleQueryParams = {
 
 type classifySampleByLearnBlockV2QueryParams = {
     variant?: KerasModelVariantEnum,
+    truncateStructuredLabels?: boolean,
 };
 
 type classifySampleForVariantsQueryParams = {
     includeDebugInfo?: boolean,
     variants: string,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type classifySampleV2QueryParams = {
     includeDebugInfo?: boolean,
     variant?: KerasModelVariantEnum,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type getClassifyJobResultQueryParams = {
     featureExplorerOnly?: boolean,
     variant?: KerasModelVariantEnum,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type getClassifyJobResultPageQueryParams = {
@@ -86,6 +90,7 @@ type getClassifyJobResultPageQueryParams = {
     offset?: number,
     variant?: KerasModelVariantEnum,
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 type getClassifyMetricsAllVariantsQueryParams = {
@@ -94,6 +99,7 @@ type getClassifyMetricsAllVariantsQueryParams = {
 
 type getSampleWindowFromCacheQueryParams = {
     impulseId?: number,
+    truncateStructuredLabels?: boolean,
 };
 
 
@@ -244,15 +250,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "TestPretrainedModelResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -346,15 +352,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -447,15 +453,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -471,6 +477,7 @@ export class ClassifyApi {
      * @param sampleId Sample ID
      * @param blockId Block ID
      * @param variant Keras model variant
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams?: classifySampleByLearnBlockV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/anomaly-gmm/v2/{blockId}/{sampleId}'
@@ -515,6 +522,10 @@ export class ClassifyApi {
             localVarQueryParameters['variant'] = ObjectSerializer.serialize(queryParams.variant, "KerasModelVariantEnum");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -553,15 +564,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -578,6 +589,7 @@ export class ClassifyApi {
      * @param variants List of keras model variants, given as a JSON string
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async classifySampleForVariants (projectId: number, sampleId: number, queryParams: classifySampleForVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponseMultipleVariants | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/variants'
@@ -629,6 +641,10 @@ export class ClassifyApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -667,15 +683,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponseMultipleVariants | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -692,6 +708,7 @@ export class ClassifyApi {
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
      * @param variant Keras model variant
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async classifySampleV2 (projectId: number, sampleId: number, queryParams?: classifySampleV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}'
@@ -736,6 +753,10 @@ export class ClassifyApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -774,15 +795,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifySampleResponse | StartJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -798,6 +819,7 @@ export class ClassifyApi {
      * @param featureExplorerOnly Whether to get only the classification results relevant to the feature explorer.
      * @param variant Keras model variant
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getClassifyJobResult (projectId: number, queryParams?: getClassifyJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result'
@@ -832,6 +854,10 @@ export class ClassifyApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -872,15 +898,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifyJobResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -897,6 +923,7 @@ export class ClassifyApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param variant Keras model variant
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result/page'
@@ -937,6 +964,10 @@ export class ClassifyApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -975,15 +1006,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "ClassifyJobResponsePage");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1063,15 +1094,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "MetricsAllVariantsResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }
@@ -1087,6 +1118,7 @@ export class ClassifyApi {
      * @param sampleId Sample ID
      * @param windowIndex Sample window index
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
     public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/raw-data/{windowIndex}'
@@ -1131,6 +1163,10 @@ export class ClassifyApi {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
         }
 
+        if (queryParams?.truncateStructuredLabels !== undefined) {
+            localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1169,15 +1205,15 @@ export class ClassifyApi {
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleResponse");
 
-                        const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-
                         if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(new Error(body.error || errString));
                         }
                         else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve(body);
                         }
                         else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
                             reject(errString);
                         }
                     }

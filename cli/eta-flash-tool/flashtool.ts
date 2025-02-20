@@ -6,7 +6,7 @@ import Path from 'path';
 import WebSocket from 'ws';
 import EtaSerialProtocol from './eta-serial-protocol';
 import { findSerial } from '../find-serial';
-import crc32 from 'crc-32';
+import { crc32 } from 'crc';
 import program from 'commander';
 import cliProgress from 'cli-progress';
 import checkNewVersions from '../../cli-common/check-new-version';
@@ -64,6 +64,17 @@ let configFactory = new Config();
         console.error('Failed to set up serial daemon', ex);
     }
 })();
+
+/**
+ * Normalizes a CRC-32 result to match the signed 32-bit integer format
+ * produced by the previous `crc-32` package.
+ *
+ * @param value - The CRC-32 value (unsigned 32-bit integer).
+ * @returns The normalized signed 32-bit integer.
+ */
+function normalizeCrc32Result(value: number): number {
+    return value > 0x7FFFFFFF ? value - 0x100000000 : value;
+}
 
 function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
@@ -146,7 +157,7 @@ async function connectToSerial(deviceId: string) {
             }
 
             let firmware = await fs.promises.readFile(firmwarePathArgv || '');
-            let fullHash = crc32.buf(firmware);
+            let fullHash = normalizeCrc32Result(crc32(firmware));
 
             let blockLength = await serialProtocol.sendAppInfo('New firmware', 'ECM3532 M3', fullHash, firmware.length);
             if (version.patch < 2) {
@@ -169,7 +180,7 @@ async function connectToSerial(deviceId: string) {
             for (let b of blocks) {
                 blockIx++;
                 let currBlock = (blockIx).toString().padStart(blocks.length.toString().length, ' ');
-                let currBlockHash = crc32.buf(b);
+                let currBlockHash = normalizeCrc32Result(crc32(b));
                 if (debug) {
                     console.log(SERIAL_PREFIX, '[' + currBlock + '/' + blocks.length + '] ' +
                         'Sending block (hash ' + currBlockHash + ')...');

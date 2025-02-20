@@ -58,6 +58,7 @@ export enum PageType {
     AccountSettingsMfa = 64,
     AccountSettingsSubscription = 65,
     AccountSettingsSecrets = 66,
+    GetStarted = 70,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
     OrganizationKeys = 92,

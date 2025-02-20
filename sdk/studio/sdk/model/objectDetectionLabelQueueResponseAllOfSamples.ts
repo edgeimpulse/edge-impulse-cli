@@ -10,33 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
-import { GenericApiResponse } from './genericApiResponse';
 
-export class CreateAIActionResponse {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
+export class ObjectDetectionLabelQueueResponseAllOfSamples {
     'id': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "id",
             "baseName": "id",
@@ -44,7 +24,7 @@ export class CreateAIActionResponse {
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateAIActionResponse.attributeTypeMap;
+        return ObjectDetectionLabelQueueResponseAllOfSamples.attributeTypeMap;
     }
 }
 

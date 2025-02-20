@@ -2,7 +2,7 @@ import fs from 'fs';
 import Path from 'path';
 import util from 'util';
 import { Config } from './config';
-import { RunnerClassifyResponseSuccess } from "../library/classifier/linux-impulse-runner";
+import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly } from "../library/classifier/linux-impulse-runner";
 import { ModelInformation } from '../library/classifier/linux-impulse-runner';
 import { EventEmitter } from 'tsee';
 import { MgmtInterfaceImpulseRecordRawData } from '../shared/MgmtInterfaceTypes';
@@ -541,12 +541,28 @@ class MetricsCalculator {
         this._storageManager = storage;
         this._model = model;
 
-        if (model.modelParameters.threshold === undefined) {
+        let threshold: number | undefined;
+        if (model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
+            const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'anomaly_gmm');
+            if (thresholdObj && thresholdObj.type === 'anomaly_gmm') {
+                threshold = thresholdObj.min_anomaly_score;
+            }
+        }
+        else if (model.modelParameters.model_type === 'constrained_object_detection' ||
+                 model.modelParameters.model_type === 'object_detection'
+        ) {
+            const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'object_detection');
+            if (thresholdObj && thresholdObj.type === 'object_detection') {
+                threshold = thresholdObj.min_score;
+            }
+        }
+
+        if (typeof threshold === 'undefined') {
             console.warn(MONITOR_PREFIX, 'Model threshold is not defined, using default value of 0.5');
             this._confidenceThreshold = 0.5;
         }
         else {
-            this._confidenceThreshold = model.modelParameters.threshold ?? 0.5;
+            this._confidenceThreshold = threshold;
         }
 
         // init as empty, will be overwritten by restoreMetrics

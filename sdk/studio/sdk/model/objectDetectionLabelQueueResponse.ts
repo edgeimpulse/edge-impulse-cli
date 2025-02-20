@@ -10,9 +10,9 @@
  * Do not edit the class manually.
  */
 
-import { AddOrganizationTransformationBlockResponseAllOf } from './addOrganizationTransformationBlockResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 import { ObjectDetectionLabelQueueResponseAllOf } from './objectDetectionLabelQueueResponseAllOf';
+import { ObjectDetectionLabelQueueResponseAllOfSamples } from './objectDetectionLabelQueueResponseAllOfSamples';
 
 export class ObjectDetectionLabelQueueResponse {
     /**
@@ -23,7 +23,7 @@ export class ObjectDetectionLabelQueueResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'samples': Array<AddOrganizationTransformationBlockResponseAllOf>;
+    'samples': Array<ObjectDetectionLabelQueueResponseAllOfSamples>;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,7 +41,7 @@ export class ObjectDetectionLabelQueueResponse {
         {
             "name": "samples",
             "baseName": "samples",
-            "type": "Array<AddOrganizationTransformationBlockResponseAllOf>"
+            "type": "Array<ObjectDetectionLabelQueueResponseAllOfSamples>"
         }    ];
 
     static getAttributeTypeMap() {

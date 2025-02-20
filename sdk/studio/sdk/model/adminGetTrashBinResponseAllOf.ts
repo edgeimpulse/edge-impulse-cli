@@ -10,24 +10,34 @@
  * Do not edit the class manually.
  */
 
+import { TrashBinEntity } from './trashBinEntity';
 
-export class EntityCreatedResponseAllOf {
+/**
+* Response containing a list of entities currently in the trash bin. Each entity represents either a deleted organization or user. 
+*/
+export class AdminGetTrashBinResponseAllOf {
     /**
-    * Unique identifier of the created entity.
+    * Total number of entities in the trash bin.
     */
-    'id': number;
+    'total': number;
+    'trashbin'?: Array<TrashBinEntity>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "id",
-            "baseName": "id",
+            "name": "total",
+            "baseName": "total",
             "type": "number"
+        },
+        {
+            "name": "trashbin",
+            "baseName": "trashbin",
+            "type": "Array<TrashBinEntity>"
         }    ];
 
     static getAttributeTypeMap() {
-        return EntityCreatedResponseAllOf.attributeTypeMap;
+        return AdminGetTrashBinResponseAllOf.attributeTypeMap;
     }
 }
 

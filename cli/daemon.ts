@@ -97,7 +97,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
         return this._deviceConfig.info.id;
     }
 
-    getDeviceType() {
+    async getDeviceType() {
         return this._deviceConfig.info.type;
     }
 

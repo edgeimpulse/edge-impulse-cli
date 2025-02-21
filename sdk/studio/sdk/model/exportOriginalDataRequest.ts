@@ -17,7 +17,7 @@ export class ExportOriginalDataRequest {
     */
     'uploaderFriendlyFilenames': boolean;
     /**
-    * Whether to retain crops and splits. If this is disabled, then the original files are returned (as they were uploaded).
+    * Whether to retain crops and splits (applicable to time-series data only). If this is disabled, then the original files are returned (as they were uploaded).
     */
     'retainCrops': boolean;
 

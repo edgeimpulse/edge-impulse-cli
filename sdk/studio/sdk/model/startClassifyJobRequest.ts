@@ -17,6 +17,10 @@ export class StartClassifyJobRequest {
     * Set of model variants to run the classify job against.
     */
     'modelVariants'?: Array<KerasModelVariantEnum>;
+    /**
+    * If enabled, skips feature generation altogether. Used e.g. if you update thresholds.
+    */
+    'skipFeatureGeneration'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -25,6 +29,11 @@ export class StartClassifyJobRequest {
             "name": "modelVariants",
             "baseName": "modelVariants",
             "type": "Array<KerasModelVariantEnum>"
+        },
+        {
+            "name": "skipFeatureGeneration",
+            "baseName": "skipFeatureGeneration",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

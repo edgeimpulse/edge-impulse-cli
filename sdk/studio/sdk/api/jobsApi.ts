@@ -122,7 +122,7 @@ type listFinishedJobsQueryParams = {
 };
 
 type optimizeJobQueryParams = {
-    continuationJobId?: number,
+    extendedFromJobId?: number,
 };
 
 type setTunerPrimaryJobQueryParams = {
@@ -2438,7 +2438,7 @@ export class JobsApi {
      * Evaluates optimal model architecture
      * @summary Optimize model
      * @param projectId Project ID
-     * @param continuationJobId Tuner coordinator job ID
+     * @param extendedFromJobId Tuner coordinator job ID for the direct descendant job to extend this search from
      */
     public async optimizeJob (projectId: number, queryParams?: optimizeJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
@@ -2463,8 +2463,8 @@ export class JobsApi {
             throw new Error('Required parameter projectId was null or undefined when calling optimizeJob.');
         }
 
-        if (queryParams?.continuationJobId !== undefined) {
-            localVarQueryParameters['continuationJobId'] = ObjectSerializer.serialize(queryParams.continuationJobId, "number");
+        if (queryParams?.extendedFromJobId !== undefined) {
+            localVarQueryParameters['extendedFromJobId'] = ObjectSerializer.serialize(queryParams.extendedFromJobId, "number");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

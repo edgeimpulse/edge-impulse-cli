@@ -14,7 +14,7 @@ This package consists of four tools (click to see their respective documentation
 
 ## Installation
 
-1. Install [Node.js](https://nodejs.org/en/) v12 or higher on your host computer.
+1. Install [Node.js](https://nodejs.org/en/) v16 or higher on your host computer.
 2. Install the CLI tools via:
 
     ```
@@ -52,12 +52,12 @@ You can pass in options to the CLI. These options may vary between the various t
 
 * `--clean` - clear credentials, and re-authenticate. Use this to switch projects or devices.
 * `--api-key <apikey>` - set an API key, useful for automatic authentication with a new project.
-* `--greengrass` - (Not used in serial daemon) utilize the AWS IoT Greengrass authentication context and AWS Secrets Manager to authenticate with a new project. Note below.  
+* `--greengrass` - (Not used in serial daemon) utilize the AWS IoT Greengrass authentication context and AWS Secrets Manager to authenticate with a new project. Note below.
 * `--help` - see all options.
 
 #### Greengrass command line option note
 
-This option has no effect on the serial daemon process. If the option is provided to the serial daemon, it will be simply ignored. 
+This option has no effect on the serial daemon process. If the option is provided to the serial daemon, it will be simply ignored.
 
 ## Debugging the serial daemon
 

@@ -52,6 +52,10 @@ export class AdminApiUser {
     'hasPendingPayments'?: boolean;
     'tier': UserTierEnum;
     /**
+    * List of identity providers (e.g. Google, GitHub) that the user has used to sign in with
+    */
+    'idps'?: Array<string>;
+    /**
     * Organizations that the user is a member of. Only filled when requesting information about yourself.
     */
     'organizations': Array<UserOrganization>;
@@ -168,6 +172,11 @@ export class AdminApiUser {
             "name": "tier",
             "baseName": "tier",
             "type": "UserTierEnum"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         },
         {
             "name": "organizations",

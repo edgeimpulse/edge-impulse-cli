@@ -21,7 +21,7 @@ export default class EtaSerialProtocol {
     }
 
     async onConnected() {
-        this._serial.write(Buffer.from('b\r', 'ascii')).then(() => { /*noop*/ }).catch(() => { /*noop*/ });
+        this._serial.write(Buffer.from('b\r', 'ascii')).then(() => { /* noop */ }).catch(() => { /* noop */ });
 
         await this.waitForSerialSequence(Buffer.from([ 0x3e, 0x20 ]), 1000, false, false);
     }

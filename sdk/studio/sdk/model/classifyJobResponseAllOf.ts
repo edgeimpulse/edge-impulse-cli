@@ -25,6 +25,10 @@ export class ClassifyJobResponseAllOf {
     * List of all model variants for which classification results exist
     */
     'availableVariants': Array<KerasModelVariantEnum>;
+    /**
+    * If set to true, there are currently no results because thresholds were changed (e.g. on live classification); and what action you can run to get new results the quickest. If the value is \"can_regenerate_model_summary\" you can run \'regenerateModelTestingSummary\'. If the value is \"should_rerun_full_job\", you need to run \'startClassifyJob\' or \'startEvaluateJob\'. 
+    */
+    'noResultsBecauseThresholdsChanged'?: ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnum;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,6 +57,11 @@ export class ClassifyJobResponseAllOf {
             "name": "availableVariants",
             "baseName": "availableVariants",
             "type": "Array<KerasModelVariantEnum>"
+        },
+        {
+            "name": "noResultsBecauseThresholdsChanged",
+            "baseName": "noResultsBecauseThresholdsChanged",
+            "type": "ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnum"
         }    ];
 
     static getAttributeTypeMap() {
@@ -60,3 +69,6 @@ export class ClassifyJobResponseAllOf {
     }
 }
 
+
+export type ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnum = 'can_regenerate_model_summary' | 'should_rerun_full_job';
+export const ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnumValues: string[] = ['can_regenerate_model_summary', 'should_rerun_full_job'];

@@ -11,6 +11,7 @@
  */
 
 import { ListVersionsResponseAllOfBucket } from './listVersionsResponseAllOfBucket';
+import { PublicProjectLicense } from './publicProjectLicense';
 
 export class ListVersionsResponseAllOfVersions {
     'id': number;
@@ -36,7 +37,7 @@ export class ListVersionsResponseAllOfVersions {
     */
     'accuracyBasedOnImpulse'?: string;
     'totalSamplesCount'?: string;
-    'license'?: string;
+    'license'?: PublicProjectLicense;
 
     static discriminator: string | undefined = undefined;
 
@@ -114,7 +115,7 @@ export class ListVersionsResponseAllOfVersions {
         {
             "name": "license",
             "baseName": "license",
-            "type": "string"
+            "type": "PublicProjectLicense"
         }    ];
 
     static getAttributeTypeMap() {

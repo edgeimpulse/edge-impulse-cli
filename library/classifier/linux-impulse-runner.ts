@@ -42,6 +42,11 @@ export type RunnerHelloResponseModelParameters = {
     axis_count: number;
     frequency: number;
     has_anomaly: RunnerHelloHasAnomaly;
+    /**
+     * NOTE: This field is _experimental_. It might change when object tracking
+     * is released publicly.
+     */
+    has_object_tracking?: boolean;
     input_features_count: number;
     image_input_height: number;
     image_input_width: number;
@@ -63,6 +68,12 @@ export type RunnerHelloResponseModelParameters = {
         id: number,
         type: 'object_detection',
         min_score: number,
+    } | {
+        id: number,
+        type: 'object_tracking',
+        keep_grace: number,
+        max_observations: number,
+        threshold: number,
     })[] | undefined,
 };
 
@@ -91,6 +102,19 @@ export type RunnerClassifyResponseSuccess = {
     result: {
         classification?: { [k: string]: number };
         bounding_boxes?: {
+            label: string,
+            value: number,
+            x: number,
+            y: number,
+            width: number,
+            height: number,
+        }[],
+        /**
+         * NOTE: This field is _experimental_. It might change when object tracking
+         * is released publicly.
+         */
+        object_tracking?: {
+            object_id: number,
             label: string,
             value: number,
             x: number,
@@ -129,6 +153,11 @@ type RunnerSetThresholdRequest = {
     } | {
         id: number,
         min_score: number,
+    } | {
+        id: number,
+        keep_grace: number,
+        max_observations: number,
+        threshold: number,
     };
 };
 
@@ -394,6 +423,12 @@ export class LinuxImpulseRunner {
         id: number,
         type: 'object_detection',
         min_score: number,
+    } | {
+        id: number,
+        type: 'object_tracking',
+        keep_grace: number,
+        max_observations: number,
+        threshold: number,
     }) {
         let resp: RunnerSetThresholdResponse;
         if (obj.type === 'anomaly_gmm') {
@@ -409,6 +444,16 @@ export class LinuxImpulseRunner {
                 set_threshold: {
                     id: obj.id,
                     min_score: obj.min_score,
+                }
+            });
+        }
+        else if (obj.type === 'object_tracking') {
+            resp = await this.send<RunnerSetThresholdRequest, RunnerSetThresholdResponse>({
+                set_threshold: {
+                    id: obj.id,
+                    keep_grace: obj.keep_grace,
+                    max_observations: obj.max_observations,
+                    threshold: obj.threshold,
                 }
             });
         }

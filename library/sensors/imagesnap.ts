@@ -118,8 +118,7 @@ export class Imagesnap extends EventEmitter<{
                         clearTimeout(this._keepAliveTimeout);
                     }
                     this._keepAliveTimeout = setTimeout(() => {
-                        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                        this.timeoutCallback();
+                        void this.timeoutCallback();
                     }, 2000);
                 }
                 catch (ex) {
@@ -155,8 +154,7 @@ export class Imagesnap extends EventEmitter<{
                 });
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            (async () => {
+            void (async () => {
                 if (!this._tempDir) {
                     throw new Error('tempDir is undefined');
                 }

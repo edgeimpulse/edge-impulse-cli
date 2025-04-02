@@ -12,6 +12,7 @@
 
 import { ProjectCollaborator } from './projectCollaborator';
 import { ProjectTierEnum } from './projectTierEnum';
+import { PublicProjectLicense } from './publicProjectLicense';
 
 export class Project {
     'id': number;
@@ -70,10 +71,7 @@ export class Project {
     * Project category
     */
     'category'?: string;
-    /**
-    * Public project license, if any.
-    */
-    'license'?: string;
+    'license'?: PublicProjectLicense;
     'tier': ProjectTierEnum;
     /**
     * Whether this project has been published or not.
@@ -217,7 +215,7 @@ export class Project {
         {
             "name": "license",
             "baseName": "license",
-            "type": "string"
+            "type": "PublicProjectLicense"
         },
         {
             "name": "tier",

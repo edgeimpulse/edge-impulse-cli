@@ -135,6 +135,10 @@ export class OptimizeConfigResponse {
     * Disable trial deduplication
     */
     'disableDeduplicate'?: boolean;
+    /**
+    * Maximum total training time in seconds
+    */
+    'maxTotalTrainingTime'?: number;
     'tunerSpaceOptions'?: { [key: string]: Array<string>; };
     /**
     * List of impulses specifying the EON Tuner search space
@@ -316,6 +320,11 @@ export class OptimizeConfigResponse {
             "name": "disableDeduplicate",
             "baseName": "disableDeduplicate",
             "type": "boolean"
+        },
+        {
+            "name": "maxTotalTrainingTime",
+            "baseName": "maxTotalTrainingTime",
+            "type": "number"
         },
         {
             "name": "tunerSpaceOptions",

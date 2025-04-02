@@ -12,6 +12,7 @@
 
 
 export class AnomalyConfigAxes {
+    'ix': number;
     'label': string;
     'selected': boolean;
     'favourite': boolean;
@@ -19,6 +20,11 @@ export class AnomalyConfigAxes {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "ix",
+            "baseName": "ix",
+            "type": "number"
+        },
         {
             "name": "label",
             "baseName": "label",

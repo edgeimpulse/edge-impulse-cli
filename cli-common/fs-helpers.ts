@@ -1,5 +1,5 @@
-import util from 'util';
-import fs from 'fs';
+import fs from 'fs/promises';
+import { readdirSync, statSync } from 'fs';
 import Path from 'path';
 
 export type FileInFolder = {
@@ -11,32 +11,31 @@ type FileCallback = (file: FileInFolder) => void;
 
 export class FSHelpers {
     static async exists(path: string) {
-        let fx = false;
         try {
-            await util.promisify(fs.stat)(path);
-            fx = true;
+            await fs.access(path);
+            return true;
         }
-        catch (ex) {
-            /* noop */
+        catch {
+            return false;
         }
-        return fx;
     }
 
     static async rmDir(folder: string) {
         if (!(await FSHelpers.exists(folder))) return;
 
-        const readdir = util.promisify(fs.readdir);
+        const entries = await fs.readdir(folder, { withFileTypes: true });
 
-        let entries = await readdir(folder, { withFileTypes: true });
         await Promise.all(entries.map(async entry => {
             // skip .nfs files in the EFS storage layer
             if (entry.name.startsWith('.nfs')) return;
 
-            let fullPath = Path.join(folder, entry.name);
-            return entry.isDirectory() ? FSHelpers.rmDir(fullPath) : FSHelpers.safeUnlinkFile(fullPath);
+            const fullPath = Path.join(folder, entry.name);
+            return entry.isDirectory()
+                ? FSHelpers.rmDir(fullPath)
+                : FSHelpers.safeUnlinkFile(fullPath);
         }));
 
-        await util.promisify(fs.rmdir)(folder);
+        await fs.rmdir(folder);
     }
 
     /**
@@ -45,9 +44,11 @@ export class FSHelpers {
      * when called with optional arguments.
      * @param path
      */
-     static async safeUnlinkFile(path: string) {
+    static async safeUnlinkFile(path: string) {
+        if (!path) return;
+
         try {
-            await util.promisify(fs.unlink)(path);
+            await fs.unlink(path);
         }
         catch (ex) {
             /* noop */
@@ -61,7 +62,7 @@ export class FSHelpers {
      */
     static readAllFiles(rootPath: string, callback: FileCallback) {
         const parseRecursively = (path: string) => {
-            for (const filename of fs.readdirSync(path)) {
+            for (const filename of readdirSync(path)) {
                 // Ignore any files beginning with . e.g. .DS_Store, as well as any readme files
                 if (filename.startsWith('.') || filename.toLowerCase().includes('readme')) {
                     continue;
@@ -69,7 +70,7 @@ export class FSHelpers {
 
                 const filePath = Path.join(path, filename);
 
-                if (fs.statSync(filePath).isDirectory()) {
+                if (statSync(filePath).isDirectory()) {
                     // Recursively parse any directories
                     parseRecursively(filePath);
                 }

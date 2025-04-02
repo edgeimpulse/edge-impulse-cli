@@ -155,8 +155,7 @@ export class Prophesee extends EventEmitter<{
                 });
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            (async () => {
+            void (async () => {
                 if (!this._tempDir) {
                     throw new Error('tempDir is undefined');
                 }

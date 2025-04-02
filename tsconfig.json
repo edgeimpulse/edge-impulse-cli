@@ -1,13 +1,16 @@
 {
     "compilerOptions": {
-        "target": "es2019",
+        "target": "es2021",
         "module": "commonjs",
         "esModuleInterop": true,
         "outDir": "./build",
         "strict": true,
         "sourceMap": true,
         "allowJs": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true
     },
     "include": [
         "**/*"

@@ -2,7 +2,6 @@ import { EventEmitter } from "tsee";
 import { LinuxImpulseRunner, ModelInformation, RunnerClassifyResponseSuccess } from "./linux-impulse-runner";
 import sharp, { FitEnum } from 'sharp';
 import { ICamera } from "../sensors/icamera";
-import fs from 'fs';
 
 export class ImageClassifier extends EventEmitter<{
     result: (result: RunnerClassifyResponseSuccess, timeMs: number, imgAsJpeg: Buffer) => void

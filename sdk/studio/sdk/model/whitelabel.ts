@@ -67,6 +67,10 @@ export class Whitelabel {
     * The maximum number of organizations that can be created under this white label.
     */
     'organizationsLimit'?: number;
+    /**
+    * Whether public entities (like projects, user profiles, etc.) are disabled for this whitelabel instance.
+    */
+    'disablePublicEntities'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -185,6 +189,11 @@ export class Whitelabel {
             "name": "organizationsLimit",
             "baseName": "organizationsLimit",
             "type": "number"
+        },
+        {
+            "name": "disablePublicEntities",
+            "baseName": "disablePublicEntities",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

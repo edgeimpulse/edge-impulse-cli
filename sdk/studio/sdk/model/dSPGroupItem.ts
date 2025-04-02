@@ -42,6 +42,10 @@ export class DSPGroupItem {
     * Sets the placeholder text on the input element (for types \"string\", \"int\", \"float\" and \"secret\")
     */
     'placeholder'?: string;
+    /**
+    * If enabled, render a disabled input element with \'Click to set\'
+    */
+    'showClickToSet': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -125,6 +129,11 @@ export class DSPGroupItem {
             "name": "placeholder",
             "baseName": "placeholder",
             "type": "string"
+        },
+        {
+            "name": "showClickToSet",
+            "baseName": "showClickToSet",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

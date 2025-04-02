@@ -15,6 +15,7 @@ import { GetUserResponseAllOfLastAcceptedTermsOfService } from './getUserRespons
 import { GetUserResponseAllOfLastAccessedProjects } from './getUserResponseAllOfLastAccessedProjects';
 import { GetUserResponseAllOfWhitelabels } from './getUserResponseAllOfWhitelabels';
 import { Project } from './project';
+import { UserEula } from './userEula';
 import { UserExperiment } from './userExperiment';
 import { UserOrganization } from './userOrganization';
 import { UserProjectsSortOrder } from './userProjectsSortOrder';
@@ -59,6 +60,10 @@ export class GetUserResponseAllOf {
     */
     'notifications': Array<string>;
     /**
+    * The date at which the user has requested to cancel their subscription.
+    */
+    'subscriptionCancellationRequestDate'?: Date;
+    /**
     * The date at which the user\'s subscription will be downgraded due to cancellation.
     */
     'subscriptionDowngradeDate'?: Date;
@@ -66,6 +71,14 @@ export class GetUserResponseAllOf {
     * The date at which the user\'s subscription will be automatically terminated due to failed payments.
     */
     'subscriptionTerminationDate'?: Date;
+    /**
+    * The start date of the current pay-as-you-go subscription period.
+    */
+    'payAsYouGoSubscriptionPeriodStartDate'?: Date;
+    /**
+    * The end date of the current pay-as-you-go subscription period.
+    */
+    'payAsYouGoSubscriptionPeriodEndDate'?: Date;
     /**
     * Whether the user has configured a password
     */
@@ -86,6 +99,10 @@ export class GetUserResponseAllOf {
     */
     'privatePersonalProjectsUsed': number;
     'lastAcceptedTermsOfService'?: GetUserResponseAllOfLastAcceptedTermsOfService;
+    /**
+    * List of all Vendor End-User License Agreements that the user has accepted, or could accept.
+    */
+    'eulas': Array<UserEula>;
 
     static discriminator: string | undefined = undefined;
 
@@ -146,6 +163,11 @@ export class GetUserResponseAllOf {
             "type": "Array<string>"
         },
         {
+            "name": "subscriptionCancellationRequestDate",
+            "baseName": "subscriptionCancellationRequestDate",
+            "type": "Date"
+        },
+        {
             "name": "subscriptionDowngradeDate",
             "baseName": "subscriptionDowngradeDate",
             "type": "Date"
@@ -153,6 +175,16 @@ export class GetUserResponseAllOf {
         {
             "name": "subscriptionTerminationDate",
             "baseName": "subscriptionTerminationDate",
+            "type": "Date"
+        },
+        {
+            "name": "payAsYouGoSubscriptionPeriodStartDate",
+            "baseName": "payAsYouGoSubscriptionPeriodStartDate",
+            "type": "Date"
+        },
+        {
+            "name": "payAsYouGoSubscriptionPeriodEndDate",
+            "baseName": "payAsYouGoSubscriptionPeriodEndDate",
             "type": "Date"
         },
         {
@@ -194,6 +226,11 @@ export class GetUserResponseAllOf {
             "name": "lastAcceptedTermsOfService",
             "baseName": "lastAcceptedTermsOfService",
             "type": "GetUserResponseAllOfLastAcceptedTermsOfService"
+        },
+        {
+            "name": "eulas",
+            "baseName": "eulas",
+            "type": "Array<UserEula>"
         }    ];
 
     static getAttributeTypeMap() {

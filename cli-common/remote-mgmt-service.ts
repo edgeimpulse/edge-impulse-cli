@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import TypedEmitter from "typed-emitter";
 import {
     MgmtInterfaceHelloResponse, MgmtInterfaceHelloV4, MgmtInterfaceSampleFinishedResponse,
@@ -626,7 +624,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
         this._ws.on('error', err => {
             console.error(TCP_PREFIX,
                 `Error connecting to ${this._eiConfig.endpoints.internal.ws}`,
-                // eslint-disable-next-line
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 (<any>err).code || err);
         });
 

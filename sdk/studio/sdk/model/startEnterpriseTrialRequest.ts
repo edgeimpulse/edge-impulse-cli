@@ -17,6 +17,10 @@ export class StartEnterpriseTrialRequest {
     */
     'email'?: string;
     /**
+    * Name of the user requesting the trial. If this name is different to the one stored for the user requesting the trial, it will be used to replace the existing one.
+    */
+    'name'?: string;
+    /**
     * Name of the trial organization. All enterprise features are tied to an organization. This organization will be deleted after the trial ends. If no organization name is provided, the user\'s name will be used.
     */
     'organizationName'?: string;
@@ -67,6 +71,11 @@ export class StartEnterpriseTrialRequest {
         {
             "name": "email",
             "baseName": "email",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         },
         {

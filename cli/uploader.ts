@@ -15,7 +15,7 @@ import {
     parseBoundingBoxLabels,
     parseUploaderInfo
 } from '../shared/bounding-box-file-types';
-import { FSHelpers } from './fs-helpers';
+import { FSHelpers } from '../cli-common/fs-helpers';
 import {
     checkDatasetMatchesFormat,
     DatasetConverterHelperCli,

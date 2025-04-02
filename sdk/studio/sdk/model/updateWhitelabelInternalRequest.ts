@@ -16,6 +16,10 @@ export class UpdateWhitelabelInternalRequest {
     * The maximum number of organizations that can be created under this white label.
     */
     'organizationsLimit'?: number | null;
+    /**
+    * Controls whether public entities (like projects, user profiles, etc.) are disabled for this whitelabel instance. 
+    */
+    'disablePublicEntities'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,6 +28,11 @@ export class UpdateWhitelabelInternalRequest {
             "name": "organizationsLimit",
             "baseName": "organizationsLimit",
             "type": "number"
+        },
+        {
+            "name": "disablePublicEntities",
+            "baseName": "disablePublicEntities",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

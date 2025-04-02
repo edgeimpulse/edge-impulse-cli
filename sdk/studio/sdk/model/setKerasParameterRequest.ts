@@ -28,7 +28,7 @@ export class SetKerasParameterRequest {
     */
     'mode'?: SetKerasParameterRequestModeEnum;
     /**
-    * Minimum confidence score, if the neural network scores a sample below this threshold it will be flagged as uncertain.
+    * DEPRECATED, use \"setImpulseThresholds\" instead. Minimum confidence score, if the neural network scores a sample below this threshold it will be flagged as uncertain.
     */
     'minimumConfidenceRating'?: number;
     'selectedModelType'?: KerasModelTypeEnum;

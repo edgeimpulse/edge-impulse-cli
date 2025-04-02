@@ -16,7 +16,7 @@
 */
 export class SetAnomalyParameterRequest {
     /**
-    * Minimum confidence score, if the anomaly block scores a sample above this threshold it will be flagged as anomaly.
+    * DEPRECATED, use \"setImpulseThresholds\" instead. Minimum confidence score, if the anomaly block scores a sample above this threshold it will be flagged as anomaly.
     */
     'minimumConfidenceRating'?: number;
 

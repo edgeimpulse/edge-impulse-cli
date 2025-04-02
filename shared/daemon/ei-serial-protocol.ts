@@ -134,8 +134,7 @@ export default class EiSerialProtocol {
     }
 
     async onConnected() {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this._serial.write(Buffer.from('b\r', 'ascii'));
+        void this._serial.write(Buffer.from('b\r', 'ascii'));
 
         await this.waitForSerialSequence('onConnected', Buffer.from([ 0x3e, 0x20 ]), 5000);
     }
@@ -506,8 +505,7 @@ export default class EiSerialProtocol {
             }),
         ];
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        (async () => {
+        void (async () => {
             try {
                 let res = await this.execCommand(cmd, length * 10);
 
@@ -650,8 +648,7 @@ export default class EiSerialProtocol {
             error: (ex: string) => void
         }>;
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        (async () => {
+        void (async () => {
 
             let bytesReceived = 0;
             let lastSentDate = Date.now();
@@ -805,8 +802,7 @@ export default class EiSerialProtocol {
             await this._serial.setBaudRate(this._config.info.transferBaudRate);
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        (async () => {
+        void (async () => {
             let currDataLine = '';
 
             onData = data => {

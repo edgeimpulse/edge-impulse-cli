@@ -167,6 +167,7 @@ export class UpdateProjectRequest {
     */
     'aiActionsGridColumnCount'?: number;
     'lastShownModelEngine'?: ModelEngineShortEnum;
+    'versioningStorageSizeMib'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -390,6 +391,11 @@ export class UpdateProjectRequest {
             "name": "lastShownModelEngine",
             "baseName": "lastShownModelEngine",
             "type": "ModelEngineShortEnum"
+        },
+        {
+            "name": "versioningStorageSizeMib",
+            "baseName": "versioningStorageSizeMib",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -2,7 +2,8 @@
 
 import { SerialConnector } from './serial-connector';
 import fs from 'fs';
-import Path from 'path';
+import http from 'node:http';
+import Path from 'node:path';
 import EiSerialProtocol, {
     EiSerialDeviceConfig, EiSerialSensor
 } from '../shared/daemon/ei-serial-protocol';
@@ -11,7 +12,6 @@ import { findSerial } from './find-serial';
 import checkNewVersions from '../cli-common/check-new-version';
 import { getCliVersion } from '../cli-common/init-cli-app';
 import express = require('express');
-import http from 'http';
 import socketIO from 'socket.io';
 import { ips } from '../cli-common/get-ips';
 
@@ -128,7 +128,8 @@ async function connectToSerial(deviceId: string) {
     async function connectLogic() {
         if (serial && !serial.isConnected()) {
             inferenceStarted = false;
-            return setTimeout(serial_connect, 5000);
+            setTimeout(serial_connect, 5000);
+            return;
         }
 
         if (rawArgv) {

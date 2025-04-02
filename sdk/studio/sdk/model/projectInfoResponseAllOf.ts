@@ -88,6 +88,7 @@ export class ProjectInfoResponseAllOf {
     */
     'defaultImpulseId'?: number;
     'lastShownModelEngine'?: ModelEngineShortEnum;
+    'versioningStorageSizeMib'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -246,6 +247,11 @@ export class ProjectInfoResponseAllOf {
             "name": "lastShownModelEngine",
             "baseName": "lastShownModelEngine",
             "type": "ModelEngineShortEnum"
+        },
+        {
+            "name": "versioningStorageSizeMib",
+            "baseName": "versioningStorageSizeMib",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

@@ -1,6 +1,5 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import Path from 'path';
-import util from 'util';
 import { Config } from './config';
 import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly } from "../library/classifier/linux-impulse-runner";
 import { ModelInformation } from '../library/classifier/linux-impulse-runner';
@@ -11,7 +10,7 @@ const MONITOR_PREFIX = '\x1b[34m[MON]\x1b[0m';
 
 function checkFileExists(file: string) {
     return new Promise(resolve => {
-        return fs.promises.access(file, fs.constants.F_OK)
+        return fs.access(file, fs.constants.F_OK)
             .then(() => resolve(true))
             .catch(() => resolve(false));
     });
@@ -110,7 +109,7 @@ class StorageManager {
         let lowest = Number.MAX_SAFE_INTEGER;
 
         // get a list of all json files in the storage directory
-        let files = await fs.promises.readdir(path);
+        let files = await fs.readdir(path);
 
         // filter out non-json files
         files = files.filter(file => file.endsWith('.json'));
@@ -140,7 +139,7 @@ class StorageManager {
         const path = Path.join(this._storagePath, segment.toString());
 
         if (await checkFileExists(path) === false) {
-            await fs.promises.mkdir(path, { recursive: true });
+            await fs.mkdir(path, { recursive: true });
         }
         return path;
     }
@@ -148,13 +147,13 @@ class StorageManager {
     private async getStorageSize(path: string = this._storagePath): Promise<number> {
 
         const dirSize = async (dir: string) => {
-            const files = await fs.promises.readdir(dir, { withFileTypes: true });
+            const files = await fs.readdir(dir, { withFileTypes: true });
             // create a list of promises that will return the size of each file
             const sizesPromiseArr: Promise<number>[] = files.map( async file => {
                 const filePath = Path.join( dir, file.name );
                 // if the file is a directory, then call the dirSize function recursively
                 if (file.isDirectory()) return await dirSize(filePath);
-                if (file.isFile()) return (await fs.promises.stat(filePath)).size;
+                if (file.isFile()) return (await fs.stat(filePath)).size;
                 // for any other types return 0 bytes size
                 return 0;
             });
@@ -192,12 +191,12 @@ class StorageManager {
 
         // check if storage directory exists
         if (await checkFileExists(this._storagePath) === false) {
-            await fs.promises.mkdir(this._storagePath, { recursive: true });
+            await fs.mkdir(this._storagePath, { recursive: true });
         }
         else {
             // if storage exist, then try to restore first and last index
             // get list of all directories (segments) in the storage directory
-            let dirs = await fs.promises.readdir(this._storagePath, { withFileTypes: true });
+            let dirs = await fs.readdir(this._storagePath, { withFileTypes: true });
             // filter out non-directories
             dirs = dirs.filter(dirent => dirent.isDirectory());
             // filter out directories that don't have a number as the name
@@ -237,7 +236,7 @@ class StorageManager {
 
     private async cleanupStorage(): Promise<void> {
         // get list of segment directories
-        let dirs = await fs.promises.readdir(this._storagePath, { withFileTypes: true });
+        let dirs = await fs.readdir(this._storagePath, { withFileTypes: true });
         // filter out non-directories
         dirs = dirs.filter(dirent => dirent.isDirectory());
         // filter out directories that don't have a number as the name
@@ -256,8 +255,16 @@ class StorageManager {
         // get number of records in the lowest segment
         let { highest, lowest } = await this.getHighestAndLowestIndexes(lowestSegmentPath);
 
-        // remove the lowest segment
-        await fs.promises.rm(lowestSegmentPath, { recursive: true });
+        const stats = await fs.stat(lowestSegmentPath);
+        if (stats.isDirectory()) {
+            // In Node.js v16, fs.rmdir with recursive option is deprecated
+            // fs.rm is the recommended replacement
+            await fs.rm(lowestSegmentPath, { recursive: true, force: true });
+        }
+        else {
+            await fs.unlink(lowestSegmentPath);
+        }
+
         // update the first index
         this._firstIndex = highest + 1;
         // update the storage size
@@ -279,12 +286,12 @@ class StorageManager {
     }
 
     async saveInferenceMetrics(metrics: string): Promise<void> {
-        await fs.promises.writeFile(this._metricsPath, metrics);
+        await fs.writeFile(this._metricsPath, metrics);
     }
 
     async getInferenceMetrics(): Promise<string | undefined> {
         if (await checkFileExists(this._metricsPath) === true) {
-            return await fs.promises.readFile(this._metricsPath, 'utf-8');
+            return await fs.readFile(this._metricsPath, 'utf-8');
         }
         return undefined;
     }
@@ -303,13 +310,13 @@ class StorageManager {
         if (record.rawData.type === 'jpg') {
             const imgPath = Path.join(await this.getPathByIndex(record.index), record.index.toString() + '.jpg');
             const buf = Buffer.from(record.rawData.bufferBase64, 'base64');
-            await fs.promises.writeFile(imgPath, buf);
+            await fs.writeFile(imgPath, buf);
             rawDataSize = buf.length;
             record.rawData.bufferBase64 = imgPath;
         }
 
         const recordStr = JSON.stringify(record, null, 4);
-        await fs.promises.writeFile(recordPath, recordStr, 'utf-8');
+        await fs.writeFile(recordPath, recordStr, 'utf-8');
         recordSize = recordStr.length;
 
         this._storageSize += (recordSize + rawDataSize);
@@ -327,7 +334,7 @@ class StorageManager {
             return undefined;
         }
 
-        let record = <ImpulseRecord>JSON.parse(await fs.promises.readFile(recordPath, 'utf-8'));
+        let record = <ImpulseRecord>JSON.parse(await fs.readFile(recordPath, 'utf-8'));
         if (record.rawData.type === 'jpg') {
             let fileBuf: Buffer;
             if (await checkFileExists(record.rawData.bufferBase64) === false) {
@@ -340,7 +347,7 @@ class StorageManager {
                     throw new Error(`Record ${index} doesn't have the raw data file and the base64 is invalid`);
                 }
             }
-            fileBuf = <Buffer>await fs.promises.readFile(record.rawData.bufferBase64);
+            fileBuf = await fs.readFile(record.rawData.bufferBase64);
             record.rawData.bufferBase64 = fileBuf.toString('base64');
         }
 
@@ -763,8 +770,7 @@ export class ModelMonitor extends EventEmitter<{
         this._streamState = 'records-request';
 
         if (impulseRequest.index) {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            this._storageManager?.getRecord(impulseRequest.index)
+            void this._storageManager?.getRecord(impulseRequest.index)
                 .then(record => {
                     if (record) {
                         this.emit('impulse-records-response', record);
@@ -788,8 +794,7 @@ export class ModelMonitor extends EventEmitter<{
                 return;
             }
             for (let i = impulseRequest.range.first; i <= impulseRequest.range.last; i++) {
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                this._storageManager?.getRecord(i)
+                void this._storageManager?.getRecord(i)
                     .then(record => {
                         if (record) {
                             this.emit('impulse-records-response', record);
@@ -808,8 +813,7 @@ export class ModelMonitor extends EventEmitter<{
             // sort the list of indices in ascending order
             impulseRequest.list.sort((a, b) => a - b);
             for (const index of impulseRequest.list) {
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                this._storageManager?.getRecord(index)
+                void this._storageManager?.getRecord(index)
                     .then(record => {
                         if (record) {
                             this.emit('impulse-records-response', record);
@@ -845,8 +849,7 @@ export class ModelMonitor extends EventEmitter<{
                 bufferBase64: rawData.buffer.toString('base64'),
             },
         };
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this._storageManager?.saveRecord(record);
+        void this._storageManager?.saveRecord(record);
         if (this._metricsCalculator?.updateMetrics(record)) {
             this.emit('inference-summary', this._metricsCalculator.getMetrics());
         }

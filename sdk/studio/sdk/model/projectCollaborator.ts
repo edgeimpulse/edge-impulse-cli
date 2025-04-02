@@ -49,6 +49,10 @@ export class ProjectCollaborator {
     */
     'hasPendingPayments'?: boolean;
     'tier'?: UserTierEnum;
+    /**
+    * List of identity providers (e.g. Google, GitHub) that the user has used to sign in with
+    */
+    'idps'?: Array<string>;
     'isOwner': boolean;
 
     static discriminator: string | undefined = undefined;
@@ -138,6 +142,11 @@ export class ProjectCollaborator {
             "name": "tier",
             "baseName": "tier",
             "type": "UserTierEnum"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         },
         {
             "name": "isOwner",

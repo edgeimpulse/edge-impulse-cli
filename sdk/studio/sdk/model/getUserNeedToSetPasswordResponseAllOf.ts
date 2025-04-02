@@ -33,6 +33,10 @@ export class GetUserNeedToSetPasswordResponseAllOf {
     * Whether the user has verified its email address or not
     */
     'emailVerified'?: boolean;
+    /**
+    * List of unique identifiers for identity providers associated with the user.
+    */
+    'idps'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -61,6 +65,11 @@ export class GetUserNeedToSetPasswordResponseAllOf {
             "name": "emailVerified",
             "baseName": "emailVerified",
             "type": "boolean"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

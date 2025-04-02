@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 import { SerialConnector } from './serial-connector';
+import crypto from 'node:crypto';
 import WebSocket from 'ws';
 import cbor from 'cbor';
 import inquirer from 'inquirer';
-import request from 'request-promise';
+import fetch from 'node-fetch';
 import {
     MgmtInterfaceHelloV4, MgmtInterfaceHelloResponse,
     MgmtInterfaceSampleRequest, MgmtInterfaceSampleResponse,
@@ -14,7 +15,6 @@ import {
 } from '../shared/MgmtInterfaceTypes';
 import { Config, EdgeImpulseConfig } from '../cli-common/config';
 import { findSerial } from './find-serial';
-import crypto from 'crypto';
 import { getCliVersion, initCliApp, setupCliApp } from '../cli-common/init-cli-app';
 import encodeLabel from '../shared/encoding';
 
@@ -119,7 +119,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
     //     // client.write(data);
     // });
     async function connectLogic() {
-        if (!serial.isConnected()) return setTimeout(serial_connect, 5000);
+        if (!serial.isConnected()) {
+            setTimeout(serial_connect, 5000);
+            return;
+        }
 
         let deviceId = await getDeviceId(serial);
 
@@ -414,7 +417,8 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                         ws.send(cbor.encode(res5));
                     }
 
-                    await request.post(eiConfig.endpoints.internal.ingestion + s.path, {
+                    const response = await fetch(eiConfig.endpoints.internal.ingestion + s.path, {
+                        method: 'POST',
                         headers: {
                             'x-api-key': dataForwarderConfig.apiKey,
                             'x-file-name': encodeLabel(s.label + '.json'),
@@ -422,9 +426,12 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                             'x-upload-source': 'EDGE_IMPULSE_CLI_FORWARDER',
                             'Content-Type': 'application/json'
                         },
-                        body: encoded,
-                        encoding: 'binary'
+                        body: encoded
                     });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to upload sample: ${response.status} ${response.statusText}`);
+                    }
 
                     let res3: MgmtInterfaceSampleFinishedResponse = {
                         sampleFinished: true
@@ -528,7 +535,7 @@ async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: Seria
         (await serial.getMACAddress()) || undefined);
 
     // check what the sampling freq is for this device and how many sensors there are?
-    let sensorInfo = await getSensorInfo(serial, frequencyArgv);
+    const sensorInfo = await getSensorInfo(serial, frequencyArgv);
 
     let axes = '';
     while (axes.split(',').filter(f => !!f.trim()).length !== sensorInfo.sensorCount) {

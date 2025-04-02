@@ -11,6 +11,7 @@
  */
 
 import { AnomalyConfigAxes } from './anomalyConfigAxes';
+import { BlockThreshold } from './blockThreshold';
 import { DependencyData } from './dependencyData';
 
 export class AnomalyConfig {
@@ -33,9 +34,13 @@ export class AnomalyConfig {
     */
     'selectedAxes': Array<number>;
     /**
-    * Minimum confidence rating for this block, scores above this number will be flagged as anomaly.
+    * DEPRECATED, see \"thresholds\" instead. Minimum confidence rating for this block, scores above this number will be flagged as anomaly.
     */
     'minimumConfidenceRating': number;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,6 +79,11 @@ export class AnomalyConfig {
             "name": "minimumConfidenceRating",
             "baseName": "minimumConfidenceRating",
             "type": "number"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

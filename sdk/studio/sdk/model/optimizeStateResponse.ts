@@ -55,6 +55,7 @@ export class OptimizeStateResponse {
     'nextRunIndex': number;
     'canExtendSearch': boolean;
     'isWhitelabel': boolean;
+    'totalTrainingTimeExceeded': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -137,6 +138,11 @@ export class OptimizeStateResponse {
         {
             "name": "isWhitelabel",
             "baseName": "isWhitelabel",
+            "type": "boolean"
+        },
+        {
+            "name": "totalTrainingTimeExceeded",
+            "baseName": "totalTrainingTimeExceeded",
             "type": "boolean"
         }    ];
 

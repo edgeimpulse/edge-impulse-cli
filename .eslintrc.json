@@ -7,13 +7,10 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.json",
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 2021
     },
-    "plugins": [
-        "@typescript-eslint",
-        "@stylistic",
-        "mocha"
-    ],
+    "plugins": ["@typescript-eslint", "@stylistic", "mocha", "n"],
     "rules": {
         "no-restricted-globals": [
             "error",
@@ -36,45 +33,9 @@
                 "message": "Use 'Number()' instead of 'parseFloat'."
             }
         ],
-        "@stylistic/member-delimiter-style": [
-            "off",
-            {
-                "multiline": {
-                    "delimiter": "semi",
-                    "requireLast": true
-                },
-                "singleline": {
-                    "delimiter": "semi",
-                    "requireLast": false
-                }
-            }
-        ],
-        "@stylistic/indent": [
-            "off",
-            4,
-            {
-                "SwitchCase": 1,
-                "VariableDeclarator": 1,
-                "outerIIFEBody": 1,
-                "MemberExpression": 1,
-                "FunctionDeclaration": {
-                    "parameters": 1,
-                    "body": 1
-                },
-                "FunctionExpression": {
-                    "parameters": 1,
-                    "body": 1
-                },
-                "CallExpression": {
-                    "arguments": 1
-                },
-                "ArrayExpression": 1,
-                "ObjectExpression": 1,
-                "ImportDeclaration": 1,
-                "flatTernaryExpressions": false,
-                "ignoreComments": false
-            }
-        ],
+        "@stylistic/member-delimiter-style": ["off"],
+        "@stylistic/indent": ["off"],
+        "@stylistic/semi": ["error", "always"],
         "@stylistic/comma-spacing": [
             "error",
             {
@@ -83,40 +44,22 @@
             }
         ],
         "@typescript-eslint/adjacent-overload-signatures": "error",
-        "@typescript-eslint/array-type": [
-            "off",
-            {
-                "default": "array"
-            }
-        ],
-        "@typescript-eslint/ban-types": [
-            "off",
-            {
-                "types": {
-                    "Object": false,
-                    "Function": {
-                        "message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
-                    },
-                    "Boolean": {
-                        "message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
-                    },
-                    "Number": {
-                        "message": "Avoid using the `Number` type. Did you mean `number`?"
-                    },
-                    "String": {
-                        "message": "Avoid using the `String` type. Did you mean `string`?"
-                    },
-                    "Symbol": {
-                        "message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
-                    },
-                    "{}": false
-                }
-            }
-        ],
+        "@typescript-eslint/array-type": "off",
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/dot-notation": "error",
         "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-base-to-string": "warn",
+        "@typescript-eslint/only-throw-error": "warn",
+        "@typescript-eslint/restrict-plus-operands": "warn",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-unsafe-enum-comparison": "off",
+        "@typescript-eslint/no-unsafe-return": "warn",
+        "@typescript-eslint/ban-tslint-comment": "warn",
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/prefer-promise-reject-errors": "off",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
         "@typescript-eslint/explicit-member-accessibility": [
             "error",
             {
@@ -136,17 +79,16 @@
         "@typescript-eslint/no-empty-function": "error",
         "@typescript-eslint/no-empty-interface": "error",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-floating-promises": "error",
         "@typescript-eslint/no-misused-promises": [
             "error",
             {
-              "checksVoidReturn": {
-                "arguments": false,
-                "returns": false,
-                "properties": false
-              }
+                "checksVoidReturn": {
+                    "arguments": false,
+                    "returns": false,
+                    "properties": false
+                }
             }
-          ],
+        ],
         "@typescript-eslint/no-misused-new": "error",
         "@typescript-eslint/no-namespace": "error",
         "@typescript-eslint/no-parameter-properties": "off",
@@ -163,7 +105,6 @@
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/quotes": "off",
-        "@stylistic/semi": ["error", "always"],
         "@typescript-eslint/triple-slash-reference": [
             "error",
             {
@@ -195,13 +136,15 @@
         "id-denylist": "error",
         "id-match": "error",
         "max-classes-per-file": "off",
+        "@stylistic/space-infix-ops": ["error", { "int32Hint": false }],
         "@stylistic/max-len": [
             "error",
             {
                 "ignoreStrings": true,
                 "ignoreTemplateLiterals": true,
                 "ignoreRegExpLiterals": true,
-                "code": 120
+                "code": 120,
+                "ignorePattern": "^\\s*[/][/*]\\s*eslint-disable-next-line"
             }
         ],
         "@stylistic/new-parens": "error",
@@ -213,7 +156,7 @@
         "no-debugger": "error",
         "no-empty": "error",
         "no-eval": "error",
-        "no-fallthrough": "off",
+        "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted" }],
         "no-invalid-this": "off",
         "no-irregular-whitespace": "error",
         "no-inner-declarations": "off",
@@ -233,7 +176,7 @@
         "no-unused-expressions": "off",
         "no-unused-labels": "error",
         "no-use-before-define": "off",
-        "no-var": "off",
+        "no-var": "warn",
         "object-shorthand": "off",
         "one-var": ["error", "never"],
         "prefer-rest-params": "error",
@@ -241,10 +184,11 @@
         "no-bitwise": "error",
         "radix": "error",
         "@stylistic/spaced-comment": [
-            "off",
+            "error",
             "always",
             {
-                "markers": ["/"]
+                "line": { "exceptions": [], "markers": ["/"] },
+                "block": { "balanced": true, "exceptions": ["*"] }
             }
         ],
         "@stylistic/type-generic-spacing": ["error"],
@@ -259,6 +203,20 @@
         "mocha/no-identical-title": "off",
         "mocha/no-mocha-arrows": "off",
         "mocha/consistent-spacing-between-blocks": "off",
-        "mocha/no-exports": "off"
+        "mocha/no-exports": "off",
+        "n/no-unsupported-features/es-builtins": [
+            "error",
+            {
+                "version": ">=16.0.0",
+                "ignores": []
+            }
+        ],
+        "n/no-unsupported-features/node-builtins": [
+            "error",
+            {
+                "version": ">=16.0.0",
+                "ignores": []
+            }
+        ]
     }
 }

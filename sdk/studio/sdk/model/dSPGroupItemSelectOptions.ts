@@ -12,9 +12,25 @@
 
 
 export class DSPGroupItemSelectOptions {
+    /**
+    * What is the string that will be set if this option is selected?
+    */
     'value'?: string;
     'selected'?: boolean;
+    /**
+    * What is the label that will be shown to the user for this option?
+    */
     'optionLabel'?: string;
+    /**
+    * The following options are optional.  See Learn Block Auto Config in Notion. Higher priority will get chosen based on limits below.
+    */
+    'priority'?: number;
+    /**
+    * Estimated ROM footprint for this choice.  Will be tested against ROM budget in Studio.
+    */
+    'romEstimate'?: number;
+    'needsOps'?: Array<string>;
+    'needsFeatures'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +49,26 @@ export class DSPGroupItemSelectOptions {
             "name": "optionLabel",
             "baseName": "optionLabel",
             "type": "string"
+        },
+        {
+            "name": "priority",
+            "baseName": "priority",
+            "type": "number"
+        },
+        {
+            "name": "romEstimate",
+            "baseName": "romEstimate",
+            "type": "number"
+        },
+        {
+            "name": "needsOps",
+            "baseName": "needsOps",
+            "type": "Array<string>"
+        },
+        {
+            "name": "needsFeatures",
+            "baseName": "needsFeatures",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

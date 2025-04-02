@@ -52,7 +52,15 @@ export type DSPParameterItem = {
     // When type is "select" lists all options for the dropdown menu
     // you can either pass in an array of strings, or a list of objects
     // (if you want to customize the label)
-    valid?: (string | { label: string, value: string })[];
+    valid?: (string |
+        {
+            label: string,
+            value: string,
+            priority?: number,
+            needsOps?: LearnBlockProfileOp[],
+            needsFeatures?: LearnBlockProfileFeature[],
+            romEstimate?: number,
+        })[];
     // If this is set, the field is rendered as readonly with the text "Click to set"
     // when clicked the UI changes to a normal text box.
     optional?: boolean;
@@ -83,6 +91,8 @@ export type DSPParameterItem = {
     hint?: string;
     // Sets the placeholder text on the input element (for types "string", "int", "float" and "secret")
     placeholder?: string;
+    // Disables empty checking, only valid for type: string
+    allowEmpty?: boolean;
 };
 
 export type DSPParameterResponse = {
@@ -104,3 +114,10 @@ export type BlockConfigV2 = {
         [host: string]: BlockConfigItemV2,
     }
 };
+
+// This type should list out ops we track support of across NPUs, etc.
+// Just one for now, add more with OR (|)
+export type LearnBlockProfileOp = 'bilinear_upsample';
+
+// Placeholder for features that aren't ops.  None as of yet
+export type LearnBlockProfileFeature = 'dummy';

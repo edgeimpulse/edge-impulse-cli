@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const serialPort = require('serialport');
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
@@ -72,7 +69,9 @@ export class SerialConnector extends (EventEmitter as new () => TypedEmitter<{
             this._serial = serialPorts[this._path];
         }
         else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             this._serial = new serialPort(this._path, { baudRate: this._baudrate });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             serialPorts[this._path] = this._serial;
 
             this._serial.on('close', () => {

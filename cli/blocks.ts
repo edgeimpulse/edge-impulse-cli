@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import Path from 'node:path';
+import os from 'node:os';
 import program from 'commander';
-import fs from 'fs';
-import Path from 'path';
-import os from 'os';
 import { Config, EdgeImpulseConfig } from '../cli-common/config';
 import checkNewVersions from '../cli-common/check-new-version';
 import inquirer from 'inquirer';
 import { c as compress } from 'tar';
-import crypto from 'crypto';
 import dockerignore from '@zeit/dockerignore';
 import { getCliVersion } from '../cli-common/init-cli-app';
 import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
@@ -47,8 +47,7 @@ const init = program.command('init')
             .description('Initialize the current folder as a new block');
 
 const push = program.command('push')
-            .description('Push the current block to Edge Impulse')
-            .option('--port <number>', 'Port that the DSP block is listening on', '4446');
+            .description('Push the current block to Edge Impulse');
 
 const runner = program.command('runner')
                .description('Run the current block locally')
@@ -60,7 +59,6 @@ const runner = program.command('runner')
                .option('--validation-set-size <size>', 'Transfer learning: Size of validation set')
                .option('--input-shape <shape>', 'Transfer learning: List of axis dimensions. Example: "(1, 4, 2)"')
                .option('--download-data [directory]', 'Transfer learning or deploy: Only download data and don\'t run the block')
-               .option('--port <number>', 'DSP: Port to host DSP block on')
                .option('--extra-args <args>', 'Pass extra arguments/options to the Docker container')
                .option('--skip-download', `Tranformation block: Don't download data`);
 
@@ -73,16 +71,8 @@ const runnerCommand = program.args[0] === 'runner';
 const cleanArgv = !!program.clean;
 const devArgv = !!program.dev;
 const apiKeyArgv = program.apiKey ? <string>program.apiKey : undefined;
-let portArgv: string | undefined;
 
 const runnerOpts = runner.opts();
-if (runnerCommand) {
-    portArgv = runnerOpts.port ? <string>runnerOpts.port : undefined;
-}
-else if (pushCommand) {
-    const pushOpts = push.opts();
-    portArgv = pushOpts.port ? <string>pushOpts.port : undefined;
-}
 
 const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
 const dockerignorePath = Path.join(process.cwd(), '.dockerignore');
@@ -147,7 +137,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse:',
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                (<any>ex).statusCode, (<any>(<any>ex).response).body);
+                (<any>ex).statusCode, ((<any>ex).response).body);
         }
         else {
             console.error('Failed to authenticate with Edge Impulse:', ex.message || ex.toString());
@@ -493,42 +483,66 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         organizationId, newObj);
                 }
                 else if (currentBlockConfig.type === 'dsp') {
-                    if (currentBlockConfig.type === 'dsp' && typeof currentBlockConfig.parameters.info.port !== 'number') {
-                        let port: number;
-                        if (portArgv) {
-                            port = Number(portArgv);
-                            if (isNaN(port)) {
-                                console.error(`Invalid value for --port, should be a number, but was "${portArgv}"`);
-                                process.exit(1);
-                            }
+
+                    let portChoices: {name: string, value: number}[] = [];
+
+                    // find choices from dockerfile
+                    //
+                    // note: we expect to find only a single 'EXPOSE' directive in
+                    // the Dockerfile, otherwise the first found will be used.
+                    let dockerChoice: number | undefined;
+                    if (await pathExists(dockerfilePath)) {
+                        let dockerfileLines = (await fs.promises.readFile(dockerfilePath))
+                                .toString('utf-8').split('\n');
+                        let exposeLine = dockerfileLines.find(x => x.toLowerCase().startsWith('expose'));
+                        let exposePort = Number(exposeLine?.toLowerCase().replace('expose ', ''));
+                        if ((typeof exposePort === 'number') && !isNaN(exposePort)) {
+                            dockerChoice = exposePort;
+                            portChoices.push({
+                                name: `from ${Path.basename(dockerfilePath)}: ${dockerChoice}`,
+                                value: dockerChoice
+                            });
                         }
-                        else {
-                            let defaultChoice: number | undefined;
+                    }
 
-                            if (await pathExists(dockerfilePath)) {
-                                let dockerfileLines = (await fs.promises.readFile(dockerfilePath))
-                                    .toString('utf-8').split('\n');
-                                let exposeLine = dockerfileLines.find(x => x.toLowerCase().startsWith('expose'));
-                                let exposePort = Number(exposeLine?.toLowerCase().replace('expose ', ''));
-                                defaultChoice = exposePort;
-                            }
+                    // find choice from the parameters
+                    let parametersChoice: number | undefined;
+                    if (typeof currentBlockConfig.parameters.info.port === 'number') {
+                        parametersChoice = currentBlockConfig.parameters.info.port;
+                        portChoices.push({ name: `from parameters: ${parametersChoice}`, value: parametersChoice });
+                    }
 
-                            let portRes = await inquirer.prompt([{
-                                type: 'number',
-                                name: 'port',
-                                message: 'What port is your block listening on?',
-                                default: defaultChoice
-                            }]);
-                            port = Number(portRes.port);
-                            if (isNaN(port)) {
-                                console.error(`Invalid value for port, should be a number, but was "${portRes.port}"`);
-                                process.exit(1);
-                            }
+                    // when no port setting is detected or
+                    // multiple unique settings.
+                    if (((typeof parametersChoice !== 'number') && (typeof dockerChoice !== 'number')) ||
+                        ((typeof parametersChoice === 'number') && (typeof dockerChoice === 'number')
+                            && parametersChoice !== dockerChoice)) {
+
+                        console.log(`${portChoices.length} port(s) detected! ${portChoices.map(p => p.value)}`);
+
+                        let portRes = await inquirer.prompt([{
+                            type: 'number',
+                            name: 'port',
+                            message: 'What port is your block listening on?',
+                        }]);
+                        const port = Number(portRes.port);
+                        if (isNaN(port)) {
+                            console.error(`Invalid value for port, should be a number, but was "${portRes.port}"`);
+                            process.exit(1);
                         }
 
                         currentBlockConfig.parameters.info.port = port;
                         await blockConfigManager.saveParameters(currentBlockConfig.parameters);
                     }
+                    else if (typeof dockerChoice === 'number') {
+                        // either parameters's port settings is undefined or
+                        // it's the same as dockers's port setting in either
+                        // case we'll use the docker's setting.
+                        currentBlockConfig.parameters.info.port = dockerChoice.valueOf();
+                        await blockConfigManager.saveParameters(currentBlockConfig.parameters);
+                    }
+
+                    console.log(`Pushing block listening on port: ${currentBlockConfig.parameters.info.port}`);
 
                     // If you get a type error here, it means that a new field was added to the add request
                     // and you need to update the parameters json spec (or set the field to undefined) here.
@@ -576,6 +590,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         isPublicForDevices: undefined,
                         publicProjectTierAvailability: 'all-projects',
                         displayCategory: info.displayCategory,
+                        indBlockNoLongerAvailable: undefined,
+                        blockNoLongerAvailableReason: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newObj);
@@ -1039,6 +1055,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             process.exit(1);
         }
     }
+    return;
 })();
 
 function blockTypeToString(blockType: CLIBlockType): string {

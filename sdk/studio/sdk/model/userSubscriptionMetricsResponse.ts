@@ -24,6 +24,10 @@ export class UserSubscriptionMetricsResponse {
     */
     'error'?: string;
     'metrics'?: UserSubscriptionMetricsResponseAllOfMetrics;
+    /**
+    * Number of compute minutes remaining before reaching the monthly compute limit. This field is only present when the user has fewer than 60 minutes left. Once the limit is reached, users can continue using compute resources by subscribing to the pay-as-you-go plan. 
+    */
+    'approachingComputeLimitMinutesLeft'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +46,11 @@ export class UserSubscriptionMetricsResponse {
             "name": "metrics",
             "baseName": "metrics",
             "type": "UserSubscriptionMetricsResponseAllOfMetrics"
+        },
+        {
+            "name": "approachingComputeLimitMinutesLeft",
+            "baseName": "approachingComputeLimitMinutesLeft",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

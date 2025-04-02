@@ -15,6 +15,7 @@ import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { BlockParameters } from './blockParameters';
+import { BlockThreshold } from './blockThreshold';
 import { DependencyData } from './dependencyData';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
@@ -35,7 +36,7 @@ export class KerasConfig {
     */
     'script': string;
     /**
-    * Minimum confidence rating required for the neural network. Scores below this confidence are tagged as uncertain.
+    * DEPRECATED, see \"thresholds\" instead. Minimum confidence rating required for the neural network. Scores below this confidence are tagged as uncertain.
     */
     'minimumConfidenceRating': number;
     'selectedModelType': KerasModelTypeEnum;
@@ -110,6 +111,10 @@ export class KerasConfig {
     'anomalyCapacity'?: AnomalyCapacity;
     'lastShownModelVariant'?: KerasModelVariantEnum;
     'blockParameters'?: BlockParameters;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -263,6 +268,11 @@ export class KerasConfig {
             "name": "blockParameters",
             "baseName": "blockParameters",
             "type": "BlockParameters"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

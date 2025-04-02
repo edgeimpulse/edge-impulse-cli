@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
 
 export class ImpulseInputBlock {
@@ -57,10 +58,7 @@ export class ImpulseInputBlock {
     * Width all images are resized to before training
     */
     'imageHeight'?: number;
-    /**
-    * How to resize images before training
-    */
-    'resizeMode'?: ImpulseInputBlockResizeModeEnum;
+    'resizeMode'?: ImageInputResizeMode;
     /**
     * Resize method to use when resizing images
     */
@@ -144,7 +142,7 @@ export class ImpulseInputBlock {
         {
             "name": "resizeMode",
             "baseName": "resizeMode",
-            "type": "ImpulseInputBlockResizeModeEnum"
+            "type": "ImageInputResizeMode"
         },
         {
             "name": "resizeMethod",
@@ -185,9 +183,6 @@ export class ImpulseInputBlock {
 
 export type ImpulseInputBlockTypeEnum = 'time-series' | 'image' | 'features';
 export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image', 'features'];
-
-export type ImpulseInputBlockResizeModeEnum = 'squash' | 'fit-short' | 'fit-long' | 'crop';
-export const ImpulseInputBlockResizeModeEnumValues: string[] = ['squash', 'fit-short', 'fit-long', 'crop'];
 
 export type ImpulseInputBlockResizeMethodEnum = 'lanczos3' | 'nearest';
 export const ImpulseInputBlockResizeMethodEnumValues: string[] = ['lanczos3', 'nearest'];

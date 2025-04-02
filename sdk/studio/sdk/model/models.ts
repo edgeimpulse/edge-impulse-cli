@@ -5,6 +5,7 @@ export * from './aIActionsConfig';
 export * from './aIActionsConfigStep';
 export * from './aIActionsDataCategory';
 export * from './aIActionsOperatesOn';
+export * from './acceptEulaRequest';
 export * from './activateUserByThirdPartyActivationCodeRequest';
 export * from './activateUserOrVerifyEmailRequest';
 export * from './addApiKeyRequest';
@@ -65,8 +66,6 @@ export * from './adminGetReportResponse';
 export * from './adminGetReportResponseAllOf';
 export * from './adminGetReportsResponse';
 export * from './adminGetReportsResponseAllOf';
-export * from './adminGetSSODomainIdPsResponse';
-export * from './adminGetSSODomainIdPsResponseAllOf';
 export * from './adminGetSSOSettingsResponse';
 export * from './adminGetSSOSettingsResponseAllOf';
 export * from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
@@ -126,6 +125,7 @@ export * from './blockDisplayCategory';
 export * from './blockParameters';
 export * from './blockParamsVisualAnomalyGmm';
 export * from './blockParamsVisualAnomalyPatchcore';
+export * from './blockThreshold';
 export * from './blockType';
 export * from './boundingBox';
 export * from './boundingBoxWithScore';
@@ -357,6 +357,8 @@ export * from './getAllImpulsesResponse';
 export * from './getAllImpulsesResponseAllOf';
 export * from './getAllThirdPartyAuthResponse';
 export * from './getAllThirdPartyAuthResponseAllOf';
+export * from './getAllTransferLearningModelsResponse';
+export * from './getAllTransferLearningModelsResponseAllOf';
 export * from './getAllWhitelabelsResponse';
 export * from './getAllWhitelabelsResponseAllOf';
 export * from './getAutoLabelerResponse';
@@ -392,6 +394,8 @@ export * from './getImpulseRecordsRequest';
 export * from './getImpulseRecordsRequestRange';
 export * from './getImpulseResponse';
 export * from './getImpulseResponseAllOf';
+export * from './getIntegrationSessionStatusResponse';
+export * from './getIntegrationSessionStatusResponseAllOf';
 export * from './getJWTRequest';
 export * from './getJWTResponse';
 export * from './getJWTResponseAllOf';
@@ -461,6 +465,8 @@ export * from './getPublicMetricsResponse';
 export * from './getPublicMetricsResponseAllOf';
 export * from './getPublicOrganizationTransformationBlockResponse';
 export * from './getPublicOrganizationTransformationBlockResponseAllOf';
+export * from './getSSODomainIdPsResponse';
+export * from './getSSODomainIdPsResponseAllOf';
 export * from './getSampleMetadataResponse';
 export * from './getSampleResponse';
 export * from './getStudioConfigResponse';
@@ -495,6 +501,7 @@ export * from './getWhitelabelResponse';
 export * from './getWhitelabelResponseAllOf';
 export * from './hasDataExplorerFeaturesResponse';
 export * from './hasDataExplorerFeaturesResponseAllOf';
+export * from './imageInputResizeMode';
 export * from './imageInputScaling';
 export * from './impulse';
 export * from './impulseDspBlock';
@@ -504,6 +511,7 @@ export * from './impulseInputBlock';
 export * from './impulseInputBlockDatasetSubset';
 export * from './impulseLearnBlock';
 export * from './inputBlock';
+export * from './integrationSessionStatus';
 export * from './inviteOrganizationMemberRequest';
 export * from './job';
 export * from './jobDetails';
@@ -807,6 +815,7 @@ export * from './projectType';
 export * from './projectVersionRequest';
 export * from './projectVisibility';
 export * from './publicOrganizationTransformationBlock';
+export * from './publicProjectLicense';
 export * from './publicProjectTierAvailability';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
@@ -841,6 +850,10 @@ export * from './sendUserFeedbackRequest';
 export * from './sensor';
 export * from './setAIActionsOrderRequest';
 export * from './setAnomalyParameterRequest';
+export * from './setImpulseThresholdsRequest';
+export * from './setImpulseThresholdsRequestThresholds';
+export * from './setImpulseThresholdsResponse';
+export * from './setImpulseThresholdsResponseAllOf';
 export * from './setKerasParameterRequest';
 export * from './setLegacyImpulseStateInternalRequest';
 export * from './setMemberDatasetsRequest';
@@ -866,6 +879,8 @@ export * from './startDeviceDebugStreamResponse';
 export * from './startDeviceDebugStreamResponseAllOf';
 export * from './startDeviceSnapshotDebugStreamRequest';
 export * from './startEnterpriseTrialRequest';
+export * from './startIntegrationSessionResponse';
+export * from './startIntegrationSessionResponseAllOf';
 export * from './startJobResponse';
 export * from './startJobResponseAllOf';
 export * from './startPerformanceCalibrationRequest';
@@ -873,6 +888,7 @@ export * from './startPostProcessingRequest';
 export * from './startSamplingRequest';
 export * from './startSamplingResponse';
 export * from './startSamplingResponseAllOf';
+export * from './startTensorBoardSessionRequest';
 export * from './startTrainingRequestAnomaly';
 export * from './stopDeviceDebugStreamRequest';
 export * from './storageProvider';
@@ -883,6 +899,8 @@ export * from './targetConstraints';
 export * from './targetConstraintsDevice';
 export * from './targetMemory';
 export * from './targetProcessor';
+export * from './testPretrainedModelImagesRequest';
+export * from './testPretrainedModelImagesRequestInput';
 export * from './testPretrainedModelRequest';
 export * from './testPretrainedModelResponse';
 export * from './testPretrainedModelResponseAllOf';
@@ -896,6 +914,7 @@ export * from './trackObjectsRequest';
 export * from './trackObjectsResponse';
 export * from './trackObjectsResponseAllOf';
 export * from './transferLearningModel';
+export * from './transferLearningModelBlockNoLongerAvailable';
 export * from './transferOwnershipOrganizationRequest';
 export * from './transformationBlockAdditionalMountPoint';
 export * from './transformationJobOperatesOnEnum';
@@ -963,10 +982,13 @@ export * from './user';
 export * from './userByThirdPartyActivationRequest';
 export * from './userDeleteTotpMfaKeyRequest';
 export * from './userDismissNotificationRequest';
+export * from './userEula';
+export * from './userEulaName';
 export * from './userExperiment';
 export * from './userGenerateNewMfaKeyResponse';
 export * from './userGenerateNewMfaKeyResponseAllOf';
 export * from './userOrganization';
+export * from './userOrganizationPublicProjectLicense';
 export * from './userProjectsSortOrder';
 export * from './userSetTotpMfaKeyRequest';
 export * from './userSetTotpMfaKeyResponse';
@@ -1006,6 +1028,7 @@ import { AIActionsConfig } from './aIActionsConfig';
 import { AIActionsConfigStep } from './aIActionsConfigStep';
 import { AIActionsDataCategory } from './aIActionsDataCategory';
 import { AIActionsOperatesOn } from './aIActionsOperatesOn';
+import { AcceptEulaRequest } from './acceptEulaRequest';
 import { ActivateUserByThirdPartyActivationCodeRequest } from './activateUserByThirdPartyActivationCodeRequest';
 import { ActivateUserOrVerifyEmailRequest } from './activateUserOrVerifyEmailRequest';
 import { AddApiKeyRequest } from './addApiKeyRequest';
@@ -1066,8 +1089,6 @@ import { AdminGetReportResponse } from './adminGetReportResponse';
 import { AdminGetReportResponseAllOf } from './adminGetReportResponseAllOf';
 import { AdminGetReportsResponse } from './adminGetReportsResponse';
 import { AdminGetReportsResponseAllOf } from './adminGetReportsResponseAllOf';
-import { AdminGetSSODomainIdPsResponse } from './adminGetSSODomainIdPsResponse';
-import { AdminGetSSODomainIdPsResponseAllOf } from './adminGetSSODomainIdPsResponseAllOf';
 import { AdminGetSSOSettingsResponse } from './adminGetSSOSettingsResponse';
 import { AdminGetSSOSettingsResponseAllOf } from './adminGetSSOSettingsResponseAllOf';
 import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
@@ -1127,6 +1148,7 @@ import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockParameters } from './blockParameters';
 import { BlockParamsVisualAnomalyGmm } from './blockParamsVisualAnomalyGmm';
 import { BlockParamsVisualAnomalyPatchcore } from './blockParamsVisualAnomalyPatchcore';
+import { BlockThreshold } from './blockThreshold';
 import { BlockType } from './blockType';
 import { BoundingBox } from './boundingBox';
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
@@ -1358,6 +1380,8 @@ import { GetAllImpulsesResponse } from './getAllImpulsesResponse';
 import { GetAllImpulsesResponseAllOf } from './getAllImpulsesResponseAllOf';
 import { GetAllThirdPartyAuthResponse } from './getAllThirdPartyAuthResponse';
 import { GetAllThirdPartyAuthResponseAllOf } from './getAllThirdPartyAuthResponseAllOf';
+import { GetAllTransferLearningModelsResponse } from './getAllTransferLearningModelsResponse';
+import { GetAllTransferLearningModelsResponseAllOf } from './getAllTransferLearningModelsResponseAllOf';
 import { GetAllWhitelabelsResponse } from './getAllWhitelabelsResponse';
 import { GetAllWhitelabelsResponseAllOf } from './getAllWhitelabelsResponseAllOf';
 import { GetAutoLabelerResponse } from './getAutoLabelerResponse';
@@ -1393,6 +1417,8 @@ import { GetImpulseRecordsRequest } from './getImpulseRecordsRequest';
 import { GetImpulseRecordsRequestRange } from './getImpulseRecordsRequestRange';
 import { GetImpulseResponse } from './getImpulseResponse';
 import { GetImpulseResponseAllOf } from './getImpulseResponseAllOf';
+import { GetIntegrationSessionStatusResponse } from './getIntegrationSessionStatusResponse';
+import { GetIntegrationSessionStatusResponseAllOf } from './getIntegrationSessionStatusResponseAllOf';
 import { GetJWTRequest } from './getJWTRequest';
 import { GetJWTResponse } from './getJWTResponse';
 import { GetJWTResponseAllOf } from './getJWTResponseAllOf';
@@ -1462,6 +1488,8 @@ import { GetPublicMetricsResponse } from './getPublicMetricsResponse';
 import { GetPublicMetricsResponseAllOf } from './getPublicMetricsResponseAllOf';
 import { GetPublicOrganizationTransformationBlockResponse } from './getPublicOrganizationTransformationBlockResponse';
 import { GetPublicOrganizationTransformationBlockResponseAllOf } from './getPublicOrganizationTransformationBlockResponseAllOf';
+import { GetSSODomainIdPsResponse } from './getSSODomainIdPsResponse';
+import { GetSSODomainIdPsResponseAllOf } from './getSSODomainIdPsResponseAllOf';
 import { GetSampleMetadataResponse } from './getSampleMetadataResponse';
 import { GetSampleResponse } from './getSampleResponse';
 import { GetStudioConfigResponse } from './getStudioConfigResponse';
@@ -1496,6 +1524,7 @@ import { GetWhitelabelResponse } from './getWhitelabelResponse';
 import { GetWhitelabelResponseAllOf } from './getWhitelabelResponseAllOf';
 import { HasDataExplorerFeaturesResponse } from './hasDataExplorerFeaturesResponse';
 import { HasDataExplorerFeaturesResponseAllOf } from './hasDataExplorerFeaturesResponseAllOf';
+import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImageInputScaling } from './imageInputScaling';
 import { Impulse } from './impulse';
 import { ImpulseDspBlock } from './impulseDspBlock';
@@ -1505,6 +1534,7 @@ import { ImpulseInputBlock } from './impulseInputBlock';
 import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { InputBlock } from './inputBlock';
+import { IntegrationSessionStatus } from './integrationSessionStatus';
 import { InviteOrganizationMemberRequest } from './inviteOrganizationMemberRequest';
 import { Job } from './job';
 import { JobDetails } from './jobDetails';
@@ -1808,6 +1838,7 @@ import { ProjectType } from './projectType';
 import { ProjectVersionRequest } from './projectVersionRequest';
 import { ProjectVisibility } from './projectVisibility';
 import { PublicOrganizationTransformationBlock } from './publicOrganizationTransformationBlock';
+import { PublicProjectLicense } from './publicProjectLicense';
 import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
@@ -1842,6 +1873,10 @@ import { SendUserFeedbackRequest } from './sendUserFeedbackRequest';
 import { Sensor } from './sensor';
 import { SetAIActionsOrderRequest } from './setAIActionsOrderRequest';
 import { SetAnomalyParameterRequest } from './setAnomalyParameterRequest';
+import { SetImpulseThresholdsRequest } from './setImpulseThresholdsRequest';
+import { SetImpulseThresholdsRequestThresholds } from './setImpulseThresholdsRequestThresholds';
+import { SetImpulseThresholdsResponse } from './setImpulseThresholdsResponse';
+import { SetImpulseThresholdsResponseAllOf } from './setImpulseThresholdsResponseAllOf';
 import { SetKerasParameterRequest } from './setKerasParameterRequest';
 import { SetLegacyImpulseStateInternalRequest } from './setLegacyImpulseStateInternalRequest';
 import { SetMemberDatasetsRequest } from './setMemberDatasetsRequest';
@@ -1867,6 +1902,8 @@ import { StartDeviceDebugStreamResponse } from './startDeviceDebugStreamResponse
 import { StartDeviceDebugStreamResponseAllOf } from './startDeviceDebugStreamResponseAllOf';
 import { StartDeviceSnapshotDebugStreamRequest } from './startDeviceSnapshotDebugStreamRequest';
 import { StartEnterpriseTrialRequest } from './startEnterpriseTrialRequest';
+import { StartIntegrationSessionResponse } from './startIntegrationSessionResponse';
+import { StartIntegrationSessionResponseAllOf } from './startIntegrationSessionResponseAllOf';
 import { StartJobResponse } from './startJobResponse';
 import { StartJobResponseAllOf } from './startJobResponseAllOf';
 import { StartPerformanceCalibrationRequest } from './startPerformanceCalibrationRequest';
@@ -1874,6 +1911,7 @@ import { StartPostProcessingRequest } from './startPostProcessingRequest';
 import { StartSamplingRequest } from './startSamplingRequest';
 import { StartSamplingResponse } from './startSamplingResponse';
 import { StartSamplingResponseAllOf } from './startSamplingResponseAllOf';
+import { StartTensorBoardSessionRequest } from './startTensorBoardSessionRequest';
 import { StartTrainingRequestAnomaly } from './startTrainingRequestAnomaly';
 import { StopDeviceDebugStreamRequest } from './stopDeviceDebugStreamRequest';
 import { StorageProvider } from './storageProvider';
@@ -1884,6 +1922,8 @@ import { TargetConstraints } from './targetConstraints';
 import { TargetConstraintsDevice } from './targetConstraintsDevice';
 import { TargetMemory } from './targetMemory';
 import { TargetProcessor } from './targetProcessor';
+import { TestPretrainedModelImagesRequest } from './testPretrainedModelImagesRequest';
+import { TestPretrainedModelImagesRequestInput } from './testPretrainedModelImagesRequestInput';
 import { TestPretrainedModelRequest } from './testPretrainedModelRequest';
 import { TestPretrainedModelResponse } from './testPretrainedModelResponse';
 import { TestPretrainedModelResponseAllOf } from './testPretrainedModelResponseAllOf';
@@ -1897,6 +1937,7 @@ import { TrackObjectsRequest } from './trackObjectsRequest';
 import { TrackObjectsResponse } from './trackObjectsResponse';
 import { TrackObjectsResponseAllOf } from './trackObjectsResponseAllOf';
 import { TransferLearningModel } from './transferLearningModel';
+import { TransferLearningModelBlockNoLongerAvailable } from './transferLearningModelBlockNoLongerAvailable';
 import { TransferOwnershipOrganizationRequest } from './transferOwnershipOrganizationRequest';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
@@ -1964,10 +2005,13 @@ import { User } from './user';
 import { UserByThirdPartyActivationRequest } from './userByThirdPartyActivationRequest';
 import { UserDeleteTotpMfaKeyRequest } from './userDeleteTotpMfaKeyRequest';
 import { UserDismissNotificationRequest } from './userDismissNotificationRequest';
+import { UserEula } from './userEula';
+import { UserEulaName } from './userEulaName';
 import { UserExperiment } from './userExperiment';
 import { UserGenerateNewMfaKeyResponse } from './userGenerateNewMfaKeyResponse';
 import { UserGenerateNewMfaKeyResponseAllOf } from './userGenerateNewMfaKeyResponseAllOf';
 import { UserOrganization } from './userOrganization';
+import { UserOrganizationPublicProjectLicense } from './userOrganizationPublicProjectLicense';
 import { UserProjectsSortOrder } from './userProjectsSortOrder';
 import { UserSetTotpMfaKeyRequest } from './userSetTotpMfaKeyRequest';
 import { UserSetTotpMfaKeyResponse } from './userSetTotpMfaKeyResponse';
@@ -2031,6 +2075,8 @@ let enumsMap: {[index: string]: any} = {
     "BlockDisplayCategory": "BlockDisplayCategory",
     "BlockType": "BlockType",
     "CalculateDataQualityMetricsRequestRepresentationEnum": "CalculateDataQualityMetricsRequestRepresentationEnum",
+    "ClassifyJobResponseNoResultsBecauseThresholdsChangedEnum": "ClassifyJobResponseNoResultsBecauseThresholdsChangedEnum",
+    "ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnum": "ClassifyJobResponseAllOfNoResultsBecauseThresholdsChangedEnum",
     "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum": "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum",
     "CreateUserThirdPartyResponseStatusEnum": "CreateUserThirdPartyResponseStatusEnum",
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
@@ -2072,12 +2118,13 @@ let enumsMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum",
     "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum",
     "GetJWTRequestSsoTypeEnum": "GetJWTRequestSsoTypeEnum",
+    "ImageInputResizeMode": "ImageInputResizeMode",
     "ImageInputScaling": "ImageInputScaling",
     "ImpulseInputBlockTypeEnum": "ImpulseInputBlockTypeEnum",
-    "ImpulseInputBlockResizeModeEnum": "ImpulseInputBlockResizeModeEnum",
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",
     "InputBlockTypeEnum": "InputBlockTypeEnum",
+    "IntegrationSessionStatusStatusEnum": "IntegrationSessionStatusStatusEnum",
     "JobParentTypeEnum": "JobParentTypeEnum",
     "JobStatus": "JobStatus",
     "KerasConfigModeEnum": "KerasConfigModeEnum",
@@ -2146,11 +2193,14 @@ let enumsMap: {[index: string]: any} = {
     "ProjectTierEnum": "ProjectTierEnum",
     "ProjectType": "ProjectType",
     "ProjectVisibility": "ProjectVisibility",
+    "PublicProjectLicense": "PublicProjectLicense",
     "PublicProjectTierAvailability": "PublicProjectTierAvailability",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SampleProjectLabelingMethodEnum": "SampleProjectLabelingMethodEnum",
     "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
+    "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum": "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum",
+    "SetImpulseThresholdsResponseAllOfRegenerateModelTestingStatusEnum": "SetImpulseThresholdsResponseAllOfRegenerateModelTestingStatusEnum",
     "SetKerasParameterRequestModeEnum": "SetKerasParameterRequestModeEnum",
     "StartDeviceSnapshotDebugStreamRequestResolutionEnum": "StartDeviceSnapshotDebugStreamRequestResolutionEnum",
     "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum": "StartEnterpriseTrialRequestUserHasMLModelsInProductionEnum",
@@ -2171,6 +2221,7 @@ let enumsMap: {[index: string]: any} = {
     "UpdateProjectRequestDataAcquisitionViewTypeEnum": "UpdateProjectRequestDataAcquisitionViewTypeEnum",
     "UploadCustomBlockRequestTypeEnum": "UploadCustomBlockRequestTypeEnum",
     "UploadPretrainedModelRequestModelFileTypeEnum": "UploadPretrainedModelRequestModelFileTypeEnum",
+    "UserEulaName": "UserEulaName",
     "UserProjectsSortOrder": "UserProjectsSortOrder",
     "UserTierEnum": "UserTierEnum",
     "ValidateEmailResponseVerdictEnum": "ValidateEmailResponseVerdictEnum",
@@ -2185,6 +2236,7 @@ let typeMap: {[index: string]: any} = {
     "AIActionLastPreviewStateProposedChanges": AIActionLastPreviewStateProposedChanges,
     "AIActionsConfig": AIActionsConfig,
     "AIActionsConfigStep": AIActionsConfigStep,
+    "AcceptEulaRequest": AcceptEulaRequest,
     "ActivateUserByThirdPartyActivationCodeRequest": ActivateUserByThirdPartyActivationCodeRequest,
     "ActivateUserOrVerifyEmailRequest": ActivateUserOrVerifyEmailRequest,
     "AddApiKeyRequest": AddApiKeyRequest,
@@ -2245,8 +2297,6 @@ let typeMap: {[index: string]: any} = {
     "AdminGetReportResponseAllOf": AdminGetReportResponseAllOf,
     "AdminGetReportsResponse": AdminGetReportsResponse,
     "AdminGetReportsResponseAllOf": AdminGetReportsResponseAllOf,
-    "AdminGetSSODomainIdPsResponse": AdminGetSSODomainIdPsResponse,
-    "AdminGetSSODomainIdPsResponseAllOf": AdminGetSSODomainIdPsResponseAllOf,
     "AdminGetSSOSettingsResponse": AdminGetSSOSettingsResponse,
     "AdminGetSSOSettingsResponseAllOf": AdminGetSSOSettingsResponseAllOf,
     "AdminGetSSOSettingsResponseAllOfSsoWhitelist": AdminGetSSOSettingsResponseAllOfSsoWhitelist,
@@ -2302,6 +2352,7 @@ let typeMap: {[index: string]: any} = {
     "BlockParameters": BlockParameters,
     "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
     "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
+    "BlockThreshold": BlockThreshold,
     "BoundingBox": BoundingBox,
     "BoundingBoxWithScore": BoundingBoxWithScore,
     "BuildOnDeviceModelRequest": BuildOnDeviceModelRequest,
@@ -2527,6 +2578,8 @@ let typeMap: {[index: string]: any} = {
     "GetAllImpulsesResponseAllOf": GetAllImpulsesResponseAllOf,
     "GetAllThirdPartyAuthResponse": GetAllThirdPartyAuthResponse,
     "GetAllThirdPartyAuthResponseAllOf": GetAllThirdPartyAuthResponseAllOf,
+    "GetAllTransferLearningModelsResponse": GetAllTransferLearningModelsResponse,
+    "GetAllTransferLearningModelsResponseAllOf": GetAllTransferLearningModelsResponseAllOf,
     "GetAllWhitelabelsResponse": GetAllWhitelabelsResponse,
     "GetAllWhitelabelsResponseAllOf": GetAllWhitelabelsResponseAllOf,
     "GetAutoLabelerResponse": GetAutoLabelerResponse,
@@ -2562,6 +2615,8 @@ let typeMap: {[index: string]: any} = {
     "GetImpulseRecordsRequestRange": GetImpulseRecordsRequestRange,
     "GetImpulseResponse": GetImpulseResponse,
     "GetImpulseResponseAllOf": GetImpulseResponseAllOf,
+    "GetIntegrationSessionStatusResponse": GetIntegrationSessionStatusResponse,
+    "GetIntegrationSessionStatusResponseAllOf": GetIntegrationSessionStatusResponseAllOf,
     "GetJWTRequest": GetJWTRequest,
     "GetJWTResponse": GetJWTResponse,
     "GetJWTResponseAllOf": GetJWTResponseAllOf,
@@ -2631,6 +2686,8 @@ let typeMap: {[index: string]: any} = {
     "GetPublicMetricsResponseAllOf": GetPublicMetricsResponseAllOf,
     "GetPublicOrganizationTransformationBlockResponse": GetPublicOrganizationTransformationBlockResponse,
     "GetPublicOrganizationTransformationBlockResponseAllOf": GetPublicOrganizationTransformationBlockResponseAllOf,
+    "GetSSODomainIdPsResponse": GetSSODomainIdPsResponse,
+    "GetSSODomainIdPsResponseAllOf": GetSSODomainIdPsResponseAllOf,
     "GetSampleMetadataResponse": GetSampleMetadataResponse,
     "GetSampleResponse": GetSampleResponse,
     "GetStudioConfigResponse": GetStudioConfigResponse,
@@ -2673,6 +2730,7 @@ let typeMap: {[index: string]: any} = {
     "ImpulseInputBlockDatasetSubset": ImpulseInputBlockDatasetSubset,
     "ImpulseLearnBlock": ImpulseLearnBlock,
     "InputBlock": InputBlock,
+    "IntegrationSessionStatus": IntegrationSessionStatus,
     "InviteOrganizationMemberRequest": InviteOrganizationMemberRequest,
     "Job": Job,
     "JobDetails": JobDetails,
@@ -2992,6 +3050,10 @@ let typeMap: {[index: string]: any} = {
     "Sensor": Sensor,
     "SetAIActionsOrderRequest": SetAIActionsOrderRequest,
     "SetAnomalyParameterRequest": SetAnomalyParameterRequest,
+    "SetImpulseThresholdsRequest": SetImpulseThresholdsRequest,
+    "SetImpulseThresholdsRequestThresholds": SetImpulseThresholdsRequestThresholds,
+    "SetImpulseThresholdsResponse": SetImpulseThresholdsResponse,
+    "SetImpulseThresholdsResponseAllOf": SetImpulseThresholdsResponseAllOf,
     "SetKerasParameterRequest": SetKerasParameterRequest,
     "SetLegacyImpulseStateInternalRequest": SetLegacyImpulseStateInternalRequest,
     "SetMemberDatasetsRequest": SetMemberDatasetsRequest,
@@ -3017,6 +3079,8 @@ let typeMap: {[index: string]: any} = {
     "StartDeviceDebugStreamResponseAllOf": StartDeviceDebugStreamResponseAllOf,
     "StartDeviceSnapshotDebugStreamRequest": StartDeviceSnapshotDebugStreamRequest,
     "StartEnterpriseTrialRequest": StartEnterpriseTrialRequest,
+    "StartIntegrationSessionResponse": StartIntegrationSessionResponse,
+    "StartIntegrationSessionResponseAllOf": StartIntegrationSessionResponseAllOf,
     "StartJobResponse": StartJobResponse,
     "StartJobResponseAllOf": StartJobResponseAllOf,
     "StartPerformanceCalibrationRequest": StartPerformanceCalibrationRequest,
@@ -3024,6 +3088,7 @@ let typeMap: {[index: string]: any} = {
     "StartSamplingRequest": StartSamplingRequest,
     "StartSamplingResponse": StartSamplingResponse,
     "StartSamplingResponseAllOf": StartSamplingResponseAllOf,
+    "StartTensorBoardSessionRequest": StartTensorBoardSessionRequest,
     "StartTrainingRequestAnomaly": StartTrainingRequestAnomaly,
     "StopDeviceDebugStreamRequest": StopDeviceDebugStreamRequest,
     "StoreSegmentLengthRequest": StoreSegmentLengthRequest,
@@ -3033,6 +3098,8 @@ let typeMap: {[index: string]: any} = {
     "TargetConstraintsDevice": TargetConstraintsDevice,
     "TargetMemory": TargetMemory,
     "TargetProcessor": TargetProcessor,
+    "TestPretrainedModelImagesRequest": TestPretrainedModelImagesRequest,
+    "TestPretrainedModelImagesRequestInput": TestPretrainedModelImagesRequestInput,
     "TestPretrainedModelRequest": TestPretrainedModelRequest,
     "TestPretrainedModelResponse": TestPretrainedModelResponse,
     "TestPretrainedModelResponseAllOf": TestPretrainedModelResponseAllOf,
@@ -3046,6 +3113,7 @@ let typeMap: {[index: string]: any} = {
     "TrackObjectsResponse": TrackObjectsResponse,
     "TrackObjectsResponseAllOf": TrackObjectsResponseAllOf,
     "TransferLearningModel": TransferLearningModel,
+    "TransferLearningModelBlockNoLongerAvailable": TransferLearningModelBlockNoLongerAvailable,
     "TransferOwnershipOrganizationRequest": TransferOwnershipOrganizationRequest,
     "TransformationBlockAdditionalMountPoint": TransformationBlockAdditionalMountPoint,
     "TrashBinEntity": TrashBinEntity,
@@ -3111,10 +3179,12 @@ let typeMap: {[index: string]: any} = {
     "UserByThirdPartyActivationRequest": UserByThirdPartyActivationRequest,
     "UserDeleteTotpMfaKeyRequest": UserDeleteTotpMfaKeyRequest,
     "UserDismissNotificationRequest": UserDismissNotificationRequest,
+    "UserEula": UserEula,
     "UserExperiment": UserExperiment,
     "UserGenerateNewMfaKeyResponse": UserGenerateNewMfaKeyResponse,
     "UserGenerateNewMfaKeyResponseAllOf": UserGenerateNewMfaKeyResponseAllOf,
     "UserOrganization": UserOrganization,
+    "UserOrganizationPublicProjectLicense": UserOrganizationPublicProjectLicense,
     "UserSetTotpMfaKeyRequest": UserSetTotpMfaKeyRequest,
     "UserSetTotpMfaKeyResponse": UserSetTotpMfaKeyResponse,
     "UserSetTotpMfaKeyResponseAllOf": UserSetTotpMfaKeyResponseAllOf,

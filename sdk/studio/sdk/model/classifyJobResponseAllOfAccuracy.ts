@@ -18,6 +18,9 @@ export class ClassifyJobResponseAllOfAccuracy {
     'confusionMatrixValues': { [key: string]: { [key: string]: number; }; };
     'allLabels': Array<string>;
     'accuracyScore'?: number;
+    'balancedAccuracyScore'?: number;
+    'anomalyAccuracyScore'?: number;
+    'noAnomalyAccuracyScore'?: number;
     'mseScore'?: number;
 
     static discriminator: string | undefined = undefined;
@@ -46,6 +49,21 @@ export class ClassifyJobResponseAllOfAccuracy {
         {
             "name": "accuracyScore",
             "baseName": "accuracyScore",
+            "type": "number"
+        },
+        {
+            "name": "balancedAccuracyScore",
+            "baseName": "balancedAccuracyScore",
+            "type": "number"
+        },
+        {
+            "name": "anomalyAccuracyScore",
+            "baseName": "anomalyAccuracyScore",
+            "type": "number"
+        },
+        {
+            "name": "noAnomalyAccuracyScore",
+            "baseName": "noAnomalyAccuracyScore",
             "type": "number"
         },
         {

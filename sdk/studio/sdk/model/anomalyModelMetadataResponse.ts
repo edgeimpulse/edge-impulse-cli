@@ -12,6 +12,7 @@
 
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
 import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
+import { BlockThreshold } from './blockThreshold';
 import { GenericApiResponse } from './genericApiResponse';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
@@ -46,9 +47,9 @@ export class AnomalyModelMetadataResponse {
     */
     'axes': Array<number>;
     /**
-    * Default minimum confidence rating required before tagging as anomaly, based on scores of training data (GMM only).
+    * DEPRECATED, see \"thresholds\" instead. Default minimum confidence rating required before tagging as anomaly, based on scores of training data (GMM only).
     */
-    'defaultMinimumConfidenceRating'?: number;
+    'defaultMinimumConfidenceRating': number;
     /**
     * The types of model that are available
     */
@@ -59,6 +60,10 @@ export class AnomalyModelMetadataResponse {
     */
     'modelValidationMetrics'?: Array<KerasModelMetadataMetrics>;
     'hasTrainedModel'?: boolean;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -122,6 +127,11 @@ export class AnomalyModelMetadataResponse {
             "name": "hasTrainedModel",
             "baseName": "hasTrainedModel",
             "type": "boolean"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

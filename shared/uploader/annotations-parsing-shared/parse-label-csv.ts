@@ -9,27 +9,35 @@ type CsvColumnMap = { column: string, ix: number }[];
  * @param formatsToTry List of formats to try; if not given, will try all formats
  * @returns Format info if a match is found
  */
-export function checkCsvMatchesAnyFormat(csvFile: string[][], formatsToTry?: SupportedLabelFormatCsv[]):
-    SupportedLabelFormatInfo | undefined {
-
+/**
+ * Check if a given CSV file matches any known schema from a list of supported types
+ * @param csvFile CSV file to analyze
+ * @param formatsToTry List of formats to try; if not given, will try all formats
+ * @returns Format info if a match is found, or undefined if no match
+ */
+export function checkCsvMatchesAnyFormat(
+    csvFile: string[][],
+    formatsToTry?: SupportedLabelFormatCsv[]
+): SupportedLabelFormatInfo | undefined {
     if (csvFile.length === 0) {
         return undefined;
     }
 
-    const allFormats = formatsToTry ? formatsToTry : supportedCsvLabelFormats;
+    const allFormats = formatsToTry ?? supportedCsvLabelFormats;
 
     // We check that our CSV has at least the columns required for these formats.
     // So we should match the most specific first.
     const csvFormatsSorted = allFormats.sort((a, b) => b.fn.schema.length - a.fn.schema.length);
 
     const headerRow = csvFile[0];
-
     for (const format of csvFormatsSorted) {
         const colMap = parseCsvHeader(headerRow, format.fn.schema);
         if (colMap) {
             return format.info;
         }
     }
+
+    return undefined;
 }
 
 /**

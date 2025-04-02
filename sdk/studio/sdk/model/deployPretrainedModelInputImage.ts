@@ -10,11 +10,13 @@
  * Do not edit the class manually.
  */
 
+import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImageInputScaling } from './imageInputScaling';
 
 export class DeployPretrainedModelInputImage {
     'inputType': DeployPretrainedModelInputImageInputTypeEnum;
     'inputScaling'?: ImageInputScaling;
+    'resizeMode'?: ImageInputResizeMode;
 
     static discriminator: string | undefined = undefined;
 
@@ -28,6 +30,11 @@ export class DeployPretrainedModelInputImage {
             "name": "inputScaling",
             "baseName": "inputScaling",
             "type": "ImageInputScaling"
+        },
+        {
+            "name": "resizeMode",
+            "baseName": "resizeMode",
+            "type": "ImageInputResizeMode"
         }    ];
 
     static getAttributeTypeMap() {

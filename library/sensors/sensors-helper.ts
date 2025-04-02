@@ -59,7 +59,7 @@ export async function initCamera(cameraType: CameraType,
         cameraDevice = <string>inqRes.camera;
     }
 
-    //TODO: move this message out of the camera init function
+    // TODO: move this message out of the camera init function
     // console.log(RUNNER_PREFIX, 'Using camera', cameraDevice, 'starting...');
 
     if (cameraType === CameraType.PropheseeCamera) {

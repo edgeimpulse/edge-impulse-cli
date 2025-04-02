@@ -51,6 +51,14 @@ export class AddOrganizationTransferLearningBlockRequest {
     */
     'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
     'displayCategory'?: BlockDisplayCategory;
+    /**
+    * If set, then this block is no longer available for training; and blockNoLongerAvailableReason should be set.
+    */
+    'indBlockNoLongerAvailable'?: boolean;
+    /**
+    * In Markdown format. Should be set if `indBlockNoLongerAvailable` is true, contains migration information for existing users of this block.
+    */
+    'blockNoLongerAvailableReason'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -129,6 +137,16 @@ export class AddOrganizationTransferLearningBlockRequest {
             "name": "displayCategory",
             "baseName": "displayCategory",
             "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "indBlockNoLongerAvailable",
+            "baseName": "indBlockNoLongerAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "blockNoLongerAvailableReason",
+            "baseName": "blockNoLongerAvailableReason",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

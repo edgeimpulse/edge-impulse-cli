@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-import { AdminGetSSODomainIdPsResponseAllOf } from './adminGetSSODomainIdPsResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { StartIntegrationSessionResponseAllOf } from './startIntegrationSessionResponseAllOf';
 
-export class AdminGetSSODomainIdPsResponse {
+export class StartIntegrationSessionResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,7 +22,10 @@ export class AdminGetSSODomainIdPsResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'idps': Array<string>;
+    /**
+    * Unique integration session identifier. Pass this to getIntegrationSessionStatus to check the status of the integration session.
+    */
+    'id': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,13 +41,13 @@ export class AdminGetSSODomainIdPsResponse {
             "type": "string"
         },
         {
-            "name": "idps",
-            "baseName": "idps",
-            "type": "Array<string>"
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetSSODomainIdPsResponse.attributeTypeMap;
+        return StartIntegrationSessionResponse.attributeTypeMap;
     }
 }
 

@@ -85,6 +85,7 @@ export enum PageType {
     OrganizationAiActionsList = 114,
     UploadPortal = 200,
     Announcement = 201,
+    TensorBoardIntegration = 202,
 }
 
 export const getPageTypeName = (pageTypeValue: number): string | undefined => {

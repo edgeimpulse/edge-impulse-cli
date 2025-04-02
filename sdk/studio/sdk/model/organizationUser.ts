@@ -50,6 +50,10 @@ export class OrganizationUser {
     */
     'hasPendingPayments'?: boolean;
     'tier'?: UserTierEnum;
+    /**
+    * List of identity providers (e.g. Google, GitHub) that the user has used to sign in with
+    */
+    'idps'?: Array<string>;
     'added': Date;
     'role': OrganizationMemberRole;
     'projectCount': number;
@@ -150,6 +154,11 @@ export class OrganizationUser {
             "name": "tier",
             "baseName": "tier",
             "type": "UserTierEnum"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         },
         {
             "name": "added",

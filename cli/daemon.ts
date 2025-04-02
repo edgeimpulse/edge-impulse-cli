@@ -8,7 +8,7 @@ import EiSerialProtocol, {
     EiSnapshotResponse
 } from '../shared/daemon/ei-serial-protocol';
 import inquirer from 'inquirer';
-import request from 'request-promise';
+import fetch from 'node-fetch';
 import {
     MgmtInterfaceSampleRequestSample,
     ClientConnectionType
@@ -224,7 +224,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         }, 80);
                         jpegImage = jpegImageData.data;
                     }
-                    else if(isJpeg(buffer)) {
+                    else if (isJpeg(buffer)) {
                         jpegImage = buffer;
                     }
                     else {
@@ -437,27 +437,35 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                         deviceResponse.file.indexOf(Buffer.from('Ref-BINARY-', 'ascii')) > -1) {
 
                         let dr = <EiSerialDoneBuffer>deviceResponse;
-                        await request.post(url, {
+                        const response = await fetch(url, {
+                            method: 'POST',
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
                                 'x-file-name': encodeLabel(deviceResponse.filename),
                                 'x-label': encodeLabel(dr.label),
                                 'Content-Type': 'application/octet-stream'
                             },
-                            body: deviceResponse.file,
-                            encoding: 'binary'
+                            body: deviceResponse.file
                         });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to upload: ${response.status} ${response.statusText}`);
+                        }
                     }
                     else {
-                        await request.post(url, {
+                        const response = await fetch(url, {
+                            method: 'POST',
                             headers: {
                                 'x-api-key': this._deviceConfig.upload.apiKey,
                                 'x-file-name': encodeLabel(deviceResponse.filename),
                                 'Content-Type': 'application/cbor'
                             },
-                            body: deviceResponse.file,
-                            encoding: 'binary'
+                            body: deviceResponse.file
                         });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to upload: ${response.status} ${response.statusText}`);
+                        }
                         await this._serialProtocol.unlink(deviceResponse.onDeviceFileName);
                     }
                     console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
@@ -534,7 +542,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
     //     // client.write(data);
     // });
     async function connectLogic() {
-        if (!serial || !serial.isConnected()) return setTimeout(serial_connect, 5000);
+        if (!serial || !serial.isConnected()) {
+            setTimeout(serial_connect, 5000);
+            return;
+        }
 
         config = undefined;
         console.log(SERIAL_PREFIX, 'Serial is connected, trying to read config...');

@@ -267,31 +267,70 @@ export class GStreamer extends EventEmitter<{
             if (this._captureProcess) {
                 let cp = this._captureProcess;
 
-                this._captureProcess.on('close', code => {
-                    if (this._keepAliveTimeout) {
-                        clearTimeout(this._keepAliveTimeout);
-                    }
+                let onCaptureProcessCloseCount = 0;
 
-                    if (typeof code === 'number') {
-                        reject('Capture process failed with code ' + code);
-                    }
-                    else {
-                        reject('Failed to start capture process, but no exit code. ' +
-                            'This might be a permissions issue. ' +
-                            'Are you running this command from a simulated shell (like in Visual Studio Code)?');
-                    }
+                const onCaptureProcessClose = async (code: number) => {
+                    try {
+                        if (this._keepAliveTimeout) {
+                            clearTimeout(this._keepAliveTimeout);
+                        }
 
-                    // already started and we're the active process?
-                    if (this._isStarted && cp === this._captureProcess && !this._isRestarting) {
-                        this.emit('error', 'gstreamer process was killed with code (' + code + ')');
-                    }
+                        if (typeof code === 'number') {
+                            // if code is 255 and device id is qtiqmmfsrc, it means the camera is not available
+                            // try restart on first close only
+                            if (code === 255 && device.id.startsWith('qtiqmmfsrc') && onCaptureProcessCloseCount === 0) {
+                                // restart cam-server systemctl service
+                                console.log(PREFIX, 'Camera is not available, restarting cam-server service...');
 
-                    this._captureProcess = undefined;
-                });
+                                await spawnHelper('systemctl', [ 'restart', 'cam-server' ]);
+
+                                console.log(PREFIX, 'Camera is not available, restarting cam-server service OK');
+
+                                if (invokeProcess === 'spawn') {
+                                    this._captureProcess = spawn(command, args,
+                                        { env: process.env, cwd: this._tempDir });
+                                }
+                                else if (invokeProcess === 'exec') {
+                                    this._captureProcess = exec(command + ' ' + args.join(' '), { env: process.env, cwd: this._tempDir });
+                                }
+                                else {
+                                    throw new Error(`invokeProcess is neither "spawn" or "exec" ("${invokeProcess}")`);
+                                }
+
+                                this._captureProcess.on('close', onCaptureProcessClose);
+                                return;
+                            }
+                            else {
+                                reject('Capture process failed with code ' + code);
+                            }
+                        }
+                        else {
+                            reject('Failed to start capture process, but no exit code. ' +
+                                'This might be a permissions issue. ' +
+                                'Are you running this command from a simulated shell (like in Visual Studio Code)?');
+                        }
+
+                        // already started and we're the active process?
+                        if (this._isStarted && cp === this._captureProcess && !this._isRestarting) {
+                            this.emit('error', 'gstreamer process was killed with code (' + code + ')');
+                        }
+
+                        this._captureProcess = undefined;
+                    }
+                    catch (ex2) {
+                        const ex = <Error>ex2;
+                        reject(`Failed to start capture process, gstreamer process was killed with code (${code}): ` +
+                            (ex.message || ex.toString()));
+                    }
+                    finally {
+                        onCaptureProcessCloseCount++;
+                    }
+                };
+
+                this._captureProcess.on('close', onCaptureProcessClose);
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            (async () => {
+            void (async () => {
                 if (!this._tempDir) {
                     throw new Error('tempDir is undefined');
                 }
@@ -388,8 +427,8 @@ export class GStreamer extends EventEmitter<{
         if (device.id === 'pylonsrc') {
             videoSource = [ 'pylonsrc' ];
         }
-        else if (device.id === 'qtiqmmfsrc') {
-            videoSource = [ 'qtiqmmfsrc' ];
+        else if (device.id.startsWith('qtiqmmfsrc')) {
+            videoSource = device.videoSource.split(' ');
         }
 
         let invokeProcess: 'spawn' | 'exec';
@@ -1055,22 +1094,34 @@ export class GStreamer extends EventEmitter<{
         let caps: GStreamerCap[] = [];
         let cap: GStreamerCap = {
             type: 'video/x-raw',
-            width: 640,
-            height: 480,
+            width: 1280,
+            height: 720,
             framerate: 30,
         };
         caps.push(cap);
 
-        let d: GStreamerDevice = {
-            caps: caps,
-            deviceClass: '',
-            id: 'qtiqmmfsrc',
-            inCapMode: false,
-            name: 'CSI Camera 0',
-            rawCaps: [],
-            videoSource: 'qtiqmmfsrc',
-        };
-        return [ d ];
+        let d: GStreamerDevice[] = [
+            {
+                caps: caps,
+                deviceClass: '',
+                id: 'qtiqmmfsrc-0',
+                inCapMode: false,
+                name: 'Camera 0 (High-resolution, fisheye, IMX577)',
+                rawCaps: [],
+                videoSource: 'qtiqmmfsrc name=camsrc camera=0',
+            },
+            {
+                caps: caps,
+                deviceClass: '',
+                id: 'qtiqmmfsrc-1',
+                inCapMode: false,
+                name: 'Camera 1 (Low-resolution, OV9282)',
+                rawCaps: [],
+                videoSource: 'qtiqmmfsrc name=camsrc camera=1',
+            }
+        ];
+
+        return d;
     }
 
     getLastOptions() {

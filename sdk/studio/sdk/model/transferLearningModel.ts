@@ -15,6 +15,7 @@ import { BlockType } from './blockType';
 import { DSPGroupItem } from './dSPGroupItem';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LearnBlockType } from './learnBlockType';
+import { TransferLearningModelBlockNoLongerAvailable } from './transferLearningModelBlockNoLongerAvailable';
 
 export class TransferLearningModel {
     'name': string;
@@ -29,7 +30,7 @@ export class TransferLearningModel {
     'defaultTrainingCycles'?: number;
     'hasImageAugmentation'?: boolean;
     'type': KerasVisualLayerType;
-    'learnBlockType'?: LearnBlockType;
+    'learnBlockType': LearnBlockType;
     'organizationModelId'?: number;
     'implementationVersion'?: number;
     /**
@@ -40,6 +41,7 @@ export class TransferLearningModel {
     'blockType': BlockType;
     'customParameters'?: Array<DSPGroupItem>;
     'displayCategory'?: BlockDisplayCategory;
+    'blockNoLongerAvailable'?: TransferLearningModelBlockNoLongerAvailable;
 
     static discriminator: string | undefined = undefined;
 
@@ -143,6 +145,11 @@ export class TransferLearningModel {
             "name": "displayCategory",
             "baseName": "displayCategory",
             "type": "BlockDisplayCategory"
+        },
+        {
+            "name": "blockNoLongerAvailable",
+            "baseName": "blockNoLongerAvailable",
+            "type": "TransferLearningModelBlockNoLongerAvailable"
         }    ];
 
     static getAttributeTypeMap() {

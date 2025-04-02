@@ -11,6 +11,7 @@
  */
 
 import { EntitlementLimits } from './entitlementLimits';
+import { UserOrganizationPublicProjectLicense } from './userOrganizationPublicProjectLicense';
 
 export class UserOrganization {
     'id': number;
@@ -58,6 +59,7 @@ export class UserOrganization {
     * Last time this user accessed this organization.
     */
     'lastAccessed'?: Date;
+    'publicProjectLicense': UserOrganizationPublicProjectLicense;
 
     static discriminator: string | undefined = undefined;
 
@@ -136,6 +138,11 @@ export class UserOrganization {
             "name": "lastAccessed",
             "baseName": "lastAccessed",
             "type": "Date"
+        },
+        {
+            "name": "publicProjectLicense",
+            "baseName": "publicProjectLicense",
+            "type": "UserOrganizationPublicProjectLicense"
         }    ];
 
     static getAttributeTypeMap() {

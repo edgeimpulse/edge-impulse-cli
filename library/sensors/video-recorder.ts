@@ -1,10 +1,10 @@
-import { ICamera } from "./icamera";
-import os from 'os';
-import util from 'util';
-import fs from 'fs';
+import fs from 'fs/promises';
 import Path from 'path';
+import { tmpdir } from 'os';
+import { ICamera } from "./icamera";
 import { EventEmitter } from 'tsee';
 import { spawnHelper } from "./spawn-helper";
+import { FSHelpers } from '../../cli-common/fs-helpers';
 
 const PREFIX = '\x1b[35m[VID]\x1b[0m';
 
@@ -32,8 +32,8 @@ export class VideoRecorder {
         }>();
 
         // if we have /dev/shm, use that (RAM backed, instead of SD card backed, better for wear)
-        let osTmpDir = os.tmpdir();
-        if (await this.exists('/dev/shm')) {
+        let osTmpDir = tmpdir();
+        if (await FSHelpers.exists('/dev/shm')) {
             osTmpDir = '/dev/shm';
         }
 
@@ -45,17 +45,16 @@ export class VideoRecorder {
         let frequency = 1000 / lastCameraOptions.intervalMs;
         let expectedFrames = Math.ceil((timeMs / 1000) * frequency);
 
-        let tempDir = await fs.promises.mkdtemp(Path.join(osTmpDir, 'edge-impulse-cli'));
+        let tempDir = await fs.mkdtemp(Path.join(osTmpDir, 'edge-impulse-cli'));
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        (async () => {
+        void (async () => {
             let fileIx = 0;
             let hasError = false;
 
             const onSnapshot = async (data: Buffer) => {
                 try {
                     let filename = 'image' + (++fileIx).toString().padStart(5, '0') + '.jpg';
-                    await fs.promises.writeFile(Path.join(tempDir, filename), data);
+                    await fs.writeFile(Path.join(tempDir, filename), data);
                 }
                 catch (ex) {
                     let ex2 = <Error>ex;
@@ -102,7 +101,7 @@ export class VideoRecorder {
 
             if (this._verbose) {
                 console.log(PREFIX, 'Found ' +
-                    (await fs.promises.readdir(tempDir)).filter(x => x.endsWith('.jpg')).length +
+                    (await fs.readdir(tempDir)).filter(x => x.endsWith('.jpg')).length +
                     ' files, combining them into a video...');
             }
 
@@ -127,7 +126,7 @@ export class VideoRecorder {
                 return onError(ex);
             }
 
-            let outBuffer = await fs.promises.readFile(outFile);
+            let outBuffer = await fs.readFile(outFile);
 
             if (this._verbose) {
                 console.log(PREFIX, 'Converted images into video, ' + outBuffer.length + ' bytes');
@@ -141,51 +140,27 @@ export class VideoRecorder {
         return ee;
     }
 
-    private async exists(path: string) {
-        let exists = false;
-        try {
-            await util.promisify(fs.stat)(path);
-            exists = true;
-        }
-        catch (ex) {
-            /* noop */
-        }
-        return exists;
-    }
-
     private async rmDir(folder: string) {
-        if (!(await this.exists(folder))) return;
+        if (!(await FSHelpers.exists(folder))) return;
 
-        const readdir = util.promisify(fs.readdir);
+        const entries = await fs.readdir(folder, { withFileTypes: true });
 
-        let entries = await readdir(folder, { withFileTypes: true });
-        await Promise.all(entries.map(async entry => {
-            // skip .nfs files in the EFS storage layer
-            if (entry.name.startsWith('.nfs')) return;
+        // Skip .nfs files in the EFS storage layer
+        const filteredEntries = entries.filter(entry => !entry.name.startsWith('.nfs'));
 
-            let fullPath = Path.join(folder, entry.name);
-            return entry.isDirectory() ? this.rmDir(fullPath) : this.safeUnlinkFile(fullPath);
+        await Promise.all(filteredEntries.map(entry => {
+            const fullPath = Path.join(folder, entry.name);
+            return entry.isDirectory()
+                ? FSHelpers.rmDir(fullPath)
+                : FSHelpers.safeUnlinkFile(fullPath);
         }));
 
         try {
-            await util.promisify(fs.rmdir)(folder);
+            await fs.rmdir(folder);
         }
         catch (ex) {
             // OK not great but OK there are some issues with removing files from EFS
             console.warn('Failed to remove', folder, ex);
-        }
-    }
-
-    /**
-     * Unlinks a file, but does not throw if unlinking fails
-     * @param path
-     */
-    private async safeUnlinkFile(path: string) {
-        try {
-            await util.promisify(fs.unlink)(path);
-        }
-        catch (ex) {
-            /* noop */
         }
     }
 }

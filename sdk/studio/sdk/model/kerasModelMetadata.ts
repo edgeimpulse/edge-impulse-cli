@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockThreshold } from './blockThreshold';
 import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
@@ -46,6 +47,10 @@ export class KerasModelMetadata {
     'mode': KerasModelMetadataModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'imageInputScaling': ImageInputScaling;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -104,6 +109,11 @@ export class KerasModelMetadata {
             "name": "imageInputScaling",
             "baseName": "imageInputScaling",
             "type": "ImageInputScaling"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,20 +11,23 @@
  */
 
 
-export class AdminGetSSODomainIdPsResponseAllOf {
-    'idps': Array<string>;
+export class StartTensorBoardSessionRequest {
+    /**
+    * IDs of learn blocks to compare in a TensorBoard session
+    */
+    'blockIds': Array<number>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "idps",
-            "baseName": "idps",
-            "type": "Array<string>"
+            "name": "blockIds",
+            "baseName": "blockIds",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AdminGetSSODomainIdPsResponseAllOf.attributeTypeMap;
+        return StartTensorBoardSessionRequest.attributeTypeMap;
     }
 }
 

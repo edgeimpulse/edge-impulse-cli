@@ -19,6 +19,10 @@ export class CreateEnterpriseTrialUserRequest {
     */
     'email': string;
     /**
+    * Name of the user.
+    */
+    'name': string;
+    /**
     * Name of the trial organization. All enterprise features are tied to an organization. This organization will be deleted after the trial ends. If no organization name is provided, the user\'s name will be used.
     */
     'organizationName'?: string;
@@ -63,10 +67,6 @@ export class CreateEnterpriseTrialUserRequest {
     */
     'redirectUrlQueryParams'?: string;
     /**
-    * Name of the user.
-    */
-    'name': string;
-    /**
     * Username, minimum 4 and maximum 30 characters. May contain alphanumeric characters, hyphens, underscores and dots. Validated according to `^(?=.{4,30}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._-]+(?<![_.])$`.
     */
     'username': string;
@@ -97,6 +97,11 @@ export class CreateEnterpriseTrialUserRequest {
         {
             "name": "email",
             "baseName": "email",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
             "type": "string"
         },
         {
@@ -152,11 +157,6 @@ export class CreateEnterpriseTrialUserRequest {
         {
             "name": "redirectUrlQueryParams",
             "baseName": "redirectUrlQueryParams",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
             "type": "string"
         },
         {

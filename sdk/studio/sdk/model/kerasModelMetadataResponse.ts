@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockThreshold } from './blockThreshold';
 import { GenericApiResponse } from './genericApiResponse';
 import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
@@ -56,6 +57,10 @@ export class KerasModelMetadataResponse {
     'mode': KerasModelMetadataResponseModeEnum;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'imageInputScaling': ImageInputScaling;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -124,6 +129,11 @@ export class KerasModelMetadataResponse {
             "name": "imageInputScaling",
             "baseName": "imageInputScaling",
             "type": "ImageInputScaling"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

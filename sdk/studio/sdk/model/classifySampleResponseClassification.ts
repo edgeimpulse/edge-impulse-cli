@@ -11,6 +11,7 @@
  */
 
 import { AnomalyResult } from './anomalyResult';
+import { BlockThreshold } from './blockThreshold';
 import { ClassifySampleResponseClassificationDetails } from './classifySampleResponseClassificationDetails';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
@@ -32,7 +33,7 @@ export class ClassifySampleResponseClassification {
     */
     'structuredResult'?: Array<StructuredClassifyResult>;
     /**
-    * The minimum confidence rating for this block. For regression, this is the absolute error (which can be larger than 1).
+    * DEPRECATED, see \"thresholds\" instead. The minimum confidence rating for this block. For regression, this is the absolute error (which can be larger than 1).
     */
     'minimumConfidenceRating': number;
     /**
@@ -44,6 +45,10 @@ export class ClassifySampleResponseClassification {
     * An array with an expected label per window.
     */
     'expectedLabels': Array<StructuredLabel>;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds': Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -87,6 +92,11 @@ export class ClassifySampleResponseClassification {
             "name": "expectedLabels",
             "baseName": "expectedLabels",
             "type": "Array<StructuredLabel>"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

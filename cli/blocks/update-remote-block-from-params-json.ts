@@ -293,7 +293,9 @@ export class UpdateRemoteBlockFromParamsJson {
             'isPublic' |
             'isPublicForDevices' |
             'publicProjectTierAvailability' |
-            'parameters'
+            'parameters' |
+            'indBlockNoLongerAvailable' |
+            'blockNoLongerAvailableReason'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             operatesOn: { oldVal: remoteBlock.operatesOn, newVal: params.info.operatesOn },

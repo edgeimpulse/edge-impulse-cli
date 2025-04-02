@@ -47,6 +47,10 @@ export class User {
     */
     'hasPendingPayments'?: boolean;
     'tier'?: UserTierEnum;
+    /**
+    * List of identity providers (e.g. Google, GitHub) that the user has used to sign in with
+    */
+    'idps'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -135,6 +139,11 @@ export class User {
             "name": "tier",
             "baseName": "tier",
             "type": "UserTierEnum"
+        },
+        {
+            "name": "idps",
+            "baseName": "idps",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

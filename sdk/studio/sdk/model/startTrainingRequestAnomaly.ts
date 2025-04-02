@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BlockThreshold } from './blockThreshold';
 
 export class StartTrainingRequestAnomaly {
     /**
@@ -21,13 +22,17 @@ export class StartTrainingRequestAnomaly {
     */
     'clusterCount'?: number;
     /**
-    * Minimum confidence rating required before tagging as anomaly
+    * DEPRECATED, use \"thresholds\" instead. Minimum confidence rating required before tagging as anomaly
     */
     'minimumConfidenceRating': number;
     /**
     * If set, skips creating embeddings and measuring memory (used in tests)
     */
     'skipEmbeddingsAndMemory'?: boolean;
+    /**
+    * List of configurable thresholds for this block.
+    */
+    'thresholds'?: Array<BlockThreshold>;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +56,11 @@ export class StartTrainingRequestAnomaly {
             "name": "skipEmbeddingsAndMemory",
             "baseName": "skipEmbeddingsAndMemory",
             "type": "boolean"
+        },
+        {
+            "name": "thresholds",
+            "baseName": "thresholds",
+            "type": "Array<BlockThreshold>"
         }    ];
 
     static getAttributeTypeMap() {

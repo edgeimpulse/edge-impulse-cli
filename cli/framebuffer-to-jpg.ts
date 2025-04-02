@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /* eslint-disable no-bitwise */
+import fs from 'node:fs';
+import Path from 'node:path';
 import program from 'commander';
-import fs from 'fs';
-import Path from 'path';
 import jpegjs from 'jpeg-js';
 
 const packageVersion = (<{ version: string }>JSON.parse(fs.readFileSync(
@@ -61,11 +61,8 @@ const outputFile = <string | undefined>program.outputFile;
         snapshot = Buffer.alloc(width * height * 3);
         let six = 0;
         for (let f of features) {
-            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 16 & 0xff;
-            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 8 & 0xff;
-            // eslint-disable-next-line no-bitwise
             snapshot[six++] = f >> 0 & 0xff;
         }
     }
@@ -107,4 +104,5 @@ const outputFile = <string | undefined>program.outputFile;
 
     fs.writeFileSync(outputFile, jpegImageData.data);
     console.log('Written to', outputFile);
+    return;
 })();

@@ -1,5 +1,5 @@
-import Path from 'path';
-import fs from 'fs';
+import Path from 'node:path';
+import fs from 'node:fs';
 import Papa from 'papaparse';
 import inquirer from 'inquirer';
 import {
@@ -17,7 +17,7 @@ import {
     parseJsonLabelsFile,
     parseTxtLabelsFile
 } from "../shared/uploader/annotations-parsing-shared/parse-label-json";
-import { FSHelpers, FileInFolder } from './fs-helpers';
+import { FSHelpers, FileInFolder } from '../cli-common/fs-helpers';
 import { checkCsvMatchesAnyFormat, parseCsvLabelsFile }
     from "../shared/uploader/annotations-parsing-shared/parse-label-csv";
 import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, validateBoundingBoxLabelsFile }
@@ -327,6 +327,7 @@ export class DatasetConverterHelperCli extends DatasetConverterHelper {
         if (!continueRes.continue) {
             process.exit(0);
         }
+        return;
     }
 
     /**

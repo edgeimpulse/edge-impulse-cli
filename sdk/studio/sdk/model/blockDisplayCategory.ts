@@ -15,5 +15,5 @@
 * Category to display this block in the UI.
 */
 
-export type BlockDisplayCategory = 'classical' | 'tao';
-export const BlockDisplayCategoryValues: string[] = ['classical', 'tao'];
+export type BlockDisplayCategory = 'classical' | 'tao' | 'developer-preview';
+export const BlockDisplayCategoryValues: string[] = ['classical', 'tao', 'developer-preview'];

@@ -28,6 +28,10 @@ export class DSPMetadataResponse {
     * Date when the features were created
     */
     'created': Date;
+    /**
+    * Whether features were generated
+    */
+    'generated': boolean;
     'dspConfig': { [key: string]: string; };
     /**
     * Labels in the dataset when generator ran
@@ -68,6 +72,22 @@ export class DSPMetadataResponse {
     * The version number of the resampling algorithm used (for resampled time series data only)
     */
     'resamplingAlgorithmVersion'?: number;
+    /**
+    * When specified, a job is running (asynchronously) to generate the feature explorer.
+    */
+    'featureExplorerJobId'?: number;
+    /**
+    * If this is set, then the feature explorer job failed (get the status by getting the job logs for \'featureExplorerJobId\').
+    */
+    'featureExplorerJobFailed'?: boolean;
+    /**
+    * When specified, a job is running (asynchronously) to generate feature importance.
+    */
+    'featureImportanceJobId'?: number;
+    /**
+    * If this is set, then the feature importance job failed (get the status by getting the job logs for \'featureImportanceJobId\').
+    */
+    'featureImportanceJobFailed'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -86,6 +106,11 @@ export class DSPMetadataResponse {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "generated",
+            "baseName": "generated",
+            "type": "boolean"
         },
         {
             "name": "dspConfig",
@@ -151,6 +176,26 @@ export class DSPMetadataResponse {
             "name": "resamplingAlgorithmVersion",
             "baseName": "resamplingAlgorithmVersion",
             "type": "number"
+        },
+        {
+            "name": "featureExplorerJobId",
+            "baseName": "featureExplorerJobId",
+            "type": "number"
+        },
+        {
+            "name": "featureExplorerJobFailed",
+            "baseName": "featureExplorerJobFailed",
+            "type": "boolean"
+        },
+        {
+            "name": "featureImportanceJobId",
+            "baseName": "featureImportanceJobId",
+            "type": "number"
+        },
+        {
+            "name": "featureImportanceJobFailed",
+            "baseName": "featureImportanceJobFailed",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

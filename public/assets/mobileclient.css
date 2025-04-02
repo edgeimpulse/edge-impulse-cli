@@ -499,14 +499,12 @@ video {
 
 .bounding-box-label {
     color: white;
-    border-radius: 3px;
     padding: 0.2rem 0.6rem;
-    margin: -33px -3px 0 -3px;
     display: inline-block;
     position: absolute;
     font-size: 1rem;
-    right: 0;
-    top: 1px;
+    right: -3px;
+    bottom: 100%;
 }
 
 /* notify */

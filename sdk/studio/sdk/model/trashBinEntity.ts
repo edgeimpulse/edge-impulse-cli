@@ -40,6 +40,10 @@ export class TrashBinEntity {
     */
     'deletedAt': Date;
     /**
+    * The timestamp when the entity was permanently deleted.
+    */
+    'fullyDeletedAt'?: Date;
+    /**
     * The email of the user that requested the deletion.
     */
     'deletionRequestedByUserEmail': string;
@@ -75,6 +79,11 @@ export class TrashBinEntity {
         {
             "name": "deletedAt",
             "baseName": "deletedAt",
+            "type": "Date"
+        },
+        {
+            "name": "fullyDeletedAt",
+            "baseName": "fullyDeletedAt",
             "type": "Date"
         },
         {

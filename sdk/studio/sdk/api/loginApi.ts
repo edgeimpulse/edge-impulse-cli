@@ -21,6 +21,7 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { GetJWTRequest } from '../model/getJWTRequest';
 import { GetJWTResponse } from '../model/getJWTResponse';
+import { GetSSODomainIdPsResponse } from '../model/getSSODomainIdPsResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 
@@ -95,6 +96,83 @@ export class LoginApi {
         (this.authentications as any)[LoginApiApiKeys[key]].apiKey = value;
     }
 
+
+    /**
+     * Get the list of identity providers enabled for a user or a given email domain.
+     * @summary Get SSO settings for a user or email domain
+     * @param usernameOrEmail Username or email
+     */
+    public async getSSODomainIdPs (usernameOrEmail: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSSODomainIdPsResponse> {
+        const localVarPath = this.basePath + '/api-sso/{usernameOrEmail}'
+            .replace('{' + 'usernameOrEmail' + '}', encodeURIComponent(String(usernameOrEmail)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'usernameOrEmail' is not null or undefined
+
+
+        if (usernameOrEmail === null || usernameOrEmail === undefined) {
+            throw new Error('Required parameter usernameOrEmail was null or undefined when calling getSSODomainIdPs.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetSSODomainIdPsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetSSODomainIdPsResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
 
     /**
      * Get a JWT token to authenticate with the API.

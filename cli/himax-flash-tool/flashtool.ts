@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { SerialConnector } from '../serial-connector';
-import fs from 'fs';
-import Path from 'path';
+import fs from 'node:fs';
+import Path from 'node:path';
 import WebSocket from 'ws';
 import { HimaxSerialProtocol, HimaxDeviceTypes } from './himax-serial-protocol';
 import { findSerial } from '../find-serial';
@@ -122,7 +122,10 @@ async function connectToSerial(deviceId: string) {
     //     // client.write(data);
     // });
     async function connectLogic() {
-        if (!serial.isConnected()) return setTimeout(serial_connect, 5000);
+        if (!serial.isConnected()) {
+            setTimeout(serial_connect, 5000);
+            return;
+        }
 
         if (!await serial.hasSerial()) {
             console.log('');

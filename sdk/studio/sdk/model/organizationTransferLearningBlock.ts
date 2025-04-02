@@ -69,6 +69,14 @@ export class OrganizationTransferLearningBlock {
     * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
     */
     'customModelVariants'?: Array<OrganizationTransferLearningBlockCustomVariant>;
+    /**
+    * If set, then this block is no longer available for training; and blockNoLongerAvailableReason will be set.
+    */
+    'indBlockNoLongerAvailable': boolean;
+    /**
+    * In Markdown format. Set if `indBlockNoLongerAvailable` is true, contains migration information for existing users of this block.
+    */
+    'blockNoLongerAvailableReason'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -202,6 +210,16 @@ export class OrganizationTransferLearningBlock {
             "name": "customModelVariants",
             "baseName": "customModelVariants",
             "type": "Array<OrganizationTransferLearningBlockCustomVariant>"
+        },
+        {
+            "name": "indBlockNoLongerAvailable",
+            "baseName": "indBlockNoLongerAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "blockNoLongerAvailableReason",
+            "baseName": "blockNoLongerAvailableReason",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

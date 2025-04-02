@@ -66,6 +66,7 @@ type dspSampleTrainedFeaturesQueryParams = {
 
 type getDspMetadataQueryParams = {
     excludeIncludedSamples?: boolean,
+    category?: 'training' | 'testing' | 'all',
 };
 
 type getDspRawSampleQueryParams = {
@@ -1165,6 +1166,7 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
+     * @param category Which of the acquisition categories to get metadata from
      */
     public async getDspMetadata (projectId: number, dspId: number, queryParams?: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
@@ -1199,6 +1201,10 @@ export class DSPApi {
 
         if (queryParams?.excludeIncludedSamples !== undefined) {
             localVarQueryParameters['excludeIncludedSamples'] = ObjectSerializer.serialize(queryParams.excludeIncludedSamples, "boolean");
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'all'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

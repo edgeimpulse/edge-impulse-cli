@@ -1,13 +1,19 @@
 import npmFetch from 'npm-registry-fetch';
-import fs from 'fs';
-import Path from 'path';
-import util from 'util';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import { Config } from './config';
 const compareSemver = createCompareVersions();
 
-const minNodeVersion = '12.0.0';
+const DEFAULT_MIN_NODE_VERSION = '16.0.0';
 
 export default async function(config: Config) {
+    const packageJson = <{ version: string; name: string; engines: { node: string } }>(
+        JSON.parse(await readFile(join(__dirname, '..', '..', 'package.json'), 'utf-8'))
+    );
+
+    const engineVersion = packageJson?.engines?.node;
+    const minNodeVersion = engineVersion ? engineVersion.replace(/^[^\d]+/, '') : DEFAULT_MIN_NODE_VERSION;
+
     // Node.js version check
     let nodeVersion = process.version.replace(/^v/, '');
     if (nodeVersion && compareSemver(nodeVersion, minNodeVersion) === -1) {
@@ -21,13 +27,9 @@ export default async function(config: Config) {
         return;
     }
 
-    const packageJson = <{ version: string, name: string }>JSON.parse(
-        await util.promisify(fs.readFile)(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'));
+    let pkg: { versions: { [k: string]: { } } } =
+        <{ versions: { [k: string]: { } } }>await npmFetch.json(`/${packageJson.name}/`, { timeout: 3000 });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    let pkg: { versions: { [k: string]: { } } } = <any>await npmFetch.json(`/${packageJson.name}/`, {
-        timeout: 3000
-    });
     if (pkg) {
         let latestInNpm = (Object.keys(pkg.versions).sort((a, b) => compareSemver(b, a))[0]);
         let myVersion = packageJson.version;
@@ -42,7 +44,6 @@ export default async function(config: Config) {
 // from https://github.com/omichelsen/compare-versions#readme
 // licensed under the MIT
 function createCompareVersions() {
-    // eslint-disable-next-line @stylistic/max-len
     let semver = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
 
     function indexOrEnd(str: string, q: string) {

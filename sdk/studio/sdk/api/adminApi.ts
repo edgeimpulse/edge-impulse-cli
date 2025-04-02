@@ -35,7 +35,6 @@ import { AdminGetOrganizationComputeTimeUsageResponse } from '../model/adminGetO
 import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
 import { AdminGetReportResponse } from '../model/adminGetReportResponse';
 import { AdminGetReportsResponse } from '../model/adminGetReportsResponse';
-import { AdminGetSSODomainIdPsResponse } from '../model/adminGetSSODomainIdPsResponse';
 import { AdminGetSSOSettingsResponse } from '../model/adminGetSSOSettingsResponse';
 import { AdminGetTrashBinResponse } from '../model/adminGetTrashBinResponse';
 import { AdminGetTrialResponse } from '../model/adminGetTrialResponse';
@@ -4980,89 +4979,6 @@ export class AdminApi {
     }
 
     /**
-     * Admin-only API to get the list of identity providers enabled for a given domain.
-     * @summary Get SSO settings for a domain
-     * @param domainName Email domain name
-     */
-    public async adminGetSSODomainIdPs (domainName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetSSODomainIdPsResponse> {
-        const localVarPath = this.basePath + '/api/admin/sso/{domainName}'
-            .replace('{' + 'domainName' + '}', encodeURIComponent(String(domainName)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'domainName' is not null or undefined
-
-
-        if (domainName === null || domainName === undefined) {
-            throw new Error('Required parameter domainName was null or undefined when calling adminGetSSODomainIdPs.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<AdminGetSSODomainIdPsResponse>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "AdminGetSSODomainIdPsResponse");
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
      * Admin-only API to get the SSO settings.
      * @summary Get SSO settings
      */
@@ -5154,6 +5070,89 @@ export class AdminApi {
             localVarHeaderParams.Accept = produces.join(',');
         }
         let localVarFormParams: any = {};
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetStudioConfigResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetStudioConfigResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Admin-only API to get a studio config item.
+     * @summary Get a studio config item
+     * @param configKey Config Key
+     */
+    public async adminGetStudioConfigKey (configKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetStudioConfigResponse> {
+        const localVarPath = this.basePath + '/api/admin/infra/config/{configKey}'
+            .replace('{' + 'configKey' + '}', encodeURIComponent(String(configKey)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'configKey' is not null or undefined
+
+
+        if (configKey === null || configKey === undefined) {
+            throw new Error('Required parameter configKey was null or undefined when calling adminGetStudioConfigKey.');
+        }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);

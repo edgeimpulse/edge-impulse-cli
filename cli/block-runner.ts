@@ -1,13 +1,16 @@
-import fs from "fs";
+import fs from "fs/promises";
+import { createWriteStream } from "fs";
 import Path from "path";
 import os from "os";
-import tar from "tar";
+import { promisify } from "util";
+import * as tar from "tar";
 import yauzl, { Entry } from "yauzl";
 import { spawn, SpawnOptions } from "child_process";
 import { Config, EdgeImpulseConfig } from "../cli-common/config";
 import inquirer from "inquirer";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
+import https from 'https';
 import {
     ListOrganizationDataResponseAllOfData, OrganizationDataItemFiles,
     OrganizationTransformationBlock, UpdateProjectRequest,
@@ -106,7 +109,7 @@ export interface IRunner {
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
-    return !!(await fs.promises.stat(filePath).catch((e) => false));
+    return !!(await fs.stat(filePath).catch(() => false));
 }
 
 export abstract class BlockRunner implements IRunner {
@@ -783,13 +786,13 @@ export class BlockRunnerTransform extends BlockRunner {
         let currentFolderSize = 0;
         const extractFolder = Path.join(path, sourceData.bucketPath);
 
-        await fs.promises.mkdir(extractFolder, { recursive: true });
+        await fs.mkdir(extractFolder, { recursive: true });
 
         if (await fileExists(extractFolder)) {
-            const files = await fs.promises.readdir(extractFolder);
+            const files = await fs.readdir(extractFolder);
 
             for (const filename of files) {
-                const fileInfo = await fs.promises.stat(Path.join(extractFolder, filename));
+                const fileInfo = await fs.stat(Path.join(extractFolder, filename));
 
                 if (fileInfo.isFile()) {
                     currentFolderSize += fileInfo.size;
@@ -819,7 +822,7 @@ export class BlockRunnerTransform extends BlockRunner {
             );
 
             const rawBuffer = fileRes;
-            await fs.promises.writeFile(targetFilePath, rawBuffer);
+            await fs.writeFile(targetFilePath, rawBuffer);
         }
         else {
             const fileRes = await this._eiConfig.api.organizationData.downloadDatasetFolder(
@@ -834,7 +837,7 @@ export class BlockRunnerTransform extends BlockRunner {
             );
 
             const rawBuffer = fileRes;
-            await fs.promises.writeFile(targetFilePath, rawBuffer);
+            await fs.writeFile(targetFilePath, rawBuffer);
         }
 
         // extract and save files
@@ -846,12 +849,12 @@ export class BlockRunnerTransform extends BlockRunner {
         });
 
         // delete tarball
-        await fs.promises.unlink(targetFilePath);
+        await fs.unlink(targetFilePath);
 
         // Create the block output directory if it does not already exist
         const blockOutputDirectoryPath = Path.join(path, sourceData.bucketPath, 'out');
         if (!await fileExists(blockOutputDirectoryPath)) {
-            await fs.promises.mkdir(blockOutputDirectoryPath);
+            await fs.mkdir(blockOutputDirectoryPath);
         }
 
         console.log(CON_PREFIX, 'Done extracting files');
@@ -877,7 +880,7 @@ export class BlockRunnerTransform extends BlockRunner {
             return { fileDir: fileDir, filename: filename };
         }
 
-        await fs.promises.mkdir(fileDir, { recursive: true });
+        await fs.mkdir(fileDir, { recursive: true });
 
         // grab list of files in data item
         let fileListRes = (
@@ -923,7 +926,7 @@ export class BlockRunnerTransform extends BlockRunner {
         // see if file is present and the same size
         // if it is, don't download
         if (await fileExists(filePath)) {
-            let localFileSize = (await fs.promises.stat(filePath)).size;
+            let localFileSize = (await fs.stat(filePath)).size;
 
             if (localFileSize === foundFileEntry.size) {
                 console.log(CON_PREFIX, "File already present; skipping download...");
@@ -931,7 +934,7 @@ export class BlockRunnerTransform extends BlockRunner {
             }
 
             // delete the old file
-            await fs.promises.unlink(filePath);
+            await fs.unlink(filePath);
         }
 
         console.log(CON_PREFIX, `Downloading file ${filename} to ${fileDir}...`);
@@ -947,7 +950,7 @@ export class BlockRunnerTransform extends BlockRunner {
             )
         );
 
-        await fs.promises.writeFile(filePath, file);
+        await fs.writeFile(filePath, file);
 
         console.log(CON_PREFIX, `File downloaded`);
 
@@ -978,7 +981,7 @@ export class BlockRunnerTransform extends BlockRunner {
             return { fileDir: targetDir, filename: filename };
         }
 
-        await fs.promises.mkdir(targetDir, { recursive: true });
+        await fs.mkdir(targetDir, { recursive: true });
 
         const filePath = Path.join(targetDir, filename);
 
@@ -1001,14 +1004,24 @@ export class BlockRunnerTransform extends BlockRunner {
         }
 
         // Download the file
-        const writeStream = fs.createWriteStream(filePath);
+        const writeStream = createWriteStream(filePath);
         await new Promise<void>((res) => {
-            http.get(datasetFilePathRes.url, (response) => {
-                response.pipe(writeStream);
-                writeStream.on('finish', () => {
-                    res();
+            if (datasetFilePathRes.url.startsWith("https://")) {
+                https.get(datasetFilePathRes.url, (response) => {
+                    response.pipe(writeStream);
+                    writeStream.on('finish', () => {
+                        res();
+                    });
                 });
-            });
+            }
+            else {
+                http.get(datasetFilePathRes.url, (response) => {
+                    response.pipe(writeStream);
+                    writeStream.on('finish', () => {
+                        res();
+                    });
+                });
+            }
         });
 
         console.log(CON_PREFIX, 'File downloaded successfully');
@@ -1056,6 +1069,8 @@ export class BlockRunnerTransform extends BlockRunner {
 
 export class BlockRunnerTransferLearning extends BlockRunner {
     private _projectId: number = -1;
+    private _impulseId: number = -1;
+    private _learnBlockId: number = -1;
 
     async setup(): Promise<void> {
         if (this._runnerOpts.type !== 'machine-learning') {
@@ -1080,28 +1095,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         }
 
         if (!runner.projectId) {
-            let projectChoices = (projectList.projects || []).map((p) => ({
-                name: p.owner + " / " + p.name,
-                value: p.id
-            }));
-
-            if (!projectChoices || projectChoices.length === 0) {
-                throw new Error(`No projects found`);
-            }
-
-            let projectInq = await inquirer.prompt([
-                {
-                    type: "list",
-                    choices: projectChoices,
-                    name: "projectId",
-                    message:
-                        "Select a project to download training files and labels",
-                    pageSize: 20
-                }
-            ]);
-
-            this._projectId = Number(projectInq.projectId);
-
+            this._projectId = await chooseProjectId(projectList);
             await this._cliConfig.storeProjectId(this._projectId);
         }
         else {
@@ -1113,67 +1107,95 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         console.log(CON_PREFIX, `Loading data from project "${projectInfo.project.owner} / ${projectInfo.project.name}" (ID: ${this._projectId}) ` +
             `(run with --clean to switch projects)`);
 
-        let impulseRes = (
-            await this._eiConfig.api.impulse.getImpulse(this._projectId, { })
-        );
+        const impulsesRes = (await this._eiConfig.api.impulse.getAllImpulses(this._projectId));
 
-        if (!impulseRes.success) {
+        if (!impulsesRes.success) {
             console.error(CON_PREFIX,
-                "Failed to retrieve learn block list...",
-                impulseRes,
-                impulseRes.error
+                "Failed to retrieve impulse list...",
+                impulsesRes,
+                impulsesRes.error
             );
             process.exit(1);
         }
 
-        if (!impulseRes.impulse || impulseRes.impulse.learnBlocks.length === 0) {
+        if (!impulsesRes.impulses || impulsesRes.impulses.length === 0
+            || impulsesRes.impulses.every(x => !x.learnBlocks)
+            || impulsesRes.impulses.every(x => x.learnBlocks.length === 0)) {
             console.error(CON_PREFIX,
                 `Unable to find learn blocks for project id '${this._projectId}'. Create an impulse first.`
             );
             process.exit(1);
         }
 
-        let learnBlockId: number;
+        // if the impulse is deleted then set impulseId back to undefined
+        // so we ask about the impulse again...
+        const projectIdStr: string = this._projectId.toString();
+        if (runner.impulseIdsForProjectId
+            && runner.impulseIdsForProjectId[projectIdStr]
+            && runner.impulseIdsForProjectId[projectIdStr].impulseId) {
+            const impulseIdFromConfig = runner.impulseIdsForProjectId[projectIdStr].impulseId;
+            if (!impulsesRes.impulses.find(x => x.id === impulseIdFromConfig)) {
+                // invalidate values
+                delete runner.impulseIdsForProjectId[projectIdStr];
+                runner.blockId = undefined;
+            }
+        }
+
+        if (!runner.impulseIdsForProjectId
+            || !runner.impulseIdsForProjectId[projectIdStr]
+            || !runner.impulseIdsForProjectId[projectIdStr].impulseId) {
+            const impulses = impulsesRes.impulses;
+            this._impulseId = await chooseImpulseId(impulses);
+            await this._cliConfig.setRunnerImpulseIdForProjectId(this._projectId, this._impulseId);
+            runner.blockId = undefined; // also invalidate block id
+        }
+        else {
+            this._impulseId = runner.impulseIdsForProjectId[projectIdStr].impulseId;
+        }
+
+        const impulseName = impulsesRes.impulses.find(x => x.id === this._impulseId)?.name;
+        if (!impulseName) {
+            console.error(CON_PREFIX,
+                `Unable to get impulse name impulse id '${this._impulseId}'.`
+            );
+            process.exit(1);
+        }
+        else {
+            console.log(CON_PREFIX, `Loading data from impulse "${impulseName}" (ID: ${this._impulseId}) ` +
+                `(run with --clean to switch impulses)`);
+        }
+
 
         // https://github.com/edgeimpulse/edgeimpulse/issues/7799
         // if the learn block is deleted then set blockId back to undefined
         // so we ask about the block again...
         if (runner.blockId) {
-            let block = impulseRes.impulse.learnBlocks.find(l => l.id === runner.blockId);
+            const impulse = impulsesRes.impulses.find(x => x.id === this._impulseId);
+            let block = impulse?.learnBlocks.find(l => l.id === runner.blockId);
             if (!block) {
                 runner.blockId = undefined;
             }
         }
 
         if (!runner.blockId) {
-            let learnBlocks = impulseRes.impulse.learnBlocks;
-
-            if (learnBlocks.length === 1) {
-                learnBlockId = learnBlocks[0].id;
+            let learnBlocks = impulsesRes.impulses.find(x => x.id === this._impulseId)?.learnBlocks;
+            if (!learnBlocks) {
+                console.error(CON_PREFIX,
+                    "Failed to retrieve learn block...",
+                    this._impulseId
+                );
+                process.exit(1);
             }
             else {
-                let learnInq = await inquirer.prompt([
-                    {
-                        type: "list",
-                        choices: (learnBlocks || []).map((b) => ({
-                            name: b.title,
-                            value: b.id
-                        })),
-                        name: "learnBlockId",
-                        message: "Select a learn block to download files and labels",
-                        pageSize: 10
-                    }
-                ]);
-                learnBlockId = Number(learnInq.learnBlockId);
+                this._learnBlockId = await chooseLearnBlockId(learnBlocks);
+                await this._cliConfig.storeBlockId(this._learnBlockId);
             }
-
-            await this._cliConfig.storeBlockId(learnBlockId);
         }
         else {
-            learnBlockId = runner.blockId;
+            this._learnBlockId = runner.blockId;
         }
 
-        let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, learnBlockId));
+        let learnBlockRes = (await this._eiConfig.api.learn.getKeras(this._projectId, this._learnBlockId));
 
         try {
             if (await this.checkFilesPresent(this._projectId) && !this._runnerOpts.downloadData) {
@@ -1186,7 +1208,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                     Path.join(process.cwd(), 'ei-block-data', this._projectId.toString());
 
                 console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" (run with --clean to switch blocks)...`);
-                await this.downloadFiles(this._projectId, learnBlockId, targetDir);
+                await this.downloadFiles(this._projectId, this._learnBlockId, targetDir);
                 console.log(CON_PREFIX, `Downloading files from block "${learnBlockRes.name}" OK (stored in "${targetDir}")`);
 
                 if (this._runnerOpts.downloadData) {
@@ -1313,6 +1335,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         learnId: number,
         targetDir: string,
     ): Promise<void> {
+        console.log('downloadFiles', { projectId, learnId });
 
         let overrideImageInputScaling: models.ImageInputScaling | undefined;
 
@@ -1349,7 +1372,7 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             }
         }
 
-        await fs.promises.mkdir(targetDir, { recursive: true });
+        await fs.mkdir(targetDir, { recursive: true });
 
         console.log(CON_PREFIX, 'Creating download job...');
         let job = await this._eiConfig.api.jobs.exportKerasBlockData(projectId, learnId, {
@@ -1367,14 +1390,14 @@ export class BlockRunnerTransferLearning extends BlockRunner {
 
         let zipFile = Path.join(targetDir, "data.zip");
         let data = await this._eiConfig.api.learn.downloadKerasData(projectId, learnId);
-        await fs.promises.writeFile(
+        await fs.writeFile(
             zipFile,
             data
         );
 
         console.log(CON_PREFIX, 'Download completed, unzipping...');
         await extractFiles(zipFile, targetDir);
-        await fs.promises.unlink(zipFile);
+        await fs.unlink(zipFile);
     }
 
     private async checkFilesPresent(projectId: number): Promise<boolean> {
@@ -1404,31 +1427,7 @@ export class BlockRunnerDeploy extends BlockRunner {
                 );
             }
 
-            let projectChoices = (projectList.projects || []).map((p) => ({
-                name: p.owner + " / " + p.name,
-                value: p.id
-            }));
-
-            if (!projectChoices || projectChoices.length === 0) {
-                throw new Error(`No projects found`);
-            }
-
-            let projectInq = await inquirer.prompt([
-                {
-                    type: "list",
-                    choices: (projectList.projects || []).map((p) => ({
-                        name: p.owner + " / " + p.name,
-                        value: p.id
-                    })),
-                    name: "projectId",
-                    message:
-                        "Select a project to download files",
-                    pageSize: 20
-                }
-            ]);
-
-            this._projectId = Number(projectInq.projectId);
-
+            this._projectId = await chooseProjectId(projectList);
             await this._cliConfig.storeProjectId(this._projectId);
         }
         else {
@@ -1480,13 +1479,20 @@ export class BlockRunnerDeploy extends BlockRunner {
             Path.join(process.cwd(), 'ei-block-data', this._projectId.toString(), 'input');
         let zipDir = Path.join(process.cwd(), "ei-block-data", "download");
 
+        if (await fileExists(targetDir)) {
+            console.log(CON_PREFIX, `Removing ${targetDir}...`);
+            await promisify(fs.rmdir)(targetDir, { recursive: true });
+        }
+
         console.log(CON_PREFIX, `Downloading build artifacts ZIP into ${zipDir}...`);
         await this.downloadFile(zipDir, "build-data.zip", this._projectId);
         console.log(CON_PREFIX, "Downloaded file");
 
+        let zipFile = Path.join(zipDir, "build-data.zip");
         console.log(CON_PREFIX, `Unzipping into ${targetDir}...`);
-        await extractFiles(Path.join(zipDir, "build-data.zip"), targetDir);
+        await extractFiles(zipFile, targetDir);
         console.log(CON_PREFIX, `Extracted into ${targetDir}`);
+        await fs.unlink(zipFile);
 
         if (this._runnerOpts.type === 'deploy' && this._runnerOpts.downloadData) {
             process.exit(0);
@@ -1562,15 +1568,15 @@ export class BlockRunnerDeploy extends BlockRunner {
         let downloadPath = Path.join(zipFileDir, zipFileName);
 
         if (!(await fileExists(zipFileDir))) {
-            await fs.promises.mkdir(zipFileDir);
+            await fs.mkdir(zipFileDir, { recursive: true });
         }
 
         if (await fileExists(downloadPath)) {
             // delete the old file
-            await fs.promises.unlink(downloadPath);
+            await fs.unlink(downloadPath);
         }
 
-        await fs.promises.writeFile(downloadPath, buildArtifacts);
+        await fs.writeFile(downloadPath, buildArtifacts);
     }
 }
 
@@ -1589,7 +1595,7 @@ export class BlockRunnerDSP extends BlockRunner {
         if (!this._runnerOpts.port) {
             const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
             if (await pathExists(dockerfilePath)) {
-                let dockerfileLines = (await fs.promises.readFile(dockerfilePath))
+                let dockerfileLines = (await fs.readFile(dockerfilePath))
                     .toString('utf-8').split('\n');
                 let exposeLine = dockerfileLines.find(x => x.toLowerCase().startsWith('expose'));
                 let exposePort = Number(exposeLine?.toLowerCase().replace('expose ', ''));
@@ -1786,7 +1792,7 @@ async function extractFiles(
         throw new Error(`Unable to find file ${zipFileName} for unzipping`);
     }
 
-    await fs.promises.mkdir(targetFolder, { recursive: true });
+    await fs.mkdir(targetFolder, { recursive: true });
 
     return new Promise<void>((resolve, reject) => {
         yauzl.open(zipFileName, { lazyEntries: true }, (err, zipFile) => {
@@ -1800,7 +1806,7 @@ async function extractFiles(
                     try {
                         if (/\/$/.test(entry.fileName)) {
                             // A directory
-                            await fs.promises.mkdir(
+                            await fs.mkdir(
                                 Path.join(targetFolder, entry.fileName)
                             );
                             zipFile.readEntry();
@@ -1820,7 +1826,7 @@ async function extractFiles(
                                         );
                                     }
 
-                                    let writeStream = fs.createWriteStream(
+                                    let writeStream = createWriteStream(
                                         Path.join(
                                             targetFolder,
                                             entry.fileName
@@ -1852,7 +1858,7 @@ async function extractFiles(
                     }
                     catch (ex) {
                         zipFile.close();
-                        reject(new Error("Unable to read ZIP file"));
+                        reject(new Error(`Unable to read ZIP file ${ex}`));
                     }
                 });
 
@@ -1871,4 +1877,69 @@ async function extractFiles(
             }
         });
     });
+}
+
+async function chooseProjectId(
+    projectList: models.ListProjectsResponse
+): Promise<number> {
+    let projectChoices = (projectList.projects || []).map((p) => ({
+        name: p.owner + " / " + p.name,
+        value: p.id
+    }));
+
+    if (!projectChoices || projectChoices.length === 0) {
+        throw new Error(`No projects found`);
+    }
+
+    let projectInq = await inquirer.prompt([
+        {
+            type: "list",
+            choices: projectChoices,
+            name: "projectId",
+            message:
+                "Select a project to download training files and labels",
+            pageSize: 20
+        }
+    ]);
+
+    return Number(projectInq.projectId);
+}
+
+async function chooseImpulseId(
+    impulses: models.Impulse[]
+): Promise<number> {
+    if (impulses.length === 1) {
+        // use the first impulse
+        return impulses[0].id;
+    }
+
+    let inqRes = await inquirer.prompt([{
+        type: 'list',
+        choices: impulses.map(p => ({ name: p.name, value: p.id })),
+        name: 'impulseId',
+        message: 'Which impulse do you want to use?',
+        pageSize: 20
+    }]);
+    return Number(inqRes.impulseId);
+}
+
+async function chooseLearnBlockId(
+    learnBlocks: models.ImpulseLearnBlock[]
+): Promise<number> {
+    if (learnBlocks.length === 1) {
+        return learnBlocks[0].id;
+    }
+    let learnInq = await inquirer.prompt([
+        {
+            type: "list",
+            choices: (learnBlocks || []).map((b) => ({
+                name: b.title,
+                value: b.id
+            })),
+            name: "learnBlockId",
+            message: "Select a learn block to download files and labels",
+            pageSize: 10
+        }
+    ]);
+    return Number(learnInq.learnBlockId);
 }

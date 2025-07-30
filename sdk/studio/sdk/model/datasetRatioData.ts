@@ -13,7 +13,7 @@
 import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
 
 export class DatasetRatioData {
-    'ratio'?: DatasetRatioDataRatio;
+    'ratio': DatasetRatioDataRatio;
 
     static discriminator: string | undefined = undefined;
 

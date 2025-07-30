@@ -21,9 +21,13 @@ export class Migration {
     */
     'state': MigrationStateEnum;
     /**
-    * Number of items already processed
+    * Optional. Number of items already processed
     */
     'offset'?: number;
+    /**
+    * Optional. The number of items to process in each batch during a migration
+    */
+    'batchSize'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,6 +45,11 @@ export class Migration {
         {
             "name": "offset",
             "baseName": "offset",
+            "type": "number"
+        },
+        {
+            "name": "batchSize",
+            "baseName": "batchSize",
             "type": "number"
         }    ];
 

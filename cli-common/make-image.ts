@@ -3,9 +3,9 @@ import https from 'node:https';
 import Path from 'node:path';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
-import { EdgeImpulseConfig } from './config';
+import { Config, EdgeImpulseConfig } from './config';
 import encodeLabel from '../shared/encoding';
-import { ExportInputBoundingBox, ExportStructuredLabelsFileV1,
+import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportStructuredLabelsFileV1,
     ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from '../shared/bounding-box-file-types';
 
 const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
@@ -28,6 +28,7 @@ export const EXTENSION_MAPPING: { [k: string]: string } = {
 export const VALID_EXTENSIONS = Object.keys(EXTENSION_MAPPING);
 
 export async function upload(opts: {
+    projectId: number,
     filename: string,
     buffer: Buffer,
     label: { type: 'infer'} | ExportUploaderInfoFileLabel,
@@ -38,12 +39,35 @@ export async function upload(opts: {
     boundingBoxes: ExportInputBoundingBox[] | undefined,
     metadata: { [k: string]: string } | undefined,
     addDateId: boolean,
+    configFactory: Config,
 }) {
-    if (opts.buffer.length > 100 * 1024 * 1024) {
-        throw new Error('File too large, max. size is 100MB');
-    }
-
     let ext = Path.extname(opts.filename).toLowerCase();
+
+    if (ext === '.csv' || ext === '.txt') {
+        const project = await opts.config.api.projects.getProjectInfo(opts.projectId);
+
+        if (project.csvImportConfig) {
+            if (opts.buffer.length >= 2 * 1024 * 1024 * 1024) {
+                throw new Error('File too large, max. size is 2GiB');
+            }
+        }
+        else {
+            if (opts.buffer.length >= 100 * 1024 * 1024) {
+                const studioUrl = await opts.configFactory.getStudioUrl(project.project.whitelabelId);
+                const csvLink = `${studioUrl}/studio/${opts.projectId}/upload/csv`;
+
+                throw new Error(`The max. size for TXT / CSV files is 100MiB unless you have configured ` +
+                    `the CSV wizard via ${csvLink}, then the max. size is 2GiB before splitting the CSV file. ` +
+                    `Samples after splitting should be <100MiB.`);
+            }
+        }
+    }
+    else {
+        // all other files
+        if (opts.buffer.length >= 100 * 1024 * 1024) {
+            throw new Error('File too large, max. size is 100MB');
+        }
+    }
 
     let headers: { [k: string]: string} = {
         'x-api-key': opts.apiKey,
@@ -64,9 +88,6 @@ export async function upload(opts: {
 
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
-    }
-    if (opts.boundingBoxes) {
-        headers['x-bounding-boxes'] = JSON.stringify(opts.boundingBoxes);
     }
     if (opts.metadata) {
         headers['x-metadata'] = JSON.stringify(opts.metadata);
@@ -97,6 +118,18 @@ export async function upload(opts: {
         labelsFile.structuredLabels[opts.filename] = opts.label.labels;
         form.append('data', Buffer.from(JSON.stringify(labelsFile), 'utf-8'), {
             filename: 'structured_labels.labels',
+            contentType: 'application/json',
+        });
+    }
+    if (opts.boundingBoxes) {
+        let bbsFile: ExportBoundingBoxesFileV1 = {
+            version: 1,
+            type: 'bounding-box-labels',
+            boundingBoxes: { },
+        };
+        bbsFile.boundingBoxes[opts.filename] = opts.boundingBoxes;
+        form.append('data', Buffer.from(JSON.stringify(bbsFile), 'utf-8'), {
+            filename: 'bounding_boxes.labels',
             contentType: 'application/json',
         });
     }

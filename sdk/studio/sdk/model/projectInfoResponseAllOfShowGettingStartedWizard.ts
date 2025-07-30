@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { TutorialType } from './tutorialType';
 
 export class ProjectInfoResponseAllOfShowGettingStartedWizard {
     'showWizard': boolean;
@@ -17,6 +18,11 @@ export class ProjectInfoResponseAllOfShowGettingStartedWizard {
     * Current step of the getting started wizard
     */
     'step': number;
+    'tutorial'?: TutorialType;
+    /**
+    * Classes or labels used in the getting started wizard
+    */
+    'classes'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +36,16 @@ export class ProjectInfoResponseAllOfShowGettingStartedWizard {
             "name": "step",
             "baseName": "step",
             "type": "number"
+        },
+        {
+            "name": "tutorial",
+            "baseName": "tutorial",
+            "type": "TutorialType"
+        },
+        {
+            "name": "classes",
+            "baseName": "classes",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

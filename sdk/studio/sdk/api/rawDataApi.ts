@@ -35,8 +35,10 @@ import { GetAIActionsProposedChangesResponse } from '../model/getAIActionsPropos
 import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
 import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
 import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
+import { GetDatasetRatioResponse } from '../model/getDatasetRatioResponse';
 import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
+import { GetSampleMetadataFilterOptionsResponse } from '../model/getSampleMetadataFilterOptionsResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
 import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
@@ -46,6 +48,7 @@ import { ObjectDetectionAutoLabelRequest } from '../model/objectDetectionAutoLab
 import { ObjectDetectionAutoLabelResponse } from '../model/objectDetectionAutoLabelResponse';
 import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetectionLabelQueueCountResponse';
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
+import { RawDataCategory } from '../model/rawDataCategory';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
@@ -53,6 +56,7 @@ import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
 import { SetSampleProposedChangesRequest } from '../model/setSampleProposedChangesRequest';
 import { SetSampleStructuredLabelsRequest } from '../model/setSampleStructuredLabelsRequest';
+import { SetSampleVideoDimensionsRequest } from '../model/setSampleVideoDimensionsRequest';
 import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
 import { StoreSegmentLengthRequest } from '../model/storeSegmentLengthRequest';
 import { TrackObjectsRequest } from '../model/trackObjectsRequest';
@@ -76,7 +80,7 @@ export enum RawDataApiApiKeys {
 }
 
 type batchAddMetadataQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -90,10 +94,16 @@ type batchAddMetadataQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchClearMetadataQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -107,10 +117,16 @@ type batchClearMetadataQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchClearMetadataByKeyQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -124,10 +140,16 @@ type batchClearMetadataByKeyQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchDeleteQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -141,10 +163,16 @@ type batchDeleteQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchDisableQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -158,10 +186,16 @@ type batchDisableQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchEditLabelsQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -175,10 +209,16 @@ type batchEditLabelsQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchEnableQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -192,10 +232,16 @@ type batchEnableQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type batchMoveQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -209,10 +255,16 @@ type batchMoveQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type countSamplesQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -224,6 +276,12 @@ type countSamplesQueryParams = {
     minLabel?: number,
     maxLabel?: number,
     search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type getAllImportedFromQueryParams = {
@@ -259,7 +317,13 @@ type getSampleAsVideoQueryParams = {
 };
 
 type getSampleMetadataQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
+};
+
+type getSampleMetadataFilterOptionsQueryParams = {
+    category: RawDataCategory,
+    limit?: number,
+    offset?: number,
 };
 
 type getSampleSliceQueryParams = {
@@ -278,7 +342,7 @@ type getUncroppedDownsampledSampleQueryParams = {
 };
 
 type listSamplesQueryParams = {
-    category: 'training' | 'testing' | 'anomaly',
+    category: RawDataCategory,
     limit?: number,
     offset?: number,
     excludeSensors?: boolean,
@@ -295,6 +359,13 @@ type listSamplesQueryParams = {
     search?: string,
     proposedActionsJobId?: number,
     truncateStructuredLabels?: boolean,
+    sortBy?: 'id-desc' | 'random',
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 export type uploadDataExplorerScreenshotFormParams = {
@@ -317,6 +388,7 @@ export class RawDataApi {
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
         'ApiKeyAuthentication': new ApiKeyAuth('header', 'x-api-key'),
+        'OAuth2': new OAuth(),
         'JWTAuthentication': new ApiKeyAuth('cookie', 'jwt'),
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
@@ -364,6 +436,10 @@ export class RawDataApi {
         (this.authentications as any)[RawDataApiApiKeys[key]].apiKey = value;
     }
 
+    set accessToken(token: string) {
+        this.authentications.OAuth2.accessToken = token;
+    }
+
 
     /**
      * Add specific metadata for multiple samples.
@@ -384,6 +460,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/add-metadata'
@@ -423,7 +505,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -478,6 +560,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -500,6 +606,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -552,6 +660,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchClearMetadata (projectId: number, queryParams: batchClearMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata'
@@ -584,7 +698,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -639,6 +753,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -660,6 +798,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -713,6 +853,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata-by-key'
@@ -752,7 +898,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -807,6 +953,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -829,6 +999,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -881,6 +1053,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
@@ -913,7 +1091,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -968,6 +1146,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -989,6 +1191,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1041,6 +1245,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
@@ -1073,7 +1283,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1128,6 +1338,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1149,6 +1383,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1202,6 +1438,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
@@ -1241,7 +1483,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1296,6 +1538,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1318,6 +1584,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1370,6 +1638,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
@@ -1402,7 +1676,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1457,6 +1731,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1478,6 +1776,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1531,6 +1831,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
@@ -1570,7 +1876,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1625,6 +1931,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -1647,6 +1977,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1749,6 +2081,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -1831,6 +2165,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1915,6 +2251,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -1964,6 +2302,12 @@ export class RawDataApi {
      * @param minLabel Only include samples with a label &gt;&#x3D; this value
      * @param maxLabel Only include samples with a label &lt; this value
      * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
@@ -1996,7 +2340,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -2043,6 +2387,30 @@ export class RawDataApi {
             localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
         }
 
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -2064,6 +2432,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -2166,6 +2536,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -2249,6 +2621,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -2288,7 +2662,7 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to download data from
      */
-    public async deleteAllSamplesByCategory (projectId: number, category: 'training' | 'testing' | 'anomaly', options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteAllSamplesByCategory (projectId: number, category: RawDataCategory, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/delete-all/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
@@ -2340,6 +2714,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -2433,6 +2809,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -2524,6 +2902,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -2626,6 +3006,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -2717,6 +3099,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -2819,6 +3203,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -2910,6 +3296,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -3004,6 +3392,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3086,6 +3476,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -3170,6 +3562,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3253,6 +3647,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3268,6 +3664,91 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetDataExplorerSettingsResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Retrieve number of samples in train and test set.
+     * @summary Get dataset ratio
+     * @param projectId Project ID
+     */
+    public async getDatasetRatio (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetRatioResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/ratio'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getDatasetRatio.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetDatasetRatioResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetDatasetRatioResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -3335,6 +3816,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -3419,6 +3902,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3502,6 +3987,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3584,6 +4071,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -3701,6 +4190,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -3821,6 +4312,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -3928,6 +4421,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4019,6 +4514,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -4127,6 +4624,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4197,7 +4696,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -4222,6 +4721,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4237,6 +4738,113 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetSampleMetadataResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get a list of unique key value pairs across all samples in a project that can be applied as filters to the /api/{projectId}/raw-data endpoint
+     * @summary Get project sample metadata filter options
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async getSampleMetadataFilterOptions (projectId: number, queryParams: getSampleMetadataFilterOptionsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleMetadataFilterOptionsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-filter-options'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getSampleMetadataFilterOptions.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling getSampleMetadataFilterOptions.');
+        }
+
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+        }
+
+        if (queryParams?.limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(queryParams.limit, "number");
+        }
+
+        if (queryParams?.offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(queryParams.offset, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetSampleMetadataFilterOptionsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetSampleMetadataFilterOptionsResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -4340,6 +4948,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -4458,6 +5068,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4540,6 +5152,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -4624,6 +5238,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4707,6 +5323,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -4761,6 +5379,13 @@ export class RawDataApi {
      * @param search Search query
      * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param sortBy If not specified, \&quot;id-desc\&quot; is used.
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
@@ -4793,7 +5418,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'anomaly'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
         }
 
         if (queryParams?.limit !== undefined) {
@@ -4860,6 +5485,34 @@ export class RawDataApi {
             localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
         }
 
+        if (queryParams?.sortBy !== undefined) {
+            localVarQueryParameters['sortBy'] = ObjectSerializer.serialize(queryParams.sortBy, "'id-desc' | 'random'");
+        }
+
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
         (<any>Object).assign(localVarHeaderParams, options.headers);
         (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
 
@@ -4881,6 +5534,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -4983,6 +5638,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5075,6 +5732,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5109,7 +5768,7 @@ export class RawDataApi {
     }
 
     /**
-     * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
+     * This API is deprecated, use rebalanceDatasetV2 instead (`/v1/api/{projectId}/classify/v2/{sampleId}`). Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
      * @summary Rebalance dataset
      * @param projectId Project ID
      */
@@ -5158,6 +5817,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5173,6 +5834,91 @@ export class RawDataApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "RebalanceDatasetResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. To get the dataset ratio (as returned by the v1 endpoint), use getDatasetRatio.
+     * @summary Rebalance dataset
+     * @param projectId Project ID
+     */
+    public async rebalanceDatasetV2 (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/v2/rebalance'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling rebalanceDatasetV2.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -5258,6 +6004,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -5350,6 +6098,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -5452,6 +6202,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5543,6 +6295,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -5645,6 +6399,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5745,6 +6501,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -5847,6 +6605,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -5947,6 +6707,111 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Update the video dimensions for a sample. This is only available for video files that do not have dimensions set yet.
+     * @summary Set sample video dimensions
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param setSampleVideoDimensionsRequest 
+     */
+    public async setSampleVideoDimensions (projectId: number, sampleId: number, setSampleVideoDimensionsRequest: SetSampleVideoDimensionsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video-dimensions'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setSampleVideoDimensions.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling setSampleVideoDimensions.');
+        }
+
+        // verify required parameter 'setSampleVideoDimensionsRequest' is not null or undefined
+
+
+        if (setSampleVideoDimensionsRequest === null || setSampleVideoDimensionsRequest === undefined) {
+            throw new Error('Required parameter setSampleVideoDimensionsRequest was null or undefined when calling setSampleVideoDimensions.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(setSampleVideoDimensionsRequest, "SetSampleVideoDimensionsRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -6049,6 +6914,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -6141,6 +7008,8 @@ export class RawDataApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -6232,6 +7101,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -6328,6 +7199,8 @@ export class RawDataApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {

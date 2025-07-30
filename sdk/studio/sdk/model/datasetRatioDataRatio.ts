@@ -17,7 +17,7 @@ export class DatasetRatioDataRatio {
     */
     'training'?: number;
     /**
-    * number of testing samples after rebalance
+    * number of testing samples after rebalance. This ignores test data with a label that\'s not in the training dataset.
     */
     'testing'?: number;
 

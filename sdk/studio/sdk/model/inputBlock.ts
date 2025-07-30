@@ -18,7 +18,6 @@ export class InputBlock {
     'author': string;
     'description': string;
     'name': string;
-    'recommended'?: boolean;
     'blockType': BlockType;
 
     static discriminator: string | undefined = undefined;
@@ -48,11 +47,6 @@ export class InputBlock {
             "name": "name",
             "baseName": "name",
             "type": "string"
-        },
-        {
-            "name": "recommended",
-            "baseName": "recommended",
-            "type": "boolean"
         },
         {
             "name": "blockType",

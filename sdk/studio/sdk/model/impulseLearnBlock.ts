@@ -14,7 +14,7 @@ import { LearnBlockType } from './learnBlockType';
 
 export class ImpulseLearnBlock {
     /**
-    * Identifier for this block. Make sure to up this number when creating a new block, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
+    * Identifier for this block. Make sure to up this number when creating a new block via `getNewBlockId`, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
     */
     'id': number;
     'type': LearnBlockType;
@@ -30,10 +30,6 @@ export class ImpulseLearnBlock {
     * Block title, used in the impulse UI
     */
     'title': string;
-    /**
-    * A short description of the block version, displayed in the block versioning UI
-    */
-    'description'?: string;
     /**
     * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
     */
@@ -69,11 +65,6 @@ export class ImpulseLearnBlock {
         {
             "name": "title",
             "baseName": "title",
-            "type": "string"
-        },
-        {
-            "name": "description",
-            "baseName": "description",
             "type": "string"
         },
         {

@@ -10,9 +10,10 @@
  * Do not edit the class manually.
  */
 
+import { RawDataCategory } from './rawDataCategory';
 
 export class MoveRawDataRequest {
-    'newCategory': MoveRawDataRequestNewCategoryEnum;
+    'newCategory': RawDataCategory;
 
     static discriminator: string | undefined = undefined;
 
@@ -20,7 +21,7 @@ export class MoveRawDataRequest {
         {
             "name": "newCategory",
             "baseName": "newCategory",
-            "type": "MoveRawDataRequestNewCategoryEnum"
+            "type": "RawDataCategory"
         }    ];
 
     static getAttributeTypeMap() {
@@ -28,6 +29,3 @@ export class MoveRawDataRequest {
     }
 }
 
-
-export type MoveRawDataRequestNewCategoryEnum = 'training' | 'testing' | 'anomaly';
-export const MoveRawDataRequestNewCategoryEnumValues: string[] = ['training', 'testing', 'anomaly'];

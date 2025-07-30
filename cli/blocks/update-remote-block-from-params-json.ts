@@ -94,7 +94,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'showInSyntheticData' |
             'showInAIActions' |
             'environmentVariables' |
-            'aiActionsOperatesOn'
+            'aiActionsOperatesOn' |
+            'sourceCodeDownloadStaffOnly'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             operatesOn: { oldVal: remoteBlock.operatesOn, newVal: params.info.operatesOn },
@@ -174,7 +175,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'showInCreateTransformationJob' |
             'showInAIActions' |
             'environmentVariables' |
-            'aiActionsOperatesOn'
+            'aiActionsOperatesOn' |
+            'sourceCodeDownloadStaffOnly'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             showInSyntheticData: { oldVal: remoteBlock.showInSyntheticData, newVal: true },
@@ -239,7 +241,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'showInDataSources' |
             'showInCreateTransformationJob' |
             'showInSyntheticData' |
-            'environmentVariables'
+            'environmentVariables' |
+            'sourceCodeDownloadStaffOnly'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             showInAIActions: { oldVal: remoteBlock.showInAIActions, newVal: true },
@@ -295,7 +298,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'publicProjectTierAvailability' |
             'parameters' |
             'indBlockNoLongerAvailable' |
-            'blockNoLongerAvailableReason'
+            'blockNoLongerAvailableReason' |
+            'sourceCodeDownloadStaffOnly'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             operatesOn: { oldVal: remoteBlock.operatesOn, newVal: params.info.operatesOn },
@@ -356,7 +360,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'requestsCpu' |
             'requestsMemory' |
             'limitsCpu' |
-            'limitsMemory'
+            'limitsMemory' |
+            'sourceCodeDownloadStaffOnly'
         >;
 
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
@@ -410,7 +415,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'requestsMemory' |
             'limitsCpu' |
             'limitsMemory' |
-            'photo'
+            'photo' |
+            'sourceCodeDownloadStaffOnly'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             category: { oldVal: remoteBlock.category, newVal: params.info.category },

@@ -10,8 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { GenericApiResponse } from './genericApiResponse';
+import { PortalInfoResponseAllOf } from './portalInfoResponseAllOf';
 
 export class PortalInfoResponse {
+    /**
+    * Whether the operation succeeded
+    */
+    'success': boolean;
+    /**
+    * Optional error description (set if \'success\' was false)
+    */
+    'error'?: string;
     'name': string;
     'description': string;
     'organizationId': number;
@@ -22,6 +32,16 @@ export class PortalInfoResponse {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        },
         {
             "name": "name",
             "baseName": "name",

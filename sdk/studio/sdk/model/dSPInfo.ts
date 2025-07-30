@@ -11,6 +11,7 @@
  */
 
 import { DSPInfoFeatures } from './dSPInfoFeatures';
+import { DSPNormalizeData } from './dSPNormalizeData';
 import { DspPerformance } from './dspPerformance';
 
 export class DSPInfo {
@@ -31,6 +32,11 @@ export class DSPInfo {
     'performance'?: DspPerformance;
     'canCalculateFeatureImportance': boolean;
     'calculateFeatureImportance': boolean;
+    /**
+    * Whether this DSP block supports data normalization after features were generated. This is true unless \"dontAllowDataNormalization\" is set to true in the DSP block\'s parameters.json.
+    */
+    'canNormalizeData': boolean;
+    'normalizeData': DSPNormalizeData;
     /**
     * Whether this type of DSP block supports autotuning.
     */
@@ -105,6 +111,16 @@ export class DSPInfo {
             "name": "calculateFeatureImportance",
             "baseName": "calculateFeatureImportance",
             "type": "boolean"
+        },
+        {
+            "name": "canNormalizeData",
+            "baseName": "canNormalizeData",
+            "type": "boolean"
+        },
+        {
+            "name": "normalizeData",
+            "baseName": "normalizeData",
+            "type": "DSPNormalizeData"
         },
         {
             "name": "hasAutoTune",

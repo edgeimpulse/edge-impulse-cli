@@ -23,6 +23,7 @@ import { CreateDeviceRequest } from '../model/createDeviceRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDeviceResponse } from '../model/getDeviceResponse';
 import { GetImpulseRecordsRequest } from '../model/getImpulseRecordsRequest';
+import { GetInferenceHistoryResponse } from '../model/getInferenceHistoryResponse';
 import { KeepDeviceDebugStreamAliveRequest } from '../model/keepDeviceDebugStreamAliveRequest';
 import { ListDevicesResponse } from '../model/listDevicesResponse';
 import { RenameDeviceRequest } from '../model/renameDeviceRequest';
@@ -49,6 +50,21 @@ export enum DevicesApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
+type downloadInferenceHistoryExportQueryParams = {
+    deploymentId: number,
+    startTimestamp: number,
+    endTimestamp: number,
+    devices?: string,
+    format: 'row-per-summary' | 'row-per-value',
+};
+
+type getInferenceHistoryQueryParams = {
+    deploymentId?: number,
+    startTimestamp: number,
+    endTimestamp?: number,
+    devices?: string,
+};
+
 
 export type DevicesApiOpts = {
     extraHeaders?: {
@@ -65,6 +81,7 @@ export class DevicesApi {
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
         'ApiKeyAuthentication': new ApiKeyAuth('header', 'x-api-key'),
+        'OAuth2': new OAuth(),
         'JWTAuthentication': new ApiKeyAuth('cookie', 'jwt'),
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
@@ -110,6 +127,10 @@ export class DevicesApi {
 
     public setApiKey(key: DevicesApiApiKeys, value: string | undefined) {
         (this.authentications as any)[DevicesApiApiKeys[key]].apiKey = value;
+    }
+
+    set accessToken(token: string) {
+        this.authentications.OAuth2.accessToken = token;
     }
 
 
@@ -171,6 +192,8 @@ export class DevicesApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -264,6 +287,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -279,6 +304,144 @@ export class DevicesApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Downloads exported on-device inference history data. This is experimental and may change in the future. 
+     * @summary Download exported on-device inference history
+     * @param projectId Project ID
+     * @param deploymentId 
+     * @param startTimestamp 
+     * @param endTimestamp 
+     * @param format Data export format
+     * @param devices Optional list of devices to filter by, given as a JSON string
+     */
+    public async downloadInferenceHistoryExport (projectId: number, queryParams: downloadInferenceHistoryExportQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/download-export'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/zip'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling downloadInferenceHistoryExport.');
+        }
+
+        // verify required parameter 'deploymentId' is not null or undefined
+
+        if (queryParams.deploymentId === null || queryParams.deploymentId === undefined) {
+            throw new Error('Required parameter queryParams.deploymentId was null or undefined when calling downloadInferenceHistoryExport.');
+        }
+
+
+        // verify required parameter 'startTimestamp' is not null or undefined
+
+        if (queryParams.startTimestamp === null || queryParams.startTimestamp === undefined) {
+            throw new Error('Required parameter queryParams.startTimestamp was null or undefined when calling downloadInferenceHistoryExport.');
+        }
+
+
+        // verify required parameter 'endTimestamp' is not null or undefined
+
+        if (queryParams.endTimestamp === null || queryParams.endTimestamp === undefined) {
+            throw new Error('Required parameter queryParams.endTimestamp was null or undefined when calling downloadInferenceHistoryExport.');
+        }
+
+
+        // verify required parameter 'format' is not null or undefined
+
+        if (queryParams.format === null || queryParams.format === undefined) {
+            throw new Error('Required parameter queryParams.format was null or undefined when calling downloadInferenceHistoryExport.');
+        }
+
+
+        if (queryParams?.deploymentId !== undefined) {
+            localVarQueryParameters['deploymentId'] = ObjectSerializer.serialize(queryParams.deploymentId, "number");
+        }
+
+        if (queryParams?.startTimestamp !== undefined) {
+            localVarQueryParameters['startTimestamp'] = ObjectSerializer.serialize(queryParams.startTimestamp, "number");
+        }
+
+        if (queryParams?.endTimestamp !== undefined) {
+            localVarQueryParameters['endTimestamp'] = ObjectSerializer.serialize(queryParams.endTimestamp, "number");
+        }
+
+        if (queryParams?.devices !== undefined) {
+            localVarQueryParameters['devices'] = ObjectSerializer.serialize(queryParams.devices, "string");
+        }
+
+        if (queryParams?.format !== undefined) {
+            localVarQueryParameters['format'] = ObjectSerializer.serialize(queryParams.format, "'row-per-summary' | 'row-per-value'");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -355,6 +518,8 @@ export class DevicesApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -457,6 +622,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -472,6 +639,118 @@ export class DevicesApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get summary metrics for historical on-device inferences, aggregated by device and by time. This is experimental and may change in the future.
+     * @summary Get summary metrics for past on-device inferences
+     * @param projectId Project ID
+     * @param startTimestamp 
+     * @param deploymentId 
+     * @param endTimestamp 
+     * @param devices Optional list of devices to filter by, given as a JSON string
+     */
+    public async getInferenceHistory (projectId: number, queryParams: getInferenceHistoryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetInferenceHistoryResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getInferenceHistory.');
+        }
+
+        // verify required parameter 'startTimestamp' is not null or undefined
+
+        if (queryParams.startTimestamp === null || queryParams.startTimestamp === undefined) {
+            throw new Error('Required parameter queryParams.startTimestamp was null or undefined when calling getInferenceHistory.');
+        }
+
+
+        if (queryParams?.deploymentId !== undefined) {
+            localVarQueryParameters['deploymentId'] = ObjectSerializer.serialize(queryParams.deploymentId, "number");
+        }
+
+        if (queryParams?.startTimestamp !== undefined) {
+            localVarQueryParameters['startTimestamp'] = ObjectSerializer.serialize(queryParams.startTimestamp, "number");
+        }
+
+        if (queryParams?.endTimestamp !== undefined) {
+            localVarQueryParameters['endTimestamp'] = ObjectSerializer.serialize(queryParams.endTimestamp, "number");
+        }
+
+        if (queryParams?.devices !== undefined) {
+            localVarQueryParameters['devices'] = ObjectSerializer.serialize(queryParams.devices, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetInferenceHistoryResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetInferenceHistoryResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -558,6 +837,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -640,6 +921,8 @@ export class DevicesApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -742,6 +1025,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -834,6 +1119,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -925,6 +1212,8 @@ export class DevicesApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1027,6 +1316,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -1128,6 +1419,8 @@ export class DevicesApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -1228,6 +1521,8 @@ export class DevicesApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {

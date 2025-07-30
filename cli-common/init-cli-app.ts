@@ -1,12 +1,15 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import inquirer from 'inquirer';
 import { Config, EdgeImpulseConfig } from "./config";
 import checkNewVersions from './check-new-version';
-import fs from 'fs';
-import Path from 'path';
-import inquirer from 'inquirer';
 import { AWSSecretsManagerUtils } from "./aws-sm-utils";
 import { AWSIoTCoreConnector } from "./aws-iotcore-connector";
+import searchList from 'inquirer-search-list';
 
-const version = (<{ version: string }>JSON.parse(fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
+inquirer.registerPrompt('search-list', searchList);
+
+const version = (<{ version: string }>JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8'))).version;
 
 export function getCliVersion() {
     return version;
@@ -40,41 +43,32 @@ export async function initCliApp(opts: {
 
         // AWS: Secrets Manager + IoTCore Connect Integration
         if (opts.greengrassArgv) {
-            if (awsSM === undefined) {
-                awsSM = await new AWSSecretsManagerUtils(opts);
+            if (!awsSM) {
+                awsSM = new AWSSecretsManagerUtils({
+                    silent: opts.silentArgv
+                });
             }
-            let smApiKey: string;
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            smApiKey = await awsSM.getEdgeImpulseAPIKeyFromSecretsManager();
-            if (smApiKey !== undefined && smApiKey.length > 0) {
+            let smApiKey = await awsSM.getSecret();
+            if (smApiKey && smApiKey.length > 0) {
                 // assign if we capture the API key via SM...
                 opts.apiKeyArgv = smApiKey;
 
                 // we only need AWS IoTCore connectivity for the runner app...
                 if (opts.appName === "Edge Impulse Linux runner" ) {
-                    // success - allocate the AWS IoT Helper
                     awsIOT = new AWSIoTCoreConnector(opts);
-                    if (awsIOT !== undefined) {
-                        if (!opts.silentArgv) {
-                            console.log(opts.appName + ": Connecting to IoTCore...");
-                        }
-                        const connected = await awsIOT.connect();
-                        if (connected) {
-                            // success
-                            console.log(opts.appName + ": Connected to IoTCore Successfully!");
+                    if (!opts.silentArgv) {
+                        console.log(opts.appName + ": Connecting to IoTCore...");
+                    }
+                    const connected = await awsIOT.connect();
+                    if (connected) {
+                        console.log(opts.appName + ": Connected to IoTCore Successfully!");
 
-                            // since we are not running a model, we have to nail/fudge our model info
-                            await awsIOT.initModelInfo(opts.appName.replace(" ", "_"), "v" + version, {});
-
-                            // launch all async tasks
-                            console.log(opts.appName + ": launching async tasks...");
-                            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                            awsIOT.launchAsyncTasks();
-                        }
-                        else {
-                            // failure
-                            console.log(opts.appName + ": FAILED to connect to IoTCore");
-                        }
+                        // since we are not running a model, we have to nail/fudge our model info
+                        awsIOT.initModelInfo(opts.appName.replace(" ", "_"), "v" + version, {});
+                        awsIOT.initializeAsyncCollectors();
+                    }
+                    else {
+                        console.error(opts.appName + ": failed to connect to IoTCore");
                     }
                 }
 
@@ -82,13 +76,10 @@ export async function initCliApp(opts: {
                 await configFactory.removeProjectReferences();
             }
             else {
-                if (!opts.silentArgv) {
-                    // unable to continue as no API key was found in Secrets Manager
-                    console.log(opts.appName + " ERROR: Unable to find EI API Key within AWS Secrets Manager. Check AWS configuration. Continuing...");
-                }
+                // unable to continue as no API key was found in Secrets Manager
+                console.error(opts.appName + " ERROR: Unable to find EI API Key within AWS Secrets Manager. Check AWS configuration. Continuing...");
             }
         }
-        // AWS: Secrets Manager + IoTCore Connect Integration
 
         if (opts.apiKeyArgv) {
             await configFactory.removeProjectReferences();
@@ -138,7 +129,7 @@ export async function initCliApp(opts: {
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse:',
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                (<any>ex).statusCode, (<any>(<any>ex).response).body);
+                (<any>ex).statusCode, ((<any>ex).response).body);
         }
         else {
             console.error('Failed to authenticate with Edge Impulse:', ex.message || ex.toString());
@@ -147,7 +138,7 @@ export async function initCliApp(opts: {
     }
 
     // AWS Integration additions
-    if (awsSM !== undefined && awsIOT !== undefined) {
+    if (awsSM && awsIOT) {
         return {
             configFactory,
             config,
@@ -212,11 +203,14 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
         }
         else {
             let inqRes = await inquirer.prompt([{
-                type: 'list',
-                choices: (projectList.projects || []).map(p => ({ name: p.owner + ' / ' + p.name, value: p.id })),
+                type: 'search-list',
+                suffix: ' (🔍 type to search)',
                 name: 'project',
                 message: opts.connectProjectMsg,
-                pageSize: 20
+                choices: (projectList.projects || []).map(p => ({
+                    name: p.owner + ' / ' + p.name,
+                    value: p.id
+                }))
             }]);
             projectId = Number(inqRes.project);
         }

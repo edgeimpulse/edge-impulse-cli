@@ -15,6 +15,7 @@ import { GenericApiResponse } from './genericApiResponse';
 import { ImageInputScaling } from './imageInputScaling';
 import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadata } from './kerasModelMetadata';
+import { KerasModelMetadataGraph } from './kerasModelMetadataGraph';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
@@ -61,6 +62,7 @@ export class KerasModelMetadataResponse {
     * List of configurable thresholds for this block.
     */
     'thresholds': Array<BlockThreshold>;
+    'tensorboardGraphs'?: Array<KerasModelMetadataGraph>;
 
     static discriminator: string | undefined = undefined;
 
@@ -134,6 +136,11 @@ export class KerasModelMetadataResponse {
             "name": "thresholds",
             "baseName": "thresholds",
             "type": "Array<BlockThreshold>"
+        },
+        {
+            "name": "tensorboardGraphs",
+            "baseName": "tensorboardGraphs",
+            "type": "Array<KerasModelMetadataGraph>"
         }    ];
 
     static getAttributeTypeMap() {

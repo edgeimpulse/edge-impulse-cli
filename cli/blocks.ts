@@ -44,6 +44,7 @@ program
     .allowUnknownOption(false);
 
 const init = program.command('init')
+            .option('--create-new-block', `Don't prompt to create a new block or update an existing block, auto-picks "Create a new block"`)
             .description('Initialize the current folder as a new block');
 
 const push = program.command('push')
@@ -72,6 +73,7 @@ const cleanArgv = !!program.clean;
 const devArgv = !!program.dev;
 const apiKeyArgv = program.apiKey ? <string>program.apiKey : undefined;
 
+const initOpts = init.opts();
 const runnerOpts = runner.opts();
 
 const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
@@ -213,7 +215,9 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             process.exit(1);
         }
 
-        const initBlock = new InitCLIBlock(config, process.cwd(), blockConfigManager);
+        const initBlock = new InitCLIBlock(config, process.cwd(), blockConfigManager, {
+            alwaysCreateNewBlock: initOpts.createNewBlock === true ? true : false,
+        });
 
         const organizationInfo = await initBlock.getOrganization();
         const organizationId = organizationInfo.organization.id;
@@ -394,6 +398,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
                         aiActionsOperatesOn: undefined,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -424,6 +429,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
                         aiActionsOperatesOn: undefined,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -454,6 +460,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsMemory: undefined,
                         environmentVariables: await getEnvVariablesForBlock(currentBlockConfig.parameters, undefined),
                         aiActionsOperatesOn: currentBlockConfig.parameters.info.operatesOn,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransformationBlock(
                         organizationId, newObj);
@@ -477,6 +484,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsCpu: undefined,
                         requestsMemory: undefined,
                         privileged: currentBlockConfig.parameters.info.privileged,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
 
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
@@ -555,6 +563,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         limitsMemory: undefined,
                         requestsCpu: undefined,
                         requestsMemory: undefined,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
 
                     newResponse = await config.api.organizationBlocks.addOrganizationDspBlock(
@@ -592,6 +601,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         displayCategory: info.displayCategory,
                         indBlockNoLongerAvailable: undefined,
                         blockNoLongerAvailableReason: undefined,
+                        sourceCodeDownloadStaffOnly: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newObj);

@@ -28,6 +28,8 @@ export type DSPInfo = {
     port?: number;
     // List of targets that support this DSP block. If undefined, we assume this block works on all targets.
     supportedTargets?: string[];
+    // When set, "Normalize features" will not be displayed and data won't be normalized
+    dontAllowDataNormalization?: boolean;
 };
 
 export type DSPParameters = {

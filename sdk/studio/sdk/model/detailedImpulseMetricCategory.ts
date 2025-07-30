@@ -12,5 +12,5 @@
 
 
 
-export type DetailedImpulseMetricCategory = 'impulseMetrics' | 'inputBlockConfig' | 'dspBlockConfig' | 'learnBlockConfig' | 'learnBlockMetrics';
-export const DetailedImpulseMetricCategoryValues: string[] = ['impulseMetrics', 'inputBlockConfig', 'dspBlockConfig', 'learnBlockConfig', 'learnBlockMetrics'];
+export type DetailedImpulseMetricCategory = 'impulseMetrics' | 'inputBlockConfig' | 'dspBlockConfig' | 'learnBlockConfig' | 'learnBlockMetrics' | 'postProcessingBlockConfig';
+export const DetailedImpulseMetricCategoryValues: string[] = ['impulseMetrics', 'inputBlockConfig', 'dspBlockConfig', 'learnBlockConfig', 'learnBlockMetrics', 'postProcessingBlockConfig'];

@@ -25,6 +25,7 @@ import { EvaluateJobResponse } from '../model/evaluateJobResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDeploymentResponse } from '../model/getDeploymentResponse';
 import { GetLastDeploymentBuildResponse } from '../model/getLastDeploymentBuildResponse';
+import { GetModelMonitoringDeploymentsResponse } from '../model/getModelMonitoringDeploymentsResponse';
 import { GetSyntiantPosteriorResponse } from '../model/getSyntiantPosteriorResponse';
 import { KerasModelTypeEnum } from '../model/kerasModelTypeEnum';
 import { ProjectDeploymentTargetsResponse } from '../model/projectDeploymentTargetsResponse';
@@ -86,6 +87,10 @@ type getLastDeploymentBuildQueryParams = {
     impulseId?: number,
 };
 
+type getModelMonitoringDeploymentsQueryParams = {
+    startTimestamp?: number,
+};
+
 type getSyntiantPosteriorQueryParams = {
     impulseId?: number,
 };
@@ -118,6 +123,7 @@ export class DeploymentApi {
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
         'ApiKeyAuthentication': new ApiKeyAuth('header', 'x-api-key'),
+        'OAuth2': new OAuth(),
         'JWTAuthentication': new ApiKeyAuth('cookie', 'jwt'),
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
@@ -163,6 +169,10 @@ export class DeploymentApi {
 
     public setApiKey(key: DeploymentApiApiKeys, value: string | undefined) {
         (this.authentications as any)[DeploymentApiApiKeys[key]].apiKey = value;
+    }
+
+    set accessToken(token: string) {
+        this.authentications.OAuth2.accessToken = token;
     }
 
 
@@ -242,6 +252,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -372,6 +384,8 @@ export class DeploymentApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -482,6 +496,8 @@ export class DeploymentApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -569,6 +585,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -658,6 +676,8 @@ export class DeploymentApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -746,6 +766,8 @@ export class DeploymentApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -761,6 +783,96 @@ export class DeploymentApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetLastDeploymentBuildResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get a list of deployments that have previously ran (or are currently running) on-device. These deployments can be used by model monitoring. This is experimental and may change in the future. 
+     * @summary Get information on all deployments available for model monitoring
+     * @param projectId Project ID
+     * @param startTimestamp 
+     */
+    public async getModelMonitoringDeployments (projectId: number, queryParams?: getModelMonitoringDeploymentsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetModelMonitoringDeploymentsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/deployment/monitoring'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getModelMonitoringDeployments.');
+        }
+
+        if (queryParams?.startTimestamp !== undefined) {
+            localVarQueryParameters['startTimestamp'] = ObjectSerializer.serialize(queryParams.startTimestamp, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetModelMonitoringDeploymentsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetModelMonitoringDeploymentsResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -833,6 +945,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -907,6 +1021,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -996,6 +1112,8 @@ export class DeploymentApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
             if (Object.keys(localVarFormParams).length) {
@@ -1083,6 +1201,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -1180,6 +1300,8 @@ export class DeploymentApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {

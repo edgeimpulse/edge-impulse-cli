@@ -15,20 +15,26 @@
 * Only generate features for samples where (sample_id + datasetSubsetSeed) % datasetSubset) == 0
 */
 export class ImpulseInputBlockDatasetSubset {
-    'subsetModulo'?: number;
-    'subsetSeed'?: number;
+    /**
+    * Number between 0 and 100, with the % of data that should be _included_
+    */
+    'includePercentage': number;
+    /**
+    * Seed number (optional). If not specified, the seed is set to 0.
+    */
+    'seed'?: number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "subsetModulo",
-            "baseName": "subsetModulo",
+            "name": "includePercentage",
+            "baseName": "includePercentage",
             "type": "number"
         },
         {
-            "name": "subsetSeed",
-            "baseName": "subsetSeed",
+            "name": "seed",
+            "baseName": "seed",
             "type": "number"
         }    ];
 

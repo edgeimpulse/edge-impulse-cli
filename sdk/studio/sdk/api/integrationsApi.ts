@@ -56,6 +56,7 @@ export class IntegrationsApi {
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
         'ApiKeyAuthentication': new ApiKeyAuth('header', 'x-api-key'),
+        'OAuth2': new OAuth(),
         'JWTAuthentication': new ApiKeyAuth('cookie', 'jwt'),
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
@@ -103,12 +104,16 @@ export class IntegrationsApi {
         (this.authentications as any)[IntegrationsApiApiKeys[key]].apiKey = value;
     }
 
+    set accessToken(token: string) {
+        this.authentications.OAuth2.accessToken = token;
+    }
+
 
     /**
      * Get the status of a TensorBoard session
      * @summary Get TensorBoard session status
      * @param projectId Project ID
-     * @param resourceId Unique resource ID for an integration session. When an integration is launched we create a new session for it. Each session is uniquely identifiable by its resource ID. 
+     * @param resourceId Unique resource ID for an integration session. When an integration is launched we create a new session for it. Each session is uniquely identifiable by the project ID and resource ID. 
      */
     public async getTensorBoardSessionStatus (projectId: number, resourceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetIntegrationSessionStatusResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/integrations/tensorboard/{resourceId}'
@@ -162,6 +167,8 @@ export class IntegrationsApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {
@@ -254,6 +261,8 @@ export class IntegrationsApi {
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {

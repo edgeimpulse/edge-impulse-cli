@@ -19,7 +19,7 @@ export class DSPBlock {
     'author': string;
     'description': string;
     'name': string;
-    'recommended'?: boolean;
+    'recommended': boolean;
     'experimental': boolean;
     'latestImplementationVersion': number;
     'organizationId'?: number;

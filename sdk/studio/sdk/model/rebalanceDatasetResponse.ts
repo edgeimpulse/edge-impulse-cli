@@ -23,7 +23,7 @@ export class RebalanceDatasetResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'ratio'?: DatasetRatioDataRatio;
+    'ratio': DatasetRatioDataRatio;
 
     static discriminator: string | undefined = undefined;
 

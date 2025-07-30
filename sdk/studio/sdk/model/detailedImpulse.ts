@@ -15,6 +15,7 @@ import { DetailedImpulseDspBlockConfigs } from './detailedImpulseDspBlockConfigs
 import { DetailedImpulseLearnBlockAnomalyConfigs } from './detailedImpulseLearnBlockAnomalyConfigs';
 import { DetailedImpulseLearnBlockKerasConfigs } from './detailedImpulseLearnBlockKerasConfigs';
 import { DetailedImpulseMetric } from './detailedImpulseMetric';
+import { DetailedImpulsePostProcessingBlockConfigs } from './detailedImpulsePostProcessingBlockConfigs';
 import { DetailedImpulsePretrainedModelInfo } from './detailedImpulsePretrainedModelInfo';
 import { Impulse } from './impulse';
 
@@ -24,6 +25,7 @@ export class DetailedImpulse {
     'dspBlockConfigs': Array<DetailedImpulseDspBlockConfigs>;
     'learnBlockKerasConfigs': Array<DetailedImpulseLearnBlockKerasConfigs>;
     'learnBlockAnomalyConfigs': Array<DetailedImpulseLearnBlockAnomalyConfigs>;
+    'postProcessingBlockConfigs': Array<DetailedImpulsePostProcessingBlockConfigs>;
     'pretrainedModelInfo'?: DetailedImpulsePretrainedModelInfo;
     /**
     * Whether this impulse contains blocks with \"stale\" features (i.e. the dataset has changed since features were generated)
@@ -74,6 +76,11 @@ export class DetailedImpulse {
             "name": "learnBlockAnomalyConfigs",
             "baseName": "learnBlockAnomalyConfigs",
             "type": "Array<DetailedImpulseLearnBlockAnomalyConfigs>"
+        },
+        {
+            "name": "postProcessingBlockConfigs",
+            "baseName": "postProcessingBlockConfigs",
+            "type": "Array<DetailedImpulsePostProcessingBlockConfigs>"
         },
         {
             "name": "pretrainedModelInfo",

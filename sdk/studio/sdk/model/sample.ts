@@ -11,6 +11,7 @@
  */
 
 import { BoundingBox } from './boundingBox';
+import { RawDataCategory } from './rawDataCategory';
 import { SampleImageDimensions } from './sampleImageDimensions';
 import { Sensor } from './sensor';
 import { StructuredLabel } from './structuredLabel';
@@ -35,7 +36,7 @@ export class Sample {
     * Timestamp when the sample was last modified.
     */
     'lastModified': Date;
-    'category': string;
+    'category': RawDataCategory;
     'coldstorageFilename': string;
     'label': string;
     /**
@@ -129,6 +130,14 @@ export class Sample {
     */
     'createdBySyntheticDataJobId'?: number;
     'imageDimensions'?: SampleImageDimensions;
+    /**
+    * Video link, cropped and in original resolution.
+    */
+    'videoUrl'?: string;
+    /**
+    * Video link in original resolution.
+    */
+    'videoUrlFull'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -171,7 +180,7 @@ export class Sample {
         {
             "name": "category",
             "baseName": "category",
-            "type": "string"
+            "type": "RawDataCategory"
         },
         {
             "name": "coldstorageFilename",
@@ -337,6 +346,16 @@ export class Sample {
             "name": "imageDimensions",
             "baseName": "imageDimensions",
             "type": "SampleImageDimensions"
+        },
+        {
+            "name": "videoUrl",
+            "baseName": "videoUrl",
+            "type": "string"
+        },
+        {
+            "name": "videoUrlFull",
+            "baseName": "videoUrlFull",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

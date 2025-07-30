@@ -12,10 +12,11 @@
 
 import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
+import { ImpulseInputBlockLabelingMethodMultiLabel } from './impulseInputBlockLabelingMethodMultiLabel';
 
 export class ImpulseInputBlock {
     /**
-    * Identifier for this block. Make sure to up this number when creating a new block, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
+    * Identifier for this block. Make sure to up this number when creating a new block via `getNewBlockId`, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
     */
     'id': number;
     /**
@@ -50,6 +51,7 @@ export class ImpulseInputBlock {
     * Whether to zero pad data when a data item is too short
     */
     'padZeros'?: boolean;
+    'labelingMethodMultiLabel'?: ImpulseInputBlockLabelingMethodMultiLabel;
     /**
     * Width all images are resized to before training
     */
@@ -67,10 +69,6 @@ export class ImpulseInputBlock {
     * If images are resized using a crop, choose where to anchor the crop
     */
     'cropAnchor'?: ImpulseInputBlockCropAnchorEnum;
-    /**
-    * A short description of the block version, displayed in the block versioning UI
-    */
-    'description'?: string;
     /**
     * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
     */
@@ -130,6 +128,11 @@ export class ImpulseInputBlock {
             "type": "boolean"
         },
         {
+            "name": "labelingMethodMultiLabel",
+            "baseName": "labelingMethodMultiLabel",
+            "type": "ImpulseInputBlockLabelingMethodMultiLabel"
+        },
+        {
             "name": "imageWidth",
             "baseName": "imageWidth",
             "type": "number"
@@ -153,11 +156,6 @@ export class ImpulseInputBlock {
             "name": "cropAnchor",
             "baseName": "cropAnchor",
             "type": "ImpulseInputBlockCropAnchorEnum"
-        },
-        {
-            "name": "description",
-            "baseName": "description",
-            "type": "string"
         },
         {
             "name": "createdBy",

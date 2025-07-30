@@ -222,7 +222,7 @@ export function calculateAllStructuredLabels(sample: {
     return <string[]>allStructuredLabels;
 }
 
-export type ExportUploaderInfoFileCategory = 'training' | 'testing' | 'split';
+export type ExportUploaderInfoFileCategory = 'training' | 'testing' | 'post-processing' | 'split';
 
 export type ExportUploaderInfoFileMultiLabel = {
     startIndex: number,

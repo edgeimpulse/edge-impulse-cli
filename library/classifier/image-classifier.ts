@@ -3,6 +3,16 @@ import { LinuxImpulseRunner, ModelInformation, RunnerClassifyResponseSuccess } f
 import sharp, { FitEnum } from 'sharp';
 import { ICamera } from "../sensors/icamera";
 
+const PREFIX = '\x1b[35m[IMG]\x1b[0m';
+
+// Map studio
+const FitMethodMap: { [key: string]: keyof FitEnum } = {
+    'none': 'contain',
+    'fit-shortest': 'cover',
+    'fit-longest': 'contain',
+    'squash': 'fill'
+};
+
 export class ImageClassifier extends EventEmitter<{
     result: (result: RunnerClassifyResponseSuccess, timeMs: number, imgAsJpeg: Buffer) => void
 }> {
@@ -11,18 +21,22 @@ export class ImageClassifier extends EventEmitter<{
     private _stopped: boolean = true;
     private _runningInference = false;
     private _model: ModelInformation;
+    private _verbose: boolean;
 
     /**
      * Classifies realtime image data from a camera
      * @param runner An initialized impulse runner instance
      * @param camera An initialized ICamera instance
      */
-    constructor(runner: LinuxImpulseRunner, camera: ICamera) {
+    constructor(runner: LinuxImpulseRunner, camera: ICamera, opts?: {
+        verbose?: boolean,
+    }) {
         super();
 
         this._runner = runner;
         this._camera = camera;
         this._model = runner.getModel();
+        this._verbose = opts?.verbose || false;
     }
 
     /**
@@ -38,73 +52,79 @@ export class ImageClassifier extends EventEmitter<{
 
         let frameQueue: { features: number[], img: sharp.Sharp }[] = [];
 
-        this._camera.on('snapshot', async (data) => {
-            let model = this._model;
-            if (this._stopped) {
-                return;
-            }
-
-            // are we looking at video? Then we always add to the frameQueue
-            if (model.modelParameters.image_input_frames > 1) {
-                let resized = await ImageClassifier.resizeImage(model, data);
-                frameQueue.push(resized);
-            }
-
-            // still running inferencing?
-            if (this._runningInference) {
-                return;
-            }
-
-            // too little frames? then wait for next one
-            if (model.modelParameters.image_input_frames > 1 &&
-                frameQueue.length < model.modelParameters.image_input_frames) {
-                return;
-            }
-
-            this._runningInference = true;
-
+        this._camera.on('snapshot', async (data, filename) => {
             try {
-                // if we have single frame then resize now
-                if (model.modelParameters.image_input_frames > 1) {
-                    frameQueue = frameQueue.slice(frameQueue.length - model.modelParameters.image_input_frames);
-                }
-                else {
-                    let resized = await ImageClassifier.resizeImage(model, data);
-                    frameQueue = [ resized ];
-                }
-
-                let img = frameQueue[frameQueue.length - 1].img;
-
-                // slice the frame queue
-                frameQueue = frameQueue.slice(frameQueue.length - model.modelParameters.image_input_frames);
-
-                // concat the frames
-                let values: number[] = [];
-                for (let ix = 0; ix < model.modelParameters.image_input_frames; ix++) {
-                    values = values.concat(frameQueue[ix].features);
-                }
-
-                let now = Date.now();
-
+                let model = this._model;
                 if (this._stopped) {
                     return;
                 }
 
-                let classifyRes = await this._runner.classify(values);
-
-                let timeSpent = Date.now() - now;
-
-                let timingMs = classifyRes.timing.dsp + classifyRes.timing.classification + classifyRes.timing.anomaly;
-                if (timingMs === 0) {
-                    timingMs = 1;
+                // are we looking at video? Then we always add to the frameQueue
+                if (model.modelParameters.image_input_frames > 1) {
+                    let resized = await ImageClassifier.resizeImage(model, data);
+                    frameQueue.push(resized);
                 }
 
-                this.emit('result', classifyRes,
-                    timingMs,
-                    await img.jpeg({ quality: 90 }).toBuffer());
+                // still running inferencing?
+                if (this._runningInference) {
+                    return;
+                }
+
+                // too little frames? then wait for next one
+                if (model.modelParameters.image_input_frames > 1 &&
+                    frameQueue.length < model.modelParameters.image_input_frames) {
+                    return;
+                }
+
+                this._runningInference = true;
+
+                try {
+                    // if we have single frame then resize now
+                    if (model.modelParameters.image_input_frames > 1) {
+                        frameQueue = frameQueue.slice(frameQueue.length - model.modelParameters.image_input_frames);
+                    }
+                    else {
+                        let resized = await ImageClassifier.resizeImage(model, data);
+                        frameQueue = [ resized ];
+                    }
+
+                    let img = frameQueue[frameQueue.length - 1].img;
+
+                    // slice the frame queue
+                    frameQueue = frameQueue.slice(frameQueue.length - model.modelParameters.image_input_frames);
+
+                    // concat the frames
+                    let values: number[] = [];
+                    for (let ix = 0; ix < model.modelParameters.image_input_frames; ix++) {
+                        values = values.concat(frameQueue[ix].features);
+                    }
+
+                    if (this._stopped) {
+                        return;
+                    }
+
+                    let classifyRes = await this._runner.classify(values);
+
+                    let timingMs = classifyRes.timing.dsp + classifyRes.timing.classification +
+                        classifyRes.timing.anomaly;
+                    if (timingMs === 0) {
+                        timingMs = 1;
+                    }
+
+                    this.emit('result', classifyRes,
+                        timingMs,
+                        await img.jpeg({ quality: 90 }).toBuffer());
+                }
+                finally {
+                    this._runningInference = false;
+                }
             }
-            finally {
-                this._runningInference = false;
+            catch (ex2) {
+                const ex = <Error>ex2;
+                console.log(PREFIX, `Failed to handle snapshot "${filename}":`, ex.message || ex.toString());
+                if (this._verbose) {
+                    console.log(PREFIX, ex);
+                }
             }
         });
     }
@@ -137,7 +157,7 @@ export class ImageClassifier extends EventEmitter<{
         return this._runner;
     }
 
-    static async resizeImage(model: ModelInformation, data: Buffer, fitMethod?: keyof FitEnum) {
+    static async resizeImage(model: ModelInformation, data: Buffer) {
         const metadata = await sharp(data).metadata();
         if (!metadata.width) {
             throw new Error('ImageClassifier.resize: cannot determine width of image');
@@ -147,15 +167,21 @@ export class ImageClassifier extends EventEmitter<{
         }
 
         // resize image and add to frameQueue
-        let img;
-        let features: number[] = [];
-        if (model.modelParameters.image_channel_count === 3) {
-            img = sharp(data).resize({
+        const fitMethod: keyof FitEnum = FitMethodMap[model.modelParameters.image_resize_mode || 'none'];
+        let img = sharp(data);
+        if (metadata.width !== model.modelParameters.image_input_width ||
+            metadata.height !== model.modelParameters.image_input_height) {
+            img = img.resize({
                 height: model.modelParameters.image_input_height,
                 width: model.modelParameters.image_input_width,
                 fit: fitMethod,
                 fastShrinkOnLoad: false
-            }).removeAlpha();
+            });
+        }
+
+        let features: number[] = [];
+        if (model.modelParameters.image_channel_count === 3) {
+            img = img.removeAlpha();
             let buffer = await img.raw().toBuffer();
 
             for (let ix = 0; ix < buffer.length; ix += 3) {
@@ -167,12 +193,7 @@ export class ImageClassifier extends EventEmitter<{
             }
         }
         else {
-            img = sharp(data).resize({
-                height: model.modelParameters.image_input_height,
-                width: model.modelParameters.image_input_width,
-                fit: fitMethod,
-                fastShrinkOnLoad: false
-            }).toColourspace('b-w');
+            img = img.toColourspace('b-w');
             let buffer = await img.raw().toBuffer();
 
             for (let p of buffer) {

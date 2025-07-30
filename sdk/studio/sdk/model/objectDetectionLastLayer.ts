@@ -12,5 +12,5 @@
 
 
 
-export type ObjectDetectionLastLayer = 'mobilenet-ssd' | 'fomo' | 'yolov2-akida' | 'yolov5' | 'yolov5v5-drpai' | 'yolox' | 'yolov7' | 'yolo-pro' | 'tao-retinanet' | 'tao-ssd' | 'tao-yolov3' | 'tao-yolov4';
-export const ObjectDetectionLastLayerValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov2-akida', 'yolov5', 'yolov5v5-drpai', 'yolox', 'yolov7', 'yolo-pro', 'tao-retinanet', 'tao-ssd', 'tao-yolov3', 'tao-yolov4'];
+export type ObjectDetectionLastLayer = 'mobilenet-ssd' | 'fomo' | 'yolov2-akida' | 'yolov5' | 'yolov5v5-drpai' | 'yolox' | 'yolov7' | 'yolo-pro' | 'tao-retinanet' | 'tao-ssd' | 'tao-yolov3' | 'tao-yolov4' | 'yolov11' | 'yolov11-abs';
+export const ObjectDetectionLastLayerValues: string[] = ['mobilenet-ssd', 'fomo', 'yolov2-akida', 'yolov5', 'yolov5v5-drpai', 'yolox', 'yolov7', 'yolo-pro', 'tao-retinanet', 'tao-ssd', 'tao-yolov3', 'tao-yolov4', 'yolov11', 'yolov11-abs'];

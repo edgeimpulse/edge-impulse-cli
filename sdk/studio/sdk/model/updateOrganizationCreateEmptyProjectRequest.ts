@@ -11,6 +11,7 @@
  */
 
 import { ProjectVisibility } from './projectVisibility';
+import { TutorialType } from './tutorialType';
 
 export class UpdateOrganizationCreateEmptyProjectRequest {
     /**
@@ -22,6 +23,11 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
     * The username or email of the owner of the project. This field is mandatory when authenticating via API key. If no email is provided when authenticating via JWT, the user ID attached to the JWT will be user as project owner.
     */
     'projectOwnerUsernameOrEmail'?: string;
+    /**
+    * Whether to show the getting started wizard use-case chooser screen after the project is created
+    */
+    'showGettingStartedWizard'?: boolean;
+    'tutorialKey'?: TutorialType;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,6 +46,16 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
             "name": "projectOwnerUsernameOrEmail",
             "baseName": "projectOwnerUsernameOrEmail",
             "type": "string"
+        },
+        {
+            "name": "showGettingStartedWizard",
+            "baseName": "showGettingStartedWizard",
+            "type": "boolean"
+        },
+        {
+            "name": "tutorialKey",
+            "baseName": "tutorialKey",
+            "type": "TutorialType"
         }    ];
 
     static getAttributeTypeMap() {

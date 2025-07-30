@@ -14,6 +14,7 @@ export { AudioClassifier };
 export { ImageClassifier };
 export { LinuxImpulseRunner };
 export { GStreamer as Ffmpeg };
+export { GStreamer };
 export { Imagesnap };
 export { AudioRecorder };
 export { ICamera };

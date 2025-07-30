@@ -22,10 +22,12 @@ import {
     GetJobResponse,
     SocketTokenResponse,
     OrganizationDataCampaignsApi,
+    PostProcessingApi,
 } from './sdk/api';
 import WebSocket from 'ws';
 
 const JOB_CONNECTION_TIMEOUT = 60000;
+const SOCKETIO_EVENT_CODE = '42'; // 4: message, 2: event
 
 export type EdgeImpulseApiOpts = {
     endpoint?: string;
@@ -69,6 +71,7 @@ export class EdgeImpulseApi {
     organizationPortals: OrganizationPortalsApi;
     organizations: OrganizationsApi;
     performanceCalibration: PerformanceCalibrationApi;
+    postProcessing: PostProcessingApi;
     projects: ProjectsApi;
     rawData: RawDataApi;
     themes: ThemesApi;
@@ -142,6 +145,8 @@ export class EdgeImpulseApi {
             { extraHeaders: this._opts.extraHeaders });
         this.performanceCalibration = new PerformanceCalibrationApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
+        this.postProcessing = new PostProcessingApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
         this.projects = new ProjectsApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.rawData = new RawDataApi(this._opts.endpoint + '/v1',
@@ -203,6 +208,7 @@ export class EdgeImpulseApi {
             this.organizationPortals.setApiKey(apiKeyAuthId, opts.apiKey);
             this.organizations.setApiKey(apiKeyAuthId, opts.apiKey);
             this.performanceCalibration.setApiKey(apiKeyAuthId, opts.apiKey);
+            this.postProcessing.setApiKey(apiKeyAuthId, opts.apiKey);
             this.projects.setApiKey(apiKeyAuthId, opts.apiKey);
             this.rawData.setApiKey(apiKeyAuthId, opts.apiKey);
             this.themes.setApiKey(apiKeyAuthId, opts.apiKey);
@@ -231,6 +237,7 @@ export class EdgeImpulseApi {
             this.organizationPortals.setApiKey(jwtTokenAuthId, undefined);
             this.organizations.setApiKey(jwtTokenAuthId, undefined);
             this.performanceCalibration.setApiKey(jwtTokenAuthId, undefined);
+            this.postProcessing.setApiKey(jwtTokenAuthId, undefined);
             this.projects.setApiKey(jwtTokenAuthId, undefined);
             this.rawData.setApiKey(jwtTokenAuthId, undefined);
             this.themes.setApiKey(jwtTokenAuthId, undefined);
@@ -262,6 +269,7 @@ export class EdgeImpulseApi {
             this.organizationPortals.setApiKey(jwtTokenAuthId, jwtToken);
             this.organizations.setApiKey(jwtTokenAuthId, jwtToken);
             this.performanceCalibration.setApiKey(jwtTokenAuthId, jwtToken);
+            this.postProcessing.setApiKey(jwtTokenAuthId, jwtToken);
             this.projects.setApiKey(jwtTokenAuthId, jwtToken);
             this.rawData.setApiKey(jwtTokenAuthId, jwtToken);
             this.themes.setApiKey(jwtTokenAuthId, jwtToken);
@@ -290,6 +298,7 @@ export class EdgeImpulseApi {
             this.organizationPortals.setApiKey(apiKeyAuthId, undefined);
             this.organizations.setApiKey(apiKeyAuthId, undefined);
             this.performanceCalibration.setApiKey(apiKeyAuthId, undefined);
+            this.postProcessing.setApiKey(apiKeyAuthId, undefined);
             this.projects.setApiKey(apiKeyAuthId, undefined);
             this.rawData.setApiKey(apiKeyAuthId, undefined);
             this.themes.setApiKey(apiKeyAuthId, undefined);
@@ -446,6 +455,9 @@ export class EdgeImpulseApi {
                 }
             }, 5000);
 
+            // request stream for the specific job (onDemandLogs=true) (socket-io format)
+            socket.send(SOCKETIO_EVENT_CODE + JSON.stringify([ 'start-log-stream',
+                                                             { jobId, lastReceivedTimestamp: 0 }]));
             socket.onmessage = (msg) => {
                 try {
                     let m = JSON.parse(msg.data.toString().replace(/^[0-9]+/, ''));
@@ -537,7 +549,7 @@ export class EdgeImpulseApi {
         };
 
         let ws = new WebSocket(wsHost + '/socket.io/?token=' +
-            tokenData.token.socketToken + '&EIO=3&transport=websocket');
+            tokenData.token.socketToken + '&EIO=3&transport=websocket&onDemandLogs=true');
 
         return new Promise<WebSocket>((resolve, reject) => {
             ws.onclose = () => {

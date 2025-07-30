@@ -52,9 +52,18 @@ export class OptimizeStateResponse {
     'projectDataType': OptimizeStateResponseProjectDataTypeEnum;
     'jobError'?: string;
     'workers': Array<OptimizeStateResponseAllOfWorkers>;
+    /**
+    * Index of the next run to be created. Used to pre-populate the name of the next run.
+    */
     'nextRunIndex': number;
+    /**
+    * Whether the search can be extended to evaluate more candidate models. Extending is possible if the search space contains candidate models that are expected to perform better than the current best candidate. And extending is also possible if the previous run was paused due to the total runtime limit being exceeded.
+    */
     'canExtendSearch': boolean;
     'isWhitelabel': boolean;
+    /**
+    * Whether the total training time has exceeded the defined limit for the current run.
+    */
     'totalTrainingTimeExceeded': boolean;
 
     static discriminator: string | undefined = undefined;

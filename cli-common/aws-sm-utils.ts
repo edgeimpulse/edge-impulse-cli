@@ -1,67 +1,77 @@
-import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 
 const PREFIX = '\x1b[34m[AWS_SECRET_MANAGER]\x1b[0m';
 
+interface AWSSecretsManagerOptions {
+    region: string;
+    silent: boolean;
+    secretId: string;
+    secretName: string;
+}
+
 export class AWSSecretsManagerUtils {
+    private readonly client: SecretsManagerClient;
+    private readonly silent: boolean;
+    private readonly secretId: string;
+    private readonly secretName: string;
 
-    private _smInput;
-    private _smName;
-    private _notSilent: boolean;
-    private _client: SecretsManagerClient;
-    private _clientConfig;
+    constructor(options: Partial<AWSSecretsManagerOptions> = {}, client?: SecretsManagerClient) {
+        this.silent = options.silent ?? false;
+        this.secretId = options.secretId ?? process.env.EI_AWS_SECRET_ID ?? '';
+        this.secretName = options.secretName ?? process.env.EI_AWS_SECRET_NAME ?? '';
 
-    constructor(opts: {
-        appName: string,
-        silentArgv: boolean,
-        cleanArgv: boolean,
-        apiKeyArgv: string | undefined,
-        greengrassArgv: boolean,
-        devArgv: boolean,
-        hmacKeyArgv: string | undefined,
-        connectProjectMsg: string,
-    }) {
-        this._notSilent = (!opts.silentArgv);
-        this._smInput = { SecretId: process.env.EI_AWS_SECRET_ID };
-        this._clientConfig = { region: process.env.AWS_REGION };
-        this._smName = process.env.EI_AWS_SECRET_NAME;
-        this._client = new SecretsManagerClient(this._clientConfig);
+        // Allow dependency injection of the AWS client for testing/mocking
+        this.client = client ?? new SecretsManagerClient({
+            region: options.region ?? process.env.AWS_REGION
+        });
     }
 
-    async getEdgeImpulseAPIKeyFromSecretsManager() {
-        const command = new GetSecretValueCommand(this._smInput);
-        let name = this._smName;
-        if (name === undefined) {
-            name = "";
+    async getSecret(): Promise<string | undefined> {
+        // Don't proceed if required values are missing
+        if (!this.secretId || !this.secretName) {
+            this.logError(
+                `ERROR - Missing required env variables EI_AWS_SECRET_ID and/or EI_AWS_SECRET_NAME`
+            );
+            return undefined;
         }
+
         try {
-            const response = await this._client.send(command);
-            if (response !== undefined && response.SecretString !== undefined && name.length > 0 &&
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                JSON.parse(response.SecretString)[name] !== undefined) {
-                // return the API Key
-                if (this._notSilent) {
-                    // runtime: show status only...
-                    console.log(PREFIX + " EI: API Key FOUND within AWS Secrets Manager. Continuing...");
-                }
+            const response = await this.client.send(new GetSecretValueCommand({ SecretId: this.secretId }));
 
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                return JSON.parse(response.SecretString)[name];
+            const secretString = response.SecretString;
+            if (!secretString) {
+                this.logError('ERROR - Secret value is empty');
+                return undefined;
             }
-            else {
-                if (this._notSilent) {
-                    // Unable to find the API Key... invalid SecretId more than likely...
-                    console.log(PREFIX +
-                        " EI: ERROR - Unable to retrieve API Key from AWS Secrets Manager with greengrass option selected. Check ID in configuration: NAME: " +
-                        name + " ID: " + process.env.EI_AWS_SECRET_ID);
-                }
+
+            const secretData = JSON.parse(secretString) as Record<string, string>;
+            const secretValue = secretData[this.secretName];
+
+            if (!secretValue) {
+                this.logError(`ERROR - Secret not found with name: ${this.secretName}`);
+                return undefined;
             }
+
+            this.logInfo('Secret successfully retrieved from AWS Secrets Manager');
+            return secretValue;
         }
-        catch(err) {
-            if (this._notSilent) {
-                console.log(PREFIX + " EI: ERROR - Unable to retrieve API Key from AWS Secrets Manager with greengrass option selected. Caught Exception: " +
-                            err + " NAME: " + name + " ID: " + process.env.EI_AWS_SECRET_ID);
-            }
+        catch (error) {
+            this.logError(
+                `ERROR - Unable to retrieve secret from AWS Secrets Manager: ${
+                    error instanceof Error ? error.message : String(error)
+                }`
+            );
+            return undefined;
         }
-        return undefined;
     }
+
+    private logInfo(message: string): void {
+        if (!this.silent) {
+            console.log(PREFIX, message);
+        }
+    };
+
+    private logError(message: string): void {
+        console.error(PREFIX, message);
+    };
 }

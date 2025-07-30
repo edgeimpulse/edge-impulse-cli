@@ -11,6 +11,7 @@
  */
 
 import { ProjectVisibility } from './projectVisibility';
+import { TutorialType } from './tutorialType';
 
 export class CreateProjectRequest {
     /**
@@ -22,6 +23,11 @@ export class CreateProjectRequest {
     * The ID of the version that was used to restore this project.
     */
     'originalProjectVersionId'?: number;
+    /**
+    * Whether to show the getting started wizard use-case chooser screen after the project is created
+    */
+    'showGettingStartedWizard'?: boolean;
+    'tutorialKey'?: TutorialType;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,6 +46,16 @@ export class CreateProjectRequest {
             "name": "originalProjectVersionId",
             "baseName": "originalProjectVersionId",
             "type": "number"
+        },
+        {
+            "name": "showGettingStartedWizard",
+            "baseName": "showGettingStartedWizard",
+            "type": "boolean"
+        },
+        {
+            "name": "tutorialKey",
+            "baseName": "tutorialKey",
+            "type": "TutorialType"
         }    ];
 
     static getAttributeTypeMap() {

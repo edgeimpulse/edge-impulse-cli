@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPNormalizeData } from './dSPNormalizeData';
 
 export class GenerateFeaturesRequest {
     /**
@@ -24,6 +25,7 @@ export class GenerateFeaturesRequest {
     * If set, skips feature explorer (used in tests)
     */
     'skipFeatureExplorer'?: boolean;
+    'normalizeData'?: DSPNormalizeData;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,6 +44,11 @@ export class GenerateFeaturesRequest {
             "name": "skipFeatureExplorer",
             "baseName": "skipFeatureExplorer",
             "type": "boolean"
+        },
+        {
+            "name": "normalizeData",
+            "baseName": "normalizeData",
+            "type": "DSPNormalizeData"
         }    ];
 
     static getAttributeTypeMap() {

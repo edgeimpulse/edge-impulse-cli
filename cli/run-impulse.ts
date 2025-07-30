@@ -12,8 +12,9 @@ import { findSerial } from './find-serial';
 import checkNewVersions from '../cli-common/check-new-version';
 import { getCliVersion } from '../cli-common/init-cli-app';
 import express = require('express');
-import socketIO from 'socket.io';
+import { Server as SocketIoServer } from 'socket.io';
 import { ips } from '../cli-common/get-ips';
+import { DEFAULT_SOCKET_IO_V2_PARAMS, startEio3Interceptor } from '../cli-common/socket-utils';
 
 const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 
@@ -242,8 +243,10 @@ async function startWebServer(config: EiSerialDeviceConfig) {
     const app = express();
     app.use(express.static(Path.join(__dirname, '..', '..', 'public')));
 
-    const server = new http.Server(app);
-    const io = socketIO(server);
+    const server = http.createServer(app);
+    const io = new SocketIoServer(server, DEFAULT_SOCKET_IO_V2_PARAMS);
+
+    startEio3Interceptor(io);
 
     server.listen(Number(process.env.PORT) || 4915, process.env.HOST || '0.0.0.0', async () => {
         // noop

@@ -52,6 +52,7 @@ export type RunnerHelloResponseModelParameters = {
     image_input_width: number;
     image_input_frames: number;
     image_channel_count: number;
+    image_resize_mode?: 'none' | 'fit-shortest' | 'fit-longest' | 'squash';
     interval_ms: number;
     label_count: number;
     sensor: number;

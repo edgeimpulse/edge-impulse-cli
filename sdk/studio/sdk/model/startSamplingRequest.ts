@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { RawDataCategory } from './rawDataCategory';
 
 export class StartSamplingRequest {
     /**
@@ -20,10 +21,7 @@ export class StartSamplingRequest {
     * Requested length of the sample (in ms).
     */
     'lengthMs': number;
-    /**
-    * Which acquisition category to sample data into.
-    */
-    'category': StartSamplingRequestCategoryEnum;
+    'category': RawDataCategory;
     /**
     * Interval between samples (can be calculated like `1/hz * 1000`)
     */
@@ -32,6 +30,18 @@ export class StartSamplingRequest {
     * The sensor to sample from.
     */
     'sensor'?: string;
+    /**
+    * Text color of label displayed on supported clients. Value can be any supported CSS color value
+    */
+    'labelColor'?: string;
+    /**
+    * A hint to supported clients to show the number of samples currently collected
+    */
+    'collectedSampleCount'?: number;
+    /**
+    * A hint to supported clients to show the desired number of samples to be collected
+    */
+    'targetSampleCount'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,7 +59,7 @@ export class StartSamplingRequest {
         {
             "name": "category",
             "baseName": "category",
-            "type": "StartSamplingRequestCategoryEnum"
+            "type": "RawDataCategory"
         },
         {
             "name": "intervalMs",
@@ -60,6 +70,21 @@ export class StartSamplingRequest {
             "name": "sensor",
             "baseName": "sensor",
             "type": "string"
+        },
+        {
+            "name": "labelColor",
+            "baseName": "labelColor",
+            "type": "string"
+        },
+        {
+            "name": "collectedSampleCount",
+            "baseName": "collectedSampleCount",
+            "type": "number"
+        },
+        {
+            "name": "targetSampleCount",
+            "baseName": "targetSampleCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -67,6 +92,3 @@ export class StartSamplingRequest {
     }
 }
 
-
-export type StartSamplingRequestCategoryEnum = 'training' | 'testing' | 'anomaly';
-export const StartSamplingRequestCategoryEnumValues: string[] = ['training', 'testing', 'anomaly'];

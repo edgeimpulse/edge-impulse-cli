@@ -55,6 +55,10 @@ export class OrganizationTransformationBlock {
     'maxRunningTimeStr'?: string;
     'sourceCodeAvailable': boolean;
     /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly': boolean;
+    /**
     * URL to the source code of this custom learn block.
     */
     'repositoryUrl'?: string;
@@ -208,6 +212,11 @@ export class OrganizationTransformationBlock {
         {
             "name": "sourceCodeAvailable",
             "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
         },
         {

@@ -78,6 +78,10 @@ export class Imagesnap extends EventEmitter<{
             throw new Error('Invalid device ' + options.device);
         }
 
+        if (options.intervalMs === 0) {
+            options.intervalMs = 1000 / 30;
+        }
+
         this._captureProcess = spawn('imagesnap', [
             '-d', options.device,
             '-t', (options.intervalMs / 1000).toString()

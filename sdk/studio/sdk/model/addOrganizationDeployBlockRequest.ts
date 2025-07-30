@@ -27,6 +27,10 @@ export class AddOrganizationDeployBlockRequest {
     'supportsEonCompiler'?: boolean;
     'showOptimizations'?: boolean;
     'category'?: AddOrganizationDeployBlockRequestCategoryEnum;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -105,6 +109,11 @@ export class AddOrganizationDeployBlockRequest {
             "name": "category",
             "baseName": "category",
             "type": "AddOrganizationDeployBlockRequestCategoryEnum"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

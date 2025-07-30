@@ -15,7 +15,7 @@ import { ProjectDataSummary } from './projectDataSummary';
 export class ProjectInfoResponseAllOfDataSummaryPerCategory {
     'training': ProjectDataSummary;
     'testing': ProjectDataSummary;
-    'anomaly': ProjectDataSummary;
+    'postProcessing': ProjectDataSummary;
 
     static discriminator: string | undefined = undefined;
 
@@ -31,8 +31,8 @@ export class ProjectInfoResponseAllOfDataSummaryPerCategory {
             "type": "ProjectDataSummary"
         },
         {
-            "name": "anomaly",
-            "baseName": "anomaly",
+            "name": "postProcessing",
+            "baseName": "postProcessing",
             "type": "ProjectDataSummary"
         }    ];
 

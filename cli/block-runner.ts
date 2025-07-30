@@ -20,6 +20,9 @@ import * as models from '../sdk/studio/sdk/model/models';
 import { pathExists } from "./blocks/blocks-helper";
 import { BlockConfig } from "./blocks/block-config-manager";
 import { CLIBlockType } from "../shared/parameters-json-types";
+import searchList from 'inquirer-search-list';
+
+inquirer.registerPrompt('search-list', searchList);
 
 const CON_PREFIX = '\x1b[34m[BLK]\x1b[0m';
 
@@ -1893,12 +1896,11 @@ async function chooseProjectId(
 
     let projectInq = await inquirer.prompt([
         {
-            type: "list",
+            type: "search-list",
             choices: projectChoices,
             name: "projectId",
             message:
                 "Select a project to download training files and labels",
-            pageSize: 20
         }
     ]);
 
@@ -1914,7 +1916,8 @@ async function chooseImpulseId(
     }
 
     let inqRes = await inquirer.prompt([{
-        type: 'list',
+        type: 'search-list',
+        suffix: ' (🔍 type to search)',
         choices: impulses.map(p => ({ name: p.name, value: p.id })),
         name: 'impulseId',
         message: 'Which impulse do you want to use?',
@@ -1931,7 +1934,7 @@ async function chooseLearnBlockId(
     }
     let learnInq = await inquirer.prompt([
         {
-            type: "list",
+            type: "search-list",
             choices: (learnBlocks || []).map((b) => ({
                 name: b.title,
                 value: b.id

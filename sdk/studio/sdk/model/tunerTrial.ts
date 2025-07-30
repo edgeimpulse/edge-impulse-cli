@@ -38,6 +38,7 @@ export class TunerTrial {
     'progress'?: TunerTrialProgress;
     'metrics'?: TunerTrialMetrics;
     'impulseAddedToProject'?: TunerTrialImpulseAddedToProject;
+    'createdInPostProcessing'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -141,6 +142,11 @@ export class TunerTrial {
             "name": "impulseAddedToProject",
             "baseName": "impulseAddedToProject",
             "type": "TunerTrialImpulseAddedToProject"
+        },
+        {
+            "name": "createdInPostProcessing",
+            "baseName": "createdInPostProcessing",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

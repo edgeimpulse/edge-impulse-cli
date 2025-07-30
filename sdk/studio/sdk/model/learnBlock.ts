@@ -20,7 +20,7 @@ export class LearnBlock {
     'author': string;
     'description': string;
     'name': string;
-    'recommended'?: boolean;
+    'recommended': boolean;
     'organizationModelId'?: number;
     'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**

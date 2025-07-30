@@ -42,9 +42,13 @@ export class DspRunResponseWithSample {
     */
     'stateString'?: string;
     /**
-    * Label for the window (only present for time-series data)
+    * DEPRECATED. Label at the end of the window (only present for time-series data)
     */
     'labelAtEndOfWindow'?: string;
+    /**
+    * Label for the window. How the label is chosen is dependent on the value of \"labelingMethodMultiLabel\" in the input block.
+    */
+    'labelForWindow'?: string;
     'sample': RawSampleData;
     'performance'?: DspPerformance;
     'canProfilePerformance': boolean;
@@ -85,6 +89,11 @@ export class DspRunResponseWithSample {
         {
             "name": "labelAtEndOfWindow",
             "baseName": "labelAtEndOfWindow",
+            "type": "string"
+        },
+        {
+            "name": "labelForWindow",
+            "baseName": "labelForWindow",
             "type": "string"
         },
         {

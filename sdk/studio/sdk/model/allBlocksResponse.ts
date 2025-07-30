@@ -10,10 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { CreateEvaluationUserResponseAllOf } from './createEvaluationUserResponseAllOf';
+import { AllBlocksResponseAllOf } from './allBlocksResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
+import { TunerBlock } from './tunerBlock';
 
-export class CreateEvaluationUserResponse {
+export class AllBlocksResponse {
     /**
     * Whether the operation succeeded
     */
@@ -22,14 +23,9 @@ export class CreateEvaluationUserResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token': string;
-    /**
-    * URL to redirect user to.
-    */
-    'redirectUrl': string;
+    'input': Array<TunerBlock>;
+    'dsp': Array<TunerBlock>;
+    'learn': Array<TunerBlock>;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,18 +41,23 @@ export class CreateEvaluationUserResponse {
             "type": "string"
         },
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
+            "name": "input",
+            "baseName": "input",
+            "type": "Array<TunerBlock>"
         },
         {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "dsp",
+            "baseName": "dsp",
+            "type": "Array<TunerBlock>"
+        },
+        {
+            "name": "learn",
+            "baseName": "learn",
+            "type": "Array<TunerBlock>"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateEvaluationUserResponse.attributeTypeMap;
+        return AllBlocksResponse.attributeTypeMap;
     }
 }
 

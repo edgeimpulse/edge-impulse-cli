@@ -13,11 +13,13 @@
 import { DSPBlock } from './dSPBlock';
 import { InputBlock } from './inputBlock';
 import { LearnBlock } from './learnBlock';
+import { PostProcessingBlock } from './postProcessingBlock';
 
 export class GetImpulseBlocksResponseAllOf {
     'inputBlocks': Array<InputBlock>;
     'dspBlocks': Array<DSPBlock>;
     'learnBlocks': Array<LearnBlock>;
+    'postProcessingBlocks': Array<PostProcessingBlock>;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,6 +38,11 @@ export class GetImpulseBlocksResponseAllOf {
             "name": "learnBlocks",
             "baseName": "learnBlocks",
             "type": "Array<LearnBlock>"
+        },
+        {
+            "name": "postProcessingBlocks",
+            "baseName": "postProcessingBlocks",
+            "type": "Array<PostProcessingBlock>"
         }    ];
 
     static getAttributeTypeMap() {

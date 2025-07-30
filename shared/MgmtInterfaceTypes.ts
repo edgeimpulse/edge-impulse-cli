@@ -91,6 +91,9 @@ export interface MgmtInterfaceSampleRequestSample {
     hmacKey: string;
     interval: number;
     sensor?: string;
+    labelColor?: string;
+    collectedSampleCount?: number,
+    targetSampleCount?: number,
 }
 
 export interface MgmtInterfaceSampleRequest {
@@ -173,8 +176,14 @@ export interface MgmtInterfaceInferenceStreamFailedResponse {
 
 export interface MgmtInterfaceInferenceSummary {
     inferenceSummary: {
-        firstIndex: number;
-        lastIndex: number;
+        start: {
+            index: number;
+            timestamp: number;
+        };
+        end: {
+            index: number;
+            timestamp: number;
+        };
         classificationCounter: {
             label: string;
             value: number
@@ -188,9 +197,13 @@ export interface MgmtInterfaceInferenceSummary {
             value: number;
         }[];
         metrics: {
-            name: string;
-            value: number;
-        }[];
+            avg_inference_time?: {
+                dsp: number;
+                classification: number;
+                anomaly?: number;
+            };
+            visual_anomaly_mean?: number;
+        }
     };
 }
 

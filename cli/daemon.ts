@@ -63,6 +63,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
     snapshot: (buffer: Buffer, filename: string) => void
 }>) implements RemoteMgmtDevice  {
     private _config: EdgeImpulseConfig;
+    private _projectId: number;
     private _serial: SerialConnector;
     private _serialProtocol: EiSerialProtocol;
     private _deviceConfig: EiSerialDeviceConfig;
@@ -78,12 +79,18 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
     private _snapshotId = 0;
     private _waitingForSnapshotToStart = false;
 
-    constructor(config: EdgeImpulseConfig, serialConnector: SerialConnector, serialProtocol: EiSerialProtocol,
-                deviceConfig: EiSerialDeviceConfig) {
+    constructor(
+        config: EdgeImpulseConfig,
+        projectId: number,
+        serialConnector: SerialConnector,
+        serialProtocol: EiSerialProtocol,
+        deviceConfig: EiSerialDeviceConfig
+    ) {
         // eslint-disable-next-line constructor-super
         super();
 
         this._config = config;
+        this._projectId = projectId;
         this._serial = serialConnector;
         this._serialProtocol = serialProtocol;
         this._deviceConfig = deviceConfig;
@@ -389,6 +396,8 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 boundingBoxes: undefined,
                 metadata: undefined,
                 addDateId: true,
+                projectId: this._projectId,
+                configFactory: configFactory,
             });
 
             console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');
@@ -616,7 +625,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, deviceId: string, ba
             }
 
             if (!remoteMgmt) {
-                const device = new SerialDevice(eiConfig, serial, serialProtocol, config);
+                const device = new SerialDevice(eiConfig, projectId, serial, serialProtocol, config);
                 remoteMgmt = new RemoteMgmt(projectId,
                     devKeys,
                     Object.assign({
@@ -792,7 +801,8 @@ async function setupWizard(eiConfig: EdgeImpulseConfig,
                 process.stdout.write(' OK\n');
 
                 let inqWifi = await inquirer.prompt([{
-                    type: 'list',
+                    type: 'search-list',
+                    suffix: ' (🔍 type to search)',
                     choices: wifi.map(w => ({ name: w.line, value: w })),
                     message: 'Select WiFi network',
                     name: 'wifi',

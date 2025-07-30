@@ -40,6 +40,10 @@ export class OrganizationDeployBlock {
     'showOptimizations': boolean;
     'category': OrganizationDeployBlockCategoryEnum;
     'sourceCodeAvailable': boolean;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -162,6 +166,11 @@ export class OrganizationDeployBlock {
         {
             "name": "sourceCodeAvailable",
             "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
         }    ];
 

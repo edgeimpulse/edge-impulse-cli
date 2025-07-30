@@ -4,10 +4,12 @@ import fs from 'fs';
 import Path from 'path';
 import os from 'os';
 import { spawnHelper, SpawnHelperType } from './spawn-helper';
-import { ICamera, ICameraStartOptions } from './icamera';
+import { ICamera, ICameraInferenceDimensions, ICameraStartOptions } from './icamera';
 import util from 'util';
 import crypto from 'crypto';
 import { split as argvSplit } from '../argv-split';
+import { FitEnum } from 'sharp';
+import { RunnerHelloResponseModelParameters } from '../classifier/linux-impulse-runner';
 
 const PREFIX = '\x1b[34m[GST]\x1b[0m';
 
@@ -52,11 +54,16 @@ export class GStreamer extends EventEmitter<{
     private _isRestarting = false;
     private _spawnHelper: SpawnHelperType;
     private _customLaunchCommand: string | undefined;
+    private _scaleAndCropInPipeline: boolean;
 
     constructor(verbose: boolean, options?: {
         spawnHelperOverride?: SpawnHelperType,
         customLaunchCommand?: string,
         modeOverride?: GStreamerMode,
+        // Default: false, if set to true then scaling/cropping is done inside the GStreamer pipeline
+        // this affects "snapshot" events (which will be scaled to the inference resolution rather
+        // than the original resolution, if scaling in the pipeline is supported) but is faster.
+        scaleAndCropInPipeline?: boolean,
     }) {
         super();
 
@@ -64,6 +71,9 @@ export class GStreamer extends EventEmitter<{
         this._customLaunchCommand = options?.customLaunchCommand;
         this._spawnHelper = options?.spawnHelperOverride || spawnHelper;
         this._modeOverride = options?.modeOverride;
+        this._scaleAndCropInPipeline = typeof options?.scaleAndCropInPipeline === 'boolean' ?
+            options.scaleAndCropInPipeline :
+            false;
     }
 
     async init() {
@@ -167,7 +177,8 @@ export class GStreamer extends EventEmitter<{
             }
         }
 
-        const { invokeProcess, command, args } = await this.getGstreamerLaunchCommand(device, dimensions);
+        const { invokeProcess, command, args } = await this.getGstreamerLaunchCommand(
+            device, dimensions, options.inferenceDimensions);
 
         if (this._verbose) {
             console.log(PREFIX, `Starting ${command} with`, args);
@@ -357,11 +368,14 @@ export class GStreamer extends EventEmitter<{
     }
 
     async getGstreamerLaunchCommand(device: {
-        id: string,
-        name: string,
-        caps: GStreamerCap[],
-        videoSource: string
-    }, dimensions: { width: number, height: number }) {
+            id: string,
+            name: string,
+            caps: GStreamerCap[],
+            videoSource: string
+        },
+        dimensions: { width: number, height: number },
+        inferenceDims: ICameraInferenceDimensions | undefined,
+    ) {
 
         if (device.id === CUSTOM_GST_LAUNCH_COMMAND) {
             if (!this._customLaunchCommand) {
@@ -431,6 +445,38 @@ export class GStreamer extends EventEmitter<{
             videoSource = device.videoSource.split(' ');
         }
 
+        let cropArgs: string[] = [];
+        if (inferenceDims && this._scaleAndCropInPipeline) {
+            // fast path for fit-shortest and squash
+            if (inferenceDims.width === inferenceDims.height && inferenceDims.resizeMode === 'fit-shortest') {
+                const crop = this.determineSquareCrop(cap);
+                cropArgs.push(`!`);
+                if (crop.type === 'landscape') {
+                    cropArgs = cropArgs.concat([
+                        `videocrop`, `left=${crop.left}`, `right=${crop.right}`,
+                        `!`,
+                        `videoscale`, `method=lanczos`,
+                        `!`,
+                    ]);
+                }
+                else if (crop.type === 'portrait') {
+                    cropArgs = cropArgs.concat([
+                        `videocrop`, `top=${crop.top}`, `bottom=${crop.bottom}`,
+                        `!`,
+                        `videoscale`, `method=lanczos`,
+                        `!`,
+                    ]);
+                }
+                cropArgs.push(`video/x-raw,width=${inferenceDims.width},height=${inferenceDims.height}`);
+            }
+            else if (inferenceDims.resizeMode === 'squash' || inferenceDims.resizeMode === 'none' /* old model */) {
+                cropArgs.push(`!`);
+                cropArgs.push(`videoscale`, `method=lanczos`);
+                cropArgs.push(`!`);
+                cropArgs.push(`video/x-raw,width=${inferenceDims.width},height=${inferenceDims.height}`);
+            }
+        }
+
         let invokeProcess: 'spawn' | 'exec';
         let args: string[];
         if ((cap.type === 'video/x-raw') || (cap.type === 'pylonsrc')) {
@@ -451,6 +497,7 @@ export class GStreamer extends EventEmitter<{
             args = videoSource.concat([
                 `!`,
                 `videoconvert`,
+                ...cropArgs,
                 `!`,
                 `jpegenc`,
                 `!`,
@@ -738,7 +785,7 @@ export class GStreamer extends EventEmitter<{
         devices = devices.concat(await this.listQtiqmmsrcDevices());
 
         let mapped = devices.map(d => {
-            let name = devices.filter(x => x.name === d.name).length >= 2 ?
+            let name = d.id ?
                 d.name + ' (' + d.id + ')' :
                 d.name;
 
@@ -1171,6 +1218,27 @@ export class GStreamer extends EventEmitter<{
         }
         finally {
             this._isRestarting = false;
+        }
+    }
+
+    determineSquareCrop({ width, height }: { width: number; height: number }):
+        { type: 'landscape', left: number; right: number } |
+        { type: 'portrait', top: number; bottom: number } |
+        { type: 'none' } {
+         // no crop needed
+        if (width === height) return { type: 'none' };
+
+        if (width > height) {
+            const diff = width - height;
+            const left  = Math.floor(diff / 2);
+            const right = diff - left;
+            return { type: 'landscape', left, right };
+        }
+        else {
+            const diff  = height - width;
+            const top    = Math.floor(diff / 2);
+            const bottom = diff - top;
+            return { type: 'portrait', top, bottom };
         }
     }
 }

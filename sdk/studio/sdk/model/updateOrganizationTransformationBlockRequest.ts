@@ -65,6 +65,10 @@ export class UpdateOrganizationTransformationBlockRequest {
     * For AI labeling blocks, this lists the data types that the block supports. If this field is empty then there\'s no information about supported data types.
     */
     'aiActionsOperatesOn'?: Array<AIActionsOperatesOn>;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -178,6 +182,11 @@ export class UpdateOrganizationTransformationBlockRequest {
             "name": "aiActionsOperatesOn",
             "baseName": "aiActionsOperatesOn",
             "type": "Array<AIActionsOperatesOn>"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

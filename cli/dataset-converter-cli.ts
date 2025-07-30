@@ -20,7 +20,8 @@ import {
 import { FSHelpers, FileInFolder } from '../cli-common/fs-helpers';
 import { checkCsvMatchesAnyFormat, parseCsvLabelsFile }
     from "../shared/uploader/annotations-parsing-shared/parse-label-csv";
-import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, validateBoundingBoxLabelsFile }
+import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportUploaderInfoFileCategory,
+    validateBoundingBoxLabelsFile }
     from '../shared/bounding-box-file-types';
 import {
     Annotations,
@@ -38,7 +39,7 @@ import yaml from 'js-yaml';
 type SampleMetadata = {
     filename: string;
     directory: string;
-    category: 'training' | 'testing' | undefined;
+    category: Exclude<ExportUploaderInfoFileCategory, 'split'> | undefined;
 };
 
 type DatasetConverterHelperOpts = {

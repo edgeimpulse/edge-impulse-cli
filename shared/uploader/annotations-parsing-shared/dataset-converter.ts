@@ -1,8 +1,8 @@
-import { ExportInputBoundingBox } from "../../bounding-box-file-types";
+import { ExportInputBoundingBox, ExportUploaderInfoFileCategory } from "../../bounding-box-file-types";
 import { FormatMetadata } from "./label-file-types";
 import { AnnotationLookup, Annotations, LabelMapType, removeExtension } from "./label-files-shared";
 
-type Category = 'training' | 'testing' | undefined;
+type Category = Exclude<ExportUploaderInfoFileCategory, 'split'> | undefined;
 
 /**
  * DatasetConverterHelpers allow for converting various dataset annotation formats to a format usable in EI.
@@ -56,7 +56,7 @@ export abstract class DatasetConverterHelper {
 
         // If we can, we'll associate these annotations with a category.
         // We try to derive this first from the directory path, then the file name.
-        let annotationsKey: 'training' | 'testing' | undefined;
+        let annotationsKey: Exclude<ExportUploaderInfoFileCategory, 'split'> | undefined;
         if (directoryCategory) {
             annotationsKey = directoryCategory;
         }

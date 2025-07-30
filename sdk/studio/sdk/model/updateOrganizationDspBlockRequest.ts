@@ -20,6 +20,10 @@ export class UpdateOrganizationDspBlockRequest {
     'limitsCpu'?: number;
     'limitsMemory'?: number;
     'port'?: number;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,6 +67,11 @@ export class UpdateOrganizationDspBlockRequest {
             "name": "port",
             "baseName": "port",
             "type": "number"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

@@ -47,7 +47,8 @@ export async function findSerial(whichDeviceIndex: number | undefined) {
         }
 
         let deviceRes = <{ device: string }>await inquirer.prompt([{
-            type: 'list',
+            type: 'search-list',
+            suffix: ' (🔍 type to search)',
             choices: filteredDevices.map(d => ({
                 value: d.path,
                 name: d.path + (d.manufacturer ? ' (' + d.manufacturer + ')' : '')

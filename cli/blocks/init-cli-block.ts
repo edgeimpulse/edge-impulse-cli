@@ -21,9 +21,16 @@ export class InitCLIBlock {
         parametersJson: string,
     };
     private _blockConfigManager: BlockConfigManager;
+    private _opts: {
+        alwaysCreateNewBlock: boolean,
+    };
 
-    constructor(config: EdgeImpulseConfig, folder: string,
-                blockConfigManager: BlockConfigManager
+    constructor(config: EdgeImpulseConfig,
+                folder: string,
+                blockConfigManager: BlockConfigManager,
+                opts: {
+                    alwaysCreateNewBlock: boolean,
+                }
     ) {
         this._config = config;
         this._folder = folder;
@@ -32,6 +39,7 @@ export class InitCLIBlock {
             parametersJson: Path.join(folder, 'parameters.json'),
         };
         this._blockConfigManager = blockConfigManager;
+        this._opts = opts;
     }
 
     async getOrganization() {
@@ -50,7 +58,8 @@ export class InitCLIBlock {
         }
         else {
             let orgInqRes = await inquirer.prompt([{
-                type: 'list',
+                type: 'search-list',
+                suffix: ' (🔍 type to search)',
                 choices: (organizations.organizations || []).map(p => {
                     let name = p.name;
                     if (p.isDeveloperProfile) {
@@ -1052,6 +1061,10 @@ export class InitCLIBlock {
     }
 
     private async createOrUpdate(existingBlocks: { }[]) {
+        if (this._opts.alwaysCreateNewBlock) {
+            return 'create';
+        }
+
         return existingBlocks.length > 0 ? <'create' | 'update'>(await inquirer.prompt([{
             type: 'list',
             choices: [

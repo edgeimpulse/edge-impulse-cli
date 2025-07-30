@@ -188,8 +188,8 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
     inferenceSummaryListener(ev: InferenceMetrics) {
         let req: MgmtInterfaceInferenceSummary = {
             inferenceSummary: {
-                firstIndex: ev.firstIndex,
-                lastIndex: ev.lastIndex,
+                start: ev.start,
+                end: ev.end,
                 classificationCounter: ev.classificationCounter.map((counter) => {
                     return { label: counter.label, value: counter.value };
                 }),
@@ -199,9 +199,7 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
                 standardDeviation: ev.standardDeviation.map((std) => {
                     return { label: std.label, value: std.value };
                 }),
-                metrics: ev.metrics.map((metric) => {
-                    return { name: metric.name, value: metric.value };
-                }),
+                metrics: ev.metrics,
             }
         };
         if (this._ws) {
@@ -566,8 +564,12 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             }
 
             if (typeof (<MgmtInterfaceStartInferenceStreamRequest>d).startInferenceStream !== 'undefined') {
+                if (this._monitor) {
+                    this._monitor.impulseDebug = true;
+                }
+
                 let resp: MgmtInterfaceInferenceStreamStartedResponse = {
-                    inferenceStreamStarted: this._monitor ? (this._monitor.impulseDebug = true, true) : false
+                    inferenceStreamStarted: this._monitor?.impulseDebug === true
                 };
 
                 if (this._ws) {
@@ -577,8 +579,12 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
             }
 
             if (typeof (<MgmtInterfaceStopInferenceStreamRequest>d).stopInferenceStream !== 'undefined') {
+                if (this._monitor) {
+                    this._monitor.impulseDebug = false;
+                }
+
                 let resp: MgmtInterfaceInferenceStreamStoppedResponse = {
-                    inferenceStreamStopped: this._monitor ? (this._monitor.impulseDebug = false, true) : false
+                    inferenceStreamStopped: this._monitor?.impulseDebug === false
                 };
 
                 if (this._ws) {

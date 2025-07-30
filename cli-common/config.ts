@@ -14,6 +14,9 @@ export interface RunnerConfig {
     blockId: number | undefined;
     storageIndex: number | undefined;
     storagePath: string;
+    storageMaxSizeMb: number | undefined;
+    deploymentVersion: number | undefined;
+    monitorSummaryIntervalMs: number | undefined;
     // key = projectId
     impulseIdsForProjectId: { [k: string ]: { impulseId: number } } | undefined;
     modelVariantsForProjectId: { [k: string ]: { variant: models.KerasModelVariantEnum } } | undefined;
@@ -385,6 +388,20 @@ export class Config {
         await this.store(config);
     }
 
+    async getStorageMaxSizeMb() {
+        let config = await this.load();
+        if (!config) {
+            return undefined;
+        }
+        return config.runner.storageMaxSizeMb;
+    }
+
+    async setStorageMaxSizeMb(maxSizeMb: number) {
+        let config = await this.load();
+        config.runner.storageMaxSizeMb = maxSizeMb;
+        await this.store(config);
+    }
+
     async storeProjectId(projectId: number) {
         let config = await this.load();
         config.runner.projectId = projectId;
@@ -432,6 +449,20 @@ export class Config {
         return ret ? ret.variant : null;
     }
 
+    async getDeploymentVersion() {
+        let config = await this.load();
+        if (!config) {
+            return undefined;
+        }
+        return config.runner.deploymentVersion;
+    }
+
+    async setDeploymentVersion(deploymentVersion: number) {
+        let config = await this.load();
+        config.runner.deploymentVersion = deploymentVersion;
+        await this.store(config);
+    }
+
     async getStudioUrl(whitelabelId: number | null) {
         if (whitelabelId !== null) {
             const whitelabelRequest = await this._api?.whitelabels.getWhitelabelDomain(whitelabelId);
@@ -471,10 +502,13 @@ export class Config {
                 runner: {
                     projectId: undefined,
                     blockId: undefined,
+                    deploymentVersion: undefined,
                     storageIndex: undefined,
                     storagePath: this.getDefaultStoragePath(),
                     impulseIdsForProjectId: undefined,
                     modelVariantsForProjectId: undefined,
+                    storageMaxSizeMb: undefined,
+                    monitorSummaryIntervalMs: undefined,
                 }
             };
         }
@@ -639,5 +673,19 @@ export class Config {
 
     private async store(config: SerialConfig) {
         await util.promisify(fs.writeFile)(this._filename, JSON.stringify(config, null, 4), 'utf-8');
+    }
+
+    async getMonitorSummaryIntervalMs() {
+        let config = await this.load();
+        if (!config) {
+            return undefined;
+        }
+        return config.runner.monitorSummaryIntervalMs;
+    }
+
+    async setMonitorSummaryIntervalMs(ms: number) {
+        let config = await this.load();
+        config.runner.monitorSummaryIntervalMs = ms;
+        await this.store(config);
     }
 }

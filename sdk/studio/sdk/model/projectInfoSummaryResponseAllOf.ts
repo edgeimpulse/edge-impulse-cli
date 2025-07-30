@@ -16,6 +16,8 @@ export class ProjectInfoSummaryResponseAllOf {
     'owner': string;
     'name': string;
     'studioUrl': string;
+    'viewCount': number;
+    'cloneCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +41,16 @@ export class ProjectInfoSummaryResponseAllOf {
             "name": "studioUrl",
             "baseName": "studioUrl",
             "type": "string"
+        },
+        {
+            "name": "viewCount",
+            "baseName": "viewCount",
+            "type": "number"
+        },
+        {
+            "name": "cloneCount",
+            "baseName": "cloneCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

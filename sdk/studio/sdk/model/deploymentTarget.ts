@@ -53,6 +53,10 @@ export class DeploymentTarget {
     * Preferably use supportedEngines / preferredEngine
     */
     'hasStAton': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasCevaNpn': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
@@ -137,6 +141,11 @@ export class DeploymentTarget {
         {
             "name": "hasStAton",
             "baseName": "hasStAton",
+            "type": "boolean"
+        },
+        {
+            "name": "hasCevaNpn",
+            "baseName": "hasCevaNpn",
             "type": "boolean"
         },
         {

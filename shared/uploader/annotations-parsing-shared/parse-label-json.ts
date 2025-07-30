@@ -14,7 +14,13 @@ export type JsonSchemaConstraint = {
 } | {
     type: 'object';
     isMap: true;
-    values: JsonSchemaConstraint;
+    values: JsonSchemaConstraint | {
+        // Allows you to define a constraint recursively, with some recursive base type.
+        // E.g. type X = { [ key: string ]: X | number } ->
+        // values: { type: 'recursive', base: { type: 'number', ... } }
+        type: 'recursive';
+        base: JsonSchemaConstraint;
+    };
     required?: boolean;
     validationFn?: (o: object) => SchemaValidationOutputOmitScope;
 } | {
@@ -113,8 +119,8 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
         // If type 'either', check we have any valid match
         if (constraint.type === 'either') {
             for (const possibleConstraint of constraint.possibleTypes) {
-                const isValid = validateObject(io, possibleConstraint, scope);
-                if (isValid) {
+                const result = validateObject(io, possibleConstraint, scope);
+                if (result.valid) {
                     return {
                         valid: true
                     };
@@ -135,6 +141,14 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
                 valid: false,
                 reason: `Incorrect type. Got: ${type}, expected: ${constraint.type}`,
                 scope: scope
+            };
+        }
+        // Don't allow NaN for number
+        if (typeof io === 'number' && isNaN(io)) {
+            return {
+                valid: false,
+                reason: 'Entry is NaN',
+                scope,
             };
         }
 
@@ -190,10 +204,15 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
         else if (constraint.type === 'object' && constraint.isMap) {
             // Like an 'object', only the keys can be any string, we just enforce types of values
             const rootObj = <{ [k: string]: object }>io;
+            // Constraint may be recursively defined; if so, reuse the parent constraint.
+            const valuesConstraint: JsonSchemaConstraint = constraint.values.type === 'recursive' ? {
+                type: 'either',
+                possibleTypes: [ constraint, constraint.values.base ],
+            } : constraint.values;
 
             // Recursively validate all values
             for (const [ key, value ] of Object.entries(rootObj)) {
-                const entryIsValid = validateObject(value, constraint.values, [ ...scope, key ]);
+                const entryIsValid = validateObject(value, valuesConstraint, [ ...scope, key ]);
                 if (!entryIsValid.valid) {
                     return entryIsValid;
                 }

@@ -13,6 +13,7 @@
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { ProjectVisibility } from './projectVisibility';
+import { TutorialType } from './tutorialType';
 
 /**
 * Only fields set in this object will be updated.
@@ -58,6 +59,11 @@ export class UpdateProjectRequest {
     * The next step in the getting started wizard, or set to -1 to clear the getting started wizard
     */
     'gettingStartedStep'?: number;
+    'gettingStartedTutorial'?: TutorialType;
+    /**
+    * Classes or labels used in the getting started wizard
+    */
+    'gettingStartedClasses'?: Array<string>;
     /**
     * Whether to use GPU for training
     */
@@ -236,6 +242,16 @@ export class UpdateProjectRequest {
             "name": "gettingStartedStep",
             "baseName": "gettingStartedStep",
             "type": "number"
+        },
+        {
+            "name": "gettingStartedTutorial",
+            "baseName": "gettingStartedTutorial",
+            "type": "TutorialType"
+        },
+        {
+            "name": "gettingStartedClasses",
+            "baseName": "gettingStartedClasses",
+            "type": "Array<string>"
         },
         {
             "name": "useGpu",

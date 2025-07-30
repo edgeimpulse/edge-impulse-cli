@@ -46,6 +46,18 @@ export class DSPGroupItem {
     * If enabled, render a disabled input element with \'Click to set\'
     */
     'showClickToSet': boolean;
+    /**
+    * Valid values for parameter.
+    */
+    'valid'?: Array<object>;
+    /**
+    * Recursive definition for items of a parameter with type \'array\'.
+    */
+    'items'?: object;
+    /**
+    * Recursive definition for a parameter with type \'object\'.
+    */
+    'properties'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -134,6 +146,21 @@ export class DSPGroupItem {
             "name": "showClickToSet",
             "baseName": "showClickToSet",
             "type": "boolean"
+        },
+        {
+            "name": "valid",
+            "baseName": "valid",
+            "type": "Array<object>"
+        },
+        {
+            "name": "items",
+            "baseName": "items",
+            "type": "object"
+        },
+        {
+            "name": "properties",
+            "baseName": "properties",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

@@ -20,7 +20,14 @@ export class JobDetails {
     * Job id, use this to refer back to the job. The web socket API also uses this ID.
     */
     'id': number;
+    /**
+    * User-friendly category (e.g. \"Training model\")
+    */
     'category': string;
+    /**
+    * Machine-readable category (e.g. \"learn-train-studio-wrapper\")
+    */
+    'categoryKey': string;
     /**
     * External job identifier, this can be used to categorize jobs, and recover job status. E.g. set this to \'keras-192\' for a Keras learning block with ID 192. When a user refreshes the page you can check whether a job is active for this ID and re-attach. 
     */
@@ -59,6 +66,10 @@ export class JobDetails {
     */
     'categoryCount'?: number;
     /**
+    * Structured job metadata
+    */
+    'metadata'?: object;
+    /**
     * List of jobs children isd triggered by this job
     */
     'childrenIds'?: Array<number>;
@@ -82,6 +93,11 @@ export class JobDetails {
         {
             "name": "category",
             "baseName": "category",
+            "type": "string"
+        },
+        {
+            "name": "categoryKey",
+            "baseName": "categoryKey",
             "type": "string"
         },
         {
@@ -133,6 +149,11 @@ export class JobDetails {
             "name": "categoryCount",
             "baseName": "categoryCount",
             "type": "number"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "object"
         },
         {
             "name": "childrenIds",

@@ -13,7 +13,7 @@
 
 export class StartIntegrationSessionResponseAllOf {
     /**
-    * Unique integration session identifier. Pass this to getIntegrationSessionStatus to check the status of the integration session.
+    * Unique integration resource identifier. Pass this to getIntegrationSessionStatus to check the status of the integration session.
     */
     'id': string;
 

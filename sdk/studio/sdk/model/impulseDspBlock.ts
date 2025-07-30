@@ -15,7 +15,7 @@ import { ImpulseDspBlockOrganization } from './impulseDspBlockOrganization';
 
 export class ImpulseDspBlock {
     /**
-    * Identifier for this block. Make sure to up this number when creating a new block, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
+    * Identifier for this block. Make sure to up this number when creating a new block via `getNewBlockId`, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
     */
     'id': number;
     /**
@@ -42,10 +42,6 @@ export class ImpulseDspBlock {
     * The ID of the Input block a DSP block is connected to
     */
     'input'?: number;
-    /**
-    * A short description of the block version, displayed in the block versioning UI
-    */
-    'description'?: string;
     /**
     * The system component that created the block version (createImpulse | clone | tuner). Cannot be set via API.
     */
@@ -105,11 +101,6 @@ export class ImpulseDspBlock {
             "name": "input",
             "baseName": "input",
             "type": "number"
-        },
-        {
-            "name": "description",
-            "baseName": "description",
-            "type": "string"
         },
         {
             "name": "createdBy",

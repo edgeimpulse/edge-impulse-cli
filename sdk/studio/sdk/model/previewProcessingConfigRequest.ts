@@ -11,32 +11,26 @@
  */
 
 
-export class CreateEvaluationUserResponseAllOf {
-    /**
-    * JWT token, to be used to log in in the future through JWTAuthentication
-    */
-    'token': string;
-    /**
-    * URL to redirect user to.
-    */
-    'redirectUrl': string;
+export class PreviewProcessingConfigRequest {
+    'enabled': boolean;
+    'parameters': { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "token",
-            "baseName": "token",
-            "type": "string"
+            "name": "enabled",
+            "baseName": "enabled",
+            "type": "boolean"
         },
         {
-            "name": "redirectUrl",
-            "baseName": "redirectUrl",
-            "type": "string"
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateEvaluationUserResponseAllOf.attributeTypeMap;
+        return PreviewProcessingConfigRequest.attributeTypeMap;
     }
 }
 

@@ -59,6 +59,10 @@ export class UpdateOrganizationTransferLearningBlockRequest {
     * In Markdown format. Should be set if `indBlockNoLongerAvailable` is true, contains migration information for existing users of this block.
     */
     'blockNoLongerAvailableReason'?: string;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -147,6 +151,11 @@ export class UpdateOrganizationTransferLearningBlockRequest {
             "name": "blockNoLongerAvailableReason",
             "baseName": "blockNoLongerAvailableReason",
             "type": "string"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

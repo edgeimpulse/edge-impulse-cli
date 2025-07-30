@@ -64,6 +64,10 @@ export class OrganizationTransferLearningBlock {
     */
     'indRequiresGpu': boolean;
     'sourceCodeAvailable': boolean;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly': boolean;
     'displayCategory'?: BlockDisplayCategory;
     /**
     * List of custom model variants produced when this block is trained. This is experimental and may change in the future.
@@ -199,6 +203,11 @@ export class OrganizationTransferLearningBlock {
         {
             "name": "sourceCodeAvailable",
             "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
         },
         {

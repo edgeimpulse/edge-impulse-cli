@@ -58,6 +58,7 @@ export class AuthApi {
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
         'ApiKeyAuthentication': new ApiKeyAuth('header', 'x-api-key'),
+        'OAuth2': new OAuth(),
         'JWTAuthentication': new ApiKeyAuth('cookie', 'jwt'),
         'JWTHttpHeaderAuthentication': new ApiKeyAuth('header', 'x-jwt-token'),
     }
@@ -103,6 +104,10 @@ export class AuthApi {
 
     public setApiKey(key: AuthApiApiKeys, value: string | undefined) {
         (this.authentications as any)[AuthApiApiKeys[key]].apiKey = value;
+    }
+
+    set accessToken(token: string) {
+        this.authentications.OAuth2.accessToken = token;
     }
 
 
@@ -164,71 +169,7 @@ export class AuthApi {
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
 
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<any>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-
-                        if (typeof body.success === 'boolean' && !body.success) {
-                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-                            reject(new Error(body.error || errString));
-                        }
-                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve(body);
-                        }
-                        else {
-                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
-                            reject(errString);
-                        }
-                    }
-                });
-            });
-        });
-    }
-
-    /**
-     * Log in a user to the docs. This function is only available through a JWT token.
-     * @summary Readme.io
-     */
-    public async readme (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
-        const localVarPath = this.basePath + '/api/auth/readme';
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({
-            'User-Agent': 'edgeimpulse-api nodejs'
-        }, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            agentOptions: {keepAlive: false},
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
-
-        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
 
         authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
         return authenticationPromise.then(() => {

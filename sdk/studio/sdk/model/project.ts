@@ -70,7 +70,7 @@ export class Project {
     /**
     * Project category
     */
-    'category'?: string;
+    'category'?: ProjectCategoryEnum;
     'license'?: PublicProjectLicense;
     'tier': ProjectTierEnum;
     /**
@@ -210,7 +210,7 @@ export class Project {
         {
             "name": "category",
             "baseName": "category",
-            "type": "string"
+            "type": "ProjectCategoryEnum"
         },
         {
             "name": "license",
@@ -271,3 +271,6 @@ export class Project {
 
 export type ProjectLabelingMethodEnum = 'single_label' | 'object_detection';
 export const ProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
+
+export type ProjectCategoryEnum = 'Accelerometer' | 'Audio' | 'Images' | 'Keyword spotting' | 'Object detection' | 'Other';
+export const ProjectCategoryEnumValues: string[] = ['Accelerometer', 'Audio', 'Images', 'Keyword spotting', 'Object detection', 'Other'];

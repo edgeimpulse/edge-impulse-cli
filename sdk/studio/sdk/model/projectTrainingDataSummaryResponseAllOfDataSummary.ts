@@ -17,6 +17,10 @@ export class ProjectTrainingDataSummaryResponseAllOfDataSummary {
     */
     'labels': Array<string>;
     'dataCount': number;
+    /**
+    * Whether there are samples in the training dataset that are both time-series data and have multiple labels
+    */
+    'hasTimeseriesDataWithMultipleLabels': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +34,11 @@ export class ProjectTrainingDataSummaryResponseAllOfDataSummary {
             "name": "dataCount",
             "baseName": "dataCount",
             "type": "number"
+        },
+        {
+            "name": "hasTimeseriesDataWithMultipleLabels",
+            "baseName": "hasTimeseriesDataWithMultipleLabels",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

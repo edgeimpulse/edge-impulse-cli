@@ -12,7 +12,7 @@ const PREFIX = '\x1b[34m[PRO]\x1b[0m';
 
 export class Prophesee extends EventEmitter<{
     snapshot: (buffer: Buffer, filename: string) => void,
-    error: (message: string) => void
+    error: (message: string) => void,
 }> implements ICamera {
     private _captureProcess?: ChildProcess;
     private _tempDir?: string;
@@ -66,6 +66,10 @@ export class Prophesee extends EventEmitter<{
         const devices = await this.listDevices();
         if (!devices.find(d => d === options.device)) {
             throw new Error('Invalid device ' + options.device);
+        }
+
+        if (options.intervalMs === 0) {
+            options.intervalMs = 1000 / 30;
         }
 
         let args = [

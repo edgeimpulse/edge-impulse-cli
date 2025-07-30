@@ -1,4 +1,4 @@
-import { BoundingBoxesMap, ExportInputBoundingBox, ExportUploaderInfoFileLabel } from "../../bounding-box-file-types";
+import { BoundingBoxesMap, ExportInputBoundingBox, ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from "../../bounding-box-file-types";
 import { LabelMapFile, SupportedLabelFormatInfo } from "./label-file-types";
 
 export type AnnotationLookup = { [key: string]: Annotations | undefined };
@@ -38,13 +38,16 @@ export type LabelMapType = { [ key: string ]: string };
  * @param name Name to examine
  * @returns Category if one can be found
  */
-export function findCategoryMatch(name: string): 'training' | 'testing' | undefined {
+export function findCategoryMatch(name: string): Exclude<ExportUploaderInfoFileCategory, 'split'> | undefined {
     name = name.toLowerCase();
     if (name.includes('val') || name.includes('test')) {
         return 'testing';
     }
     else if (name.includes('train')) {
         return 'training';
+    }
+    else if (name.includes('postProcessing') || name.includes('post-processing')) {
+        return 'post-processing';
     }
     return undefined;
 }

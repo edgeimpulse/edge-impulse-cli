@@ -32,6 +32,10 @@ export class OrganizationDspBlock {
     'isConnected': boolean;
     'error'?: string;
     'sourceCodeAvailable': boolean;
+    /**
+    * Whether the source code is only available for staff users.
+    */
+    'sourceCodeDownloadStaffOnly': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -129,6 +133,11 @@ export class OrganizationDspBlock {
         {
             "name": "sourceCodeAvailable",
             "baseName": "sourceCodeAvailable",
+            "type": "boolean"
+        },
+        {
+            "name": "sourceCodeDownloadStaffOnly",
+            "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
         }    ];
 

@@ -507,6 +507,8 @@ const logAllAnnotationFormats = () => {
                     boundingBoxes: boundingBoxes,
                     metadata: file.metadata,
                     addDateId: false,
+                    configFactory: configFactory,
+                    projectId: projectId,
                 });
 
                 let ix = ++fileIx;

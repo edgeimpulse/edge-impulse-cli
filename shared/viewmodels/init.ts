@@ -51,6 +51,7 @@ export enum PageType {
     AIActionsConfig = 52,
     AIActionsRun = 53,
     AIActionsList = 54,
+    PostProcessing = 55,
     AccountSettingsAccountInfo = 60,
     AccountSettingsAuthentication = 61,
     AccountSettingsOrganizations = 62,
@@ -58,6 +59,7 @@ export enum PageType {
     AccountSettingsMfa = 64,
     AccountSettingsSubscription = 65,
     AccountSettingsSecrets = 66,
+    ModelMonitoring = 67,
     GetStarted = 70,
     OrganizationDashboard = 90,
     OrganizationUsers = 91,
@@ -86,6 +88,7 @@ export enum PageType {
     UploadPortal = 200,
     Announcement = 201,
     TensorBoardIntegration = 202,
+    OAuthConsent = 203,
 }
 
 export const getPageTypeName = (pageTypeValue: number): string | undefined => {

@@ -4,8 +4,9 @@ import { Config } from './config';
 import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly } from "../library/classifier/linux-impulse-runner";
 import { ModelInformation } from '../library/classifier/linux-impulse-runner';
 import { EventEmitter } from 'tsee';
-import { MgmtInterfaceImpulseRecordRawData } from '../shared/MgmtInterfaceTypes';
+import { MgmtInterfaceImpulseRecordRawData, MgmtInterfaceInferenceSummary } from '../shared/MgmtInterfaceTypes';
 
+export const DEFAULT_MONITOR_SUMMARY_INTERVAL_MS = 60000;
 const MONITOR_PREFIX = '\x1b[34m[MON]\x1b[0m';
 
 function checkFileExists(file: string) {
@@ -54,37 +55,22 @@ export type StorageStatus = {
     lastTimestamp: number;
 };
 
-export type InferenceMetrics = {
-    firstIndex: number;
-    lastIndex: number;
-    classificationCounter: {
-        label: string;
-        value: number
-    }[];
-    mean: {
-        label: string;
-        value: number
-    }[];
-    standardDeviation: {
-        label: string;
-        value: number
-    }[];
-    metrics: {
-        name: string;
-        value: number
-    }[];
+export type MetricsWindowBoundary = {
+    index: number;
+    timestamp: number;
 };
+
+export type InferenceMetrics = MgmtInterfaceInferenceSummary['inferenceSummary'];
 
 class StorageManager {
     private _storagePath: string = '';
-    private _metricsPath: string = '';
+    private _metricsDir: string = '';
     private _config: Config;
     private _model: ModelInformation;
     private _storageIndex: number = 0;
     private _firstIndex: number = Number.MAX_SAFE_INTEGER;
     // this limits the number of records in a single directory
     private _storageIndexSegment: number = 1000;
-    // hardcoded to 250 MB for now
     private _storageSizeMaxBytes: number = 250 * 1024 * 1024;
     private _storageSize: number = 0;
     // when the monitor stores the record, storage manager checks if the storage size
@@ -169,20 +155,41 @@ class StorageManager {
     }
 
     private async initialize(): Promise<void> {
-        this._storagePath = await this._config.getStoragePath();
+        const modelProjectId = this._model.project.id;
+        const deploymentVersion = await this._config.getDeploymentVersion();
 
-        let modelProjectId = this._model.project.id;
+        // We store inference records in a directory structure based on the model project ID
+        // and deployment version.
+        // TODO[MM] Verify that the deployment version is actually always set, since the
+        // type system suggests otherwise.
+        const currentStoragePath = await this._config.getStoragePath();
+        const expectedStoragePath = Path.join(
+            this._config.getDefaultStoragePath(),
+            modelProjectId.toString(),
+            deploymentVersion?.toString() ?? '',
+        );
 
-        // check if the last directory in the path is equal to modelProjectId
-        if (Path.basename(this._storagePath) !== modelProjectId.toString()) {
-            // if not, append modelProjectId to the default storage path
-            this._storagePath = Path.join(this._config.getDefaultStoragePath(), modelProjectId.toString());
-            // update the storage path in the config
+        if (currentStoragePath !== expectedStoragePath) {
+            this._storagePath = expectedStoragePath;
+
             await this._config.storeStoragePath(this._storagePath);
         }
+        else {
+            this._storagePath = currentStoragePath;
+        }
 
-        // set the metrics path
-        this._metricsPath = Path.join(this._storagePath, 'metrics.json');
+        // If a storage max size is set in config, use it (in MB, converted to bytes). Otherwise, use the default.
+        // TODO[MM] Consider if a minimum/maximum should be enforced, probably yes.
+        const storageMaxSizeMb = await this._config.getStorageMaxSizeMb();
+        if (storageMaxSizeMb !== undefined) {
+            this._storageSizeMaxBytes = storageMaxSizeMb * 1024 * 1024; // convert to bytes
+        }
+
+        // set the metrics directory path
+        this._metricsDir = Path.join(this._storagePath, 'metrics');
+        if (await checkFileExists(this._metricsDir) === false) {
+            await fs.mkdir(this._metricsDir, { recursive: true });
+        }
 
         // get the current storage index (the next index to be used for saving records)
         // storage index may be updated during the initialization if there is a record with higer index
@@ -234,6 +241,8 @@ class StorageManager {
         this._storageSize = await this.getStorageSize();
     }
 
+    // TODO[MM] Currently, only data segments are deleted when storage is full.
+    // If metrics files grow too large, they may not be cleaned up.
     private async cleanupStorage(): Promise<void> {
         // get list of segment directories
         let dirs = await fs.readdir(this._storagePath, { withFileTypes: true });
@@ -285,15 +294,33 @@ class StorageManager {
         };
     }
 
-    async saveInferenceMetrics(metrics: string): Promise<void> {
-        await fs.writeFile(this._metricsPath, metrics);
+    async saveInferenceMetrics(metricsStr: string, fileName: string): Promise<void> {
+        const metricsPath = Path.join(this._metricsDir, `${fileName}.json`);
+        await fs.writeFile(metricsPath, metricsStr);
     }
 
-    async getInferenceMetrics(): Promise<string | undefined> {
-        if (await checkFileExists(this._metricsPath) === true) {
-            return await fs.readFile(this._metricsPath, 'utf-8');
+    async getLatestInferenceMetrics(): Promise<string | undefined> {
+        try {
+            const files = await fs.readdir(this._metricsDir);
+            const metricsFiles = files.filter(file => file.endsWith('.json'));
+            if (metricsFiles.length === 0) {
+                return undefined;
+            }
+
+            // Sort files by the last index in the filename (after the last underscore)
+            metricsFiles.sort((a, b) => {
+                const indexA = Number(a.replace('.json', '').split('_').pop());
+                const indexB = Number(b.replace('.json', '').split('_').pop());
+                return indexB - indexA; // Sort in descending order
+            });
+
+            const latestFile = metricsFiles[0];
+            return await fs.readFile(Path.join(this._metricsDir, latestFile), 'utf-8');
         }
-        return undefined;
+        catch (error) {
+            console.error(MONITOR_PREFIX, 'Error reading metrics files:', error);
+            return undefined;
+        }
     }
 
     // we pass raw data separately, so the storage manager can decide how to store it
@@ -357,8 +384,6 @@ class StorageManager {
 
 interface MetricCalculator {
     name: string;
-    serialize(): string;
-    deserialize(data: string): void;
     update(classification: { [label: string]: number } | undefined): void;
     getMetric(): { label: string; value: number }[];
 }
@@ -373,26 +398,17 @@ type MeanValues = {
 class MeanCalculator implements MetricCalculator {
     private _mean: MeanValues;
     private _name: string = 'mean';
+    private _confidenceThreshold: number;
 
-    constructor() {
+    constructor(opts: {
+        confidenceThreshold: number,
+    }) {
         this._mean = { };
+        this._confidenceThreshold = opts.confidenceThreshold;
     }
 
     get name(): string {
         return this._name;
-    }
-
-    serialize(): string {
-        return JSON.stringify(this._mean);
-    }
-
-    deserialize(data: string): void {
-        try {
-            this._mean = <MeanValues>JSON.parse(data);
-        }
-        catch (ex) {
-            this._mean = { };
-        }
     }
 
     update(classification: { [label: string]: number } | undefined): void {
@@ -400,16 +416,31 @@ class MeanCalculator implements MetricCalculator {
             return;
         }
 
-        for (const label in classification) {
-            if (!classification.hasOwnProperty(label)) {
-                continue;
+        // Here we only want to update the mean for the label that was actually
+        // predicted (hence, the one >= the threshold, with the highest score).
+        // Imagine a model with two classes, A and B, and within some window the model
+        // classifies once as A, once as B, with the scores: [ (0.8, 0.2), (0.2, 0.8) ].
+        // When looking at the mean for A we should get an answer of 0.8, not 0.5, this is
+        // because the question we're answering is "when the model predicts A, how confident
+        // is it in its decision?"
+        let predictedLabel: string | undefined;
+        let predictedScore: number = 0;
+
+        for (const label of Object.keys(classification)) {
+            const score = Number(classification[label]);
+            if (score > predictedScore && score >= this._confidenceThreshold) {
+                predictedScore = score;
+                predictedLabel = label;
             }
+        }
+
+        if (predictedLabel !== undefined) {
             try {
-                this._mean[label].count += 1;
-                this._mean[label].sum += Number(classification[label]);
+                this._mean[predictedLabel].count += 1;
+                this._mean[predictedLabel].sum += Number(classification[predictedLabel]);
             }
             catch (ex) {
-                this._mean[label] = { count: 1, sum: Number(classification[label]) };
+                this._mean[predictedLabel] = { count: 1, sum: Number(classification[predictedLabel]) };
             }
         }
     }
@@ -445,26 +476,17 @@ type StdDevValues = {
 class StdDevCalculator implements MetricCalculator {
     private _stdDev: StdDevValues;
     private _name: string = 'standardDeviation';
+    private _confidenceThreshold: number;
 
-    constructor() {
+    constructor(opts: {
+        confidenceThreshold: number,
+    }) {
         this._stdDev = { };
+        this._confidenceThreshold = opts.confidenceThreshold;
     }
 
     get name(): string {
         return this._name;
-    }
-
-    serialize(): string {
-        return JSON.stringify(this._stdDev);
-    }
-
-    deserialize(data: string): void {
-        try {
-            this._stdDev = <StdDevValues>JSON.parse(data);
-        }
-        catch (ex) {
-            this._stdDev = { };
-        }
     }
 
     // based on Welford's online algorithm
@@ -474,21 +496,33 @@ class StdDevCalculator implements MetricCalculator {
             return;
         }
 
-        for (const label in classification) {
-            if (!classification.hasOwnProperty(label)) {
-                continue;
-            }
-            try {
-                const x = classification[label];
-                this._stdDev[label].count += 1;
+        // Here we only want to update the stdev for the label that was actually
+        // predicted (hence, the one >= the threshold, with the highest score).
+        // See comment above in MeanCalculator for more details.
+        let predictedLabel: string | undefined;
+        let predictedScore: number = 0;
 
-                const delta = x - this._stdDev[label].mean;
-                this._stdDev[label].mean += delta / this._stdDev[label].count;
-                const delta2 = x - this._stdDev[label].mean;
-                this._stdDev[label].m2 += delta * delta2;
+        for (const label of Object.keys(classification)) {
+            const score = Number(classification[label]);
+            if (score > predictedScore && score >= this._confidenceThreshold) {
+                predictedScore = score;
+                predictedLabel = label;
+            }
+        }
+
+        if (predictedLabel !== undefined) {
+            try {
+                const x = Number(classification[predictedLabel]);
+                this._stdDev[predictedLabel].count += 1;
+
+                const delta = x - this._stdDev[predictedLabel].mean;
+                this._stdDev[predictedLabel].mean += delta / this._stdDev[predictedLabel].count;
+
+                const delta2 = x - this._stdDev[predictedLabel].mean;
+                this._stdDev[predictedLabel].m2 += delta * delta2;
             }
             catch (ex) {
-                this._stdDev[label] = { count: 1, m2: 0, mean: 0 };
+                this._stdDev[predictedLabel] = { count: 1, m2: 0, mean: Number(classification[predictedLabel]) };
             }
         }
     }
@@ -502,23 +536,19 @@ class StdDevCalculator implements MetricCalculator {
     }
 
     getMetric(): { label: string; value: number }[] {
-        let ret: { label: string; value: number }[] = [];
+        const ret: { label: string; value: number }[] = [];
 
-        for (const label in this._stdDev) {
-            if (!this._stdDev.hasOwnProperty(label)) {
-                continue;
-            }
-            let val = Math.sqrt(this._stdDev[label].m2 / (this._stdDev[label].count));
+        for (const label of Object.keys(this._stdDev)) {
+            const val = Math.sqrt(this._stdDev[label].m2 / (this._stdDev[label].count));
             ret.push({ label: label, value: val });
         }
+
         return ret;
     }
 }
 
 type InferenceMetricsCache = {
     metrics: InferenceMetrics;
-    meanCalculator: string;
-    stdDevCalculator: string;
 };
 
 class MetricsCalculator {
@@ -528,25 +558,45 @@ class MetricsCalculator {
     private _metrics: InferenceMetrics;
     private _model: ModelInformation;
     private _confidenceThreshold: number;
+    private _summaryWindowMs: number;
+
     // parameters and variables used to determine summary period
-    private _inferenceSummaryPeriod: number = 10;
-    private _inferenceSummaryCounter: number = 0;
+    private _windowStartIndex: number = 0;
+    private _windowStartTimestamp: number = 0;
+
+    private _totalInferenceTime = {
+        dsp: 0,
+        classification: 0,
+        anomaly: 0,
+    };
+
+    private _visualAnomalyMean: number = 0;
 
     // because we need to initialize the class with async method, the constructor is private
     // and any new object should be created using getMetricsInstance
-    static async getMetricsInstance(storage: StorageManager, model: ModelInformation): Promise<MetricsCalculator> {
-        let metrics = new MetricsCalculator(storage, model);
-        await metrics.restoreMetrics(model);
+    static async getMetricsInstance(
+        config: Config,
+        storage: StorageManager,
+        model: ModelInformation
+    ): Promise<MetricsCalculator> {
+        // Get the interval from config, default to DEFAULT_MONITOR_SUMMARY_INTERVAL_MS
+        let summaryWindowMs = await config.getMonitorSummaryIntervalMs();
+        if (!summaryWindowMs || isNaN(summaryWindowMs) || summaryWindowMs <= 0) {
+            summaryWindowMs = DEFAULT_MONITOR_SUMMARY_INTERVAL_MS;
+        }
+        const metrics = new MetricsCalculator(storage, model, summaryWindowMs);
+
+        // Initialize the metrics by restoring them from the storage
+        await metrics.restoreMetrics();
 
         return metrics;
     }
 
     // private constructor to prevent direct object creation, use getMetricsInstance instead
-    private constructor(storage: StorageManager, model: ModelInformation) {
-        this._meanCalculator = new MeanCalculator();
-        this._stdDevCalculator = new StdDevCalculator();
+    private constructor(storage: StorageManager, model: ModelInformation, summaryWindowMs: number) {
         this._storageManager = storage;
         this._model = model;
+        this._summaryWindowMs = summaryWindowMs;
 
         let threshold: number | undefined;
         if (model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
@@ -571,87 +621,144 @@ class MetricsCalculator {
         else {
             this._confidenceThreshold = threshold;
         }
+        this._meanCalculator = new MeanCalculator({ confidenceThreshold: this._confidenceThreshold });
+        this._stdDevCalculator = new StdDevCalculator({ confidenceThreshold: this._confidenceThreshold });
 
         // init as empty, will be overwritten by restoreMetrics
         this._metrics = {
-            firstIndex: 0,
-            lastIndex: 0,
+            start: { index: 0, timestamp: 0 },
+            end: { index: 0, timestamp: 0 },
             classificationCounter: [],
             mean: [],
             standardDeviation: [],
-            metrics: []
+            metrics: {},
         };
     }
 
-    // restore saved metrics from the storage
-    private async restoreMetrics(model: ModelInformation): Promise<void> {
-        // load serialized metrics from the storage
-        const cache = await this._storageManager.getInferenceMetrics();
-        if (cache) {
-            // if cache exists, then try to deserialize it
-            const data = <InferenceMetricsCache>JSON.parse(cache);
-            this._meanCalculator.deserialize(data.meanCalculator);
-            this._stdDevCalculator.deserialize(data.stdDevCalculator);
-            this._metrics = data.metrics;
-        }
+    private resetMetrics(): void {
+        this._meanCalculator = new MeanCalculator({ confidenceThreshold: this._confidenceThreshold });
+        this._stdDevCalculator = new StdDevCalculator({ confidenceThreshold: this._confidenceThreshold });
+
+        this._metrics = {
+            start: { index: this._windowStartIndex, timestamp: this._windowStartTimestamp },
+            end: { index: this._windowStartIndex, timestamp: this._windowStartTimestamp },
+            classificationCounter: [],
+            mean: [],
+            standardDeviation: [],
+            metrics: {},
+        };
+
+        this._totalInferenceTime = {
+            dsp: 0,
+            classification: 0,
+            anomaly: 0,
+        };
+
+        this._visualAnomalyMean = 0;
     }
 
     async updateMetrics(record: ImpulseRecord): Promise<boolean> {
+        // If this is the first record in a new window, reset metrics
+        if (this._windowStartTimestamp === 0) {
+            // This is the start of a new metrics window,
+            // set window start index/timestamp
+            this._windowStartIndex = record.index;
+            this._windowStartTimestamp = record.timestamp;
+
+            this.resetMetrics();
+        }
+
+        const incrementClassificationCounter = (key: string) => {
+            // find key index in classificationCounter
+            const index = this._metrics.classificationCounter.findIndex((element) => element.label === key);
+            if (index < 0) {
+                this._metrics.classificationCounter.push({ label: key, value: 1 });
+            }
+            else {
+                this._metrics.classificationCounter[index].value++;
+            }
+        };
+
+        if (
+            this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM &&
+            record.impulseRecord.result.visual_anomaly_max !== undefined
+        ) {
+            const isAnomaly = record.impulseRecord.result.visual_anomaly_max > this._confidenceThreshold;
+            const predictedLabel = isAnomaly ? 'anomaly' : 'no anomaly';
+            incrementClassificationCounter(predictedLabel);
+
+            const classifications = { [predictedLabel]: record.impulseRecord.result.visual_anomaly_max };
+            // update mean and stdev partial values
+            this._meanCalculator.update(classifications);
+            this._stdDevCalculator.update(classifications);
+        }
         // check if property classification exists in record.impulseRecord.result
-        if (record.impulseRecord.result.classification !== undefined) {
+        else if (record.impulseRecord.result.classification !== undefined) {
             // iterate over properites in impulseRecord.result.classification
             for (const key in record.impulseRecord.result.classification) {
                 if (!record.impulseRecord.result.classification.hasOwnProperty(key)) {
                     continue;
                 }
+
                 // check if value is above threshold
                 if (Number(record.impulseRecord.result.classification[key]) > this._confidenceThreshold) {
-                    // find key index in classificationCounter
-                    let index = this._metrics.classificationCounter
-                                .findIndex((element) => element.label === key);
-                    if (index < 0) {
-                        this._metrics.classificationCounter.push({ label: key, value: 1 });
-                    }
-                    else {
-                        this._metrics.classificationCounter[index].value++;
-                    }
+                    incrementClassificationCounter(key);
                 }
             }
+
+            // update mean and stdev partial values
+            this._meanCalculator.update(record.impulseRecord.result.classification);
+            this._stdDevCalculator.update(record.impulseRecord.result.classification);
         }
         else if (record.impulseRecord.result.bounding_boxes !== undefined) {
             // iterate over list of bounding boxes
             for (const box of record.impulseRecord.result.bounding_boxes) {
                 // check if value is above threshold
                 if (box.value > this._confidenceThreshold) {
-                    // find key index in classificationCounter
-                    let index = this._metrics.classificationCounter
-                                .findIndex((element) => element.label === box.label);
-                    if (index < 0) {
-                        this._metrics.classificationCounter.push({ label: box.label, value: 1 });
-                    }
-                    else {
-                        this._metrics.classificationCounter[index].value++;
-                    }
+                    incrementClassificationCounter(box.label);
                 }
             }
+
+            // Convert bounding boxes to a classification data object, i.e go from
+            // [{ label: 'cat', value: 0.9, x: 40, y: 50, ... }, { label: 'dog', value: 0.8, x: 10, y: 20, ... }] to
+            // { cat: 0.9, dog: 0.8 }, so we can use it for mean and stdev calculations
+            const classificationData = record.impulseRecord.result.bounding_boxes.reduce((acc, { label, value }) => {
+                acc[label] = value;
+                return acc;
+            }, {} as { [k: string]: number });
+
+            // update mean and stdev partial values
+            this._meanCalculator.update(classificationData);
+            this._stdDevCalculator.update(classificationData);
         }
 
-        // update mean partial values
-        this._meanCalculator.update(record.impulseRecord.result.classification);
-        this._stdDevCalculator.update(record.impulseRecord.result.classification);
+        // Calculate average inference time, if timing information is present
+        if (record.impulseRecord.timing) {
+            this._totalInferenceTime.dsp += record.impulseRecord.timing.dsp;
+            this._totalInferenceTime.classification += record.impulseRecord.timing.classification;
+            this._totalInferenceTime.anomaly += record.impulseRecord.timing.anomaly;
+        }
 
-        // update the last index
-        this._metrics.lastIndex = record.index;
+        // Only calculate mean visual anomaly score if relevant
+        if (
+            this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM &&
+            record.impulseRecord.result.visual_anomaly_mean
+        ) {
+            this._visualAnomalyMean += record.impulseRecord.result.visual_anomaly_mean;
+        }
 
-        // store metrics with storage manager
-        await this.saveMetrics();
+        // update the end boundary
+        this._metrics.end = { index: record.index, timestamp: record.timestamp };
 
-        // send inference summary if needed
-        this._inferenceSummaryCounter++;
-        if (this._inferenceSummaryCounter === this._inferenceSummaryPeriod) {
-            this._inferenceSummaryCounter = 0;
+        // Check if the time window has elapsed
+        if ((record.timestamp - this._windowStartTimestamp) >= this._summaryWindowMs) {
+            // Save metrics and reset window
+            await this.saveMetrics();
+            this._windowStartTimestamp = 0;
+
             return true;
         }
+
         return false;
     }
 
@@ -659,17 +766,56 @@ class MetricsCalculator {
         // get actual mean values
         this._metrics.mean = this._meanCalculator.getMetric();
         this._metrics.standardDeviation = this._stdDevCalculator.getMetric();
+
+        // calculate other metrics
+        const numberOfInferences = this._metrics.end.index - this._metrics.start.index + 1;
+
+        // Average inference time, only include `anomaly` if the model has anomaly detection
+        if (this._model.modelParameters.has_anomaly) {
+            this._metrics.metrics.avg_inference_time = {
+                dsp: this._totalInferenceTime.dsp / numberOfInferences,
+                classification: this._totalInferenceTime.classification / numberOfInferences,
+                anomaly: this._totalInferenceTime.anomaly / numberOfInferences,
+            };
+        }
+        else {
+            this._metrics.metrics.avg_inference_time = {
+                dsp: this._totalInferenceTime.dsp / numberOfInferences,
+                classification: this._totalInferenceTime.classification / numberOfInferences,
+            };
+        }
+
+        // Only include visual_anomaly_mean if visual anomaly is relevant
+        if (this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
+            this._metrics.metrics.visual_anomaly_mean = this._visualAnomalyMean / numberOfInferences;
+        }
+        else {
+            delete this._metrics.metrics.visual_anomaly_mean;
+        }
+
         return this._metrics;
     }
 
     async saveMetrics(): Promise<void> {
         const cache: InferenceMetricsCache = {
-            metrics: this.getMetrics(),
-            meanCalculator: this._meanCalculator.serialize(),
-            stdDevCalculator: this._stdDevCalculator.serialize()
+            metrics: this.getMetrics()
         };
 
-        await this._storageManager.saveInferenceMetrics(JSON.stringify(cache, null, 2));
+        await this._storageManager.saveInferenceMetrics(
+            JSON.stringify(cache, null, 2),
+            `${this._metrics.start.index}_${this._metrics.end.index}`
+        );
+    }
+
+    // restore saved metrics from the storage
+    private async restoreMetrics(): Promise<void> {
+        // load serialized metrics from the storage
+        const cache = await this._storageManager.getLatestInferenceMetrics();
+        if (cache) {
+            // if cache exists, then try to deserialize it
+            const data = <InferenceMetricsCache>JSON.parse(cache);
+            this._metrics = data.metrics;
+        }
     }
 }
 
@@ -697,12 +843,20 @@ export class ModelMonitor extends EventEmitter<{
      * @returns A promise that resolves to a ModelMonitor instance.
      */
     static async getModelMonitor(config: Config, model: ModelInformation): Promise<ModelMonitor> {
-        let monitor = new ModelMonitor(config);
+        const monitor = new ModelMonitor(config);
 
         monitor._storageManager = await StorageManager.getStorageManager(config, model);
-        monitor._metricsCalculator = await MetricsCalculator.getMetricsInstance(monitor._storageManager, model);
+        monitor._metricsCalculator = await MetricsCalculator.getMetricsInstance(config, monitor._storageManager, model);
 
         return monitor;
+    }
+
+    async flushMetrics(): Promise<void> {
+        if (this._metricsCalculator) {
+            await this._metricsCalculator.saveMetrics();
+
+            this.emit('inference-summary', this._metricsCalculator.getMetrics());
+        }
     }
 
     get impulseDebug() {
@@ -769,7 +923,7 @@ export class ModelMonitor extends EventEmitter<{
         this._streamPrevState = this._streamState;
         this._streamState = 'records-request';
 
-        if (impulseRequest.index) {
+        if (typeof impulseRequest.index === 'number') {
             void this._storageManager?.getRecord(impulseRequest.index)
                 .then(record => {
                     if (record) {
@@ -843,14 +997,16 @@ export class ModelMonitor extends EventEmitter<{
         let record: ImpulseRecord = {
             impulseRecord: result,
             timestamp: Date.now(),
-            index: -1,
+            index: -1, // will be set by the storage manager later
             rawData: {
                 type: rawData.type,
                 bufferBase64: rawData.buffer.toString('base64'),
             },
         };
+
         void this._storageManager?.saveRecord(record);
-        if (this._metricsCalculator?.updateMetrics(record)) {
+
+        if (this._metricsCalculator && await this._metricsCalculator.updateMetrics(record)) {
             this.emit('inference-summary', this._metricsCalculator.getMetrics());
         }
 

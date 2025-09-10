@@ -30,7 +30,7 @@ import {
 import { IWebsocket } from "../shared/daemon/iwebsocket";
 import { ImpulseRecord, ImpulseRecordError, InferenceMetrics, ModelMonitor } from './model-monitor';
 import { EventEmitter } from '../shared/daemon/events';
-import { ModelInformation } from "../library/classifier/linux-impulse-runner";
+import { ModelInformation } from "../library/classifier/linux-impulse-runner-types";
 
 const TCP_PREFIX = '\x1b[32m[WS ]\x1b[0m';
 

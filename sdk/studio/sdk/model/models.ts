@@ -132,6 +132,7 @@ export * from './authorizeThirdPartyRequest';
 export * from './autotuneDspRequest';
 export * from './batchAddMetadataRequest';
 export * from './batchClearMetadataByKeyRequest';
+export * from './batchEditBoundingBoxesRequest';
 export * from './billingCycle';
 export * from './blockDisplayCategory';
 export * from './blockParameters';
@@ -1043,6 +1044,7 @@ export * from './uploadReadmeImageResponse';
 export * from './uploadUserPhotoRequest';
 export * from './uploadUserPhotoResponse';
 export * from './uploadUserPhotoResponseAllOf';
+export * from './uploadVersionArchiveRequest';
 export * from './user';
 export * from './userByThirdPartyActivationRequest';
 export * from './userDeleteTotpMfaKeyRequest';
@@ -1220,6 +1222,7 @@ import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
 import { AutotuneDspRequest } from './autotuneDspRequest';
 import { BatchAddMetadataRequest } from './batchAddMetadataRequest';
 import { BatchClearMetadataByKeyRequest } from './batchClearMetadataByKeyRequest';
+import { BatchEditBoundingBoxesRequest } from './batchEditBoundingBoxesRequest';
 import { BillingCycle } from './billingCycle';
 import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockParameters } from './blockParameters';
@@ -2131,6 +2134,7 @@ import { UploadReadmeImageResponse } from './uploadReadmeImageResponse';
 import { UploadUserPhotoRequest } from './uploadUserPhotoRequest';
 import { UploadUserPhotoResponse } from './uploadUserPhotoResponse';
 import { UploadUserPhotoResponseAllOf } from './uploadUserPhotoResponseAllOf';
+import { UploadVersionArchiveRequest } from './uploadVersionArchiveRequest';
 import { User } from './user';
 import { UserByThirdPartyActivationRequest } from './userByThirdPartyActivationRequest';
 import { UserDeleteTotpMfaKeyRequest } from './userDeleteTotpMfaKeyRequest';
@@ -2499,6 +2503,7 @@ let typeMap: {[index: string]: any} = {
     "AutotuneDspRequest": AutotuneDspRequest,
     "BatchAddMetadataRequest": BatchAddMetadataRequest,
     "BatchClearMetadataByKeyRequest": BatchClearMetadataByKeyRequest,
+    "BatchEditBoundingBoxesRequest": BatchEditBoundingBoxesRequest,
     "BlockParameters": BlockParameters,
     "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
     "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
@@ -3373,6 +3378,7 @@ let typeMap: {[index: string]: any} = {
     "UploadUserPhotoRequest": UploadUserPhotoRequest,
     "UploadUserPhotoResponse": UploadUserPhotoResponse,
     "UploadUserPhotoResponseAllOf": UploadUserPhotoResponseAllOf,
+    "UploadVersionArchiveRequest": UploadVersionArchiveRequest,
     "User": User,
     "UserByThirdPartyActivationRequest": UserByThirdPartyActivationRequest,
     "UserDeleteTotpMfaKeyRequest": UserDeleteTotpMfaKeyRequest,

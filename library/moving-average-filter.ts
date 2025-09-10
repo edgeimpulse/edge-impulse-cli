@@ -1,4 +1,4 @@
-import { RunnerClassifyResponseSuccess } from "./classifier/linux-impulse-runner";
+import { RunnerClassifyResponseSuccess } from "./classifier/linux-impulse-runner-types";
 
 export class MovingAverageFilter {
     private _filterSize: number;

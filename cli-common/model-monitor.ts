@@ -1,8 +1,7 @@
 import fs from 'fs/promises';
 import Path from 'path';
 import { Config } from './config';
-import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly } from "../library/classifier/linux-impulse-runner";
-import { ModelInformation } from '../library/classifier/linux-impulse-runner';
+import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly, ModelInformation } from "../library/classifier/linux-impulse-runner-types";
 import { EventEmitter } from 'tsee';
 import { MgmtInterfaceImpulseRecordRawData, MgmtInterfaceInferenceSummary } from '../shared/MgmtInterfaceTypes';
 
@@ -68,6 +67,7 @@ class StorageManager {
     private _config: Config;
     private _model: ModelInformation;
     private _storageIndex: number = 0;
+    private _isUpdatingStorageIndex: boolean = false;
     private _firstIndex: number = Number.MAX_SAFE_INTEGER;
     // this limits the number of records in a single directory
     private _storageIndexSegment: number = 1000;
@@ -330,7 +330,11 @@ class StorageManager {
         let rawDataSize: number = 0;
 
         record.index = this._storageIndex++;
-        await this._config.storeStorageIndex(this._storageIndex);
+        if (!this._isUpdatingStorageIndex) {
+            this._isUpdatingStorageIndex = true;
+            await this._config.storeStorageIndex(this._storageIndex);
+            this._isUpdatingStorageIndex = false;
+        }
 
         const recordPath = Path.join(await this.getPathByIndex(record.index), record.index.toString() + '.json');
 

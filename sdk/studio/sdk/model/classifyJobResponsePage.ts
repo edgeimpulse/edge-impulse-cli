@@ -26,6 +26,10 @@ export class ClassifyJobResponsePage {
     'error'?: string;
     'result': Array<ModelResult>;
     'predictions': Array<ModelPrediction>;
+    /**
+    * Total sample count
+    */
+    'totalCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -49,6 +53,11 @@ export class ClassifyJobResponsePage {
             "name": "predictions",
             "baseName": "predictions",
             "type": "Array<ModelPrediction>"
+        },
+        {
+            "name": "totalCount",
+            "baseName": "totalCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

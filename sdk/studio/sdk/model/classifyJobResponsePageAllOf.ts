@@ -16,6 +16,10 @@ import { ModelResult } from './modelResult';
 export class ClassifyJobResponsePageAllOf {
     'result': Array<ModelResult>;
     'predictions': Array<ModelPrediction>;
+    /**
+    * Total sample count
+    */
+    'totalCount': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -29,6 +33,11 @@ export class ClassifyJobResponsePageAllOf {
             "name": "predictions",
             "baseName": "predictions",
             "type": "Array<ModelPrediction>"
+        },
+        {
+            "name": "totalCount",
+            "baseName": "totalCount",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

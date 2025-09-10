@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import os from 'os';
 import Path from 'path';
 import fs from 'fs';
@@ -86,6 +87,39 @@ export class Config {
         return exists;
     }
 
+    /**
+     * Unlinks a file, but does not throw if unlinking fails.
+     */
+    static async safeUnlinkFile(path: string) {
+        try {
+            await fs.promises.unlink(path);
+        }
+        catch (ex) {
+            /* noop */
+        }
+    }
+
+    /**
+     * Atomic write (first write to temp file, then rename)
+     */
+    static async writeFileAtomic(path: string, content: string | Buffer) {
+        const tempPath = path + '.' + crypto.randomBytes(8).toString('hex') + '.lock';
+        try {
+            await fs.promises.mkdir(Path.dirname(path), { recursive: true });
+            if (typeof content === 'string') {
+                await fs.promises.writeFile(tempPath, content, 'utf-8');
+            }
+            else {
+                await fs.promises.writeFile(tempPath, content);
+            }
+            // rename should be atomic
+            await fs.promises.rename(tempPath, path);
+        }
+        finally {
+            await Config.safeUnlinkFile(tempPath);
+        }
+    }
+
     private _filename: string;
     private _api: EdgeImpulseApi | undefined;
     private _endpoints: EdgeImpulseEndpoints | undefined;
@@ -171,7 +205,7 @@ export class Config {
         // no host? ask the user where to connect
         if (!config.host) {
             if (devMode) {
-                let hostRes = <{ host: string}>await inquirer.prompt([{
+                const hostRes = <{ host: string }>await inquirer.prompt([{
                     type: 'list',
                     choices: [
                         { name: 'edgeimpulse.com (Production)', value: 'edgeimpulse.com' },
@@ -672,7 +706,7 @@ export class Config {
     }
 
     private async store(config: SerialConfig) {
-        await util.promisify(fs.writeFile)(this._filename, JSON.stringify(config, null, 4), 'utf-8');
+        await Config.writeFileAtomic(this._filename, JSON.stringify(config, null, 4));
     }
 
     async getMonitorSummaryIntervalMs() {

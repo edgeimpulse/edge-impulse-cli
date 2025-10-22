@@ -22,6 +22,7 @@ import http = require('http');
 import { CloneImpulseRequest } from '../model/cloneImpulseRequest';
 import { CreateImpulseRequest } from '../model/createImpulseRequest';
 import { CreateImpulseResponse } from '../model/createImpulseResponse';
+import { CreateNewEmptyImpulseRequest } from '../model/createNewEmptyImpulseRequest';
 import { CreateNewEmptyImpulseResponse } from '../model/createNewEmptyImpulseResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAllDetailedImpulsesResponse } from '../model/getAllDetailedImpulsesResponse';
@@ -462,8 +463,9 @@ export class ImpulseApi {
      * Create a new empty impulse, and return the ID.
      * @summary Create new empty impulse
      * @param projectId Project ID
+     * @param createNewEmptyImpulseRequest 
      */
-    public async createNewEmptyImpulse (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateNewEmptyImpulseResponse> {
+    public async createNewEmptyImpulse (projectId: number, createNewEmptyImpulseRequest?: CreateNewEmptyImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateNewEmptyImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/new'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: any = {};
@@ -499,6 +501,7 @@ export class ImpulseApi {
             useQuerystring: this._useQuerystring,
             agentOptions: {keepAlive: false},
             json: true,
+            body: ObjectSerializer.serialize(createNewEmptyImpulseRequest, "CreateNewEmptyImpulseRequest")
         };
 
         let authenticationPromise = Promise.resolve();

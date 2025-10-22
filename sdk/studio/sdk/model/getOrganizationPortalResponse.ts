@@ -58,6 +58,10 @@ export class GetOrganizationPortalResponse {
     * The full S3 bucket path where uploaded data is stored.
     */
     'bucketUrl'?: string;
+    /**
+    * The storage provider type (s3, azure, google, other).
+    */
+    'storageProvider'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -115,6 +119,11 @@ export class GetOrganizationPortalResponse {
         {
             "name": "bucketUrl",
             "baseName": "bucketUrl",
+            "type": "string"
+        },
+        {
+            "name": "storageProvider",
+            "baseName": "storageProvider",
             "type": "string"
         }    ];
 

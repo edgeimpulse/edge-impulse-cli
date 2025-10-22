@@ -11,6 +11,9 @@
  */
 
 
+/**
+* The tensor format used by the model. - NHWC means: [batch, height, width, channels] - NCHW means: [batch, channels, height, width] - NWHC means: [batch, width, height, channels] 
+*/
 
-export type UserEulaName = 'brainchip' | 'syntiant';
-export const UserEulaNameValues: string[] = ['brainchip', 'syntiant'];
+export type ImageTensorFormat = 'NHWC' | 'NCHW' | 'NWHC';
+export const ImageTensorFormatValues: string[] = ['NHWC', 'NCHW', 'NWHC'];

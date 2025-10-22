@@ -14,6 +14,7 @@ import { ImpulseDspBlock } from './impulseDspBlock';
 import { ImpulseInputBlock } from './impulseInputBlock';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { ImpulsePostProcessingBlock } from './impulsePostProcessingBlock';
+import { ImpulseType } from './impulseType';
 
 export class Impulse {
     /**
@@ -40,6 +41,7 @@ export class Impulse {
     * Post-processing blocks that are part of this impulse
     */
     'postProcessingBlocks': Array<ImpulsePostProcessingBlock>;
+    'type': ImpulseType;
 
     static discriminator: string | undefined = undefined;
 
@@ -73,6 +75,11 @@ export class Impulse {
             "name": "postProcessingBlocks",
             "baseName": "postProcessingBlocks",
             "type": "Array<ImpulsePostProcessingBlock>"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "ImpulseType"
         }    ];
 
     static getAttributeTypeMap() {

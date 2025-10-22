@@ -13,6 +13,7 @@
 import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
+import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 import { TestPretrainedModelImagesRequestInput } from './testPretrainedModelImagesRequestInput';
 
 export class TestPretrainedModelImagesRequest {
@@ -21,7 +22,7 @@ export class TestPretrainedModelImagesRequest {
     */
     'imageFileBase64': string;
     'input': TestPretrainedModelImagesRequestInput;
-    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,7 +40,7 @@ export class TestPretrainedModelImagesRequest {
         {
             "name": "model",
             "baseName": "model",
-            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform"
         }    ];
 
     static getAttributeTypeMap() {

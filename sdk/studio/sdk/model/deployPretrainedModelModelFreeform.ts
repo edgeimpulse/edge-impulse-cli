@@ -10,34 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { ImpulseType } from './impulseType';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
-    'type'?: ImpulseType;
+export class DeployPretrainedModelModelFreeform {
+    'modelType': DeployPretrainedModelModelFreeformModelTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
-        },
-        {
-            "name": "type",
-            "baseName": "type",
-            "type": "ImpulseType"
+            "name": "modelType",
+            "baseName": "modelType",
+            "type": "DeployPretrainedModelModelFreeformModelTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return DeployPretrainedModelModelFreeform.attributeTypeMap;
     }
 }
 
+
+export type DeployPretrainedModelModelFreeformModelTypeEnum = 'freeform';
+export const DeployPretrainedModelModelFreeformModelTypeEnumValues: string[] = ['freeform'];

@@ -12,11 +12,13 @@
 
 import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImageInputScaling } from './imageInputScaling';
+import { ImageTensorFormat } from './imageTensorFormat';
 
 export class DeployPretrainedModelInputImage {
     'inputType': DeployPretrainedModelInputImageInputTypeEnum;
     'inputScaling'?: ImageInputScaling;
     'resizeMode'?: ImageInputResizeMode;
+    'tensorFormat'?: ImageTensorFormat;
 
     static discriminator: string | undefined = undefined;
 
@@ -35,6 +37,11 @@ export class DeployPretrainedModelInputImage {
             "name": "resizeMode",
             "baseName": "resizeMode",
             "type": "ImageInputResizeMode"
+        },
+        {
+            "name": "tensorFormat",
+            "baseName": "tensorFormat",
+            "type": "ImageTensorFormat"
         }    ];
 
     static getAttributeTypeMap() {

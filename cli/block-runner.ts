@@ -41,7 +41,6 @@ type DockerRunParams = {
             type: "transform";
             operatesOn: "file" | "directory" | "standalone" | undefined;
             metadata?: string;
-            hmacKey?: string;
         } & (
             {
                 operatesOn: "standalone";
@@ -549,7 +548,6 @@ export class BlockRunnerTransform extends BlockRunner {
                         type: "transform",
                         operatesOn: "directory",
                         metadata: this._dataItem ? JSON.stringify(this._dataItem.metadata) : undefined,
-                        hmacKey: "0",
                         inDir: Path.join(downloadDir, this._dataItem.bucketPath)
                     };
                 }
@@ -569,7 +567,6 @@ export class BlockRunnerTransform extends BlockRunner {
                         type: 'transform',
                         operatesOn: 'file',
                         metadata: JSON.stringify(this._dataItem.metadata),
-                        hmacKey: '0',
                         inFileDir: file.fileDir,
                         filename: file.filename
                     };
@@ -608,7 +605,6 @@ export class BlockRunnerTransform extends BlockRunner {
                         type: 'transform',
                         operatesOn: 'directory',
                         metadata: this._dataItem ? JSON.stringify(this._dataItem.metadata) : undefined,
-                        hmacKey: '0',
                         inDir: Path.join(downloadDir, datasetBucketPath)
                     };
                 }
@@ -632,7 +628,6 @@ export class BlockRunnerTransform extends BlockRunner {
                         type: "transform",
                         operatesOn: "file",
                         metadata: undefined,
-                        hmacKey: "0",
                         inFileDir: file.fileDir,
                         filename: file.filename
                     };
@@ -705,11 +700,6 @@ export class BlockRunnerTransform extends BlockRunner {
         if (this._dockerRunParams.metadata) {
             ret.args.push("--metadata");
             ret.args.push(this._dockerRunParams.metadata);
-        }
-
-        if (this._dockerRunParams.hmacKey) {
-            ret.args.push("--hmac-key");
-            ret.args.push(this._dockerRunParams.hmacKey);
         }
 
         if (this._runnerOpts.extraArgs) {

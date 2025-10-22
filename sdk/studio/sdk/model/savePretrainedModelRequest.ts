@@ -17,10 +17,11 @@ import { DeployPretrainedModelInputOther } from './deployPretrainedModelInputOth
 import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
+import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 
 export class SavePretrainedModelRequest {
     'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
-    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,7 +34,7 @@ export class SavePretrainedModelRequest {
         {
             "name": "model",
             "baseName": "model",
-            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform"
         }    ];
 
     static getAttributeTypeMap() {

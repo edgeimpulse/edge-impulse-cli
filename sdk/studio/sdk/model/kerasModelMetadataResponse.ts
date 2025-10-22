@@ -17,6 +17,7 @@ import { KerasModelLayer } from './kerasModelLayer';
 import { KerasModelMetadata } from './kerasModelMetadata';
 import { KerasModelMetadataGraph } from './kerasModelMetadataGraph';
 import { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
+import { KerasModelMode } from './kerasModelMode';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { ObjectDetectionLastLayer } from './objectDetectionLastLayer';
 
@@ -55,7 +56,7 @@ export class KerasModelMetadataResponse {
     */
     'modelValidationMetrics': Array<KerasModelMetadataMetrics>;
     'hasTrainedModel': boolean;
-    'mode': KerasModelMetadataResponseModeEnum;
+    'mode': KerasModelMode;
     'objectDetectionLastLayer'?: ObjectDetectionLastLayer;
     'imageInputScaling': ImageInputScaling;
     /**
@@ -120,7 +121,7 @@ export class KerasModelMetadataResponse {
         {
             "name": "mode",
             "baseName": "mode",
-            "type": "KerasModelMetadataResponseModeEnum"
+            "type": "KerasModelMode"
         },
         {
             "name": "objectDetectionLastLayer",
@@ -148,6 +149,3 @@ export class KerasModelMetadataResponse {
     }
 }
 
-
-export type KerasModelMetadataResponseModeEnum = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm';
-export const KerasModelMetadataResponseModeEnumValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm'];

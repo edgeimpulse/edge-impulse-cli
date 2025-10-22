@@ -71,6 +71,18 @@ export class Whitelabel {
     * Whether public entities (like projects, user profiles, etc.) are disabled for this whitelabel instance.
     */
     'disablePublicEntities'?: boolean;
+    /**
+    * Whether marketing features (marketing cookies, HubSpot tracking, etc.) are disabled for this whitelabel instance.
+    */
+    'disableMarketingFeatures'?: boolean;
+    /**
+    * Whether forum access is disabled for this whitelabel instance.
+    */
+    'disableForumAccess'?: boolean;
+    /**
+    * Custom limits for this whitelabel instance.
+    */
+    'customLimits'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -194,6 +206,21 @@ export class Whitelabel {
             "name": "disablePublicEntities",
             "baseName": "disablePublicEntities",
             "type": "boolean"
+        },
+        {
+            "name": "disableMarketingFeatures",
+            "baseName": "disableMarketingFeatures",
+            "type": "boolean"
+        },
+        {
+            "name": "disableForumAccess",
+            "baseName": "disableForumAccess",
+            "type": "boolean"
+        },
+        {
+            "name": "customLimits",
+            "baseName": "customLimits",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

@@ -2947,7 +2947,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * White label admin only API to add a user to an organization. If no user is provided, the current user is used.
+     * DEPRECATED. White label admin only API to add a user to an organization. If no user is provided, the current user is used.
      * @summary White Label Admin - Add user to an organization
      * @param organizationId Organization ID
      * @param innerOrganizationId Organization ID within the context of a white label
@@ -3050,7 +3050,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * White label admin only API to add a user to a project. If no user is provided, the current user is used.
+     * DEPRECATED. White label admin only API to add a user to a project. If no user is provided, the current user is used.
      * @summary White Label Admin - Add user to a project
      * @param organizationId Organization ID
      * @param projectId Project ID
@@ -6097,7 +6097,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * White label admin only API to remove a user from an organization.
+     * DEPRECATED. White label admin only API to remove a user from an organization.
      * @summary White Label Admin - Remove user from an organization
      * @param organizationId Organization ID
      * @param innerOrganizationId Organization ID within the context of a white label
@@ -6200,7 +6200,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * White label admin only API to remove a user from a project.
+     * DEPRECATED. White label admin only API to remove a user from a project.
      * @summary White Label Admin - Remove user from a project
      * @param organizationId Organization ID
      * @param projectId Project ID

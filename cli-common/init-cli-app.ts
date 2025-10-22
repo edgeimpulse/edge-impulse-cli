@@ -125,6 +125,7 @@ export async function initCliApp(opts: {
     }
     catch (ex2) {
         let ex = <Error>ex2;
+        let msg = ex.message || ex.toString();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((<any>ex).statusCode) {
             console.error('Failed to authenticate with Edge Impulse:',
@@ -133,6 +134,9 @@ export async function initCliApp(opts: {
         }
         else {
             console.error('Failed to authenticate with Edge Impulse:', ex.message || ex.toString());
+        }
+        if (msg.includes('Failed to parse config')) {
+            console.error('Please retry using a clean config (run with --clean).');
         }
         process.exit(1);
     }

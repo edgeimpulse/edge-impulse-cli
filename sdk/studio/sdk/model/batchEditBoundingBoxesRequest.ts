@@ -10,34 +10,33 @@
  * Do not edit the class manually.
  */
 
-import { ImpulseType } from './impulseType';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
-    'type'?: ImpulseType;
+export class BatchEditBoundingBoxesRequest {
+    /**
+    * List of labels to edit. All bounding boxes with this label will be edited.
+    */
+    'oldLabels': Array<string>;
+    /**
+    * New label. Set to an empty string to remove the bounding boxes.
+    */
+    'newLabel': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
+            "name": "oldLabels",
+            "baseName": "oldLabels",
             "type": "Array<string>"
         },
         {
-            "name": "type",
-            "baseName": "type",
-            "type": "ImpulseType"
+            "name": "newLabel",
+            "baseName": "newLabel",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return BatchEditBoundingBoxesRequest.attributeTypeMap;
     }
 }
 

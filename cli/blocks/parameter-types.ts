@@ -35,6 +35,9 @@ export type MachineLearningBlockParametersJson = {
         repositoryUrl?: string;
         customModelVariants?: models.OrganizationTransferLearningBlockCustomVariant[];
         displayCategory?: models.BlockDisplayCategory;
+        isPublic?: boolean;
+        publicProjectTierAvailability?: models.PublicProjectTierAvailability;
+        sourceCodeDownloadStaffOnly?: boolean;
     },
     parameters: DSPParameterItem[];
 };

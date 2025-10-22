@@ -73,6 +73,7 @@ type getDspMetadataQueryParams = {
 type getDspRawSampleQueryParams = {
     limitPayloadValues?: number,
     truncateStructuredLabels?: boolean,
+    useCachedUpsampledData?: boolean,
 };
 
 type getDspSampleSliceQueryParams = {
@@ -1298,6 +1299,7 @@ export class DSPApi {
      * @param sampleId Sample ID
      * @param limitPayloadValues Limit the number of payload values in the response
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param useCachedUpsampledData If true, upsampled data will be fetched from cache, returning the original sample data when limitPayloadValues &gt; sample length.
      */
     public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
@@ -1344,6 +1346,10 @@ export class DSPApi {
 
         if (queryParams?.truncateStructuredLabels !== undefined) {
             localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
+        if (queryParams?.useCachedUpsampledData !== undefined) {
+            localVarQueryParameters['useCachedUpsampledData'] = ObjectSerializer.serialize(queryParams.useCachedUpsampledData, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

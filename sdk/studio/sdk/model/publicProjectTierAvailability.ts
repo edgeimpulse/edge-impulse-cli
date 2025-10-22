@@ -15,5 +15,5 @@
 * For public blocks, this indicates the project tiers for which this block is available.
 */
 
-export type PublicProjectTierAvailability = 'enterprise-only' | 'pro-or-enterprise' | 'all-projects';
-export const PublicProjectTierAvailabilityValues: string[] = ['enterprise-only', 'pro-or-enterprise', 'all-projects'];
+export type PublicProjectTierAvailability = 'enterprise-only' | 'pro-or-enterprise' | 'all-projects' | 'all-projects-including-whitelabels';
+export const PublicProjectTierAvailabilityValues: string[] = ['enterprise-only', 'pro-or-enterprise', 'all-projects', 'all-projects-including-whitelabels'];

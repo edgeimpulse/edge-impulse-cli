@@ -12,24 +12,12 @@
 
 import { ImpulseType } from './impulseType';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
+export class CreateNewEmptyImpulseRequest {
     'type'?: ImpulseType;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
-        },
         {
             "name": "type",
             "baseName": "type",
@@ -37,7 +25,7 @@ export class UpdateImpulseRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return CreateNewEmptyImpulseRequest.attributeTypeMap;
     }
 }
 

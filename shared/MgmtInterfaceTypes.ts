@@ -47,7 +47,7 @@ export type MgmtInterfaceInferenceInfo = {
     projectOwner: string,
     projectName: string,
     deploymentVersion: number,
-    modelType: 'classification' | 'object_detection' | 'constrained_object_detection',
+    modelType: 'classification' | 'object_detection' | 'constrained_object_detection' | 'freeform',
 };
 
 export interface MgmtInterfaceHelloV4 {

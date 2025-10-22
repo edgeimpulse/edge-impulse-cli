@@ -61,6 +61,18 @@ export class CreateWhitelabelRequest {
     * The maximum number of organizations that can be created under this white label.
     */
     'organizationsLimit'?: number | null;
+    /**
+    * Controls whether marketing features (marketing cookies, HubSpot tracking, etc.) are disabled for this whitelabel instance. 
+    */
+    'disableMarketingFeatures'?: boolean;
+    /**
+    * Controls whether forum access is disabled for this whitelabel instance. 
+    */
+    'disableForumAccess'?: boolean;
+    /**
+    * Custom limits for this whitelabel instance.
+    */
+    'customLimits'?: object;
 
     static discriminator: string | undefined = undefined;
 
@@ -129,6 +141,21 @@ export class CreateWhitelabelRequest {
             "name": "organizationsLimit",
             "baseName": "organizationsLimit",
             "type": "number"
+        },
+        {
+            "name": "disableMarketingFeatures",
+            "baseName": "disableMarketingFeatures",
+            "type": "boolean"
+        },
+        {
+            "name": "disableForumAccess",
+            "baseName": "disableForumAccess",
+            "type": "boolean"
+        },
+        {
+            "name": "customLimits",
+            "baseName": "customLimits",
+            "type": "object"
         }    ];
 
     static getAttributeTypeMap() {

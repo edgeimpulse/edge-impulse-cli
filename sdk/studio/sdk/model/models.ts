@@ -132,6 +132,7 @@ export * from './authorizeThirdPartyRequest';
 export * from './autotuneDspRequest';
 export * from './batchAddMetadataRequest';
 export * from './batchClearMetadataByKeyRequest';
+export * from './batchEditBoundingBoxesRequest';
 export * from './billingCycle';
 export * from './blockDisplayCategory';
 export * from './blockParameters';
@@ -182,6 +183,7 @@ export * from './createEnterpriseTrialUserRequestAllOf';
 export * from './createImpulseRequest';
 export * from './createImpulseResponse';
 export * from './createImpulseResponseAllOf';
+export * from './createNewEmptyImpulseRequest';
 export * from './createNewEmptyImpulseResponse';
 export * from './createNewEmptyImpulseResponseAllOf';
 export * from './createOrganizationPortalRequest';
@@ -257,6 +259,7 @@ export * from './deployPretrainedModelInputImage';
 export * from './deployPretrainedModelInputOther';
 export * from './deployPretrainedModelInputTimeSeries';
 export * from './deployPretrainedModelModelClassification';
+export * from './deployPretrainedModelModelFreeform';
 export * from './deployPretrainedModelModelObjectDetection';
 export * from './deployPretrainedModelModelRegression';
 export * from './deployPretrainedModelRequest';
@@ -533,6 +536,7 @@ export * from './hasDataExplorerFeaturesResponse';
 export * from './hasDataExplorerFeaturesResponseAllOf';
 export * from './imageInputResizeMode';
 export * from './imageInputScaling';
+export * from './imageTensorFormat';
 export * from './importDataFromAnotherProjectJobRequest';
 export * from './impulse';
 export * from './impulseDspBlock';
@@ -543,6 +547,7 @@ export * from './impulseInputBlockDatasetSubset';
 export * from './impulseInputBlockLabelingMethodMultiLabel';
 export * from './impulseLearnBlock';
 export * from './impulsePostProcessingBlock';
+export * from './impulseType';
 export * from './inferenceHistoryAggregate';
 export * from './inferenceSummaryMetrics';
 export * from './inputBlock';
@@ -963,6 +968,8 @@ export * from './testPretrainedModelImagesRequestInput';
 export * from './testPretrainedModelRequest';
 export * from './testPretrainedModelResponse';
 export * from './testPretrainedModelResponseAllOf';
+export * from './testPretrainedModelResponseAllOfFreeformResult';
+export * from './testPretrainedModelResponseAllOfFreeformResultOutputTensors';
 export * from './theme';
 export * from './themeColors';
 export * from './themeFavicon';
@@ -1043,6 +1050,7 @@ export * from './uploadReadmeImageResponse';
 export * from './uploadUserPhotoRequest';
 export * from './uploadUserPhotoResponse';
 export * from './uploadUserPhotoResponseAllOf';
+export * from './uploadVersionArchiveRequest';
 export * from './user';
 export * from './userByThirdPartyActivationRequest';
 export * from './userDeleteTotpMfaKeyRequest';
@@ -1220,6 +1228,7 @@ import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
 import { AutotuneDspRequest } from './autotuneDspRequest';
 import { BatchAddMetadataRequest } from './batchAddMetadataRequest';
 import { BatchClearMetadataByKeyRequest } from './batchClearMetadataByKeyRequest';
+import { BatchEditBoundingBoxesRequest } from './batchEditBoundingBoxesRequest';
 import { BillingCycle } from './billingCycle';
 import { BlockDisplayCategory } from './blockDisplayCategory';
 import { BlockParameters } from './blockParameters';
@@ -1270,6 +1279,7 @@ import { CreateEnterpriseTrialUserRequestAllOf } from './createEnterpriseTrialUs
 import { CreateImpulseRequest } from './createImpulseRequest';
 import { CreateImpulseResponse } from './createImpulseResponse';
 import { CreateImpulseResponseAllOf } from './createImpulseResponseAllOf';
+import { CreateNewEmptyImpulseRequest } from './createNewEmptyImpulseRequest';
 import { CreateNewEmptyImpulseResponse } from './createNewEmptyImpulseResponse';
 import { CreateNewEmptyImpulseResponseAllOf } from './createNewEmptyImpulseResponseAllOf';
 import { CreateOrganizationPortalRequest } from './createOrganizationPortalRequest';
@@ -1345,6 +1355,7 @@ import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputIma
 import { DeployPretrainedModelInputOther } from './deployPretrainedModelInputOther';
 import { DeployPretrainedModelInputTimeSeries } from './deployPretrainedModelInputTimeSeries';
 import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
+import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelRequest } from './deployPretrainedModelRequest';
@@ -1621,6 +1632,7 @@ import { HasDataExplorerFeaturesResponse } from './hasDataExplorerFeaturesRespon
 import { HasDataExplorerFeaturesResponseAllOf } from './hasDataExplorerFeaturesResponseAllOf';
 import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImageInputScaling } from './imageInputScaling';
+import { ImageTensorFormat } from './imageTensorFormat';
 import { ImportDataFromAnotherProjectJobRequest } from './importDataFromAnotherProjectJobRequest';
 import { Impulse } from './impulse';
 import { ImpulseDspBlock } from './impulseDspBlock';
@@ -1631,6 +1643,7 @@ import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset
 import { ImpulseInputBlockLabelingMethodMultiLabel } from './impulseInputBlockLabelingMethodMultiLabel';
 import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { ImpulsePostProcessingBlock } from './impulsePostProcessingBlock';
+import { ImpulseType } from './impulseType';
 import { InferenceHistoryAggregate } from './inferenceHistoryAggregate';
 import { InferenceSummaryMetrics } from './inferenceSummaryMetrics';
 import { InputBlock } from './inputBlock';
@@ -2051,6 +2064,8 @@ import { TestPretrainedModelImagesRequestInput } from './testPretrainedModelImag
 import { TestPretrainedModelRequest } from './testPretrainedModelRequest';
 import { TestPretrainedModelResponse } from './testPretrainedModelResponse';
 import { TestPretrainedModelResponseAllOf } from './testPretrainedModelResponseAllOf';
+import { TestPretrainedModelResponseAllOfFreeformResult } from './testPretrainedModelResponseAllOfFreeformResult';
+import { TestPretrainedModelResponseAllOfFreeformResultOutputTensors } from './testPretrainedModelResponseAllOfFreeformResultOutputTensors';
 import { Theme } from './theme';
 import { ThemeColors } from './themeColors';
 import { ThemeFavicon } from './themeFavicon';
@@ -2131,6 +2146,7 @@ import { UploadReadmeImageResponse } from './uploadReadmeImageResponse';
 import { UploadUserPhotoRequest } from './uploadUserPhotoRequest';
 import { UploadUserPhotoResponse } from './uploadUserPhotoResponse';
 import { UploadUserPhotoResponseAllOf } from './uploadUserPhotoResponseAllOf';
+import { UploadVersionArchiveRequest } from './uploadVersionArchiveRequest';
 import { User } from './user';
 import { UserByThirdPartyActivationRequest } from './userByThirdPartyActivationRequest';
 import { UserDeleteTotpMfaKeyRequest } from './userDeleteTotpMfaKeyRequest';
@@ -2225,6 +2241,7 @@ let enumsMap: {[index: string]: any} = {
     "DeployPretrainedModelInputOtherInputTypeEnum": "DeployPretrainedModelInputOtherInputTypeEnum",
     "DeployPretrainedModelInputTimeSeriesInputTypeEnum": "DeployPretrainedModelInputTimeSeriesInputTypeEnum",
     "DeployPretrainedModelModelClassificationModelTypeEnum": "DeployPretrainedModelModelClassificationModelTypeEnum",
+    "DeployPretrainedModelModelFreeformModelTypeEnum": "DeployPretrainedModelModelFreeformModelTypeEnum",
     "DeployPretrainedModelModelObjectDetectionModelTypeEnum": "DeployPretrainedModelModelObjectDetectionModelTypeEnum",
     "DeployPretrainedModelModelRegressionModelTypeEnum": "DeployPretrainedModelModelRegressionModelTypeEnum",
     "DeployPretrainedModelRequestModelFileTypeEnum": "DeployPretrainedModelRequestModelFileTypeEnum",
@@ -2254,18 +2271,18 @@ let enumsMap: {[index: string]: any} = {
     "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum": "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum",
     "ImageInputResizeMode": "ImageInputResizeMode",
     "ImageInputScaling": "ImageInputScaling",
+    "ImageTensorFormat": "ImageTensorFormat",
     "ImpulseInputBlockTypeEnum": "ImpulseInputBlockTypeEnum",
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",
     "ImpulseInputBlockLabelingMethodMultiLabelTypeEnum": "ImpulseInputBlockLabelingMethodMultiLabelTypeEnum",
+    "ImpulseType": "ImpulseType",
     "InputBlockTypeEnum": "InputBlockTypeEnum",
     "IntegrationSessionStatusStatusEnum": "IntegrationSessionStatusStatusEnum",
     "JobParentTypeEnum": "JobParentTypeEnum",
     "JobStatus": "JobStatus",
     "KerasConfigModeEnum": "KerasConfigModeEnum",
-    "KerasModelMetadataModeEnum": "KerasModelMetadataModeEnum",
     "KerasModelMetadataMetricsVisualizationEnum": "KerasModelMetadataMetricsVisualizationEnum",
-    "KerasModelMetadataResponseModeEnum": "KerasModelMetadataResponseModeEnum",
     "KerasModelMode": "KerasModelMode",
     "KerasModelTypeEnum": "KerasModelTypeEnum",
     "KerasModelVariantEnum": "KerasModelVariantEnum",
@@ -2345,6 +2362,7 @@ let enumsMap: {[index: string]: any} = {
     "StartPostProcessingRequestDatasetEnum": "StartPostProcessingRequestDatasetEnum",
     "StorageProvider": "StorageProvider",
     "TargetConstraintsSelectedTargetBasedOnEnum": "TargetConstraintsSelectedTargetBasedOnEnum",
+    "TestPretrainedModelResponseAllOfFreeformResultOutputTensorsDataTypeEnum": "TestPretrainedModelResponseAllOfFreeformResultOutputTensorsDataTypeEnum",
     "TransformationBlockAdditionalMountPointTypeEnum": "TransformationBlockAdditionalMountPointTypeEnum",
     "TransformationJobOperatesOnEnum": "TransformationJobOperatesOnEnum",
     "TransformationJobStatusEnum": "TransformationJobStatusEnum",
@@ -2499,6 +2517,7 @@ let typeMap: {[index: string]: any} = {
     "AutotuneDspRequest": AutotuneDspRequest,
     "BatchAddMetadataRequest": BatchAddMetadataRequest,
     "BatchClearMetadataByKeyRequest": BatchClearMetadataByKeyRequest,
+    "BatchEditBoundingBoxesRequest": BatchEditBoundingBoxesRequest,
     "BlockParameters": BlockParameters,
     "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
     "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
@@ -2546,6 +2565,7 @@ let typeMap: {[index: string]: any} = {
     "CreateImpulseRequest": CreateImpulseRequest,
     "CreateImpulseResponse": CreateImpulseResponse,
     "CreateImpulseResponseAllOf": CreateImpulseResponseAllOf,
+    "CreateNewEmptyImpulseRequest": CreateNewEmptyImpulseRequest,
     "CreateNewEmptyImpulseResponse": CreateNewEmptyImpulseResponse,
     "CreateNewEmptyImpulseResponseAllOf": CreateNewEmptyImpulseResponseAllOf,
     "CreateOrganizationPortalRequest": CreateOrganizationPortalRequest,
@@ -2620,6 +2640,7 @@ let typeMap: {[index: string]: any} = {
     "DeployPretrainedModelInputOther": DeployPretrainedModelInputOther,
     "DeployPretrainedModelInputTimeSeries": DeployPretrainedModelInputTimeSeries,
     "DeployPretrainedModelModelClassification": DeployPretrainedModelModelClassification,
+    "DeployPretrainedModelModelFreeform": DeployPretrainedModelModelFreeform,
     "DeployPretrainedModelModelObjectDetection": DeployPretrainedModelModelObjectDetection,
     "DeployPretrainedModelModelRegression": DeployPretrainedModelModelRegression,
     "DeployPretrainedModelRequest": DeployPretrainedModelRequest,
@@ -3296,6 +3317,8 @@ let typeMap: {[index: string]: any} = {
     "TestPretrainedModelRequest": TestPretrainedModelRequest,
     "TestPretrainedModelResponse": TestPretrainedModelResponse,
     "TestPretrainedModelResponseAllOf": TestPretrainedModelResponseAllOf,
+    "TestPretrainedModelResponseAllOfFreeformResult": TestPretrainedModelResponseAllOfFreeformResult,
+    "TestPretrainedModelResponseAllOfFreeformResultOutputTensors": TestPretrainedModelResponseAllOfFreeformResultOutputTensors,
     "Theme": Theme,
     "ThemeColors": ThemeColors,
     "ThemeFavicon": ThemeFavicon,
@@ -3373,6 +3396,7 @@ let typeMap: {[index: string]: any} = {
     "UploadUserPhotoRequest": UploadUserPhotoRequest,
     "UploadUserPhotoResponse": UploadUserPhotoResponse,
     "UploadUserPhotoResponseAllOf": UploadUserPhotoResponseAllOf,
+    "UploadVersionArchiveRequest": UploadVersionArchiveRequest,
     "User": User,
     "UserByThirdPartyActivationRequest": UserByThirdPartyActivationRequest,
     "UserDeleteTotpMfaKeyRequest": UserDeleteTotpMfaKeyRequest,

@@ -21,6 +21,7 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { BatchAddMetadataRequest } from '../model/batchAddMetadataRequest';
 import { BatchClearMetadataByKeyRequest } from '../model/batchClearMetadataByKeyRequest';
+import { BatchEditBoundingBoxesRequest } from '../model/batchEditBoundingBoxesRequest';
 import { CountSamplesResponse } from '../model/countSamplesResponse';
 import { CropSampleRequest } from '../model/cropSampleRequest';
 import { CropSampleResponse } from '../model/cropSampleResponse';
@@ -172,6 +173,29 @@ type batchDeleteQueryParams = {
 };
 
 type batchDisableQueryParams = {
+    category: RawDataCategory,
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    includeDisabled?: 'both' | 'enabled' | 'disabled',
+    ids?: string,
+    excludeIds?: string,
+    minLabel?: number,
+    maxLabel?: number,
+    search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
+};
+
+type batchEditBoundingBoxesQueryParams = {
     category: RawDataCategory,
     labels?: string,
     filename?: string,
@@ -463,7 +487,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -663,7 +687,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -856,7 +880,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -1056,7 +1080,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -1248,7 +1272,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -1420,7 +1444,208 @@ export class RawDataApi {
     }
 
     /**
-     * Sets the label (also known as class) of multiple samples. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
+     * Relabels (or removes) bounding boxes for multiple samples. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
+     * @summary Edit bounding boxes for multiple samples
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param batchEditBoundingBoxesRequest 
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param includeDisabled Include only enabled or disabled samples (or both)
+     * @param ids Only include samples with an ID within the given list of IDs, given as a JSON string
+     * @param excludeIds Exclude samples with an ID within the given list of IDs, given as a JSON string
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
+     * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
+     */
+    public async batchEditBoundingBoxes (projectId: number, batchEditBoundingBoxesRequest: BatchEditBoundingBoxesRequest, queryParams: batchEditBoundingBoxesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-bounding-boxes'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling batchEditBoundingBoxes.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling batchEditBoundingBoxes.');
+        }
+
+
+        // verify required parameter 'batchEditBoundingBoxesRequest' is not null or undefined
+
+
+        if (batchEditBoundingBoxesRequest === null || batchEditBoundingBoxesRequest === undefined) {
+            throw new Error('Required parameter batchEditBoundingBoxesRequest was null or undefined when calling batchEditBoundingBoxes.');
+        }
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+        }
+
+        if (queryParams?.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
+        }
+
+        if (queryParams?.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
+        }
+
+        if (queryParams?.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
+        }
+
+        if (queryParams?.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
+        }
+
+        if (queryParams?.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
+        }
+
+        if (queryParams?.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
+        }
+
+        if (queryParams?.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (queryParams?.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled' | 'disabled'");
+        }
+
+        if (queryParams?.ids !== undefined) {
+            localVarQueryParameters['ids'] = ObjectSerializer.serialize(queryParams.ids, "string");
+        }
+
+        if (queryParams?.excludeIds !== undefined) {
+            localVarQueryParameters['excludeIds'] = ObjectSerializer.serialize(queryParams.excludeIds, "string");
+        }
+
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(batchEditBoundingBoxesRequest, "BatchEditBoundingBoxesRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse | StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse | StartJobResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Sets the label (also known as class) of multiple samples. If you want to relabel bounding boxes, use \"batchEditBoundingBoxes\" instead. Depending on the number of affected samples this will either execute immediately or return the ID of a job that will perform this action in batches. 
      * @summary Edit labels for multiple samples
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -1441,7 +1666,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -1641,7 +1866,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -1834,7 +2059,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -2305,7 +2530,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -5383,7 +5608,7 @@ export class RawDataApi {
      * @param dataType Include only samples with a particular data type
      * @param minId Include only samples with an ID &gt;&#x3D; this value
      * @param maxId Include only samples with an ID &lt; this value
-     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each filter item in the list is combined using a logical OR. To include samples without any metadata, use: { \&quot;no_metadata\&quot;: true }. 
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
@@ -5768,7 +5993,7 @@ export class RawDataApi {
     }
 
     /**
-     * This API is deprecated, use rebalanceDatasetV2 instead (`/v1/api/{projectId}/classify/v2/{sampleId}`). Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
+     * This API is deprecated, use rebalanceDatasetV2 instead (`/v1/api/{projectId}/v2/rebalance`). Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data.
      * @summary Rebalance dataset
      * @param projectId Project ID
      */

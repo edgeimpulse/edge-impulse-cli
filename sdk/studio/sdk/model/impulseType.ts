@@ -11,6 +11,9 @@
  */
 
 
+/**
+* Specifies the type of impulse. Options include: - default: Standard Edge Impulse pipeline. - BYOM: Impulse that includes a pretrained model. 
+*/
 
-export type UserEulaName = 'brainchip' | 'syntiant';
-export const UserEulaNameValues: string[] = ['brainchip', 'syntiant'];
+export type ImpulseType = 'default' | 'BYOM';
+export const ImpulseTypeValues: string[] = ['default', 'BYOM'];

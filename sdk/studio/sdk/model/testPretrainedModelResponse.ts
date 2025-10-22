@@ -13,6 +13,7 @@
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
 import { GenericApiResponse } from './genericApiResponse';
 import { TestPretrainedModelResponseAllOf } from './testPretrainedModelResponseAllOf';
+import { TestPretrainedModelResponseAllOfFreeformResult } from './testPretrainedModelResponseAllOfFreeformResult';
 
 export class TestPretrainedModelResponse {
     /**
@@ -28,6 +29,7 @@ export class TestPretrainedModelResponse {
     */
     'result'?: { [key: string]: number; };
     'boundingBoxes'?: Array<BoundingBoxWithScore>;
+    'freeformResult'?: TestPretrainedModelResponseAllOfFreeformResult;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +53,11 @@ export class TestPretrainedModelResponse {
             "name": "boundingBoxes",
             "baseName": "boundingBoxes",
             "type": "Array<BoundingBoxWithScore>"
+        },
+        {
+            "name": "freeformResult",
+            "baseName": "freeformResult",
+            "type": "TestPretrainedModelResponseAllOfFreeformResult"
         }    ];
 
     static getAttributeTypeMap() {

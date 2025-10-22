@@ -595,13 +595,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         implementationVersion,
                         parameters: currentBlockConfig.parameters.parameters,
                         customModelVariants: info.customModelVariants,
-                        isPublic: false,
+                        isPublic: info.isPublic || false,
                         isPublicForDevices: undefined,
-                        publicProjectTierAvailability: 'all-projects',
+                        publicProjectTierAvailability: info.publicProjectTierAvailability || 'all-projects',
                         displayCategory: info.displayCategory,
                         indBlockNoLongerAvailable: undefined,
                         blockNoLongerAvailableReason: undefined,
-                        sourceCodeDownloadStaffOnly: undefined,
+                        sourceCodeDownloadStaffOnly: info.sourceCodeDownloadStaffOnly || undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newObj);
@@ -946,7 +946,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 console.log(`Your block has been updated, go to **Data acquisition > Synthetic data** on any project to generate new synthetic data`);
             }
             else if (currentBlockConfig.type === 'ai-action') {
-                console.log(`Your block has been updated, go to **Data acquisition > AI Actions** on any project to run your action`);
+                console.log(`Your block has been updated, go to **Data acquisition > AI labeling** on any project to run your action`);
             }
             else if (currentBlockConfig.type === 'deploy') {
                 const organizationStudioPath = studioUrl + '/organization/' + organizationId + '/deployment';

@@ -43,7 +43,7 @@ export type JsonSchemaConstraint = {
 } | {
     type: 'boolean';
     valid?: boolean[];
-    required?: boolean[];
+    required?: boolean;
     validationFn?: (o: boolean) => SchemaValidationOutputOmitScope;
 } | {
     type: 'any';

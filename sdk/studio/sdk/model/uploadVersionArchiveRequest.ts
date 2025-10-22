@@ -10,34 +10,21 @@
  * Do not edit the class manually.
  */
 
-import { ImpulseType } from './impulseType';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
-    'type'?: ImpulseType;
+export class UploadVersionArchiveRequest {
+    'zip':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
-        },
-        {
-            "name": "type",
-            "baseName": "type",
-            "type": "ImpulseType"
+            "name": "zip",
+            "baseName": "zip",
+            "type": "RequestFile"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return UploadVersionArchiveRequest.attributeTypeMap;
     }
 }
 

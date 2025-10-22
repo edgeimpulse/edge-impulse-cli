@@ -91,6 +91,22 @@ type getClassifyJobResultPageQueryParams = {
     variant?: KerasModelVariantEnum,
     impulseId?: number,
     truncateStructuredLabels?: boolean,
+    labels?: string,
+    filename?: string,
+    maxLength?: number,
+    minLength?: number,
+    minFrequency?: number,
+    maxFrequency?: number,
+    signatureValidity?: 'both' | 'valid' | 'invalid',
+    minLabel?: number,
+    maxLabel?: number,
+    search?: string,
+    dataType?: 'audio' | 'image',
+    minId?: number,
+    maxId?: number,
+    metadata?: string,
+    minDate?: Date,
+    maxDate?: Date,
 };
 
 type getClassifyMetricsAllVariantsQueryParams = {
@@ -943,6 +959,22 @@ export class ClassifyApi {
      * @param variant Keras model variant
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param labels Only include samples with a label within the given list of labels, given as a JSON string
+     * @param filename Only include samples whose filename includes the given filename
+     * @param maxLength Only include samples shorter than the given length, in milliseconds
+     * @param minLength Only include samples longer than the given length, in milliseconds
+     * @param minFrequency Only include samples with higher frequency than given frequency, in hertz
+     * @param maxFrequency Only include samples with lower frequency than given frequency, in hertz
+     * @param signatureValidity Include samples with either valid or invalid signatures
+     * @param minLabel Only include samples with a label &gt;&#x3D; this value
+     * @param maxLabel Only include samples with a label &lt; this value
+     * @param search Search query
+     * @param dataType Include only samples with a particular data type
+     * @param minId Include only samples with an ID &gt;&#x3D; this value
+     * @param maxId Include only samples with an ID &lt; this value
+     * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
+     * @param minDate Only include samples that where added after the date given
+     * @param maxDate Only include samples that were added before the date given
      */
     public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result/page'
@@ -985,6 +1017,70 @@ export class ClassifyApi {
 
         if (queryParams?.truncateStructuredLabels !== undefined) {
             localVarQueryParameters['truncateStructuredLabels'] = ObjectSerializer.serialize(queryParams.truncateStructuredLabels, "boolean");
+        }
+
+        if (queryParams?.labels !== undefined) {
+            localVarQueryParameters['labels'] = ObjectSerializer.serialize(queryParams.labels, "string");
+        }
+
+        if (queryParams?.filename !== undefined) {
+            localVarQueryParameters['filename'] = ObjectSerializer.serialize(queryParams.filename, "string");
+        }
+
+        if (queryParams?.maxLength !== undefined) {
+            localVarQueryParameters['maxLength'] = ObjectSerializer.serialize(queryParams.maxLength, "number");
+        }
+
+        if (queryParams?.minLength !== undefined) {
+            localVarQueryParameters['minLength'] = ObjectSerializer.serialize(queryParams.minLength, "number");
+        }
+
+        if (queryParams?.minFrequency !== undefined) {
+            localVarQueryParameters['minFrequency'] = ObjectSerializer.serialize(queryParams.minFrequency, "number");
+        }
+
+        if (queryParams?.maxFrequency !== undefined) {
+            localVarQueryParameters['maxFrequency'] = ObjectSerializer.serialize(queryParams.maxFrequency, "number");
+        }
+
+        if (queryParams?.signatureValidity !== undefined) {
+            localVarQueryParameters['signatureValidity'] = ObjectSerializer.serialize(queryParams.signatureValidity, "'both' | 'valid' | 'invalid'");
+        }
+
+        if (queryParams?.minLabel !== undefined) {
+            localVarQueryParameters['minLabel'] = ObjectSerializer.serialize(queryParams.minLabel, "number");
+        }
+
+        if (queryParams?.maxLabel !== undefined) {
+            localVarQueryParameters['maxLabel'] = ObjectSerializer.serialize(queryParams.maxLabel, "number");
+        }
+
+        if (queryParams?.search !== undefined) {
+            localVarQueryParameters['search'] = ObjectSerializer.serialize(queryParams.search, "string");
+        }
+
+        if (queryParams?.dataType !== undefined) {
+            localVarQueryParameters['dataType'] = ObjectSerializer.serialize(queryParams.dataType, "'audio' | 'image'");
+        }
+
+        if (queryParams?.minId !== undefined) {
+            localVarQueryParameters['minId'] = ObjectSerializer.serialize(queryParams.minId, "number");
+        }
+
+        if (queryParams?.maxId !== undefined) {
+            localVarQueryParameters['maxId'] = ObjectSerializer.serialize(queryParams.maxId, "number");
+        }
+
+        if (queryParams?.metadata !== undefined) {
+            localVarQueryParameters['metadata'] = ObjectSerializer.serialize(queryParams.metadata, "string");
+        }
+
+        if (queryParams?.minDate !== undefined) {
+            localVarQueryParameters['minDate'] = ObjectSerializer.serialize(queryParams.minDate, "Date");
+        }
+
+        if (queryParams?.maxDate !== undefined) {
+            localVarQueryParameters['maxDate'] = ObjectSerializer.serialize(queryParams.maxDate, "Date");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

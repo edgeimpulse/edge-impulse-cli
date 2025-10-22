@@ -97,6 +97,7 @@ type BoundingBox = {
     width: number;
     height: number;
 };
+type FreeformResult = number[][];
 
 type BasePayload = {
     time_ms: number;
@@ -113,8 +114,8 @@ type DynamicPayload = {
     [key in AwsResultKey]?: AwsResult;
 };
 
-export type AwsResult = ClassificationResult | BoundingBox[];
-export type AwsResultKey = 'c' | 'box' | 'grid';
+export type AwsResult = ClassificationResult | BoundingBox[] | FreeformResult;
+export type AwsResultKey = 'c' | 'box' | 'grid' | 'freeform';
 export type Payload = BasePayload & DynamicPayload;
 type CommandMethod = (value?: any) => Promise<void>;
 

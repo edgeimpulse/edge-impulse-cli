@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { BoundingBoxWithScore } from './boundingBoxWithScore';
 
 export class ModelPrediction {
     'sampleId': number;
@@ -26,6 +27,10 @@ export class ModelPrediction {
     * Only set for visual anomaly projects. 2D array of shape (n, n) with raw anomaly scores, where n varies based on the image input size and the specific visual anomaly algorithm used. The scores corresponds to each grid cell in the image\'s spatial matrix.
     */
     'anomalyScores'?: Array<Array<number>>;
+    /**
+    * Only set for object detection projects. Coordinates are scaled 0..1, not absolute values.
+    */
+    'boundingBoxes'?: Array<BoundingBoxWithScore>;
 
     static discriminator: string | undefined = undefined;
 
@@ -69,6 +74,11 @@ export class ModelPrediction {
             "name": "anomalyScores",
             "baseName": "anomalyScores",
             "type": "Array<Array<number>>"
+        },
+        {
+            "name": "boundingBoxes",
+            "baseName": "boundingBoxes",
+            "type": "Array<BoundingBoxWithScore>"
         }    ];
 
     static getAttributeTypeMap() {

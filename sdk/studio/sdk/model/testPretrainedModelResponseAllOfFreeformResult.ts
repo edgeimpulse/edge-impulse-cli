@@ -10,34 +10,22 @@
  * Do not edit the class manually.
  */
 
-import { ImpulseType } from './impulseType';
+import { TestPretrainedModelResponseAllOfFreeformResultOutputTensors } from './testPretrainedModelResponseAllOfFreeformResultOutputTensors';
 
-export class UpdateImpulseRequest {
-    'name'?: string;
-    'tags'?: Array<string>;
-    'type'?: ImpulseType;
+export class TestPretrainedModelResponseAllOfFreeformResult {
+    'outputTensors': Array<TestPretrainedModelResponseAllOfFreeformResultOutputTensors>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        },
-        {
-            "name": "tags",
-            "baseName": "tags",
-            "type": "Array<string>"
-        },
-        {
-            "name": "type",
-            "baseName": "type",
-            "type": "ImpulseType"
+            "name": "outputTensors",
+            "baseName": "outputTensors",
+            "type": "Array<TestPretrainedModelResponseAllOfFreeformResultOutputTensors>"
         }    ];
 
     static getAttributeTypeMap() {
-        return UpdateImpulseRequest.attributeTypeMap;
+        return TestPretrainedModelResponseAllOfFreeformResult.attributeTypeMap;
     }
 }
 

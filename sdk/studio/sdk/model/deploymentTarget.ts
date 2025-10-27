@@ -57,6 +57,10 @@ export class DeploymentTarget {
     * Preferably use supportedEngines / preferredEngine
     */
     'hasCevaNpn': boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
+    'hasNordicAxon': boolean;
     'hideOptimizations': boolean;
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
@@ -146,6 +150,11 @@ export class DeploymentTarget {
         {
             "name": "hasCevaNpn",
             "baseName": "hasCevaNpn",
+            "type": "boolean"
+        },
+        {
+            "name": "hasNordicAxon",
+            "baseName": "hasNordicAxon",
             "type": "boolean"
         },
         {

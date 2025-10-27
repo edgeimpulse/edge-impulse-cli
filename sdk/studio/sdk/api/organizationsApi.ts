@@ -43,6 +43,7 @@ import { AdminProjectInfoResponse } from '../model/adminProjectInfoResponse';
 import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
 import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
 import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
+import { CreateMultiProjectDeploymentRequest } from '../model/createMultiProjectDeploymentRequest';
 import { CreateOrganizationRequest } from '../model/createOrganizationRequest';
 import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
 import { CreateProjectResponse } from '../model/createProjectResponse';
@@ -462,6 +463,100 @@ export class OrganizationsApi {
     }
 
     /**
+     * WIP
+     * @summary Create multi-project deployment
+     * @param organizationId Organization ID
+     * @param createMultiProjectDeploymentRequest 
+     */
+    public async createMultiProjectDeployment (organizationId: number, createMultiProjectDeploymentRequest: CreateMultiProjectDeploymentRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/multi-project-deployment/start'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling createMultiProjectDeployment.');
+        }
+
+        // verify required parameter 'createMultiProjectDeploymentRequest' is not null or undefined
+
+
+        if (createMultiProjectDeploymentRequest === null || createMultiProjectDeploymentRequest === undefined) {
+            throw new Error('Required parameter createMultiProjectDeploymentRequest was null or undefined when calling createMultiProjectDeployment.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(createMultiProjectDeploymentRequest, "CreateMultiProjectDeploymentRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<StartJobResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "StartJobResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Create a new organization. This is an internal API.
      * @summary Create new organization
      * @param createOrganizationRequest 
@@ -613,6 +708,100 @@ export class OrganizationsApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * WIP
+     * @summary Download multi-project deployment
+     * @param organizationId Organization ID
+     * @param jobId Job ID
+     */
+    public async downloadMultiProjectDeployment (organizationId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/multi-project-deployment/jobs/{jobId}/download'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/x-tar'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling downloadMultiProjectDeployment.');
+        }
+
+        // verify required parameter 'jobId' is not null or undefined
+
+
+        if (jobId === null || jobId === undefined) {
+            throw new Error('Required parameter jobId was null or undefined when calling downloadMultiProjectDeployment.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            encoding: null,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<Buffer>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "Buffer");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;

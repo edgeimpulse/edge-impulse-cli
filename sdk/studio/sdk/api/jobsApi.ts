@@ -113,6 +113,7 @@ type listAllJobsQueryParams = {
     rootOnly?: boolean,
     key?: string,
     category?: string,
+    finished?: 'successful' | 'failed' | 'all',
 };
 
 type listFinishedJobsQueryParams = {
@@ -2362,6 +2363,7 @@ export class JobsApi {
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      * @param key Job key to filter on
      * @param category Job category to filter on
+     * @param finished Job finish status to filter on
      */
     public async listAllJobs (projectId: number, queryParams?: listAllJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/all'
@@ -2412,6 +2414,10 @@ export class JobsApi {
 
         if (queryParams?.category !== undefined) {
             localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "string");
+        }
+
+        if (queryParams?.finished !== undefined) {
+            localVarQueryParameters['finished'] = ObjectSerializer.serialize(queryParams.finished, "'successful' | 'failed' | 'all'");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

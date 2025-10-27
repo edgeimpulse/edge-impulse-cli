@@ -183,6 +183,8 @@ export * from './createEnterpriseTrialUserRequestAllOf';
 export * from './createImpulseRequest';
 export * from './createImpulseResponse';
 export * from './createImpulseResponseAllOf';
+export * from './createMultiProjectDeploymentRequest';
+export * from './createMultiProjectDeploymentRequestImpulses';
 export * from './createNewEmptyImpulseRequest';
 export * from './createNewEmptyImpulseResponse';
 export * from './createNewEmptyImpulseResponseAllOf';
@@ -1084,6 +1086,27 @@ export * from './verifyOrganizationBucketResponseAllOf';
 export * from './verifyOrganizationBucketResponseAllOfFiles';
 export * from './verifyOrganizationExistingBucketRequest';
 export * from './verifyResetPasswordRequest';
+export * from './vlmCandidateLabelItem';
+export * from './vlmCandidateLabelMap';
+export * from './vlmConfigResponse';
+export * from './vlmConfigResponseAllOf';
+export * from './vlmConfiguration';
+export * from './vlmConfigurationAllOf';
+export * from './vlmConfigurationBase';
+export * from './vlmGetAllModelsResponse';
+export * from './vlmGetAllModelsResponseAllOf';
+export * from './vlmGetInferenceResultsResponse';
+export * from './vlmInferenceRequest';
+export * from './vlmInferenceResults';
+export * from './vlmInferenceResultsResults';
+export * from './vlmMetadata';
+export * from './vlmModel';
+export * from './vlmModelType';
+export * from './vlmPromptComponent';
+export * from './vlmPromptComponentConfig';
+export * from './vlmPromptConfigParamItem';
+export * from './vlmPromptConfigParameters';
+export * from './vlmSetConfigResponse';
 export * from './whitelabel';
 export * from './whitelabelAdminCreateOrganizationRequest';
 export * from './whitelabelAllLearningBlocks';
@@ -1279,6 +1302,8 @@ import { CreateEnterpriseTrialUserRequestAllOf } from './createEnterpriseTrialUs
 import { CreateImpulseRequest } from './createImpulseRequest';
 import { CreateImpulseResponse } from './createImpulseResponse';
 import { CreateImpulseResponseAllOf } from './createImpulseResponseAllOf';
+import { CreateMultiProjectDeploymentRequest } from './createMultiProjectDeploymentRequest';
+import { CreateMultiProjectDeploymentRequestImpulses } from './createMultiProjectDeploymentRequestImpulses';
 import { CreateNewEmptyImpulseRequest } from './createNewEmptyImpulseRequest';
 import { CreateNewEmptyImpulseResponse } from './createNewEmptyImpulseResponse';
 import { CreateNewEmptyImpulseResponseAllOf } from './createNewEmptyImpulseResponseAllOf';
@@ -2180,6 +2205,27 @@ import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucke
 import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 import { VerifyOrganizationExistingBucketRequest } from './verifyOrganizationExistingBucketRequest';
 import { VerifyResetPasswordRequest } from './verifyResetPasswordRequest';
+import { VlmCandidateLabelItem } from './vlmCandidateLabelItem';
+import { VlmCandidateLabelMap } from './vlmCandidateLabelMap';
+import { VlmConfigResponse } from './vlmConfigResponse';
+import { VlmConfigResponseAllOf } from './vlmConfigResponseAllOf';
+import { VlmConfiguration } from './vlmConfiguration';
+import { VlmConfigurationAllOf } from './vlmConfigurationAllOf';
+import { VlmConfigurationBase } from './vlmConfigurationBase';
+import { VlmGetAllModelsResponse } from './vlmGetAllModelsResponse';
+import { VlmGetAllModelsResponseAllOf } from './vlmGetAllModelsResponseAllOf';
+import { VlmGetInferenceResultsResponse } from './vlmGetInferenceResultsResponse';
+import { VlmInferenceRequest } from './vlmInferenceRequest';
+import { VlmInferenceResults } from './vlmInferenceResults';
+import { VlmInferenceResultsResults } from './vlmInferenceResultsResults';
+import { VlmMetadata } from './vlmMetadata';
+import { VlmModel } from './vlmModel';
+import { VlmModelType } from './vlmModelType';
+import { VlmPromptComponent } from './vlmPromptComponent';
+import { VlmPromptComponentConfig } from './vlmPromptComponentConfig';
+import { VlmPromptConfigParamItem } from './vlmPromptConfigParamItem';
+import { VlmPromptConfigParameters } from './vlmPromptConfigParameters';
+import { VlmSetConfigResponse } from './vlmSetConfigResponse';
 import { Whitelabel } from './whitelabel';
 import { WhitelabelAdminCreateOrganizationRequest } from './whitelabelAdminCreateOrganizationRequest';
 import { WhitelabelAllLearningBlocks } from './whitelabelAllLearningBlocks';
@@ -2384,6 +2430,7 @@ let enumsMap: {[index: string]: any} = {
     "ValidateEmailResponseAllOfVerdictEnum": "ValidateEmailResponseAllOfVerdictEnum",
     "VerifyOrganizationBucketResponseConnectionStatusEnum": "VerifyOrganizationBucketResponseConnectionStatusEnum",
     "VerifyOrganizationBucketResponseAllOfConnectionStatusEnum": "VerifyOrganizationBucketResponseAllOfConnectionStatusEnum",
+    "VlmModelType": "VlmModelType",
 }
 
 let typeMap: {[index: string]: any} = {
@@ -2565,6 +2612,8 @@ let typeMap: {[index: string]: any} = {
     "CreateImpulseRequest": CreateImpulseRequest,
     "CreateImpulseResponse": CreateImpulseResponse,
     "CreateImpulseResponseAllOf": CreateImpulseResponseAllOf,
+    "CreateMultiProjectDeploymentRequest": CreateMultiProjectDeploymentRequest,
+    "CreateMultiProjectDeploymentRequestImpulses": CreateMultiProjectDeploymentRequestImpulses,
     "CreateNewEmptyImpulseRequest": CreateNewEmptyImpulseRequest,
     "CreateNewEmptyImpulseResponse": CreateNewEmptyImpulseResponse,
     "CreateNewEmptyImpulseResponseAllOf": CreateNewEmptyImpulseResponseAllOf,
@@ -3427,6 +3476,26 @@ let typeMap: {[index: string]: any} = {
     "VerifyOrganizationBucketResponseAllOfFiles": VerifyOrganizationBucketResponseAllOfFiles,
     "VerifyOrganizationExistingBucketRequest": VerifyOrganizationExistingBucketRequest,
     "VerifyResetPasswordRequest": VerifyResetPasswordRequest,
+    "VlmCandidateLabelItem": VlmCandidateLabelItem,
+    "VlmCandidateLabelMap": VlmCandidateLabelMap,
+    "VlmConfigResponse": VlmConfigResponse,
+    "VlmConfigResponseAllOf": VlmConfigResponseAllOf,
+    "VlmConfiguration": VlmConfiguration,
+    "VlmConfigurationAllOf": VlmConfigurationAllOf,
+    "VlmConfigurationBase": VlmConfigurationBase,
+    "VlmGetAllModelsResponse": VlmGetAllModelsResponse,
+    "VlmGetAllModelsResponseAllOf": VlmGetAllModelsResponseAllOf,
+    "VlmGetInferenceResultsResponse": VlmGetInferenceResultsResponse,
+    "VlmInferenceRequest": VlmInferenceRequest,
+    "VlmInferenceResults": VlmInferenceResults,
+    "VlmInferenceResultsResults": VlmInferenceResultsResults,
+    "VlmMetadata": VlmMetadata,
+    "VlmModel": VlmModel,
+    "VlmPromptComponent": VlmPromptComponent,
+    "VlmPromptComponentConfig": VlmPromptComponentConfig,
+    "VlmPromptConfigParamItem": VlmPromptConfigParamItem,
+    "VlmPromptConfigParameters": VlmPromptConfigParameters,
+    "VlmSetConfigResponse": VlmSetConfigResponse,
     "Whitelabel": Whitelabel,
     "WhitelabelAdminCreateOrganizationRequest": WhitelabelAdminCreateOrganizationRequest,
     "WhitelabelAllLearningBlocks": WhitelabelAllLearningBlocks,

@@ -35,6 +35,9 @@ import { StartJobResponse } from '../model/startJobResponse';
 import { TestPretrainedModelImagesRequest } from '../model/testPretrainedModelImagesRequest';
 import { TestPretrainedModelRequest } from '../model/testPretrainedModelRequest';
 import { TestPretrainedModelResponse } from '../model/testPretrainedModelResponse';
+import { VlmConfigResponse } from '../model/vlmConfigResponse';
+import { VlmConfigurationBase } from '../model/vlmConfigurationBase';
+import { VlmSetConfigResponse } from '../model/vlmSetConfigResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -1741,6 +1744,100 @@ export class LearnApi {
     }
 
     /**
+     * Get config for a VLM learn block, including prompt and other model parameters
+     * @summary Get VLM block config
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     */
+    public async getVlmConfig (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmConfigResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getVlmConfig.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+
+
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling getVlmConfig.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<VlmConfigResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "VlmConfigResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
      * Returns the latency, RAM and ROM used for the pretrained model - upload first via  `uploadPretrainedModel`. This is using the project\'s selected latency device. Updates are streamed over the websocket API (or can be retrieved through the /stdout endpoint). Use getProfileTfliteJobResult to get the results when the job is completed.
      * @summary Profile pretrained model
      * @param projectId Project ID
@@ -2117,6 +2214,109 @@ export class LearnApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Update config for a VLM learn block, including prompt and other model parameters.
+     * @summary Set VLM block config
+     * @param projectId Project ID
+     * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
+     * @param vlmConfigurationBase 
+     */
+    public async setVlmConfig (projectId: number, learnId: number, vlmConfigurationBase: VlmConfigurationBase, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmSetConfigResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setVlmConfig.');
+        }
+
+        // verify required parameter 'learnId' is not null or undefined
+
+
+        if (learnId === null || learnId === undefined) {
+            throw new Error('Required parameter learnId was null or undefined when calling setVlmConfig.');
+        }
+
+        // verify required parameter 'vlmConfigurationBase' is not null or undefined
+
+
+        if (vlmConfigurationBase === null || vlmConfigurationBase === undefined) {
+            throw new Error('Required parameter vlmConfigurationBase was null or undefined when calling setVlmConfig.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(vlmConfigurationBase, "VlmConfigurationBase")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<VlmSetConfigResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "VlmSetConfigResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;

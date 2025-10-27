@@ -62,5 +62,5 @@ export class OptimizeConfigSearchSpaceTemplate {
 }
 
 
-export type OptimizeConfigSearchSpaceTemplateIdentifierEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'visual' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection_bounding_boxes' | 'object_detection_centroids' | 'visual_ad';
-export const OptimizeConfigSearchSpaceTemplateIdentifierEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'visual', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection_bounding_boxes', 'object_detection_centroids', 'visual_ad'];
+export type OptimizeConfigSearchSpaceTemplateIdentifierEnum = 'speech_keyword' | 'speech_continuous' | 'audio_event' | 'audio_continuous' | 'visual' | 'motion_event' | 'motion_continuous' | 'audio_syntiant' | 'object_detection_bounding_boxes' | 'object_detection_centroids' | 'visual_ad' | 'object_detection_yolo_pro';
+export const OptimizeConfigSearchSpaceTemplateIdentifierEnumValues: string[] = ['speech_keyword', 'speech_continuous', 'audio_event', 'audio_continuous', 'visual', 'motion_event', 'motion_continuous', 'audio_syntiant', 'object_detection_bounding_boxes', 'object_detection_centroids', 'visual_ad', 'object_detection_yolo_pro'];

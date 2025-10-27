@@ -11,9 +11,6 @@
  */
 
 
-/**
-* Specifies the type of impulse. Options include: - default: Standard Edge Impulse pipeline. - BYOM: Impulse that includes a pretrained model. - VLM: Impulse created as part of a Vision Learning Model (VLM) workflow. 
-*/
 
-export type ImpulseType = 'default' | 'BYOM' | 'VLM';
-export const ImpulseTypeValues: string[] = ['default', 'BYOM', 'VLM'];
+export type VlmModelType = 'clip' | 'vlmZeroShot';
+export const VlmModelTypeValues: string[] = ['clip', 'vlmZeroShot'];

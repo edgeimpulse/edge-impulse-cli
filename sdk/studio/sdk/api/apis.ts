@@ -70,6 +70,8 @@ export * from './uploadPortalApi';
 import { UploadPortalApi } from './uploadPortalApi';
 export * from './userApi';
 import { UserApi } from './userApi';
+export * from './vlmApi';
+import { VlmApi } from './vlmApi';
 export * from './whitelabelsApi';
 import { WhitelabelsApi } from './whitelabelsApi';
 import * as fs from 'fs';
@@ -92,4 +94,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = RequestDetailedFile;
 
-export const APIS = [AdminApi, AuthApi, CDNApi, CanaryApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, EmailVerificationApi, ExportApi, FeatureFlagsApi, HealthApi, ImpulseApi, IntegrationsApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationsApi, PerformanceCalibrationApi, PostProcessingApi, ProjectsApi, RawDataApi, TestApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, WhitelabelsApi];
+export const APIS = [AdminApi, AuthApi, CDNApi, CanaryApi, ClassifyApi, DSPApi, DeploymentApi, DevicesApi, EmailVerificationApi, ExportApi, FeatureFlagsApi, HealthApi, ImpulseApi, IntegrationsApi, JobsApi, LearnApi, LoginApi, MetricsApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationsApi, PerformanceCalibrationApi, PostProcessingApi, ProjectsApi, RawDataApi, TestApi, ThemesApi, ThirdPartyAuthApi, UploadPortalApi, UserApi, VlmApi, WhitelabelsApi];

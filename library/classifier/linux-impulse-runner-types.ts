@@ -98,6 +98,13 @@ export type RunnerHelloResponse = {
         elements: number,
     };
     features_shm_error?: string;
+    freeform_output_shm?: {
+        index: number,
+        name: string,
+        size_bytes: number,
+        type: 'float32',
+        elements: number,
+    }[];
     model_parameters: RunnerHelloResponseModelParameters;
     project: RunnerHelloResponseProject;
     inferencing_engine: RunnerHelloResponseInferencingEngine;
@@ -120,7 +127,8 @@ export type RunnerClassifyContinuousRequest = {
     },
 };
 
-export type RunnerClassifyResponseSuccess = {
+// This is the spec that the EIM file returns on classification
+export type EimRunnerClassifyResponseSuccess = {
     result: {
         classification?: { [k: string]: number };
         bounding_boxes?: {
@@ -131,10 +139,6 @@ export type RunnerClassifyResponseSuccess = {
             width: number,
             height: number,
         }[],
-        /**
-         * NOTE: This field is _experimental_. It might change when object tracking
-         * is released publicly.
-         */
         object_tracking?: {
             object_id: number,
             label: string,
@@ -162,7 +166,7 @@ export type RunnerClassifyResponseSuccess = {
             newWidth: number,
             newHeight: number,
         };
-        freeform?: number[][];
+        freeform?: 'shm' | number[][];
     },
     timing: {
         dsp: number;
@@ -172,9 +176,14 @@ export type RunnerClassifyResponseSuccess = {
     info?: string;
 };
 
-export type RunnerClassifyResponse = ({
-    success: true;
-} & RunnerClassifyResponseSuccess) | RunnerErrorResponse;
+// This is the _public_ type that we return after classify() calls
+export type RunnerClassifyResponseSuccess = {
+    result: Omit<EimRunnerClassifyResponseSuccess['result'], 'freeform'> & {
+        freeform?: number[][],
+    },
+    timing: EimRunnerClassifyResponseSuccess['timing'],
+    info: EimRunnerClassifyResponseSuccess['info'],
+};
 
 export type RunnerSetThresholdRequest = {
     set_threshold: {

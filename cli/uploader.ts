@@ -71,6 +71,7 @@ const directoryArgv = directoryArgvIx !== -1 ? process.argv[directoryArgvIx + 1]
 const annotationFormatArgvIx = process.argv.indexOf('--dataset-format');
 const annotationFormatArgv = annotationFormatArgvIx !== -1 ? process.argv[annotationFormatArgvIx + 1] : undefined;
 const greengrassArgv = process.argv.indexOf('--greengrass') > -1;
+const dontAllowFailedUploadsArgv = process.argv.indexOf('--dont-allow-failed-uploads') > -1;
 
 let configFactory: Config;
 
@@ -173,6 +174,7 @@ const logAllAnnotationFormats = () => {
     if (infoFileArgv) argv += 2;
     if (metadataArgv) argv += 2;
     if (annotationFormatArgv) argv += 2;
+    if (dontAllowFailedUploadsArgv) argv++;
 
     try {
         let concurrency = concurrencyArgv ? Number(concurrencyArgv) : 20;
@@ -554,6 +556,12 @@ const logAllAnnotationFormats = () => {
             console.log('');
             console.log('Done. Files uploaded successful: ' + success + '. Files that failed to upload: ' +
                 failed + '.');
+        }
+
+        if (failed > 0 && dontAllowFailedUploadsArgv) {
+            console.log('');
+            console.log('--dont-allow-failed-uploads passed in, and some files failed to upload. Exiting with error code 1.');
+            process.exit(1);
         }
     }
     catch (ex2) {

@@ -11,23 +11,26 @@
  */
 
 
-export class ObjectDetectionAutoLabelRequest {
-    'neuralNetwork': ObjectDetectionAutoLabelRequestNeuralNetworkEnum;
+export class BackToLabelingRequest {
+    /**
+    * Defines what should happen to labels during the action. Use \"clear-labels\" to remove all existing labels.
+    */
+    'labelAction': BackToLabelingRequestLabelActionEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "neuralNetwork",
-            "baseName": "neuralNetwork",
-            "type": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum"
+            "name": "labelAction",
+            "baseName": "labelAction",
+            "type": "BackToLabelingRequestLabelActionEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return ObjectDetectionAutoLabelRequest.attributeTypeMap;
+        return BackToLabelingRequest.attributeTypeMap;
     }
 }
 
 
-export type ObjectDetectionAutoLabelRequestNeuralNetworkEnum = 'yolov5' | 'yolo-pro' | 'currentProject';
-export const ObjectDetectionAutoLabelRequestNeuralNetworkEnumValues: string[] = ['yolov5', 'yolo-pro', 'currentProject'];
+export type BackToLabelingRequestLabelActionEnum = 'clear-labels';
+export const BackToLabelingRequestLabelActionEnumValues: string[] = ['clear-labels'];

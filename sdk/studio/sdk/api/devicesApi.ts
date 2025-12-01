@@ -24,6 +24,8 @@ import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetDeviceResponse } from '../model/getDeviceResponse';
 import { GetImpulseRecordsRequest } from '../model/getImpulseRecordsRequest';
 import { GetInferenceHistoryResponse } from '../model/getInferenceHistoryResponse';
+import { GetInferenceMetricsRequest } from '../model/getInferenceMetricsRequest';
+import { GetInferenceMetricsResponse } from '../model/getInferenceMetricsResponse';
 import { KeepDeviceDebugStreamAliveRequest } from '../model/keepDeviceDebugStreamAliveRequest';
 import { ListDevicesResponse } from '../model/listDevicesResponse';
 import { RenameDeviceRequest } from '../model/renameDeviceRequest';
@@ -32,6 +34,7 @@ import { StartDeviceSnapshotDebugStreamRequest } from '../model/startDeviceSnaps
 import { StartSamplingRequest } from '../model/startSamplingRequest';
 import { StartSamplingResponse } from '../model/startSamplingResponse';
 import { StopDeviceDebugStreamRequest } from '../model/stopDeviceDebugStreamRequest';
+import { StoreInferenceHistoryRequest } from '../model/storeInferenceHistoryRequest';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -63,6 +66,16 @@ type getInferenceHistoryQueryParams = {
     startTimestamp: number,
     endTimestamp?: number,
     devices?: string,
+};
+
+type getInferenceMetricsQueryParams = {
+    deploymentId?: number,
+    startTimestamp: number,
+    endTimestamp?: number,
+};
+
+type storeInferenceHistoryQueryParams = {
+    deploymentId: number,
 };
 
 
@@ -751,6 +764,122 @@ export class DevicesApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "GetInferenceHistoryResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Get metrics from past on-device inferences, filtered and aggregated by custom criteria. This is experimental and may change in the future.
+     * @summary Get metrics from past on-device inferences, filtered and aggregated by custom criteria. This is experimental and may change in the future.
+     * @param projectId Project ID
+     * @param startTimestamp 
+     * @param getInferenceMetricsRequest 
+     * @param deploymentId 
+     * @param endTimestamp 
+     */
+    public async getInferenceMetrics (projectId: number, getInferenceMetricsRequest: GetInferenceMetricsRequest, queryParams: getInferenceMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetInferenceMetricsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/metrics'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getInferenceMetrics.');
+        }
+
+        // verify required parameter 'startTimestamp' is not null or undefined
+
+        if (queryParams.startTimestamp === null || queryParams.startTimestamp === undefined) {
+            throw new Error('Required parameter queryParams.startTimestamp was null or undefined when calling getInferenceMetrics.');
+        }
+
+
+        // verify required parameter 'getInferenceMetricsRequest' is not null or undefined
+
+
+        if (getInferenceMetricsRequest === null || getInferenceMetricsRequest === undefined) {
+            throw new Error('Required parameter getInferenceMetricsRequest was null or undefined when calling getInferenceMetrics.');
+        }
+
+        if (queryParams?.deploymentId !== undefined) {
+            localVarQueryParameters['deploymentId'] = ObjectSerializer.serialize(queryParams.deploymentId, "number");
+        }
+
+        if (queryParams?.startTimestamp !== undefined) {
+            localVarQueryParameters['startTimestamp'] = ObjectSerializer.serialize(queryParams.startTimestamp, "number");
+        }
+
+        if (queryParams?.endTimestamp !== undefined) {
+            localVarQueryParameters['endTimestamp'] = ObjectSerializer.serialize(queryParams.endTimestamp, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(getInferenceMetricsRequest, "GetInferenceMetricsRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GetInferenceMetricsResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GetInferenceMetricsResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
@@ -1513,6 +1642,121 @@ export class DevicesApi {
             agentOptions: {keepAlive: false},
             json: true,
             body: ObjectSerializer.serialize(stopDeviceDebugStreamRequest, "StopDeviceDebugStreamRequest")
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.ApiKeyAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.JWTHttpHeaderAuthentication.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.OAuth2.applyToRequest(localVarRequestOptions));
+
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<GenericApiResponse>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+
+                        if (typeof body.success === 'boolean' && !body.success) {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(new Error(body.error || errString));
+                        }
+                        else if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve(body);
+                        }
+                        else {
+                            const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;
+                            reject(errString);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Store historical on-device inference data
+     * @summary Store on-device inference data
+     * @param projectId Project ID
+     * @param deploymentId 
+     * @param deviceId Device ID
+     * @param storeInferenceHistoryRequest 
+     */
+    public async storeInferenceHistory (projectId: number, deviceId: string, storeInferenceHistoryRequest: StoreInferenceHistoryRequest, queryParams: storeInferenceHistoryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/{deviceId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({
+            'User-Agent': 'edgeimpulse-api nodejs'
+        }, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling storeInferenceHistory.');
+        }
+
+        // verify required parameter 'deploymentId' is not null or undefined
+
+        if (queryParams.deploymentId === null || queryParams.deploymentId === undefined) {
+            throw new Error('Required parameter queryParams.deploymentId was null or undefined when calling storeInferenceHistory.');
+        }
+
+
+        // verify required parameter 'deviceId' is not null or undefined
+
+
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling storeInferenceHistory.');
+        }
+
+        // verify required parameter 'storeInferenceHistoryRequest' is not null or undefined
+
+
+        if (storeInferenceHistoryRequest === null || storeInferenceHistoryRequest === undefined) {
+            throw new Error('Required parameter storeInferenceHistoryRequest was null or undefined when calling storeInferenceHistory.');
+        }
+
+        if (queryParams?.deploymentId !== undefined) {
+            localVarQueryParameters['deploymentId'] = ObjectSerializer.serialize(queryParams.deploymentId, "number");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+        (<any>Object).assign(localVarHeaderParams, this.opts.extraHeaders);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            agentOptions: {keepAlive: false},
+            json: true,
+            body: ObjectSerializer.serialize(storeInferenceHistoryRequest, "StoreInferenceHistoryRequest")
         };
 
         let authenticationPromise = Promise.resolve();

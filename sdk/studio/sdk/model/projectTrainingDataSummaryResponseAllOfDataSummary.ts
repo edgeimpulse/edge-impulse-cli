@@ -21,6 +21,10 @@ export class ProjectTrainingDataSummaryResponseAllOfDataSummary {
     * Whether there are samples in the training dataset that are both time-series data and have multiple labels
     */
     'hasTimeseriesDataWithMultipleLabels': boolean;
+    /**
+    * For labelmap datasets, this property provides a breakdown of labels per attribute or key.
+    */
+    'labelsPerKey'?: { [key: string]: Array<string>; };
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +43,11 @@ export class ProjectTrainingDataSummaryResponseAllOfDataSummary {
             "name": "hasTimeseriesDataWithMultipleLabels",
             "baseName": "hasTimeseriesDataWithMultipleLabels",
             "type": "boolean"
+        },
+        {
+            "name": "labelsPerKey",
+            "baseName": "labelsPerKey",
+            "type": "{ [key: string]: Array<string>; }"
         }    ];
 
     static getAttributeTypeMap() {

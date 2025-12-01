@@ -10,24 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { VlmModel } from './vlmModel';
 
-export class ObjectDetectionAutoLabelRequest {
-    'neuralNetwork': ObjectDetectionAutoLabelRequestNeuralNetworkEnum;
+export class VlmGetModelResponseAllOf {
+    'model'?: VlmModel;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "neuralNetwork",
-            "baseName": "neuralNetwork",
-            "type": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum"
+            "name": "model",
+            "baseName": "model",
+            "type": "VlmModel"
         }    ];
 
     static getAttributeTypeMap() {
-        return ObjectDetectionAutoLabelRequest.attributeTypeMap;
+        return VlmGetModelResponseAllOf.attributeTypeMap;
     }
 }
 
-
-export type ObjectDetectionAutoLabelRequestNeuralNetworkEnum = 'yolov5' | 'yolo-pro' | 'currentProject';
-export const ObjectDetectionAutoLabelRequestNeuralNetworkEnumValues: string[] = ['yolov5', 'yolo-pro', 'currentProject'];

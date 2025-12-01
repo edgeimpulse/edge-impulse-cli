@@ -11,23 +11,29 @@
  */
 
 
-export class ObjectDetectionAutoLabelRequest {
-    'neuralNetwork': ObjectDetectionAutoLabelRequestNeuralNetworkEnum;
+export class SampleKeyValueLabels {
+    'type': SampleKeyValueLabelsTypeEnum;
+    'labels': { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "neuralNetwork",
-            "baseName": "neuralNetwork",
-            "type": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum"
+            "name": "type",
+            "baseName": "type",
+            "type": "SampleKeyValueLabelsTypeEnum"
+        },
+        {
+            "name": "labels",
+            "baseName": "labels",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {
-        return ObjectDetectionAutoLabelRequest.attributeTypeMap;
+        return SampleKeyValueLabels.attributeTypeMap;
     }
 }
 
 
-export type ObjectDetectionAutoLabelRequestNeuralNetworkEnum = 'yolov5' | 'yolo-pro' | 'currentProject';
-export const ObjectDetectionAutoLabelRequestNeuralNetworkEnumValues: string[] = ['yolov5', 'yolo-pro', 'currentProject'];
+export type SampleKeyValueLabelsTypeEnum = 'key-values';
+export const SampleKeyValueLabelsTypeEnumValues: string[] = ['key-values'];

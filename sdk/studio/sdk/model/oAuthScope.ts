@@ -12,5 +12,5 @@
 
 
 
-export type OAuthScope = 'deployments:create' | 'deployments:delete' | 'deployments:read' | 'deployments:update' | 'devices:create' | 'devices:delete' | 'devices:read' | 'devices:update' | 'organizations:read' | 'projects:create' | 'projects:delete' | 'projects:read' | 'projects:update' | 'user:read' | 'user:update';
-export const OAuthScopeValues: string[] = ['deployments:create', 'deployments:delete', 'deployments:read', 'deployments:update', 'devices:create', 'devices:delete', 'devices:read', 'devices:update', 'organizations:read', 'projects:create', 'projects:delete', 'projects:read', 'projects:update', 'user:read', 'user:update'];
+export type OAuthScope = 'deployments:create' | 'deployments:delete' | 'deployments:read' | 'deployments:update' | 'devices:create' | 'devices:delete' | 'devices:read' | 'devices:update' | 'jobs:read' | 'organizations:read' | 'projects:create' | 'projects:delete' | 'projects:read' | 'projects:update' | 'user:read' | 'user:update';
+export const OAuthScopeValues: string[] = ['deployments:create', 'deployments:delete', 'deployments:read', 'deployments:update', 'devices:create', 'devices:delete', 'devices:read', 'devices:update', 'jobs:read', 'organizations:read', 'projects:create', 'projects:delete', 'projects:read', 'projects:update', 'user:read', 'user:update'];

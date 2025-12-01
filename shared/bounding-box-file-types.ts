@@ -71,13 +71,25 @@ export type ExportStructuredLabelsFileV1 = {
     structuredLabels: StructuredLabelsMap;
 };
 
+export type ExportLabelMapFileV1 = {
+    version: 1;
+    type: 'label-map-labels';
+    labels: LabelMap;
+};
+
+export type LabelMapPerFile = {
+    [file: string]: { [key: string]: string }
+};
+
 export type ExportStructuredLabel = {
     startIndex: number;
     endIndex: number;
     label: string;
 };
 
-export type StructuredLabelsMap = { [fileName: string]: ExportStructuredLabel[]; };
+export type StructuredLabelsMap = { [fileName: string]: ExportStructuredLabel[] };
+
+export type LabelMap = { [fileName: string]: { [key: string]: string } | string[] };
 
 export function parseStructuredLabelsFile(jsonFile: string) {
     const data = <ExportStructuredLabelsFileV1>JSON.parse(jsonFile);
@@ -189,6 +201,51 @@ export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCo
 }
 
 /**
+ * Parse a labelmap labels file, validating its schema and converting it to a format for internal storage.
+ * @param jsonFile Raw JSON string
+ * @returns LabelMapPerFile object
+ * @throws If jsonFile is not valid JSON, or if the file does not adhere to the ExportLabelMapFileV1 schema.
+ */
+export function parseLabelMapFile(jsonFile: string): LabelMapPerFile {
+    const data = <ExportLabelMapFileV1>JSON.parse(jsonFile);
+
+    // Validate data and map to a fixed internal representation
+    const labelMapOut: LabelMapPerFile = { };
+    for (const [ filename, labels ] of Object.entries(data.labels)) {
+        try {
+            if (Array.isArray(labels)) {
+                if (!labels.every(l => typeof l === 'string')) {
+                    throw new Error('All labels must be strings');
+                }
+                // Map string[] -> kv pairs
+                let ix = 0;
+                labelMapOut[filename] = labels.reduce((acc, cur) => {
+                    acc[(ix++).toString()] = cur;
+                    return acc;
+                }, { } as { [key: string]: string });
+            }
+            else {
+                // Validate { [key: string]: string } type
+                if (typeof labels !== 'object') {
+                    throw new Error('Labelmap is not an object');
+                }
+                for (const value of Object.values(labels)) {
+                    if (typeof value !== 'string') {
+                        throw new Error('All values must be strings');
+                    }
+                }
+                labelMapOut[filename] = labels;
+            }
+        }
+        catch (ex) {
+            throw new Error(`Invalid label for file '${filename}': ${(<Error>ex).message}`);
+        }
+    }
+
+    return labelMapOut;
+}
+
+/**
  * This returns a new string array of length `sample.valuesCount`, and each
  * value of the array contains the label of the sample at that specific index.
  * If you have a sample that has structured labels you can use this to easily
@@ -230,12 +287,19 @@ export type ExportUploaderInfoFileMultiLabel = {
     label: string,
 };
 
-export type ExportUploaderInfoFileLabel = { type: 'unlabeled' } |
-    { type: 'label', label: string } |
-    {
-        type: 'multi-label',
-        labels: ExportUploaderInfoFileMultiLabel[],
-    };
+export type ExportUploaderInfoFileLabel = |
+{
+    type: 'unlabeled';
+} | {
+    type: 'label';
+    label: string;
+} | {
+    type: 'multi-label';
+    labels: ExportUploaderInfoFileMultiLabel[];
+} | {
+    type: 'keyvalue-labels';
+    labels: { [key: string]: string };
+};
 
 export interface ExportUploaderInfoFile {
     path: string;

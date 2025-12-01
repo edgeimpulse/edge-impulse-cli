@@ -11,23 +11,26 @@
  */
 
 
-export class ObjectDetectionAutoLabelRequest {
-    'neuralNetwork': ObjectDetectionAutoLabelRequestNeuralNetworkEnum;
+export class InferenceHistoryEntry {
+    'label': string;
+    'value': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "neuralNetwork",
-            "baseName": "neuralNetwork",
-            "type": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum"
+            "name": "label",
+            "baseName": "label",
+            "type": "string"
+        },
+        {
+            "name": "value",
+            "baseName": "value",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ObjectDetectionAutoLabelRequest.attributeTypeMap;
+        return InferenceHistoryEntry.attributeTypeMap;
     }
 }
 
-
-export type ObjectDetectionAutoLabelRequestNeuralNetworkEnum = 'yolov5' | 'yolo-pro' | 'currentProject';
-export const ObjectDetectionAutoLabelRequestNeuralNetworkEnumValues: string[] = ['yolov5', 'yolo-pro', 'currentProject'];

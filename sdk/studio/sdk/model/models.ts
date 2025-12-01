@@ -130,6 +130,7 @@ export * from './augmentationPolicyImageEnum';
 export * from './augmentationPolicySpectrogram';
 export * from './authorizeThirdPartyRequest';
 export * from './autotuneDspRequest';
+export * from './backToLabelingRequest';
 export * from './batchAddMetadataRequest';
 export * from './batchClearMetadataByKeyRequest';
 export * from './batchEditBoundingBoxesRequest';
@@ -419,6 +420,12 @@ export * from './getInferenceHistoryResponse';
 export * from './getInferenceHistoryResponseAllOf';
 export * from './getInferenceHistoryResponseAllOfAllDevices';
 export * from './getInferenceHistoryResponseAllOfSummaryByTime';
+export * from './getInferenceMetricsRequest';
+export * from './getInferenceMetricsRequestAggregate';
+export * from './getInferenceMetricsRequestMetrics';
+export * from './getInferenceMetricsResponse';
+export * from './getInferenceMetricsResponseAllOf';
+export * from './getInferenceMetricsResponseAllOfData';
 export * from './getIntegrationSessionStatusResponse';
 export * from './getIntegrationSessionStatusResponseAllOf';
 export * from './getJWTRequest';
@@ -551,6 +558,8 @@ export * from './impulseLearnBlock';
 export * from './impulsePostProcessingBlock';
 export * from './impulseType';
 export * from './inferenceHistoryAggregate';
+export * from './inferenceHistoryEntry';
+export * from './inferenceHistoryTimestamp';
 export * from './inferenceSummaryMetrics';
 export * from './inputBlock';
 export * from './integrationSessionStatus';
@@ -865,6 +874,7 @@ export * from './projectInfoResponseAllOfShowGettingStartedWizard';
 export * from './projectInfoResponseAllOfUrls';
 export * from './projectInfoSummaryResponse';
 export * from './projectInfoSummaryResponseAllOf';
+export * from './projectLabelingMethod';
 export * from './projectModelVariant';
 export * from './projectPrivateData';
 export * from './projectPublicData';
@@ -901,6 +911,7 @@ export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
 export * from './sampleImageDimensions';
+export * from './sampleKeyValueLabels';
 export * from './sampleMetadata';
 export * from './sampleProposedChanges';
 export * from './savePretrainedModelRequest';
@@ -957,6 +968,8 @@ export * from './startTensorBoardSessionRequest';
 export * from './startTrainingRequestAnomaly';
 export * from './stopDeviceDebugStreamRequest';
 export * from './storageProvider';
+export * from './storeInferenceHistoryRequest';
+export * from './storeInferenceHistoryRequestSummaries';
 export * from './storeSegmentLengthRequest';
 export * from './structuredClassifyResult';
 export * from './structuredLabel';
@@ -1096,6 +1109,8 @@ export * from './vlmConfigurationBase';
 export * from './vlmGetAllModelsResponse';
 export * from './vlmGetAllModelsResponseAllOf';
 export * from './vlmGetInferenceResultsResponse';
+export * from './vlmGetModelResponse';
+export * from './vlmGetModelResponseAllOf';
 export * from './vlmInferenceRequest';
 export * from './vlmInferenceResults';
 export * from './vlmInferenceResultsResults';
@@ -1249,6 +1264,7 @@ import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { AuthorizeThirdPartyRequest } from './authorizeThirdPartyRequest';
 import { AutotuneDspRequest } from './autotuneDspRequest';
+import { BackToLabelingRequest } from './backToLabelingRequest';
 import { BatchAddMetadataRequest } from './batchAddMetadataRequest';
 import { BatchClearMetadataByKeyRequest } from './batchClearMetadataByKeyRequest';
 import { BatchEditBoundingBoxesRequest } from './batchEditBoundingBoxesRequest';
@@ -1538,6 +1554,12 @@ import { GetInferenceHistoryResponse } from './getInferenceHistoryResponse';
 import { GetInferenceHistoryResponseAllOf } from './getInferenceHistoryResponseAllOf';
 import { GetInferenceHistoryResponseAllOfAllDevices } from './getInferenceHistoryResponseAllOfAllDevices';
 import { GetInferenceHistoryResponseAllOfSummaryByTime } from './getInferenceHistoryResponseAllOfSummaryByTime';
+import { GetInferenceMetricsRequest } from './getInferenceMetricsRequest';
+import { GetInferenceMetricsRequestAggregate } from './getInferenceMetricsRequestAggregate';
+import { GetInferenceMetricsRequestMetrics } from './getInferenceMetricsRequestMetrics';
+import { GetInferenceMetricsResponse } from './getInferenceMetricsResponse';
+import { GetInferenceMetricsResponseAllOf } from './getInferenceMetricsResponseAllOf';
+import { GetInferenceMetricsResponseAllOfData } from './getInferenceMetricsResponseAllOfData';
 import { GetIntegrationSessionStatusResponse } from './getIntegrationSessionStatusResponse';
 import { GetIntegrationSessionStatusResponseAllOf } from './getIntegrationSessionStatusResponseAllOf';
 import { GetJWTRequest } from './getJWTRequest';
@@ -1670,6 +1692,8 @@ import { ImpulseLearnBlock } from './impulseLearnBlock';
 import { ImpulsePostProcessingBlock } from './impulsePostProcessingBlock';
 import { ImpulseType } from './impulseType';
 import { InferenceHistoryAggregate } from './inferenceHistoryAggregate';
+import { InferenceHistoryEntry } from './inferenceHistoryEntry';
+import { InferenceHistoryTimestamp } from './inferenceHistoryTimestamp';
 import { InferenceSummaryMetrics } from './inferenceSummaryMetrics';
 import { InputBlock } from './inputBlock';
 import { IntegrationSessionStatus } from './integrationSessionStatus';
@@ -1984,6 +2008,7 @@ import { ProjectInfoResponseAllOfShowGettingStartedWizard } from './projectInfoR
 import { ProjectInfoResponseAllOfUrls } from './projectInfoResponseAllOfUrls';
 import { ProjectInfoSummaryResponse } from './projectInfoSummaryResponse';
 import { ProjectInfoSummaryResponseAllOf } from './projectInfoSummaryResponseAllOf';
+import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { ProjectModelVariant } from './projectModelVariant';
 import { ProjectPrivateData } from './projectPrivateData';
 import { ProjectPublicData } from './projectPublicData';
@@ -2020,6 +2045,7 @@ import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineR
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
 import { SampleImageDimensions } from './sampleImageDimensions';
+import { SampleKeyValueLabels } from './sampleKeyValueLabels';
 import { SampleMetadata } from './sampleMetadata';
 import { SampleProposedChanges } from './sampleProposedChanges';
 import { SavePretrainedModelRequest } from './savePretrainedModelRequest';
@@ -2076,6 +2102,8 @@ import { StartTensorBoardSessionRequest } from './startTensorBoardSessionRequest
 import { StartTrainingRequestAnomaly } from './startTrainingRequestAnomaly';
 import { StopDeviceDebugStreamRequest } from './stopDeviceDebugStreamRequest';
 import { StorageProvider } from './storageProvider';
+import { StoreInferenceHistoryRequest } from './storeInferenceHistoryRequest';
+import { StoreInferenceHistoryRequestSummaries } from './storeInferenceHistoryRequestSummaries';
 import { StoreSegmentLengthRequest } from './storeSegmentLengthRequest';
 import { StructuredClassifyResult } from './structuredClassifyResult';
 import { StructuredLabel } from './structuredLabel';
@@ -2215,6 +2243,8 @@ import { VlmConfigurationBase } from './vlmConfigurationBase';
 import { VlmGetAllModelsResponse } from './vlmGetAllModelsResponse';
 import { VlmGetAllModelsResponseAllOf } from './vlmGetAllModelsResponseAllOf';
 import { VlmGetInferenceResultsResponse } from './vlmGetInferenceResultsResponse';
+import { VlmGetModelResponse } from './vlmGetModelResponse';
+import { VlmGetModelResponseAllOf } from './vlmGetModelResponseAllOf';
 import { VlmInferenceRequest } from './vlmInferenceRequest';
 import { VlmInferenceResults } from './vlmInferenceResults';
 import { VlmInferenceResultsResults } from './vlmInferenceResultsResults';
@@ -2263,6 +2293,7 @@ let enumsMap: {[index: string]: any} = {
     "AugmentationPolicySpectrogramFreqMaskingEnum": "AugmentationPolicySpectrogramFreqMaskingEnum",
     "AugmentationPolicySpectrogramTimeMaskingEnum": "AugmentationPolicySpectrogramTimeMaskingEnum",
     "AugmentationPolicySpectrogramGaussianNoiseEnum": "AugmentationPolicySpectrogramGaussianNoiseEnum",
+    "BackToLabelingRequestLabelActionEnum": "BackToLabelingRequestLabelActionEnum",
     "BillingCycle": "BillingCycle",
     "BlockDisplayCategory": "BlockDisplayCategory",
     "BlockType": "BlockType",
@@ -2312,6 +2343,8 @@ let enumsMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum": "GetDataExplorerSettingsResponseDimensionalityReductionTechniqueEnum",
     "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseDimensionalityReductionRecommendationEnum",
     "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum": "GetDataExplorerSettingsResponseAllOfDimensionalityReductionRecommendationEnum",
+    "GetInferenceMetricsRequestSplitByEnum": "GetInferenceMetricsRequestSplitByEnum",
+    "GetInferenceMetricsRequestAggregateAggregationEnum": "GetInferenceMetricsRequestAggregateAggregationEnum",
     "GetJWTRequestSsoTypeEnum": "GetJWTRequestSsoTypeEnum",
     "GetPostProcessingResultsForSampleResponseHasResultsEnum": "GetPostProcessingResultsForSampleResponseHasResultsEnum",
     "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum": "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum",
@@ -2385,11 +2418,11 @@ let enumsMap: {[index: string]: any} = {
     "PreviewDefaultFilesInFolderResponseTruncationReasonEnum": "PreviewDefaultFilesInFolderResponseTruncationReasonEnum",
     "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum": "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum",
     "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
-    "ProjectLabelingMethodEnum": "ProjectLabelingMethodEnum",
     "ProjectCategoryEnum": "ProjectCategoryEnum",
     "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
+    "ProjectLabelingMethod": "ProjectLabelingMethod",
     "ProjectTierEnum": "ProjectTierEnum",
     "ProjectType": "ProjectType",
     "ProjectVisibility": "ProjectVisibility",
@@ -2398,7 +2431,7 @@ let enumsMap: {[index: string]: any} = {
     "RawDataCategory": "RawDataCategory",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
-    "SampleProjectLabelingMethodEnum": "SampleProjectLabelingMethodEnum",
+    "SampleKeyValueLabelsTypeEnum": "SampleKeyValueLabelsTypeEnum",
     "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
     "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum": "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum",
     "SetImpulseThresholdsResponseAllOfRegenerateModelTestingStatusEnum": "SetImpulseThresholdsResponseAllOfRegenerateModelTestingStatusEnum",
@@ -2418,7 +2451,6 @@ let enumsMap: {[index: string]: any} = {
     "TutorialType": "TutorialType",
     "UpdateOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "UpdateOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
     "UpdateOrganizationDeployBlockRequestCategoryEnum": "UpdateOrganizationDeployBlockRequestCategoryEnum",
-    "UpdateProjectRequestLabelingMethodEnum": "UpdateProjectRequestLabelingMethodEnum",
     "UpdateProjectRequestSelectedProjectTypeInWizardEnum": "UpdateProjectRequestSelectedProjectTypeInWizardEnum",
     "UpdateProjectRequestDataAcquisitionViewTypeEnum": "UpdateProjectRequestDataAcquisitionViewTypeEnum",
     "UploadCustomBlockRequestTypeEnum": "UploadCustomBlockRequestTypeEnum",
@@ -2562,6 +2594,7 @@ let typeMap: {[index: string]: any} = {
     "AugmentationPolicySpectrogram": AugmentationPolicySpectrogram,
     "AuthorizeThirdPartyRequest": AuthorizeThirdPartyRequest,
     "AutotuneDspRequest": AutotuneDspRequest,
+    "BackToLabelingRequest": BackToLabelingRequest,
     "BatchAddMetadataRequest": BatchAddMetadataRequest,
     "BatchClearMetadataByKeyRequest": BatchClearMetadataByKeyRequest,
     "BatchEditBoundingBoxesRequest": BatchEditBoundingBoxesRequest,
@@ -2842,6 +2875,12 @@ let typeMap: {[index: string]: any} = {
     "GetInferenceHistoryResponseAllOf": GetInferenceHistoryResponseAllOf,
     "GetInferenceHistoryResponseAllOfAllDevices": GetInferenceHistoryResponseAllOfAllDevices,
     "GetInferenceHistoryResponseAllOfSummaryByTime": GetInferenceHistoryResponseAllOfSummaryByTime,
+    "GetInferenceMetricsRequest": GetInferenceMetricsRequest,
+    "GetInferenceMetricsRequestAggregate": GetInferenceMetricsRequestAggregate,
+    "GetInferenceMetricsRequestMetrics": GetInferenceMetricsRequestMetrics,
+    "GetInferenceMetricsResponse": GetInferenceMetricsResponse,
+    "GetInferenceMetricsResponseAllOf": GetInferenceMetricsResponseAllOf,
+    "GetInferenceMetricsResponseAllOfData": GetInferenceMetricsResponseAllOfData,
     "GetIntegrationSessionStatusResponse": GetIntegrationSessionStatusResponse,
     "GetIntegrationSessionStatusResponseAllOf": GetIntegrationSessionStatusResponseAllOf,
     "GetJWTRequest": GetJWTRequest,
@@ -2970,6 +3009,8 @@ let typeMap: {[index: string]: any} = {
     "ImpulseLearnBlock": ImpulseLearnBlock,
     "ImpulsePostProcessingBlock": ImpulsePostProcessingBlock,
     "InferenceHistoryAggregate": InferenceHistoryAggregate,
+    "InferenceHistoryEntry": InferenceHistoryEntry,
+    "InferenceHistoryTimestamp": InferenceHistoryTimestamp,
     "InferenceSummaryMetrics": InferenceSummaryMetrics,
     "InputBlock": InputBlock,
     "IntegrationSessionStatus": IntegrationSessionStatus,
@@ -3298,6 +3339,7 @@ let typeMap: {[index: string]: any} = {
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
     "SampleImageDimensions": SampleImageDimensions,
+    "SampleKeyValueLabels": SampleKeyValueLabels,
     "SampleMetadata": SampleMetadata,
     "SampleProposedChanges": SampleProposedChanges,
     "SavePretrainedModelRequest": SavePretrainedModelRequest,
@@ -3353,6 +3395,8 @@ let typeMap: {[index: string]: any} = {
     "StartTensorBoardSessionRequest": StartTensorBoardSessionRequest,
     "StartTrainingRequestAnomaly": StartTrainingRequestAnomaly,
     "StopDeviceDebugStreamRequest": StopDeviceDebugStreamRequest,
+    "StoreInferenceHistoryRequest": StoreInferenceHistoryRequest,
+    "StoreInferenceHistoryRequestSummaries": StoreInferenceHistoryRequestSummaries,
     "StoreSegmentLengthRequest": StoreSegmentLengthRequest,
     "StructuredClassifyResult": StructuredClassifyResult,
     "StructuredLabel": StructuredLabel,
@@ -3486,6 +3530,8 @@ let typeMap: {[index: string]: any} = {
     "VlmGetAllModelsResponse": VlmGetAllModelsResponse,
     "VlmGetAllModelsResponseAllOf": VlmGetAllModelsResponseAllOf,
     "VlmGetInferenceResultsResponse": VlmGetInferenceResultsResponse,
+    "VlmGetModelResponse": VlmGetModelResponse,
+    "VlmGetModelResponseAllOf": VlmGetModelResponseAllOf,
     "VlmInferenceRequest": VlmInferenceRequest,
     "VlmInferenceResults": VlmInferenceResults,
     "VlmInferenceResultsResults": VlmInferenceResultsResults,

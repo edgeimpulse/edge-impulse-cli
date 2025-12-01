@@ -65,6 +65,7 @@ export class DeploymentTarget {
     'badge'?: DeploymentTargetBadge;
     'uiSection': DeploymentTargetUiSectionEnum;
     'customDeployId'?: number;
+    'customDeployOrganizationId'?: number;
     'integrateUrl'?: string;
     'ownerOrganizationName'?: string;
     'supportedEngines': Array<DeploymentTargetEngine>;
@@ -175,6 +176,11 @@ export class DeploymentTarget {
         {
             "name": "customDeployId",
             "baseName": "customDeployId",
+            "type": "number"
+        },
+        {
+            "name": "customDeployOrganizationId",
+            "baseName": "customDeployOrganizationId",
             "type": "number"
         },
         {

@@ -12,6 +12,7 @@
 
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ModelEngineShortEnum } from './modelEngineShortEnum';
+import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { ProjectVisibility } from './projectVisibility';
 import { TutorialType } from './tutorialType';
 
@@ -47,10 +48,7 @@ export class UpdateProjectRequest {
     * Whether to show the \'Create your first impulse\' section on the dashboard
     */
     'showCreateFirstImpulse'?: boolean;
-    /**
-    * What labeling flow to use
-    */
-    'labelingMethod'?: UpdateProjectRequestLabelingMethodEnum;
+    'labelingMethod'?: ProjectLabelingMethod;
     /**
     * Which option was selected in the project type wizard
     */
@@ -231,7 +229,7 @@ export class UpdateProjectRequest {
         {
             "name": "labelingMethod",
             "baseName": "labelingMethod",
-            "type": "UpdateProjectRequestLabelingMethodEnum"
+            "type": "ProjectLabelingMethod"
         },
         {
             "name": "selectedProjectTypeInWizard",
@@ -419,9 +417,6 @@ export class UpdateProjectRequest {
     }
 }
 
-
-export type UpdateProjectRequestLabelingMethodEnum = 'single_label' | 'object_detection';
-export const UpdateProjectRequestLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
 
 export type UpdateProjectRequestSelectedProjectTypeInWizardEnum = 'accelerometer' | 'audio' | 'image_classification' | 'object_detection' | 'something_else';
 export const UpdateProjectRequestSelectedProjectTypeInWizardEnumValues: string[] = ['accelerometer', 'audio', 'image_classification', 'object_detection', 'something_else'];

@@ -11,6 +11,7 @@
  */
 
 import { ProjectCollaborator } from './projectCollaborator';
+import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { ProjectTierEnum } from './projectTierEnum';
 import { PublicProjectLicense } from './publicProjectLicense';
 
@@ -45,7 +46,7 @@ export class Project {
     */
     'developerProfileUserId'?: number;
     'collaborators': Array<ProjectCollaborator>;
-    'labelingMethod': ProjectLabelingMethodEnum;
+    'labelingMethod': ProjectLabelingMethod;
     /**
     * Metadata about the project
     */
@@ -175,7 +176,7 @@ export class Project {
         {
             "name": "labelingMethod",
             "baseName": "labelingMethod",
-            "type": "ProjectLabelingMethodEnum"
+            "type": "ProjectLabelingMethod"
         },
         {
             "name": "metadata",
@@ -268,9 +269,6 @@ export class Project {
     }
 }
 
-
-export type ProjectLabelingMethodEnum = 'single_label' | 'object_detection';
-export const ProjectLabelingMethodEnumValues: string[] = ['single_label', 'object_detection'];
 
 export type ProjectCategoryEnum = 'Accelerometer' | 'Audio' | 'Images' | 'Keyword spotting' | 'Object detection' | 'Other';
 export const ProjectCategoryEnumValues: string[] = ['Accelerometer', 'Audio', 'Images', 'Keyword spotting', 'Object detection', 'Other'];

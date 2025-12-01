@@ -10,24 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { StoreInferenceHistoryRequestSummaries } from './storeInferenceHistoryRequestSummaries';
 
-export class ObjectDetectionAutoLabelRequest {
-    'neuralNetwork': ObjectDetectionAutoLabelRequestNeuralNetworkEnum;
+export class StoreInferenceHistoryRequest {
+    'summaries': Array<StoreInferenceHistoryRequestSummaries>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "neuralNetwork",
-            "baseName": "neuralNetwork",
-            "type": "ObjectDetectionAutoLabelRequestNeuralNetworkEnum"
+            "name": "summaries",
+            "baseName": "summaries",
+            "type": "Array<StoreInferenceHistoryRequestSummaries>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ObjectDetectionAutoLabelRequest.attributeTypeMap;
+        return StoreInferenceHistoryRequest.attributeTypeMap;
     }
 }
 
-
-export type ObjectDetectionAutoLabelRequestNeuralNetworkEnum = 'yolov5' | 'yolo-pro' | 'currentProject';
-export const ObjectDetectionAutoLabelRequestNeuralNetworkEnumValues: string[] = ['yolov5', 'yolo-pro', 'currentProject'];

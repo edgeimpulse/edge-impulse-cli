@@ -8,7 +8,8 @@ import { BlockConfigManager } from "./block-config-manager";
 import {
     AIActionBlockParametersJson,
     DeployBlockParametersJson, DSPBlockParametersJson,
-    MachineLearningBlockParametersJson, SyntheticDataBlockParametersJson,
+    MachineLearningBlockParametersJson,
+    SyntheticDataBlockParametersJson,
     TransformBlockParametersJson
 } from "./parameter-types";
 import { CLIBlockType, DSPParameterItem } from "../../shared/parameters-json-types";
@@ -437,6 +438,47 @@ export class InitCLIBlock {
             }])).description;
         }
 
+        const operatesOnOptions = [
+            {
+                name: 'Object Detection',
+                value: 'object_detection'
+            },
+            {
+                name: 'Image classification',
+                value: 'image'
+            },
+            {
+                name: 'Audio classification',
+                value: 'audio'
+            },
+            {
+                name: 'Classification',
+                value: 'other'
+            },
+            {
+                name: 'Regression',
+                value: 'regression'
+            },
+        ];
+
+        const showAnomalyOption = organizationInfo.experiments?.find(x => x.type === 'custom_ad_blocks')?.enabled;
+        const showVisualAnomalyOption = organizationInfo.experiments?.find(
+            x => x.type === 'custom_visual_ad_blocks'
+        )?.enabled;
+
+        if (showAnomalyOption) {
+            operatesOnOptions.push({
+                name: 'Anomaly detection',
+                value: 'anomaly_detection'
+            });
+        }
+        if (showVisualAnomalyOption) {
+            operatesOnOptions.push({
+                name: 'Anomaly detection (Images)',
+                value: 'visual_anomaly_detection'
+            });
+        }
+
         let blockTlOperatesOn: models.OrganizationTransferLearningOperatesOn;
         if (params?.info?.operatesOn) {
             blockTlOperatesOn = params.info.operatesOn;
@@ -448,28 +490,7 @@ export class InitCLIBlock {
             blockTlOperatesOn = <models.OrganizationTransferLearningOperatesOn>(await inquirer.prompt([{
                 type: 'list',
                 name: 'operatesOn',
-                choices: [
-                    {
-                        name: 'Object Detection',
-                        value: 'object_detection'
-                    },
-                    {
-                        name: 'Image classification',
-                        value: 'image'
-                    },
-                    {
-                        name: 'Audio classification',
-                        value: 'audio'
-                    },
-                    {
-                        name: 'Classification',
-                        value: 'other'
-                    },
-                    {
-                        name: 'Regression',
-                        value: 'regression'
-                    },
-                ],
+                choices: operatesOnOptions,
                 message: 'What type of data does this model operate on?',
             }])).operatesOn;
         }

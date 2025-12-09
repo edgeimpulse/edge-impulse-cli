@@ -11,42 +11,32 @@
  */
 
 
-
-export class SetImpulseThresholdsRequestThresholds {
+export class BlockThresholdDropdownOptions {
     /**
-    * Learn block ID for which you want to set the threshold
+    * Full description of the value
     */
-    'blockId': number;
+    'description': string;
     /**
-    * Threshold identifier (see BlockThreshold#key)
+    * Value, maps back to \"BlockThreshold#value\"
     */
-    'key': string;
-    /**
-    * New threshold value
-    */
-    'value': number | string;
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "blockId",
-            "baseName": "blockId",
-            "type": "number"
-        },
-        {
-            "name": "key",
-            "baseName": "key",
+            "name": "description",
+            "baseName": "description",
             "type": "string"
         },
         {
             "name": "value",
             "baseName": "value",
-            "type": "Number | string"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return SetImpulseThresholdsRequestThresholds.attributeTypeMap;
+        return BlockThresholdDropdownOptions.attributeTypeMap;
     }
 }
 

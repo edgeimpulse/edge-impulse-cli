@@ -12,5 +12,5 @@
 
 
 
-export type KerasModelMode = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm' | 'freeform';
-export const KerasModelModeValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm', 'freeform'];
+export type KerasModelMode = 'classification' | 'regression' | 'object-detection' | 'visual-anomaly' | 'anomaly-gmm' | 'freeform' | 'anomaly';
+export const KerasModelModeValues: string[] = ['classification', 'regression', 'object-detection', 'visual-anomaly', 'anomaly-gmm', 'freeform', 'anomaly'];

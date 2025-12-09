@@ -18,6 +18,7 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
     'kws': Array<TransferLearningModel>;
     'regression': Array<TransferLearningModel>;
     'classification': Array<TransferLearningModel>;
+    'anomaly'?: Array<TransferLearningModel>;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +46,11 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
         {
             "name": "classification",
             "baseName": "classification",
+            "type": "Array<TransferLearningModel>"
+        },
+        {
+            "name": "anomaly",
+            "baseName": "anomaly",
             "type": "Array<TransferLearningModel>"
         }    ];
 

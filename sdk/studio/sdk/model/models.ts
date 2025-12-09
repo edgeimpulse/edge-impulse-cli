@@ -140,6 +140,7 @@ export * from './blockParameters';
 export * from './blockParamsVisualAnomalyGmm';
 export * from './blockParamsVisualAnomalyPatchcore';
 export * from './blockThreshold';
+export * from './blockThresholdDropdownOptions';
 export * from './blockType';
 export * from './boundingBox';
 export * from './boundingBoxWithScore';
@@ -1274,6 +1275,7 @@ import { BlockParameters } from './blockParameters';
 import { BlockParamsVisualAnomalyGmm } from './blockParamsVisualAnomalyGmm';
 import { BlockParamsVisualAnomalyPatchcore } from './blockParamsVisualAnomalyPatchcore';
 import { BlockThreshold } from './blockThreshold';
+import { BlockThresholdDropdownOptions } from './blockThresholdDropdownOptions';
 import { BlockType } from './blockType';
 import { BoundingBox } from './boundingBox';
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
@@ -2602,6 +2604,7 @@ let typeMap: {[index: string]: any} = {
     "BlockParamsVisualAnomalyGmm": BlockParamsVisualAnomalyGmm,
     "BlockParamsVisualAnomalyPatchcore": BlockParamsVisualAnomalyPatchcore,
     "BlockThreshold": BlockThreshold,
+    "BlockThresholdDropdownOptions": BlockThresholdDropdownOptions,
     "BoundingBox": BoundingBox,
     "BoundingBoxWithScore": BoundingBoxWithScore,
     "BuildOnDeviceModelRequest": BuildOnDeviceModelRequest,

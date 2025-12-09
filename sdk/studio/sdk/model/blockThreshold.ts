@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import { BlockThresholdDropdownOptions } from './blockThresholdDropdownOptions';
+
 
 /**
 * Configurable threshold for this block (e.g. minimum score before tagging as an anomaly, or the min. score to save bounding boxes)
@@ -38,7 +40,11 @@ export class BlockThreshold {
     /**
     * Current value of the threshold
     */
-    'value': number;
+    'value': number | string;
+    /**
+    * Optional list of options, will be shown in a dropdown.
+    */
+    'dropdownOptions'?: Array<BlockThresholdDropdownOptions>;
 
     static discriminator: string | undefined = undefined;
 
@@ -71,7 +77,12 @@ export class BlockThreshold {
         {
             "name": "value",
             "baseName": "value",
-            "type": "number"
+            "type": "Number | string"
+        },
+        {
+            "name": "dropdownOptions",
+            "baseName": "dropdownOptions",
+            "type": "Array<BlockThresholdDropdownOptions>"
         }    ];
 
     static getAttributeTypeMap() {

@@ -19,8 +19,10 @@ export class VlmModel {
     'modelName': string;
     'type': VlmModelType;
     'description': string;
-    'cardLink': string;
-    'quantizationSchemes'?: Array<string>;
+    /**
+    * If true, the warmup endpoint may be called to prepare the model for inference
+    */
+    'requiresWarmup'?: boolean;
     /**
     * List of example prompt templates available for insertion. Each template is an array of components defining the prompt text and whether the component is user-editable.
     */
@@ -51,14 +53,9 @@ export class VlmModel {
             "type": "string"
         },
         {
-            "name": "cardLink",
-            "baseName": "cardLink",
-            "type": "string"
-        },
-        {
-            "name": "quantizationSchemes",
-            "baseName": "quantizationSchemes",
-            "type": "Array<string>"
+            "name": "requiresWarmup",
+            "baseName": "requiresWarmup",
+            "type": "boolean"
         },
         {
             "name": "availablePromptComponents",

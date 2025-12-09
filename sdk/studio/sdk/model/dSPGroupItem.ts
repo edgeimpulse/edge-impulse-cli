@@ -58,6 +58,14 @@ export class DSPGroupItem {
     * Recursive definition for a parameter with type \'object\'.
     */
     'properties'?: object;
+    /**
+    * Minimum value for parameters of type \'int\' or \'float\'.
+    */
+    'minVal'?: number;
+    /**
+    * Maximum value for parameters of type \'int\' or \'float\'.
+    */
+    'maxVal'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -161,6 +169,16 @@ export class DSPGroupItem {
             "name": "properties",
             "baseName": "properties",
             "type": "object"
+        },
+        {
+            "name": "minVal",
+            "baseName": "minVal",
+            "type": "number"
+        },
+        {
+            "name": "maxVal",
+            "baseName": "maxVal",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

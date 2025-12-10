@@ -546,7 +546,6 @@ export * from './hasDataExplorerFeaturesResponse';
 export * from './hasDataExplorerFeaturesResponseAllOf';
 export * from './imageInputResizeMode';
 export * from './imageInputScaling';
-export * from './imageTensorFormat';
 export * from './importDataFromAnotherProjectJobRequest';
 export * from './impulse';
 export * from './impulseDspBlock';
@@ -1681,7 +1680,6 @@ import { HasDataExplorerFeaturesResponse } from './hasDataExplorerFeaturesRespon
 import { HasDataExplorerFeaturesResponseAllOf } from './hasDataExplorerFeaturesResponseAllOf';
 import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImageInputScaling } from './imageInputScaling';
-import { ImageTensorFormat } from './imageTensorFormat';
 import { ImportDataFromAnotherProjectJobRequest } from './importDataFromAnotherProjectJobRequest';
 import { Impulse } from './impulse';
 import { ImpulseDspBlock } from './impulseDspBlock';
@@ -2352,7 +2350,6 @@ let enumsMap: {[index: string]: any} = {
     "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum": "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum",
     "ImageInputResizeMode": "ImageInputResizeMode",
     "ImageInputScaling": "ImageInputScaling",
-    "ImageTensorFormat": "ImageTensorFormat",
     "ImpulseInputBlockTypeEnum": "ImpulseInputBlockTypeEnum",
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",

@@ -68,6 +68,14 @@ export class CreateUserRequest {
     * CloudFlare Turnstile response token
     */
     'turnstileResponse': string;
+    /**
+    * Date of birth of the user in YYYY-MM-DD format. Optional field.
+    */
+    'dateOfBirth'?: string;
+    /**
+    * Email address to be used for signup approval. Optional field.
+    */
+    'approverEmail'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -140,6 +148,16 @@ export class CreateUserRequest {
         {
             "name": "turnstileResponse",
             "baseName": "turnstileResponse",
+            "type": "string"
+        },
+        {
+            "name": "dateOfBirth",
+            "baseName": "dateOfBirth",
+            "type": "string"
+        },
+        {
+            "name": "approverEmail",
+            "baseName": "approverEmail",
             "type": "string"
         }    ];
 

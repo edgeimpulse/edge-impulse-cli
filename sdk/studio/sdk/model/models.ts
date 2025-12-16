@@ -52,6 +52,7 @@ export * from './adminCreateOauthClientResponseAllOf';
 export * from './adminCreateOrganizationDataExportRequest';
 export * from './adminCreateOrganizationRequest';
 export * from './adminCreateProjectRequest';
+export * from './adminCreateSignupApprovalRequest';
 export * from './adminEnableFeatureRequest';
 export * from './adminGetDataMigrationResponse';
 export * from './adminGetDataMigrationResponseAllOf';
@@ -76,6 +77,8 @@ export * from './adminGetReportsResponseAllOf';
 export * from './adminGetSSOSettingsResponse';
 export * from './adminGetSSOSettingsResponseAllOf';
 export * from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
+export * from './adminGetSignupApprovalRequestResponse';
+export * from './adminGetSignupApprovalRequestResponseAllOf';
 export * from './adminGetTrashBinResponse';
 export * from './adminGetTrashBinResponseAllOf';
 export * from './adminGetTrialResponse';
@@ -1186,6 +1189,7 @@ import { AdminCreateOauthClientResponseAllOf } from './adminCreateOauthClientRes
 import { AdminCreateOrganizationDataExportRequest } from './adminCreateOrganizationDataExportRequest';
 import { AdminCreateOrganizationRequest } from './adminCreateOrganizationRequest';
 import { AdminCreateProjectRequest } from './adminCreateProjectRequest';
+import { AdminCreateSignupApprovalRequest } from './adminCreateSignupApprovalRequest';
 import { AdminEnableFeatureRequest } from './adminEnableFeatureRequest';
 import { AdminGetDataMigrationResponse } from './adminGetDataMigrationResponse';
 import { AdminGetDataMigrationResponseAllOf } from './adminGetDataMigrationResponseAllOf';
@@ -1210,6 +1214,8 @@ import { AdminGetReportsResponseAllOf } from './adminGetReportsResponseAllOf';
 import { AdminGetSSOSettingsResponse } from './adminGetSSOSettingsResponse';
 import { AdminGetSSOSettingsResponseAllOf } from './adminGetSSOSettingsResponseAllOf';
 import { AdminGetSSOSettingsResponseAllOfSsoWhitelist } from './adminGetSSOSettingsResponseAllOfSsoWhitelist';
+import { AdminGetSignupApprovalRequestResponse } from './adminGetSignupApprovalRequestResponse';
+import { AdminGetSignupApprovalRequestResponseAllOf } from './adminGetSignupApprovalRequestResponseAllOf';
 import { AdminGetTrashBinResponse } from './adminGetTrashBinResponse';
 import { AdminGetTrashBinResponseAllOf } from './adminGetTrashBinResponseAllOf';
 import { AdminGetTrialResponse } from './adminGetTrialResponse';
@@ -2287,6 +2293,8 @@ let enumsMap: {[index: string]: any} = {
     "AddProjectApiKeyRequestRoleEnum": "AddProjectApiKeyRequestRoleEnum",
     "AddProjectApiKeyRequestAllOfRoleEnum": "AddProjectApiKeyRequestAllOfRoleEnum",
     "AdminAddOrganizationApiKeyRequestRoleEnum": "AdminAddOrganizationApiKeyRequestRoleEnum",
+    "AdminGetSignupApprovalRequestResponseStatusEnum": "AdminGetSignupApprovalRequestResponseStatusEnum",
+    "AdminGetSignupApprovalRequestResponseAllOfStatusEnum": "AdminGetSignupApprovalRequestResponseAllOfStatusEnum",
     "AdminStartEnterpriseTrialRequestUserHasMLModelsInProductionEnum": "AdminStartEnterpriseTrialRequestUserHasMLModelsInProductionEnum",
     "AnomalyCapacity": "AnomalyCapacity",
     "AugmentationPolicyImageEnum": "AugmentationPolicyImageEnum",
@@ -2517,6 +2525,7 @@ let typeMap: {[index: string]: any} = {
     "AdminCreateOrganizationDataExportRequest": AdminCreateOrganizationDataExportRequest,
     "AdminCreateOrganizationRequest": AdminCreateOrganizationRequest,
     "AdminCreateProjectRequest": AdminCreateProjectRequest,
+    "AdminCreateSignupApprovalRequest": AdminCreateSignupApprovalRequest,
     "AdminEnableFeatureRequest": AdminEnableFeatureRequest,
     "AdminGetDataMigrationResponse": AdminGetDataMigrationResponse,
     "AdminGetDataMigrationResponseAllOf": AdminGetDataMigrationResponseAllOf,
@@ -2541,6 +2550,8 @@ let typeMap: {[index: string]: any} = {
     "AdminGetSSOSettingsResponse": AdminGetSSOSettingsResponse,
     "AdminGetSSOSettingsResponseAllOf": AdminGetSSOSettingsResponseAllOf,
     "AdminGetSSOSettingsResponseAllOfSsoWhitelist": AdminGetSSOSettingsResponseAllOfSsoWhitelist,
+    "AdminGetSignupApprovalRequestResponse": AdminGetSignupApprovalRequestResponse,
+    "AdminGetSignupApprovalRequestResponseAllOf": AdminGetSignupApprovalRequestResponseAllOf,
     "AdminGetTrashBinResponse": AdminGetTrashBinResponse,
     "AdminGetTrashBinResponseAllOf": AdminGetTrashBinResponseAllOf,
     "AdminGetTrialResponse": AdminGetTrialResponse,

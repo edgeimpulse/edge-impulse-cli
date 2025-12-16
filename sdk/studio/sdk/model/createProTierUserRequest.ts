@@ -71,6 +71,14 @@ export class CreateProTierUserRequest {
     */
     'turnstileResponse': string;
     /**
+    * Date of birth of the user in YYYY-MM-DD format. Optional field.
+    */
+    'dateOfBirth'?: string;
+    /**
+    * Email address to be used for signup approval. Optional field.
+    */
+    'approverEmail'?: string;
+    /**
     * Origin of the redirect URL returned as result of creating the professional user.
     */
     'redirectUrlOrigin'?: string;
@@ -150,6 +158,16 @@ export class CreateProTierUserRequest {
         {
             "name": "turnstileResponse",
             "baseName": "turnstileResponse",
+            "type": "string"
+        },
+        {
+            "name": "dateOfBirth",
+            "baseName": "dateOfBirth",
+            "type": "string"
+        },
+        {
+            "name": "approverEmail",
+            "baseName": "approverEmail",
             "type": "string"
         },
         {

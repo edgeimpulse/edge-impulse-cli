@@ -12,10 +12,17 @@
 
 
 export class DependencyData {
+    /**
+    * Set of all labels present in data feeding into this model
+    */
     'classes': Array<string>;
     'blockNames': Array<string>;
     'featureCount': number;
     'sampleCount': number;
+    /**
+    * Set of output classes for this model
+    */
+    'outputClasses': Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -39,6 +46,11 @@ export class DependencyData {
             "name": "sampleCount",
             "baseName": "sampleCount",
             "type": "number"
+        },
+        {
+            "name": "outputClasses",
+            "baseName": "outputClasses",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {

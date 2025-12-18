@@ -108,6 +108,9 @@ export class UpdateProjectRequest {
     * Config file specifying how to process CSV files. (set to null to clear the config)
     */
     'csvImportConfig'?: object;
+    /**
+    * DEPRECATED. To enable the pretrained model flow, set the impulse type property to \"BYOM\" instead.
+    */
     'inPretrainedModelFlow'?: boolean;
     /**
     * Set to \'0\' to disable DSP paging

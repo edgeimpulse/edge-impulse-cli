@@ -58,6 +58,7 @@ import { UserSetTotpMfaKeyRequest } from '../model/userSetTotpMfaKeyRequest';
 import { UserSetTotpMfaKeyResponse } from '../model/userSetTotpMfaKeyResponse';
 import { UserSubscriptionMetricsResponse } from '../model/userSubscriptionMetricsResponse';
 import { VerifyResetPasswordRequest } from '../model/verifyResetPasswordRequest';
+import { VerifySignupApprovalResponse } from '../model/verifySignupApprovalResponse';
 
 import { ObjectSerializer, Authentication, VoidAuth } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
@@ -4147,7 +4148,7 @@ export class UserApi {
      * @summary Verify signup approval
      * @param activateUserOrVerifyEmailRequest 
      */
-    public async verifySignupApproval (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async verifySignupApproval (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifySignupApprovalResponse> {
         const localVarPath = this.basePath + '/api/signup-approval/verify';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({
@@ -4195,12 +4196,12 @@ export class UserApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<GenericApiResponse>((resolve, reject) => {
+            return new Promise<VerifySignupApprovalResponse>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "GenericApiResponse");
+                        body = ObjectSerializer.deserialize(body, "VerifySignupApprovalResponse");
 
                         if (typeof body.success === 'boolean' && !body.success) {
                             const errString = `Failed to call "${localVarPath}", returned ${response.statusCode}: ` + response.body;

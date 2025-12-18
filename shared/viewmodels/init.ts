@@ -91,6 +91,7 @@ export enum PageType {
     Announcement = 201,
     TensorBoardIntegration = 202,
     OAuthConsent = 203,
+    VerifySignupSuccess = 204,
 }
 
 export const getPageTypeName = (pageTypeValue: number): string | undefined => {

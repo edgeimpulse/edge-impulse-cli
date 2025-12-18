@@ -1102,6 +1102,8 @@ export * from './verifyOrganizationBucketResponseAllOf';
 export * from './verifyOrganizationBucketResponseAllOfFiles';
 export * from './verifyOrganizationExistingBucketRequest';
 export * from './verifyResetPasswordRequest';
+export * from './verifySignupApprovalResponse';
+export * from './verifySignupApprovalResponseAllOf';
 export * from './vlmCandidateLabelItem';
 export * from './vlmCandidateLabelMap';
 export * from './vlmConfigResponse';
@@ -2239,6 +2241,8 @@ import { VerifyOrganizationBucketResponseAllOf } from './verifyOrganizationBucke
 import { VerifyOrganizationBucketResponseAllOfFiles } from './verifyOrganizationBucketResponseAllOfFiles';
 import { VerifyOrganizationExistingBucketRequest } from './verifyOrganizationExistingBucketRequest';
 import { VerifyResetPasswordRequest } from './verifyResetPasswordRequest';
+import { VerifySignupApprovalResponse } from './verifySignupApprovalResponse';
+import { VerifySignupApprovalResponseAllOf } from './verifySignupApprovalResponseAllOf';
 import { VlmCandidateLabelItem } from './vlmCandidateLabelItem';
 import { VlmCandidateLabelMap } from './vlmCandidateLabelMap';
 import { VlmConfigResponse } from './vlmConfigResponse';
@@ -3531,6 +3535,8 @@ let typeMap: {[index: string]: any} = {
     "VerifyOrganizationBucketResponseAllOfFiles": VerifyOrganizationBucketResponseAllOfFiles,
     "VerifyOrganizationExistingBucketRequest": VerifyOrganizationExistingBucketRequest,
     "VerifyResetPasswordRequest": VerifyResetPasswordRequest,
+    "VerifySignupApprovalResponse": VerifySignupApprovalResponse,
+    "VerifySignupApprovalResponseAllOf": VerifySignupApprovalResponseAllOf,
     "VlmCandidateLabelItem": VlmCandidateLabelItem,
     "VlmCandidateLabelMap": VlmCandidateLabelMap,
     "VlmConfigResponse": VlmConfigResponse,

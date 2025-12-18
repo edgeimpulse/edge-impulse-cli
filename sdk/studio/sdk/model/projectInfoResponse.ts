@@ -82,6 +82,9 @@ export class ProjectInfoResponse {
     */
     'csvImportConfig'?: object;
     'studioUrl': string;
+    /**
+    * DEPRECATED. To enable the pretrained model flow, set the impulse type property to \"BYOM\" instead.
+    */
     'inPretrainedModelFlow': boolean;
     'dspPageSize'?: number;
     /**

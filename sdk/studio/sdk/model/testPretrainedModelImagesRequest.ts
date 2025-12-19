@@ -14,6 +14,7 @@ import { DeployPretrainedModelModelClassification } from './deployPretrainedMode
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
+import { DeployPretrainedModelModelAnomaly } from './deployPretrainedModelModelAnomaly';
 import { TestPretrainedModelImagesRequestInput } from './testPretrainedModelImagesRequestInput';
 
 export class TestPretrainedModelImagesRequest {
@@ -22,7 +23,7 @@ export class TestPretrainedModelImagesRequest {
     */
     'imageFileBase64': string;
     'input': TestPretrainedModelImagesRequestInput;
-    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,7 +41,7 @@ export class TestPretrainedModelImagesRequest {
         {
             "name": "model",
             "baseName": "model",
-            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly"
         }    ];
 
     static getAttributeTypeMap() {

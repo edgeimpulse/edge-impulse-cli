@@ -18,10 +18,11 @@ import { DeployPretrainedModelModelClassification } from './deployPretrainedMode
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
+import { DeployPretrainedModelModelAnomaly } from './deployPretrainedModelModelAnomaly';
 
 export class SavePretrainedModelRequest {
     'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
-    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,7 +35,7 @@ export class SavePretrainedModelRequest {
         {
             "name": "model",
             "baseName": "model",
-            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly"
         }    ];
 
     static getAttributeTypeMap() {

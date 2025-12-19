@@ -265,6 +265,7 @@ export * from './deployPretrainedModelInputAudio';
 export * from './deployPretrainedModelInputImage';
 export * from './deployPretrainedModelInputOther';
 export * from './deployPretrainedModelInputTimeSeries';
+export * from './deployPretrainedModelModelAnomaly';
 export * from './deployPretrainedModelModelClassification';
 export * from './deployPretrainedModelModelFreeform';
 export * from './deployPretrainedModelModelObjectDetection';
@@ -1404,6 +1405,7 @@ import { DeployPretrainedModelInputAudio } from './deployPretrainedModelInputAud
 import { DeployPretrainedModelInputImage } from './deployPretrainedModelInputImage';
 import { DeployPretrainedModelInputOther } from './deployPretrainedModelInputOther';
 import { DeployPretrainedModelInputTimeSeries } from './deployPretrainedModelInputTimeSeries';
+import { DeployPretrainedModelModelAnomaly } from './deployPretrainedModelModelAnomaly';
 import { DeployPretrainedModelModelClassification } from './deployPretrainedModelModelClassification';
 import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
@@ -2329,6 +2331,7 @@ let enumsMap: {[index: string]: any} = {
     "DeployPretrainedModelInputImageInputTypeEnum": "DeployPretrainedModelInputImageInputTypeEnum",
     "DeployPretrainedModelInputOtherInputTypeEnum": "DeployPretrainedModelInputOtherInputTypeEnum",
     "DeployPretrainedModelInputTimeSeriesInputTypeEnum": "DeployPretrainedModelInputTimeSeriesInputTypeEnum",
+    "DeployPretrainedModelModelAnomalyModelTypeEnum": "DeployPretrainedModelModelAnomalyModelTypeEnum",
     "DeployPretrainedModelModelClassificationModelTypeEnum": "DeployPretrainedModelModelClassificationModelTypeEnum",
     "DeployPretrainedModelModelFreeformModelTypeEnum": "DeployPretrainedModelModelFreeformModelTypeEnum",
     "DeployPretrainedModelModelObjectDetectionModelTypeEnum": "DeployPretrainedModelModelObjectDetectionModelTypeEnum",
@@ -2736,6 +2739,7 @@ let typeMap: {[index: string]: any} = {
     "DeployPretrainedModelInputImage": DeployPretrainedModelInputImage,
     "DeployPretrainedModelInputOther": DeployPretrainedModelInputOther,
     "DeployPretrainedModelInputTimeSeries": DeployPretrainedModelInputTimeSeries,
+    "DeployPretrainedModelModelAnomaly": DeployPretrainedModelModelAnomaly,
     "DeployPretrainedModelModelClassification": DeployPretrainedModelModelClassification,
     "DeployPretrainedModelModelFreeform": DeployPretrainedModelModelFreeform,
     "DeployPretrainedModelModelObjectDetection": DeployPretrainedModelModelObjectDetection,

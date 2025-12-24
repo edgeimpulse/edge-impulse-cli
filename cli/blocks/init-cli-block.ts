@@ -168,6 +168,11 @@ export class InitCLIBlock {
             }
             params.type = 'deploy';
             params.info = params.info || { };
+            // migrate -> this is a new field introduced in Dec. 2025; so not all parameters.json
+            //            files will have this (didn't want to up version number)
+            if (!params.parameters) {
+                params.parameters = [];
+            }
         }
 
         let blockName: string;
@@ -344,7 +349,8 @@ export class InitCLIBlock {
                     showOptimizations: showOptimizations,
                     cliArguments: cliArguments,
                     privileged: privileged,
-                }
+                },
+                parameters: [],
             };
         }
         else {

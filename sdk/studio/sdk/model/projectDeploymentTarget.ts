@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPGroupItem } from './dSPGroupItem';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
@@ -76,6 +77,7 @@ export class ProjectDeploymentTarget {
     'docsUrl': string;
     'firmwareRepoUrl'?: string;
     'modelVariants': Array<DeploymentTargetVariant>;
+    'parameters': Array<DSPGroupItem>;
     /**
     * Whether this deployment target is recommended for the project based on connected devices.
     */
@@ -236,6 +238,11 @@ export class ProjectDeploymentTarget {
             "name": "modelVariants",
             "baseName": "modelVariants",
             "type": "Array<DeploymentTargetVariant>"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<DSPGroupItem>"
         },
         {
             "name": "recommendedForProject",

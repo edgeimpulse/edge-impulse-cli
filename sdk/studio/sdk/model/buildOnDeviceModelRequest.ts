@@ -16,6 +16,10 @@ import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 export class BuildOnDeviceModelRequest {
     'engine': DeploymentTargetEngine;
     'modelType'?: KerasModelTypeEnum;
+    /**
+    * List of custom parameters for this deployment job (see the list of parameters that the block exposes in DeploymentTarget#parameters).
+    */
+    'parameters'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -29,6 +33,11 @@ export class BuildOnDeviceModelRequest {
             "name": "modelType",
             "baseName": "modelType",
             "type": "KerasModelTypeEnum"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

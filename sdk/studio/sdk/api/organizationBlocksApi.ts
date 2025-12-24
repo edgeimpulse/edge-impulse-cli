@@ -75,6 +75,7 @@ export type addOrganizationDeployBlockFormParams = {
     showOptimizations?: boolean,
     category?: string,
     sourceCodeDownloadStaffOnly?: boolean,
+    parameters?: Array<object>,
 };
 
 export type updateOrganizationDeployBlockFormParams = {
@@ -94,6 +95,7 @@ export type updateOrganizationDeployBlockFormParams = {
     showOptimizations?: boolean,
     category?: string,
     sourceCodeDownloadStaffOnly?: boolean,
+    parameters?: Array<object>,
 };
 
 
@@ -185,6 +187,7 @@ export class OrganizationBlocksApi {
      * @param showOptimizations 
      * @param category 
      * @param sourceCodeDownloadStaffOnly Whether the source code is only available for staff users.
+     * @param parameters List of parameters, spec\&#39;ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
      */
     public async addOrganizationDeployBlock (organizationId: number, params: addOrganizationDeployBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy'
@@ -305,6 +308,10 @@ export class OrganizationBlocksApi {
 
         if (params.sourceCodeDownloadStaffOnly !== undefined) {
             localVarFormParams['sourceCodeDownloadStaffOnly'] = ObjectSerializer.serializeFormData(params.sourceCodeDownloadStaffOnly, "boolean");
+        }
+
+        if (params.parameters !== undefined) {
+            localVarFormParams['parameters'] = JSON.stringify(params.parameters);
         }
 
         let localVarRequestOptions: localVarRequest.Options = {
@@ -2676,6 +2683,7 @@ export class OrganizationBlocksApi {
      * @param showOptimizations 
      * @param category 
      * @param sourceCodeDownloadStaffOnly Whether the source code is only available for staff users.
+     * @param parameters List of parameters, spec\&#39;ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
      */
     public async updateOrganizationDeployBlock (organizationId: number, deployId: number, params: updateOrganizationDeployBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/deploy/{deployId}'
@@ -2776,6 +2784,10 @@ export class OrganizationBlocksApi {
 
         if (params.sourceCodeDownloadStaffOnly !== undefined) {
             localVarFormParams['sourceCodeDownloadStaffOnly'] = ObjectSerializer.serializeFormData(params.sourceCodeDownloadStaffOnly, "boolean");
+        }
+
+        if (params.parameters !== undefined) {
+            localVarFormParams['parameters'] = JSON.stringify(params.parameters);
         }
 
         let localVarRequestOptions: localVarRequest.Options = {

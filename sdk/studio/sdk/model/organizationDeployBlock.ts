@@ -11,6 +11,7 @@
  */
 
 import { CreatedUpdatedByUser } from './createdUpdatedByUser';
+import { DSPGroupItem } from './dSPGroupItem';
 
 export class OrganizationDeployBlock {
     'id': number;
@@ -44,6 +45,14 @@ export class OrganizationDeployBlock {
     * Whether the source code is only available for staff users.
     */
     'sourceCodeDownloadStaffOnly': boolean;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters'?: Array<object>;
+    /**
+    * List of parameters to be rendered in the UI
+    */
+    'parametersUI'?: Array<DSPGroupItem>;
 
     static discriminator: string | undefined = undefined;
 
@@ -172,6 +181,16 @@ export class OrganizationDeployBlock {
             "name": "sourceCodeDownloadStaffOnly",
             "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
+        },
+        {
+            "name": "parametersUI",
+            "baseName": "parametersUI",
+            "type": "Array<DSPGroupItem>"
         }    ];
 
     static getAttributeTypeMap() {

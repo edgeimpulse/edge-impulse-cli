@@ -31,6 +31,10 @@ export class AddOrganizationDeployBlockRequest {
     * Whether the source code is only available for staff users.
     */
     'sourceCodeDownloadStaffOnly'?: boolean;
+    /**
+    * List of parameters, spec\'ed according to https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
+    */
+    'parameters'?: Array<object>;
 
     static discriminator: string | undefined = undefined;
 
@@ -114,6 +118,11 @@ export class AddOrganizationDeployBlockRequest {
             "name": "sourceCodeDownloadStaffOnly",
             "baseName": "sourceCodeDownloadStaffOnly",
             "type": "boolean"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<object>"
         }    ];
 
     static getAttributeTypeMap() {

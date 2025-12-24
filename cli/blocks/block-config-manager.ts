@@ -221,6 +221,11 @@ export class BlockConfigManager {
                     if (parameters.version !== 1) {
                         throw new Error(`Unexpected value for "version" in "parameters.json" (expected 1)`);
                     }
+                    // migrate -> this is a new field introduced in Dec. 2025; so not all parameters.json
+                    //            files will have this (didn't want to up version number)
+                    if (!parameters.parameters) {
+                        parameters.parameters = [];
+                    }
                     return {
                         type: 'deploy',
                         config: config,
@@ -412,6 +417,7 @@ export class BlockConfigManager {
                         version: 1,
                         type: 'deploy',
                         info: parameters.info || { },
+                        parameters: [],
                     };
                 }
                 parameters.info = parameters.info || { };
@@ -451,6 +457,7 @@ export class BlockConfigManager {
                                 integrateUrl: block.deployBlock.integrateUrl,
                                 privileged: block.deployBlock.privileged,
                             },
+                            parameters: <DSPParameterItem[]>(block.deployBlock.parameters || []),
                         };
                     }
                     catch (ex2) {
@@ -474,6 +481,7 @@ export class BlockConfigManager {
                             showOptimizations: true,
                             supportsEonCompiler: true,
                         },
+                        parameters: [],
                     };
                 }
                 await this.saveParameters(parameters);

@@ -416,7 +416,8 @@ export class UpdateRemoteBlockFromParamsJson {
             'limitsCpu' |
             'limitsMemory' |
             'photo' |
-            'sourceCodeDownloadStaffOnly'
+            'sourceCodeDownloadStaffOnly' |
+            'parameters'
         >;
         let diffCheck: { [K in TL]: { oldVal: any, newVal: any } } = {
             category: { oldVal: remoteBlock.category, newVal: params.info.category },

@@ -20,6 +20,7 @@ export type DeployBlockParametersJson = {
         showOptimizations: boolean,
         privileged?: boolean,
     },
+    parameters: DSPParameterItem[];
 };
 
 export type MachineLearningBlockParametersJson = {

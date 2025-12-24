@@ -52,6 +52,7 @@ describe("block config migration (deploy)", () => {
                     "showOptimizations": true,
                     "supportsEonCompiler": true,
                 },
+                "parameters": [],
             });
             assert.deepStrictEqual(JSON.parse(await fs.promises.readFile(Path.join(folder, '.ei-block-config'), 'utf-8')), {
                 "version": 2,
@@ -74,6 +75,7 @@ describe("block config migration (deploy)", () => {
                     "showOptimizations": true,
                     "supportsEonCompiler": true,
                 },
+                "parameters": [],
             });
         });
 
@@ -138,6 +140,7 @@ describe("block config migration (deploy)", () => {
                     "showOptimizations": true,
                     "supportsEonCompiler": true,
                 },
+                "parameters": [],
             });
             assert.deepStrictEqual(JSON.parse(await fs.promises.readFile(Path.join(folder, '.ei-block-config'), 'utf-8')), {
                 "version": 2,
@@ -160,6 +163,7 @@ describe("block config migration (deploy)", () => {
                     "showOptimizations": true,
                     "supportsEonCompiler": true,
                 },
+                "parameters": [],
             });
         });
 
@@ -209,6 +213,7 @@ describe("block config migration (deploy)", () => {
                     "description": "Don't overwrite dis",
                     "category": "library",
                 },
+                "parameters": [],   // should have parameters (but not saved to disk)
             });
             assert.deepStrictEqual(JSON.parse(await fs.promises.readFile(Path.join(folder, '.ei-block-config'), 'utf-8')), {
                 "version": 2,
@@ -227,6 +232,94 @@ describe("block config migration (deploy)", () => {
                     "description": "Don't overwrite dis",
                     "category": "library",
                 },
+            });
+        });
+
+        it('loads v2 deploy block w/ parameters.json', async () => {
+            let config = <EdgeImpulseConfig><unknown>{ };
+            config.host = '211.212.213.214';
+
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let eiBlockConfig = {
+                "version": 2,
+                "config": {
+                    "211.212.213.214": {
+                        "organizationId": 1,
+                        "id": 200
+                    },
+                }
+            };
+            await fs.promises.writeFile(Path.join(folder, '.ei-block-config'), JSON.stringify(eiBlockConfig, null, 4), 'utf-8');
+            await fs.promises.writeFile(Path.join(folder, 'parameters.json'), JSON.stringify({
+                "version": 1,
+                "type": "deploy",
+                "info": {
+                    "name": "My awesome block",
+                    "description": "Don't overwrite dis",
+                    "category": "library",
+                },
+                "parameters": [{
+                    "name": "Number of training cycles",
+                    "value": -1,
+                    "type": "int",
+                    "help": "Maximum number of iterations taken for the solvers to converge.",
+                    "param": "max-iter"
+                }],
+            }, null, 4), 'utf-8');
+
+            const blockConfigManager = new BlockConfigManager(config, folder, {
+                skipConfirmation: true,
+            });
+            const blockConfig = await blockConfigManager.loadConfig({ throwOnMissingParams: false });
+            assert(blockConfig !== null, 'blockConfig should not be null');
+            if (blockConfig.type !== 'deploy') {
+                assert(false, 'blockConfig type should be "deploy": ' + JSON.stringify(blockConfig));
+            }
+            assert.deepEqual(blockConfig.type, 'deploy');
+            assert.deepEqual(blockConfig.config, {
+                "organizationId": 1,
+                "id": 200
+            });
+            assert.deepEqual(blockConfig.parameters, {
+                "version": 1,
+                "type": "deploy",
+                "info": {
+                    "name": "My awesome block",
+                    "description": "Don't overwrite dis",
+                    "category": "library",
+                },
+                "parameters": [{
+                    "name": "Number of training cycles",
+                    "value": -1,
+                    "type": "int",
+                    "help": "Maximum number of iterations taken for the solvers to converge.",
+                    "param": "max-iter"
+                }],
+            });
+            assert.deepStrictEqual(JSON.parse(await fs.promises.readFile(Path.join(folder, '.ei-block-config'), 'utf-8')), {
+                "version": 2,
+                "config": {
+                    "211.212.213.214": {
+                        "organizationId": 1,
+                        "id": 200
+                    }
+                }
+            });
+            assert.deepStrictEqual(JSON.parse(await fs.promises.readFile(Path.join(folder, 'parameters.json'), 'utf-8')), {
+                "version": 1,
+                "type": "deploy",
+                "info": {
+                    "name": "My awesome block",
+                    "description": "Don't overwrite dis",
+                    "category": "library",
+                },
+                "parameters": [{
+                    "name": "Number of training cycles",
+                    "value": -1,
+                    "type": "int",
+                    "help": "Maximum number of iterations taken for the solvers to converge.",
+                    "param": "max-iter"
+                }],
             });
         });
     });

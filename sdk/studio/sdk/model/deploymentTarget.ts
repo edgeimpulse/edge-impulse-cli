@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { DSPGroupItem } from './dSPGroupItem';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
 import { DeploymentTargetVariant } from './deploymentTargetVariant';
@@ -74,6 +75,7 @@ export class DeploymentTarget {
     'docsUrl': string;
     'firmwareRepoUrl'?: string;
     'modelVariants': Array<DeploymentTargetVariant>;
+    'parameters': Array<DSPGroupItem>;
 
     static discriminator: string | undefined = undefined;
 
@@ -222,6 +224,11 @@ export class DeploymentTarget {
             "name": "modelVariants",
             "baseName": "modelVariants",
             "type": "Array<DeploymentTargetVariant>"
+        },
+        {
+            "name": "parameters",
+            "baseName": "parameters",
+            "type": "Array<DSPGroupItem>"
         }    ];
 
     static getAttributeTypeMap() {

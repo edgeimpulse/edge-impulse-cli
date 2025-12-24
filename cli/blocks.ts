@@ -485,6 +485,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         requestsMemory: undefined,
                         privileged: currentBlockConfig.parameters.info.privileged,
                         sourceCodeDownloadStaffOnly: undefined,
+                        parameters: currentBlockConfig.parameters.parameters,
                     };
 
                     newResponse = await config.api.organizationBlocks.addOrganizationDeployBlock(
@@ -638,7 +639,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             }
             else {
                 if (currentBlockConfig.type === 'machine-learning' || currentBlockConfig.type === 'transform' ||
-                    currentBlockConfig.type === 'ai-action' || currentBlockConfig.type === 'synthetic-data'
+                    currentBlockConfig.type === 'ai-action' || currentBlockConfig.type === 'synthetic-data' ||
+                    currentBlockConfig.type === 'deploy'
                 ) {
                     let currParams: { }[] | undefined;
                     if (currentBlockConfig.type === 'machine-learning') {
@@ -662,6 +664,10 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         }
 
                         currParams = currBlock.parameters;
+                    }
+                    else if (currentBlockConfig.type === 'deploy') {
+                        currParams = (await config.api.organizationBlocks.getOrganizationDeployBlock(
+                            organizationId, currentBlockConfig.config.id)).deployBlock.parameters;
                     }
 
                     let shouldOverwrite = true;
@@ -887,6 +893,12 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                     };
                     await config.api.organizationBlocks.updateOrganizationTransformationBlock(
                         organizationId, currentBlockConfig.config.id, newBlockObject);
+                }
+                else if (currentBlockConfig.type === 'deploy') {
+                    await config.api.organizationBlocks.updateOrganizationDeployBlock(
+                        organizationId, currentBlockConfig.config.id, {
+                            parameters: currentBlockConfig.parameters.parameters,
+                        });
                 }
             }
 

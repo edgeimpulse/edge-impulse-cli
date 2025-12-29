@@ -42,6 +42,10 @@ export class TransferLearningModel {
     'customParameters'?: Array<DSPGroupItem>;
     'displayCategory'?: BlockDisplayCategory;
     'blockNoLongerAvailable'?: TransferLearningModelBlockNoLongerAvailable;
+    /**
+    * Whether this block can be switched to expert mode.
+    */
+    'hasExpertMode': boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -150,6 +154,11 @@ export class TransferLearningModel {
             "name": "blockNoLongerAvailable",
             "baseName": "blockNoLongerAvailable",
             "type": "TransferLearningModelBlockNoLongerAvailable"
+        },
+        {
+            "name": "hasExpertMode",
+            "baseName": "hasExpertMode",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

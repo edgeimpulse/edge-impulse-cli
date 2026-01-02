@@ -34,6 +34,10 @@ export class DeployPretrainedModelRequest {
     * Optional, use a specific converter (only for ONNX models).
     */
     'useConverter'?: DeployPretrainedModelRequestUseConverterEnum;
+    /**
+    * Optional for ONNX files: overrides the input shape of the model. This is highly suggested if the model has dynamic dimensions. If this field is not set, then all dynamic dimensions will be set to \'1\'.
+    */
+    'overrideInputShape'?: Array<number>;
 
     static discriminator: string | undefined = undefined;
 
@@ -77,6 +81,11 @@ export class DeployPretrainedModelRequest {
             "name": "useConverter",
             "baseName": "useConverter",
             "type": "DeployPretrainedModelRequestUseConverterEnum"
+        },
+        {
+            "name": "overrideInputShape",
+            "baseName": "overrideInputShape",
+            "type": "Array<number>"
         }    ];
 
     static getAttributeTypeMap() {

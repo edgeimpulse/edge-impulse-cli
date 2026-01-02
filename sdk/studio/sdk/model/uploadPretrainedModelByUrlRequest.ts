@@ -11,10 +11,10 @@
  */
 
 
-export class UploadPretrainedModelRequest {
-    'modelFile':{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
+export class UploadPretrainedModelByUrlRequest {
+    'modelFileUrl': string;
     'modelFileName': string;
-    'modelFileType': UploadPretrainedModelRequestModelFileTypeEnum;
+    'modelFileType': UploadPretrainedModelByUrlRequestModelFileTypeEnum;
     'representativeFeatures'?:{ fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
     /**
     * MCU used for calculating latency, query `latencyDevices` in `listProject` for a list of supported devices (and use the \"mcu\" property here). If this is kept empty then we\'ll show an overview of multiple devices.
@@ -29,9 +29,9 @@ export class UploadPretrainedModelRequest {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "modelFile",
-            "baseName": "modelFile",
-            "type": "RequestFile"
+            "name": "modelFileUrl",
+            "baseName": "modelFileUrl",
+            "type": "string"
         },
         {
             "name": "modelFileName",
@@ -41,7 +41,7 @@ export class UploadPretrainedModelRequest {
         {
             "name": "modelFileType",
             "baseName": "modelFileType",
-            "type": "UploadPretrainedModelRequestModelFileTypeEnum"
+            "type": "UploadPretrainedModelByUrlRequestModelFileTypeEnum"
         },
         {
             "name": "representativeFeatures",
@@ -60,10 +60,10 @@ export class UploadPretrainedModelRequest {
         }    ];
 
     static getAttributeTypeMap() {
-        return UploadPretrainedModelRequest.attributeTypeMap;
+        return UploadPretrainedModelByUrlRequest.attributeTypeMap;
     }
 }
 
 
-export type UploadPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';
-export const UploadPretrainedModelRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model'];
+export type UploadPretrainedModelByUrlRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';
+export const UploadPretrainedModelByUrlRequestModelFileTypeEnumValues: string[] = ['tflite', 'onnx', 'saved_model'];

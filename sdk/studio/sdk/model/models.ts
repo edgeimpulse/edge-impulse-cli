@@ -1064,6 +1064,7 @@ export * from './uploadCsvWizardUploadedFileRequest';
 export * from './uploadCustomBlockRequest';
 export * from './uploadImageRequest';
 export * from './uploadKerasFilesRequest';
+export * from './uploadPretrainedModelByUrlRequest';
 export * from './uploadPretrainedModelRequest';
 export * from './uploadReadmeImageResponse';
 export * from './uploadUserPhotoRequest';
@@ -1136,7 +1137,6 @@ export * from './windowSettings';
 export * from './windowSettingsResponse';
 export * from './windowSettingsResponseAllOf';
 
-import localVarRequest = require('request');
 
 import { AIAction } from './aIAction';
 import { AIActionLastPreviewState } from './aIActionLastPreviewState';
@@ -2204,6 +2204,7 @@ import { UploadCsvWizardUploadedFileRequest } from './uploadCsvWizardUploadedFil
 import { UploadCustomBlockRequest } from './uploadCustomBlockRequest';
 import { UploadImageRequest } from './uploadImageRequest';
 import { UploadKerasFilesRequest } from './uploadKerasFilesRequest';
+import { UploadPretrainedModelByUrlRequest } from './uploadPretrainedModelByUrlRequest';
 import { UploadPretrainedModelRequest } from './uploadPretrainedModelRequest';
 import { UploadReadmeImageResponse } from './uploadReadmeImageResponse';
 import { UploadUserPhotoRequest } from './uploadUserPhotoRequest';
@@ -2276,7 +2277,6 @@ import { WindowSettings } from './windowSettings';
 import { WindowSettingsResponse } from './windowSettingsResponse';
 import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
 
-/* tslint:disable:no-unused-variable */
 let primitives = [
                     "string",
                     "boolean",
@@ -2468,6 +2468,7 @@ let enumsMap: {[index: string]: any} = {
     "UpdateProjectRequestSelectedProjectTypeInWizardEnum": "UpdateProjectRequestSelectedProjectTypeInWizardEnum",
     "UpdateProjectRequestDataAcquisitionViewTypeEnum": "UpdateProjectRequestDataAcquisitionViewTypeEnum",
     "UploadCustomBlockRequestTypeEnum": "UploadCustomBlockRequestTypeEnum",
+    "UploadPretrainedModelByUrlRequestModelFileTypeEnum": "UploadPretrainedModelByUrlRequestModelFileTypeEnum",
     "UploadPretrainedModelRequestModelFileTypeEnum": "UploadPretrainedModelRequestModelFileTypeEnum",
     "UserEulaName": "UserEulaName",
     "UserProjectsSortOrder": "UserProjectsSortOrder",
@@ -3503,6 +3504,7 @@ let typeMap: {[index: string]: any} = {
     "UploadCustomBlockRequest": UploadCustomBlockRequest,
     "UploadImageRequest": UploadImageRequest,
     "UploadKerasFilesRequest": UploadKerasFilesRequest,
+    "UploadPretrainedModelByUrlRequest": UploadPretrainedModelByUrlRequest,
     "UploadPretrainedModelRequest": UploadPretrainedModelRequest,
     "UploadReadmeImageResponse": UploadReadmeImageResponse,
     "UploadUserPhotoRequest": UploadUserPhotoRequest,
@@ -3693,61 +3695,82 @@ export class ObjectSerializer {
     }
 }
 
+export type RequestOptionsType = { method: string; headers: Record<string, string>; body?: any };
+type ApplyToRequestResult = {
+  requestOptions: RequestOptionsType;
+  url: string;
+};
+
 export interface Authentication {
     /**
     * Apply authentication settings to header and query params.
+    * Returns updated requestOptions and url (for query params).
     */
-    applyToRequest(requestOptions: localVarRequest.Options): Promise<void> | void;
+    applyToRequest(requestOptions: RequestOptionsType, url: string): ApplyToRequestResult | Promise<ApplyToRequestResult>;
 }
 
 export class HttpBasicAuth implements Authentication {
     public username: string = '';
     public password: string = '';
 
-    applyToRequest(requestOptions: localVarRequest.Options): void {
-        requestOptions.auth = {
-            username: this.username, password: this.password
-        }
+    applyToRequest(requestOptions: RequestOptionsType, url: string) {
+        const headers = { ...(requestOptions.headers || {}) };
+        headers['Authorization'] = 'Basic ' + Buffer.from(this.username + ':' + this.password).toString('base64');
+        return { requestOptions: { ...requestOptions, headers }, url };
     }
 }
 
 export class ApiKeyAuth implements Authentication {
-    public apiKey: string = '';
+    public apiKey = '';
 
-    constructor(private location: string, private paramName: string) {
+    constructor(private location: 'query' | 'header' | 'cookie', private paramName: string) {
     }
 
-    applyToRequest(requestOptions: localVarRequest.Options): void {
-        if (this.location == "query") {
-            (<any>requestOptions.qs)[this.paramName] = this.apiKey;
-        } else if (this.location == "header" && requestOptions && requestOptions.headers) {
-            requestOptions.headers[this.paramName] = this.apiKey;
-        } else if (this.location == 'cookie' && requestOptions && requestOptions.headers) {
-            if (requestOptions.headers['Cookie']) {
-                requestOptions.headers['Cookie'] += '; ' + this.paramName + '=' + encodeURIComponent(this.apiKey);
+    applyToRequest(requestOptions: RequestOptionsType, url: string) {
+        const headers = { ...(requestOptions.headers || {}) };
+        let newUrl = url;
+
+        if (!this.apiKey) {
+            return { requestOptions: { ...requestOptions, headers }, url: newUrl };
+        }
+
+        switch (this.location) {
+            case 'query': {
+                const urlObj = new URL(url);
+                urlObj.searchParams.append(this.paramName, this.apiKey);
+                newUrl = urlObj.toString();
+                break;
             }
-            else {
-                requestOptions.headers['Cookie'] = this.paramName + '=' + encodeURIComponent(this.apiKey);
+            case 'header':
+                headers[this.paramName] = this.apiKey;
+                break;
+            case 'cookie': {
+                const cookie = `${this.paramName}=${encodeURIComponent(this.apiKey)}`;
+                headers['Cookie'] = headers['Cookie'] ? `${headers['Cookie']}; ${cookie}` : cookie;
+                break;
             }
         }
+
+        return { requestOptions: { ...requestOptions, headers }, url: newUrl };
     }
 }
 
 export class OAuth implements Authentication {
     public accessToken: string = '';
 
-    applyToRequest(requestOptions: localVarRequest.Options): void {
-        if (requestOptions && requestOptions.headers) {
-            requestOptions.headers["Authorization"] = "Bearer " + this.accessToken;
-        }
+    applyToRequest(requestOptions: RequestOptionsType, url: string) {
+        const headers = { ...(requestOptions.headers || {}) };
+        headers['Authorization'] = 'Bearer ' + this.accessToken;
+        return { requestOptions: { ...requestOptions, headers }, url };
     }
 }
+
 
 export class VoidAuth implements Authentication {
     public username: string = '';
     public password: string = '';
 
-    applyToRequest(_: localVarRequest.Options): void {
-        // Do nothing
+    applyToRequest(requestOptions: RequestOptionsType, url: string) {
+        return { requestOptions, url };
     }
 }

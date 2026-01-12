@@ -2277,18 +2277,9 @@ import { WindowSettings } from './windowSettings';
 import { WindowSettingsResponse } from './windowSettingsResponse';
 import { WindowSettingsResponseAllOf } from './windowSettingsResponseAllOf';
 
-let primitives = [
-                    "string",
-                    "boolean",
-                    "double",
-                    "integer",
-                    "long",
-                    "float",
-                    "number",
-                    "any"
-                 ];
+const primitives = [ "string", "boolean", "double", "integer", "long", "float", "number", "any" ];
 
-let enumsMap: {[index: string]: any} = {
+const enumsMap: {[index: string]: any} = {
     "AIActionsDataCategory": "AIActionsDataCategory",
     "AIActionsOperatesOn": "AIActionsOperatesOn",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
@@ -2480,7 +2471,7 @@ let enumsMap: {[index: string]: any} = {
     "VlmModelType": "VlmModelType",
 }
 
-let typeMap: {[index: string]: any} = {
+const typeMap: {[index: string]: any} = {
     "AIAction": AIAction,
     "AIActionLastPreviewState": AIActionLastPreviewState,
     "AIActionLastPreviewStateProposedChanges": AIActionLastPreviewStateProposedChanges,
@@ -3578,11 +3569,14 @@ export class ObjectSerializer {
     public static findCorrectType(data: any, expectedType: string) {
         if (data == undefined) {
             return expectedType;
-        } else if (primitives.indexOf(expectedType.toLowerCase()) !== -1) {
+        }
+        else if (primitives.includes(expectedType.toLowerCase())) {
             return expectedType;
-        } else if (expectedType === "Date") {
+        }
+        else if (expectedType === "Date") {
             return expectedType;
-        } else {
+        }
+        else {
             if (enumsMap[expectedType]) {
                 return expectedType;
             }
@@ -3595,15 +3589,18 @@ export class ObjectSerializer {
             let discriminatorProperty = typeMap[expectedType].discriminator;
             if (discriminatorProperty == null) {
                 return expectedType; // the type does not have a discriminator. use it.
-            } else {
+            }
+            else {
                 if (data[discriminatorProperty]) {
                     var discriminatorType = data[discriminatorProperty];
                     if(typeMap[discriminatorType]){
                         return discriminatorType; // use the type given in the discriminator
-                    } else {
+                    }
+                    else {
                         return expectedType; // discriminator did not map to a type
                     }
-                } else {
+                }
+                else {
                     return expectedType; // discriminator was not present (or an empty string)
                 }
             }
@@ -3613,9 +3610,11 @@ export class ObjectSerializer {
     public static serialize(data: any, type: string) {
         if (data == undefined) {
             return data;
-        } else if (primitives.indexOf(type.toLowerCase()) !== -1) {
+        }
+        else if (primitives.includes(type.toLowerCase())) {
             return data;
-        } else if (type.lastIndexOf("Array<", 0) === 0) { // string.startsWith pre es6
+        }
+        else if (type.lastIndexOf("Array<", 0) === 0) { // string.startsWith pre es6
             let subType: string = type.replace("Array<", ""); // Array<Type> => Type>
             subType = subType.substring(0, subType.length - 1); // Type> => Type
             let transformedData: any[] = [];
@@ -3624,9 +3623,11 @@ export class ObjectSerializer {
                 transformedData.push(ObjectSerializer.serialize(date, subType));
             }
             return transformedData;
-        } else if (type === "Date" && data instanceof Date) {
+        }
+        else if (type === "Date" && data instanceof Date) {
             return data.toISOString();
-        } else {
+        }
+        else {
             if (enumsMap[type]) {
                 return data;
             }
@@ -3649,7 +3650,7 @@ export class ObjectSerializer {
     }
 
     public static serializeFormData(data: any, type: string) {
-        if (primitives.indexOf(type.toLowerCase()) !== -1) {
+        if (primitives.includes(type.toLowerCase())) {
             // e.g. true/false cannot be serialized; need to be stringified
             return data.toString();
         }
@@ -3663,9 +3664,11 @@ export class ObjectSerializer {
         type = ObjectSerializer.findCorrectType(data, type);
         if (data == undefined) {
             return data;
-        } else if (primitives.indexOf(type.toLowerCase()) !== -1) {
+        }
+        else if (primitives.includes(type.toLowerCase())) {
             return data;
-        } else if (type.lastIndexOf("Array<", 0) === 0) { // string.startsWith pre es6
+        }
+        else if (type.lastIndexOf("Array<", 0) === 0) { // string.startsWith pre es6
             let subType: string = type.replace("Array<", ""); // Array<Type> => Type>
             subType = subType.substring(0, subType.length - 1); // Type> => Type
             let transformedData: any[] = [];
@@ -3674,9 +3677,11 @@ export class ObjectSerializer {
                 transformedData.push(ObjectSerializer.deserialize(date, subType));
             }
             return transformedData;
-        } else if (type === "Date" && typeof data === "string") {
+        }
+        else if (type === "Date" && typeof data === "string") {
             return new Date(data);
-        } else {
+        }
+        else {
             if (enumsMap[type]) {// is Enum
                 return data;
             }
@@ -3715,7 +3720,9 @@ export class HttpBasicAuth implements Authentication {
 
     applyToRequest(requestOptions: RequestOptionsType, url: string) {
         const headers = { ...(requestOptions.headers || {}) };
-        headers['Authorization'] = 'Basic ' + Buffer.from(this.username + ':' + this.password).toString('base64');
+        headers['Authorization'] = 'Basic ' + (typeof btoa !== 'undefined'
+            ? btoa(this.username + ':' + this.password)
+            : Buffer.from(this.username + ':' + this.password).toString('base64'));
         return { requestOptions: { ...requestOptions, headers }, url };
     }
 }

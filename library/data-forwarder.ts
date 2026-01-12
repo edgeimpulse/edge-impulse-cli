@@ -1,34 +1,28 @@
 import crypto from 'crypto';
-import request from 'request';
-import http from 'http';
-import https from 'https';
-
+import { fetch } from 'undici';
 import encodeIngestionHeader from '../shared/encoding';
-
-const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
-const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
 
 export class DataForwarder {
     private _options: {
-        deviceId: string | undefined,
-        deviceType: string,
-        sensors: { name: string, units: string }[],
-        intervalMs: number,
-        ingestionHost: string,
-        hmacKey: string,
-        apiKey: string
+        deviceId: string | undefined;
+        deviceType: string;
+        sensors: { name: string; units: string }[];
+        intervalMs: number;
+        ingestionHost: string;
+        hmacKey: string;
+        apiKey: string;
     };
     private _samples: number[][] = [];
 
     constructor(options: {
-        deviceId?: string,
-        deviceType: string,
-        sensors: { name: string, units: string }[],
-        intervalMs?: number,
-        frequency?: number,
-        host?: string,
-        hmacKey?: string,
-        apiKey: string
+        deviceId?: string;
+        deviceType: string;
+        sensors: { name: string; units: string }[];
+        intervalMs?: number;
+        frequency?: number;
+        host?: string;
+        hmacKey?: string;
+        apiKey: string;
     }) {
         this._options = {
             deviceId: options.deviceId,
@@ -36,7 +30,7 @@ export class DataForwarder {
             sensors: options.sensors,
             apiKey: options.apiKey || '',
             hmacKey: options.hmacKey || '0',
-            intervalMs: options.intervalMs || (1000 / (options.frequency || 1)),
+            intervalMs: options.intervalMs || 1000 / (options.frequency || 1),
             ingestionHost: options.host || 'edgeimpulse.com'
         };
 
@@ -79,25 +73,26 @@ export class DataForwarder {
 
     addData(data: number[]) {
         if (data.length !== this._options.sensors.length) {
-            throw new Error('Invalid data, expected ' + this._options.sensors.length + ' values, but got: ' +
-                data.length);
+            throw new Error(
+                'Invalid data, expected ' + this._options.sensors.length + ' values, but got: ' + data.length
+            );
         }
 
         this._samples.push(data);
     }
 
     async upload(opts: {
-        filename: string,
-        label?: string,
-        allowDuplicates?: boolean,
-        category: 'training' | 'testing' | 'split',
+        filename: string;
+        label?: string;
+        allowDuplicates?: boolean;
+        category: 'training' | 'testing' | 'split';
     }) {
         let emptySignature = Array(64).fill('0').join('');
 
         let data = {
             protected: {
-                ver: "v1",
-                alg: "HS256",
+                ver: 'v1',
+                alg: 'HS256',
                 iat: Math.floor(Date.now() / 1000) // epoch time, seconds since 1970
             },
             signature: emptySignature,
@@ -130,11 +125,11 @@ export class DataForwarder {
 
         let dataBuffer = encodedJson;
 
-        let headers: { [k: string]: string} = {
+        let headers: { [k: string]: string } = {
             'x-api-key': this._options.apiKey,
             'x-file-name': encodeIngestionHeader(opts.filename),
             'Content-Type': 'application/json',
-            'Connection': 'keep-alive'
+            Connection: 'keep-alive'
         };
         if (opts.label) {
             headers['x-label'] = encodeIngestionHeader(opts.label);
@@ -143,30 +138,21 @@ export class DataForwarder {
             headers['x-disallow-duplicates'] = '1';
         }
 
-        return new Promise((res, rej) => {
-            let agent = this._options.ingestionHost.indexOf('https:') === 0 ?
-                keepAliveAgentHttps :
-                keepAliveAgentHttp;
+        const category = opts.category;
+        const url = this._options.ingestionHost + '/api/' + category + '/data';
 
-            let category = opts.category;
-
-            // now upload the buffer to Edge Impulse
-            request.post(
-                this._options.ingestionHost + '/api/' + category + '/data', {
-                    headers: headers,
-                    body: dataBuffer,
-                    encoding: null,
-                    agent: agent
-                }, (err, response, body) => {
-                    if (err) return rej(err);
-                    if (response.statusCode !== 200) {
-                        if (body instanceof Buffer) {
-                            return rej(body.toString('utf-8'));
-                        }
-                        return rej(body || response.statusCode.toString());
-                    }
-                    res(body instanceof Buffer ? body.toString('utf-8') : body);
-                });
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: dataBuffer
         });
+
+        const body = await response.text();
+
+        if (response.status !== 200) {
+            throw body || response.status.toString();
+        }
+
+        return body;
     }
 }

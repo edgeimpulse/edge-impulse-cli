@@ -31,6 +31,10 @@ export class ModelPrediction {
     * Only set for object detection projects. Coordinates are scaled 0..1, not absolute values.
     */
     'boundingBoxes'?: Array<BoundingBoxWithScore>;
+    /**
+    * For samples with structured labels (in the form of a key/value label map), this object will contain per-key prediction info for the sample.
+    */
+    'labelMapPredictions'?: { [key: string]: string; };
 
     static discriminator: string | undefined = undefined;
 
@@ -79,6 +83,11 @@ export class ModelPrediction {
             "name": "boundingBoxes",
             "baseName": "boundingBoxes",
             "type": "Array<BoundingBoxWithScore>"
+        },
+        {
+            "name": "labelMapPredictions",
+            "baseName": "labelMapPredictions",
+            "type": "{ [key: string]: string; }"
         }    ];
 
     static getAttributeTypeMap() {

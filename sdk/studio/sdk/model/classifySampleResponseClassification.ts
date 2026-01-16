@@ -49,6 +49,7 @@ export class ClassifySampleResponseClassification {
     * List of configurable thresholds for this block.
     */
     'thresholds': Array<BlockThreshold>;
+    'isMultiLabel'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -97,6 +98,11 @@ export class ClassifySampleResponseClassification {
             "name": "thresholds",
             "baseName": "thresholds",
             "type": "Array<BlockThreshold>"
+        },
+        {
+            "name": "isMultiLabel",
+            "baseName": "isMultiLabel",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

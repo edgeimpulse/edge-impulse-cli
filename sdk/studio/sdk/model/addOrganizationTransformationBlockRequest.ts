@@ -12,6 +12,7 @@
 
 import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { EnvironmentVariable } from './environmentVariable';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 
 export class AddOrganizationTransformationBlockRequest {
@@ -39,6 +40,7 @@ export class AddOrganizationTransformationBlockRequest {
     */
     'maxRunningTimeStr'?: string;
     'isPublic'?: boolean;
+    'publicProjectTierAvailability'?: PublicProjectTierAvailability;
     /**
     * URL to the source code of this custom learn block.
     */
@@ -146,6 +148,11 @@ export class AddOrganizationTransformationBlockRequest {
             "name": "isPublic",
             "baseName": "isPublic",
             "type": "boolean"
+        },
+        {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
         },
         {
             "name": "repositoryUrl",

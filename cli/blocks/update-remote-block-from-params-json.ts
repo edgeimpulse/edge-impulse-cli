@@ -90,6 +90,7 @@ export class UpdateRemoteBlockFromParamsJson {
             'parameters' |
             'maxRunningTimeStr' |
             'isPublic' |
+            'publicProjectTierAvailability' |
             'repositoryUrl' |
             'showInSyntheticData' |
             'showInAIActions' |
@@ -170,6 +171,7 @@ export class UpdateRemoteBlockFromParamsJson {
             'parameters' |
             'maxRunningTimeStr' |
             'isPublic' |
+            'publicProjectTierAvailability' |
             'repositoryUrl' |
             'showInDataSources' |
             'showInCreateTransformationJob' |
@@ -237,6 +239,7 @@ export class UpdateRemoteBlockFromParamsJson {
             'parameters' |
             'maxRunningTimeStr' |
             'isPublic' |
+            'publicProjectTierAvailability' |
             'repositoryUrl' |
             'showInDataSources' |
             'showInCreateTransformationJob' |

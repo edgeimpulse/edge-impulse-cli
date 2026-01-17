@@ -12,5 +12,5 @@
 
 
 
-export type BlockType = 'official' | 'personal' | 'enterprise' | 'pro-or-enterprise' | 'community';
-export const BlockTypeValues: string[] = ['official', 'personal', 'enterprise', 'pro-or-enterprise', 'community'];
+export type BlockType = 'official' | 'personal' | 'enterprise' | 'community';
+export const BlockTypeValues: string[] = ['official', 'personal', 'enterprise', 'community'];

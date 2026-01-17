@@ -14,6 +14,7 @@ import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import { DSPGroupItem } from './dSPGroupItem';
 import { EnvironmentVariable } from './environmentVariable';
+import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { TransformationBlockAdditionalMountPoint } from './transformationBlockAdditionalMountPoint';
 import { TransformationJobOperatesOnEnum } from './transformationJobOperatesOnEnum';
 
@@ -66,6 +67,7 @@ export class OrganizationTransformationBlock {
     * Whether this block is publicly available to Edge Impulse users (if false, then only for members of the owning organization)
     */
     'isPublic': boolean;
+    'publicProjectTierAvailability': PublicProjectTierAvailability;
     /**
     * Whether to show this block in \'Data sources\'. Only applies for standalone blocks.
     */
@@ -228,6 +230,11 @@ export class OrganizationTransformationBlock {
             "name": "isPublic",
             "baseName": "isPublic",
             "type": "boolean"
+        },
+        {
+            "name": "publicProjectTierAvailability",
+            "baseName": "publicProjectTierAvailability",
+            "type": "PublicProjectTierAvailability"
         },
         {
             "name": "showInDataSources",

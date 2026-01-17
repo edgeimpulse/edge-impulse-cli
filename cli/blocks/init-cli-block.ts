@@ -467,17 +467,15 @@ export class InitCLIBlock {
             },
         ];
 
-        const showAnomalyOption = organizationInfo.experiments?.find(x => x.type === 'custom_ad_blocks')?.enabled;
         const showVisualAnomalyOption = organizationInfo.experiments?.find(
             x => x.type === 'custom_visual_ad_blocks'
         )?.enabled;
 
-        if (showAnomalyOption) {
-            operatesOnOptions.push({
-                name: 'Anomaly detection',
-                value: 'anomaly_detection'
-            });
-        }
+        operatesOnOptions.push({
+            name: 'Anomaly detection',
+            value: 'anomaly_detection'
+        });
+
         if (showVisualAnomalyOption) {
             operatesOnOptions.push({
                 name: 'Anomaly detection (Images)',

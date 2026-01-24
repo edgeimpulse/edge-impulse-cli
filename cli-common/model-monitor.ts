@@ -606,7 +606,9 @@ class MetricsCalculator {
         if (model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
             const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'anomaly_gmm');
             if (thresholdObj && thresholdObj.type === 'anomaly_gmm') {
-                threshold = thresholdObj.min_anomaly_score;
+                if (typeof thresholdObj.min_anomaly_score === 'number') {
+                    threshold = thresholdObj.min_anomaly_score;
+                }
             }
         }
         else if (model.modelParameters.model_type === 'constrained_object_detection' ||
@@ -614,7 +616,9 @@ class MetricsCalculator {
         ) {
             const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'object_detection');
             if (thresholdObj && thresholdObj.type === 'object_detection') {
-                threshold = thresholdObj.min_score;
+                if (typeof thresholdObj.min_score === 'number') {
+                    threshold = thresholdObj.min_score;
+                }
             }
         }
 

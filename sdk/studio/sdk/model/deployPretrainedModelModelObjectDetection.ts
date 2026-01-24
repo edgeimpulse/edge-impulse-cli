@@ -17,9 +17,13 @@ export class DeployPretrainedModelModelObjectDetection {
     'labels': Array<string>;
     'lastLayer': ObjectDetectionLastLayer;
     /**
-    * Threshold for objects (f.e. 0.3)
+    * Deprecated: use thresholdValues instead. Threshold for objects (f.e. 0.3).
     */
     'minimumConfidence': number;
+    /**
+    * All configured thresholds for the current model. Valid keys are \'min_score\' (object detection models, all but paddleocr-detector); \'min_score_pixel\', \'min_score_box\', \'unclip_ratio\' (paddleocr-detector).
+    */
+    'thresholdValues'?: { [key: string]: number; };
 
     static discriminator: string | undefined = undefined;
 
@@ -43,6 +47,11 @@ export class DeployPretrainedModelModelObjectDetection {
             "name": "minimumConfidence",
             "baseName": "minimumConfidence",
             "type": "number"
+        },
+        {
+            "name": "thresholdValues",
+            "baseName": "thresholdValues",
+            "type": "{ [key: string]: number; }"
         }    ];
 
     static getAttributeTypeMap() {

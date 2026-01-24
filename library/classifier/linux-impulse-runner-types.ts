@@ -29,27 +29,21 @@ export enum RunnerHelloInferencingEngine {
     Syntiant = 10,
     OnnxTidl = 11,
     Memryx = 12,
+    EthosLinux = 13,
+    Aton = 14,
+    CevaNpn = 15,
+    NordicAxon = 16,
+    VlmConnector = 17
 }
 
 export type RunnerBlockThreshold = {
-        id: number,
-        type: 'anomaly_gmm',
-        min_anomaly_score: number,
-    } | {
-        id: number,
-        type: 'object_detection',
-        min_score: number,
-    } | {
-        id: number,
-        type: 'object_tracking',
-        keep_grace: number,
-        max_observations: number,
-        threshold: number,
-    } | {
-        id: number,
-        type: 'classification',
-        min_score: number,
-};
+    id: number,
+    type: string,
+} & { [ key: string ]: number | string /* needs to be string too, otherwise TS trips (as type: string) */ };
+
+export type SetRunnerBlockThreshold = {
+    id: number,
+} & { [ key: string ]: number };
 
 export type RunnerHelloResponseModelParameters = {
     axis_count: number;
@@ -76,6 +70,7 @@ export type RunnerHelloResponseModelParameters = {
     has_performance_calibration: boolean | undefined;
     inferencing_engine?: undefined | RunnerHelloInferencingEngine;
     thresholds: RunnerBlockThreshold[] | undefined,
+    vlm_model_download_url?: string,
 };
 
 export type RunnerHelloResponseProject = {
@@ -171,6 +166,7 @@ export type EimRunnerClassifyResponseSuccess = {
     timing: {
         dsp: number;
         classification: number;
+        postprocessing?: number;
         anomaly: number;
     },
     info?: string;
@@ -186,18 +182,7 @@ export type RunnerClassifyResponseSuccess = {
 };
 
 export type RunnerSetThresholdRequest = {
-    set_threshold: {
-        id: number,
-        min_anomaly_score: number,
-    } | {
-        id: number,
-        min_score: number,
-    } | {
-        id: number,
-        keep_grace: number,
-        max_observations: number,
-        threshold: number,
-    };
+    set_threshold: SetRunnerBlockThreshold;
 };
 
 export type RunnerSetThresholdResponse = { success: true } | RunnerErrorResponse;

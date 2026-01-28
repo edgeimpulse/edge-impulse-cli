@@ -2880,7 +2880,7 @@ export class ProjectsApi {
     }
 
     /**
-     * Retrieve the development API and HMAC keys for a project. These keys are specifically marked to be used during development. These keys can be `undefined` if no development keys are set.
+     * Retrieve the development API and HMAC keys for a project. These keys are specifically marked to be used during development. These keys can be `undefined` if no development keys are set. Only available through JWT token authentication, if you authenticate with an API key then all keys will return undefined (this is changed behavior since 28 January 2026).
      * @summary Get development keys
      * @param projectId Project ID
      */

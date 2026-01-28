@@ -276,11 +276,16 @@ async function startWebServer(config: EiSerialDeviceConfig) {
             let printMsg = '';
 
             let classifyTime = 0;
-            let timingLine = lines.find(x => x.startsWith('Predictions'));
+            let timingLine = lines.find(x => x.startsWith('Predictions') || x.startsWith('Timing'));
             if (timingLine) {
-                let m = timingLine.match(/Classification: ([\d\.]+)/);
+                let m = timingLine.match(/(Classification:|inference )([\d.]+)\s*(ms|us)?/);
                 if (m) {
-                    classifyTime = Number(m[1]);
+                    if (m[3] === 'us') {
+                        classifyTime = Number(m[2]) / 1000;
+                    }
+                    else {
+                        classifyTime = Number(m[2]);
+                    }
                 }
                 printMsg += timingLine + '\n';
             }
@@ -301,13 +306,16 @@ async function startWebServer(config: EiSerialDeviceConfig) {
             for (let element of modeLines) {
                 switch (element.trim()) {
                     case '#Regression results:':
+                    case '#Regression prediction:':
                     case '#Classification results:':
+                    case '#Classification predictions:':
                         modes.push('classification');
                         break;
                     case '#Object detection results:':
+                    case '#Object detection bounding boxes:':
                         modes.push('object_detection');
                         break;
-                    case '#Visual anomaly grid results:':
+                    case '#Visual anomalies:':
                         modes.push('visual_ad');
                         break;
                     default:
@@ -320,7 +328,7 @@ async function startWebServer(config: EiSerialDeviceConfig) {
             if (modes.includes('object_detection') || modes.includes('visual_ad')) {
                 let cubes = [];
                 // parse object detection
-                for (let l of lines.filter(x => x.startsWith('    ') && x.indexOf('width:') > -1)) {
+                for (let l of lines.filter(x => x.startsWith('  ') && x.indexOf('width:') > -1)) {
                     let m = l.trim()
                         .match(/^(\w+) \(\s*([\w\.]+)\) \[ x: (\d+), y: (\d+), width: (\d+), height: (\d+)/);
                     if (!m) continue;

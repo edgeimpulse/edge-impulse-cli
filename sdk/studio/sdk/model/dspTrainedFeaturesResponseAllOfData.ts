@@ -25,6 +25,10 @@ export class DspTrainedFeaturesResponseAllOfData {
     * Training label string
     */
     'yLabel': string;
+    /**
+    * All key/value label pairs for samples with multiple labels (i.e. label map datasets).
+    */
+    'structuredYLabel'?: { [key: string]: string; };
     'sample'?: DspTrainedFeaturesResponseAllOfSample;
 
     static discriminator: string | undefined = undefined;
@@ -44,6 +48,11 @@ export class DspTrainedFeaturesResponseAllOfData {
             "name": "yLabel",
             "baseName": "yLabel",
             "type": "string"
+        },
+        {
+            "name": "structuredYLabel",
+            "baseName": "structuredYLabel",
+            "type": "{ [key: string]: string; }"
         },
         {
             "name": "sample",

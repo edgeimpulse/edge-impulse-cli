@@ -916,6 +916,8 @@ export * from './sample';
 export * from './sampleBoundingBoxesRequest';
 export * from './sampleImageDimensions';
 export * from './sampleKeyValueLabels';
+export * from './sampleLabelMapLabels';
+export * from './sampleLabelMapRequest';
 export * from './sampleMetadata';
 export * from './sampleProposedChanges';
 export * from './savePretrainedModelRequest';
@@ -2056,6 +2058,8 @@ import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
 import { SampleImageDimensions } from './sampleImageDimensions';
 import { SampleKeyValueLabels } from './sampleKeyValueLabels';
+import { SampleLabelMapLabels } from './sampleLabelMapLabels';
+import { SampleLabelMapRequest } from './sampleLabelMapRequest';
 import { SampleMetadata } from './sampleMetadata';
 import { SampleProposedChanges } from './sampleProposedChanges';
 import { SavePretrainedModelRequest } from './savePretrainedModelRequest';
@@ -3351,6 +3355,8 @@ const typeMap: {[index: string]: any} = {
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
     "SampleImageDimensions": SampleImageDimensions,
     "SampleKeyValueLabels": SampleKeyValueLabels,
+    "SampleLabelMapLabels": SampleLabelMapLabels,
+    "SampleLabelMapRequest": SampleLabelMapRequest,
     "SampleMetadata": SampleMetadata,
     "SampleProposedChanges": SampleProposedChanges,
     "SavePretrainedModelRequest": SavePretrainedModelRequest,

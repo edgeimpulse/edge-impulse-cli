@@ -14,7 +14,7 @@ import { BoundingBox } from './boundingBox';
 import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { RawDataCategory } from './rawDataCategory';
 import { SampleImageDimensions } from './sampleImageDimensions';
-import { SampleKeyValueLabels } from './sampleKeyValueLabels';
+import { SampleLabelMapLabels } from './sampleLabelMapLabels';
 import { Sensor } from './sensor';
 import { StructuredLabel } from './structuredLabel';
 
@@ -137,10 +137,7 @@ export class Sample {
     * Video link in original resolution.
     */
     'videoUrlFull'?: string;
-    /**
-    * Structured sample labels in the form of a key-value map. This property is optional and only defined for samples with key-value labels. 
-    */
-    'labelMap'?: SampleKeyValueLabels;
+    'labelMap'?: SampleLabelMapLabels;
 
     static discriminator: string | undefined = undefined;
 
@@ -363,7 +360,7 @@ export class Sample {
         {
             "name": "labelMap",
             "baseName": "labelMap",
-            "type": "SampleKeyValueLabels"
+            "type": "SampleLabelMapLabels"
         }    ];
 
     static getAttributeTypeMap() {

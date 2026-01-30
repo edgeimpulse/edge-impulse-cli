@@ -63,6 +63,7 @@ import { RawDataCategory } from '../model/rawDataCategory';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
+import { SampleLabelMapRequest } from '../model/sampleLabelMapRequest';
 import { SegmentSampleRequest } from '../model/segmentSampleRequest';
 import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
 import { SetSampleProposedChangesRequest } from '../model/setSampleProposedChangesRequest';
@@ -7163,6 +7164,115 @@ export class RawDataApi {
         };
 
         localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(sampleBoundingBoxesRequest, "SampleBoundingBoxesRequest"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Update key/value labels for a sample. This is experimental and may change in the future.
+     * @summary Set sample label map labels
+     * @param projectId Project ID
+     * @param sampleId Sample ID
+     * @param sampleLabelMapRequest 
+     */
+    public async setSampleLabelMap (projectId: number, sampleId: number, sampleLabelMapRequest: SampleLabelMapRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/label-map-labels'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setSampleLabelMap.');
+        }
+
+        // verify required parameter 'sampleId' is not null or undefined
+
+
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling setSampleLabelMap.');
+        }
+
+        // verify required parameter 'sampleLabelMapRequest' is not null or undefined
+
+
+        if (sampleLabelMapRequest === null || sampleLabelMapRequest === undefined) {
+            throw new Error('Required parameter sampleLabelMapRequest was null or undefined when calling setSampleLabelMap.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(sampleLabelMapRequest, "SampleLabelMapRequest"));
 
 
         let requestOptions = localVarRequestOptions;

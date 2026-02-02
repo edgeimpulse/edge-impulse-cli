@@ -281,20 +281,20 @@ export class LearnApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const zipFiles = Array.isArray(params.zip) ? params.zip : [params.zip];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            zipFiles.forEach((f) => {
+            for (const f of zipFiles) {
                 (localVarFormParams as FormData).append('zip', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)
@@ -2976,20 +2976,20 @@ export class LearnApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const zipFiles = Array.isArray(params.zip) ? params.zip : [params.zip];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            zipFiles.forEach((f) => {
+            for (const f of zipFiles) {
                 (localVarFormParams as FormData).append('zip', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)
@@ -3119,20 +3119,20 @@ export class LearnApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const modelFileFiles = Array.isArray(params.modelFile) ? params.modelFile : [params.modelFile];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            modelFileFiles.forEach((f) => {
+            for (const f of modelFileFiles) {
                 (localVarFormParams as FormData).append('modelFile', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.modelFileName !== undefined) {
             const isParametersField = ("modelFileName" as string) === "parameters";
@@ -3176,20 +3176,20 @@ export class LearnApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const representativeFeaturesFiles = Array.isArray(params.representativeFeatures) ? params.representativeFeatures : [params.representativeFeatures];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            representativeFeaturesFiles.forEach((f) => {
+            for (const f of representativeFeaturesFiles) {
                 (localVarFormParams as FormData).append('representativeFeatures', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.device !== undefined) {
             const isParametersField = ("device" as string) === "parameters";

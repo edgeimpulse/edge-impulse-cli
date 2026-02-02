@@ -8,7 +8,7 @@ import EiSerialProtocol, {
     EiSnapshotResponse
 } from '../shared/daemon/ei-serial-protocol';
 import inquirer from 'inquirer';
-import fetch from 'node-fetch';
+import { fetch } from 'undici';
 import {
     MgmtInterfaceSampleRequestSample,
     ClientConnectionType

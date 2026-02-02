@@ -427,20 +427,20 @@ export class OrganizationDataApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const filesFiles = Array.isArray(params.files) ? params.files : [params.files];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            filesFiles.forEach((f) => {
+            for (const f of filesFiles) {
                 (localVarFormParams as FormData).append('files[]', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)
@@ -781,20 +781,20 @@ export class OrganizationDataApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const filesFiles = Array.isArray(params.files) ? params.files : [params.files];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            filesFiles.forEach((f) => {
+            for (const f of filesFiles) {
                 (localVarFormParams as FormData).append('files[]', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)
@@ -3276,20 +3276,20 @@ export class OrganizationDataApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const csvFileFiles = Array.isArray(params.csvFile) ? params.csvFile : [params.csvFile];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            csvFileFiles.forEach((f) => {
+            for (const f of csvFileFiles) {
                 (localVarFormParams as FormData).append('csvFile', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)

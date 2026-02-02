@@ -1,15 +1,11 @@
-import http from 'node:http';
-import https from 'node:https';
 import Path from 'node:path';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+import { fetch, FormData } from 'undici';
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
+import { Blob } from 'node:buffer';
 import { Config, EdgeImpulseConfig } from './config';
 import encodeLabel from '../shared/encoding';
 import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportStructuredLabelsFileV1,
     ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from '../shared/bounding-box-file-types';
-
-const keepAliveAgentHttp = new http.Agent({ keepAlive: true });
-const keepAliveAgentHttps = new https.Agent({ keepAlive: true });
 
 export const EXTENSION_MAPPING: { [k: string]: string } = {
     '.wav': 'audio/wav',
@@ -98,17 +94,12 @@ export async function upload(opts: {
 
     headers['x-device-type'] = 'EDGE_IMPULSE_CLI';
 
-    let agent = opts.config.endpoints.internal.ingestion.indexOf('https:') === 0 ?
-        keepAliveAgentHttps :
-        keepAliveAgentHttp;
-
     let category = opts.category;
 
     const form = new FormData();
-    form.append('data', opts.buffer, {
-        filename: opts.filename,
-        contentType: EXTENSION_MAPPING[ext] || 'application/octet-stream',
-    });
+    form.append('data', new Blob([ opts.buffer ], {
+        type: EXTENSION_MAPPING[ext] || 'application/octet-stream',
+    }), opts.filename);
     if (opts.label.type === 'multi-label') {
         let labelsFile: ExportStructuredLabelsFileV1 = {
             type: 'structured-labels',
@@ -116,10 +107,9 @@ export async function upload(opts: {
             structuredLabels: { }
         };
         labelsFile.structuredLabels[opts.filename] = opts.label.labels;
-        form.append('data', Buffer.from(JSON.stringify(labelsFile), 'utf-8'), {
-            filename: 'structured_labels.labels',
-            contentType: 'application/json',
-        });
+        form.append('data', new Blob([ JSON.stringify(labelsFile) ], {
+            type: 'application/json',
+        }), 'structured_labels.labels');
     }
     if (opts.boundingBoxes) {
         let bbsFile: ExportBoundingBoxesFileV1 = {
@@ -128,18 +118,15 @@ export async function upload(opts: {
             boundingBoxes: { },
         };
         bbsFile.boundingBoxes[opts.filename] = opts.boundingBoxes;
-        form.append('data', Buffer.from(JSON.stringify(bbsFile), 'utf-8'), {
-            filename: 'bounding_boxes.labels',
-            contentType: 'application/json',
-        });
+        form.append('data', new Blob([ JSON.stringify(bbsFile) ], {
+            type: 'application/json',
+        }), 'bounding_boxes.labels');
     }
 
     let res = await fetch(opts.config.endpoints.internal.ingestion + '/api/' + category + '/files', {
         method: 'POST',
         headers: headers,
         body: form,
-        agent: agent,
-        compress: true,
     });
 
     let body = await res.text();

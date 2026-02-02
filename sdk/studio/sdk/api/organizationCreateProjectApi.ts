@@ -1492,20 +1492,20 @@ export class OrganizationCreateProjectApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const tarFiles = Array.isArray(params.tar) ? params.tar : [params.tar];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            tarFiles.forEach((f) => {
+            for (const f of tarFiles) {
                 (localVarFormParams as FormData).append('tar', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.type !== undefined) {
             const isParametersField = ("type" as string) === "parameters";

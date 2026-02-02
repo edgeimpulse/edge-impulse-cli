@@ -540,20 +540,20 @@ export class DeploymentApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const wavFileFiles = Array.isArray(params.wavFile) ? params.wavFile : [params.wavFile];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            wavFileFiles.forEach((f) => {
+            for (const f of wavFileFiles) {
                 (localVarFormParams as FormData).append('wavFile', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.metaCsvFile !== undefined) {
             if (!(localVarFormParams instanceof FormData)) {
@@ -561,20 +561,20 @@ export class DeploymentApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const metaCsvFileFiles = Array.isArray(params.metaCsvFile) ? params.metaCsvFile : [params.metaCsvFile];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            metaCsvFileFiles.forEach((f) => {
+            for (const f of metaCsvFileFiles) {
                 (localVarFormParams as FormData).append('metaCsvFile', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.deploymentTarget !== undefined) {
             const isParametersField = ("deploymentTarget" as string) === "parameters";

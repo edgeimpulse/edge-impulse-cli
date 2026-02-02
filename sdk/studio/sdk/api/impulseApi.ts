@@ -1712,20 +1712,20 @@ export class ImpulseApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const zipFiles = Array.isArray(params.zip) ? params.zip : [params.zip];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            zipFiles.forEach((f) => {
+            for (const f of zipFiles) {
                 (localVarFormParams as FormData).append('zip', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.impulse !== undefined) {
             if (!(localVarFormParams instanceof FormData)) {
@@ -1733,20 +1733,20 @@ export class ImpulseApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const impulseFiles = Array.isArray(params.impulse) ? params.impulse : [params.impulse];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            impulseFiles.forEach((f) => {
+            for (const f of impulseFiles) {
                 (localVarFormParams as FormData).append('impulse', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         if (params.config !== undefined) {
             if (!(localVarFormParams instanceof FormData)) {
@@ -1754,20 +1754,20 @@ export class ImpulseApi {
                 localVarFormParams = new FormData();
 
                 if (existingParams && typeof existingParams === 'object') {
-                    Object.keys(existingParams).forEach(key => {
+                    for (const key of Object.keys(existingParams)) {
                         (localVarFormParams as FormData).append(key, (existingParams as Record<string, string>)[key]);
-                    });
+                    }
                 }
             }
 
             const configFiles = Array.isArray(params.config) ? params.config : [params.config];
 
             const Blob = globalThis.Blob || require('buffer').Blob;
-            configFiles.forEach((f) => {
+            for (const f of configFiles) {
                 (localVarFormParams as FormData).append('config', new Blob([f.value], {
                     type: f.options.contentType
                 }), f.options.filename);
-            });
+            }
         }
         const queryString = Object.entries(localVarQueryParameters)
             .filter(([, value]) => value !== undefined)

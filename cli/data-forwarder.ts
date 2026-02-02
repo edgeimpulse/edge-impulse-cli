@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import WebSocket from 'ws';
 import cbor from 'cbor';
 import inquirer from 'inquirer';
-import fetch from 'node-fetch';
+import { fetch } from 'undici';
 import {
     MgmtInterfaceHelloV4, MgmtInterfaceHelloResponse,
     MgmtInterfaceSampleRequest, MgmtInterfaceSampleResponse,
@@ -282,10 +282,10 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
 
             // hello messages are handled in sendHello()
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (typeof (<any>d).hello !== 'undefined') return;
+            if (typeof d.hello !== 'undefined') return;
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (typeof (<any>d).sample !== 'undefined') {
+            if (typeof d.sample !== 'undefined') {
                 let s = (<MgmtInterfaceSampleRequest>d).sample;
 
                 console.log(TCP_PREFIX, 'Incoming sampling request', s);

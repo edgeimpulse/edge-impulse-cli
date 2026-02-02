@@ -11,11 +11,11 @@
  */
 
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
-import { KerasModelTypeEnum } from './kerasModelTypeEnum';
+import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 
 export class BuildOnDeviceModelRequest {
     'engine': DeploymentTargetEngine;
-    'modelType'?: KerasModelTypeEnum;
+    'modelType'?: KerasModelVariantEnum;
     /**
     * List of custom parameters for this deployment job (see the list of parameters that the block exposes in DeploymentTarget#parameters).
     */
@@ -32,7 +32,7 @@ export class BuildOnDeviceModelRequest {
         {
             "name": "modelType",
             "baseName": "modelType",
-            "type": "KerasModelTypeEnum"
+            "type": "KerasModelVariantEnum"
         },
         {
             "name": "parameters",

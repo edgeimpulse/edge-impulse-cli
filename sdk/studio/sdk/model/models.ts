@@ -148,6 +148,8 @@ export * from './blockType';
 export * from './boundingBox';
 export * from './boundingBoxWithScore';
 export * from './buildOnDeviceModelRequest';
+export * from './buildOnDeviceModelResponse';
+export * from './buildOnDeviceModelResponseAllOf';
 export * from './buildOrganizationOnDeviceModelRequest';
 export * from './calculateDataQualityMetricsRequest';
 export * from './canaryResponse';
@@ -272,6 +274,7 @@ export * from './deployPretrainedModelModelObjectDetection';
 export * from './deployPretrainedModelModelRegression';
 export * from './deployPretrainedModelRequest';
 export * from './deployPretrainedModelRequestModelInfo';
+export * from './deploymentHistory';
 export * from './deploymentTarget';
 export * from './deploymentTargetBadge';
 export * from './deploymentTargetEngine';
@@ -398,6 +401,8 @@ export * from './getDataExplorerFeaturesResponseAllOfSample';
 export * from './getDataExplorerSettingsResponse';
 export * from './getDataExplorerSettingsResponseAllOf';
 export * from './getDatasetRatioResponse';
+export * from './getDeploymentHistoryResponse';
+export * from './getDeploymentHistoryResponseAllOf';
 export * from './getDeploymentResponse';
 export * from './getDeploymentResponseAllOf';
 export * from './getDeviceResponse';
@@ -615,6 +620,8 @@ export * from './listAIActionsResponseAllOf';
 export * from './listApiKeysResponse';
 export * from './listApiKeysResponseAllOf';
 export * from './listApiKeysResponseAllOfApiKeys';
+export * from './listDeploymentHistoryResponse';
+export * from './listDeploymentHistoryResponseAllOf';
 export * from './listDevicesResponse';
 export * from './listDevicesResponseAllOf';
 export * from './listEmailResponse';
@@ -1290,6 +1297,8 @@ import { BlockType } from './blockType';
 import { BoundingBox } from './boundingBox';
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
 import { BuildOnDeviceModelRequest } from './buildOnDeviceModelRequest';
+import { BuildOnDeviceModelResponse } from './buildOnDeviceModelResponse';
+import { BuildOnDeviceModelResponseAllOf } from './buildOnDeviceModelResponseAllOf';
 import { BuildOrganizationOnDeviceModelRequest } from './buildOrganizationOnDeviceModelRequest';
 import { CalculateDataQualityMetricsRequest } from './calculateDataQualityMetricsRequest';
 import { CanaryResponse } from './canaryResponse';
@@ -1414,6 +1423,7 @@ import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedMod
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
 import { DeployPretrainedModelRequest } from './deployPretrainedModelRequest';
 import { DeployPretrainedModelRequestModelInfo } from './deployPretrainedModelRequestModelInfo';
+import { DeploymentHistory } from './deploymentHistory';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
@@ -1540,6 +1550,8 @@ import { GetDataExplorerFeaturesResponseAllOfSample } from './getDataExplorerFea
 import { GetDataExplorerSettingsResponse } from './getDataExplorerSettingsResponse';
 import { GetDataExplorerSettingsResponseAllOf } from './getDataExplorerSettingsResponseAllOf';
 import { GetDatasetRatioResponse } from './getDatasetRatioResponse';
+import { GetDeploymentHistoryResponse } from './getDeploymentHistoryResponse';
+import { GetDeploymentHistoryResponseAllOf } from './getDeploymentHistoryResponseAllOf';
 import { GetDeploymentResponse } from './getDeploymentResponse';
 import { GetDeploymentResponseAllOf } from './getDeploymentResponseAllOf';
 import { GetDeviceResponse } from './getDeviceResponse';
@@ -1757,6 +1769,8 @@ import { ListAIActionsResponseAllOf } from './listAIActionsResponseAllOf';
 import { ListApiKeysResponse } from './listApiKeysResponse';
 import { ListApiKeysResponseAllOf } from './listApiKeysResponseAllOf';
 import { ListApiKeysResponseAllOfApiKeys } from './listApiKeysResponseAllOfApiKeys';
+import { ListDeploymentHistoryResponse } from './listDeploymentHistoryResponse';
+import { ListDeploymentHistoryResponseAllOf } from './listDeploymentHistoryResponseAllOf';
 import { ListDevicesResponse } from './listDevicesResponse';
 import { ListDevicesResponseAllOf } from './listDevicesResponseAllOf';
 import { ListEmailResponse } from './listEmailResponse';
@@ -2619,6 +2633,8 @@ const typeMap: {[index: string]: any} = {
     "BoundingBox": BoundingBox,
     "BoundingBoxWithScore": BoundingBoxWithScore,
     "BuildOnDeviceModelRequest": BuildOnDeviceModelRequest,
+    "BuildOnDeviceModelResponse": BuildOnDeviceModelResponse,
+    "BuildOnDeviceModelResponseAllOf": BuildOnDeviceModelResponseAllOf,
     "BuildOrganizationOnDeviceModelRequest": BuildOrganizationOnDeviceModelRequest,
     "CalculateDataQualityMetricsRequest": CalculateDataQualityMetricsRequest,
     "CanaryResponse": CanaryResponse,
@@ -2742,6 +2758,7 @@ const typeMap: {[index: string]: any} = {
     "DeployPretrainedModelModelRegression": DeployPretrainedModelModelRegression,
     "DeployPretrainedModelRequest": DeployPretrainedModelRequest,
     "DeployPretrainedModelRequestModelInfo": DeployPretrainedModelRequestModelInfo,
+    "DeploymentHistory": DeploymentHistory,
     "DeploymentTarget": DeploymentTarget,
     "DeploymentTargetBadge": DeploymentTargetBadge,
     "DeploymentTargetVariant": DeploymentTargetVariant,
@@ -2863,6 +2880,8 @@ const typeMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponse": GetDataExplorerSettingsResponse,
     "GetDataExplorerSettingsResponseAllOf": GetDataExplorerSettingsResponseAllOf,
     "GetDatasetRatioResponse": GetDatasetRatioResponse,
+    "GetDeploymentHistoryResponse": GetDeploymentHistoryResponse,
+    "GetDeploymentHistoryResponseAllOf": GetDeploymentHistoryResponseAllOf,
     "GetDeploymentResponse": GetDeploymentResponse,
     "GetDeploymentResponseAllOf": GetDeploymentResponseAllOf,
     "GetDeviceResponse": GetDeviceResponse,
@@ -3070,6 +3089,8 @@ const typeMap: {[index: string]: any} = {
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
     "ListApiKeysResponseAllOfApiKeys": ListApiKeysResponseAllOfApiKeys,
+    "ListDeploymentHistoryResponse": ListDeploymentHistoryResponse,
+    "ListDeploymentHistoryResponseAllOf": ListDeploymentHistoryResponseAllOf,
     "ListDevicesResponse": ListDevicesResponse,
     "ListDevicesResponseAllOf": ListDevicesResponseAllOf,
     "ListEmailResponse": ListEmailResponse,

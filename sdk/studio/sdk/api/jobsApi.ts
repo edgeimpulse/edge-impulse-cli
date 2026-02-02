@@ -30,6 +30,7 @@ else {
 
 import { AutotuneDspRequest } from '../model/autotuneDspRequest';
 import { BuildOnDeviceModelRequest } from '../model/buildOnDeviceModelRequest';
+import { BuildOnDeviceModelResponse } from '../model/buildOnDeviceModelResponse';
 import { BuildOrganizationOnDeviceModelRequest } from '../model/buildOrganizationOnDeviceModelRequest';
 import { CalculateDataQualityMetricsRequest } from '../model/calculateDataQualityMetricsRequest';
 import { CreatePreviewAIActionsJobRequest } from '../model/createPreviewAIActionsJobRequest';
@@ -364,14 +365,14 @@ export class JobsApi {
     }
 
     /**
-     * Generate code to run the impulse on an embedded device. When this step is complete use `downloadBuild` to download the artefacts.  Updates are streamed over the websocket API.
+     * Generate code to run the impulse on an embedded device. When this step is complete use `downloadHistoricDeployment` to download the artefacts. Updates are streamed over the websocket API.
      * @summary Build on-device model
      * @param projectId Project ID
      * @param type The name of the built target. You can find this by listing all deployment targets through &#x60;listDeploymentTargetsForProject&#x60; (via &#x60;GET /v1/api/{projectId}/deployment/targets&#x60;) and see the &#x60;format&#x60; type.
      * @param buildOnDeviceModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async buildOnDeviceModelJob (projectId: number, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, queryParams: buildOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async buildOnDeviceModelJob (projectId: number, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, queryParams: buildOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<BuildOnDeviceModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: Record<string, string> = {};
@@ -476,18 +477,18 @@ export class JobsApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'StartJobResponse'
+            'BuildOnDeviceModelResponse'
         );
     }
 
     /**
-     * Generate code to run the impulse on an embedded device using an organizational deployment block. When this step is complete use `downloadBuild` to download the artefacts.  Updates are streamed over the websocket API.
+     * Generate code to run the impulse on an embedded device using an organizational deployment block. When this step is complete use `downloadHistoricDeployment` to download the artefacts.  Updates are streamed over the websocket API.
      * @summary Build organizational on-device model
      * @param projectId Project ID
      * @param buildOrganizationOnDeviceModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async buildOrganizationOnDeviceModelJob (projectId: number, buildOrganizationOnDeviceModelRequest: BuildOrganizationOnDeviceModelRequest, queryParams?: buildOrganizationOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async buildOrganizationOnDeviceModelJob (projectId: number, buildOrganizationOnDeviceModelRequest: BuildOrganizationOnDeviceModelRequest, queryParams?: buildOrganizationOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<BuildOnDeviceModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model/organization'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let localVarQueryParameters: Record<string, string> = {};
@@ -581,7 +582,7 @@ export class JobsApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'StartJobResponse'
+            'BuildOnDeviceModelResponse'
         );
     }
 

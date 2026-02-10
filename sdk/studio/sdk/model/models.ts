@@ -902,6 +902,7 @@ export * from './publicOrganizationTransformationBlock';
 export * from './publicProjectLicense';
 export * from './publicProjectTierAvailability';
 export * from './rawDataCategory';
+export * from './rawDataFilterCategory';
 export * from './rawSampleData';
 export * from './rawSamplePayload';
 export * from './rebalanceDatasetResponse';
@@ -2051,6 +2052,7 @@ import { PublicOrganizationTransformationBlock } from './publicOrganizationTrans
 import { PublicProjectLicense } from './publicProjectLicense';
 import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { RawDataCategory } from './rawDataCategory';
+import { RawDataFilterCategory } from './rawDataFilterCategory';
 import { RawSampleData } from './rawSampleData';
 import { RawSamplePayload } from './rawSamplePayload';
 import { RebalanceDatasetResponse } from './rebalanceDatasetResponse';
@@ -2452,6 +2454,7 @@ const enumsMap: {[index: string]: any} = {
     "PublicProjectLicense": "PublicProjectLicense",
     "PublicProjectTierAvailability": "PublicProjectTierAvailability",
     "RawDataCategory": "RawDataCategory",
+    "RawDataFilterCategory": "RawDataFilterCategory",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
     "SampleKeyValueLabelsTypeEnum": "SampleKeyValueLabelsTypeEnum",

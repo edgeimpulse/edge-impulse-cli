@@ -60,6 +60,7 @@ import { ObjectDetectionAutoLabelResponse } from '../model/objectDetectionAutoLa
 import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetectionLabelQueueCountResponse';
 import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
 import { RawDataCategory } from '../model/rawDataCategory';
+import { RawDataFilterCategory } from '../model/rawDataFilterCategory';
 import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
 import { RenameSampleRequest } from '../model/renameSampleRequest';
 import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
@@ -104,7 +105,7 @@ export enum RawDataApiApiKeys {
 }
 
 type batchAddMetadataQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -127,7 +128,7 @@ type batchAddMetadataQueryParams = {
 };
 
 type batchBackToLabelingQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -150,7 +151,7 @@ type batchBackToLabelingQueryParams = {
 };
 
 type batchClearMetadataQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -173,7 +174,7 @@ type batchClearMetadataQueryParams = {
 };
 
 type batchClearMetadataByKeyQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -196,7 +197,7 @@ type batchClearMetadataByKeyQueryParams = {
 };
 
 type batchDeleteQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -219,7 +220,7 @@ type batchDeleteQueryParams = {
 };
 
 type batchDisableQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -242,7 +243,7 @@ type batchDisableQueryParams = {
 };
 
 type batchEditBoundingBoxesQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -265,7 +266,7 @@ type batchEditBoundingBoxesQueryParams = {
 };
 
 type batchEditLabelsQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -288,7 +289,7 @@ type batchEditLabelsQueryParams = {
 };
 
 type batchEnableQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -311,7 +312,7 @@ type batchEnableQueryParams = {
 };
 
 type batchMoveQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -334,7 +335,7 @@ type batchMoveQueryParams = {
 };
 
 type countSamplesQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     labels?: string,
     filename?: string,
     maxLength?: number,
@@ -387,11 +388,11 @@ type getSampleAsVideoQueryParams = {
 };
 
 type getSampleMetadataQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
 };
 
 type getSampleMetadataFilterOptionsQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     limit?: number,
     offset?: number,
 };
@@ -412,7 +413,7 @@ type getUncroppedDownsampledSampleQueryParams = {
 };
 
 type listSamplesQueryParams = {
-    category: RawDataCategory,
+    category: RawDataFilterCategory,
     limit?: number,
     offset?: number,
     excludeSensors?: boolean,
@@ -594,7 +595,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -801,7 +802,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1000,7 +1001,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1205,7 +1206,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1404,7 +1405,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1601,7 +1602,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -1806,7 +1807,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -2013,7 +2014,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -2212,7 +2213,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -2417,7 +2418,7 @@ export class RawDataApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -2903,7 +2904,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.labels !== undefined) {
@@ -5382,7 +5383,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         localVarHeaderParams = {
@@ -5486,7 +5487,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.limit !== undefined) {
@@ -6139,7 +6140,7 @@ export class RawDataApi {
 
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataFilterCategory");
         }
 
         if (queryParams?.limit !== undefined) {

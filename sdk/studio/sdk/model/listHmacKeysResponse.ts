@@ -12,7 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ListHmacKeysResponseAllOf } from './listHmacKeysResponseAllOf';
-import { ListHmacKeysResponseAllOfHmacKeys } from './listHmacKeysResponseAllOfHmacKeys';
+import { ProjectHmacKey } from './projectHmacKey';
 
 export class ListHmacKeysResponse {
     /**
@@ -26,7 +26,7 @@ export class ListHmacKeysResponse {
     /**
     * List of HMAC keys
     */
-    'hmacKeys': Array<ListHmacKeysResponseAllOfHmacKeys>;
+    'hmacKeys': Array<ProjectHmacKey>;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,7 +44,7 @@ export class ListHmacKeysResponse {
         {
             "name": "hmacKeys",
             "baseName": "hmacKeys",
-            "type": "Array<ListHmacKeysResponseAllOfHmacKeys>"
+            "type": "Array<ProjectHmacKey>"
         }    ];
 
     static getAttributeTypeMap() {

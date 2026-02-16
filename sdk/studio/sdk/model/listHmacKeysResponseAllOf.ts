@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { ListHmacKeysResponseAllOfHmacKeys } from './listHmacKeysResponseAllOfHmacKeys';
+import { ProjectHmacKey } from './projectHmacKey';
 
 export class ListHmacKeysResponseAllOf {
     /**
     * List of HMAC keys
     */
-    'hmacKeys': Array<ListHmacKeysResponseAllOfHmacKeys>;
+    'hmacKeys': Array<ProjectHmacKey>;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,7 +24,7 @@ export class ListHmacKeysResponseAllOf {
         {
             "name": "hmacKeys",
             "baseName": "hmacKeys",
-            "type": "Array<ListHmacKeysResponseAllOfHmacKeys>"
+            "type": "Array<ProjectHmacKey>"
         }    ];
 
     static getAttributeTypeMap() {

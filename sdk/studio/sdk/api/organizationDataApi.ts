@@ -437,7 +437,7 @@ export class OrganizationDataApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of filesFiles) {
-                (localVarFormParams as FormData).append('files[]', new Blob([f.value], {
+                (localVarFormParams as FormData).append('files[]', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -791,7 +791,7 @@ export class OrganizationDataApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of filesFiles) {
-                (localVarFormParams as FormData).append('files[]', new Blob([f.value], {
+                (localVarFormParams as FormData).append('files[]', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -3286,7 +3286,7 @@ export class OrganizationDataApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of csvFileFiles) {
-                (localVarFormParams as FormData).append('csvFile', new Blob([f.value], {
+                (localVarFormParams as FormData).append('csvFile', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

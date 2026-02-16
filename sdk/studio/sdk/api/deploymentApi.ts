@@ -550,7 +550,7 @@ export class DeploymentApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of wavFileFiles) {
-                (localVarFormParams as FormData).append('wavFile', new Blob([f.value], {
+                (localVarFormParams as FormData).append('wavFile', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -571,7 +571,7 @@ export class DeploymentApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of metaCsvFileFiles) {
-                (localVarFormParams as FormData).append('metaCsvFile', new Blob([f.value], {
+                (localVarFormParams as FormData).append('metaCsvFile', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

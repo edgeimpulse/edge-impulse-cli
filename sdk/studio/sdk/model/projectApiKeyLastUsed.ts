@@ -11,32 +11,41 @@
  */
 
 
-export class OrganizationCreateProjectResponseAllOf {
+/**
+* When this API key was last used.
+*/
+export class ProjectApiKeyLastUsed {
+    'date': Date;
     /**
-    * Project ID for the new project
+    * If available, the country from which the API key was last used.
     */
-    'createProjectId': number;
+    'country'?: string;
     /**
-    * DEPRECATED. API key for the new project. This field will always be empty.
+    * If available, the IP address from which the API key was last used.
     */
-    'apiKey': string;
+    'ipAddress'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "createProjectId",
-            "baseName": "createProjectId",
-            "type": "number"
+            "name": "date",
+            "baseName": "date",
+            "type": "Date"
         },
         {
-            "name": "apiKey",
-            "baseName": "apiKey",
+            "name": "country",
+            "baseName": "country",
+            "type": "string"
+        },
+        {
+            "name": "ipAddress",
+            "baseName": "ipAddress",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OrganizationCreateProjectResponseAllOf.attributeTypeMap;
+        return ProjectApiKeyLastUsed.attributeTypeMap;
     }
 }
 

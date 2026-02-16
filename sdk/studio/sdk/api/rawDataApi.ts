@@ -8123,7 +8123,7 @@ export class RawDataApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                (localVarFormParams as FormData).append('image', new Blob([f.value], {
+                (localVarFormParams as FormData).append('image', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

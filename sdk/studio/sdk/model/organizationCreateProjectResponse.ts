@@ -27,7 +27,7 @@ export class OrganizationCreateProjectResponse {
     */
     'createProjectId': number;
     /**
-    * API key for the new project
+    * DEPRECATED. API key for the new project. This field will always be empty.
     */
     'apiKey': string;
 

@@ -1502,7 +1502,7 @@ export class OrganizationCreateProjectApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of tarFiles) {
-                (localVarFormParams as FormData).append('tar', new Blob([f.value], {
+                (localVarFormParams as FormData).append('tar', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

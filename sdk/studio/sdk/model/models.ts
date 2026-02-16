@@ -619,7 +619,6 @@ export * from './listAIActionsResponse';
 export * from './listAIActionsResponseAllOf';
 export * from './listApiKeysResponse';
 export * from './listApiKeysResponseAllOf';
-export * from './listApiKeysResponseAllOfApiKeys';
 export * from './listDeploymentHistoryResponse';
 export * from './listDeploymentHistoryResponseAllOf';
 export * from './listDevicesResponse';
@@ -631,14 +630,12 @@ export * from './listEnterpriseTrialsResponse';
 export * from './listEnterpriseTrialsResponseAllOf';
 export * from './listHmacKeysResponse';
 export * from './listHmacKeysResponseAllOf';
-export * from './listHmacKeysResponseAllOfHmacKeys';
 export * from './listJobsResponse';
 export * from './listJobsResponseAllOf';
 export * from './listModelsResponse';
 export * from './listModelsResponseAllOf';
 export * from './listOrganizationApiKeysResponse';
 export * from './listOrganizationApiKeysResponseAllOf';
-export * from './listOrganizationApiKeysResponseAllOfApiKeys';
 export * from './listOrganizationBucketsResponse';
 export * from './listOrganizationBucketsResponseAllOf';
 export * from './listOrganizationBucketsUserResponse';
@@ -761,6 +758,7 @@ export * from './organizationAddDataFolderResponseAllOf';
 export * from './organizationAddDataItemRequest';
 export * from './organizationAddDatasetRequest';
 export * from './organizationAddDatasetRequestBucket';
+export * from './organizationApiKey';
 export * from './organizationBucket';
 export * from './organizationBulkMetadataRequest';
 export * from './organizationComputeTimeUsage';
@@ -858,6 +856,8 @@ export * from './profileModelTableMpu';
 export * from './profileTfLiteRequest';
 export * from './profileTfLiteResponse';
 export * from './project';
+export * from './projectApiKey';
+export * from './projectApiKeyLastUsed';
 export * from './projectCollaborator';
 export * from './projectCollaboratorAllOf';
 export * from './projectDataAxesSummaryResponse';
@@ -872,6 +872,7 @@ export * from './projectDeploymentTargetsResponseAllOf';
 export * from './projectDismissNotificationRequest';
 export * from './projectDownloadsResponse';
 export * from './projectDownloadsResponseAllOf';
+export * from './projectHmacKey';
 export * from './projectInfoResponse';
 export * from './projectInfoResponseAllOf';
 export * from './projectInfoResponseAllOfAcquisitionSettings';
@@ -1769,7 +1770,6 @@ import { ListAIActionsResponse } from './listAIActionsResponse';
 import { ListAIActionsResponseAllOf } from './listAIActionsResponseAllOf';
 import { ListApiKeysResponse } from './listApiKeysResponse';
 import { ListApiKeysResponseAllOf } from './listApiKeysResponseAllOf';
-import { ListApiKeysResponseAllOfApiKeys } from './listApiKeysResponseAllOfApiKeys';
 import { ListDeploymentHistoryResponse } from './listDeploymentHistoryResponse';
 import { ListDeploymentHistoryResponseAllOf } from './listDeploymentHistoryResponseAllOf';
 import { ListDevicesResponse } from './listDevicesResponse';
@@ -1781,14 +1781,12 @@ import { ListEnterpriseTrialsResponse } from './listEnterpriseTrialsResponse';
 import { ListEnterpriseTrialsResponseAllOf } from './listEnterpriseTrialsResponseAllOf';
 import { ListHmacKeysResponse } from './listHmacKeysResponse';
 import { ListHmacKeysResponseAllOf } from './listHmacKeysResponseAllOf';
-import { ListHmacKeysResponseAllOfHmacKeys } from './listHmacKeysResponseAllOfHmacKeys';
 import { ListJobsResponse } from './listJobsResponse';
 import { ListJobsResponseAllOf } from './listJobsResponseAllOf';
 import { ListModelsResponse } from './listModelsResponse';
 import { ListModelsResponseAllOf } from './listModelsResponseAllOf';
 import { ListOrganizationApiKeysResponse } from './listOrganizationApiKeysResponse';
 import { ListOrganizationApiKeysResponseAllOf } from './listOrganizationApiKeysResponseAllOf';
-import { ListOrganizationApiKeysResponseAllOfApiKeys } from './listOrganizationApiKeysResponseAllOfApiKeys';
 import { ListOrganizationBucketsResponse } from './listOrganizationBucketsResponse';
 import { ListOrganizationBucketsResponseAllOf } from './listOrganizationBucketsResponseAllOf';
 import { ListOrganizationBucketsUserResponse } from './listOrganizationBucketsUserResponse';
@@ -1911,6 +1909,7 @@ import { OrganizationAddDataFolderResponseAllOf } from './organizationAddDataFol
 import { OrganizationAddDataItemRequest } from './organizationAddDataItemRequest';
 import { OrganizationAddDatasetRequest } from './organizationAddDatasetRequest';
 import { OrganizationAddDatasetRequestBucket } from './organizationAddDatasetRequestBucket';
+import { OrganizationApiKey } from './organizationApiKey';
 import { OrganizationBucket } from './organizationBucket';
 import { OrganizationBulkMetadataRequest } from './organizationBulkMetadataRequest';
 import { OrganizationComputeTimeUsage } from './organizationComputeTimeUsage';
@@ -2008,6 +2007,8 @@ import { ProfileModelTableMpu } from './profileModelTableMpu';
 import { ProfileTfLiteRequest } from './profileTfLiteRequest';
 import { ProfileTfLiteResponse } from './profileTfLiteResponse';
 import { Project } from './project';
+import { ProjectApiKey } from './projectApiKey';
+import { ProjectApiKeyLastUsed } from './projectApiKeyLastUsed';
 import { ProjectCollaborator } from './projectCollaborator';
 import { ProjectCollaboratorAllOf } from './projectCollaboratorAllOf';
 import { ProjectDataAxesSummaryResponse } from './projectDataAxesSummaryResponse';
@@ -2022,6 +2023,7 @@ import { ProjectDeploymentTargetsResponseAllOf } from './projectDeploymentTarget
 import { ProjectDismissNotificationRequest } from './projectDismissNotificationRequest';
 import { ProjectDownloadsResponse } from './projectDownloadsResponse';
 import { ProjectDownloadsResponseAllOf } from './projectDownloadsResponseAllOf';
+import { ProjectHmacKey } from './projectHmacKey';
 import { ProjectInfoResponse } from './projectInfoResponse';
 import { ProjectInfoResponseAllOf } from './projectInfoResponseAllOf';
 import { ProjectInfoResponseAllOfAcquisitionSettings } from './projectInfoResponseAllOfAcquisitionSettings';
@@ -2393,8 +2395,6 @@ const enumsMap: {[index: string]: any} = {
     "KerasResponseModeEnum": "KerasResponseModeEnum",
     "KerasVisualLayerType": "KerasVisualLayerType",
     "LearnBlockType": "LearnBlockType",
-    "ListApiKeysResponseAllOfApiKeysRoleEnum": "ListApiKeysResponseAllOfApiKeysRoleEnum",
-    "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum",
     "LogStdoutResponseAllOfStdoutLogLevelEnum": "LogStdoutResponseAllOfStdoutLogLevelEnum",
     "MigrationStateEnum": "MigrationStateEnum",
     "ModelEngineShortEnum": "ModelEngineShortEnum",
@@ -2414,6 +2414,7 @@ const enumsMap: {[index: string]: any} = {
     "OptimizeStateResponseAllOfProjectDataTypeEnum": "OptimizeStateResponseAllOfProjectDataTypeEnum",
     "OptimizeStateResponseAllOfStatusStatusEnum": "OptimizeStateResponseAllOfStatusStatusEnum",
     "OptimizeStateResponseAllOfWorkersStatusEnum": "OptimizeStateResponseAllOfWorkersStatusEnum",
+    "OrganizationApiKeyRoleEnum": "OrganizationApiKeyRoleEnum",
     "OrganizationCreateProjectUploadTypeEnum": "OrganizationCreateProjectUploadTypeEnum",
     "OrganizationCreateProjectCategoryEnum": "OrganizationCreateProjectCategoryEnum",
     "OrganizationCreateProjectOutputDatasetPathRule": "OrganizationCreateProjectOutputDatasetPathRule",
@@ -2444,6 +2445,7 @@ const enumsMap: {[index: string]: any} = {
     "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum": "PreviewDefaultFilesInFolderResponseAllOfTruncationReasonEnum",
     "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
     "ProjectCategoryEnum": "ProjectCategoryEnum",
+    "ProjectApiKeyRoleEnum": "ProjectApiKeyRoleEnum",
     "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
@@ -3091,7 +3093,6 @@ const typeMap: {[index: string]: any} = {
     "ListAIActionsResponseAllOf": ListAIActionsResponseAllOf,
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
-    "ListApiKeysResponseAllOfApiKeys": ListApiKeysResponseAllOfApiKeys,
     "ListDeploymentHistoryResponse": ListDeploymentHistoryResponse,
     "ListDeploymentHistoryResponseAllOf": ListDeploymentHistoryResponseAllOf,
     "ListDevicesResponse": ListDevicesResponse,
@@ -3103,14 +3104,12 @@ const typeMap: {[index: string]: any} = {
     "ListEnterpriseTrialsResponseAllOf": ListEnterpriseTrialsResponseAllOf,
     "ListHmacKeysResponse": ListHmacKeysResponse,
     "ListHmacKeysResponseAllOf": ListHmacKeysResponseAllOf,
-    "ListHmacKeysResponseAllOfHmacKeys": ListHmacKeysResponseAllOfHmacKeys,
     "ListJobsResponse": ListJobsResponse,
     "ListJobsResponseAllOf": ListJobsResponseAllOf,
     "ListModelsResponse": ListModelsResponse,
     "ListModelsResponseAllOf": ListModelsResponseAllOf,
     "ListOrganizationApiKeysResponse": ListOrganizationApiKeysResponse,
     "ListOrganizationApiKeysResponseAllOf": ListOrganizationApiKeysResponseAllOf,
-    "ListOrganizationApiKeysResponseAllOfApiKeys": ListOrganizationApiKeysResponseAllOfApiKeys,
     "ListOrganizationBucketsResponse": ListOrganizationBucketsResponse,
     "ListOrganizationBucketsResponseAllOf": ListOrganizationBucketsResponseAllOf,
     "ListOrganizationBucketsUserResponse": ListOrganizationBucketsUserResponse,
@@ -3229,6 +3228,7 @@ const typeMap: {[index: string]: any} = {
     "OrganizationAddDataItemRequest": OrganizationAddDataItemRequest,
     "OrganizationAddDatasetRequest": OrganizationAddDatasetRequest,
     "OrganizationAddDatasetRequestBucket": OrganizationAddDatasetRequestBucket,
+    "OrganizationApiKey": OrganizationApiKey,
     "OrganizationBucket": OrganizationBucket,
     "OrganizationBulkMetadataRequest": OrganizationBulkMetadataRequest,
     "OrganizationComputeTimeUsage": OrganizationComputeTimeUsage,
@@ -3321,6 +3321,8 @@ const typeMap: {[index: string]: any} = {
     "ProfileTfLiteRequest": ProfileTfLiteRequest,
     "ProfileTfLiteResponse": ProfileTfLiteResponse,
     "Project": Project,
+    "ProjectApiKey": ProjectApiKey,
+    "ProjectApiKeyLastUsed": ProjectApiKeyLastUsed,
     "ProjectCollaborator": ProjectCollaborator,
     "ProjectCollaboratorAllOf": ProjectCollaboratorAllOf,
     "ProjectDataAxesSummaryResponse": ProjectDataAxesSummaryResponse,
@@ -3335,6 +3337,7 @@ const typeMap: {[index: string]: any} = {
     "ProjectDismissNotificationRequest": ProjectDismissNotificationRequest,
     "ProjectDownloadsResponse": ProjectDownloadsResponse,
     "ProjectDownloadsResponseAllOf": ProjectDownloadsResponseAllOf,
+    "ProjectHmacKey": ProjectHmacKey,
     "ProjectInfoResponse": ProjectInfoResponse,
     "ProjectInfoResponseAllOf": ProjectInfoResponseAllOf,
     "ProjectInfoResponseAllOfAcquisitionSettings": ProjectInfoResponseAllOfAcquisitionSettings,

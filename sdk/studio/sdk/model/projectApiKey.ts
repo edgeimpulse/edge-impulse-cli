@@ -10,14 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
+import { ProjectApiKeyLastUsed } from './projectApiKeyLastUsed';
 
-export class ListApiKeysResponseAllOfApiKeys {
+export class ProjectApiKey {
     'id': number;
     'apiKey': string;
     'isDevelopmentKey': boolean;
     'name': string;
     'created': Date;
-    'role': ListApiKeysResponseAllOfApiKeysRoleEnum;
+    'role': ProjectApiKeyRoleEnum;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUsed'?: ProjectApiKeyLastUsed;
 
     static discriminator: string | undefined = undefined;
 
@@ -50,14 +54,24 @@ export class ListApiKeysResponseAllOfApiKeys {
         {
             "name": "role",
             "baseName": "role",
-            "type": "ListApiKeysResponseAllOfApiKeysRoleEnum"
+            "type": "ProjectApiKeyRoleEnum"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUsed",
+            "baseName": "lastUsed",
+            "type": "ProjectApiKeyLastUsed"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListApiKeysResponseAllOfApiKeys.attributeTypeMap;
+        return ProjectApiKey.attributeTypeMap;
     }
 }
 
 
-export type ListApiKeysResponseAllOfApiKeysRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'wladmin';
-export const ListApiKeysResponseAllOfApiKeysRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'wladmin'];
+export type ProjectApiKeyRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'wladmin';
+export const ProjectApiKeyRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'wladmin'];

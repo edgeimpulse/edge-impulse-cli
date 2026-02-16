@@ -1722,7 +1722,7 @@ export class ImpulseApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of zipFiles) {
-                (localVarFormParams as FormData).append('zip', new Blob([f.value], {
+                (localVarFormParams as FormData).append('zip', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -1743,7 +1743,7 @@ export class ImpulseApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of impulseFiles) {
-                (localVarFormParams as FormData).append('impulse', new Blob([f.value], {
+                (localVarFormParams as FormData).append('impulse', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -1764,7 +1764,7 @@ export class ImpulseApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of configFiles) {
-                (localVarFormParams as FormData).append('config', new Blob([f.value], {
+                (localVarFormParams as FormData).append('config', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

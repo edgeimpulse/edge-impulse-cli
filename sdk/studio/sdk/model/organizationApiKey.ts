@@ -10,14 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
+import { ProjectApiKeyLastUsed } from './projectApiKeyLastUsed';
 
-export class ListOrganizationApiKeysResponseAllOfApiKeys {
+export class OrganizationApiKey {
     'id': number;
     'apiKey': string;
     'name': string;
     'created': Date;
-    'role': ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum;
+    'role': OrganizationApiKeyRoleEnum;
     'isTransformationJobKey': boolean;
+    'createdByUser'?: CreatedUpdatedByUser;
+    'lastUsed'?: ProjectApiKeyLastUsed;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,19 +49,29 @@ export class ListOrganizationApiKeysResponseAllOfApiKeys {
         {
             "name": "role",
             "baseName": "role",
-            "type": "ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum"
+            "type": "OrganizationApiKeyRoleEnum"
         },
         {
             "name": "isTransformationJobKey",
             "baseName": "isTransformationJobKey",
             "type": "boolean"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
+        },
+        {
+            "name": "lastUsed",
+            "baseName": "lastUsed",
+            "type": "ProjectApiKeyLastUsed"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListOrganizationApiKeysResponseAllOfApiKeys.attributeTypeMap;
+        return OrganizationApiKey.attributeTypeMap;
     }
 }
 
 
-export type ListOrganizationApiKeysResponseAllOfApiKeysRoleEnum = 'admin' | 'member';
-export const ListOrganizationApiKeysResponseAllOfApiKeysRoleEnumValues: string[] = ['admin', 'member'];
+export type OrganizationApiKeyRoleEnum = 'admin' | 'member';
+export const OrganizationApiKeyRoleEnumValues: string[] = ['admin', 'member'];

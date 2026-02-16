@@ -319,7 +319,7 @@ export class TestApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of zipFiles) {
-                (localVarFormParams as FormData).append('zip', new Blob([f.value], {
+                (localVarFormParams as FormData).append('zip', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

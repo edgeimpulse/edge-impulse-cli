@@ -15,7 +15,7 @@ import { OrganizationCreateProjectPathFilter } from './organizationCreateProject
 import { ProjectVisibility } from './projectVisibility';
 
 /**
-* If uploadType is set to \'project\', either projectId, newProjectName or both projectApiKey and projectHmacKey are required. projectId and newProjectName are only available through JWT tokens. If uploadType is set to \'dataset\' then outputDatasetName can be set to \'\' to output in the same dataset, or set to a string to create (or append to) a new dataset.
+* If uploadType is set to \'project\', either projectId, newProjectName or projectApiKey is required. projectId and newProjectName are only available through JWT tokens. If uploadType is set to \'dataset\' then outputDatasetName can be set to \'\' to output in the same dataset, or set to a string to create (or append to) a new dataset.
 */
 export class OrganizationCreateProjectRequest {
     'name': string;

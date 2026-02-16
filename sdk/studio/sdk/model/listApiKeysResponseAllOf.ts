@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { ListApiKeysResponseAllOfApiKeys } from './listApiKeysResponseAllOfApiKeys';
+import { ProjectApiKey } from './projectApiKey';
 
 export class ListApiKeysResponseAllOf {
     /**
     * List of API keys.
     */
-    'apiKeys': Array<ListApiKeysResponseAllOfApiKeys>;
+    'apiKeys': Array<ProjectApiKey>;
 
     static discriminator: string | undefined = undefined;
 
@@ -24,7 +24,7 @@ export class ListApiKeysResponseAllOf {
         {
             "name": "apiKeys",
             "baseName": "apiKeys",
-            "type": "Array<ListApiKeysResponseAllOfApiKeys>"
+            "type": "Array<ProjectApiKey>"
         }    ];
 
     static getAttributeTypeMap() {

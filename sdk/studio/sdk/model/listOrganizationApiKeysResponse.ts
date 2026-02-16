@@ -12,7 +12,7 @@
 
 import { GenericApiResponse } from './genericApiResponse';
 import { ListOrganizationApiKeysResponseAllOf } from './listOrganizationApiKeysResponseAllOf';
-import { ListOrganizationApiKeysResponseAllOfApiKeys } from './listOrganizationApiKeysResponseAllOfApiKeys';
+import { OrganizationApiKey } from './organizationApiKey';
 
 export class ListOrganizationApiKeysResponse {
     /**
@@ -26,7 +26,7 @@ export class ListOrganizationApiKeysResponse {
     /**
     * List of API keys.
     */
-    'apiKeys': Array<ListOrganizationApiKeysResponseAllOfApiKeys>;
+    'apiKeys': Array<OrganizationApiKey>;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,7 +44,7 @@ export class ListOrganizationApiKeysResponse {
         {
             "name": "apiKeys",
             "baseName": "apiKeys",
-            "type": "Array<ListOrganizationApiKeysResponseAllOfApiKeys>"
+            "type": "Array<OrganizationApiKey>"
         }    ];
 
     static getAttributeTypeMap() {

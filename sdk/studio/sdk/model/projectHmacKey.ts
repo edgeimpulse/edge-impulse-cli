@@ -10,13 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { CreatedUpdatedByUser } from './createdUpdatedByUser';
 
-export class ListHmacKeysResponseAllOfHmacKeys {
+export class ProjectHmacKey {
     'id': number;
     'hmacKey': string;
     'isDevelopmentKey': boolean;
     'name': string;
     'created': Date;
+    'createdByUser'?: CreatedUpdatedByUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,10 +47,15 @@ export class ListHmacKeysResponseAllOfHmacKeys {
             "name": "created",
             "baseName": "created",
             "type": "Date"
+        },
+        {
+            "name": "createdByUser",
+            "baseName": "createdByUser",
+            "type": "CreatedUpdatedByUser"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListHmacKeysResponseAllOfHmacKeys.attributeTypeMap;
+        return ProjectHmacKey.attributeTypeMap;
     }
 }
 

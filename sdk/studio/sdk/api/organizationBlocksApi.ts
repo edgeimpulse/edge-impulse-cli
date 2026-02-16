@@ -446,7 +446,7 @@ export class OrganizationBlocksApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                (localVarFormParams as FormData).append('photo', new Blob([f.value], {
+                (localVarFormParams as FormData).append('photo', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }
@@ -3296,7 +3296,7 @@ export class OrganizationBlocksApi {
 
             const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                (localVarFormParams as FormData).append('photo', new Blob([f.value], {
+                (localVarFormParams as FormData).append('photo', new Blob([new Uint8Array(f.value)], {
                     type: f.options.contentType
                 }), f.options.filename);
             }

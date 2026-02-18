@@ -19,10 +19,11 @@ import { DeployPretrainedModelModelRegression } from './deployPretrainedModelMod
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 import { DeployPretrainedModelModelAnomaly } from './deployPretrainedModelModelAnomaly';
+import { DeployPretrainedModelModelVisualAnomaly } from './deployPretrainedModelModelVisualAnomaly';
 
 export class DeployPretrainedModelRequestModelInfo {
     'input': DeployPretrainedModelInputTimeSeries | DeployPretrainedModelInputAudio | DeployPretrainedModelInputImage | DeployPretrainedModelInputOther;
-    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly;
+    'model': DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly | DeployPretrainedModelModelVisualAnomaly;
 
     static discriminator: string | undefined = undefined;
 
@@ -35,7 +36,7 @@ export class DeployPretrainedModelRequestModelInfo {
         {
             "name": "model",
             "baseName": "model",
-            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly"
+            "type": "DeployPretrainedModelModelClassification | DeployPretrainedModelModelRegression | DeployPretrainedModelModelObjectDetection | DeployPretrainedModelModelFreeform | DeployPretrainedModelModelAnomaly | DeployPretrainedModelModelVisualAnomaly"
         }    ];
 
     static getAttributeTypeMap() {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyResult } from './anomalyResult';
 import { BoundingBoxWithScore } from './boundingBoxWithScore';
 import { TestPretrainedModelResponseAllOfFreeformResult } from './testPretrainedModelResponseAllOfFreeformResult';
 
@@ -20,6 +21,10 @@ export class TestPretrainedModelResponseAllOf {
     'result'?: { [key: string]: number; };
     'boundingBoxes'?: Array<BoundingBoxWithScore>;
     'freeformResult'?: TestPretrainedModelResponseAllOfFreeformResult;
+    /**
+    * Anomaly scores and computed metrics for visual anomaly detection, one item per window.
+    */
+    'anomalyResult'?: Array<AnomalyResult>;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,6 +43,11 @@ export class TestPretrainedModelResponseAllOf {
             "name": "freeformResult",
             "baseName": "freeformResult",
             "type": "TestPretrainedModelResponseAllOfFreeformResult"
+        },
+        {
+            "name": "anomalyResult",
+            "baseName": "anomalyResult",
+            "type": "Array<AnomalyResult>"
         }    ];
 
     static getAttributeTypeMap() {

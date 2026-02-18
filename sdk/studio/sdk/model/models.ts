@@ -272,6 +272,7 @@ export * from './deployPretrainedModelModelClassification';
 export * from './deployPretrainedModelModelFreeform';
 export * from './deployPretrainedModelModelObjectDetection';
 export * from './deployPretrainedModelModelRegression';
+export * from './deployPretrainedModelModelVisualAnomaly';
 export * from './deployPretrainedModelRequest';
 export * from './deployPretrainedModelRequestModelInfo';
 export * from './deploymentHistory';
@@ -1005,6 +1006,7 @@ export * from './themeColors';
 export * from './themeFavicon';
 export * from './themeLogos';
 export * from './thirdPartyAuth';
+export * from './thresholdValue';
 export * from './timeSeriesDataPoint';
 export * from './trackObjectsRequest';
 export * from './trackObjectsResponse';
@@ -1423,6 +1425,7 @@ import { DeployPretrainedModelModelClassification } from './deployPretrainedMode
 import { DeployPretrainedModelModelFreeform } from './deployPretrainedModelModelFreeform';
 import { DeployPretrainedModelModelObjectDetection } from './deployPretrainedModelModelObjectDetection';
 import { DeployPretrainedModelModelRegression } from './deployPretrainedModelModelRegression';
+import { DeployPretrainedModelModelVisualAnomaly } from './deployPretrainedModelModelVisualAnomaly';
 import { DeployPretrainedModelRequest } from './deployPretrainedModelRequest';
 import { DeployPretrainedModelRequestModelInfo } from './deployPretrainedModelRequestModelInfo';
 import { DeploymentHistory } from './deploymentHistory';
@@ -2156,6 +2159,7 @@ import { ThemeColors } from './themeColors';
 import { ThemeFavicon } from './themeFavicon';
 import { ThemeLogos } from './themeLogos';
 import { ThirdPartyAuth } from './thirdPartyAuth';
+import { ThresholdValue } from './thresholdValue';
 import { TimeSeriesDataPoint } from './timeSeriesDataPoint';
 import { TrackObjectsRequest } from './trackObjectsRequest';
 import { TrackObjectsResponse } from './trackObjectsResponse';
@@ -2349,6 +2353,7 @@ const enumsMap: {[index: string]: any} = {
     "DeployPretrainedModelModelFreeformModelTypeEnum": "DeployPretrainedModelModelFreeformModelTypeEnum",
     "DeployPretrainedModelModelObjectDetectionModelTypeEnum": "DeployPretrainedModelModelObjectDetectionModelTypeEnum",
     "DeployPretrainedModelModelRegressionModelTypeEnum": "DeployPretrainedModelModelRegressionModelTypeEnum",
+    "DeployPretrainedModelModelVisualAnomalyModelTypeEnum": "DeployPretrainedModelModelVisualAnomalyModelTypeEnum",
     "DeployPretrainedModelRequestModelFileTypeEnum": "DeployPretrainedModelRequestModelFileTypeEnum",
     "DeployPretrainedModelRequestDeployModelTypeEnum": "DeployPretrainedModelRequestDeployModelTypeEnum",
     "DeployPretrainedModelRequestUseConverterEnum": "DeployPretrainedModelRequestUseConverterEnum",
@@ -2761,6 +2766,7 @@ const typeMap: {[index: string]: any} = {
     "DeployPretrainedModelModelFreeform": DeployPretrainedModelModelFreeform,
     "DeployPretrainedModelModelObjectDetection": DeployPretrainedModelModelObjectDetection,
     "DeployPretrainedModelModelRegression": DeployPretrainedModelModelRegression,
+    "DeployPretrainedModelModelVisualAnomaly": DeployPretrainedModelModelVisualAnomaly,
     "DeployPretrainedModelRequest": DeployPretrainedModelRequest,
     "DeployPretrainedModelRequestModelInfo": DeployPretrainedModelRequestModelInfo,
     "DeploymentHistory": DeploymentHistory,
@@ -3461,6 +3467,7 @@ const typeMap: {[index: string]: any} = {
     "ThemeFavicon": ThemeFavicon,
     "ThemeLogos": ThemeLogos,
     "ThirdPartyAuth": ThirdPartyAuth,
+    "ThresholdValue": ThresholdValue,
     "TimeSeriesDataPoint": TimeSeriesDataPoint,
     "TrackObjectsRequest": TrackObjectsRequest,
     "TrackObjectsResponse": TrackObjectsResponse,

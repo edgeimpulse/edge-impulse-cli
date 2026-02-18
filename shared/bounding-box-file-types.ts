@@ -315,8 +315,87 @@ export interface ExportUploaderInfoFileV1 {
     files: ExportUploaderInfoFile[];
 }
 
+export const NDJSON_MARKER_PROP = '{\"__ndjson\":true,';
+
+/**
+ * Check if json file content has the NDJSON marker property, which indicates that the file
+ * should be parsed as NDJSON. This is an internal approach, f.e. used by for (large) dataset export.
+ * @param content Content of the JSON file (stringified) to check for the NDJSON marker
+ * @param n Number of characters to check from the start of the content (default: 64)
+ */
+export function hasNdjsonMarkerPrefix(content: string, n: number = 64) {
+	const head = (content || '').slice(0, n);
+	return head.startsWith(NDJSON_MARKER_PROP);
+}
+
+/**
+ * Parse object from NDJSON text
+ * @param text NDJSON text
+ * @param itemsKeys Keys of properties that are arrays of items that were exported as NDJSON lines
+ *                  Expected format per line: { __key: string, __item: any }
+ * @returns Parsed object
+ */
+export function parseObjectFromNdjson(text: string, itemsKeys: string[]) {
+    const lines = text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter(Boolean);
+
+    const parsedResult: { [ key: string ]: any } = { };
+    const keySet = new Set(itemsKeys);
+
+    // Initialize arrays for requested keys
+    for (const k of itemsKeys) parsedResult[k] = [ ];
+
+    if (lines.length === 0) return parsedResult;
+
+    let startIdx = 0;
+
+    // Try to parse first line and check its format
+    const headerObj = JSON.parse(lines[0]) as unknown;
+    const isPlainObject =
+        headerObj !== null && typeof headerObj === 'object' && !Array.isArray(headerObj);
+    const isItemLine =
+        isPlainObject && '__key' in headerObj && '__item' in headerObj;
+    // If present, this header object contains be the props that
+    // were considered small enough to be safe to JSON parse and stringify
+    if (isPlainObject && !isItemLine) {
+        // Remove internal marker
+        const { ['__ndjson']: _ndjsonMarker, ...parsedHeader } = headerObj as Record<string, unknown>;
+
+        Object.assign(parsedResult, parsedHeader);
+        startIdx = 1;
+    }
+
+    // Parse item lines: { __key: string, __item: any }
+    for (let i = startIdx; i < lines.length; i++) {
+        const row = JSON.parse(lines[i]) as unknown;
+        if (row === null || typeof row !== 'object') continue;
+
+        const parsedRow = row as Record<string, unknown>;
+        const key = parsedRow.__key;
+
+        if (typeof key !== 'string') continue;
+        if (!keySet.has(key)) continue;
+
+        // For example, pushing files to 'files' array in the result object
+        (parsedResult[key] as unknown[]).push(parsedRow.__item);
+    }
+
+    return parsedResult;
+}
+
 export function parseUploaderInfo(jsonFile: string) {
-    let data = <ExportUploaderInfoFileV1>JSON.parse(jsonFile);
+    let data: ExportUploaderInfoFileV1 | undefined;
+    const hasNdjsonMarker = hasNdjsonMarkerPrefix(jsonFile);
+    if (hasNdjsonMarker) {
+        // Parse as NDJSON, which would be the case if a very large dataset was exported
+        data = <ExportUploaderInfoFileV1>parseObjectFromNdjson(jsonFile, [ 'files' ]);
+    }
+    else {
+        data = <ExportUploaderInfoFileV1>JSON.parse(jsonFile);
+    }
+
     if (data.version !== 1) {
         throw new Error('Invalid version');
     }

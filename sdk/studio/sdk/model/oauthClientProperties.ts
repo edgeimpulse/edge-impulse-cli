@@ -38,6 +38,10 @@ export class OauthClientProperties {
     */
     'requiresConsent'?: boolean;
     /**
+    * Indicates whether this OAuth client is a public client (e.g. native/SPA using PKCE) and does not require a client secret.
+    */
+    'isPublic'?: boolean;
+    /**
     * URL of the OAuth client logo
     */
     'logoUrl'?: string;
@@ -81,6 +85,11 @@ export class OauthClientProperties {
         {
             "name": "requiresConsent",
             "baseName": "requiresConsent",
+            "type": "boolean"
+        },
+        {
+            "name": "isPublic",
+            "baseName": "isPublic",
             "type": "boolean"
         },
         {

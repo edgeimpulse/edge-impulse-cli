@@ -13,6 +13,7 @@
 import { DSPGroupItem } from './dSPGroupItem';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
+import { DeploymentTargetRedirect } from './deploymentTargetRedirect';
 import { DeploymentTargetVariant } from './deploymentTargetVariant';
 
 export class DeploymentTarget {
@@ -76,6 +77,7 @@ export class DeploymentTarget {
     'firmwareRepoUrl'?: string;
     'modelVariants': Array<DeploymentTargetVariant>;
     'parameters': Array<DSPGroupItem>;
+    'redirect'?: DeploymentTargetRedirect;
 
     static discriminator: string | undefined = undefined;
 
@@ -229,6 +231,11 @@ export class DeploymentTarget {
             "name": "parameters",
             "baseName": "parameters",
             "type": "Array<DSPGroupItem>"
+        },
+        {
+            "name": "redirect",
+            "baseName": "redirect",
+            "type": "DeploymentTargetRedirect"
         }    ];
 
     static getAttributeTypeMap() {

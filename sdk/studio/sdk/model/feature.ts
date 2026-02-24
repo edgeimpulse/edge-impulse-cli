@@ -15,5 +15,5 @@
 * Known feature identifiers.
 */
 
-export type Feature = 'signup-thank-you-page' | 'stripe-live-mode' | 'azure-storage' | 'monthly-compute-limit-enforcement' | 'pay-as-you-go' | 'user-screening-check' | 'oauth2';
-export const FeatureValues: string[] = ['signup-thank-you-page', 'stripe-live-mode', 'azure-storage', 'monthly-compute-limit-enforcement', 'pay-as-you-go', 'user-screening-check', 'oauth2'];
+export type Feature = 'signup-thank-you-page' | 'stripe-live-mode' | 'azure-storage' | 'monthly-compute-limit-enforcement' | 'pay-as-you-go' | 'user-screening-check' | 'oauth2' | 'external-apps-redirect-flow';
+export const FeatureValues: string[] = ['signup-thank-you-page', 'stripe-live-mode', 'azure-storage', 'monthly-compute-limit-enforcement', 'pay-as-you-go', 'user-screening-check', 'oauth2', 'external-apps-redirect-flow'];

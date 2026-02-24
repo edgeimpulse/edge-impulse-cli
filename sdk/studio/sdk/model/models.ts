@@ -279,6 +279,7 @@ export * from './deploymentHistory';
 export * from './deploymentTarget';
 export * from './deploymentTargetBadge';
 export * from './deploymentTargetEngine';
+export * from './deploymentTargetRedirect';
 export * from './deploymentTargetVariant';
 export * from './deploymentTargetsResponse';
 export * from './deploymentTargetsResponseAllOf';
@@ -1432,6 +1433,7 @@ import { DeploymentHistory } from './deploymentHistory';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
+import { DeploymentTargetRedirect } from './deploymentTargetRedirect';
 import { DeploymentTargetVariant } from './deploymentTargetVariant';
 import { DeploymentTargetsResponse } from './deploymentTargetsResponse';
 import { DeploymentTargetsResponseAllOf } from './deploymentTargetsResponseAllOf';
@@ -2772,6 +2774,7 @@ const typeMap: {[index: string]: any} = {
     "DeploymentHistory": DeploymentHistory,
     "DeploymentTarget": DeploymentTarget,
     "DeploymentTargetBadge": DeploymentTargetBadge,
+    "DeploymentTargetRedirect": DeploymentTargetRedirect,
     "DeploymentTargetVariant": DeploymentTargetVariant,
     "DeploymentTargetsResponse": DeploymentTargetsResponse,
     "DeploymentTargetsResponseAllOf": DeploymentTargetsResponseAllOf,

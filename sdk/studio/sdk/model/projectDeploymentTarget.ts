@@ -14,6 +14,7 @@ import { DSPGroupItem } from './dSPGroupItem';
 import { DeploymentTarget } from './deploymentTarget';
 import { DeploymentTargetBadge } from './deploymentTargetBadge';
 import { DeploymentTargetEngine } from './deploymentTargetEngine';
+import { DeploymentTargetRedirect } from './deploymentTargetRedirect';
 import { DeploymentTargetVariant } from './deploymentTargetVariant';
 import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
 
@@ -78,6 +79,7 @@ export class ProjectDeploymentTarget {
     'firmwareRepoUrl'?: string;
     'modelVariants': Array<DeploymentTargetVariant>;
     'parameters': Array<DSPGroupItem>;
+    'redirect'?: DeploymentTargetRedirect;
     /**
     * Whether this deployment target is recommended for the project based on connected devices.
     */
@@ -243,6 +245,11 @@ export class ProjectDeploymentTarget {
             "name": "parameters",
             "baseName": "parameters",
             "type": "Array<DSPGroupItem>"
+        },
+        {
+            "name": "redirect",
+            "baseName": "redirect",
+            "type": "DeploymentTargetRedirect"
         },
         {
             "name": "recommendedForProject",

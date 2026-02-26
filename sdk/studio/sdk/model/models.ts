@@ -121,6 +121,7 @@ export * from './anomalyConfigAxes';
 export * from './anomalyConfigResponse';
 export * from './anomalyGmmMetadata';
 export * from './anomalyGmmMetadataResponse';
+export * from './anomalyLabelsConfig';
 export * from './anomalyModelMetadata';
 export * from './anomalyModelMetadataClusters';
 export * from './anomalyModelMetadataResponse';
@@ -1275,6 +1276,7 @@ import { AnomalyConfigAxes } from './anomalyConfigAxes';
 import { AnomalyConfigResponse } from './anomalyConfigResponse';
 import { AnomalyGmmMetadata } from './anomalyGmmMetadata';
 import { AnomalyGmmMetadataResponse } from './anomalyGmmMetadataResponse';
+import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
 import { AnomalyModelMetadata } from './anomalyModelMetadata';
 import { AnomalyModelMetadataClusters } from './anomalyModelMetadataClusters';
 import { AnomalyModelMetadataResponse } from './anomalyModelMetadataResponse';
@@ -2622,6 +2624,7 @@ const typeMap: {[index: string]: any} = {
     "AnomalyConfigResponse": AnomalyConfigResponse,
     "AnomalyGmmMetadata": AnomalyGmmMetadata,
     "AnomalyGmmMetadataResponse": AnomalyGmmMetadataResponse,
+    "AnomalyLabelsConfig": AnomalyLabelsConfig,
     "AnomalyModelMetadata": AnomalyModelMetadata,
     "AnomalyModelMetadataClusters": AnomalyModelMetadataClusters,
     "AnomalyModelMetadataResponse": AnomalyModelMetadataResponse,

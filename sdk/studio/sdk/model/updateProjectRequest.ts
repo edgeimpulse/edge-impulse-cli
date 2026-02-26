@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { ModelEngineShortEnum } from './modelEngineShortEnum';
 import { ProjectLabelingMethod } from './projectLabelingMethod';
@@ -175,6 +176,7 @@ export class UpdateProjectRequest {
     'aiActionsGridColumnCount'?: number;
     'lastShownModelEngine'?: ModelEngineShortEnum;
     'versioningStorageSizeMib'?: number;
+    'anomalyLabelsConfig'?: AnomalyLabelsConfig;
 
     static discriminator: string | undefined = undefined;
 
@@ -413,6 +415,11 @@ export class UpdateProjectRequest {
             "name": "versioningStorageSizeMib",
             "baseName": "versioningStorageSizeMib",
             "type": "number"
+        },
+        {
+            "name": "anomalyLabelsConfig",
+            "baseName": "anomalyLabelsConfig",
+            "type": "AnomalyLabelsConfig"
         }    ];
 
     static getAttributeTypeMap() {

@@ -46,6 +46,10 @@ export class ClassifySampleResponseClassification {
     */
     'expectedLabels': Array<StructuredLabel>;
     /**
+    * An array with the expected anomaly outcome for each window — either “anomaly” or “no anomaly”. The outcome is determined by which labels are marked as anomalous in the project setup, or by the sample label if no such configuration is defined. 
+    */
+    'expectedAnomalyOutcome'?: Array<StructuredLabel>;
+    /**
     * List of configurable thresholds for this block.
     */
     'thresholds': Array<BlockThreshold>;
@@ -92,6 +96,11 @@ export class ClassifySampleResponseClassification {
         {
             "name": "expectedLabels",
             "baseName": "expectedLabels",
+            "type": "Array<StructuredLabel>"
+        },
+        {
+            "name": "expectedAnomalyOutcome",
+            "baseName": "expectedAnomalyOutcome",
             "type": "Array<StructuredLabel>"
         },
         {

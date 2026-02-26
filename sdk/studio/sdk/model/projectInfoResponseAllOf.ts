@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
 import { LatencyDevice } from './latencyDevice';
@@ -92,6 +93,7 @@ export class ProjectInfoResponseAllOf {
     'defaultImpulseId'?: number;
     'lastShownModelEngine'?: ModelEngineShortEnum;
     'versioningStorageSizeMib'?: number;
+    'anomalyLabelsConfig'?: AnomalyLabelsConfig;
 
     static discriminator: string | undefined = undefined;
 
@@ -255,6 +257,11 @@ export class ProjectInfoResponseAllOf {
             "name": "versioningStorageSizeMib",
             "baseName": "versioningStorageSizeMib",
             "type": "number"
+        },
+        {
+            "name": "anomalyLabelsConfig",
+            "baseName": "anomalyLabelsConfig",
+            "type": "AnomalyLabelsConfig"
         }    ];
 
     static getAttributeTypeMap() {

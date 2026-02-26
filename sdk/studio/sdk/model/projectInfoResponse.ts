@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
 import { GenericApiResponse } from './genericApiResponse';
@@ -102,6 +103,7 @@ export class ProjectInfoResponse {
     'defaultImpulseId'?: number;
     'lastShownModelEngine'?: ModelEngineShortEnum;
     'versioningStorageSizeMib'?: number;
+    'anomalyLabelsConfig'?: AnomalyLabelsConfig;
 
     static discriminator: string | undefined = undefined;
 
@@ -275,6 +277,11 @@ export class ProjectInfoResponse {
             "name": "versioningStorageSizeMib",
             "baseName": "versioningStorageSizeMib",
             "type": "number"
+        },
+        {
+            "name": "anomalyLabelsConfig",
+            "baseName": "anomalyLabelsConfig",
+            "type": "AnomalyLabelsConfig"
         }    ];
 
     static getAttributeTypeMap() {

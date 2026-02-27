@@ -81,10 +81,21 @@ export type LabelMapPerFile = {
     [file: string]: { [key: string]: string }
 };
 
+export type StructuredLabelExternal = {
+    startIndex: number;
+    endIndex: number;
+    label: string;
+    labelMap?: {
+        type: 'key-values';
+        labels: { [ key: string ]: string };
+    };
+};
+
 export type ExportStructuredLabel = {
     startIndex: number;
     endIndex: number;
     label: string;
+    labelMap?: { [ key: string ]: string };
 };
 
 export type StructuredLabelsMap = { [fileName: string]: ExportStructuredLabel[] };
@@ -132,16 +143,65 @@ export function verifyStructuredLabelsString(json: string, valuesCount: number,
     return verifyStructuredLabels(labels, valuesCount, source);
 }
 
-export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCount: number,
-                                       source: StructuredLabelSource) {
+// Verify structured labels from an external source, e.g. the API.
+// These labels have additional properties within the labelMap object, e.g. to differentiate
+// label map types, whereas the internal type strips this information and maps back to it when needed.
+export function verifyStructuredLabelsExternal(
+    labels: StructuredLabelExternal[],
+    valuesCount: number,
+    source: StructuredLabelSource,
+) {
+    return verifyStructuredLabels(
+        mapExternalStructuredLabelsToInternal(labels),
+        valuesCount,
+        source
+    );
+}
+
+export function mapExternalStructuredLabelsToInternal(
+    labels: StructuredLabelExternal[]
+): ExportStructuredLabel[] {
+    return labels.map(l => ({
+        ...l,
+        labelMap: l.labelMap ? l.labelMap.labels : undefined,
+    }));
+}
+
+export function verifyStructuredLabels(
+    labels: ExportStructuredLabel[],
+    valuesCount: number,
+    source: StructuredLabelSource
+) {
     if (!Array.isArray(labels)) {
         throw new Error(`${source} is not a valid array`);
     }
 
+    let allLabelMapKeys: string | undefined;
     for (let ix = 0; ix < labels.length; ix++) {
         const l = labels[ix];
+        // TODO[ML]: Future we may allow `label` to be undefined
         if (typeof l.label !== 'string') {
             throw new Error(`${source} (index ${ix}) "label" is required and should be string. Type is ${typeof l.label}`);
+        }
+        if (l.labelMap) {
+            if (typeof l.labelMap !== 'object' || Array.isArray(l.labelMap) || l.labelMap === null) {
+                throw new Error(`(index ${ix}) "labelMap" is not an object`);
+            }
+            for (const value of Object.values(l.labelMap)) {
+                if (typeof value !== 'string') {
+                    throw new Error(`(index ${ix}) "labelMap" all values must be strings`);
+                }
+            }
+            const allKeys = JSON.stringify(Object.keys(l.labelMap).sort());
+            if (allLabelMapKeys) {
+                // Verify all keys are the same
+                if (allKeys !== allLabelMapKeys) {
+                    throw new Error(`(index ${ix}) "labelMap" all keys must be the same across all indexes`);
+                }
+            }
+            else {
+                allLabelMapKeys = allKeys;
+            }
         }
         if (typeof l.startIndex !== 'number') {
             throw new Error(`${source} (index ${ix}) "startIndex" is required and should be numeric`);
@@ -181,11 +241,12 @@ export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCo
     let currLabel = allLabels[0];
     let ret: ExportStructuredLabel[] = [];
     for (let ix = 1; ix < valuesCount; ix++) {
-        if (allLabels[ix] !== currLabel) {
+        if (!structuredLabelsAreIdentical(allLabels[ix], currLabel)) {
             ret.push({
                 startIndex: currStartIx,
                 endIndex: ix - 1,
-                label: currLabel,
+                label: currLabel.label,
+                labelMap: currLabel.labelMap,
             });
             currStartIx = ix;
         }
@@ -194,7 +255,8 @@ export function verifyStructuredLabels(labels: ExportStructuredLabel[], valuesCo
     ret.push({
         startIndex: currStartIx,
         endIndex: valuesCount - 1,
-        label: currLabel,
+        label: currLabel.label,
+        labelMap: currLabel.labelMap,
     });
 
     return ret;
@@ -245,6 +307,39 @@ export function parseLabelMapFile(jsonFile: string): LabelMapPerFile {
     return labelMapOut;
 }
 
+export type AllStructuredLabels = {
+    label: string;
+    labelMap?: { [ key: string ]: string };
+};
+
+export function calculateAllStructuredLabelsExternal(sample: {
+    structuredLabels: StructuredLabelExternal[],
+    valuesCount: number,
+}): AllStructuredLabels[] {
+    const {
+        structuredLabels,
+        valuesCount,
+    } = sample;
+
+    return calculateAllStructuredLabels({
+        structuredLabels: mapExternalStructuredLabelsToInternal(structuredLabels),
+        valuesCount,
+    });
+}
+
+/**
+ * Check whether two structured labels are identical
+ * @param l1 Label 1
+ * @param l2 Label 2
+ * @returns True if labels are identical
+ */
+export function structuredLabelsAreIdentical (l1: AllStructuredLabels, l2: AllStructuredLabels): boolean {
+    if (!l1.labelMap && !l2.labelMap) {
+        return l1.label === l2.label;
+    }
+    return (JSON.stringify(l1.labelMap) === JSON.stringify(l2.labelMap)) && (l1.label === l2.label);
+}
+
 /**
  * This returns a new string array of length `sample.valuesCount`, and each
  * value of the array contains the label of the sample at that specific index.
@@ -257,8 +352,9 @@ export function parseLabelMapFile(jsonFile: string): LabelMapPerFile {
 export function calculateAllStructuredLabels(sample: {
     structuredLabels: ExportStructuredLabel[],
     valuesCount: number,
-}): string[] {
-    let allStructuredLabels = <(string | undefined)[]>Array.from({ length: sample.valuesCount }).fill(undefined);
+}): AllStructuredLabels[] {
+    let allStructuredLabels = <(AllStructuredLabels | undefined)[]>Array.from({ length: sample.valuesCount })
+        .fill(undefined);
     for (let structuredLabel of sample.structuredLabels) {
         // endIx is inclusive
         for (let ix = structuredLabel.startIndex; ix <= structuredLabel.endIndex; ix++) {
@@ -266,7 +362,10 @@ export function calculateAllStructuredLabels(sample: {
                 throw new Error(`structuredLabels: index ${ix} is out of bounds. ` +
                     `Max index is ${sample.valuesCount + 1}.`);
             }
-            allStructuredLabels[ix] = structuredLabel.label;
+            allStructuredLabels[ix] = {
+                label: structuredLabel.label,
+                labelMap: structuredLabel.labelMap,
+            };
         }
     }
 
@@ -276,15 +375,16 @@ export function calculateAllStructuredLabels(sample: {
             `Currently we require structured labels for the complete sample, there cannot be any gaps in the labels.`);
     }
 
-    return <string[]>allStructuredLabels;
+    return <AllStructuredLabels[]>allStructuredLabels;
 }
 
 export type ExportUploaderInfoFileCategory = 'training' | 'testing' | 'post-processing' | 'split';
 
 export type ExportUploaderInfoFileMultiLabel = {
-    startIndex: number,
-    endIndex: number, // endIndex is _inclusive_ (so startIndex=0, endIndex=3 => 4 values)
-    label: string,
+    startIndex: number;
+    endIndex: number; // endIndex is _inclusive_ (so startIndex=0, endIndex=3 => 4 values)
+    label: string;
+    labelMap?: { [ key: string ]: string };
 };
 
 export type ExportUploaderInfoFileLabel = |

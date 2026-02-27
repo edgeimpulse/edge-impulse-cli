@@ -94,10 +94,3 @@ export enum PageType {
     VerifySignupSuccess = 204,
     OpenExternalApp = 205,
 }
-
-export const getPageTypeName = (pageTypeValue: number): string | undefined => {
-    if (PageType[pageTypeValue] !== undefined) {
-        return PageType[pageTypeValue];
-    }
-    return undefined;
-};

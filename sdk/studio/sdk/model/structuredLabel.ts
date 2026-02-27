@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { SampleLabelMapLabels } from './sampleLabelMapLabels';
 
 /**
 * A structured label contains a label, and the range for which this label is valid. `endIndex` is inclusive. E.g. `{ startIndex: 10, endIndex: 13, label: \'running\' }` means that the values at index 10, 11, 12, 13 are labeled \'running\'. To get time codes you can multiple by the sample\'s `intervalMs` property.
@@ -27,6 +28,7 @@ export class StructuredLabel {
     * The label for this section.
     */
     'label': string;
+    'labelMap'?: SampleLabelMapLabels;
 
     static discriminator: string | undefined = undefined;
 
@@ -45,6 +47,11 @@ export class StructuredLabel {
             "name": "label",
             "baseName": "label",
             "type": "string"
+        },
+        {
+            "name": "labelMap",
+            "baseName": "labelMap",
+            "type": "SampleLabelMapLabels"
         }    ];
 
     static getAttributeTypeMap() {

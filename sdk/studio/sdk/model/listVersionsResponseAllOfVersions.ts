@@ -25,13 +25,21 @@ export class ListVersionsResponseAllOfVersions {
     'publicProjectId'?: number;
     'publicProjectUrl'?: string;
     /**
-    * Accuracy on training set.
+    * Accuracy calculated during training, using validation set.
     */
     'trainingAccuracy'?: number;
     /**
     * Accuracy on test set.
     */
     'testAccuracy'?: number;
+    /**
+    * Mean Average Precision @ IoU=50 on validation set (for object detection projects).
+    */
+    'trainingmAP50'?: number;
+    /**
+    * Mean Average Precision @ IoU=50 on test set (for object detection projects).
+    */
+    'testmAP50'?: number;
     /**
     * If your project had multiple impulses, this field indicates which impulse was used to calculate the accuracy metrics.
     */
@@ -100,6 +108,16 @@ export class ListVersionsResponseAllOfVersions {
         {
             "name": "testAccuracy",
             "baseName": "testAccuracy",
+            "type": "number"
+        },
+        {
+            "name": "trainingmAP50",
+            "baseName": "trainingmAP50",
+            "type": "number"
+        },
+        {
+            "name": "testmAP50",
+            "baseName": "testmAP50",
             "type": "number"
         },
         {

@@ -12,5 +12,5 @@
 
 
 
-export type OrganizationTransferLearningOperatesOn = 'object_detection' | 'audio' | 'image' | 'regression' | 'anomaly_detection' | 'visual_anomaly_detection' | 'other';
-export const OrganizationTransferLearningOperatesOnValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'anomaly_detection', 'visual_anomaly_detection', 'other'];
+export type OrganizationTransferLearningOperatesOn = 'object_detection' | 'audio' | 'image' | 'regression' | 'anomaly_detection' | 'visual_anomaly_detection' | 'other' | 'image_akida' | 'object_detection_akida' | 'classification_akida';
+export const OrganizationTransferLearningOperatesOnValues: string[] = ['object_detection', 'audio', 'image', 'regression', 'anomaly_detection', 'visual_anomaly_detection', 'other', 'image_akida', 'object_detection_akida', 'classification_akida'];

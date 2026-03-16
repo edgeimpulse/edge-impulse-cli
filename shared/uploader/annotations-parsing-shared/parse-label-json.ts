@@ -49,6 +49,9 @@ export type JsonSchemaConstraint = {
     type: 'any';
     required?: boolean;
 } | {
+    type: 'null';
+    required?: boolean;
+} | {
     type: 'either';
     required?: boolean;
     possibleTypes: JsonSchemaConstraint[];
@@ -111,6 +114,12 @@ export function validateJsonSchema(schema: JsonSchemaConstraint, instance: objec
 
         // If type 'any', do no further validation
         if (constraint.type === 'any') {
+            return {
+                valid: true
+            };
+        }
+
+        if (constraint.type === 'null' && io === null) {
             return {
                 valid: true
             };

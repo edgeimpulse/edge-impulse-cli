@@ -12,14 +12,18 @@
 
 
 /**
-* How to pick the label for multi-label samples
+* Determines how a single label is assigned to each generated window when source samples contain multiple labels. Available options - end-of-window: use the label active at the end timestamp of the window. - anywhere-in-window: assign one of the configured `labels` when it appears anywhere in the window. - anywhere-in-window-min-percentage: assign one of the configured `labels` only when it covers at least `minPercentage` of the full window. - majority-in-window: assign the label with the highest prevalence across the full window. Tie-breaking: - For count-based modes (anywhere-in-window, anywhere-in-window-min-percentage, and majority-in-window), if two or more candidate labels have equal prevalence, the first encountered label in the window is used.
 */
 export class ImpulseInputBlockLabelingMethodMultiLabel {
     'type': ImpulseInputBlockLabelingMethodMultiLabelTypeEnum;
     /**
-    * Required when choosing \"anywhere-in-window\". The list of classes that should trigger detection (e.g. \"interference\").
+    * Required when choosing \"anywhere-in-window\" or \"anywhere-in-window-min-percentage\". The list of classes that should trigger detection (e.g. \"interference\").
     */
     'labels'?: Array<string>;
+    /**
+    * Required when choosing \"anywhere-in-window-min-percentage\". A label is assigned only if it is present in at least this percentage of the full window.
+    */
+    'minPercentage'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -33,6 +37,11 @@ export class ImpulseInputBlockLabelingMethodMultiLabel {
             "name": "labels",
             "baseName": "labels",
             "type": "Array<string>"
+        },
+        {
+            "name": "minPercentage",
+            "baseName": "minPercentage",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -41,5 +50,5 @@ export class ImpulseInputBlockLabelingMethodMultiLabel {
 }
 
 
-export type ImpulseInputBlockLabelingMethodMultiLabelTypeEnum = 'end-of-window' | 'anywhere-in-window';
-export const ImpulseInputBlockLabelingMethodMultiLabelTypeEnumValues: string[] = ['end-of-window', 'anywhere-in-window'];
+export type ImpulseInputBlockLabelingMethodMultiLabelTypeEnum = 'end-of-window' | 'anywhere-in-window' | 'anywhere-in-window-min-percentage' | 'majority-in-window';
+export const ImpulseInputBlockLabelingMethodMultiLabelTypeEnumValues: string[] = ['end-of-window', 'anywhere-in-window', 'anywhere-in-window-min-percentage', 'majority-in-window'];

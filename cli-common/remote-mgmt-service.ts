@@ -636,7 +636,10 @@ export class RemoteMgmt extends (EventEmitter as new () => TypedEmitter<{
 
         this._ws.on('close', () => {
             console.log(TCP_PREFIX, 'Trying to connect in 1 second...');
-            setTimeout(this.connect.bind(this), 1000);
+            setTimeout(() => {
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                this.connect(true, this._inferenceInfo);
+            }, 1000);
             if (this._ws) {
                 this._ws.removeAllListeners();
             }

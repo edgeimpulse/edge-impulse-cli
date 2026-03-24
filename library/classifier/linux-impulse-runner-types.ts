@@ -12,7 +12,9 @@ export enum RunnerHelloHasAnomaly {
     KMeans = 1,
     GMM = 2,
     VisualGMM = 3,
-    VisualPatchcore = 4
+    VisualPatchcore = 4,
+    Custom = 5,
+    VisualCustom = 6
 }
 
 export enum RunnerHelloInferencingEngine {

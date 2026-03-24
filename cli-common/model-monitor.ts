@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import Path from 'path';
 import { Config } from './config';
-import { RunnerClassifyResponseSuccess, RunnerHelloHasAnomaly, ModelInformation } from "../library/classifier/linux-impulse-runner-types";
+import { RunnerClassifyResponseSuccess, ModelInformation, RunnerHelloHasAnomaly } from "../library/classifier/linux-impulse-runner-types";
 import { EventEmitter } from 'tsee';
 import { MgmtInterfaceImpulseRecordRawData, MgmtInterfaceInferenceSummary } from '../shared/MgmtInterfaceTypes';
 
@@ -33,6 +33,17 @@ async function asyncPool<IN, OUT>(poolLimit: number, array: ReadonlyArray<IN>,
         }
     }
     return Promise.all(ret);
+}
+
+/**
+ * Helper to check if the model has visual AD capabilities based on its parameters.
+*/
+export function hasVisualAd(model: ModelInformation) {
+    return [
+        RunnerHelloHasAnomaly.VisualGMM,
+        RunnerHelloHasAnomaly.VisualPatchcore,
+        RunnerHelloHasAnomaly.VisualCustom
+    ].includes(model.modelParameters.has_anomaly);
 }
 
 export type ImpulseRecord = {
@@ -603,7 +614,8 @@ class MetricsCalculator {
         this._summaryWindowMs = summaryWindowMs;
 
         let threshold: number | undefined;
-        if (model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
+
+        if (hasVisualAd(model)) {
             const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'anomaly_gmm');
             if (thresholdObj && thresholdObj.type === 'anomaly_gmm') {
                 if (typeof thresholdObj.min_anomaly_score === 'number') {
@@ -687,10 +699,7 @@ class MetricsCalculator {
             }
         };
 
-        if (
-            this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM &&
-            record.impulseRecord.result.visual_anomaly_max !== undefined
-        ) {
+        if (hasVisualAd(this._model) && record.impulseRecord.result.visual_anomaly_max !== undefined) {
             const isAnomaly = record.impulseRecord.result.visual_anomaly_max > this._confidenceThreshold;
             const predictedLabel = isAnomaly ? 'anomaly' : 'no anomaly';
             incrementClassificationCounter(predictedLabel);
@@ -748,10 +757,7 @@ class MetricsCalculator {
         }
 
         // Only calculate mean visual anomaly score if relevant
-        if (
-            this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM &&
-            record.impulseRecord.result.visual_anomaly_mean
-        ) {
+        if (hasVisualAd(this._model) && record.impulseRecord.result.visual_anomaly_mean) {
             this._visualAnomalyMean += record.impulseRecord.result.visual_anomaly_mean;
         }
 
@@ -794,7 +800,7 @@ class MetricsCalculator {
         }
 
         // Only include visual_anomaly_mean if visual anomaly is relevant
-        if (this._model.modelParameters.has_anomaly === RunnerHelloHasAnomaly.VisualGMM) {
+        if (hasVisualAd(this._model)) {
             this._metrics.metrics.visual_anomaly_mean = this._visualAnomalyMean / numberOfInferences;
         }
         else {

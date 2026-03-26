@@ -354,6 +354,7 @@ export * from './environmentVariable';
 export * from './evaluateJobResponse';
 export * from './evaluateJobResponseAllOf';
 export * from './evaluateResultValue';
+export * from './experimentalImpulseSpecificGpuTrainingProcessor';
 export * from './exportBlockResponse';
 export * from './exportBlockResponseAllOf';
 export * from './exportGetUrlResponse';
@@ -1509,6 +1510,7 @@ import { EnvironmentVariable } from './environmentVariable';
 import { EvaluateJobResponse } from './evaluateJobResponse';
 import { EvaluateJobResponseAllOf } from './evaluateJobResponseAllOf';
 import { EvaluateResultValue } from './evaluateResultValue';
+import { ExperimentalImpulseSpecificGpuTrainingProcessor } from './experimentalImpulseSpecificGpuTrainingProcessor';
 import { ExportBlockResponse } from './exportBlockResponse';
 import { ExportBlockResponseAllOf } from './exportBlockResponseAllOf';
 import { ExportGetUrlResponse } from './exportGetUrlResponse';
@@ -2370,6 +2372,7 @@ const enumsMap: {[index: string]: any} = {
     "DeviceDebugStreamType": "DeviceDebugStreamType",
     "DeviceInferenceInfoModelTypeEnum": "DeviceInferenceInfoModelTypeEnum",
     "EnterpriseLimit": "EnterpriseLimit",
+    "ExperimentalImpulseSpecificGpuTrainingProcessor": "ExperimentalImpulseSpecificGpuTrainingProcessor",
     "ExportInferenceHistoryDataRequestFormatEnum": "ExportInferenceHistoryDataRequestFormatEnum",
     "Feature": "Feature",
     "FindSyntiantPosteriorRequestReferenceSetEnum": "FindSyntiantPosteriorRequestReferenceSetEnum",

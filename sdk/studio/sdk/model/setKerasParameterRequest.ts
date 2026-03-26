@@ -15,6 +15,7 @@ import { AnomalyCapacity } from './anomalyCapacity';
 import { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum';
 import { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import { BlockParameters } from './blockParameters';
+import { ExperimentalImpulseSpecificGpuTrainingProcessor } from './experimentalImpulseSpecificGpuTrainingProcessor';
 import { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import { KerasVisualLayer } from './kerasVisualLayer';
@@ -94,6 +95,7 @@ export class SetKerasParameterRequest {
     'anomalyCapacity'?: AnomalyCapacity;
     'lastShownModelVariant'?: KerasModelVariantEnum;
     'blockParameters'?: BlockParameters;
+    'trainingProcessor'?: ExperimentalImpulseSpecificGpuTrainingProcessor;
 
     static discriminator: string | undefined = undefined;
 
@@ -212,6 +214,11 @@ export class SetKerasParameterRequest {
             "name": "blockParameters",
             "baseName": "blockParameters",
             "type": "BlockParameters"
+        },
+        {
+            "name": "trainingProcessor",
+            "baseName": "trainingProcessor",
+            "type": "ExperimentalImpulseSpecificGpuTrainingProcessor"
         }    ];
 
     static getAttributeTypeMap() {

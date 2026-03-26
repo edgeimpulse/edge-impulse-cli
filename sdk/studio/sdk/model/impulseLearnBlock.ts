@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { ExperimentalImpulseSpecificGpuTrainingProcessor } from './experimentalImpulseSpecificGpuTrainingProcessor';
 import { LearnBlockType } from './learnBlockType';
 
 export class ImpulseLearnBlock {
@@ -38,6 +39,7 @@ export class ImpulseLearnBlock {
     * The datetime that the block version was created. Cannot be set via API.
     */
     'createdAt'?: Date;
+    'trainingProcessor'?: ExperimentalImpulseSpecificGpuTrainingProcessor;
 
     static discriminator: string | undefined = undefined;
 
@@ -76,6 +78,11 @@ export class ImpulseLearnBlock {
             "name": "createdAt",
             "baseName": "createdAt",
             "type": "Date"
+        },
+        {
+            "name": "trainingProcessor",
+            "baseName": "trainingProcessor",
+            "type": "ExperimentalImpulseSpecificGpuTrainingProcessor"
         }    ];
 
     static getAttributeTypeMap() {

@@ -37,6 +37,9 @@ import { CropSampleRequest } from '../model/cropSampleRequest';
 import { CropSampleResponse } from '../model/cropSampleResponse';
 import { DataExplorerPredictionsResponse } from '../model/dataExplorerPredictionsResponse';
 import { DataExplorerSettings } from '../model/dataExplorerSettings';
+import { DatasetStratificationOptions } from '../model/datasetStratificationOptions';
+import { DatasetStratificationPreviewResponse } from '../model/datasetStratificationPreviewResponse';
+
 import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
 import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
 import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
@@ -5685,6 +5688,96 @@ export class RawDataApi {
     }
 
     /**
+     * Returns the results of a previously requested stratification preview job. This endpoint is used to retrieve the results after a stratification preview job has been started. 
+     * @summary Get stratify preview results
+     * @param projectId Project ID
+     */
+    public async getStratifyPreviewResults (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DatasetStratificationPreviewResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/get-stratify-preview-results'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getStratifyPreviewResults.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'DatasetStratificationPreviewResponse'
+        );
+    }
+
+    /**
      * Get the original, uncropped, downsampled data.
      * @summary Get the original downsampled data
      * @param projectId Project ID
@@ -7960,6 +8053,206 @@ export class RawDataApi {
         return this.handleResponse(
             response,
             'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Performs a deterministic, in-place stratified split of the project\'s dataset into \"training\" and \"testing\" sets, based on the chosen stratification options. Stratification can use the label, one or more metadata keys, or both as a composite group. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. For example:     { \"stratifyByLabel\": true, \"metadataKeys\": [\"site\", \"scanner\"], \"excludeDisabledSamples\": false, \"splitRatio\": 0.8 }     With these options, samples are grouped by the combination of label, site, and scanner. Within each group, 80% are set to \"training\" and the rest to \"testing\". 
+     * @summary Stratify dataset
+     * @param projectId Project ID
+     * @param datasetStratificationOptions 
+     */
+    public async stratifyDataset (projectId: number, datasetStratificationOptions: DatasetStratificationOptions, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/stratify'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling stratifyDataset.');
+        }
+
+        // verify required parameter 'datasetStratificationOptions' is not null or undefined
+
+
+        if (datasetStratificationOptions === null || datasetStratificationOptions === undefined) {
+            throw new Error('Required parameter datasetStratificationOptions was null or undefined when calling stratifyDataset.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(datasetStratificationOptions, "DatasetStratificationOptions"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse | StartJobResponse'
+        );
+    }
+
+    /**
+     * Returns a preview of how the project\'s dataset would be balanced if the current stratification options were applied. For each group (composite of label and/or metadata keys), shows the number and percentage of samples that would be assigned to each split (\"training\"/\"testing\"). This does not update the dataset, only provides a summary. Returns immediately on small datasets, or starts a job on larger datasets. 
+     * @summary Stratify dataset preview
+     * @param projectId Project ID
+     * @param datasetStratificationOptions 
+     */
+    public async stratifyDatasetPreview (projectId: number, datasetStratificationOptions: DatasetStratificationOptions, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DatasetStratificationPreviewResponse | StartJobResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/stratify-preview'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling stratifyDatasetPreview.');
+        }
+
+        // verify required parameter 'datasetStratificationOptions' is not null or undefined
+
+
+        if (datasetStratificationOptions === null || datasetStratificationOptions === undefined) {
+            throw new Error('Required parameter datasetStratificationOptions was null or undefined when calling stratifyDatasetPreview.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(datasetStratificationOptions, "DatasetStratificationOptions"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'DatasetStratificationPreviewResponse | StartJobResponse'
         );
     }
 

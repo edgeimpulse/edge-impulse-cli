@@ -11,6 +11,7 @@
  */
 
 import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
+import { DatasetStratificationOptions } from './datasetStratificationOptions';
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
 import { LatencyDevice } from './latencyDevice';
@@ -94,6 +95,7 @@ export class ProjectInfoResponseAllOf {
     'lastShownModelEngine'?: ModelEngineShortEnum;
     'versioningStorageSizeMib'?: number;
     'anomalyLabelsConfig'?: AnomalyLabelsConfig;
+    'datasetStratificationOptions'?: DatasetStratificationOptions;
 
     static discriminator: string | undefined = undefined;
 
@@ -262,6 +264,11 @@ export class ProjectInfoResponseAllOf {
             "name": "anomalyLabelsConfig",
             "baseName": "anomalyLabelsConfig",
             "type": "AnomalyLabelsConfig"
+        },
+        {
+            "name": "datasetStratificationOptions",
+            "baseName": "datasetStratificationOptions",
+            "type": "DatasetStratificationOptions"
         }    ];
 
     static getAttributeTypeMap() {

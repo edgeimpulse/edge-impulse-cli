@@ -11,6 +11,7 @@
  */
 
 import { AnomalyLabelsConfig } from './anomalyLabelsConfig';
+import { DatasetStratificationOptions } from './datasetStratificationOptions';
 import { DevelopmentKeys } from './developmentKeys';
 import { Device } from './device';
 import { GenericApiResponse } from './genericApiResponse';
@@ -104,6 +105,7 @@ export class ProjectInfoResponse {
     'lastShownModelEngine'?: ModelEngineShortEnum;
     'versioningStorageSizeMib'?: number;
     'anomalyLabelsConfig'?: AnomalyLabelsConfig;
+    'datasetStratificationOptions'?: DatasetStratificationOptions;
 
     static discriminator: string | undefined = undefined;
 
@@ -282,6 +284,11 @@ export class ProjectInfoResponse {
             "name": "anomalyLabelsConfig",
             "baseName": "anomalyLabelsConfig",
             "type": "AnomalyLabelsConfig"
+        },
+        {
+            "name": "datasetStratificationOptions",
+            "baseName": "datasetStratificationOptions",
+            "type": "DatasetStratificationOptions"
         }    ];
 
     static getAttributeTypeMap() {

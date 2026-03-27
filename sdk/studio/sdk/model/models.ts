@@ -261,6 +261,10 @@ export * from './dataExplorerPredictionsResponseAllOf';
 export * from './dataExplorerSettings';
 export * from './datasetRatioData';
 export * from './datasetRatioDataRatio';
+export * from './datasetStratificationOptions';
+export * from './datasetStratificationPreviewData';
+export * from './datasetStratificationPreviewDataData';
+export * from './datasetStratificationPreviewResponse';
 export * from './deletePortalFileRequest';
 export * from './deleteUserRequest';
 export * from './dependencyData';
@@ -1417,6 +1421,10 @@ import { DataExplorerPredictionsResponseAllOf } from './dataExplorerPredictionsR
 import { DataExplorerSettings } from './dataExplorerSettings';
 import { DatasetRatioData } from './datasetRatioData';
 import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
+import { DatasetStratificationOptions } from './datasetStratificationOptions';
+import { DatasetStratificationPreviewData } from './datasetStratificationPreviewData';
+import { DatasetStratificationPreviewDataData } from './datasetStratificationPreviewDataData';
+import { DatasetStratificationPreviewResponse } from './datasetStratificationPreviewResponse';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DeleteUserRequest } from './deleteUserRequest';
 import { DependencyData } from './dependencyData';
@@ -2762,6 +2770,10 @@ const typeMap: {[index: string]: any} = {
     "DataExplorerSettings": DataExplorerSettings,
     "DatasetRatioData": DatasetRatioData,
     "DatasetRatioDataRatio": DatasetRatioDataRatio,
+    "DatasetStratificationOptions": DatasetStratificationOptions,
+    "DatasetStratificationPreviewData": DatasetStratificationPreviewData,
+    "DatasetStratificationPreviewDataData": DatasetStratificationPreviewDataData,
+    "DatasetStratificationPreviewResponse": DatasetStratificationPreviewResponse,
     "DeletePortalFileRequest": DeletePortalFileRequest,
     "DeleteUserRequest": DeleteUserRequest,
     "DependencyData": DependencyData,

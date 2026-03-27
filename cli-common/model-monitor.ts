@@ -8,6 +8,8 @@ import { MgmtInterfaceImpulseRecordRawData, MgmtInterfaceInferenceSummary } from
 export const DEFAULT_MONITOR_SUMMARY_INTERVAL_MS = 60000;
 const MONITOR_PREFIX = '\x1b[34m[MON]\x1b[0m';
 
+const DEFAULT_THRESHOLD = 0.5;
+
 function checkFileExists(file: string) {
     return new Promise(resolve => {
         return fs.access(file, fs.constants.F_OK)
@@ -399,7 +401,7 @@ class StorageManager {
 
 interface MetricCalculator {
     name: string;
-    update(classification: { [label: string]: number } | undefined): void;
+    update(classification: { [label: string]: number } | undefined, threshold: number): void;
     getMetric(): { label: string; value: number }[];
 }
 
@@ -413,20 +415,16 @@ type MeanValues = {
 class MeanCalculator implements MetricCalculator {
     private _mean: MeanValues;
     private _name: string = 'mean';
-    private _confidenceThreshold: number;
 
-    constructor(opts: {
-        confidenceThreshold: number,
-    }) {
+    constructor() {
         this._mean = { };
-        this._confidenceThreshold = opts.confidenceThreshold;
     }
 
     get name(): string {
         return this._name;
     }
 
-    update(classification: { [label: string]: number } | undefined): void {
+    update(classification: { [label: string]: number } | undefined, threshold: number): void {
         if (classification === undefined) {
             return;
         }
@@ -443,7 +441,7 @@ class MeanCalculator implements MetricCalculator {
 
         for (const label of Object.keys(classification)) {
             const score = Number(classification[label]);
-            if (score > predictedScore && score >= this._confidenceThreshold) {
+            if (score > predictedScore && score >= threshold) {
                 predictedScore = score;
                 predictedLabel = label;
             }
@@ -491,13 +489,9 @@ type StdDevValues = {
 class StdDevCalculator implements MetricCalculator {
     private _stdDev: StdDevValues;
     private _name: string = 'standardDeviation';
-    private _confidenceThreshold: number;
 
-    constructor(opts: {
-        confidenceThreshold: number,
-    }) {
+    constructor() {
         this._stdDev = { };
-        this._confidenceThreshold = opts.confidenceThreshold;
     }
 
     get name(): string {
@@ -506,7 +500,7 @@ class StdDevCalculator implements MetricCalculator {
 
     // based on Welford's online algorithm
     // https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm
-    update(classification: { [label: string]: number } | undefined ): void {
+    update(classification: { [label: string]: number } | undefined, threshold: number): void {
         if (classification === undefined) {
             return;
         }
@@ -519,7 +513,7 @@ class StdDevCalculator implements MetricCalculator {
 
         for (const label of Object.keys(classification)) {
             const score = Number(classification[label]);
-            if (score > predictedScore && score >= this._confidenceThreshold) {
+            if (score > predictedScore && score >= threshold) {
                 predictedScore = score;
                 predictedLabel = label;
             }
@@ -572,8 +566,8 @@ class MetricsCalculator {
     private _stdDevCalculator: StdDevCalculator;
     private _metrics: InferenceMetrics;
     private _model: ModelInformation;
-    private _confidenceThreshold: number;
     private _summaryWindowMs: number;
+    private _confidenceThresholds = new Map<string, number>();
 
     // parameters and variables used to determine summary period
     private _windowStartIndex: number = 0;
@@ -620,29 +614,39 @@ class MetricsCalculator {
             if (thresholdObj && thresholdObj.type === 'anomaly_gmm') {
                 if (typeof thresholdObj.min_anomaly_score === 'number') {
                     threshold = thresholdObj.min_anomaly_score;
+                    this._confidenceThresholds.set('min_anomaly_score', threshold);
                 }
             }
         }
-        else if (model.modelParameters.model_type === 'constrained_object_detection' ||
-                 model.modelParameters.model_type === 'object_detection'
+
+        // An impulse might have both visual AD and classifier/object detection, but classification and object detection
+        // are mutually exclusive, so we check them in an if-else statement
+        if (model.modelParameters.model_type === 'constrained_object_detection' ||
+            model.modelParameters.model_type === 'object_detection'
         ) {
             const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'object_detection');
             if (thresholdObj && thresholdObj.type === 'object_detection') {
                 if (typeof thresholdObj.min_score === 'number') {
                     threshold = thresholdObj.min_score;
+                    this._confidenceThresholds.set('min_score', threshold);
+                }
+            }
+        }
+        else if (model.modelParameters.model_type === 'classification') {
+            const thresholdObj = (model.modelParameters.thresholds || []).find(x => x.type === 'classification');
+            if (thresholdObj && thresholdObj.type === 'classification') {
+                if (typeof thresholdObj.min_score === 'number') {
+                    threshold = thresholdObj.min_score;
+                    this._confidenceThresholds.set('min_score', threshold);
                 }
             }
         }
 
-        if (typeof threshold === 'undefined') {
-            console.warn(MONITOR_PREFIX, 'Model threshold is not defined, using default value of 0.5');
-            this._confidenceThreshold = 0.5;
+        if (this._confidenceThresholds.size === 0) {
+            console.warn(MONITOR_PREFIX, `Model threshold is not defined, using default value of ${DEFAULT_THRESHOLD}`);
         }
-        else {
-            this._confidenceThreshold = threshold;
-        }
-        this._meanCalculator = new MeanCalculator({ confidenceThreshold: this._confidenceThreshold });
-        this._stdDevCalculator = new StdDevCalculator({ confidenceThreshold: this._confidenceThreshold });
+        this._meanCalculator = new MeanCalculator();
+        this._stdDevCalculator = new StdDevCalculator();
 
         // init as empty, will be overwritten by restoreMetrics
         this._metrics = {
@@ -656,8 +660,8 @@ class MetricsCalculator {
     }
 
     private resetMetrics(): void {
-        this._meanCalculator = new MeanCalculator({ confidenceThreshold: this._confidenceThreshold });
-        this._stdDevCalculator = new StdDevCalculator({ confidenceThreshold: this._confidenceThreshold });
+        this._meanCalculator = new MeanCalculator();
+        this._stdDevCalculator = new StdDevCalculator();
 
         this._metrics = {
             start: { index: this._windowStartIndex, timestamp: this._windowStartTimestamp },
@@ -700,17 +704,22 @@ class MetricsCalculator {
         };
 
         if (hasVisualAd(this._model) && record.impulseRecord.result.visual_anomaly_max !== undefined) {
-            const isAnomaly = record.impulseRecord.result.visual_anomaly_max > this._confidenceThreshold;
+            const minAnomalyScore = this._confidenceThresholds.get('min_anomaly_score') ?? DEFAULT_THRESHOLD;
+
+            const isAnomaly = record.impulseRecord.result.visual_anomaly_max > minAnomalyScore;
             const predictedLabel = isAnomaly ? 'anomaly' : 'no anomaly';
             incrementClassificationCounter(predictedLabel);
 
             const classifications = { [predictedLabel]: record.impulseRecord.result.visual_anomaly_max };
             // update mean and stdev partial values
-            this._meanCalculator.update(classifications);
-            this._stdDevCalculator.update(classifications);
+            this._meanCalculator.update(classifications, minAnomalyScore);
+            this._stdDevCalculator.update(classifications, minAnomalyScore);
         }
+
         // check if property classification exists in record.impulseRecord.result
-        else if (record.impulseRecord.result.classification !== undefined) {
+        if (record.impulseRecord.result.classification !== undefined) {
+            const minScore = this._confidenceThresholds.get('min_score') ?? DEFAULT_THRESHOLD;
+
             // iterate over properites in impulseRecord.result.classification
             for (const key in record.impulseRecord.result.classification) {
                 if (!record.impulseRecord.result.classification.hasOwnProperty(key)) {
@@ -718,20 +727,23 @@ class MetricsCalculator {
                 }
 
                 // check if value is above threshold
-                if (Number(record.impulseRecord.result.classification[key]) > this._confidenceThreshold) {
+                if (Number(record.impulseRecord.result.classification[key]) > minScore) {
                     incrementClassificationCounter(key);
                 }
             }
 
             // update mean and stdev partial values
-            this._meanCalculator.update(record.impulseRecord.result.classification);
-            this._stdDevCalculator.update(record.impulseRecord.result.classification);
+            this._meanCalculator.update(record.impulseRecord.result.classification, minScore);
+            this._stdDevCalculator.update(record.impulseRecord.result.classification, minScore);
         }
-        else if (record.impulseRecord.result.bounding_boxes !== undefined) {
+
+        if (record.impulseRecord.result.bounding_boxes !== undefined) {
+            const minScore = this._confidenceThresholds.get('min_score') ?? DEFAULT_THRESHOLD;
+
             // iterate over list of bounding boxes
             for (const box of record.impulseRecord.result.bounding_boxes) {
                 // check if value is above threshold
-                if (box.value > this._confidenceThreshold) {
+                if (box.value > minScore) {
                     incrementClassificationCounter(box.label);
                 }
             }
@@ -745,8 +757,8 @@ class MetricsCalculator {
             }, {} as { [k: string]: number });
 
             // update mean and stdev partial values
-            this._meanCalculator.update(classificationData);
-            this._stdDevCalculator.update(classificationData);
+            this._meanCalculator.update(classificationData, minScore);
+            this._stdDevCalculator.update(classificationData, minScore);
         }
 
         // Calculate average inference time, if timing information is present

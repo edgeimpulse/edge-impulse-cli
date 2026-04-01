@@ -47,6 +47,7 @@ export interface SerialConfig {
     camera: string | undefined;
     audio: string | undefined;
     runner: RunnerConfig;
+    apiKeysForProject: { [projectId: string]: string } | undefined;
 }
 
 export interface EdgeImpulseEndpoints {
@@ -171,6 +172,21 @@ export class Config {
     async setLinuxProjectId(projectId: number) {
         let config = await this.load();
         config.linuxProjectId = projectId;
+        await this.store(config);
+    }
+
+    async getApiKeyForProject(projectId: number): Promise<string | undefined> {
+        let config = await this.load();
+        if (!config) {
+            return undefined;
+        }
+        return (config.apiKeysForProject || { })[projectId.toString()];
+    }
+
+    async setApiKeyForProject(projectId: number, apiKey: string) {
+        let config = await this.load();
+        config.apiKeysForProject = config.apiKeysForProject || { };
+        config.apiKeysForProject[projectId.toString()] = apiKey;
         await this.store(config);
     }
 
@@ -310,12 +326,18 @@ export class Config {
 
         // fetch user...
         if (config.jwtToken) {
-            let user = await this._api.user.getCurrentUser();
-            // check if has developer profile...
-            if (!user.organizations.find(x => x.isDeveloperProfile)) {
-                console.log(PREFIX, 'Creating developer profile...');
-                await this._api.user.createDeveloperProfile();
-                console.log(PREFIX, 'Creating developer profile OK');
+            try {
+                let user = await this._api.user.getCurrentUser();
+                // check if has developer profile...
+                if (!user.organizations.find(x => x.isDeveloperProfile)) {
+                    console.log(PREFIX, 'Creating developer profile...');
+                    await this._api.user.createDeveloperProfile();
+                    console.log(PREFIX, 'Creating developer profile OK');
+                }
+            }
+            catch (ex) {
+                if (!apiKey) throw ex;
+                // Otherwise ok
             }
         }
 
@@ -543,7 +565,8 @@ export class Config {
                     modelVariantsForProjectId: undefined,
                     storageMaxSizeMb: undefined,
                     monitorSummaryIntervalMs: undefined,
-                }
+                },
+                apiKeysForProject: undefined,
             };
         }
 

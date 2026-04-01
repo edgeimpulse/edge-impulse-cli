@@ -10,42 +10,44 @@
  * Do not edit the class manually.
  */
 
+import { GenericApiResponse } from './genericApiResponse';
+import { GetHmacDevkeyResponseAllOf } from './getHmacDevkeyResponseAllOf';
 
-export class RestoreProjectRequest {
+export class GetHmacDevkeyResponse {
     /**
-    * Source project ID
+    * Whether the operation succeeded
     */
-    'projectId': number;
+    'success': boolean;
     /**
-    * Source project API key. This can be omitted if authenticating using a JWT token (you need to be a member of the source project).
+    * Optional error description (set if \'success\' was false)
     */
-    'projectApiKey'?: string;
+    'error'?: string;
     /**
-    * Source project version ID
+    * HMAC Key
     */
-    'versionId': number;
+    'hmacKey'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "projectId",
-            "baseName": "projectId",
-            "type": "number"
+            "name": "success",
+            "baseName": "success",
+            "type": "boolean"
         },
         {
-            "name": "projectApiKey",
-            "baseName": "projectApiKey",
+            "name": "error",
+            "baseName": "error",
             "type": "string"
         },
         {
-            "name": "versionId",
-            "baseName": "versionId",
-            "type": "number"
+            "name": "hmacKey",
+            "baseName": "hmacKey",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return RestoreProjectRequest.attributeTypeMap;
+        return GetHmacDevkeyResponse.attributeTypeMap;
     }
 }
 

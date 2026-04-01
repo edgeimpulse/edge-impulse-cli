@@ -6,6 +6,10 @@ import checkNewVersions from './check-new-version';
 import { AWSSecretsManagerUtils } from "./aws-sm-utils";
 import { AWSIoTCoreConnector } from "./aws-iotcore-connector";
 import searchList from 'inquirer-search-list';
+import { EdgeImpulseApi } from '../sdk/studio';
+import os from 'node:os';
+
+const PREFIX = '\x1b[33m[INT]\x1b[0m';
 
 inquirer.registerPrompt('search-list', searchList);
 
@@ -164,6 +168,7 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
     apiKeyArgv: string | undefined,
     devArgv: boolean,
     hmacKeyArgv: string | undefined,
+    verboseArgv: boolean,
     connectProjectMsg: string,
     getProjectFromConfig?: (deviceId: string | undefined) => Promise<{ projectId: number } | undefined>
 }, deviceId: string | undefined) {
@@ -228,24 +233,63 @@ export async function setupCliApp(configFactory: Config, config: EdgeImpulseConf
         apiKey: opts.apiKeyArgv || '',
         hmacKey: opts.hmacKeyArgv || '0'
     };
-    if (!opts.apiKeyArgv) {
+
+    // get hmac dev key (if set)
+    if (!opts.hmacKeyArgv) {
         try {
-            let dk = (await config.api.projects.listDevkeys(projectId));
-
-            if (!dk.apiKey) {
-                throw new Error('No API key set (via --api-key), and no development API keys configured for ' +
-                    'this project. Add a development API key from the Edge Impulse dashboard to continue.');
-            }
-
-            devKeys.apiKey = dk.apiKey;
-            if (!opts.hmacKeyArgv && dk.hmacKey) {
+            let dk = (await config.api.projects.getHmacDevkey(projectId));
+            if (dk.hmacKey) {
                 devKeys.hmacKey = dk.hmacKey;
             }
         }
         catch (ex2) {
-            let ex = <Error>ex2;
-            throw new Error('Failed to load development keys: ' + (ex.message || ex.toString()));
+            // noop, e.g. key with not enough permissions
+            if (opts.verboseArgv) {
+                const ex = <Error>ex2;
+                console.log(PREFIX, `Could not fetch development Hmac key: ` + (ex.message || ex.toString()));
+            }
         }
+    }
+
+    if (!opts.apiKeyArgv) {
+        // create API key
+        let apiKey = await configFactory.getApiKeyForProject(projectId);
+        if (apiKey) {
+            // validate API key...
+            const api = new EdgeImpulseApi({
+                endpoint: config.endpoints.internal.api,
+                extraHeaders: { 'User-Agent': 'EDGE_IMPULSE_CLI' },
+            });
+            api.authenticate({
+                method: 'apiKey',
+                apiKey: apiKey,
+            });
+            try {
+                await api.projects.getProjectInfo(projectId);
+            }
+            catch (ex2) {
+                // noop, e.g. key with not enough permissions
+                if (opts.verboseArgv) {
+                    const ex = <Error>ex2;
+                    console.log(PREFIX, `Failed to do request with stored API key for project ${projectId} (ERR: ${ex.message || ex.toString()}). ` +
+                        `Creating new API key...`);
+                }
+
+                apiKey = undefined;
+            }
+        }
+
+        if (!apiKey) {
+            const res = await config.api.projects.addProjectApiKey(projectId, {
+                name: `Edge Impulse CLI (${os.hostname()})`,
+                role: 'ingestion_deployment',
+                isDevelopmentKey: false,
+            });
+            apiKey = res.apiKey;
+            await configFactory.setApiKeyForProject(projectId, apiKey);
+        }
+
+        devKeys.apiKey = apiKey;
     }
 
     return {

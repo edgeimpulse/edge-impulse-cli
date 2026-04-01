@@ -13,6 +13,10 @@
 
 export class AddOrganizationApiKeyRequestAllOf {
     'role': AddOrganizationApiKeyRequestAllOfRoleEnum;
+    /**
+    * Optional: time to live in seconds.
+    */
+    'ttl'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,6 +25,11 @@ export class AddOrganizationApiKeyRequestAllOf {
             "name": "role",
             "baseName": "role",
             "type": "AddOrganizationApiKeyRequestAllOfRoleEnum"
+        },
+        {
+            "name": "ttl",
+            "baseName": "ttl",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

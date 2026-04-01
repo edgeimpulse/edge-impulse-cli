@@ -22,6 +22,10 @@ export class ProjectApiKey {
     'role': ProjectApiKeyRoleEnum;
     'createdByUser'?: CreatedUpdatedByUser;
     'lastUsed'?: ProjectApiKeyLastUsed;
+    /**
+    * If the key has a ttl set, when the key will expire
+    */
+    'expires'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -65,6 +69,11 @@ export class ProjectApiKey {
             "name": "lastUsed",
             "baseName": "lastUsed",
             "type": "ProjectApiKeyLastUsed"
+        },
+        {
+            "name": "expires",
+            "baseName": "expires",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
@@ -73,5 +82,5 @@ export class ProjectApiKey {
 }
 
 
-export type ProjectApiKeyRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'wladmin';
-export const ProjectApiKeyRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'wladmin'];
+export type ProjectApiKeyRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'ingestion_deployment' | 'wladmin';
+export const ProjectApiKeyRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'ingestion_deployment', 'wladmin'];

@@ -22,6 +22,10 @@ export class OrganizationApiKey {
     'isTransformationJobKey': boolean;
     'createdByUser'?: CreatedUpdatedByUser;
     'lastUsed'?: ProjectApiKeyLastUsed;
+    /**
+    * If the key has a ttl set, when the key will expire
+    */
+    'expires'?: Date;
 
     static discriminator: string | undefined = undefined;
 
@@ -65,6 +69,11 @@ export class OrganizationApiKey {
             "name": "lastUsed",
             "baseName": "lastUsed",
             "type": "ProjectApiKeyLastUsed"
+        },
+        {
+            "name": "expires",
+            "baseName": "expires",
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {

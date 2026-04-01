@@ -48,6 +48,7 @@ const helpArgv = process.argv.indexOf('--help') > -1;
 const dontResignArgv = process.argv.indexOf('--dont-resign') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
+const verboseArgv = process.argv.indexOf('--verbose') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
 const hmacKeyArgvIx = process.argv.indexOf('--hmac-key');
@@ -83,6 +84,7 @@ const cliOptions = {
     devArgv: devArgv,
     hmacKeyArgv: hmacKeyArgv,
     silentArgv: silentArgv,
+    verboseArgv: verboseArgv,
     connectProjectMsg: 'To which project do you want to upload the data?',
     getProjectFromConfig: async () => {
         let projectId = await configFactory.getUploaderProjectId();

@@ -17,6 +17,10 @@ export class AddProjectApiKeyRequestAllOf {
     */
     'isDevelopmentKey': boolean;
     'role': AddProjectApiKeyRequestAllOfRoleEnum;
+    /**
+    * Optional: time to live in seconds.
+    */
+    'ttl'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -30,6 +34,11 @@ export class AddProjectApiKeyRequestAllOf {
             "name": "role",
             "baseName": "role",
             "type": "AddProjectApiKeyRequestAllOfRoleEnum"
+        },
+        {
+            "name": "ttl",
+            "baseName": "ttl",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
@@ -38,5 +47,5 @@ export class AddProjectApiKeyRequestAllOf {
 }
 
 
-export type AddProjectApiKeyRequestAllOfRoleEnum = 'admin' | 'readonly' | 'ingestiononly';
-export const AddProjectApiKeyRequestAllOfRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly'];
+export type AddProjectApiKeyRequestAllOfRoleEnum = 'admin' | 'readonly' | 'ingestiononly' | 'ingestion_deployment';
+export const AddProjectApiKeyRequestAllOfRoleEnumValues: string[] = ['admin', 'readonly', 'ingestiononly', 'ingestion_deployment'];

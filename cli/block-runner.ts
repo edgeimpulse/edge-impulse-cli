@@ -1445,23 +1445,6 @@ export class BlockRunnerDeploy extends BlockRunner {
         );
 
         if (!deployCheckRes.hasDeployment) {
-            let projectReq: UpdateProjectRequest = {
-                experiments: [ "custom_deploy" ]
-            };
-
-            let updateProjectRes = (
-                await this._eiConfig.api.projects.updateProject(
-                    this._projectId,
-                    projectReq
-                )
-            );
-
-            if (!updateProjectRes.success) {
-                throw new Error(
-                    `Error while enabling custom deployments: ${updateProjectRes.error}`
-                );
-            }
-
             console.log(CON_PREFIX, "Starting job to build custom block...");
             await this.buildBlock(this._projectId);
             console.log(CON_PREFIX, "Finished building");

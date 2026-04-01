@@ -28,6 +28,10 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
     */
     'showGettingStartedWizard'?: boolean;
     'tutorialKey'?: TutorialType;
+    /**
+    * Whether to create an API key. If set to FALSE, the \"apiKey\" property on the response will be empty. If this field is not set, it will default to TRUE.
+    */
+    'createApiKey'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,6 +60,11 @@ export class UpdateOrganizationCreateEmptyProjectRequest {
             "name": "tutorialKey",
             "baseName": "tutorialKey",
             "type": "TutorialType"
+        },
+        {
+            "name": "createApiKey",
+            "baseName": "createApiKey",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

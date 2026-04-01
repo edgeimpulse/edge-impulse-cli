@@ -41,6 +41,7 @@ import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAIActionResponse } from '../model/getAIActionResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
+import { GetHmacDevkeyResponse } from '../model/getHmacDevkeyResponse';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
 import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
 import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
@@ -1586,6 +1587,96 @@ export class ProjectsApi {
         return this.handleResponse(
             response,
             'GetCsvWizardUploadedFileInfo'
+        );
+    }
+
+    /**
+     * Retrieve the HMAC development key for a project. This key are specifically marked to be used during development. This key can be `undefined` if no development keys are set.
+     * @summary Get HMAC development key
+     * @param projectId Project ID
+     */
+    public async getHmacDevkey (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetHmacDevkeyResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devkeys/hmac'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getHmacDevkey.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetHmacDevkeyResponse'
         );
     }
 

@@ -24,6 +24,7 @@ const SERIAL_PREFIX = '\x1b[33m[SER]\x1b[0m';
 const versionArgv = process.argv.indexOf('--version') > -1;
 const cleanArgv = process.argv.indexOf('--clean') > -1;
 const silentArgv = process.argv.indexOf('--silent') > -1;
+const verboseArgv = process.argv.indexOf('--verbose') > -1;
 const devArgv = process.argv.indexOf('--dev') > -1;
 const apiKeyArgvIx = process.argv.indexOf('--api-key');
 const apiKeyArgv = apiKeyArgvIx !== -1 ? process.argv[apiKeyArgvIx + 1] : undefined;
@@ -42,6 +43,7 @@ const cliOptions = {
     devArgv: devArgv,
     hmacKeyArgv: undefined,
     silentArgv: silentArgv,
+    verboseArgv: verboseArgv,
     connectProjectMsg: 'To which project do you want to connect this device?',
     getProjectFromConfig: async (deviceId: string | undefined) => {
         if (!deviceId) return undefined;

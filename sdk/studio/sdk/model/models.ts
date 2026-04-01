@@ -428,6 +428,8 @@ export * from './getFeatureFlagsResponseAllOf';
 export * from './getFeatureFlagsResponseAllOfFlags';
 export * from './getFeaturesForPostProcessingSampleResponse';
 export * from './getFeaturesForPostProcessingSampleResponseAllOf';
+export * from './getHmacDevkeyResponse';
+export * from './getHmacDevkeyResponseAllOf';
 export * from './getImpulseBlocksResponse';
 export * from './getImpulseBlocksResponseAllOf';
 export * from './getImpulseRecordsRequest';
@@ -1588,6 +1590,8 @@ import { GetFeatureFlagsResponseAllOf } from './getFeatureFlagsResponseAllOf';
 import { GetFeatureFlagsResponseAllOfFlags } from './getFeatureFlagsResponseAllOfFlags';
 import { GetFeaturesForPostProcessingSampleResponse } from './getFeaturesForPostProcessingSampleResponse';
 import { GetFeaturesForPostProcessingSampleResponseAllOf } from './getFeaturesForPostProcessingSampleResponseAllOf';
+import { GetHmacDevkeyResponse } from './getHmacDevkeyResponse';
+import { GetHmacDevkeyResponseAllOf } from './getHmacDevkeyResponseAllOf';
 import { GetImpulseBlocksResponse } from './getImpulseBlocksResponse';
 import { GetImpulseBlocksResponseAllOf } from './getImpulseBlocksResponseAllOf';
 import { GetImpulseRecordsRequest } from './getImpulseRecordsRequest';
@@ -2931,6 +2935,8 @@ const typeMap: {[index: string]: any} = {
     "GetFeatureFlagsResponseAllOfFlags": GetFeatureFlagsResponseAllOfFlags,
     "GetFeaturesForPostProcessingSampleResponse": GetFeaturesForPostProcessingSampleResponse,
     "GetFeaturesForPostProcessingSampleResponseAllOf": GetFeaturesForPostProcessingSampleResponseAllOf,
+    "GetHmacDevkeyResponse": GetHmacDevkeyResponse,
+    "GetHmacDevkeyResponseAllOf": GetHmacDevkeyResponseAllOf,
     "GetImpulseBlocksResponse": GetImpulseBlocksResponse,
     "GetImpulseBlocksResponseAllOf": GetImpulseBlocksResponseAllOf,
     "GetImpulseRecordsRequest": GetImpulseRecordsRequest,

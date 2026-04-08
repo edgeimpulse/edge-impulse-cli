@@ -19,6 +19,7 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
     'regression': Array<TransferLearningModel>;
     'classification': Array<TransferLearningModel>;
     'anomaly'?: Array<TransferLearningModel>;
+    'visualAnomaly'?: Array<TransferLearningModel>;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,6 +52,11 @@ export class OptimizeTransferLearningModelsResponseAllOfModels {
         {
             "name": "anomaly",
             "baseName": "anomaly",
+            "type": "Array<TransferLearningModel>"
+        },
+        {
+            "name": "visualAnomaly",
+            "baseName": "visualAnomaly",
             "type": "Array<TransferLearningModel>"
         }    ];
 

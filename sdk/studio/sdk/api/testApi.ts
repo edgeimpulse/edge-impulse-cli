@@ -28,6 +28,10 @@ else {
     FormData = undici.FormData;
 }
 
+import { CreateTestUserRequest } from '../model/createTestUserRequest';
+import { CreateTestUserResponse } from '../model/createTestUserResponse';
+import { DeleteTestUserRequest } from '../model/deleteTestUserRequest';
+import { DeleteTestUserResponse } from '../model/deleteTestUserResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { TestAddMockModelMonitoringDataRequest } from '../model/testAddMockModelMonitoringDataRequest';
 
@@ -149,6 +153,188 @@ export class TestApi {
         this.authentications.OAuth2.accessToken = token;
     }
 
+
+    /**
+     * Create a new user for testing/benchmarking purposes. Users created via this API are marked with `analytics_type = \'test\'`.  If name/username/email are not provided, random values are generated. 
+     * @summary Create a test user
+     * @param createTestUserRequest 
+     */
+    public async createTestUser (createTestUserRequest: CreateTestUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateTestUserResponse> {
+        const localVarPath = this.basePath + '/api/test/users';
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'createTestUserRequest' is not null or undefined
+
+
+        if (createTestUserRequest === null || createTestUserRequest === undefined) {
+            throw new Error('Required parameter createTestUserRequest was null or undefined when calling createTestUser.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(createTestUserRequest, "CreateTestUserRequest"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'CreateTestUserResponse'
+        );
+    }
+
+    /**
+     * Delete a user with `analytics_type = \'test\'` by user ID. 
+     * @summary Delete a test user
+     * @param deleteTestUserRequest 
+     */
+    public async deleteTestUser (deleteTestUserRequest: DeleteTestUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeleteTestUserResponse> {
+        const localVarPath = this.basePath + '/api/test/users';
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'deleteTestUserRequest' is not null or undefined
+
+
+        if (deleteTestUserRequest === null || deleteTestUserRequest === undefined) {
+            throw new Error('Required parameter deleteTestUserRequest was null or undefined when calling deleteTestUser.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'DELETE',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(deleteTestUserRequest, "DeleteTestUserRequest"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'DeleteTestUserResponse'
+        );
+    }
 
     /**
      * Test-only API to insert mock aggregate data for model monitoring. 

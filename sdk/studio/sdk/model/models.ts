@@ -213,6 +213,9 @@ export * from './createSignedUploadLinkRequest';
 export * from './createSignedUploadLinkResponse';
 export * from './createSignedUploadLinkResponseAllOf';
 export * from './createSyntheticDataRequest';
+export * from './createTestUserRequest';
+export * from './createTestUserResponse';
+export * from './createTestUserResponseAllOf';
 export * from './createThirdPartyAuthRequest';
 export * from './createThirdPartyAuthResponse';
 export * from './createThirdPartyAuthResponseAllOf';
@@ -266,6 +269,9 @@ export * from './datasetStratificationPreviewData';
 export * from './datasetStratificationPreviewDataData';
 export * from './datasetStratificationPreviewResponse';
 export * from './deletePortalFileRequest';
+export * from './deleteTestUserRequest';
+export * from './deleteTestUserResponse';
+export * from './deleteTestUserResponseAllOf';
 export * from './deleteUserRequest';
 export * from './dependencyData';
 export * from './deployPretrainedModelInputAudio';
@@ -1375,6 +1381,9 @@ import { CreateSignedUploadLinkRequest } from './createSignedUploadLinkRequest';
 import { CreateSignedUploadLinkResponse } from './createSignedUploadLinkResponse';
 import { CreateSignedUploadLinkResponseAllOf } from './createSignedUploadLinkResponseAllOf';
 import { CreateSyntheticDataRequest } from './createSyntheticDataRequest';
+import { CreateTestUserRequest } from './createTestUserRequest';
+import { CreateTestUserResponse } from './createTestUserResponse';
+import { CreateTestUserResponseAllOf } from './createTestUserResponseAllOf';
 import { CreateThirdPartyAuthRequest } from './createThirdPartyAuthRequest';
 import { CreateThirdPartyAuthResponse } from './createThirdPartyAuthResponse';
 import { CreateThirdPartyAuthResponseAllOf } from './createThirdPartyAuthResponseAllOf';
@@ -1428,6 +1437,9 @@ import { DatasetStratificationPreviewData } from './datasetStratificationPreview
 import { DatasetStratificationPreviewDataData } from './datasetStratificationPreviewDataData';
 import { DatasetStratificationPreviewResponse } from './datasetStratificationPreviewResponse';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
+import { DeleteTestUserRequest } from './deleteTestUserRequest';
+import { DeleteTestUserResponse } from './deleteTestUserResponse';
+import { DeleteTestUserResponseAllOf } from './deleteTestUserResponseAllOf';
 import { DeleteUserRequest } from './deleteUserRequest';
 import { DependencyData } from './dependencyData';
 import { DeployPretrainedModelInputAudio } from './deployPretrainedModelInputAudio';
@@ -2727,6 +2739,9 @@ const typeMap: {[index: string]: any} = {
     "CreateSignedUploadLinkResponse": CreateSignedUploadLinkResponse,
     "CreateSignedUploadLinkResponseAllOf": CreateSignedUploadLinkResponseAllOf,
     "CreateSyntheticDataRequest": CreateSyntheticDataRequest,
+    "CreateTestUserRequest": CreateTestUserRequest,
+    "CreateTestUserResponse": CreateTestUserResponse,
+    "CreateTestUserResponseAllOf": CreateTestUserResponseAllOf,
     "CreateThirdPartyAuthRequest": CreateThirdPartyAuthRequest,
     "CreateThirdPartyAuthResponse": CreateThirdPartyAuthResponse,
     "CreateThirdPartyAuthResponseAllOf": CreateThirdPartyAuthResponseAllOf,
@@ -2779,6 +2794,9 @@ const typeMap: {[index: string]: any} = {
     "DatasetStratificationPreviewDataData": DatasetStratificationPreviewDataData,
     "DatasetStratificationPreviewResponse": DatasetStratificationPreviewResponse,
     "DeletePortalFileRequest": DeletePortalFileRequest,
+    "DeleteTestUserRequest": DeleteTestUserRequest,
+    "DeleteTestUserResponse": DeleteTestUserResponse,
+    "DeleteTestUserResponseAllOf": DeleteTestUserResponseAllOf,
     "DeleteUserRequest": DeleteUserRequest,
     "DependencyData": DependencyData,
     "DeployPretrainedModelInputAudio": DeployPretrainedModelInputAudio,

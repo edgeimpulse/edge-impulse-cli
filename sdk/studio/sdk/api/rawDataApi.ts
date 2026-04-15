@@ -52,6 +52,8 @@ import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSetting
 import { GetDatasetRatioResponse } from '../model/getDatasetRatioResponse';
 import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
+import { GetRawDataMetadataCooccurrenceResponse } from '../model/getRawDataMetadataCooccurrenceResponse';
+import { GetRawDataMetadataDistributionResponse } from '../model/getRawDataMetadataDistributionResponse';
 import { GetSampleMetadataFilterOptionsResponse } from '../model/getSampleMetadataFilterOptionsResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
@@ -361,6 +363,23 @@ type countSamplesQueryParams = {
 type getAllImportedFromQueryParams = {
     limit?: number,
     offset?: number,
+};
+
+type getRawDataMetadataCooccurrenceQueryParams = {
+    category: RawDataCategory,
+    keyA: string,
+    keyB: string,
+    topNKeyA?: number,
+    topNKeyB?: number,
+    normalize?: 'none' | 'global',
+};
+
+type getRawDataMetadataDistributionQueryParams = {
+    category: RawDataCategory,
+    key: string,
+    topN?: number,
+    binCount?: number,
+    groupByLabel?: boolean,
 };
 
 type getSampleQueryParams = {
@@ -4767,6 +4786,276 @@ export class RawDataApi {
         return this.handleResponse(
             response,
             'ObjectDetectionLabelQueueCountResponse'
+        );
+    }
+
+    /**
+     * Get co-occurrence counts for two metadata keys in a project category. This is experimental and may change in the future.
+     * @summary Get project metadata co-occurrence matrix
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param keyA First metadata key to aggregate values for
+     * @param keyB Second metadata key to aggregate values for
+     * @param topNKeyA Maximum number of top values to return for keyA
+     * @param topNKeyB Maximum number of top values to return for keyB
+     * @param normalize Controls how normalizedMatrix is computed. Use none to disable normalization (normalizedMatrix omitted), or global to return percentages across all matrix cells.
+     */
+    public async getRawDataMetadataCooccurrence (projectId: number, queryParams: getRawDataMetadataCooccurrenceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataCooccurrenceResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-cooccurrence'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getRawDataMetadataCooccurrence.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling getRawDataMetadataCooccurrence.');
+        }
+
+
+        // verify required parameter 'keyA' is not null or undefined
+
+        if (queryParams.keyA === null || queryParams.keyA === undefined) {
+            throw new Error('Required parameter queryParams.keyA was null or undefined when calling getRawDataMetadataCooccurrence.');
+        }
+
+
+        // verify required parameter 'keyB' is not null or undefined
+
+        if (queryParams.keyB === null || queryParams.keyB === undefined) {
+            throw new Error('Required parameter queryParams.keyB was null or undefined when calling getRawDataMetadataCooccurrence.');
+        }
+
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+        }
+
+        if (queryParams?.keyA !== undefined) {
+            localVarQueryParameters['keyA'] = ObjectSerializer.serialize(queryParams.keyA, "string");
+        }
+
+        if (queryParams?.keyB !== undefined) {
+            localVarQueryParameters['keyB'] = ObjectSerializer.serialize(queryParams.keyB, "string");
+        }
+
+        if (queryParams?.topNKeyA !== undefined) {
+            localVarQueryParameters['topNKeyA'] = ObjectSerializer.serialize(queryParams.topNKeyA, "number");
+        }
+
+        if (queryParams?.topNKeyB !== undefined) {
+            localVarQueryParameters['topNKeyB'] = ObjectSerializer.serialize(queryParams.topNKeyB, "number");
+        }
+
+        if (queryParams?.normalize !== undefined) {
+            localVarQueryParameters['normalize'] = ObjectSerializer.serialize(queryParams.normalize, "'none' | 'global'");
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetRawDataMetadataCooccurrenceResponse'
+        );
+    }
+
+    /**
+     * Get metadata value distribution for a specific metadata key in a project category. Numeric values are returned as histogram buckets, non-numeric values as categorical counts. This is experimental and may change in the future.
+     * @summary Get project sample metadata distribution
+     * @param projectId Project ID
+     * @param category Which of the three acquisition categories to retrieve data from
+     * @param key Metadata key to aggregate values for
+     * @param topN Maximum number of top categories to return for categorical values
+     * @param binCount Number of bins to use for numeric histogram values
+     * @param groupByLabel Include per-label breakdown for each bucket
+     */
+    public async getRawDataMetadataDistribution (projectId: number, queryParams: getRawDataMetadataDistributionQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataDistributionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-distribution'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getRawDataMetadataDistribution.');
+        }
+
+        // verify required parameter 'category' is not null or undefined
+
+        if (queryParams.category === null || queryParams.category === undefined) {
+            throw new Error('Required parameter queryParams.category was null or undefined when calling getRawDataMetadataDistribution.');
+        }
+
+
+        // verify required parameter 'key' is not null or undefined
+
+        if (queryParams.key === null || queryParams.key === undefined) {
+            throw new Error('Required parameter queryParams.key was null or undefined when calling getRawDataMetadataDistribution.');
+        }
+
+
+        if (queryParams?.category !== undefined) {
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "RawDataCategory");
+        }
+
+        if (queryParams?.key !== undefined) {
+            localVarQueryParameters['key'] = ObjectSerializer.serialize(queryParams.key, "string");
+        }
+
+        if (queryParams?.topN !== undefined) {
+            localVarQueryParameters['topN'] = ObjectSerializer.serialize(queryParams.topN, "number");
+        }
+
+        if (queryParams?.binCount !== undefined) {
+            localVarQueryParameters['binCount'] = ObjectSerializer.serialize(queryParams.binCount, "number");
+        }
+
+        if (queryParams?.groupByLabel !== undefined) {
+            localVarQueryParameters['groupByLabel'] = ObjectSerializer.serialize(queryParams.groupByLabel, "boolean");
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetRawDataMetadataDistributionResponse'
         );
     }
 

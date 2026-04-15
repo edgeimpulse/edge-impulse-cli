@@ -532,6 +532,10 @@ export * from './getPublicMetricsResponse';
 export * from './getPublicMetricsResponseAllOf';
 export * from './getPublicOrganizationTransformationBlockResponse';
 export * from './getPublicOrganizationTransformationBlockResponseAllOf';
+export * from './getRawDataMetadataCooccurrenceResponse';
+export * from './getRawDataMetadataCooccurrenceResponseAllOf';
+export * from './getRawDataMetadataDistributionResponse';
+export * from './getRawDataMetadataDistributionResponseAllOf';
 export * from './getSSODomainIdPsResponse';
 export * from './getSSODomainIdPsResponseAllOf';
 export * from './getSampleMetadataFilterOptionsResponse';
@@ -714,6 +718,8 @@ export * from './logWebsitePageviewRequest';
 export * from './loginResponse';
 export * from './loginResponseAllOf';
 export * from './memorySpec';
+export * from './metadataDistributionBucket';
+export * from './metadataDistributionLabelBreakdown';
 export * from './metadataFilterOptions';
 export * from './metadataFilterOptionsOptionsList';
 export * from './metricsAllVariantsResponse';
@@ -1700,6 +1706,10 @@ import { GetPublicMetricsResponse } from './getPublicMetricsResponse';
 import { GetPublicMetricsResponseAllOf } from './getPublicMetricsResponseAllOf';
 import { GetPublicOrganizationTransformationBlockResponse } from './getPublicOrganizationTransformationBlockResponse';
 import { GetPublicOrganizationTransformationBlockResponseAllOf } from './getPublicOrganizationTransformationBlockResponseAllOf';
+import { GetRawDataMetadataCooccurrenceResponse } from './getRawDataMetadataCooccurrenceResponse';
+import { GetRawDataMetadataCooccurrenceResponseAllOf } from './getRawDataMetadataCooccurrenceResponseAllOf';
+import { GetRawDataMetadataDistributionResponse } from './getRawDataMetadataDistributionResponse';
+import { GetRawDataMetadataDistributionResponseAllOf } from './getRawDataMetadataDistributionResponseAllOf';
 import { GetSSODomainIdPsResponse } from './getSSODomainIdPsResponse';
 import { GetSSODomainIdPsResponseAllOf } from './getSSODomainIdPsResponseAllOf';
 import { GetSampleMetadataFilterOptionsResponse } from './getSampleMetadataFilterOptionsResponse';
@@ -1882,6 +1892,8 @@ import { LogWebsitePageviewRequest } from './logWebsitePageviewRequest';
 import { LoginResponse } from './loginResponse';
 import { LoginResponseAllOf } from './loginResponseAllOf';
 import { MemorySpec } from './memorySpec';
+import { MetadataDistributionBucket } from './metadataDistributionBucket';
+import { MetadataDistributionLabelBreakdown } from './metadataDistributionLabelBreakdown';
 import { MetadataFilterOptions } from './metadataFilterOptions';
 import { MetadataFilterOptionsOptionsList } from './metadataFilterOptionsOptionsList';
 import { MetricsAllVariantsResponse } from './metricsAllVariantsResponse';
@@ -2412,6 +2424,10 @@ const enumsMap: {[index: string]: any} = {
     "GetJWTRequestSsoTypeEnum": "GetJWTRequestSsoTypeEnum",
     "GetPostProcessingResultsForSampleResponseHasResultsEnum": "GetPostProcessingResultsForSampleResponseHasResultsEnum",
     "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum": "GetPostProcessingResultsForSampleResponseAllOfHasResultsEnum",
+    "GetRawDataMetadataCooccurrenceResponseNormalizeAppliedEnum": "GetRawDataMetadataCooccurrenceResponseNormalizeAppliedEnum",
+    "GetRawDataMetadataCooccurrenceResponseAllOfNormalizeAppliedEnum": "GetRawDataMetadataCooccurrenceResponseAllOfNormalizeAppliedEnum",
+    "GetRawDataMetadataDistributionResponseTypeEnum": "GetRawDataMetadataDistributionResponseTypeEnum",
+    "GetRawDataMetadataDistributionResponseAllOfTypeEnum": "GetRawDataMetadataDistributionResponseAllOfTypeEnum",
     "ImageInputResizeMode": "ImageInputResizeMode",
     "ImageInputScaling": "ImageInputScaling",
     "ImpulseInputBlockTypeEnum": "ImpulseInputBlockTypeEnum",
@@ -3051,6 +3067,10 @@ const typeMap: {[index: string]: any} = {
     "GetPublicMetricsResponseAllOf": GetPublicMetricsResponseAllOf,
     "GetPublicOrganizationTransformationBlockResponse": GetPublicOrganizationTransformationBlockResponse,
     "GetPublicOrganizationTransformationBlockResponseAllOf": GetPublicOrganizationTransformationBlockResponseAllOf,
+    "GetRawDataMetadataCooccurrenceResponse": GetRawDataMetadataCooccurrenceResponse,
+    "GetRawDataMetadataCooccurrenceResponseAllOf": GetRawDataMetadataCooccurrenceResponseAllOf,
+    "GetRawDataMetadataDistributionResponse": GetRawDataMetadataDistributionResponse,
+    "GetRawDataMetadataDistributionResponseAllOf": GetRawDataMetadataDistributionResponseAllOf,
     "GetSSODomainIdPsResponse": GetSSODomainIdPsResponse,
     "GetSSODomainIdPsResponseAllOf": GetSSODomainIdPsResponseAllOf,
     "GetSampleMetadataFilterOptionsResponse": GetSampleMetadataFilterOptionsResponse,
@@ -3223,6 +3243,8 @@ const typeMap: {[index: string]: any} = {
     "LoginResponse": LoginResponse,
     "LoginResponseAllOf": LoginResponseAllOf,
     "MemorySpec": MemorySpec,
+    "MetadataDistributionBucket": MetadataDistributionBucket,
+    "MetadataDistributionLabelBreakdown": MetadataDistributionLabelBreakdown,
     "MetadataFilterOptions": MetadataFilterOptions,
     "MetadataFilterOptionsOptionsList": MetadataFilterOptionsOptionsList,
     "MetricsAllVariantsResponse": MetricsAllVariantsResponse,

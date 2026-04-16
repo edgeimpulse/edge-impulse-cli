@@ -118,6 +118,10 @@ export class UpdateProjectRequest {
     */
     'dspPageSize'?: number;
     /**
+    * Used to override window job concurrency used during feature generation. This option is experimental and may change in the future. 
+    */
+    'windowJobConcurrency'?: number;
+    /**
     * Used in tests, to ensure samples that need to be processed async are not picked up until the flag is set to FALSE again.
     */
     'indPauseProcessingSamples'?: boolean;
@@ -329,6 +333,11 @@ export class UpdateProjectRequest {
         {
             "name": "dspPageSize",
             "baseName": "dspPageSize",
+            "type": "number"
+        },
+        {
+            "name": "windowJobConcurrency",
+            "baseName": "windowJobConcurrency",
             "type": "number"
         },
         {

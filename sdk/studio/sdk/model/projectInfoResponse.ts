@@ -89,6 +89,7 @@ export class ProjectInfoResponse {
     */
     'inPretrainedModelFlow': boolean;
     'dspPageSize'?: number;
+    'windowJobConcurrency'?: number;
     /**
     * Whether to show the actual sensor data in acquisition charts (only applies when you have structured labels)
     */
@@ -248,6 +249,11 @@ export class ProjectInfoResponse {
         {
             "name": "dspPageSize",
             "baseName": "dspPageSize",
+            "type": "number"
+        },
+        {
+            "name": "windowJobConcurrency",
+            "baseName": "windowJobConcurrency",
             "type": "number"
         },
         {

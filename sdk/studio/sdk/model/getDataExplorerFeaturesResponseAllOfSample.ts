@@ -53,5 +53,5 @@ export class GetDataExplorerFeaturesResponseAllOfSample {
 }
 
 
-export type GetDataExplorerFeaturesResponseAllOfSampleCategoryEnum = 'training' | 'testing';
-export const GetDataExplorerFeaturesResponseAllOfSampleCategoryEnumValues: string[] = ['training', 'testing'];
+export type GetDataExplorerFeaturesResponseAllOfSampleCategoryEnum = 'training' | 'testing' | 'validation';
+export const GetDataExplorerFeaturesResponseAllOfSampleCategoryEnumValues: string[] = ['training', 'testing', 'validation'];

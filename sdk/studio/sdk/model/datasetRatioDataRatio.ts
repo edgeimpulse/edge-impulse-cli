@@ -13,11 +13,15 @@
 
 export class DatasetRatioDataRatio {
     /**
-    * number of training samples after rebalance
+    * Number of training samples after rebalance
     */
     'training'?: number;
     /**
-    * number of testing samples after rebalance. This ignores test data with a label that\'s not in the training dataset.
+    * Number of validation samples after rebalance. This is experimental and may change in the future.
+    */
+    'validation'?: number;
+    /**
+    * Number of testing samples after rebalance. This ignores test data with a label that\'s not in the training dataset.
     */
     'testing'?: number;
 
@@ -27,6 +31,11 @@ export class DatasetRatioDataRatio {
         {
             "name": "training",
             "baseName": "training",
+            "type": "number"
+        },
+        {
+            "name": "validation",
+            "baseName": "validation",
             "type": "number"
         },
         {

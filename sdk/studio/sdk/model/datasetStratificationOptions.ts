@@ -13,9 +13,17 @@
 
 export class DatasetStratificationOptions {
     /**
-    * Proportion of the dataset to use for training. The remainder will be used for testing. For example, a value of 0.8 means 80% training, 20% testing. 
+    * Proportion of the dataset to use for training.
     */
-    'splitRatio': number;
+    'trainingSplitRatio': number;
+    /**
+    * Proportion of the dataset to use for testing.
+    */
+    'testingSplitRatio': number;
+    /**
+    * Proportion of the dataset to use for validation. This is experimental and may change in the future.
+    */
+    'validationSplitRatio'?: number;
     /**
     * Whether to stratify by label. If true, the label column will be used for stratification combined with metadataKeys. If false, only metadataKeys will be used. 
     */
@@ -33,8 +41,18 @@ export class DatasetStratificationOptions {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "splitRatio",
-            "baseName": "splitRatio",
+            "name": "trainingSplitRatio",
+            "baseName": "trainingSplitRatio",
+            "type": "number"
+        },
+        {
+            "name": "testingSplitRatio",
+            "baseName": "testingSplitRatio",
+            "type": "number"
+        },
+        {
+            "name": "validationSplitRatio",
+            "baseName": "validationSplitRatio",
             "type": "number"
         },
         {

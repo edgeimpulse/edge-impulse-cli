@@ -8346,7 +8346,7 @@ export class RawDataApi {
     }
 
     /**
-     * Performs a deterministic, in-place stratified split of the project\'s dataset into \"training\" and \"testing\" sets, based on the chosen stratification options. Stratification can use the label, one or more metadata keys, or both as a composite group. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. For example:     { \"stratifyByLabel\": true, \"metadataKeys\": [\"site\", \"scanner\"], \"excludeDisabledSamples\": false, \"splitRatio\": 0.8 }     With these options, samples are grouped by the combination of label, site, and scanner. Within each group, 80% are set to \"training\" and the rest to \"testing\". 
+     * Performs a deterministic, in-place stratified split of the project\'s dataset into \"training\", \"testing\", and optional \"validation\" sets, based on the chosen stratification options. Stratification can use the label, one or more metadata keys, or both as a composite group. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. For example:     { \"stratifyByLabel\": true, \"metadataKeys\": [\"site\", \"scanner\"], \"excludeDisabledSamples\": false, \"trainingSplitRatio\": 0.8, \"testingSplitRatio\": 0.1, \"validationSplitRatio\": 0.1 }     With these options, samples are grouped by the combination of label, site, and scanner. Within each group, 80% are set to \"training\", 10% to \"testing\", and 10% to \"validation\". 
      * @summary Stratify dataset
      * @param projectId Project ID
      * @param datasetStratificationOptions 

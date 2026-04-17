@@ -12,5 +12,5 @@
 
 
 
-export type RawDataFilterCategory = 'training' | 'testing' | 'post-processing' | 'all';
-export const RawDataFilterCategoryValues: string[] = ['training', 'testing', 'post-processing', 'all'];
+export type RawDataFilterCategory = 'training' | 'testing' | 'validation' | 'post-processing' | 'all';
+export const RawDataFilterCategoryValues: string[] = ['training', 'testing', 'validation', 'post-processing', 'all'];

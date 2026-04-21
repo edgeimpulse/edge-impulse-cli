@@ -4,7 +4,7 @@ import { fetch, FormData } from 'undici';
 import { Blob } from 'node:buffer';
 import { Config, EdgeImpulseConfig } from './config';
 import encodeLabel from '../shared/encoding';
-import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportStructuredLabelsFileV1,
+import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportLabelMapFileV1, ExportStructuredLabelsFileV1,
     ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from '../shared/bounding-box-file-types';
 
 export const EXTENSION_MAPPING: { [k: string]: string } = {
@@ -81,6 +81,9 @@ export async function upload(opts: {
     else if (opts.label.type === 'multi-label') {
         // gets set with a separate file, see below
     }
+    else if (opts.label.type === 'keyvalue-labels') {
+        // gets set with a separate file, see below
+    }
 
     if (!opts.allowDuplicates) {
         headers['x-disallow-duplicates'] = '1';
@@ -121,6 +124,18 @@ export async function upload(opts: {
         form.append('data', new Blob([ JSON.stringify(bbsFile) ], {
             type: 'application/json',
         }), 'bounding_boxes.labels');
+    }
+    if (opts.label.type === 'keyvalue-labels') {
+        const labelMapFile: ExportLabelMapFileV1 = {
+            version: 1,
+            type: 'label-map-labels',
+            labels: {
+                [opts.filename]: opts.label.labels,
+            },
+        };
+        form.append('data', new Blob([ JSON.stringify(labelMapFile) ], {
+            type: 'application/json',
+        }), 'label_map.labels');
     }
 
     let res = await fetch(opts.config.endpoints.internal.ingestion + '/api/' + category + '/files', {

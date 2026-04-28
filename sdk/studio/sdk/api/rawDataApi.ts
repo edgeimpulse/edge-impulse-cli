@@ -372,6 +372,7 @@ type getRawDataMetadataCooccurrenceQueryParams = {
     topNKeyA?: number,
     topNKeyB?: number,
     normalize?: 'none' | 'global',
+    excludeDisabledSamples?: boolean,
 };
 
 type getRawDataMetadataDistributionQueryParams = {
@@ -380,6 +381,7 @@ type getRawDataMetadataDistributionQueryParams = {
     topN?: number,
     binCount?: number,
     groupByLabel?: boolean,
+    excludeDisabledSamples?: boolean,
 };
 
 type getSampleQueryParams = {
@@ -4799,6 +4801,7 @@ export class RawDataApi {
      * @param topNKeyA Maximum number of top values to return for keyA
      * @param topNKeyB Maximum number of top values to return for keyB
      * @param normalize Controls how normalizedMatrix is computed. Use none to disable normalization (normalizedMatrix omitted), or global to return percentages across all matrix cells.
+     * @param excludeDisabledSamples Whether to exclude samples that are marked as disabled.
      */
     public async getRawDataMetadataCooccurrence (projectId: number, queryParams: getRawDataMetadataCooccurrenceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataCooccurrenceResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-cooccurrence'
@@ -4870,6 +4873,10 @@ export class RawDataApi {
             localVarQueryParameters['normalize'] = ObjectSerializer.serialize(queryParams.normalize, "'none' | 'global'");
         }
 
+        if (queryParams?.excludeDisabledSamples !== undefined) {
+            localVarQueryParameters['excludeDisabledSamples'] = ObjectSerializer.serialize(queryParams.excludeDisabledSamples, "boolean");
+        }
+
         localVarHeaderParams = {
             ...localVarHeaderParams,
             ...options.headers,
@@ -4939,6 +4946,7 @@ export class RawDataApi {
      * @param topN Maximum number of top categories to return for categorical values
      * @param binCount Number of bins to use for numeric histogram values
      * @param groupByLabel Include per-label breakdown for each bucket
+     * @param excludeDisabledSamples Whether to exclude samples that are marked as disabled.
      */
     public async getRawDataMetadataDistribution (projectId: number, queryParams: getRawDataMetadataDistributionQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataDistributionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-distribution'
@@ -4997,6 +5005,10 @@ export class RawDataApi {
 
         if (queryParams?.groupByLabel !== undefined) {
             localVarQueryParameters['groupByLabel'] = ObjectSerializer.serialize(queryParams.groupByLabel, "boolean");
+        }
+
+        if (queryParams?.excludeDisabledSamples !== undefined) {
+            localVarQueryParameters['excludeDisabledSamples'] = ObjectSerializer.serialize(queryParams.excludeDisabledSamples, "boolean");
         }
 
         localVarHeaderParams = {

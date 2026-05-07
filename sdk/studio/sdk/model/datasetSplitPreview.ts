@@ -10,22 +10,28 @@
  * Do not edit the class manually.
  */
 
-import { DatasetStratificationPreviewDataData } from './datasetStratificationPreviewDataData';
+import { DatasetSplitPreviewSection } from './datasetSplitPreviewSection';
 
-export class DatasetStratificationPreviewData {
-    'data': Array<DatasetStratificationPreviewDataData>;
+export class DatasetSplitPreview {
+    'assignmentPreview': DatasetSplitPreviewSection;
+    'balancePreviews': Array<DatasetSplitPreviewSection>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "data",
-            "baseName": "data",
-            "type": "Array<DatasetStratificationPreviewDataData>"
+            "name": "assignmentPreview",
+            "baseName": "assignmentPreview",
+            "type": "DatasetSplitPreviewSection"
+        },
+        {
+            "name": "balancePreviews",
+            "baseName": "balancePreviews",
+            "type": "Array<DatasetSplitPreviewSection>"
         }    ];
 
     static getAttributeTypeMap() {
-        return DatasetStratificationPreviewData.attributeTypeMap;
+        return DatasetSplitPreview.attributeTypeMap;
     }
 }
 

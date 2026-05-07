@@ -10,39 +10,40 @@
  * Do not edit the class manually.
  */
 
+import { DatasetSplitPreviewRow } from './datasetSplitPreviewRow';
 
-export class DatasetStratificationPreviewDataData {
-    'stratValue': string;
-    'splitCategory': string;
-    'sampleCount': number;
-    'percentWithinGroup': number;
+export class DatasetSplitPreviewSection {
+    'title': string;
+    'summary'?: string;
+    'keyLabel': string;
+    'rows': Array<DatasetSplitPreviewRow>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "stratValue",
-            "baseName": "strat_value",
+            "name": "title",
+            "baseName": "title",
             "type": "string"
         },
         {
-            "name": "splitCategory",
-            "baseName": "split_category",
+            "name": "summary",
+            "baseName": "summary",
             "type": "string"
         },
         {
-            "name": "sampleCount",
-            "baseName": "sample_count",
-            "type": "number"
+            "name": "keyLabel",
+            "baseName": "keyLabel",
+            "type": "string"
         },
         {
-            "name": "percentWithinGroup",
-            "baseName": "percent_within_group",
-            "type": "number"
+            "name": "rows",
+            "baseName": "rows",
+            "type": "Array<DatasetSplitPreviewRow>"
         }    ];
 
     static getAttributeTypeMap() {
-        return DatasetStratificationPreviewDataData.attributeTypeMap;
+        return DatasetSplitPreviewSection.attributeTypeMap;
     }
 }
 

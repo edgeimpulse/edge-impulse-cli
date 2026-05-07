@@ -10,8 +10,9 @@
  * Do not edit the class manually.
  */
 
+import { DatasetSplitOptionsStratifyBy } from './datasetSplitOptionsStratifyBy';
 
-export class DatasetStratificationOptions {
+export class DatasetSplitOptions {
     /**
     * Proportion of the dataset to use for training.
     */
@@ -25,17 +26,14 @@ export class DatasetStratificationOptions {
     */
     'validationSplitRatio'?: number;
     /**
-    * Whether to stratify by label. If true, the label column will be used for stratification combined with metadataKeys. If false, only metadataKeys will be used. 
-    */
-    'stratifyByLabel': boolean;
-    /**
-    * List of metadata keys to use for stratification. If more than one, they will be combined into composite strata. If stratifyByLabel is true, the label column will be used as well. 
-    */
-    'metadataKeys': Array<string>;
-    /**
     * Whether to exclude samples that are marked as disabled.
     */
     'excludeDisabledSamples'?: boolean;
+    'stratifyBy'?: DatasetSplitOptionsStratifyBy;
+    /**
+    * List of metadata keys whose matching values must stay together in a single split. This is useful for leakage prevention across train, validation, and test. 
+    */
+    'keepTogetherMetadataKeys'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
@@ -56,23 +54,23 @@ export class DatasetStratificationOptions {
             "type": "number"
         },
         {
-            "name": "stratifyByLabel",
-            "baseName": "stratifyByLabel",
-            "type": "boolean"
-        },
-        {
-            "name": "metadataKeys",
-            "baseName": "metadataKeys",
-            "type": "Array<string>"
-        },
-        {
             "name": "excludeDisabledSamples",
             "baseName": "excludeDisabledSamples",
             "type": "boolean"
+        },
+        {
+            "name": "stratifyBy",
+            "baseName": "stratifyBy",
+            "type": "DatasetSplitOptionsStratifyBy"
+        },
+        {
+            "name": "keepTogetherMetadataKeys",
+            "baseName": "keepTogetherMetadataKeys",
+            "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return DatasetStratificationOptions.attributeTypeMap;
+        return DatasetSplitOptions.attributeTypeMap;
     }
 }
 

@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { DatasetStratificationPreviewData } from './datasetStratificationPreviewData';
-import { DatasetStratificationPreviewDataData } from './datasetStratificationPreviewDataData';
+import { DatasetSplitPreview } from './datasetSplitPreview';
+import { DatasetSplitPreviewResponseAllOf } from './datasetSplitPreviewResponseAllOf';
 import { GenericApiResponse } from './genericApiResponse';
 
-export class DatasetStratificationPreviewResponse {
+export class DatasetSplitPreviewResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,7 +23,7 @@ export class DatasetStratificationPreviewResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'data': Array<DatasetStratificationPreviewDataData>;
+    'data': DatasetSplitPreview;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,11 +41,11 @@ export class DatasetStratificationPreviewResponse {
         {
             "name": "data",
             "baseName": "data",
-            "type": "Array<DatasetStratificationPreviewDataData>"
+            "type": "DatasetSplitPreview"
         }    ];
 
     static getAttributeTypeMap() {
-        return DatasetStratificationPreviewResponse.attributeTypeMap;
+        return DatasetSplitPreviewResponse.attributeTypeMap;
     }
 }
 

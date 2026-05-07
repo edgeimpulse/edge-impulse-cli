@@ -264,10 +264,13 @@ export * from './dataExplorerPredictionsResponseAllOf';
 export * from './dataExplorerSettings';
 export * from './datasetRatioData';
 export * from './datasetRatioDataRatio';
-export * from './datasetStratificationOptions';
-export * from './datasetStratificationPreviewData';
-export * from './datasetStratificationPreviewDataData';
-export * from './datasetStratificationPreviewResponse';
+export * from './datasetSplitOptions';
+export * from './datasetSplitOptionsStratifyBy';
+export * from './datasetSplitPreview';
+export * from './datasetSplitPreviewResponse';
+export * from './datasetSplitPreviewResponseAllOf';
+export * from './datasetSplitPreviewRow';
+export * from './datasetSplitPreviewSection';
 export * from './deletePortalFileRequest';
 export * from './deleteTestUserRequest';
 export * from './deleteTestUserResponse';
@@ -1438,10 +1441,13 @@ import { DataExplorerPredictionsResponseAllOf } from './dataExplorerPredictionsR
 import { DataExplorerSettings } from './dataExplorerSettings';
 import { DatasetRatioData } from './datasetRatioData';
 import { DatasetRatioDataRatio } from './datasetRatioDataRatio';
-import { DatasetStratificationOptions } from './datasetStratificationOptions';
-import { DatasetStratificationPreviewData } from './datasetStratificationPreviewData';
-import { DatasetStratificationPreviewDataData } from './datasetStratificationPreviewDataData';
-import { DatasetStratificationPreviewResponse } from './datasetStratificationPreviewResponse';
+import { DatasetSplitOptions } from './datasetSplitOptions';
+import { DatasetSplitOptionsStratifyBy } from './datasetSplitOptionsStratifyBy';
+import { DatasetSplitPreview } from './datasetSplitPreview';
+import { DatasetSplitPreviewResponse } from './datasetSplitPreviewResponse';
+import { DatasetSplitPreviewResponseAllOf } from './datasetSplitPreviewResponseAllOf';
+import { DatasetSplitPreviewRow } from './datasetSplitPreviewRow';
+import { DatasetSplitPreviewSection } from './datasetSplitPreviewSection';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DeleteTestUserRequest } from './deleteTestUserRequest';
 import { DeleteTestUserResponse } from './deleteTestUserResponse';
@@ -2386,6 +2392,7 @@ const enumsMap: {[index: string]: any} = {
     "DataExplorerPredictionsResponseAllOfClassificationTypeEnum": "DataExplorerPredictionsResponseAllOfClassificationTypeEnum",
     "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
     "DataExplorerSettingsDimensionalityReductionTechniqueEnum": "DataExplorerSettingsDimensionalityReductionTechniqueEnum",
+    "DatasetSplitPreviewRowSplitCategoryEnum": "DatasetSplitPreviewRowSplitCategoryEnum",
     "DeployPretrainedModelInputAudioInputTypeEnum": "DeployPretrainedModelInputAudioInputTypeEnum",
     "DeployPretrainedModelInputImageInputTypeEnum": "DeployPretrainedModelInputImageInputTypeEnum",
     "DeployPretrainedModelInputOtherInputTypeEnum": "DeployPretrainedModelInputOtherInputTypeEnum",
@@ -2805,10 +2812,13 @@ const typeMap: {[index: string]: any} = {
     "DataExplorerSettings": DataExplorerSettings,
     "DatasetRatioData": DatasetRatioData,
     "DatasetRatioDataRatio": DatasetRatioDataRatio,
-    "DatasetStratificationOptions": DatasetStratificationOptions,
-    "DatasetStratificationPreviewData": DatasetStratificationPreviewData,
-    "DatasetStratificationPreviewDataData": DatasetStratificationPreviewDataData,
-    "DatasetStratificationPreviewResponse": DatasetStratificationPreviewResponse,
+    "DatasetSplitOptions": DatasetSplitOptions,
+    "DatasetSplitOptionsStratifyBy": DatasetSplitOptionsStratifyBy,
+    "DatasetSplitPreview": DatasetSplitPreview,
+    "DatasetSplitPreviewResponse": DatasetSplitPreviewResponse,
+    "DatasetSplitPreviewResponseAllOf": DatasetSplitPreviewResponseAllOf,
+    "DatasetSplitPreviewRow": DatasetSplitPreviewRow,
+    "DatasetSplitPreviewSection": DatasetSplitPreviewSection,
     "DeletePortalFileRequest": DeletePortalFileRequest,
     "DeleteTestUserRequest": DeleteTestUserRequest,
     "DeleteTestUserResponse": DeleteTestUserResponse,

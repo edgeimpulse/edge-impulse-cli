@@ -10,20 +10,18 @@
  * Do not edit the class manually.
  */
 
+import { RawSamplePayload } from './rawSamplePayload';
 
-export class Sensor {
+export class RawSampleDataStreamPayloadsDatastreamPayloads {
     /**
-    * Index of the sensor (globally, so you can refer back to it in e.g. getSampleAsAudio)
+    * Index of the datastream in the sample (datastreams that are not in the impulse are filtered out here, so you can still find them back).
     */
     'index': number;
+    'payload': RawSamplePayload;
     /**
-    * Name of the axis
+    * Total number of payload values
     */
-    'name': string;
-    /**
-    * Type of data on this axis. Needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml).
-    */
-    'units': string;
+    'totalPayloadLength': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -34,18 +32,18 @@ export class Sensor {
             "type": "number"
         },
         {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
+            "name": "payload",
+            "baseName": "payload",
+            "type": "RawSamplePayload"
         },
         {
-            "name": "units",
-            "baseName": "units",
-            "type": "string"
+            "name": "totalPayloadLength",
+            "baseName": "totalPayloadLength",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return Sensor.attributeTypeMap;
+        return RawSampleDataStreamPayloadsDatastreamPayloads.attributeTypeMap;
     }
 }
 

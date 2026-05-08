@@ -396,6 +396,7 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 boundingBoxes: undefined,
                 metadata: undefined,
                 addDateId: true,
+                attachments: undefined,
                 projectId: this._projectId,
                 configFactory: configFactory,
             });

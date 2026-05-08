@@ -54,6 +54,14 @@ export class ClassifySampleResponseClassification {
     */
     'thresholds': Array<BlockThreshold>;
     'isMultiLabel'?: boolean;
+    /**
+    * Interval between two windows in \"expectedLabels\" (1000 / frequency).
+    */
+    'intervalMs': number;
+    /**
+    * Frequency of the windows in \"expectedLabels\"
+    */
+    'frequencyHz': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -112,6 +120,16 @@ export class ClassifySampleResponseClassification {
             "name": "isMultiLabel",
             "baseName": "isMultiLabel",
             "type": "boolean"
+        },
+        {
+            "name": "intervalMs",
+            "baseName": "intervalMs",
+            "type": "number"
+        },
+        {
+            "name": "frequencyHz",
+            "baseName": "frequencyHz",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {

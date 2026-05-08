@@ -40,6 +40,14 @@ export class RawSamplePayload {
     * New end index of the cropped sample
     */
     'cropEnd'?: number;
+    /**
+    * Interval between two windows (1000 / frequency). If the data was resampled, then this lists the resampled interval for this payload.
+    */
+    'intervalMs': number;
+    /**
+    * Frequency of the sample. If the data was resampled, then this lists the resampled frequency for this payload.
+    */
+    'frequencyHz': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -72,6 +80,16 @@ export class RawSamplePayload {
         {
             "name": "cropEnd",
             "baseName": "cropEnd",
+            "type": "number"
+        },
+        {
+            "name": "intervalMs",
+            "baseName": "intervalMs",
+            "type": "number"
+        },
+        {
+            "name": "frequencyHz",
+            "baseName": "frequencyHz",
             "type": "number"
         }    ];
 

@@ -11,9 +11,10 @@
  */
 
 import { BlockType } from './blockType';
+import { InputBlockType } from './inputBlockType';
 
 export class InputBlock {
-    'type': InputBlockTypeEnum;
+    'type': InputBlockType;
     'title': string;
     'author': string;
     'description': string;
@@ -26,7 +27,7 @@ export class InputBlock {
         {
             "name": "type",
             "baseName": "type",
-            "type": "InputBlockTypeEnum"
+            "type": "InputBlockType"
         },
         {
             "name": "title",
@@ -59,6 +60,3 @@ export class InputBlock {
     }
 }
 
-
-export type InputBlockTypeEnum = 'time-series' | 'image' | 'features';
-export const InputBlockTypeEnumValues: string[] = ['time-series', 'image', 'features'];

@@ -11,32 +11,32 @@
  */
 
 
-export class AutotuneDspRequest {
+export class ProjectDataIntervalResponseAllOfSensors {
     /**
-    * DSP block ID to autotune parameters of
+    * Name of the axis
     */
-    'dspId': number;
+    'name': string;
     /**
-    * Optional updated DSP block config. If undefined, the current saved block config will be used. This enables experimenting with the autotuner using temporary config options, without updating the stored DSP block config. 
+    * Type of data on this axis. Needs to comply to SenML units (see https://www.iana.org/assignments/senml/senml.xhtml).
     */
-    'config'?: { [key: string]: string; };
+    'units': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "dspId",
-            "baseName": "dspId",
-            "type": "number"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
         },
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "{ [key: string]: string; }"
+            "name": "units",
+            "baseName": "units",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return AutotuneDspRequest.attributeTypeMap;
+        return ProjectDataIntervalResponseAllOfSensors.attributeTypeMap;
     }
 }
 

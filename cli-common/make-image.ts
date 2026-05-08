@@ -4,7 +4,8 @@ import { fetch, FormData } from 'undici';
 import { Blob } from 'node:buffer';
 import { Config, EdgeImpulseConfig } from './config';
 import encodeLabel from '../shared/encoding';
-import { ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportLabelMapFileV1, ExportStructuredLabelsFileV1,
+import { ExportAttachmentsFileV1, ExportBoundingBoxesFileV1, ExportInputBoundingBox, ExportLabelMapFileV1,
+    ExportStructuredLabelsFileV1,
     ExportUploaderInfoFileCategory, ExportUploaderInfoFileLabel } from '../shared/bounding-box-file-types';
 
 export const EXTENSION_MAPPING: { [k: string]: string } = {
@@ -35,6 +36,7 @@ export async function upload(opts: {
     boundingBoxes: ExportInputBoundingBox[] | undefined,
     metadata: { [k: string]: string } | undefined,
     addDateId: boolean,
+    attachments: ({ filename: string, buffer: Buffer }[]) | undefined,
     configFactory: Config,
 }) {
     let ext = Path.extname(opts.filename).toLowerCase();
@@ -125,6 +127,31 @@ export async function upload(opts: {
             type: 'application/json',
         }), 'bounding_boxes.labels');
     }
+    if (opts.attachments) {
+        let attachmentsFile: ExportAttachmentsFileV1 = {
+            version: 1,
+            type: 'attachments',
+            attachments: { },
+        };
+
+        attachmentsFile.attachments[opts.filename] = [];
+        for (const item of opts.attachments) {
+            const itemBasename = Path.basename(item.filename);
+            const attachmentExt = Path.parse(itemBasename).ext;
+
+            attachmentsFile.attachments[opts.filename].push({
+                filename: itemBasename,
+            });
+            form.append('data', new Blob([ item.buffer ], {
+                type: EXTENSION_MAPPING[attachmentExt] || 'application/octet-stream',
+            }), itemBasename);
+        }
+
+        form.append('data', new Blob([ JSON.stringify(attachmentsFile) ], {
+            type: 'application/json',
+        }), 'attachments.labels');
+    }
+
     if (opts.label.type === 'keyvalue-labels') {
         const labelMapFile: ExportLabelMapFileV1 = {
             version: 1,

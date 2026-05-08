@@ -33,7 +33,7 @@ import { ClassifyJobResponsePage } from '../model/classifyJobResponsePage';
 import { ClassifySampleResponse } from '../model/classifySampleResponse';
 import { StartJobResponse } from '../model/startJobResponse';
 import { ClassifySampleResponseMultipleVariants } from '../model/classifySampleResponseMultipleVariants';
-import { GetSampleResponse } from '../model/getSampleResponse';
+import { GetSampleDspResponse } from '../model/getSampleDspResponse';
 import { KerasModelVariantEnum } from '../model/kerasModelVariantEnum';
 import { MetricsAllVariantsResponse } from '../model/metricsAllVariantsResponse';
 import { TestPretrainedModelResponse } from '../model/testPretrainedModelResponse';
@@ -135,6 +135,7 @@ type getClassifyMetricsAllVariantsQueryParams = {
 };
 
 type getSampleWindowFromCacheQueryParams = {
+    datastreamIndex?: number,
     impulseId?: number,
     truncateStructuredLabels?: boolean,
 };
@@ -1335,10 +1336,11 @@ export class ClassifyApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param windowIndex Sample window index
+     * @param datastreamIndex Index of the datastream, if omitted this will resolve to 0.
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/raw-data/{windowIndex}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -1377,6 +1379,10 @@ export class ClassifyApi {
 
         if (windowIndex === null || windowIndex === undefined) {
             throw new Error('Required parameter windowIndex was null or undefined when calling getSampleWindowFromCache.');
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         if (queryParams?.impulseId !== undefined) {
@@ -1443,7 +1449,7 @@ export class ClassifyApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'GetSampleResponse'
+            'GetSampleDspResponse'
         );
     }
 }

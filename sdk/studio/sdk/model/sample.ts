@@ -13,7 +13,8 @@
 import { BoundingBox } from './boundingBox';
 import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { RawDataCategory } from './rawDataCategory';
-import { SampleImageDimensions } from './sampleImageDimensions';
+import { SampleDatastream } from './sampleDatastream';
+import { SampleDatastreamImageDimensions } from './sampleDatastreamImageDimensions';
 import { SampleLabelMapLabels } from './sampleLabelMapLabels';
 import { Sensor } from './sensor';
 import { StructuredLabel } from './structuredLabel';
@@ -42,26 +43,26 @@ export class Sample {
     'coldstorageFilename': string;
     'label': string;
     /**
-    * Interval between two windows (1000 / frequency). If the data was resampled, then this lists the resampled interval.
+    * Interval between two windows (1000 / frequency). NOTE: Previously this value could change depending on whether the sample was resampled. This behavior has been removed.
     */
     'intervalMs': number;
     /**
-    * Frequency of the sample. If the data was resampled, then this lists the resampled frequency.
+    * Frequency of the sample. NOTE: Previously this value could change depending on whether the sample was resampled. This behavior has been removed.
     */
     'frequency': number;
     /**
-    * Interval between two windows (1000 / frequency) in the source data (before resampling).
+    * DEPRECATED. See \"intervalMs\".
     */
     'originalIntervalMs': number;
     /**
-    * Frequency of the sample in the source data (before resampling).
+    * DEPRECATED. See \"frequency\".
     */
     'originalFrequency': number;
     'deviceName'?: string;
     'deviceType': string;
     'sensors': Array<Sensor>;
     /**
-    * Number of readings in this file
+    * Number of readings in this file. If you have multiple datastreams, this is the value count from the datastream with the highest frequency.
     */
     'valuesCount': number;
     /**
@@ -128,7 +129,7 @@ export class Sample {
     * If this sample was created by a synthetic data job, it\'s referenced here.
     */
     'createdBySyntheticDataJobId'?: number;
-    'imageDimensions'?: SampleImageDimensions;
+    'imageDimensions'?: SampleDatastreamImageDimensions;
     /**
     * Video link, cropped and in original resolution.
     */
@@ -138,6 +139,7 @@ export class Sample {
     */
     'videoUrlFull'?: string;
     'labelMap'?: SampleLabelMapLabels;
+    'datastreams': Array<SampleDatastream>;
 
     static discriminator: string | undefined = undefined;
 
@@ -345,7 +347,7 @@ export class Sample {
         {
             "name": "imageDimensions",
             "baseName": "imageDimensions",
-            "type": "SampleImageDimensions"
+            "type": "SampleDatastreamImageDimensions"
         },
         {
             "name": "videoUrl",
@@ -361,6 +363,11 @@ export class Sample {
             "name": "labelMap",
             "baseName": "labelMap",
             "type": "SampleLabelMapLabels"
+        },
+        {
+            "name": "datastreams",
+            "baseName": "datastreams",
+            "type": "Array<SampleDatastream>"
         }    ];
 
     static getAttributeTypeMap() {

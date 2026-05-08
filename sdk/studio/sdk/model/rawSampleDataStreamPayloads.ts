@@ -10,27 +10,22 @@
  * Do not edit the class manually.
  */
 
+import { RawSampleDataStreamPayloadsDatastreamPayloads } from './rawSampleDataStreamPayloadsDatastreamPayloads';
 
-export class SampleImageDimensions {
-    'width': number;
-    'height': number;
+export class RawSampleDataStreamPayloads {
+    'datastreamPayloads': Array<RawSampleDataStreamPayloadsDatastreamPayloads>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "width",
-            "baseName": "width",
-            "type": "number"
-        },
-        {
-            "name": "height",
-            "baseName": "height",
-            "type": "number"
+            "name": "datastreamPayloads",
+            "baseName": "datastreamPayloads",
+            "type": "Array<RawSampleDataStreamPayloadsDatastreamPayloads>"
         }    ];
 
     static getAttributeTypeMap() {
-        return SampleImageDimensions.attributeTypeMap;
+        return RawSampleDataStreamPayloads.attributeTypeMap;
     }
 }
 

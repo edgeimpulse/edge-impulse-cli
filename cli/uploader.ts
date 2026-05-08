@@ -36,6 +36,7 @@ type UploaderFileType = {
     label: { type: 'infer'} | ExportUploaderInfoFileLabel,
     metadata: { [k: string]: string } | undefined,
     boundingBoxes: ExportInputBoundingBox[] | undefined,
+    attachments: string[] | undefined,
 };
 
 const versionArgv = process.argv.indexOf('--version') > -1;
@@ -196,13 +197,22 @@ const logAllAnnotationFormats = () => {
                         f.path = Path.join(Path.dirname(infoFileArgv), f.path);
                     }
 
+                    let attachments: string[] | undefined;
+                    if (f.attachments) {
+                        attachments = [];
+                        for (const attachmentPath of f.attachments) {
+                            if (!Path.isAbsolute(attachmentPath)) {
+                                attachments.push(Path.join(Path.dirname(infoFileArgv), attachmentPath));
+                            }
+                            else {
+                                attachments.push(attachmentPath);
+                            }
+                        }
+                    }
+
                     files.push({
-                        category: f.category,
-                        name: f.name,
-                        label: f.label,
-                        path: f.path,
-                        metadata: f.metadata,
-                        boundingBoxes: f.boundingBoxes,
+                        ...f,
+                        attachments: attachments,
                     });
                 }
             }
@@ -273,7 +283,8 @@ const logAllAnnotationFormats = () => {
                             category: sample.category || 'training',
                             metadata: { },
                             label: annotations.label,
-                            boundingBoxes: annotations.boundingBoxes
+                            boundingBoxes: annotations.boundingBoxes,
+                            attachments: undefined,
                         });
                     }
                 }
@@ -309,6 +320,7 @@ const logAllAnnotationFormats = () => {
                             path: fullPath,
                             metadata: { },
                             boundingBoxes: [],
+                            attachments: undefined,
                         });
                     }
                 }
@@ -385,6 +397,7 @@ const logAllAnnotationFormats = () => {
                             label: { type: 'label', label: categoryFolder.replace('.class', '') },
                             metadata: metadata,
                             boundingBoxes: undefined,
+                            attachments: undefined,
                         });
                     }
                 }
@@ -421,6 +434,7 @@ const logAllAnnotationFormats = () => {
                         } : { type: 'infer' },
                         metadata: metadata,
                         boundingBoxes: undefined,
+                        attachments: undefined,
                     };
                 });
             }
@@ -511,6 +525,14 @@ const logAllAnnotationFormats = () => {
                     boundingBoxes: boundingBoxes,
                     metadata: file.metadata,
                     addDateId: false,
+                    attachments: file.attachments ?
+                        await Promise.all(file.attachments.map(async (a) => {
+                            return {
+                                filename: Path.basename(a),
+                                buffer: await fs.promises.readFile(a),
+                            };
+                        })) :
+                        undefined,
                     configFactory: configFactory,
                     projectId: projectId,
                 });

@@ -10,22 +10,13 @@
  * Do not edit the class manually.
  */
 
-import { GenericApiResponse } from './genericApiResponse';
 import { RawSampleData } from './rawSampleData';
 import { RawSampleDataStreamPayloads } from './rawSampleDataStreamPayloads';
 import { RawSampleDataStreamPayloadsDatastreamPayloads } from './rawSampleDataStreamPayloadsDatastreamPayloads';
 import { RawSamplePayload } from './rawSamplePayload';
 import { Sample } from './sample';
 
-export class GetSampleResponse {
-    /**
-    * Whether the operation succeeded
-    */
-    'success': boolean;
-    /**
-    * Optional error description (set if \'success\' was false)
-    */
-    'error'?: string;
+export class RawSampleDataWithDataStreamPayloads {
     'sample': Sample;
     'payload': RawSamplePayload;
     /**
@@ -37,16 +28,6 @@ export class GetSampleResponse {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "success",
-            "baseName": "success",
-            "type": "boolean"
-        },
-        {
-            "name": "error",
-            "baseName": "error",
-            "type": "string"
-        },
         {
             "name": "sample",
             "baseName": "sample",
@@ -69,7 +50,7 @@ export class GetSampleResponse {
         }    ];
 
     static getAttributeTypeMap() {
-        return GetSampleResponse.attributeTypeMap;
+        return RawSampleDataWithDataStreamPayloads.attributeTypeMap;
     }
 }
 

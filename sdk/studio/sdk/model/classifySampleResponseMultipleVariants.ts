@@ -13,7 +13,7 @@
 import { ClassifySampleResponseMultipleVariantsAllOf } from './classifySampleResponseMultipleVariantsAllOf';
 import { ClassifySampleResponseVariantResults } from './classifySampleResponseVariantResults';
 import { GenericApiResponse } from './genericApiResponse';
-import { RawSampleData } from './rawSampleData';
+import { RawSampleDataWithDataStreamPayloads } from './rawSampleDataWithDataStreamPayloads';
 
 export class ClassifySampleResponseMultipleVariants {
     /**
@@ -25,7 +25,7 @@ export class ClassifySampleResponseMultipleVariants {
     */
     'error'?: string;
     'results'?: Array<ClassifySampleResponseVariantResults>;
-    'sample': RawSampleData;
+    'sample': RawSampleDataWithDataStreamPayloads;
     /**
     * Size of the sliding window (as set by the impulse) in milliseconds.
     */
@@ -60,7 +60,7 @@ export class ClassifySampleResponseMultipleVariants {
         {
             "name": "sample",
             "baseName": "sample",
-            "type": "RawSampleData"
+            "type": "RawSampleDataWithDataStreamPayloads"
         },
         {
             "name": "windowSizeMs",

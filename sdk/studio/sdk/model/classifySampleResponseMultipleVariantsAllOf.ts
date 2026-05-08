@@ -11,11 +11,11 @@
  */
 
 import { ClassifySampleResponseVariantResults } from './classifySampleResponseVariantResults';
-import { RawSampleData } from './rawSampleData';
+import { RawSampleDataWithDataStreamPayloads } from './rawSampleDataWithDataStreamPayloads';
 
 export class ClassifySampleResponseMultipleVariantsAllOf {
     'results'?: Array<ClassifySampleResponseVariantResults>;
-    'sample': RawSampleData;
+    'sample': RawSampleDataWithDataStreamPayloads;
     /**
     * Size of the sliding window (as set by the impulse) in milliseconds.
     */
@@ -40,7 +40,7 @@ export class ClassifySampleResponseMultipleVariantsAllOf {
         {
             "name": "sample",
             "baseName": "sample",
-            "type": "RawSampleData"
+            "type": "RawSampleDataWithDataStreamPayloads"
         },
         {
             "name": "windowSizeMs",

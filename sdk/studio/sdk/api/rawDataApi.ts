@@ -54,6 +54,7 @@ import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
 import { GetRawDataMetadataCooccurrenceResponse } from '../model/getRawDataMetadataCooccurrenceResponse';
 import { GetRawDataMetadataDistributionResponse } from '../model/getRawDataMetadataDistributionResponse';
+import { GetSampleDspResponse } from '../model/getSampleDspResponse';
 import { GetSampleMetadataFilterOptionsResponse } from '../model/getSampleMetadataFilterOptionsResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
 import { GetSampleResponse } from '../model/getSampleResponse';
@@ -360,6 +361,14 @@ type countSamplesQueryParams = {
     maxDate?: Date,
 };
 
+type cropSampleQueryParams = {
+    datastreamIndex?: number,
+};
+
+type findSegmentsInSampleQueryParams = {
+    datastreamIndex?: number,
+};
+
 type getAllImportedFromQueryParams = {
     limit?: number,
     offset?: number,
@@ -403,12 +412,14 @@ type getSampleAsImageQueryParams = {
     afterInputBlock?: boolean,
     cacheKey?: string,
     impulseId?: number,
+    datastreamIndex?: number,
 };
 
 type getSampleAsVideoQueryParams = {
     afterInputBlock?: boolean,
     cacheKey?: string,
     impulseId?: number,
+    datastreamIndex?: number,
 };
 
 type getSampleMetadataQueryParams = {
@@ -425,6 +436,7 @@ type getSampleSliceQueryParams = {
     sliceStart: number,
     sliceEnd?: number,
     impulseId?: number,
+    datastreamIndex?: number,
     truncateStructuredLabels?: boolean,
 };
 
@@ -433,6 +445,7 @@ type getUncroppedDownsampledSampleQueryParams = {
     zoomStart?: number,
     zoomEnd?: number,
     impulseId?: number,
+    datastreamIndex?: number,
     truncateStructuredLabels?: boolean,
 };
 
@@ -3060,13 +3073,14 @@ export class RawDataApi {
     }
 
     /**
-     * Crop a sample to within a new range.
+     * Crop a sample to within a new range. cropStart/cropEnd are relative to the selected datastream. If you have multiple datastreams and OptionalDatastreamIndexParameter is not passed in, the first datastream is used.
      * @summary Crop sample
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param cropSampleRequest 
+     * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CropSampleResponse> {
+    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, queryParams?: cropSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CropSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/crop'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3104,6 +3118,10 @@ export class RawDataApi {
 
         if (cropSampleRequest === null || cropSampleRequest === undefined) {
             throw new Error('Required parameter cropSampleRequest was null or undefined when calling cropSample.');
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         localVarHeaderParams = {
@@ -3764,13 +3782,14 @@ export class RawDataApi {
     }
 
     /**
-     * Find start and end times for all non-noise events in a sample
+     * Find start and end times for all non-noise events in a sample. If you have multiple datastreams and OptionalDatastreamIndexParameter is not passed in, the first datastream is used.
      * @summary Find segments
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param findSegmentSampleRequest 
+     * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async findSegmentsInSample (projectId: number, sampleId: number, findSegmentSampleRequest: FindSegmentSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<FindSegmentSampleResponse> {
+    public async findSegmentsInSample (projectId: number, sampleId: number, findSegmentSampleRequest: FindSegmentSampleRequest, queryParams?: findSegmentsInSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<FindSegmentSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/find-segments'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3808,6 +3827,10 @@ export class RawDataApi {
 
         if (findSegmentSampleRequest === null || findSegmentSampleRequest === undefined) {
             throw new Error('Required parameter findSegmentSampleRequest was null or undefined when calling findSegmentsInSample.');
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         localVarHeaderParams = {
@@ -5329,6 +5352,7 @@ export class RawDataApi {
      * @param afterInputBlock Whether to process the image through the input block first
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param datastreamIndex Datastream index (defaults to 0)
      */
     public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/image'
@@ -5373,6 +5397,10 @@ export class RawDataApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         localVarHeaderParams = {
@@ -5542,6 +5570,7 @@ export class RawDataApi {
      * @param afterInputBlock Whether to process the image through the input block first
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param datastreamIndex Datastream index (defaults to 0)
      */
     public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video'
@@ -5586,6 +5615,10 @@ export class RawDataApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         localVarHeaderParams = {
@@ -5863,16 +5896,17 @@ export class RawDataApi {
     }
 
     /**
-     * Get a slice of a sample.
+     * Get a slice of a sample. If you have multiple datastreams and OptionalDatastreamIndexParameter is not passed in, the first datastream is returned. sliceStart / sliceEnd are relative to the datastream.
      * @summary Get sample slice
      * @param projectId Project ID
      * @param sampleId Sample ID
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -5922,6 +5956,10 @@ export class RawDataApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         if (queryParams?.truncateStructuredLabels !== undefined) {
@@ -5984,7 +6022,7 @@ export class RawDataApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'GetSampleResponse'
+            'GetSampleDspResponse'
         );
     }
 
@@ -6079,7 +6117,7 @@ export class RawDataApi {
     }
 
     /**
-     * Get the original, uncropped, downsampled data.
+     * Get the original, uncropped, downsampled data. If you have multiple datastreams and OptionalDatastreamIndexParameter is not passed in, the first datastream is returned. The ZoomStart/ZoomEnd parameters should be relative to the selected datastream.
      * @summary Get the original downsampled data
      * @param projectId Project ID
      * @param sampleId Sample ID
@@ -6087,9 +6125,10 @@ export class RawDataApi {
      * @param zoomStart Zoom into the sample, with the focus starting at this index
      * @param zoomEnd Zoom into the sample, with the focus ending at this index
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6136,6 +6175,10 @@ export class RawDataApi {
 
         if (queryParams?.impulseId !== undefined) {
             localVarQueryParameters['impulseId'] = ObjectSerializer.serialize(queryParams.impulseId, "number");
+        }
+
+        if (queryParams?.datastreamIndex !== undefined) {
+            localVarQueryParameters['datastreamIndex'] = ObjectSerializer.serialize(queryParams.datastreamIndex, "number");
         }
 
         if (queryParams?.truncateStructuredLabels !== undefined) {
@@ -6198,7 +6241,7 @@ export class RawDataApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'GetSampleResponse'
+            'GetSampleDspResponse'
         );
     }
 

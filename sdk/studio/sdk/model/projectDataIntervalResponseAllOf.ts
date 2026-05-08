@@ -10,9 +10,15 @@
  * Do not edit the class manually.
  */
 
+import { ProjectDataIntervalResponseAllOfByDatastream } from './projectDataIntervalResponseAllOfByDatastream';
 
 export class ProjectDataIntervalResponseAllOf {
     'intervalMs': number;
+    'frequencyHz': number;
+    /**
+    * Only filled if project has \"multi_datastreams\" experiment enabled. Otherwise an empty array.
+    */
+    'byDatastream': Array<ProjectDataIntervalResponseAllOfByDatastream>;
 
     static discriminator: string | undefined = undefined;
 
@@ -21,6 +27,16 @@ export class ProjectDataIntervalResponseAllOf {
             "name": "intervalMs",
             "baseName": "intervalMs",
             "type": "number"
+        },
+        {
+            "name": "frequencyHz",
+            "baseName": "frequencyHz",
+            "type": "number"
+        },
+        {
+            "name": "byDatastream",
+            "baseName": "byDatastream",
+            "type": "Array<ProjectDataIntervalResponseAllOfByDatastream>"
         }    ];
 
     static getAttributeTypeMap() {

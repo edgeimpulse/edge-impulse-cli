@@ -378,6 +378,44 @@ export function calculateAllStructuredLabels(sample: {
     return <AllStructuredLabels[]>allStructuredLabels;
 }
 
+export type ExportAttachmentsFileV1 = {
+    version: 1;
+    type: 'attachments';
+    attachments: ExportAttachmentsMap;
+};
+
+export type ExportAttachmentsMap = { [fileName: string]: { filename: string }[] };
+
+export function parseAttachmentsFile(attachmentsFile: string) {
+    const data = <ExportAttachmentsFileV1>JSON.parse(attachmentsFile);
+    return validateAttachmentsFile(data);
+}
+
+export function validateAttachmentsFile(data: ExportAttachmentsFileV1) {
+    if (data.version !== 1) {
+        throw new Error('Invalid version');
+    }
+    if (data.type !== 'attachments') {
+        throw new Error('Invalid type, expected "attachments" but was "' + data.type + '"');
+    }
+    if (typeof data.attachments !== 'object') {
+        throw new Error('attachments is not an object');
+    }
+    for (const file of Object.keys(data.attachments)) {
+        if (!Array.isArray(data.attachments[file])) {
+            throw new Error(`attachments[${file}] is not an array`);
+        }
+        for (let ix = 0; ix < data.attachments[file].length; ix++) {
+            if (typeof data.attachments[file][ix].filename !== 'string') {
+                throw new Error(`attachments[${file}][${ix}].filename is not a string`);
+            }
+        }
+    }
+
+    return data;
+}
+
+
 export type ExportUploaderInfoFileCategory = 'training' | 'testing' | 'validation' | 'post-processing' | 'split';
 
 export type ExportUploaderInfoFileMultiLabel = {
@@ -408,6 +446,7 @@ export interface ExportUploaderInfoFile {
     label: ExportUploaderInfoFileLabel;
     metadata: { [k: string]: string } | undefined;
     boundingBoxes: ExportInputBoundingBox[] | undefined;
+    attachments: string[] | undefined;
 }
 
 export interface ExportUploaderInfoFileV1 {

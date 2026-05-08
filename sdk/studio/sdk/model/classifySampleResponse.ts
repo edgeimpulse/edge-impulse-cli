@@ -13,7 +13,7 @@
 import { ClassifySampleResponseAllOf } from './classifySampleResponseAllOf';
 import { ClassifySampleResponseClassification } from './classifySampleResponseClassification';
 import { GenericApiResponse } from './genericApiResponse';
-import { RawSampleData } from './rawSampleData';
+import { RawSampleDataWithDataStreamPayloads } from './rawSampleDataWithDataStreamPayloads';
 
 export class ClassifySampleResponse {
     /**
@@ -25,7 +25,7 @@ export class ClassifySampleResponse {
     */
     'error'?: string;
     'classifications': Array<ClassifySampleResponseClassification>;
-    'sample': RawSampleData;
+    'sample': RawSampleDataWithDataStreamPayloads;
     /**
     * Size of the sliding window (as set by the impulse) in milliseconds.
     */
@@ -61,7 +61,7 @@ export class ClassifySampleResponse {
         {
             "name": "sample",
             "baseName": "sample",
-            "type": "RawSampleData"
+            "type": "RawSampleDataWithDataStreamPayloads"
         },
         {
             "name": "windowSizeMs",

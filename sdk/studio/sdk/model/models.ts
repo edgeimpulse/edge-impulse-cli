@@ -541,6 +541,7 @@ export * from './getRawDataMetadataDistributionResponse';
 export * from './getRawDataMetadataDistributionResponseAllOf';
 export * from './getSSODomainIdPsResponse';
 export * from './getSSODomainIdPsResponseAllOf';
+export * from './getSampleDspResponse';
 export * from './getSampleMetadataFilterOptionsResponse';
 export * from './getSampleMetadataResponse';
 export * from './getSampleResponse';
@@ -594,6 +595,7 @@ export * from './inferenceHistoryEntry';
 export * from './inferenceHistoryTimestamp';
 export * from './inferenceSummaryMetrics';
 export * from './inputBlock';
+export * from './inputBlockType';
 export * from './integrationSessionStatus';
 export * from './inviteOrganizationMemberRequest';
 export * from './job';
@@ -889,6 +891,8 @@ export * from './projectDataAxesSummaryResponse';
 export * from './projectDataAxesSummaryResponseAllOf';
 export * from './projectDataIntervalResponse';
 export * from './projectDataIntervalResponseAllOf';
+export * from './projectDataIntervalResponseAllOfByDatastream';
+export * from './projectDataIntervalResponseAllOfSensors';
 export * from './projectDataSummary';
 export * from './projectDeploymentTarget';
 export * from './projectDeploymentTargetAllOf';
@@ -930,6 +934,9 @@ export * from './publicProjectTierAvailability';
 export * from './rawDataCategory';
 export * from './rawDataFilterCategory';
 export * from './rawSampleData';
+export * from './rawSampleDataStreamPayloads';
+export * from './rawSampleDataStreamPayloadsDatastreamPayloads';
+export * from './rawSampleDataWithDataStreamPayloads';
 export * from './rawSamplePayload';
 export * from './rebalanceDatasetResponse';
 export * from './removeCollaboratorRequest';
@@ -948,7 +955,8 @@ export * from './runOrganizationPipelineResponse';
 export * from './runOrganizationPipelineResponseAllOf';
 export * from './sample';
 export * from './sampleBoundingBoxesRequest';
-export * from './sampleImageDimensions';
+export * from './sampleDatastream';
+export * from './sampleDatastreamImageDimensions';
 export * from './sampleKeyValueLabels';
 export * from './sampleLabelMapLabels';
 export * from './sampleLabelMapRequest';
@@ -1718,6 +1726,7 @@ import { GetRawDataMetadataDistributionResponse } from './getRawDataMetadataDist
 import { GetRawDataMetadataDistributionResponseAllOf } from './getRawDataMetadataDistributionResponseAllOf';
 import { GetSSODomainIdPsResponse } from './getSSODomainIdPsResponse';
 import { GetSSODomainIdPsResponseAllOf } from './getSSODomainIdPsResponseAllOf';
+import { GetSampleDspResponse } from './getSampleDspResponse';
 import { GetSampleMetadataFilterOptionsResponse } from './getSampleMetadataFilterOptionsResponse';
 import { GetSampleMetadataResponse } from './getSampleMetadataResponse';
 import { GetSampleResponse } from './getSampleResponse';
@@ -1771,6 +1780,7 @@ import { InferenceHistoryEntry } from './inferenceHistoryEntry';
 import { InferenceHistoryTimestamp } from './inferenceHistoryTimestamp';
 import { InferenceSummaryMetrics } from './inferenceSummaryMetrics';
 import { InputBlock } from './inputBlock';
+import { InputBlockType } from './inputBlockType';
 import { IntegrationSessionStatus } from './integrationSessionStatus';
 import { InviteOrganizationMemberRequest } from './inviteOrganizationMemberRequest';
 import { Job } from './job';
@@ -2066,6 +2076,8 @@ import { ProjectDataAxesSummaryResponse } from './projectDataAxesSummaryResponse
 import { ProjectDataAxesSummaryResponseAllOf } from './projectDataAxesSummaryResponseAllOf';
 import { ProjectDataIntervalResponse } from './projectDataIntervalResponse';
 import { ProjectDataIntervalResponseAllOf } from './projectDataIntervalResponseAllOf';
+import { ProjectDataIntervalResponseAllOfByDatastream } from './projectDataIntervalResponseAllOfByDatastream';
+import { ProjectDataIntervalResponseAllOfSensors } from './projectDataIntervalResponseAllOfSensors';
 import { ProjectDataSummary } from './projectDataSummary';
 import { ProjectDeploymentTarget } from './projectDeploymentTarget';
 import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
@@ -2107,6 +2119,9 @@ import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { RawDataCategory } from './rawDataCategory';
 import { RawDataFilterCategory } from './rawDataFilterCategory';
 import { RawSampleData } from './rawSampleData';
+import { RawSampleDataStreamPayloads } from './rawSampleDataStreamPayloads';
+import { RawSampleDataStreamPayloadsDatastreamPayloads } from './rawSampleDataStreamPayloadsDatastreamPayloads';
+import { RawSampleDataWithDataStreamPayloads } from './rawSampleDataWithDataStreamPayloads';
 import { RawSamplePayload } from './rawSamplePayload';
 import { RebalanceDatasetResponse } from './rebalanceDatasetResponse';
 import { RemoveCollaboratorRequest } from './removeCollaboratorRequest';
@@ -2125,7 +2140,8 @@ import { RunOrganizationPipelineResponse } from './runOrganizationPipelineRespon
 import { RunOrganizationPipelineResponseAllOf } from './runOrganizationPipelineResponseAllOf';
 import { Sample } from './sample';
 import { SampleBoundingBoxesRequest } from './sampleBoundingBoxesRequest';
-import { SampleImageDimensions } from './sampleImageDimensions';
+import { SampleDatastream } from './sampleDatastream';
+import { SampleDatastreamImageDimensions } from './sampleDatastreamImageDimensions';
 import { SampleKeyValueLabels } from './sampleKeyValueLabels';
 import { SampleLabelMapLabels } from './sampleLabelMapLabels';
 import { SampleLabelMapRequest } from './sampleLabelMapRequest';
@@ -2437,12 +2453,11 @@ const enumsMap: {[index: string]: any} = {
     "GetRawDataMetadataDistributionResponseAllOfTypeEnum": "GetRawDataMetadataDistributionResponseAllOfTypeEnum",
     "ImageInputResizeMode": "ImageInputResizeMode",
     "ImageInputScaling": "ImageInputScaling",
-    "ImpulseInputBlockTypeEnum": "ImpulseInputBlockTypeEnum",
     "ImpulseInputBlockResizeMethodEnum": "ImpulseInputBlockResizeMethodEnum",
     "ImpulseInputBlockCropAnchorEnum": "ImpulseInputBlockCropAnchorEnum",
     "ImpulseInputBlockLabelingMethodMultiLabelTypeEnum": "ImpulseInputBlockLabelingMethodMultiLabelTypeEnum",
     "ImpulseType": "ImpulseType",
-    "InputBlockTypeEnum": "InputBlockTypeEnum",
+    "InputBlockType": "InputBlockType",
     "IntegrationSessionStatusStatusEnum": "IntegrationSessionStatusStatusEnum",
     "JobParentTypeEnum": "JobParentTypeEnum",
     "JobStatus": "JobStatus",
@@ -2505,6 +2520,7 @@ const enumsMap: {[index: string]: any} = {
     "ProfileModelTableVariantEnum": "ProfileModelTableVariantEnum",
     "ProjectCategoryEnum": "ProjectCategoryEnum",
     "ProjectApiKeyRoleEnum": "ProjectApiKeyRoleEnum",
+    "ProjectDataIntervalResponseAllOfByDatastreamTypeEnum": "ProjectDataIntervalResponseAllOfByDatastreamTypeEnum",
     "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
@@ -2518,6 +2534,7 @@ const enumsMap: {[index: string]: any} = {
     "RawDataFilterCategory": "RawDataFilterCategory",
     "SampleBoundingBoxesTypeEnum": "SampleBoundingBoxesTypeEnum",
     "SampleChartTypeEnum": "SampleChartTypeEnum",
+    "SampleDatastreamChartTypeEnum": "SampleDatastreamChartTypeEnum",
     "SampleKeyValueLabelsTypeEnum": "SampleKeyValueLabelsTypeEnum",
     "SendUserFeedbackRequestTypeEnum": "SendUserFeedbackRequestTypeEnum",
     "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum": "SetImpulseThresholdsResponseRegenerateModelTestingStatusEnum",
@@ -3083,6 +3100,7 @@ const typeMap: {[index: string]: any} = {
     "GetRawDataMetadataDistributionResponseAllOf": GetRawDataMetadataDistributionResponseAllOf,
     "GetSSODomainIdPsResponse": GetSSODomainIdPsResponse,
     "GetSSODomainIdPsResponseAllOf": GetSSODomainIdPsResponseAllOf,
+    "GetSampleDspResponse": GetSampleDspResponse,
     "GetSampleMetadataFilterOptionsResponse": GetSampleMetadataFilterOptionsResponse,
     "GetSampleMetadataResponse": GetSampleMetadataResponse,
     "GetSampleResponse": GetSampleResponse,
@@ -3412,6 +3430,8 @@ const typeMap: {[index: string]: any} = {
     "ProjectDataAxesSummaryResponseAllOf": ProjectDataAxesSummaryResponseAllOf,
     "ProjectDataIntervalResponse": ProjectDataIntervalResponse,
     "ProjectDataIntervalResponseAllOf": ProjectDataIntervalResponseAllOf,
+    "ProjectDataIntervalResponseAllOfByDatastream": ProjectDataIntervalResponseAllOfByDatastream,
+    "ProjectDataIntervalResponseAllOfSensors": ProjectDataIntervalResponseAllOfSensors,
     "ProjectDataSummary": ProjectDataSummary,
     "ProjectDeploymentTarget": ProjectDeploymentTarget,
     "ProjectDeploymentTargetAllOf": ProjectDeploymentTargetAllOf,
@@ -3445,6 +3465,9 @@ const typeMap: {[index: string]: any} = {
     "ProjectVersionRequest": ProjectVersionRequest,
     "PublicOrganizationTransformationBlock": PublicOrganizationTransformationBlock,
     "RawSampleData": RawSampleData,
+    "RawSampleDataStreamPayloads": RawSampleDataStreamPayloads,
+    "RawSampleDataStreamPayloadsDatastreamPayloads": RawSampleDataStreamPayloadsDatastreamPayloads,
+    "RawSampleDataWithDataStreamPayloads": RawSampleDataWithDataStreamPayloads,
     "RawSamplePayload": RawSamplePayload,
     "RebalanceDatasetResponse": RebalanceDatasetResponse,
     "RemoveCollaboratorRequest": RemoveCollaboratorRequest,
@@ -3463,7 +3486,8 @@ const typeMap: {[index: string]: any} = {
     "RunOrganizationPipelineResponseAllOf": RunOrganizationPipelineResponseAllOf,
     "Sample": Sample,
     "SampleBoundingBoxesRequest": SampleBoundingBoxesRequest,
-    "SampleImageDimensions": SampleImageDimensions,
+    "SampleDatastream": SampleDatastream,
+    "SampleDatastreamImageDimensions": SampleDatastreamImageDimensions,
     "SampleKeyValueLabels": SampleKeyValueLabels,
     "SampleLabelMapLabels": SampleLabelMapLabels,
     "SampleLabelMapRequest": SampleLabelMapRequest,

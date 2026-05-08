@@ -43,7 +43,7 @@ import { DspRunResponseWithSample } from '../model/dspRunResponseWithSample';
 import { DspSampleFeaturesResponse } from '../model/dspSampleFeaturesResponse';
 import { DspTrainedFeaturesResponse } from '../model/dspTrainedFeaturesResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetSampleResponse } from '../model/getSampleResponse';
+import { GetSampleDspResponse } from '../model/getSampleDspResponse';
 import { RawDataCategory } from '../model/rawDataCategory';
 import { StartJobResponse } from '../model/startJobResponse';
 
@@ -1394,7 +1394,7 @@ export class DSPApi {
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      * @param useCachedUpsampledData If true, upsampled data will be fetched from cache, returning the original sample data when limitPayloadValues &gt; sample length.
      */
-    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1503,7 +1503,7 @@ export class DSPApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'GetSampleResponse'
+            'GetSampleDspResponse'
         );
     }
 
@@ -1517,7 +1517,7 @@ export class DSPApi {
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1633,7 +1633,7 @@ export class DSPApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'GetSampleResponse'
+            'GetSampleDspResponse'
         );
     }
 

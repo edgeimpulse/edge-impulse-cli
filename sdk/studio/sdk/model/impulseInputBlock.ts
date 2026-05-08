@@ -13,16 +13,14 @@
 import { ImageInputResizeMode } from './imageInputResizeMode';
 import { ImpulseInputBlockDatasetSubset } from './impulseInputBlockDatasetSubset';
 import { ImpulseInputBlockLabelingMethodMultiLabel } from './impulseInputBlockLabelingMethodMultiLabel';
+import { InputBlockType } from './inputBlockType';
 
 export class ImpulseInputBlock {
     /**
     * Identifier for this block. Make sure to up this number when creating a new block via `getNewBlockId`, and don\'t re-use identifiers. If the block hasn\'t changed, keep the ID as-is. ID must be unique across the project and greather than zero (>0).
     */
     'id': number;
-    /**
-    * Block type (either time-series, image or features)
-    */
-    'type': ImpulseInputBlockTypeEnum;
+    'type': InputBlockType;
     /**
     * Block name, will be used in menus
     */
@@ -31,6 +29,10 @@ export class ImpulseInputBlock {
     * Block title, used in the impulse UI
     */
     'title': string;
+    /**
+    * Input axes, identified by the name in the name of the axis. If not set, then all axes are selected.
+    */
+    'axes'?: Array<string>;
     /**
     * Size of the sliding window in milliseconds
     */
@@ -90,7 +92,7 @@ export class ImpulseInputBlock {
         {
             "name": "type",
             "baseName": "type",
-            "type": "ImpulseInputBlockTypeEnum"
+            "type": "InputBlockType"
         },
         {
             "name": "name",
@@ -101,6 +103,11 @@ export class ImpulseInputBlock {
             "name": "title",
             "baseName": "title",
             "type": "string"
+        },
+        {
+            "name": "axes",
+            "baseName": "axes",
+            "type": "Array<string>"
         },
         {
             "name": "windowSizeMs",
@@ -178,9 +185,6 @@ export class ImpulseInputBlock {
     }
 }
 
-
-export type ImpulseInputBlockTypeEnum = 'time-series' | 'image' | 'features';
-export const ImpulseInputBlockTypeEnumValues: string[] = ['time-series', 'image', 'features'];
 
 export type ImpulseInputBlockResizeMethodEnum = 'lanczos3' | 'nearest';
 export const ImpulseInputBlockResizeMethodEnumValues: string[] = ['lanczos3', 'nearest'];

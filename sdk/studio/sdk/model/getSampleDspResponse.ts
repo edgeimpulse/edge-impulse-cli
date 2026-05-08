@@ -11,10 +11,11 @@
  */
 
 import { GenericApiResponse } from './genericApiResponse';
-import { ProjectDataIntervalResponseAllOf } from './projectDataIntervalResponseAllOf';
-import { ProjectDataIntervalResponseAllOfByDatastream } from './projectDataIntervalResponseAllOfByDatastream';
+import { RawSampleData } from './rawSampleData';
+import { RawSamplePayload } from './rawSamplePayload';
+import { Sample } from './sample';
 
-export class ProjectDataIntervalResponse {
+export class GetSampleDspResponse {
     /**
     * Whether the operation succeeded
     */
@@ -23,12 +24,12 @@ export class ProjectDataIntervalResponse {
     * Optional error description (set if \'success\' was false)
     */
     'error'?: string;
-    'intervalMs': number;
-    'frequencyHz': number;
+    'sample': Sample;
+    'payload': RawSamplePayload;
     /**
-    * Only filled if project has \"multi_datastreams\" experiment enabled. Otherwise an empty array.
+    * Total number of payload values
     */
-    'byDatastream': Array<ProjectDataIntervalResponseAllOfByDatastream>;
+    'totalPayloadLength': number;
 
     static discriminator: string | undefined = undefined;
 
@@ -44,23 +45,23 @@ export class ProjectDataIntervalResponse {
             "type": "string"
         },
         {
-            "name": "intervalMs",
-            "baseName": "intervalMs",
-            "type": "number"
+            "name": "sample",
+            "baseName": "sample",
+            "type": "Sample"
         },
         {
-            "name": "frequencyHz",
-            "baseName": "frequencyHz",
-            "type": "number"
+            "name": "payload",
+            "baseName": "payload",
+            "type": "RawSamplePayload"
         },
         {
-            "name": "byDatastream",
-            "baseName": "byDatastream",
-            "type": "Array<ProjectDataIntervalResponseAllOfByDatastream>"
+            "name": "totalPayloadLength",
+            "baseName": "totalPayloadLength",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return ProjectDataIntervalResponse.attributeTypeMap;
+        return GetSampleDspResponse.attributeTypeMap;
     }
 }
 

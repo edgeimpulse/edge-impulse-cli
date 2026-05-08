@@ -11,32 +11,26 @@
  */
 
 
-export class AutotuneDspRequest {
-    /**
-    * DSP block ID to autotune parameters of
-    */
-    'dspId': number;
-    /**
-    * Optional updated DSP block config. If undefined, the current saved block config will be used. This enables experimenting with the autotuner using temporary config options, without updating the stored DSP block config. 
-    */
-    'config'?: { [key: string]: string; };
+export class SampleDatastreamImageDimensions {
+    'width': number;
+    'height': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "dspId",
-            "baseName": "dspId",
+            "name": "width",
+            "baseName": "width",
             "type": "number"
         },
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "{ [key: string]: string; }"
+            "name": "height",
+            "baseName": "height",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return AutotuneDspRequest.attributeTypeMap;
+        return SampleDatastreamImageDimensions.attributeTypeMap;
     }
 }
 

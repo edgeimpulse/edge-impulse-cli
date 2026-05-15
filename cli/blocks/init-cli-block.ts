@@ -467,21 +467,15 @@ export class InitCLIBlock {
             },
         ];
 
-        const showVisualAnomalyOption = organizationInfo.experiments?.find(
-            x => x.type === 'custom_visual_ad_blocks'
-        )?.enabled;
-
         operatesOnOptions.push({
             name: 'Anomaly detection',
             value: 'anomaly_detection'
         });
 
-        if (showVisualAnomalyOption) {
-            operatesOnOptions.push({
-                name: 'Anomaly detection (Images)',
-                value: 'visual_anomaly_detection'
-            });
-        }
+        operatesOnOptions.push({
+            name: 'Anomaly detection (Images)',
+            value: 'visual_anomaly_detection'
+        });
 
         let blockTlOperatesOn: models.OrganizationTransferLearningOperatesOn;
         if (params?.info?.operatesOn) {

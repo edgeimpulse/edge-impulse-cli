@@ -97,6 +97,8 @@ export * from './adminOrganizationInfoResponse';
 export * from './adminOrganizationInfoResponseAllOf';
 export * from './adminProjectInfoResponse';
 export * from './adminProjectInfoResponseAllOf';
+export * from './adminProjectKillSwitchResponse';
+export * from './adminProjectKillSwitchResponseAllOf';
 export * from './adminRotateOauthClientSecretResponse';
 export * from './adminRotateOauthClientSecretResponseAllOf';
 export * from './adminStartEnterpriseTrialRequest';
@@ -1282,6 +1284,8 @@ import { AdminOrganizationInfoResponse } from './adminOrganizationInfoResponse';
 import { AdminOrganizationInfoResponseAllOf } from './adminOrganizationInfoResponseAllOf';
 import { AdminProjectInfoResponse } from './adminProjectInfoResponse';
 import { AdminProjectInfoResponseAllOf } from './adminProjectInfoResponseAllOf';
+import { AdminProjectKillSwitchResponse } from './adminProjectKillSwitchResponse';
+import { AdminProjectKillSwitchResponseAllOf } from './adminProjectKillSwitchResponseAllOf';
 import { AdminRotateOauthClientSecretResponse } from './adminRotateOauthClientSecretResponse';
 import { AdminRotateOauthClientSecretResponseAllOf } from './adminRotateOauthClientSecretResponseAllOf';
 import { AdminStartEnterpriseTrialRequest } from './adminStartEnterpriseTrialRequest';
@@ -2668,6 +2672,8 @@ const typeMap: {[index: string]: any} = {
     "AdminOrganizationInfoResponseAllOf": AdminOrganizationInfoResponseAllOf,
     "AdminProjectInfoResponse": AdminProjectInfoResponse,
     "AdminProjectInfoResponseAllOf": AdminProjectInfoResponseAllOf,
+    "AdminProjectKillSwitchResponse": AdminProjectKillSwitchResponse,
+    "AdminProjectKillSwitchResponseAllOf": AdminProjectKillSwitchResponseAllOf,
     "AdminRotateOauthClientSecretResponse": AdminRotateOauthClientSecretResponse,
     "AdminRotateOauthClientSecretResponseAllOf": AdminRotateOauthClientSecretResponseAllOf,
     "AdminStartEnterpriseTrialRequest": AdminStartEnterpriseTrialRequest,

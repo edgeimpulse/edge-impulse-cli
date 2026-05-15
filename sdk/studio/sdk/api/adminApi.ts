@@ -60,6 +60,7 @@ import { AdminGetUsersResponse } from '../model/adminGetUsersResponse';
 import { AdminListProjectsResponse } from '../model/adminListProjectsResponse';
 import { AdminOrganizationInfoResponse } from '../model/adminOrganizationInfoResponse';
 import { AdminProjectInfoResponse } from '../model/adminProjectInfoResponse';
+import { AdminProjectKillSwitchResponse } from '../model/adminProjectKillSwitchResponse';
 import { AdminRotateOauthClientSecretResponse } from '../model/adminRotateOauthClientSecretResponse';
 import { AdminStartEnterpriseTrialRequest } from '../model/adminStartEnterpriseTrialRequest';
 import { AdminToggleDataMigrationRequest } from '../model/adminToggleDataMigrationRequest';
@@ -286,6 +287,10 @@ type adminListTrashbinUserS3FilesQueryParams = {
     prefix?: string,
     sourceBucket: 'ingestion' | 'cdn' | 'user-data',
     continuationToken?: string,
+};
+
+type adminProjectKillSwitchQueryParams = {
+    skipRevokeApiKeys?: boolean,
 };
 
 export type adminUploadOauthClientLogoFormParams = {
@@ -8019,6 +8024,101 @@ export class AdminApi {
         return this.handleResponse(
             response,
             'StartJobResponse'
+        );
+    }
+
+    /**
+     * Admin-only API to cancel all active jobs for a project and revoke all project API keys, useful for projects with excessive usage or malicious activity. 
+     * @summary Trigger project kill switch
+     * @param projectId Project ID
+     * @param skipRevokeApiKeys Set to true to avoid revoking project API keys.
+     */
+    public async adminProjectKillSwitch (projectId: number, queryParams?: adminProjectKillSwitchQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminProjectKillSwitchResponse> {
+        const localVarPath = this.basePath + '/api/admin/projects/{projectId}/kill-switch'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling adminProjectKillSwitch.');
+        }
+
+        if (queryParams?.skipRevokeApiKeys !== undefined) {
+            localVarQueryParameters['skipRevokeApiKeys'] = ObjectSerializer.serialize(queryParams.skipRevokeApiKeys, "boolean");
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'AdminProjectKillSwitchResponse'
         );
     }
 

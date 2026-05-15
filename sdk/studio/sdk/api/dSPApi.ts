@@ -88,7 +88,7 @@ type dspSampleTrainedFeaturesQueryParams = {
 
 type getDspMetadataQueryParams = {
     excludeIncludedSamples?: boolean,
-    category?: 'training' | 'testing' | 'all',
+    category?: 'training' | 'testing' | 'validation' | 'all',
 };
 
 type getDspRawSampleQueryParams = {
@@ -407,7 +407,7 @@ export class DSPApi {
     }
 
     /**
-     * Download output from a DSP block over all data in the training set, already sliced in windows. In Numpy binary format.
+     * Download output from a DSP block over all data in the selected category, already sliced in windows. In Numpy binary format.
      * @summary Download DSP data
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
@@ -520,7 +520,7 @@ export class DSPApi {
     }
 
     /**
-     * Download labels for a DSP block over all data in the training set, already sliced in windows.
+     * Download labels for a DSP block over all data in the selected category, already sliced in windows.
      * @summary Download DSP labels
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
@@ -1321,7 +1321,7 @@ export class DSPApi {
         }
 
         if (queryParams?.category !== undefined) {
-            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'all'");
+            localVarQueryParameters['category'] = ObjectSerializer.serialize(queryParams.category, "'training' | 'testing' | 'validation' | 'all'");
         }
 
         localVarHeaderParams = {

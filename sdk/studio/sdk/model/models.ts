@@ -8,6 +8,11 @@ export * from './aIActionsOperatesOn';
 export * from './acceptEulaRequest';
 export * from './activateUserByThirdPartyActivationCodeRequest';
 export * from './activateUserOrVerifyEmailRequest';
+export * from './actorOAuthClient';
+export * from './actorProjectApiKey';
+export * from './actorProjectApiKeyAllOf';
+export * from './actorUser';
+export * from './actorUserAllOf';
 export * from './addApiKeyRequest';
 export * from './addApiKeyResponse';
 export * from './addApiKeyResponseAllOf';
@@ -236,6 +241,7 @@ export * from './cropSampleResponse';
 export * from './cropSampleResponseAllOf';
 export * from './crossValidationData';
 export * from './crossValidationDataScores';
+export * from './dBAction';
 export * from './dSPBlock';
 export * from './dSPConfig';
 export * from './dSPConfigRequest';
@@ -273,6 +279,12 @@ export * from './datasetSplitPreviewResponse';
 export * from './datasetSplitPreviewResponseAllOf';
 export * from './datasetSplitPreviewRow';
 export * from './datasetSplitPreviewSection';
+export * from './datasetVersion';
+export * from './datasetVersionChangeItem';
+export * from './datasetVersionPendingWindow';
+export * from './datasetVersionSummary';
+export * from './datasetVersionSummaryActionCounts';
+export * from './datasetVersionType';
 export * from './deletePortalFileRequest';
 export * from './deleteTestUserRequest';
 export * from './deleteTestUserResponse';
@@ -420,6 +432,13 @@ export * from './getDataExplorerFeaturesResponseAllOfSample';
 export * from './getDataExplorerSettingsResponse';
 export * from './getDataExplorerSettingsResponseAllOf';
 export * from './getDatasetRatioResponse';
+export * from './getDatasetVersionRawDataResponse';
+export * from './getDatasetVersionRawDataSampleResponse';
+export * from './getDatasetVersionRawDataSampleResponseAllOf';
+export * from './getDatasetVersionResponse';
+export * from './getDatasetVersionResponseAllOf';
+export * from './getDatasetVersionSampleChangeDetailsResponse';
+export * from './getDatasetVersionSampleChangeDetailsResponseAllOf';
 export * from './getDeploymentHistoryResponse';
 export * from './getDeploymentHistoryResponseAllOf';
 export * from './getDeploymentResponse';
@@ -639,6 +658,10 @@ export * from './kerasVisualLayer';
 export * from './kerasVisualLayerType';
 export * from './lastModificationDateResponse';
 export * from './lastModificationDateResponseAllOf';
+export * from './lastUpdatedByDatasetVersionRestore';
+export * from './lastUpdatedByOAuthClient';
+export * from './lastUpdatedByProjectApiKey';
+export * from './lastUpdatedByUser';
 export * from './latencyDevice';
 export * from './learnBlock';
 export * from './learnBlockType';
@@ -646,6 +669,10 @@ export * from './listAIActionsResponse';
 export * from './listAIActionsResponseAllOf';
 export * from './listApiKeysResponse';
 export * from './listApiKeysResponseAllOf';
+export * from './listDatasetVersionChangesResponse';
+export * from './listDatasetVersionChangesResponseAllOf';
+export * from './listDatasetVersionsResponse';
+export * from './listDatasetVersionsResponseAllOf';
 export * from './listDeploymentHistoryResponse';
 export * from './listDeploymentHistoryResponseAllOf';
 export * from './listDevicesResponse';
@@ -1071,6 +1098,7 @@ export * from './tunerTrialMetricsTest';
 export * from './tunerTrialProgress';
 export * from './tutorialType';
 export * from './updateAIActionRequest';
+export * from './updateDatasetVersionRequest';
 export * from './updateImpulseRequest';
 export * from './updateJobRequest';
 export * from './updateOrganizationAddCollaboratorRequest';
@@ -1195,6 +1223,11 @@ import { AIActionsOperatesOn } from './aIActionsOperatesOn';
 import { AcceptEulaRequest } from './acceptEulaRequest';
 import { ActivateUserByThirdPartyActivationCodeRequest } from './activateUserByThirdPartyActivationCodeRequest';
 import { ActivateUserOrVerifyEmailRequest } from './activateUserOrVerifyEmailRequest';
+import { ActorOAuthClient } from './actorOAuthClient';
+import { ActorProjectApiKey } from './actorProjectApiKey';
+import { ActorProjectApiKeyAllOf } from './actorProjectApiKeyAllOf';
+import { ActorUser } from './actorUser';
+import { ActorUserAllOf } from './actorUserAllOf';
 import { AddApiKeyRequest } from './addApiKeyRequest';
 import { AddApiKeyResponse } from './addApiKeyResponse';
 import { AddApiKeyResponseAllOf } from './addApiKeyResponseAllOf';
@@ -1423,6 +1456,7 @@ import { CropSampleResponse } from './cropSampleResponse';
 import { CropSampleResponseAllOf } from './cropSampleResponseAllOf';
 import { CrossValidationData } from './crossValidationData';
 import { CrossValidationDataScores } from './crossValidationDataScores';
+import { DBAction } from './dBAction';
 import { DSPBlock } from './dSPBlock';
 import { DSPConfig } from './dSPConfig';
 import { DSPConfigRequest } from './dSPConfigRequest';
@@ -1460,6 +1494,12 @@ import { DatasetSplitPreviewResponse } from './datasetSplitPreviewResponse';
 import { DatasetSplitPreviewResponseAllOf } from './datasetSplitPreviewResponseAllOf';
 import { DatasetSplitPreviewRow } from './datasetSplitPreviewRow';
 import { DatasetSplitPreviewSection } from './datasetSplitPreviewSection';
+import { DatasetVersion } from './datasetVersion';
+import { DatasetVersionChangeItem } from './datasetVersionChangeItem';
+import { DatasetVersionPendingWindow } from './datasetVersionPendingWindow';
+import { DatasetVersionSummary } from './datasetVersionSummary';
+import { DatasetVersionSummaryActionCounts } from './datasetVersionSummaryActionCounts';
+import { DatasetVersionType } from './datasetVersionType';
 import { DeletePortalFileRequest } from './deletePortalFileRequest';
 import { DeleteTestUserRequest } from './deleteTestUserRequest';
 import { DeleteTestUserResponse } from './deleteTestUserResponse';
@@ -1607,6 +1647,13 @@ import { GetDataExplorerFeaturesResponseAllOfSample } from './getDataExplorerFea
 import { GetDataExplorerSettingsResponse } from './getDataExplorerSettingsResponse';
 import { GetDataExplorerSettingsResponseAllOf } from './getDataExplorerSettingsResponseAllOf';
 import { GetDatasetRatioResponse } from './getDatasetRatioResponse';
+import { GetDatasetVersionRawDataResponse } from './getDatasetVersionRawDataResponse';
+import { GetDatasetVersionRawDataSampleResponse } from './getDatasetVersionRawDataSampleResponse';
+import { GetDatasetVersionRawDataSampleResponseAllOf } from './getDatasetVersionRawDataSampleResponseAllOf';
+import { GetDatasetVersionResponse } from './getDatasetVersionResponse';
+import { GetDatasetVersionResponseAllOf } from './getDatasetVersionResponseAllOf';
+import { GetDatasetVersionSampleChangeDetailsResponse } from './getDatasetVersionSampleChangeDetailsResponse';
+import { GetDatasetVersionSampleChangeDetailsResponseAllOf } from './getDatasetVersionSampleChangeDetailsResponseAllOf';
 import { GetDeploymentHistoryResponse } from './getDeploymentHistoryResponse';
 import { GetDeploymentHistoryResponseAllOf } from './getDeploymentHistoryResponseAllOf';
 import { GetDeploymentResponse } from './getDeploymentResponse';
@@ -1826,6 +1873,10 @@ import { KerasVisualLayer } from './kerasVisualLayer';
 import { KerasVisualLayerType } from './kerasVisualLayerType';
 import { LastModificationDateResponse } from './lastModificationDateResponse';
 import { LastModificationDateResponseAllOf } from './lastModificationDateResponseAllOf';
+import { LastUpdatedByDatasetVersionRestore } from './lastUpdatedByDatasetVersionRestore';
+import { LastUpdatedByOAuthClient } from './lastUpdatedByOAuthClient';
+import { LastUpdatedByProjectApiKey } from './lastUpdatedByProjectApiKey';
+import { LastUpdatedByUser } from './lastUpdatedByUser';
 import { LatencyDevice } from './latencyDevice';
 import { LearnBlock } from './learnBlock';
 import { LearnBlockType } from './learnBlockType';
@@ -1833,6 +1884,10 @@ import { ListAIActionsResponse } from './listAIActionsResponse';
 import { ListAIActionsResponseAllOf } from './listAIActionsResponseAllOf';
 import { ListApiKeysResponse } from './listApiKeysResponse';
 import { ListApiKeysResponseAllOf } from './listApiKeysResponseAllOf';
+import { ListDatasetVersionChangesResponse } from './listDatasetVersionChangesResponse';
+import { ListDatasetVersionChangesResponseAllOf } from './listDatasetVersionChangesResponseAllOf';
+import { ListDatasetVersionsResponse } from './listDatasetVersionsResponse';
+import { ListDatasetVersionsResponseAllOf } from './listDatasetVersionsResponseAllOf';
 import { ListDeploymentHistoryResponse } from './listDeploymentHistoryResponse';
 import { ListDeploymentHistoryResponseAllOf } from './listDeploymentHistoryResponseAllOf';
 import { ListDevicesResponse } from './listDevicesResponse';
@@ -2258,6 +2313,7 @@ import { TunerTrialMetricsTest } from './tunerTrialMetricsTest';
 import { TunerTrialProgress } from './tunerTrialProgress';
 import { TutorialType } from './tutorialType';
 import { UpdateAIActionRequest } from './updateAIActionRequest';
+import { UpdateDatasetVersionRequest } from './updateDatasetVersionRequest';
 import { UpdateImpulseRequest } from './updateImpulseRequest';
 import { UpdateJobRequest } from './updateJobRequest';
 import { UpdateOrganizationAddCollaboratorRequest } from './updateOrganizationAddCollaboratorRequest';
@@ -2376,6 +2432,12 @@ const primitives = [ "string", "boolean", "double", "integer", "long", "float", 
 const enumsMap: {[index: string]: any} = {
     "AIActionsDataCategory": "AIActionsDataCategory",
     "AIActionsOperatesOn": "AIActionsOperatesOn",
+    "ActorOAuthClientTypeEnum": "ActorOAuthClientTypeEnum",
+    "ActorProjectApiKeyRoleEnum": "ActorProjectApiKeyRoleEnum",
+    "ActorProjectApiKeyTypeEnum": "ActorProjectApiKeyTypeEnum",
+    "ActorProjectApiKeyAllOfTypeEnum": "ActorProjectApiKeyAllOfTypeEnum",
+    "ActorUserTypeEnum": "ActorUserTypeEnum",
+    "ActorUserAllOfTypeEnum": "ActorUserAllOfTypeEnum",
     "AddOrganizationApiKeyRequestRoleEnum": "AddOrganizationApiKeyRequestRoleEnum",
     "AddOrganizationApiKeyRequestAllOfRoleEnum": "AddOrganizationApiKeyRequestAllOfRoleEnum",
     "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum": "AddOrganizationDataCampaignDashboardRequestWhenToEmailEnum",
@@ -2402,6 +2464,7 @@ const enumsMap: {[index: string]: any} = {
     "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum": "CreateEnterpriseTrialUserRequestUserHasMLModelsInProductionEnum",
     "CreateUserThirdPartyResponseStatusEnum": "CreateUserThirdPartyResponseStatusEnum",
     "CreateUserThirdPartyResponseAllOfStatusEnum": "CreateUserThirdPartyResponseAllOfStatusEnum",
+    "DBAction": "DBAction",
     "DSPGroupItemSectionEnum": "DSPGroupItemSectionEnum",
     "DSPGroupItemShowIfOperatorEnum": "DSPGroupItemShowIfOperatorEnum",
     "DSPMetadataOutputConfigTypeEnum": "DSPMetadataOutputConfigTypeEnum",
@@ -2413,6 +2476,7 @@ const enumsMap: {[index: string]: any} = {
     "DataExplorerSettingsPresetEnum": "DataExplorerSettingsPresetEnum",
     "DataExplorerSettingsDimensionalityReductionTechniqueEnum": "DataExplorerSettingsDimensionalityReductionTechniqueEnum",
     "DatasetSplitPreviewRowSplitCategoryEnum": "DatasetSplitPreviewRowSplitCategoryEnum",
+    "DatasetVersionType": "DatasetVersionType",
     "DeployPretrainedModelInputAudioInputTypeEnum": "DeployPretrainedModelInputAudioInputTypeEnum",
     "DeployPretrainedModelInputImageInputTypeEnum": "DeployPretrainedModelInputImageInputTypeEnum",
     "DeployPretrainedModelInputOtherInputTypeEnum": "DeployPretrainedModelInputOtherInputTypeEnum",
@@ -2472,6 +2536,10 @@ const enumsMap: {[index: string]: any} = {
     "KerasModelVariantEnum": "KerasModelVariantEnum",
     "KerasResponseModeEnum": "KerasResponseModeEnum",
     "KerasVisualLayerType": "KerasVisualLayerType",
+    "LastUpdatedByDatasetVersionRestoreTypeEnum": "LastUpdatedByDatasetVersionRestoreTypeEnum",
+    "LastUpdatedByOAuthClientTypeEnum": "LastUpdatedByOAuthClientTypeEnum",
+    "LastUpdatedByProjectApiKeyTypeEnum": "LastUpdatedByProjectApiKeyTypeEnum",
+    "LastUpdatedByUserTypeEnum": "LastUpdatedByUserTypeEnum",
     "LearnBlockType": "LearnBlockType",
     "LogStdoutResponseAllOfStdoutLogLevelEnum": "LogStdoutResponseAllOfStdoutLogLevelEnum",
     "MigrationStateEnum": "MigrationStateEnum",
@@ -2583,6 +2651,11 @@ const typeMap: {[index: string]: any} = {
     "AcceptEulaRequest": AcceptEulaRequest,
     "ActivateUserByThirdPartyActivationCodeRequest": ActivateUserByThirdPartyActivationCodeRequest,
     "ActivateUserOrVerifyEmailRequest": ActivateUserOrVerifyEmailRequest,
+    "ActorOAuthClient": ActorOAuthClient,
+    "ActorProjectApiKey": ActorProjectApiKey,
+    "ActorProjectApiKeyAllOf": ActorProjectApiKeyAllOf,
+    "ActorUser": ActorUser,
+    "ActorUserAllOf": ActorUserAllOf,
     "AddApiKeyRequest": AddApiKeyRequest,
     "AddApiKeyResponse": AddApiKeyResponse,
     "AddApiKeyResponseAllOf": AddApiKeyResponseAllOf,
@@ -2842,6 +2915,11 @@ const typeMap: {[index: string]: any} = {
     "DatasetSplitPreviewResponseAllOf": DatasetSplitPreviewResponseAllOf,
     "DatasetSplitPreviewRow": DatasetSplitPreviewRow,
     "DatasetSplitPreviewSection": DatasetSplitPreviewSection,
+    "DatasetVersion": DatasetVersion,
+    "DatasetVersionChangeItem": DatasetVersionChangeItem,
+    "DatasetVersionPendingWindow": DatasetVersionPendingWindow,
+    "DatasetVersionSummary": DatasetVersionSummary,
+    "DatasetVersionSummaryActionCounts": DatasetVersionSummaryActionCounts,
     "DeletePortalFileRequest": DeletePortalFileRequest,
     "DeleteTestUserRequest": DeleteTestUserRequest,
     "DeleteTestUserResponse": DeleteTestUserResponse,
@@ -2983,6 +3061,13 @@ const typeMap: {[index: string]: any} = {
     "GetDataExplorerSettingsResponse": GetDataExplorerSettingsResponse,
     "GetDataExplorerSettingsResponseAllOf": GetDataExplorerSettingsResponseAllOf,
     "GetDatasetRatioResponse": GetDatasetRatioResponse,
+    "GetDatasetVersionRawDataResponse": GetDatasetVersionRawDataResponse,
+    "GetDatasetVersionRawDataSampleResponse": GetDatasetVersionRawDataSampleResponse,
+    "GetDatasetVersionRawDataSampleResponseAllOf": GetDatasetVersionRawDataSampleResponseAllOf,
+    "GetDatasetVersionResponse": GetDatasetVersionResponse,
+    "GetDatasetVersionResponseAllOf": GetDatasetVersionResponseAllOf,
+    "GetDatasetVersionSampleChangeDetailsResponse": GetDatasetVersionSampleChangeDetailsResponse,
+    "GetDatasetVersionSampleChangeDetailsResponseAllOf": GetDatasetVersionSampleChangeDetailsResponseAllOf,
     "GetDeploymentHistoryResponse": GetDeploymentHistoryResponse,
     "GetDeploymentHistoryResponseAllOf": GetDeploymentHistoryResponseAllOf,
     "GetDeploymentResponse": GetDeploymentResponse,
@@ -3192,12 +3277,20 @@ const typeMap: {[index: string]: any} = {
     "KerasVisualLayer": KerasVisualLayer,
     "LastModificationDateResponse": LastModificationDateResponse,
     "LastModificationDateResponseAllOf": LastModificationDateResponseAllOf,
+    "LastUpdatedByDatasetVersionRestore": LastUpdatedByDatasetVersionRestore,
+    "LastUpdatedByOAuthClient": LastUpdatedByOAuthClient,
+    "LastUpdatedByProjectApiKey": LastUpdatedByProjectApiKey,
+    "LastUpdatedByUser": LastUpdatedByUser,
     "LatencyDevice": LatencyDevice,
     "LearnBlock": LearnBlock,
     "ListAIActionsResponse": ListAIActionsResponse,
     "ListAIActionsResponseAllOf": ListAIActionsResponseAllOf,
     "ListApiKeysResponse": ListApiKeysResponse,
     "ListApiKeysResponseAllOf": ListApiKeysResponseAllOf,
+    "ListDatasetVersionChangesResponse": ListDatasetVersionChangesResponse,
+    "ListDatasetVersionChangesResponseAllOf": ListDatasetVersionChangesResponseAllOf,
+    "ListDatasetVersionsResponse": ListDatasetVersionsResponse,
+    "ListDatasetVersionsResponseAllOf": ListDatasetVersionsResponseAllOf,
     "ListDeploymentHistoryResponse": ListDeploymentHistoryResponse,
     "ListDeploymentHistoryResponseAllOf": ListDeploymentHistoryResponseAllOf,
     "ListDevicesResponse": ListDevicesResponse,
@@ -3602,6 +3695,7 @@ const typeMap: {[index: string]: any} = {
     "TunerTrialMetricsTest": TunerTrialMetricsTest,
     "TunerTrialProgress": TunerTrialProgress,
     "UpdateAIActionRequest": UpdateAIActionRequest,
+    "UpdateDatasetVersionRequest": UpdateDatasetVersionRequest,
     "UpdateImpulseRequest": UpdateImpulseRequest,
     "UpdateJobRequest": UpdateJobRequest,
     "UpdateOrganizationAddCollaboratorRequest": UpdateOrganizationAddCollaboratorRequest,

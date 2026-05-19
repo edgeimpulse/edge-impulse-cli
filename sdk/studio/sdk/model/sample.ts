@@ -11,6 +11,10 @@
  */
 
 import { BoundingBox } from './boundingBox';
+import { LastUpdatedByUser } from './lastUpdatedByUser';
+import { LastUpdatedByProjectApiKey } from './lastUpdatedByProjectApiKey';
+import { LastUpdatedByOAuthClient } from './lastUpdatedByOAuthClient';
+import { LastUpdatedByDatasetVersionRestore } from './lastUpdatedByDatasetVersionRestore';
 import { ProjectLabelingMethod } from './projectLabelingMethod';
 import { RawDataCategory } from './rawDataCategory';
 import { SampleDatastream } from './sampleDatastream';
@@ -139,6 +143,10 @@ export class Sample {
     */
     'videoUrlFull'?: string;
     'labelMap'?: SampleLabelMapLabels;
+    /**
+    * Information about the entity that last updated a sample. This can be a user, a project API key, an OAuth client, or a dataset version restore operation.
+    */
+    'lastUpdatedBy'?: LastUpdatedByUser | LastUpdatedByProjectApiKey | LastUpdatedByOAuthClient | LastUpdatedByDatasetVersionRestore;
     'datastreams': Array<SampleDatastream>;
 
     static discriminator: string | undefined = undefined;
@@ -363,6 +371,11 @@ export class Sample {
             "name": "labelMap",
             "baseName": "labelMap",
             "type": "SampleLabelMapLabels"
+        },
+        {
+            "name": "lastUpdatedBy",
+            "baseName": "lastUpdatedBy",
+            "type": "LastUpdatedByUser | LastUpdatedByProjectApiKey | LastUpdatedByOAuthClient | LastUpdatedByDatasetVersionRestore"
         },
         {
             "name": "datastreams",

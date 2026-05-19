@@ -1,8 +1,8 @@
 import { BoundingBoxesMap, ExportInputBoundingBox } from "../../bounding-box-file-types";
-import { JsonSchemaConstraint } from "./parse-label-json";
 import { cocoJsonSchema, pascalVocSchema, remoObjectDetectionSchema, remoSingleLabelSchema } from "./label-json-schema";
 import { LabelMapType } from "./label-files-shared";
 import { TypedCsv } from "./parse-label-csv";
+import { JsonSchemaConstraint } from "../../json-parsing";
 
 export type SupportedLabelType = 'single-label' | 'object-detection';
 

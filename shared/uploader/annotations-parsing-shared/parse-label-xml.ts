@@ -1,6 +1,7 @@
 import { SupportedLabelFormatInfo, SupportedLabelFormatNames, SupportedLabelFormatXml, supportedXmlLabelFormats } from "./label-file-types";
 import { LabelsParseOutput } from "./label-files-shared";
-import { checkJsonMatchesFormat, validateJsonSchema } from "./parse-label-json";
+import { checkJsonMatchesFormat } from "./parse-label-json";
+import { validateJsonSchema } from "../../json-parsing";
 
 type ParsedJSON = string | { [ key: string ]: ParsedJSON | ParsedJSON[] };
 

@@ -1,18 +1,19 @@
-import { JsonSchemaConstraint } from "./parse-label-json";
+import { JsonSchemaConstraint } from "../../json-parsing";
 
 export const eiBBoxJsonSchema: JsonSchemaConstraint = {
     type: 'object',
-    value: {
+    isMap: false,
+    required: {
         version: {
             type: 'number',
             valid: [ 1 ],
-            required: true
         },
         type: {
             type: 'string',
             valid: [ 'bounding-box-labels' ],
-            required: true
         },
+    },
+    optional: {
         boundingBoxes: {
             type: 'object',
             isMap: true,
@@ -20,26 +21,22 @@ export const eiBBoxJsonSchema: JsonSchemaConstraint = {
                 type: 'array',
                 values: {
                     type: 'object',
-                    value: {
+                    isMap: false,
+                    required: {
                         label: {
                             type: 'string',
-                            required: true
                         },
                         width: {
                             type: 'number',
-                            required: true
                         },
                         height: {
                             type: 'number',
-                            required: true
                         },
                         x: {
                             type: 'number',
-                            required: true
                         },
                         y: {
                             type: 'number',
-                            required: true
                         }
                     }
                 }
@@ -50,93 +47,41 @@ export const eiBBoxJsonSchema: JsonSchemaConstraint = {
 
 export const cocoJsonSchema: JsonSchemaConstraint = {
     type: 'object',
-    value: {
-        info: {
-            type: 'object',
-            value: {
-                description: { type: 'string' },
-                url: { type: 'string' },
-                version: { type: 'string' },
-                year: {
-                    type: 'either',
-                    possibleTypes: [
-                        { type: 'string' },
-                        { type: 'number' },
-                    ]
-                },
-                contributor: { type: 'string' },
-                date_created: { type: 'string' }
-            }
-        },
-        licences: {
-            type: 'array',
-            values: {
-                type: 'object',
-                value: {
-                    url: { type: 'string' },
-                    id: { type: 'string' },
-                    name: { type: 'string' }
-                }
-            }
-        },
-        licenses: {
-            type: 'array',
-            values: {
-                type: 'object',
-                value: {
-                    url: { type: 'string' },
-                    id: {
-                        type: 'either',
-                        possibleTypes: [
-                            { type: 'string' },
-                            { type: 'number' },
-                        ]
-                    },
-                    name: { type: 'string' }
-                }
-            }
-        },
-        type: {
-            type: 'string'
-        },
+    isMap: false,
+    required: {
         images: {
             type: 'array',
             values: {
                 type: 'object',
-                value: {
+                isMap: false,
+                required: {
                     file_name: {
                         type: 'string',
-                        required: true
                     },
                     id: {
                         type: 'number',
-                        required: true
                     },
                     height: {
                         type: 'number',
-                        required: true
                     },
                     width: {
                         type: 'number',
-                        required: true
                     }
                 },
                 allowAllKeys: true
             },
-            required: true
         },
         annotations: {
             type: 'array',
             values: {
                 type: 'object',
-                value: {
+                isMap: false,
+                required: {
                     image_id: {
                         type: 'number',
-                        required: true
                     },
                     bbox: {
                         type: 'either',
-                        required: true,
                         possibleTypes: [ // May or may not be nested
                             {
                                 type: 'array',
@@ -157,31 +102,80 @@ export const cocoJsonSchema: JsonSchemaConstraint = {
                     },
                     category_id: {
                         type: 'number',
-                        required: true
                     }
                 },
                 allowAllKeys: true
             },
-            required: true
         },
         categories: {
             type: 'array',
             values: {
                 type: 'object',
-                value: {
+                isMap: false,
+                required: {
                     name: {
                         type: 'string',
-                        required: true
                     },
                     id: {
                         type: 'number',
-                        required: true
                     },
                 },
                 allowAllKeys: true
             },
-            required: true
         }
+    },
+    optional: {
+        info: {
+            type: 'object',
+            isMap: false,
+            optional: {
+                description: { type: 'string' },
+                url: { type: 'string' },
+                version: { type: 'string' },
+                year: {
+                    type: 'either',
+                    possibleTypes: [
+                        { type: 'string' },
+                        { type: 'number' },
+                    ]
+                },
+                contributor: { type: 'string' },
+                date_created: { type: 'string' }
+            }
+        },
+        licences: {
+            type: 'array',
+            values: {
+                type: 'object',
+                isMap: false,
+                optional: {
+                    url: { type: 'string' },
+                    id: { type: 'string' },
+                    name: { type: 'string' }
+                }
+            }
+        },
+        licenses: {
+            type: 'array',
+            values: {
+                type: 'object',
+                isMap: false,
+                optional: {
+                    url: { type: 'string' },
+                    id: {
+                        type: 'either',
+                        possibleTypes: [
+                            { type: 'string' },
+                            { type: 'number' },
+                        ]
+                    },
+                    name: { type: 'string' }
+                }
+            }
+        },
+        type: {
+            type: 'string'
+        },
     }
 };
 
@@ -189,31 +183,29 @@ export const remoSingleLabelSchema: JsonSchemaConstraint = {
     type: 'array',
     values: {
         type: 'object',
-        value: {
+        isMap: false,
+        required: {
             file_name: {
                 type: 'string',
-                required: true
             },
             height: {
                 type: 'number',
-                required: true
             },
             width: {
                 type: 'number',
-                required: true
             },
             task: {
                 type: 'string',
                 valid: [ 'Image classification' ],
-                required: true
             },
             classes: {
                 type: 'array',
                 values: {
                     type: 'string'
                 },
-                required: true
-            },
+            }
+        },
+        optional: {
             tags: {
                 type: 'array',
                 values: {
@@ -228,50 +220,48 @@ export const remoObjectDetectionSchema: JsonSchemaConstraint = {
     type: 'array',
     values: {
         type: 'object',
-        value: {
+        isMap: false,
+        required: {
             file_name: {
                 type: 'string',
-                required: true
             },
             height: {
                 type: 'number',
-                required: true
             },
             width: {
                 type: 'number',
-                required: true
             },
             task: {
                 type: 'string',
                 valid: [ 'Object detection' ],
-                required: true
             },
             annotations: {
                 type: 'array',
-                required: true,
                 values: {
                     type: 'object',
-                    value: {
+                    isMap: false,
+                    required: {
                         classes: {
                             type: 'array',
                             values: {
                                 type: 'string'
                             },
-                            required: true
                         },
                         bbox: {
                             type: 'object',
-                            value: {
-                                xmin: { type: 'number', required: true },
-                                ymin: { type: 'number', required: true },
-                                xmax: { type: 'number', required: true },
-                                ymax: { type: 'number', required: true }
+                            isMap: false,
+                            required: {
+                                xmin: { type: 'number' },
+                                ymin: { type: 'number' },
+                                xmax: { type: 'number' },
+                                ymax: { type: 'number' }
                             },
-                            required: true
                         }
                     }
                 }
             },
+        },
+        optional: {
             tags: {
                 type: 'array',
                 values: {
@@ -284,52 +274,44 @@ export const remoObjectDetectionSchema: JsonSchemaConstraint = {
 
 export const pascalVocSchema: JsonSchemaConstraint = {
     type: 'object',
+    isMap: false,
     allowAllKeys: true,
-    value: {
+    required: {
         annotation: {
             type: 'object',
-            required: true,
+            isMap: false,
             allowAllKeys: true,
-            value: {
-                folder: {
-                    type: 'string',
-                },
+            required: {
                 filename: {
                     type: 'string',
-                    required: true,
                 },
                 object: {
                     type: 'either',
-                    required: true,
                     possibleTypes: [
                         // Single annotation
                         {
                             type: 'object',
+                            isMap: false,
                             allowAllKeys: true,
-                            value: {
+                            required: {
                                 name: {
                                     type: 'string',
-                                    required: true,
                                 },
                                 bndbox: {
                                     type: 'object',
-                                    required: true,
-                                    value: {
+                                    isMap: false,
+                                    required: {
                                         xmin: {
                                             type: 'string',
-                                            required: true,
                                         },
                                         ymin: {
                                             type: 'string',
-                                            required: true,
                                         },
                                         xmax: {
                                             type: 'string',
-                                            required: true,
                                         },
                                         ymax: {
                                             type: 'string',
-                                            required: true,
                                         }
                                     }
                                 }
@@ -340,31 +322,27 @@ export const pascalVocSchema: JsonSchemaConstraint = {
                             type: 'array',
                             values: {
                                 type: 'object',
+                                isMap: false,
                                 allowAllKeys: true,
-                                value: {
+                                required: {
                                     name: {
                                         type: 'string',
-                                        required: true,
                                     },
                                     bndbox: {
                                         type: 'object',
-                                        required: true,
-                                        value: {
+                                        isMap: false,
+                                        required: {
                                             xmin: {
                                                 type: 'string',
-                                                required: true,
                                             },
                                             ymin: {
                                                 type: 'string',
-                                                required: true,
                                             },
                                             xmax: {
                                                 type: 'string',
-                                                required: true,
                                             },
                                             ymax: {
                                                 type: 'string',
-                                                required: true,
                                             }
                                         }
                                     }
@@ -373,6 +351,11 @@ export const pascalVocSchema: JsonSchemaConstraint = {
                         },
                     ],
                 }
+            },
+            optional: {
+                folder: {
+                    type: 'string',
+                },
             }
         }
     }

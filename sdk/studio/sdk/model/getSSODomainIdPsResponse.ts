@@ -23,6 +23,10 @@ export class GetSSODomainIdPsResponse {
     */
     'error'?: string;
     'idps': Array<string>;
+    /**
+    * True when the user has no password set and none of their linked IDPs are currently valid. The client should display the password-setup flow instead of the password input. 
+    */
+    'needsPasswordSetup'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -41,6 +45,11 @@ export class GetSSODomainIdPsResponse {
             "name": "idps",
             "baseName": "idps",
             "type": "Array<string>"
+        },
+        {
+            "name": "needsPasswordSetup",
+            "baseName": "needsPasswordSetup",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

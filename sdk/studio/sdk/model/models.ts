@@ -18,6 +18,7 @@ export * from './addApiKeyResponse';
 export * from './addApiKeyResponseAllOf';
 export * from './addCollaboratorRequest';
 export * from './addHmacKeyRequest';
+export * from './addIngestionOnlyProjectApiKeyRequest';
 export * from './addKerasFilesRequest';
 export * from './addMemberRequest';
 export * from './addOrganizationApiKeyRequest';
@@ -1233,6 +1234,7 @@ import { AddApiKeyResponse } from './addApiKeyResponse';
 import { AddApiKeyResponseAllOf } from './addApiKeyResponseAllOf';
 import { AddCollaboratorRequest } from './addCollaboratorRequest';
 import { AddHmacKeyRequest } from './addHmacKeyRequest';
+import { AddIngestionOnlyProjectApiKeyRequest } from './addIngestionOnlyProjectApiKeyRequest';
 import { AddKerasFilesRequest } from './addKerasFilesRequest';
 import { AddMemberRequest } from './addMemberRequest';
 import { AddOrganizationApiKeyRequest } from './addOrganizationApiKeyRequest';
@@ -2661,6 +2663,7 @@ const typeMap: {[index: string]: any} = {
     "AddApiKeyResponseAllOf": AddApiKeyResponseAllOf,
     "AddCollaboratorRequest": AddCollaboratorRequest,
     "AddHmacKeyRequest": AddHmacKeyRequest,
+    "AddIngestionOnlyProjectApiKeyRequest": AddIngestionOnlyProjectApiKeyRequest,
     "AddKerasFilesRequest": AddKerasFilesRequest,
     "AddMemberRequest": AddMemberRequest,
     "AddOrganizationApiKeyRequest": AddOrganizationApiKeyRequest,

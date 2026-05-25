@@ -26,6 +26,10 @@ export class ProjectApiKey {
     * If the key has a ttl set, when the key will expire
     */
     'expires'?: Date;
+    /**
+    * OAuth client_id that created this API key through an OAuth-scoped key endpoint.
+    */
+    'createdViaOAuthClientId'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -74,6 +78,11 @@ export class ProjectApiKey {
             "name": "expires",
             "baseName": "expires",
             "type": "Date"
+        },
+        {
+            "name": "createdViaOAuthClientId",
+            "baseName": "createdViaOAuthClientId",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -11,29 +11,23 @@
  */
 
 
-export class GetSSODomainIdPsResponseAllOf {
-    'idps': Array<string>;
+export class AddIngestionOnlyProjectApiKeyRequest {
     /**
-    * True when the user has no password set and none of their linked IDPs are currently valid. The client should display the password-setup flow instead of the password input. 
+    * Description of the key
     */
-    'needsPasswordSetup'?: boolean;
+    'name': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "idps",
-            "baseName": "idps",
-            "type": "Array<string>"
-        },
-        {
-            "name": "needsPasswordSetup",
-            "baseName": "needsPasswordSetup",
-            "type": "boolean"
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return GetSSODomainIdPsResponseAllOf.attributeTypeMap;
+        return AddIngestionOnlyProjectApiKeyRequest.attributeTypeMap;
     }
 }
 

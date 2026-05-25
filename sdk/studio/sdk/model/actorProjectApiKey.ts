@@ -28,6 +28,10 @@ export class ActorProjectApiKey {
     * If the key has a ttl set, when the key will expire
     */
     'expires'?: Date;
+    /**
+    * OAuth client_id that created this API key through an OAuth-scoped key endpoint.
+    */
+    'createdViaOAuthClientId'?: string;
     'type': ActorProjectApiKeyTypeEnum;
 
     static discriminator: string | undefined = undefined;
@@ -77,6 +81,11 @@ export class ActorProjectApiKey {
             "name": "expires",
             "baseName": "expires",
             "type": "Date"
+        },
+        {
+            "name": "createdViaOAuthClientId",
+            "baseName": "createdViaOAuthClientId",
+            "type": "string"
         },
         {
             "name": "type",

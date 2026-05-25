@@ -31,6 +31,7 @@ else {
 import { AddApiKeyResponse } from '../model/addApiKeyResponse';
 import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
 import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
+import { AddIngestionOnlyProjectApiKeyRequest } from '../model/addIngestionOnlyProjectApiKeyRequest';
 import { AddProjectApiKeyRequest } from '../model/addProjectApiKeyRequest';
 import { ConvertParquetToCsvResponse } from '../model/convertParquetToCsvResponse';
 import { CreateProjectRequest } from '../model/createProjectRequest';
@@ -335,7 +336,7 @@ export class ProjectsApi {
     }
 
     /**
-     * Add an API key. If you set `developmentKey` to `true` this flag will be removed from the current development API key.
+     * Add an API key. If you set `developmentKey` to `true` this flag will be removed from the current development API key. For OAuth-based third-party integrations, prefer `/api/{projectId}/apikeys/ingestiononly`.
      * @summary Add API key
      * @param projectId Project ID
      * @param addProjectApiKeyRequest 
@@ -531,6 +532,106 @@ export class ProjectsApi {
         return this.handleResponse(
             response,
             'EntityCreatedResponse'
+        );
+    }
+
+    /**
+     * Add an ingestion-only API key.
+     * @summary Add ingestion-only API key
+     * @param projectId Project ID
+     * @param addIngestionOnlyProjectApiKeyRequest 
+     */
+    public async addProjectIngestionOnlyApiKey (projectId: number, addIngestionOnlyProjectApiKeyRequest: AddIngestionOnlyProjectApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddApiKeyResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/apikeys/ingestiononly'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling addProjectIngestionOnlyApiKey.');
+        }
+
+        // verify required parameter 'addIngestionOnlyProjectApiKeyRequest' is not null or undefined
+
+
+        if (addIngestionOnlyProjectApiKeyRequest === null || addIngestionOnlyProjectApiKeyRequest === undefined) {
+            throw new Error('Required parameter addIngestionOnlyProjectApiKeyRequest was null or undefined when calling addProjectIngestionOnlyApiKey.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(ObjectSerializer.serialize(addIngestionOnlyProjectApiKeyRequest, "AddIngestionOnlyProjectApiKeyRequest"));
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'AddApiKeyResponse'
         );
     }
 
@@ -843,7 +944,7 @@ export class ProjectsApi {
     }
 
     /**
-     * Create a new project. This API can only be called using a JWT token.
+     * Create a new project. By default this endpoint creates and returns a project API key. When authenticated via OAuth, API key creation and API key return in the response are disabled.
      * @summary Create new project
      * @param createProjectRequest 
      */
@@ -4459,6 +4560,105 @@ export class ProjectsApi {
 
         if (hmacId === null || hmacId === undefined) {
             throw new Error('Required parameter hmacId was null or undefined when calling revokeProjectHmacKey.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'DELETE',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Revoke an ingestion-only API key. If the ID belongs to a key with a different role, this endpoint returns an error payload (`success: false`).
+     * @summary Revoke ingestion-only API key
+     * @param projectId Project ID
+     * @param apiKeyId API key ID
+     */
+    public async revokeProjectIngestionOnlyApiKey (projectId: number, apiKeyId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/apikeys/ingestiononly/{apiKeyId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'apiKeyId' + '}', encodeURIComponent(String(apiKeyId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling revokeProjectIngestionOnlyApiKey.');
+        }
+
+        // verify required parameter 'apiKeyId' is not null or undefined
+
+
+        if (apiKeyId === null || apiKeyId === undefined) {
+            throw new Error('Required parameter apiKeyId was null or undefined when calling revokeProjectIngestionOnlyApiKey.');
         }
 
         localVarHeaderParams = {

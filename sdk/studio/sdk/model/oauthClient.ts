@@ -42,7 +42,7 @@ export class OauthClient {
     */
     'allowedGrantTypes'?: Array<OauthGrantType>;
     /**
-    * List of OAuth scopes that the client is allowed to request. Scopes define the level of access the client has to user resources. For example, \'projects:read\', \'projects:write\', etc. 
+    * List of OAuth scopes that the client is allowed to request. Scopes define the level of access the client has to user resources. For example, \'projects:read\', \'projects:update\', etc. 
     */
     'scopes'?: Array<OAuthScope>;
     /**

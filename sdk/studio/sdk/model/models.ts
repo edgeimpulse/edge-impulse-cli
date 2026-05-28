@@ -561,6 +561,8 @@ export * from './getRawDataMetadataCooccurrenceResponse';
 export * from './getRawDataMetadataCooccurrenceResponseAllOf';
 export * from './getRawDataMetadataDistributionResponse';
 export * from './getRawDataMetadataDistributionResponseAllOf';
+export * from './getRawDataProjectMetadataResponse';
+export * from './getRawDataProjectMetadataResponseAllOf';
 export * from './getSSODomainIdPsResponse';
 export * from './getSSODomainIdPsResponseAllOf';
 export * from './getSampleDspResponse';
@@ -924,6 +926,22 @@ export * from './projectDataIntervalResponseAllOf';
 export * from './projectDataIntervalResponseAllOfByDatastream';
 export * from './projectDataIntervalResponseAllOfSensors';
 export * from './projectDataSummary';
+export * from './projectDatasetMetadataBase';
+export * from './projectDatasetMetadataCategoryData';
+export * from './projectDatasetMetadataClasses';
+export * from './projectDatasetMetadataClassesAllOf';
+export * from './projectDatasetMetadataClassesCategory';
+export * from './projectDatasetMetadataClassesCategoryAllOf';
+export * from './projectDatasetMetadataCommon';
+export * from './projectDatasetMetadataRatioClass';
+export * from './projectDatasetMetadataRatioClasses';
+export * from './projectDatasetMetadataRatioCount';
+export * from './projectDatasetMetadataRatioNoRatio';
+export * from './projectDatasetMetadataRatioRegression';
+export * from './projectDatasetMetadataRegression';
+export * from './projectDatasetMetadataRegressionAllOf';
+export * from './projectDatasetMetadataRegressionCategory';
+export * from './projectDatasetMetadataRegressionCategoryAllOf';
 export * from './projectDeploymentTarget';
 export * from './projectDeploymentTargetAllOf';
 export * from './projectDeploymentTargetsResponse';
@@ -963,6 +981,9 @@ export * from './publicProjectLicense';
 export * from './publicProjectTierAvailability';
 export * from './rawDataCategory';
 export * from './rawDataFilterCategory';
+export * from './rawDataLabelDistributionLabel';
+export * from './rawDataLabelDistributionRegressionValueGroup';
+export * from './rawDataLabelDistributionRegressionValueGroupsPerKey';
 export * from './rawSampleData';
 export * from './rawSampleDataStreamPayloads';
 export * from './rawSampleDataStreamPayloadsDatastreamPayloads';
@@ -1777,6 +1798,8 @@ import { GetRawDataMetadataCooccurrenceResponse } from './getRawDataMetadataCooc
 import { GetRawDataMetadataCooccurrenceResponseAllOf } from './getRawDataMetadataCooccurrenceResponseAllOf';
 import { GetRawDataMetadataDistributionResponse } from './getRawDataMetadataDistributionResponse';
 import { GetRawDataMetadataDistributionResponseAllOf } from './getRawDataMetadataDistributionResponseAllOf';
+import { GetRawDataProjectMetadataResponse } from './getRawDataProjectMetadataResponse';
+import { GetRawDataProjectMetadataResponseAllOf } from './getRawDataProjectMetadataResponseAllOf';
 import { GetSSODomainIdPsResponse } from './getSSODomainIdPsResponse';
 import { GetSSODomainIdPsResponseAllOf } from './getSSODomainIdPsResponseAllOf';
 import { GetSampleDspResponse } from './getSampleDspResponse';
@@ -2140,6 +2163,22 @@ import { ProjectDataIntervalResponseAllOf } from './projectDataIntervalResponseA
 import { ProjectDataIntervalResponseAllOfByDatastream } from './projectDataIntervalResponseAllOfByDatastream';
 import { ProjectDataIntervalResponseAllOfSensors } from './projectDataIntervalResponseAllOfSensors';
 import { ProjectDataSummary } from './projectDataSummary';
+import { ProjectDatasetMetadataBase } from './projectDatasetMetadataBase';
+import { ProjectDatasetMetadataCategoryData } from './projectDatasetMetadataCategoryData';
+import { ProjectDatasetMetadataClasses } from './projectDatasetMetadataClasses';
+import { ProjectDatasetMetadataClassesAllOf } from './projectDatasetMetadataClassesAllOf';
+import { ProjectDatasetMetadataClassesCategory } from './projectDatasetMetadataClassesCategory';
+import { ProjectDatasetMetadataClassesCategoryAllOf } from './projectDatasetMetadataClassesCategoryAllOf';
+import { ProjectDatasetMetadataCommon } from './projectDatasetMetadataCommon';
+import { ProjectDatasetMetadataRatioClass } from './projectDatasetMetadataRatioClass';
+import { ProjectDatasetMetadataRatioClasses } from './projectDatasetMetadataRatioClasses';
+import { ProjectDatasetMetadataRatioCount } from './projectDatasetMetadataRatioCount';
+import { ProjectDatasetMetadataRatioNoRatio } from './projectDatasetMetadataRatioNoRatio';
+import { ProjectDatasetMetadataRatioRegression } from './projectDatasetMetadataRatioRegression';
+import { ProjectDatasetMetadataRegression } from './projectDatasetMetadataRegression';
+import { ProjectDatasetMetadataRegressionAllOf } from './projectDatasetMetadataRegressionAllOf';
+import { ProjectDatasetMetadataRegressionCategory } from './projectDatasetMetadataRegressionCategory';
+import { ProjectDatasetMetadataRegressionCategoryAllOf } from './projectDatasetMetadataRegressionCategoryAllOf';
 import { ProjectDeploymentTarget } from './projectDeploymentTarget';
 import { ProjectDeploymentTargetAllOf } from './projectDeploymentTargetAllOf';
 import { ProjectDeploymentTargetsResponse } from './projectDeploymentTargetsResponse';
@@ -2179,6 +2218,9 @@ import { PublicProjectLicense } from './publicProjectLicense';
 import { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 import { RawDataCategory } from './rawDataCategory';
 import { RawDataFilterCategory } from './rawDataFilterCategory';
+import { RawDataLabelDistributionLabel } from './rawDataLabelDistributionLabel';
+import { RawDataLabelDistributionRegressionValueGroup } from './rawDataLabelDistributionRegressionValueGroup';
+import { RawDataLabelDistributionRegressionValueGroupsPerKey } from './rawDataLabelDistributionRegressionValueGroupsPerKey';
 import { RawSampleData } from './rawSampleData';
 import { RawSampleDataStreamPayloads } from './rawSampleDataStreamPayloads';
 import { RawSampleDataStreamPayloadsDatastreamPayloads } from './rawSampleDataStreamPayloadsDatastreamPayloads';
@@ -2595,6 +2637,18 @@ const enumsMap: {[index: string]: any} = {
     "ProjectCategoryEnum": "ProjectCategoryEnum",
     "ProjectApiKeyRoleEnum": "ProjectApiKeyRoleEnum",
     "ProjectDataIntervalResponseAllOfByDatastreamTypeEnum": "ProjectDataIntervalResponseAllOfByDatastreamTypeEnum",
+    "ProjectDatasetMetadataBaseTypeEnum": "ProjectDatasetMetadataBaseTypeEnum",
+    "ProjectDatasetMetadataClassesTypeEnum": "ProjectDatasetMetadataClassesTypeEnum",
+    "ProjectDatasetMetadataClassesAllOfTypeEnum": "ProjectDatasetMetadataClassesAllOfTypeEnum",
+    "ProjectDatasetMetadataClassesCategoryTypeEnum": "ProjectDatasetMetadataClassesCategoryTypeEnum",
+    "ProjectDatasetMetadataClassesCategoryAllOfTypeEnum": "ProjectDatasetMetadataClassesCategoryAllOfTypeEnum",
+    "ProjectDatasetMetadataRatioClassesTypeEnum": "ProjectDatasetMetadataRatioClassesTypeEnum",
+    "ProjectDatasetMetadataRatioNoRatioTypeEnum": "ProjectDatasetMetadataRatioNoRatioTypeEnum",
+    "ProjectDatasetMetadataRatioRegressionTypeEnum": "ProjectDatasetMetadataRatioRegressionTypeEnum",
+    "ProjectDatasetMetadataRegressionTypeEnum": "ProjectDatasetMetadataRegressionTypeEnum",
+    "ProjectDatasetMetadataRegressionAllOfTypeEnum": "ProjectDatasetMetadataRegressionAllOfTypeEnum",
+    "ProjectDatasetMetadataRegressionCategoryTypeEnum": "ProjectDatasetMetadataRegressionCategoryTypeEnum",
+    "ProjectDatasetMetadataRegressionCategoryAllOfTypeEnum": "ProjectDatasetMetadataRegressionCategoryAllOfTypeEnum",
     "ProjectDeploymentTargetUiSectionEnum": "ProjectDeploymentTargetUiSectionEnum",
     "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum": "ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum",
     "ProjectInfoResponseAllOfDeploySettingsSensorEnum": "ProjectInfoResponseAllOfDeploySettingsSensorEnum",
@@ -3192,6 +3246,8 @@ const typeMap: {[index: string]: any} = {
     "GetRawDataMetadataCooccurrenceResponseAllOf": GetRawDataMetadataCooccurrenceResponseAllOf,
     "GetRawDataMetadataDistributionResponse": GetRawDataMetadataDistributionResponse,
     "GetRawDataMetadataDistributionResponseAllOf": GetRawDataMetadataDistributionResponseAllOf,
+    "GetRawDataProjectMetadataResponse": GetRawDataProjectMetadataResponse,
+    "GetRawDataProjectMetadataResponseAllOf": GetRawDataProjectMetadataResponseAllOf,
     "GetSSODomainIdPsResponse": GetSSODomainIdPsResponse,
     "GetSSODomainIdPsResponseAllOf": GetSSODomainIdPsResponseAllOf,
     "GetSampleDspResponse": GetSampleDspResponse,
@@ -3535,6 +3591,22 @@ const typeMap: {[index: string]: any} = {
     "ProjectDataIntervalResponseAllOfByDatastream": ProjectDataIntervalResponseAllOfByDatastream,
     "ProjectDataIntervalResponseAllOfSensors": ProjectDataIntervalResponseAllOfSensors,
     "ProjectDataSummary": ProjectDataSummary,
+    "ProjectDatasetMetadataBase": ProjectDatasetMetadataBase,
+    "ProjectDatasetMetadataCategoryData": ProjectDatasetMetadataCategoryData,
+    "ProjectDatasetMetadataClasses": ProjectDatasetMetadataClasses,
+    "ProjectDatasetMetadataClassesAllOf": ProjectDatasetMetadataClassesAllOf,
+    "ProjectDatasetMetadataClassesCategory": ProjectDatasetMetadataClassesCategory,
+    "ProjectDatasetMetadataClassesCategoryAllOf": ProjectDatasetMetadataClassesCategoryAllOf,
+    "ProjectDatasetMetadataCommon": ProjectDatasetMetadataCommon,
+    "ProjectDatasetMetadataRatioClass": ProjectDatasetMetadataRatioClass,
+    "ProjectDatasetMetadataRatioClasses": ProjectDatasetMetadataRatioClasses,
+    "ProjectDatasetMetadataRatioCount": ProjectDatasetMetadataRatioCount,
+    "ProjectDatasetMetadataRatioNoRatio": ProjectDatasetMetadataRatioNoRatio,
+    "ProjectDatasetMetadataRatioRegression": ProjectDatasetMetadataRatioRegression,
+    "ProjectDatasetMetadataRegression": ProjectDatasetMetadataRegression,
+    "ProjectDatasetMetadataRegressionAllOf": ProjectDatasetMetadataRegressionAllOf,
+    "ProjectDatasetMetadataRegressionCategory": ProjectDatasetMetadataRegressionCategory,
+    "ProjectDatasetMetadataRegressionCategoryAllOf": ProjectDatasetMetadataRegressionCategoryAllOf,
     "ProjectDeploymentTarget": ProjectDeploymentTarget,
     "ProjectDeploymentTargetAllOf": ProjectDeploymentTargetAllOf,
     "ProjectDeploymentTargetsResponse": ProjectDeploymentTargetsResponse,
@@ -3566,6 +3638,9 @@ const typeMap: {[index: string]: any} = {
     "ProjectTrainingDataSummaryResponseAllOfDataSummary": ProjectTrainingDataSummaryResponseAllOfDataSummary,
     "ProjectVersionRequest": ProjectVersionRequest,
     "PublicOrganizationTransformationBlock": PublicOrganizationTransformationBlock,
+    "RawDataLabelDistributionLabel": RawDataLabelDistributionLabel,
+    "RawDataLabelDistributionRegressionValueGroup": RawDataLabelDistributionRegressionValueGroup,
+    "RawDataLabelDistributionRegressionValueGroupsPerKey": RawDataLabelDistributionRegressionValueGroupsPerKey,
     "RawSampleData": RawSampleData,
     "RawSampleDataStreamPayloads": RawSampleDataStreamPayloads,
     "RawSampleDataStreamPayloadsDatastreamPayloads": RawSampleDataStreamPayloadsDatastreamPayloads,

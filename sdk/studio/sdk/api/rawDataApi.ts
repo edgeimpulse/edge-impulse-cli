@@ -54,6 +54,7 @@ import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
 import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
 import { GetRawDataMetadataCooccurrenceResponse } from '../model/getRawDataMetadataCooccurrenceResponse';
 import { GetRawDataMetadataDistributionResponse } from '../model/getRawDataMetadataDistributionResponse';
+import { GetRawDataProjectMetadataResponse } from '../model/getRawDataProjectMetadataResponse';
 import { GetSampleDspResponse } from '../model/getSampleDspResponse';
 import { GetSampleMetadataFilterOptionsResponse } from '../model/getSampleMetadataFilterOptionsResponse';
 import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
@@ -391,6 +392,10 @@ type getRawDataMetadataDistributionQueryParams = {
     binCount?: number,
     groupByLabel?: boolean,
     excludeDisabledSamples?: boolean,
+};
+
+type getRawDataProjectMetadataQueryParams = {
+    includeDisabled?: 'both' | 'enabled',
 };
 
 type getSampleQueryParams = {
@@ -5091,6 +5096,101 @@ export class RawDataApi {
         return this.handleResponse(
             response,
             'GetRawDataMetadataDistributionResponse'
+        );
+    }
+
+    /**
+     * Get the raw data metadata for this project
+     * @summary Get project dataset metadata
+     * @param projectId Project ID
+     * @param includeDisabled Whether to include enabled-only samples, or both enabled and disabled samples (defaults to both).
+     */
+    public async getRawDataProjectMetadata (projectId: number, queryParams?: getRawDataProjectMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataProjectMetadataResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/raw-data/project-metadata'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let localVarQueryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: Record<string, string> | FormData | UndiciFormData | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getRawDataProjectMetadata.');
+        }
+
+        if (queryParams?.includeDisabled !== undefined) {
+            localVarQueryParameters['includeDisabled'] = ObjectSerializer.serialize(queryParams.includeDisabled, "'both' | 'enabled'");
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(localVarQueryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        if (localVarFormParams) {
+            delete requestOptions.headers['Content-Type'];
+            if (localVarFormParams instanceof FormData) {
+                // FormData: fetch will handle Content-Type automatically.
+                requestOptions.body = localVarFormParams;
+            }
+            else if (Object.keys(localVarFormParams).length > 0) {
+                // URL-encoded form
+                requestOptions.body = new URLSearchParams(localVarFormParams as Record<string, string>).toString();
+                requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+        }
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetRawDataProjectMetadataResponse'
         );
     }
 

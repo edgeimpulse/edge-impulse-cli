@@ -12,11 +12,11 @@ export type LastUpdatedByDatasetVersionRestore = {
     /**
     * The ID of the dataset version that last updated the sample.
     */
-    datasetVersionId?: number;
+    datasetVersionId: number;
     /**
     * A random grouping ID to keep restore snapshots isolated.
     */
-    groupKey?: string;
+    groupKey: string;
     /**
     * The actor that started the dataset restore operation.
     */

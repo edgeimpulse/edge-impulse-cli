@@ -382,6 +382,7 @@ type getRawDataMetadataDistributionQueryParams = {
 };
 
 type getRawDataProjectMetadataQueryParams = {
+    datasetVersionId?: number,
     includeDisabled?: 'both' | 'enabled',
 };
 
@@ -4477,6 +4478,7 @@ export class RawDataApi {
      * Get the raw data metadata for this project
      * @summary Get project dataset metadata
      * @param projectId Project ID
+     * @param datasetVersionId Dataset version ID. If not set, the current dataset version is used
      * @param includeDisabled Whether to include enabled-only samples, or both enabled and disabled samples (defaults to both).
      */
     public async getRawDataProjectMetadata (projectId: number, queryParams?: getRawDataProjectMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataProjectMetadataResponse> {
@@ -4504,6 +4506,9 @@ export class RawDataApi {
             throw new Error('Required parameter projectId was null or undefined when calling getRawDataProjectMetadata.');
         }
 
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
+        }
         if (typeof queryParams?.includeDisabled !== 'undefined' && queryParams?.includeDisabled !== null) {
             queryParameters['includeDisabled'] = <string><any>queryParams.includeDisabled;
         }

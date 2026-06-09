@@ -27,11 +27,8 @@ else {
 
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { StartJobResponse } from '../model/startJobResponse';
-import { GetDatasetVersionRawDataResponse } from '../model/getDatasetVersionRawDataResponse';
-import { GetDatasetVersionRawDataSampleResponse } from '../model/getDatasetVersionRawDataSampleResponse';
+import { GetDatasetVersionRawDataChangesResponse } from '../model/getDatasetVersionRawDataChangesResponse';
 import { GetDatasetVersionResponse } from '../model/getDatasetVersionResponse';
-import { GetDatasetVersionSampleChangeDetailsResponse } from '../model/getDatasetVersionSampleChangeDetailsResponse';
-import { ListDatasetVersionChangesResponse } from '../model/listDatasetVersionChangesResponse';
 import { ListDatasetVersionsResponse } from '../model/listDatasetVersionsResponse';
 import { RawDataFilterCategory } from '../model/rawDataFilterCategory';
 import { UpdateDatasetVersionRequest } from '../model/updateDatasetVersionRequest';
@@ -55,7 +52,7 @@ export enum DatasetVersionsApiApiKeys {
     JWTHttpHeaderAuthentication,
 }
 
-type getDatasetVersionRawDataQueryParams = {
+type getDatasetVersionRawDataChangesQueryParams = {
     category: RawDataFilterCategory,
     limit?: number,
     offset?: number,
@@ -79,16 +76,14 @@ type getDatasetVersionRawDataQueryParams = {
     metadata?: string,
     minDate?: Date,
     maxDate?: Date,
-};
-
-type listDatasetVersionChangesQueryParams = {
-    limit?: number,
-    offset?: number,
+    changeActions?: string,
 };
 
 type listDatasetVersionsQueryParams = {
     limit?: number,
     offset?: number,
+    search?: string,
+    type?: string,
 };
 
 
@@ -262,8 +257,8 @@ export class DatasetVersionsApi {
     }
 
     /**
-     * Get the full snapshot raw data contents of a specific dataset for this project.
-     * @summary Get dataset version raw-data contents
+     * Get raw data samples from a specific dataset snapshot for this project, including per-sample change metadata when available.
+     * @summary Get dataset version raw-data samples with changes
      * @param projectId Project ID
      * @param datasetVersionId Dataset version ID
      * @param category Which of the three acquisition categories to retrieve data from
@@ -289,9 +284,10 @@ export class DatasetVersionsApi {
      * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
+     * @param changeActions Only include changes with an action within the given list of actions, given as a JSON string
      */
-    public async getDatasetVersionRawData (projectId: number, datasetVersionId: number, queryParams: getDatasetVersionRawDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionRawDataResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/raw-data'
+    public async getDatasetVersionRawDataChanges (projectId: number, datasetVersionId: number, queryParams: getDatasetVersionRawDataChangesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionRawDataChangesResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/raw-data-changes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
         let queryParameters: Record<string, string> = {};
@@ -313,20 +309,20 @@ export class DatasetVersionsApi {
 
 
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getDatasetVersionRawData.');
+            throw new Error('Required parameter projectId was null or undefined when calling getDatasetVersionRawDataChanges.');
         }
 
         // verify required parameter 'datasetVersionId' is not null or undefined
 
 
         if (datasetVersionId === null || datasetVersionId === undefined) {
-            throw new Error('Required parameter datasetVersionId was null or undefined when calling getDatasetVersionRawData.');
+            throw new Error('Required parameter datasetVersionId was null or undefined when calling getDatasetVersionRawDataChanges.');
         }
 
         // verify required parameter 'category' is not null or undefined
 
         if (queryParams.category === null || queryParams.category === undefined) {
-            throw new Error('Required parameter queryParams.category was null or undefined when calling getDatasetVersionRawData.');
+            throw new Error('Required parameter queryParams.category was null or undefined when calling getDatasetVersionRawDataChanges.');
         }
 
 
@@ -399,295 +395,8 @@ export class DatasetVersionsApi {
         if (typeof queryParams?.maxDate !== 'undefined' && queryParams?.maxDate !== null) {
             queryParameters['maxDate'] = queryParams.maxDate.toISOString();
         }
-        localVarHeaderParams = {
-            ...localVarHeaderParams,
-            ...options.headers,
-            ...this.opts.extraHeaders,
-        };
-
-        const queryString = Object.entries(queryParameters)
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
-            .join('&');
-
-        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
-        let localVarRequestOptions: RequestOptionsType = {
-            method: 'GET',
-            headers: { ...localVarHeaderParams },
-        };
-
-
-        let requestOptions = localVarRequestOptions;
-        let url = localVarUrl;
-        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_ApiKeyAuthentication.requestOptions;
-        url = auth_ApiKeyAuthentication.url;
-
-        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTAuthentication.requestOptions;
-        url = auth_JWTAuthentication.url;
-
-        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
-        url = auth_JWTHttpHeaderAuthentication.url;
-
-        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
-        requestOptions = auth_OAuth2.requestOptions;
-        url = auth_OAuth2.url;
-
-        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
-        requestOptions = authDefault.requestOptions;
-        url = authDefault.url;
-
-        applyFormParams(requestOptions, localVarFormParams);
-
-        const response = await fetch(url, requestOptions);
-        return this.handleResponse(
-            response,
-            'GetDatasetVersionRawDataResponse'
-        );
-    }
-
-    /**
-     * Get a raw sample from a specific dataset version.
-     * @summary Get dataset version raw sample
-     * @param projectId Project ID
-     * @param datasetVersionId Dataset version ID
-     * @param sampleId Sample ID
-     */
-    public async getDatasetVersionRawSample (projectId: number, datasetVersionId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionRawDataSampleResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/raw-data/{sampleId}'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)))
-            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
-        let queryParameters: Record<string, string> = {};
-        let localVarHeaderParams: Record<string, string> = {
-            'User-Agent': 'edgeimpulse-api nodejs',
-            'Content-Type': 'application/json',
-            ...this.defaultHeaders,
-        };
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: LocalFormParams | undefined;
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getDatasetVersionRawSample.');
-        }
-
-        // verify required parameter 'datasetVersionId' is not null or undefined
-
-
-        if (datasetVersionId === null || datasetVersionId === undefined) {
-            throw new Error('Required parameter datasetVersionId was null or undefined when calling getDatasetVersionRawSample.');
-        }
-
-        // verify required parameter 'sampleId' is not null or undefined
-
-
-        if (sampleId === null || sampleId === undefined) {
-            throw new Error('Required parameter sampleId was null or undefined when calling getDatasetVersionRawSample.');
-        }
-
-        localVarHeaderParams = {
-            ...localVarHeaderParams,
-            ...options.headers,
-            ...this.opts.extraHeaders,
-        };
-
-        const queryString = Object.entries(queryParameters)
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
-            .join('&');
-
-        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
-        let localVarRequestOptions: RequestOptionsType = {
-            method: 'GET',
-            headers: { ...localVarHeaderParams },
-        };
-
-
-        let requestOptions = localVarRequestOptions;
-        let url = localVarUrl;
-        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_ApiKeyAuthentication.requestOptions;
-        url = auth_ApiKeyAuthentication.url;
-
-        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTAuthentication.requestOptions;
-        url = auth_JWTAuthentication.url;
-
-        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
-        url = auth_JWTHttpHeaderAuthentication.url;
-
-        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
-        requestOptions = auth_OAuth2.requestOptions;
-        url = auth_OAuth2.url;
-
-        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
-        requestOptions = authDefault.requestOptions;
-        url = authDefault.url;
-
-        applyFormParams(requestOptions, localVarFormParams);
-
-        const response = await fetch(url, requestOptions);
-        return this.handleResponse(
-            response,
-            'GetDatasetVersionRawDataSampleResponse'
-        );
-    }
-
-    /**
-     * Get a sample\'s changes in a specific dataset version for this project.
-     * @summary Get dataset version sample change details
-     * @param projectId Project ID
-     * @param datasetVersionId Dataset version ID
-     * @param sampleId Sample ID
-     */
-    public async getDatasetVersionSampleChangeDetails (projectId: number, datasetVersionId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionSampleChangeDetailsResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/changes/{sampleId}'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)))
-            .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
-        let queryParameters: Record<string, string> = {};
-        let localVarHeaderParams: Record<string, string> = {
-            'User-Agent': 'edgeimpulse-api nodejs',
-            'Content-Type': 'application/json',
-            ...this.defaultHeaders,
-        };
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: LocalFormParams | undefined;
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling getDatasetVersionSampleChangeDetails.');
-        }
-
-        // verify required parameter 'datasetVersionId' is not null or undefined
-
-
-        if (datasetVersionId === null || datasetVersionId === undefined) {
-            throw new Error('Required parameter datasetVersionId was null or undefined when calling getDatasetVersionSampleChangeDetails.');
-        }
-
-        // verify required parameter 'sampleId' is not null or undefined
-
-
-        if (sampleId === null || sampleId === undefined) {
-            throw new Error('Required parameter sampleId was null or undefined when calling getDatasetVersionSampleChangeDetails.');
-        }
-
-        localVarHeaderParams = {
-            ...localVarHeaderParams,
-            ...options.headers,
-            ...this.opts.extraHeaders,
-        };
-
-        const queryString = Object.entries(queryParameters)
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
-            .join('&');
-
-        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
-        let localVarRequestOptions: RequestOptionsType = {
-            method: 'GET',
-            headers: { ...localVarHeaderParams },
-        };
-
-
-        let requestOptions = localVarRequestOptions;
-        let url = localVarUrl;
-        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_ApiKeyAuthentication.requestOptions;
-        url = auth_ApiKeyAuthentication.url;
-
-        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTAuthentication.requestOptions;
-        url = auth_JWTAuthentication.url;
-
-        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
-        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
-        url = auth_JWTHttpHeaderAuthentication.url;
-
-        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
-        requestOptions = auth_OAuth2.requestOptions;
-        url = auth_OAuth2.url;
-
-        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
-        requestOptions = authDefault.requestOptions;
-        url = authDefault.url;
-
-        applyFormParams(requestOptions, localVarFormParams);
-
-        const response = await fetch(url, requestOptions);
-        return this.handleResponse(
-            response,
-            'GetDatasetVersionSampleChangeDetailsResponse'
-        );
-    }
-
-    /**
-     * List details of the changes in a specific dataset version for this project.
-     * @summary List dataset version changes
-     * @param projectId Project ID
-     * @param datasetVersionId Dataset version ID
-     * @param limit Maximum number of results
-     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
-     */
-    public async listDatasetVersionChanges (projectId: number, datasetVersionId: number, queryParams?: listDatasetVersionChangesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListDatasetVersionChangesResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/changes'
-            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
-        let queryParameters: Record<string, string> = {};
-        let localVarHeaderParams: Record<string, string> = {
-            'User-Agent': 'edgeimpulse-api nodejs',
-            'Content-Type': 'application/json',
-            ...this.defaultHeaders,
-        };
-        const produces = ['application/json'];
-        // give precedence to 'application/json'
-        if (produces.indexOf('application/json') >= 0) {
-            localVarHeaderParams.Accept = 'application/json';
-        } else {
-            localVarHeaderParams.Accept = produces.join(',');
-        }
-        let localVarFormParams: LocalFormParams | undefined;
-
-        // verify required parameter 'projectId' is not null or undefined
-
-
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling listDatasetVersionChanges.');
-        }
-
-        // verify required parameter 'datasetVersionId' is not null or undefined
-
-
-        if (datasetVersionId === null || datasetVersionId === undefined) {
-            throw new Error('Required parameter datasetVersionId was null or undefined when calling listDatasetVersionChanges.');
-        }
-
-        if (typeof queryParams?.limit !== 'undefined' && queryParams?.limit !== null) {
-            queryParameters['limit'] = <string><any>queryParams.limit;
-        }
-        if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
-            queryParameters['offset'] = <string><any>queryParams.offset;
+        if (typeof queryParams?.changeActions !== 'undefined' && queryParams?.changeActions !== null) {
+            queryParameters['changeActions'] = <string><any>queryParams.changeActions;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -734,7 +443,7 @@ export class DatasetVersionsApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'ListDatasetVersionChangesResponse'
+            'GetDatasetVersionRawDataChangesResponse'
         );
     }
 
@@ -744,6 +453,8 @@ export class DatasetVersionsApi {
      * @param projectId Project ID
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param search Search query
+     * @param type Only include dataset versions with a type within the given list of types, given as a JSON string
      */
     public async listDatasetVersions (projectId: number, queryParams?: listDatasetVersionsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListDatasetVersionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions'
@@ -775,6 +486,12 @@ export class DatasetVersionsApi {
         }
         if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
             queryParameters['offset'] = <string><any>queryParams.offset;
+        }
+        if (typeof queryParams?.search !== 'undefined' && queryParams?.search !== null) {
+            queryParameters['search'] = <string><any>queryParams.search;
+        }
+        if (typeof queryParams?.type !== 'undefined' && queryParams?.type !== null) {
+            queryParameters['type'] = <string><any>queryParams.type;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

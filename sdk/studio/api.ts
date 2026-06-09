@@ -23,6 +23,9 @@ import {
     SocketTokenResponse,
     OrganizationDataCampaignsApi,
     PostProcessingApi,
+    DatasetVersionsApi,
+    VlmApi,
+    IntegrationsApi,
 } from './sdk/api';
 import WebSocket from 'ws';
 
@@ -51,12 +54,14 @@ export class EdgeImpulseApi {
     admin: AdminApi;
     auth: AuthApi;
     classify: ClassifyApi;
+    datasetVersions: DatasetVersionsApi;
     dsp: DSPApi;
     deployment: DeploymentApi;
     devices: DevicesApi;
     export: ExportApi;
     health: HealthApi;
     impulse: ImpulseApi;
+    integrations: IntegrationsApi;
     jobs: JobsApi;
     learn: LearnApi;
     login: LoginApi;
@@ -78,6 +83,7 @@ export class EdgeImpulseApi {
     thirdPartyAuth: ThirdPartyAuthApi;
     uploadPortal: UploadPortalApi;
     user: UserApi;
+    vlm: VlmApi;
     whitelabels: WhitelabelsApi;
 
     /**
@@ -105,6 +111,8 @@ export class EdgeImpulseApi {
             { extraHeaders: this._opts.extraHeaders });
         this.classify = new ClassifyApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
+        this.datasetVersions = new DatasetVersionsApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
         this.dsp = new DSPApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.deployment = new DeploymentApi(this._opts.endpoint + '/v1',
@@ -114,6 +122,8 @@ export class EdgeImpulseApi {
         this.export = new ExportApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.health = new HealthApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
+        this.integrations = new IntegrationsApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.impulse = new ImpulseApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
@@ -159,6 +169,8 @@ export class EdgeImpulseApi {
             { extraHeaders: this._opts.extraHeaders });
         this.user = new UserApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
+        this.vlm = new VlmApi(this._opts.endpoint + '/v1',
+            { extraHeaders: this._opts.extraHeaders });
         this.whitelabels = new WhitelabelsApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
     }
@@ -191,11 +203,13 @@ export class EdgeImpulseApi {
             this.admin.setApiKey(apiKeyAuthId, opts.apiKey);
             this.auth.setApiKey(apiKeyAuthId, opts.apiKey);
             this.classify.setApiKey(apiKeyAuthId, opts.apiKey);
+            this.datasetVersions.setApiKey(apiKeyAuthId, opts.apiKey);
             this.dsp.setApiKey(apiKeyAuthId, opts.apiKey);
             this.deployment.setApiKey(apiKeyAuthId, opts.apiKey);
             this.devices.setApiKey(apiKeyAuthId, opts.apiKey);
             this.export.setApiKey(apiKeyAuthId, opts.apiKey);
             this.impulse.setApiKey(apiKeyAuthId, opts.apiKey);
+            this.integrations.setApiKey(apiKeyAuthId, opts.apiKey);
             this.jobs.setApiKey(apiKeyAuthId, opts.apiKey);
             this.learn.setApiKey(apiKeyAuthId, opts.apiKey);
             this.optimization.setApiKey(apiKeyAuthId, opts.apiKey);
@@ -215,16 +229,19 @@ export class EdgeImpulseApi {
             this.thirdPartyAuth.setApiKey(apiKeyAuthId, opts.apiKey);
             this.uploadPortal.setApiKey(apiKeyAuthId, opts.apiKey);
             this.user.setApiKey(apiKeyAuthId, opts.apiKey);
+            this.vlm.setApiKey(apiKeyAuthId, opts.apiKey);
             this.whitelabels.setApiKey(apiKeyAuthId, opts.apiKey);
 
             this.admin.setApiKey(jwtTokenAuthId, undefined);
             this.auth.setApiKey(jwtTokenAuthId, undefined);
             this.classify.setApiKey(jwtTokenAuthId, undefined);
+            this.datasetVersions.setApiKey(jwtTokenAuthId, undefined);
             this.dsp.setApiKey(jwtTokenAuthId, undefined);
             this.deployment.setApiKey(jwtTokenAuthId, undefined);
             this.devices.setApiKey(jwtTokenAuthId, undefined);
             this.export.setApiKey(jwtTokenAuthId, undefined);
             this.impulse.setApiKey(jwtTokenAuthId, undefined);
+            this.integrations.setApiKey(jwtTokenAuthId, undefined);
             this.jobs.setApiKey(jwtTokenAuthId, undefined);
             this.learn.setApiKey(jwtTokenAuthId, undefined);
             this.optimization.setApiKey(jwtTokenAuthId, undefined);
@@ -244,6 +261,7 @@ export class EdgeImpulseApi {
             this.thirdPartyAuth.setApiKey(jwtTokenAuthId, undefined);
             this.uploadPortal.setApiKey(jwtTokenAuthId, undefined);
             this.user.setApiKey(jwtTokenAuthId, undefined);
+            this.vlm.setApiKey(jwtTokenAuthId, undefined);
             this.whitelabels.setApiKey(jwtTokenAuthId, undefined);
         }
         else {
@@ -252,11 +270,13 @@ export class EdgeImpulseApi {
             this.admin.setApiKey(jwtTokenAuthId, jwtToken);
             this.auth.setApiKey(jwtTokenAuthId, jwtToken);
             this.classify.setApiKey(jwtTokenAuthId, jwtToken);
+            this.datasetVersions.setApiKey(jwtTokenAuthId, jwtToken);
             this.dsp.setApiKey(jwtTokenAuthId, jwtToken);
             this.deployment.setApiKey(jwtTokenAuthId, jwtToken);
             this.devices.setApiKey(jwtTokenAuthId, jwtToken);
             this.export.setApiKey(jwtTokenAuthId, jwtToken);
             this.impulse.setApiKey(jwtTokenAuthId, jwtToken);
+            this.integrations.setApiKey(jwtTokenAuthId, jwtToken);
             this.jobs.setApiKey(jwtTokenAuthId, jwtToken);
             this.learn.setApiKey(jwtTokenAuthId, jwtToken);
             this.optimization.setApiKey(jwtTokenAuthId, jwtToken);
@@ -276,16 +296,19 @@ export class EdgeImpulseApi {
             this.thirdPartyAuth.setApiKey(jwtTokenAuthId, jwtToken);
             this.uploadPortal.setApiKey(jwtTokenAuthId, jwtToken);
             this.user.setApiKey(jwtTokenAuthId, jwtToken);
+            this.vlm.setApiKey(jwtTokenAuthId, jwtToken);
             this.whitelabels.setApiKey(jwtTokenAuthId, jwtToken);
 
             this.admin.setApiKey(apiKeyAuthId, undefined);
             this.auth.setApiKey(apiKeyAuthId, undefined);
             this.classify.setApiKey(apiKeyAuthId, undefined);
+            this.datasetVersions.setApiKey(apiKeyAuthId, undefined);
             this.dsp.setApiKey(apiKeyAuthId, undefined);
             this.deployment.setApiKey(apiKeyAuthId, undefined);
             this.devices.setApiKey(apiKeyAuthId, undefined);
             this.export.setApiKey(apiKeyAuthId, undefined);
             this.impulse.setApiKey(apiKeyAuthId, undefined);
+            this.integrations.setApiKey(apiKeyAuthId, undefined);
             this.jobs.setApiKey(apiKeyAuthId, undefined);
             this.learn.setApiKey(apiKeyAuthId, undefined);
             this.optimization.setApiKey(apiKeyAuthId, undefined);
@@ -305,6 +328,7 @@ export class EdgeImpulseApi {
             this.thirdPartyAuth.setApiKey(apiKeyAuthId, undefined);
             this.uploadPortal.setApiKey(apiKeyAuthId, undefined);
             this.user.setApiKey(apiKeyAuthId, undefined);
+            this.vlm.setApiKey(apiKeyAuthId, undefined);
             this.whitelabels.setApiKey(apiKeyAuthId, undefined);
         }
     }
@@ -363,6 +387,10 @@ export class EdgeImpulseApi {
                 return d;
             }
         );
+    }
+
+    get studioHost() {
+        return this._opts.endpoint;
     }
 
     private async getProjectWebsocket(projectId: number) {

@@ -11,11 +11,6 @@ import inquirer from "inquirer";
 import { split as argvSplit } from './argv-split';
 import http from 'http';
 import https from 'https';
-import {
-    ListOrganizationDataResponseAllOfData, OrganizationDataItemFiles,
-    OrganizationTransformationBlock, UpdateProjectRequest,
-    UploadCustomBlockRequestTypeEnum
-} from "../sdk/studio";
 import * as models from '../sdk/studio/sdk/model/models';
 import { pathExists } from "./blocks/blocks-helper";
 import { BlockConfig } from "./blocks/block-config-manager";
@@ -33,7 +28,7 @@ export type DockerBuildParams = {
 
 type DockerRunParams = {
     blockConfig: BlockConfig;
-    type: UploadCustomBlockRequestTypeEnum;
+    type: models.UploadCustomBlockRequestTypeEnum;
     containerName: string | undefined;
 } & (
     (
@@ -354,7 +349,7 @@ export class BlockRunnerFactory {
 }
 
 export class BlockRunnerTransform extends BlockRunner {
-    private _dataItem: ListOrganizationDataResponseAllOfData | undefined;
+    private _dataItem: NonNullable<models.ListOrganizationDataResponse['data']>[number] | undefined;
 
     async setup(): Promise<void> {
         await super.setup();
@@ -388,7 +383,7 @@ export class BlockRunnerTransform extends BlockRunner {
             }
 
             let foundBlock = transformBlocksRes.transformationBlocks.find(
-                (el: OrganizationTransformationBlock) =>
+                (el: models.OrganizationTransformationBlock) =>
                     el.id === this._blockConfig.config!.id
             );
 
@@ -909,7 +904,7 @@ export class BlockRunnerTransform extends BlockRunner {
         let filePath = Path.join(fileDir, filename);
 
         let foundFileEntry = fileListRes.data.files.find(
-            (item: OrganizationDataItemFiles) => item.name === filename
+            (item: models.OrganizationDataItem['files'][number]) => item.name === filename
         );
 
         if (!foundFileEntry) {
@@ -1027,7 +1022,7 @@ export class BlockRunnerTransform extends BlockRunner {
         dataItemName: string,
         organizationId: number,
         config: EdgeImpulseConfig
-    ): Promise<ListOrganizationDataResponseAllOfData> {
+    ): Promise<NonNullable<models.ListOrganizationDataResponse['data']>[number]> {
 
         const queryFilter = dataset ?
             `dataset='${dataset}' and name='${dataItemName}'` :

@@ -6255,7 +6255,7 @@ export class RawDataApi {
     }
 
     /**
-     * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. To get the dataset ratio (as returned by the v1 endpoint), use getDatasetRatio.
+     * Rebalances the dataset over training / testing categories. This resets the category for all data and splits it 80%/20% between training and testing. This is a deterministic process based on the hash of the name of the data. Returns immediately on small datasets, or starts a job on larger datasets. To get the dataset ratio (as returned by the v1 endpoint), use getDatasetRatio. For richer, more powerful dataset splitting with configurable ratios, stratification, and grouping, use splitDataset (`/v1/api/{projectId}/split`). 
      * @summary Rebalance dataset
      * @param projectId Project ID
      */

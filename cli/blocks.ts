@@ -15,8 +15,13 @@ import { BlockRunner, BlockRunnerFactory, RunnerOptions } from './block-runner';
 import * as models from  '../sdk/studio/sdk/model/models';
 import { InitCLIBlock } from './blocks/init-cli-block';
 import { bytesToSize, deepCompare, guessRepoUrl, pathExists, sleep, spinner } from './blocks/blocks-helper';
+import {
+    calculateFileSha256,
+    getUploadTypeForBlockType,
+    uploadFileToSignedUrl,
+} from './blocks/custom-block-upload';
 import { BlockConfigManager } from './blocks/block-config-manager';
-import { addOrganizationDeployBlockFormParams, RequestDetailedFile } from '../sdk/studio/sdk/api';
+import { addOrganizationDeployBlockFormParams } from '../sdk/studio/sdk/api';
 import { CLIBlockType } from '../shared/parameters-json-types';
 import { TurnOptionalIntoOrUndefined, UpdateRemoteBlockFromParamsJson } from './blocks/update-remote-block-from-params-json';
 import { AIActionBlockParametersJson, SyntheticDataBlockParametersJson, TransformBlockParametersJson } from './blocks/parameter-types';
@@ -794,10 +799,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             // Check the size of the file
             const fileSize = (await fs.promises.stat(packagePath)).size;
             if (fileSize > 400 * 1000 * 1000) {
-                console.error('Your custom block exceeds the block size limit of 400MB. If your archive includes ' +
-                    ' unwanted files, add a .dockerignore file to list files that will be ignored when compressing your ' +
-                    'block. If you need large binary files in this block, then download them in your Dockerfile.');
-                process.exit(1);
+                console.log('NOTE: Large custom block archives are uploaded directly to object storage now. ' +
+                    'If upload initiation fails due to size, reduce your archive or move large binaries into your Dockerfile.');
             }
             console.log(`Archiving '${cwd}' OK (${bytesToSize(fileSize)})`,
                 packagePath);
@@ -805,74 +808,83 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
 
             // Push the file to the endpoint
             console.log(`Uploading block '${blockName}' to organization '${organizationName}'...`);
-            let data = await fs.promises.readFile(packagePath);
-            const tarFile: RequestDetailedFile = {
-                value: data,
-                options: {
-                    filename: packagePath,
-                    contentType: 'application/octet-stream'
+            const uploadType = getUploadTypeForBlockType(currentBlockConfig.type);
+            const archiveFileName = Path.basename(packagePath);
+            const archiveHash = await calculateFileSha256(packagePath);
+
+            try {
+                const uploadLinkResponse = await config.api.organizationCreateProject.createCustomBlockUploadLink(
+                    currentBlockConfig.config.organizationId,
+                    {
+                        fileName: archiveFileName,
+                        fileSize: fileSize,
+                        fileHash: archiveHash,
+                        type: uploadType,
+                        blockId: currentBlockConfig.config.id || 0,
+                    }
+                );
+
+                if (!uploadLinkResponse.success || !uploadLinkResponse.uploadKey) {
+                    console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadLinkResponse.error);
+                    process.exit(1);
                 }
-            };
 
-            let uploadType: models.UploadCustomBlockRequestTypeEnum;
-            switch (currentBlockConfig.type) {
-                case 'dsp':
-                    uploadType = 'dsp';
-                    break;
-                case 'deploy':
-                    uploadType = 'deploy';
-                    break;
-                case 'machine-learning':
-                    uploadType = 'transferLearning';
-                    break;
-                case 'transform':
-                case 'synthetic-data':
-                case 'ai-action':
-                    uploadType = 'transform';
-                    break;
-                default:
-                    throw new Error('Failed to determine uploadType ("' + (<{ type: string }>currentBlockConfig).type + '")');
-            }
-
-            let uploadResponse = await config.api.organizationCreateProject.uploadCustomBlock(
-                currentBlockConfig.config.organizationId,
-                {
-                    tar: tarFile,
-                    type: uploadType,
-                    blockId: currentBlockConfig.config.id || 0
+                if (uploadLinkResponse.url) {
+                    await uploadFileToSignedUrl({
+                        url: uploadLinkResponse.url,
+                        filePath: packagePath,
+                        fileSize: fileSize,
+                        fileHash: archiveHash,
+                    });
                 }
-            );
 
-            if (!uploadResponse.success || !uploadResponse.id) {
-                console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadResponse.error);
-                process.exit(1);
+                const uploadResponse = await config.api.organizationCreateProject.finalizeCustomBlockUpload(
+                    currentBlockConfig.config.organizationId,
+                    {
+                        uploadKey: uploadLinkResponse.uploadKey,
+                        fileName: archiveFileName,
+                        fileSize: fileSize,
+                        fileHash: archiveHash,
+                        type: uploadType,
+                        blockId: currentBlockConfig.config.id || 0,
+                    }
+                );
+
+                if (!uploadResponse.success || !uploadResponse.id) {
+                    console.error(`Unable to upload your ${currentBlockConfig.type} block:`, uploadResponse.error);
+                    process.exit(1);
+                }
+                const jobId = uploadResponse.id;
+
+                pushingBlockJobId = {
+                    organizationId: currentBlockConfig.config.organizationId,
+                    jobId
+                };
+
+                console.log(`Uploading block '${blockName}' to organization '${organizationName}' OK`);
+                console.log('');
+
+                console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${blockName}'...`);
+
+                await config.api.runJobUntilCompletion({
+                    type: 'organization',
+                    organizationId: organizationId,
+                    jobId: jobId
+                }, d => {
+                    process.stdout.write(d);
+                });
+
+                pushingBlockJobId = undefined;
+
+                console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${blockName}' OK`);
+                console.log('');
             }
-            let jobId = uploadResponse.id;
-
-            pushingBlockJobId = {
-                organizationId: currentBlockConfig.config.organizationId,
-                jobId
-            };
-
-            console.log(`Uploading block '${blockName}' to organization '${organizationName}' OK`);
-            console.log('');
-
-            console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${blockName}'...`);
-
-            await config.api.runJobUntilCompletion({
-                type: 'organization',
-                organizationId: organizationId,
-                jobId: jobId
-            }, d => {
-                process.stdout.write(d);
-            });
-
-            await fs.promises.unlink(packagePath);
-
-            pushingBlockJobId = undefined;
-
-            console.log(`Building ${blockTypeToString(currentBlockConfig.type)} block '${blockName}' OK`);
-            console.log('');
+            finally {
+                if (await pathExists(packagePath)) {
+                    await fs.promises.unlink(packagePath);
+                }
+                pushingBlockJobId = undefined;
+            }
 
             // Now update any block parameters
             if (shouldOverwriteParamsAfterPush) {

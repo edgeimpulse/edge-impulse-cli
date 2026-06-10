@@ -25,7 +25,10 @@ else {
     FormData = undici.FormData;
 }
 
+import { CreateCustomBlockUploadLinkRequest } from '../model/createCustomBlockUploadLinkRequest';
+import { CreateCustomBlockUploadLinkResponse } from '../model/createCustomBlockUploadLinkResponse';
 import { CreateProjectResponse } from '../model/createProjectResponse';
+import { FinalizeCustomBlockUploadRequest } from '../model/finalizeCustomBlockUploadRequest';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { OrganizationCreateProjectRequest } from '../model/organizationCreateProjectRequest';
 import { OrganizationCreateProjectResponse } from '../model/organizationCreateProjectResponse';
@@ -244,6 +247,95 @@ export class OrganizationCreateProjectApi {
     }
 
     /**
+     * Creates a signed link to securely upload a custom block archive directly to S3.
+     * @summary Create pre-signed S3 upload link for a custom block archive
+     * @param organizationId Organization ID
+     * @param createCustomBlockUploadLinkRequest 
+     */
+    public async createCustomBlockUploadLink (organizationId: number, createCustomBlockUploadLinkRequest: CreateCustomBlockUploadLinkRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateCustomBlockUploadLinkResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block/upload-link'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling createCustomBlockUploadLink.');
+        }
+
+        // verify required parameter 'createCustomBlockUploadLinkRequest' is not null or undefined
+
+
+        if (createCustomBlockUploadLinkRequest === null || createCustomBlockUploadLinkRequest === undefined) {
+            throw new Error('Required parameter createCustomBlockUploadLinkRequest was null or undefined when calling createCustomBlockUploadLink.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(createCustomBlockUploadLinkRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'CreateCustomBlockUploadLinkResponse'
+        );
+    }
+
+    /**
      * Remove a transformation job. This will stop all running jobs.
      * @summary Delete transformation job
      * @param organizationId Organization ID
@@ -425,6 +517,95 @@ export class OrganizationCreateProjectApi {
         return this.handleResponse(
             response,
             'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Verifies a staged custom block archive and starts a custom block build job.
+     * @summary Finalize custom block upload
+     * @param organizationId Organization ID
+     * @param finalizeCustomBlockUploadRequest 
+     */
+    public async finalizeCustomBlockUpload (organizationId: number, finalizeCustomBlockUploadRequest: FinalizeCustomBlockUploadRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block/finalize'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling finalizeCustomBlockUpload.');
+        }
+
+        // verify required parameter 'finalizeCustomBlockUploadRequest' is not null or undefined
+
+
+        if (finalizeCustomBlockUploadRequest === null || finalizeCustomBlockUploadRequest === undefined) {
+            throw new Error('Required parameter finalizeCustomBlockUploadRequest was null or undefined when calling finalizeCustomBlockUpload.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(finalizeCustomBlockUploadRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'StartJobResponse'
         );
     }
 

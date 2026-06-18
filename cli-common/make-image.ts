@@ -1,5 +1,5 @@
 import Path from 'node:path';
-import { fetch, FormData } from 'undici';
+import { fetch, FormData, Agent } from 'undici';
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
 import { Blob } from 'node:buffer';
 import { Config, EdgeImpulseConfig } from './config';
@@ -165,40 +165,89 @@ export async function upload(opts: {
         }), 'label_map.labels');
     }
 
-    let res = await fetch(opts.config.endpoints.internal.ingestion + '/api/' + category + '/files', {
-        method: 'POST',
-        headers: headers,
-        body: form,
-    });
-
-    let body = await res.text();
-    let msg: ({ success: false, error: string } |
-        { success: true, files: ({ success: false, error: string } | { success: true })[]}) | undefined;
+    const url = opts.config.endpoints.internal.ingestion + '/api/' + category + '/files';
     try {
-        msg = <{ success: false, error: string } |
-            { success: true, files: ({ success: false, error: string } | { success: true })[]}>JSON.parse(body);
-    }
-    catch (ex2) {
-        // noop
-    }
+        let res = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: form,
+            dispatcher: new Agent({
+                headersTimeout: 20 * 60_000,
+                bodyTimeout: 20 * 60_000,
+            }),
+        });
 
-    if (res.status !== 200) {
-        if (msg && msg.success === false) {
+        let body = await res.text();
+        let msg: ({ success: false, error: string } |
+            { success: true, files: ({ success: false, error: string } | { success: true })[]}) | undefined;
+        try {
+            msg = <{ success: false, error: string } |
+                { success: true, files: ({ success: false, error: string } | { success: true })[]}>JSON.parse(body);
+        }
+        catch (ex2) {
+            // noop
+        }
+
+        if (res.status !== 200) {
+            if (msg && msg.success === false) {
+                throw new Error(msg.error);
+            }
+            throw new Error(body || res.status.toString());
+        }
+
+        if (!msg) {
+            throw new Error('Ingestion returned 200, but body is not a valid response message: ' +
+                body);
+        }
+        if (!msg.success) {
             throw new Error(msg.error);
         }
-        throw new Error(body || res.status.toString());
-    }
-
-    if (!msg) {
-        throw new Error('Ingestion returned 200, but body is not a valid response message: ' +
-            body);
-    }
-    if (!msg.success) {
-        throw new Error(msg.error);
-    }
-    for (let f of msg.files) {
-        if (!f.success) {
-            throw new Error(f.error);
+        for (let f of msg.files) {
+            if (!f.success) {
+                throw new Error(f.error);
+            }
         }
     }
+    catch (ex) {
+        throw new Error(formatFetchError(url, ex));
+    }
+}
+
+function formatFetchError(url: string, err: unknown): string {
+    type ErrorWithCause = Error & {
+        cause?: unknown;
+    };
+
+    type ErrorCause = {
+        name?: string;
+        message?: string;
+        code?: string;
+        errno?: number;
+        syscall?: string;
+        hostname?: string;
+        address?: string;
+        port?: number;
+    };
+
+    if (!(err instanceof Error)) {
+        return String(err);
+    }
+
+    if ((err as ErrorWithCause).cause) {
+        const cause = <ErrorCause>(<ErrorWithCause>err).cause;
+        const msg = [
+            `${err.name}: ${err.message}`,
+            cause ? `cause: ${cause.name ?? 'Error'}${cause.message ? ` (${cause.message})` : ``}` : undefined,
+            cause?.code ? `code: ${cause.code}` : undefined,
+            cause?.errno !== undefined ? `errno: ${cause.errno}` : undefined,
+            cause?.syscall ? `syscall: ${cause.syscall}` : undefined,
+            cause?.hostname ? `hostname: ${cause.hostname}` : undefined,
+            cause?.address ? `address: ${cause.address}` : undefined,
+            cause?.port ? `port: ${cause.port}` : undefined,
+        ].filter(x => !!x).join(', ');
+
+        return `Request to ${url} failed: ${msg}`;
+    }
+
+    return `Request to ${url} failed: ${err.message || err.toString()}`;
 }

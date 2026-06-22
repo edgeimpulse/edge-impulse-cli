@@ -19,6 +19,10 @@ export type ProjectDatasetMetadataBase = {
     isFeatures: boolean;
     metadataFilterOptions: MetadataFilterOptions;
     /**
+    * Full list of metadata keys in the project.
+    */
+    metadataKeys: string[];
+    /**
     * Breakdown of the number of samples with mutation events in the dataset version.
     */
     changeActionCounts?: ProjectDatasetMetadataBaseChangeActionCounts;

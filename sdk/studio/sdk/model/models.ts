@@ -713,6 +713,7 @@ export * from './startSamplingRequest';
 export * from './startSamplingResponse';
 export * from './startTensorBoardSessionRequest';
 export * from './startTrainingRequestAnomaly';
+export * from './startVlmInferenceJobResponse';
 export * from './stopDeviceDebugStreamRequest';
 export * from './storageProvider';
 export * from './storeInferenceHistoryRequest';

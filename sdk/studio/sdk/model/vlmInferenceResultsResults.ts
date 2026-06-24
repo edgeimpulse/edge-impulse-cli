@@ -5,7 +5,7 @@ import type { Sample } from './sample';
 export type VlmInferenceResultsResults = {
     sample: Sample;
     /**
-    * Classification results for the sample
+    * Classification results for the sample, or null for pending results.
     */
-    result: { [key: string]: number; };
+    result: { [key: string]: number; } | null;
 };

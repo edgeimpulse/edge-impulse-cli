@@ -26,7 +26,7 @@ else {
 }
 
 import { GenericApiResponse } from '../model/genericApiResponse';
-import { StartJobResponse } from '../model/startJobResponse';
+import { StartVlmInferenceJobResponse } from '../model/startVlmInferenceJobResponse';
 import { VlmGetAllModelsResponse } from '../model/vlmGetAllModelsResponse';
 import { VlmGetInferenceResultsResponse } from '../model/vlmGetInferenceResultsResponse';
 import { VlmGetModelResponse } from '../model/vlmGetModelResponse';
@@ -403,7 +403,7 @@ export class VlmApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param vlmInferenceRequest 
      */
-    public async runVlmInference (projectId: number, learnId: number, vlmInferenceRequest: VlmInferenceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async runVlmInference (projectId: number, learnId: number, vlmInferenceRequest: VlmInferenceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartVlmInferenceJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}/run-inference'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -490,7 +490,7 @@ export class VlmApi {
         const response = await fetch(url, requestOptions);
         return this.handleResponse(
             response,
-            'StartJobResponse'
+            'StartVlmInferenceJobResponse'
         );
     }
 

@@ -60,5 +60,5 @@ export type OrganizationCreateProjectRequest = {
 export type OrganizationCreateProjectRequestUploadTypeEnum = 'project' | 'dataset';
 export const OrganizationCreateProjectRequestUploadTypeEnumValues: string[] = [ 'project', 'dataset' ];
 
-export type OrganizationCreateProjectRequestCategoryEnum = 'training' | 'testing' | 'split';
-export const OrganizationCreateProjectRequestCategoryEnumValues: string[] = [ 'training', 'testing', 'split' ];
+export type OrganizationCreateProjectRequestCategoryEnum = 'training' | 'validation' | 'testing' | 'split';
+export const OrganizationCreateProjectRequestCategoryEnumValues: string[] = [ 'training', 'validation', 'testing', 'split' ];

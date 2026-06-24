@@ -73,5 +73,5 @@ export type OrganizationCreateProjectWithFiles = {
 export type OrganizationCreateProjectWithFilesUploadTypeEnum = 'dataset' | 'project';
 export const OrganizationCreateProjectWithFilesUploadTypeEnumValues: string[] = [ 'dataset', 'project' ];
 
-export type OrganizationCreateProjectWithFilesCategoryEnum = 'training' | 'testing' | 'split';
-export const OrganizationCreateProjectWithFilesCategoryEnumValues: string[] = [ 'training', 'testing', 'split' ];
+export type OrganizationCreateProjectWithFilesCategoryEnum = 'training' | 'validation' | 'testing' | 'split';
+export const OrganizationCreateProjectWithFilesCategoryEnumValues: string[] = [ 'training', 'validation', 'testing', 'split' ];

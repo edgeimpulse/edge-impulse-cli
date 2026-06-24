@@ -37,5 +37,5 @@ export type OrganizationPipelineStep = {
 export type OrganizationPipelineStepUploadTypeEnum = 'project' | 'dataset';
 export const OrganizationPipelineStepUploadTypeEnumValues: string[] = [ 'project', 'dataset' ];
 
-export type OrganizationPipelineStepCategoryEnum = 'training' | 'testing' | 'split';
-export const OrganizationPipelineStepCategoryEnumValues: string[] = [ 'training', 'testing', 'split' ];
+export type OrganizationPipelineStepCategoryEnum = 'training' | 'validation' | 'testing' | 'split';
+export const OrganizationPipelineStepCategoryEnumValues: string[] = [ 'training', 'validation', 'testing', 'split' ];

@@ -26,6 +26,8 @@ else {
 }
 
 import { AddOrganizationBucketRequest } from '../model/addOrganizationBucketRequest';
+import { CreateOrganizationBucketRequest } from '../model/createOrganizationBucketRequest';
+import { CreateOrganizationBucketResponse } from '../model/createOrganizationBucketResponse';
 import { CreateSignedUploadLinkRequest } from '../model/createSignedUploadLinkRequest';
 import { CreateSignedUploadLinkResponse } from '../model/createSignedUploadLinkResponse';
 import { DeletePortalFileRequest } from '../model/deletePortalFileRequest';
@@ -985,6 +987,95 @@ export class OrganizationDataApi {
         return this.handleResponse(
             response,
             'StartJobResponse'
+        );
+    }
+
+    /**
+     * Create a new storage bucket in the Edge Impulse infra. This API is only available through JWT token authentication.
+     * @summary Create storage bucket
+     * @param organizationId Organization ID
+     * @param createOrganizationBucketRequest 
+     */
+    public async createOrganizationBucket (organizationId: number, createOrganizationBucketRequest: CreateOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateOrganizationBucketResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/create'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling createOrganizationBucket.');
+        }
+
+        // verify required parameter 'createOrganizationBucketRequest' is not null or undefined
+
+
+        if (createOrganizationBucketRequest === null || createOrganizationBucketRequest === undefined) {
+            throw new Error('Required parameter createOrganizationBucketRequest was null or undefined when calling createOrganizationBucket.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(createOrganizationBucketRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'CreateOrganizationBucketResponse'
         );
     }
 

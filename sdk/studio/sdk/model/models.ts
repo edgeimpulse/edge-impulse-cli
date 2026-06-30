@@ -118,6 +118,8 @@ export * from './boundingBoxWithScore';
 export * from './buildOnDeviceModelRequest';
 export * from './buildOnDeviceModelResponse';
 export * from './buildOrganizationOnDeviceModelRequest';
+export * from './buildPublicDeploymentJobRequest';
+export * from './buildPublicDeploymentJobResponse';
 export * from './calculateDataQualityMetricsRequest';
 export * from './canaryResponse';
 export * from './changePasswordRequest';
@@ -148,6 +150,8 @@ export * from './createImpulseResponse';
 export * from './createMultiProjectDeploymentRequest';
 export * from './createNewEmptyImpulseRequest';
 export * from './createNewEmptyImpulseResponse';
+export * from './createOrganizationBucketRequest';
+export * from './createOrganizationBucketResponse';
 export * from './createOrganizationPortalRequest';
 export * from './createOrganizationPortalResponse';
 export * from './createOrganizationRequest';
@@ -361,6 +365,7 @@ export * from './getPostProcessingResultsForSampleResponse';
 export * from './getPostProcessingResultsForSampleResponseAllOfResults';
 export * from './getPostProcessingResultsResponse';
 export * from './getPretrainedModelResponse';
+export * from './getPublicDeploymentStatusResponse';
 export * from './getPublicMetricsResponse';
 export * from './getPublicOrganizationTransformationBlockResponse';
 export * from './getRawDataMetadataCooccurrenceResponse';
@@ -407,6 +412,7 @@ export * from './job';
 export * from './jobDetails';
 export * from './jobDetailsResponse';
 export * from './jobFailureDetails';
+export * from './jobLogItem';
 export * from './jobLogsResponse';
 export * from './jobMetricsResponse';
 export * from './jobParentTypeEnum';
@@ -481,7 +487,6 @@ export * from './listVersionsResponse';
 export * from './listWebhookDestinationsResponse';
 export * from './logAnalyticsEventRequest';
 export * from './logStdoutResponse';
-export * from './logStdoutResponseAllOfStdout';
 export * from './logWebsitePageviewRequest';
 export * from './loginResponse';
 export * from './memorySpec';
@@ -911,6 +916,10 @@ export class OAuth implements Authentication {
 
     applyToRequest(requestOptions: RequestOptionsType, url: string) {
         const headers = { ...(requestOptions.headers || {}) };
+        if (!this.accessToken) {
+            return { requestOptions: { ...requestOptions, headers }, url };
+        }
+
         headers['Authorization'] = 'Bearer ' + this.accessToken;
         return { requestOptions: { ...requestOptions, headers }, url };
     }

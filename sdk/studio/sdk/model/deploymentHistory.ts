@@ -25,4 +25,8 @@ export type DeploymentHistory = {
     */
     impulseHasChangedSinceDeployment: boolean;
     downloadUrl: string;
+    /**
+    * If set, then this deployment was created by an anonymous user through buildPublicDeploymentJob.
+    */
+    createdByBuildPublicDeploymentJob: boolean;
 };

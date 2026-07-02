@@ -88,6 +88,11 @@ export type SetKerasParameterRequest = {
     lastShownModelVariant?: KerasModelVariantEnum;
     blockParameters?: BlockParameters;
     trainingProcessor?: ExperimentalImpulseSpecificGpuTrainingProcessor;
+    /**
+    * EXPERIMENTAL. When set, max GPU utilization will be checked against this threshold after training. Used for
+    * testing purposes.
+    */
+    assertGpuUsagePercentage?: number | null;
 };
 
 export type SetKerasParameterRequestModeEnum = 'expert' | 'visual';

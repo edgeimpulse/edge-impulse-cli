@@ -29,6 +29,7 @@ import { AddApiKeyResponse } from '../model/addApiKeyResponse';
 import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
 import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
 import { AddIngestionOnlyProjectApiKeyRequest } from '../model/addIngestionOnlyProjectApiKeyRequest';
+import { AddProjectActiveExtensionRequest } from '../model/addProjectActiveExtensionRequest';
 import { AddProjectApiKeyRequest } from '../model/addProjectApiKeyRequest';
 import { ConvertParquetToCsvResponse } from '../model/convertParquetToCsvResponse';
 import { CreateProjectRequest } from '../model/createProjectRequest';
@@ -39,8 +40,10 @@ import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAIActionResponse } from '../model/getAIActionResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
+import { GetCurrentApiKeyInfoResponse } from '../model/getCurrentApiKeyInfoResponse';
 import { GetHmacDevkeyResponse } from '../model/getHmacDevkeyResponse';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
+import { GetProjectActiveExtensionsResponse } from '../model/getProjectActiveExtensionsResponse';
 import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
 import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
 import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
@@ -48,6 +51,7 @@ import { ListAIActionsResponse } from '../model/listAIActionsResponse';
 import { ListApiKeysResponse } from '../model/listApiKeysResponse';
 import { ListEmailResponse } from '../model/listEmailResponse';
 import { ListHmacKeysResponse } from '../model/listHmacKeysResponse';
+import { ListProjectAvailableExtensionsResponse } from '../model/listProjectAvailableExtensionsResponse';
 import { ListProjectsResponse } from '../model/listProjectsResponse';
 import { ListPublicProjectTypesResponse } from '../model/listPublicProjectTypesResponse';
 import { ListPublicProjectsResponse } from '../model/listPublicProjectsResponse';
@@ -63,6 +67,7 @@ import { ProjectInfoResponse } from '../model/projectInfoResponse';
 import { ProjectInfoSummaryResponse } from '../model/projectInfoSummaryResponse';
 import { ProjectTrainingDataSummaryResponse } from '../model/projectTrainingDataSummaryResponse';
 import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
+import { RemoveProjectActiveExtensionResponse } from '../model/removeProjectActiveExtensionResponse';
 import { SetAIActionsOrderRequest } from '../model/setAIActionsOrderRequest';
 import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
@@ -304,6 +309,95 @@ export class ProjectsApi {
         return this.handleResponse(
             response,
             'EntityCreatedResponse'
+        );
+    }
+
+    /**
+     * Adds an extension to a project. This API is only available through JWT token authentication.
+     * @summary Add extension to project
+     * @param projectId Project ID
+     * @param addProjectActiveExtensionRequest 
+     */
+    public async addProjectActiveExtension (projectId: number, addProjectActiveExtensionRequest: AddProjectActiveExtensionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/active/add'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling addProjectActiveExtension.');
+        }
+
+        // verify required parameter 'addProjectActiveExtensionRequest' is not null or undefined
+
+
+        if (addProjectActiveExtensionRequest === null || addProjectActiveExtensionRequest === undefined) {
+            throw new Error('Required parameter addProjectActiveExtensionRequest was null or undefined when calling addProjectActiveExtension.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(addProjectActiveExtensionRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse'
         );
     }
 
@@ -1580,6 +1674,76 @@ export class ProjectsApi {
     }
 
     /**
+     * Only available when authenticating with a project API key. Returns the current role and project ID that you\'re authenticated with.
+     * @summary Get info about current API key
+     */
+    public async getCurrentApiKeyInfo (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetCurrentApiKeyInfoResponse> {
+        const localVarPath = this.basePath + '/api/projects/api-key-info';
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetCurrentApiKeyInfoResponse'
+        );
+    }
+
+    /**
      * Retrieve the HMAC development key for a project. This key are specifically marked to be used during development. This key can be `undefined` if no development keys are set.
      * @summary Get HMAC development key
      * @param projectId Project ID
@@ -1817,6 +1981,85 @@ export class ProjectsApi {
         return this.handleResponse(
             response,
             'GetAIActionResponse'
+        );
+    }
+
+    /**
+     * Lists all extensions that are active for this project.
+     * @summary List active extensions
+     * @param projectId Project ID
+     */
+    public async getProjectActiveExtensions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetProjectActiveExtensionsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/active'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getProjectActiveExtensions.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetProjectActiveExtensionsResponse'
         );
     }
 
@@ -3109,6 +3352,85 @@ export class ProjectsApi {
     }
 
     /**
+     * Lists all available extensions that can be added to this project.
+     * @summary List available extensions
+     * @param projectId Project ID
+     */
+    public async listProjectAvailableExtensions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListProjectAvailableExtensionsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/available'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listProjectAvailableExtensions.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'ListProjectAvailableExtensionsResponse'
+        );
+    }
+
+    /**
      * Retrieve all HMAC keys.
      * @summary Get HMAC keys
      * @param projectId Project ID
@@ -3888,6 +4210,94 @@ export class ProjectsApi {
         return this.handleResponse(
             response,
             'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Removes an existing extension from a project.
+     * @summary Remove extension from project
+     * @param projectId Project ID
+     * @param extensionId Extension ID
+     */
+    public async removeProjectActiveExtension (projectId: number, extensionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RemoveProjectActiveExtensionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/active/{extensionId}'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling removeProjectActiveExtension.');
+        }
+
+        // verify required parameter 'extensionId' is not null or undefined
+
+
+        if (extensionId === null || extensionId === undefined) {
+            throw new Error('Required parameter extensionId was null or undefined when calling removeProjectActiveExtension.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'DELETE',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'RemoveProjectActiveExtensionResponse'
         );
     }
 

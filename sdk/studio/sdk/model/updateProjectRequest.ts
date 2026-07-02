@@ -179,6 +179,10 @@ export type UpdateProjectRequest = {
     lastShownModelEngine?: ModelEngineShortEnum;
     versioningStorageSizeMib?: number;
     anomalyLabelsConfig?: AnomalyLabelsConfig;
+    /**
+    * Enables a first-class validation dataset alongside training and testing.
+    */
+    explicitValidationEnabled?: boolean;
 };
 
 export type UpdateProjectRequestSelectedProjectTypeInWizardEnum = 'accelerometer' | 'audio' | 'image_classification' | 'object_detection' | 'something_else';

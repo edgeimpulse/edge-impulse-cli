@@ -31,18 +31,23 @@ import { AddOrganizationTransferLearningBlockRequest } from '../model/addOrganiz
 import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { ExportBlockResponse } from '../model/exportBlockResponse';
+import { ExtensionVisibility } from '../model/extensionVisibility';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDeployBlockResponse } from '../model/getOrganizationDeployBlockResponse';
 import { GetOrganizationDspBlockResponse } from '../model/getOrganizationDspBlockResponse';
+import { GetOrganizationExtensionBlockResponse } from '../model/getOrganizationExtensionBlockResponse';
 import { GetOrganizationTransferLearningBlockResponse } from '../model/getOrganizationTransferLearningBlockResponse';
 import { GetOrganizationTransformationBlockResponse } from '../model/getOrganizationTransformationBlockResponse';
 import { GetPublicOrganizationTransformationBlockResponse } from '../model/getPublicOrganizationTransformationBlockResponse';
 import { ListOrganizationDeployBlocksResponse } from '../model/listOrganizationDeployBlocksResponse';
 import { ListOrganizationDspBlocksResponse } from '../model/listOrganizationDspBlocksResponse';
+import { ListOrganizationExtensionBlocksResponse } from '../model/listOrganizationExtensionBlocksResponse';
 import { ListOrganizationSecretsResponse } from '../model/listOrganizationSecretsResponse';
 import { ListOrganizationTransferLearningBlocksResponse } from '../model/listOrganizationTransferLearningBlocksResponse';
 import { ListOrganizationTransformationBlocksResponse } from '../model/listOrganizationTransformationBlocksResponse';
 import { ListPublicOrganizationTransformationBlocksResponse } from '../model/listPublicOrganizationTransformationBlocksResponse';
+import { ProjectApiKeyRole } from '../model/projectApiKeyRole';
+import { PublicProjectTierAvailability } from '../model/publicProjectTierAvailability';
 import { UpdateOrganizationDspBlockRequest } from '../model/updateOrganizationDspBlockRequest';
 import { UpdateOrganizationTransferLearningBlockRequest } from '../model/updateOrganizationTransferLearningBlockRequest';
 import { UpdateOrganizationTransformationBlockRequest } from '../model/updateOrganizationTransformationBlockRequest';
@@ -86,6 +91,22 @@ export type addOrganizationDeployBlockFormParams = {
     parameters?: Array<object>,
 };
 
+export type addOrganizationExtensionBlockFormParams = {
+    name: string,
+    onlyAvailableInProjectId?: number,
+    description: string,
+    url: string,
+    repositoryUrl?: string,
+    logo?: RequestFile,
+    navbarIcon?: string,
+    navbarLocation: string,
+    requiredApiKeyRole: ProjectApiKeyRole,
+    visibility?: ExtensionVisibility,
+    publicProjectTierAvailability?: PublicProjectTierAvailability,
+    indBlockNoLongerAvailable?: boolean,
+    blockNoLongerAvailableReason?: string,
+};
+
 export type updateOrganizationDeployBlockFormParams = {
     name?: string,
     dockerContainer?: string,
@@ -104,6 +125,22 @@ export type updateOrganizationDeployBlockFormParams = {
     category?: string,
     sourceCodeDownloadStaffOnly?: boolean,
     parameters?: Array<object>,
+};
+
+export type updateOrganizationExtensionBlockFormParams = {
+    name?: string,
+    onlyAvailableInProjectId?: number,
+    description?: string,
+    url?: string,
+    repositoryUrl?: string,
+    logo?: RequestFile,
+    navbarIcon?: string,
+    navbarLocation?: string,
+    requiredApiKeyRole?: ProjectApiKeyRole,
+    visibility?: ExtensionVisibility,
+    publicProjectTierAvailability?: PublicProjectTierAvailability,
+    indBlockNoLongerAvailable?: boolean,
+    blockNoLongerAvailableReason?: string,
 };
 
 
@@ -467,6 +504,205 @@ export class OrganizationBlocksApi {
         };
 
         localVarRequestOptions.body = JSON.stringify(addOrganizationDspBlockRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'EntityCreatedResponse'
+        );
+    }
+
+    /**
+     * Adds an extension block.
+     * @summary Add extension block
+     * @param organizationId Organization ID
+     * @param name Extension block name.
+     * @param description Extension block description.
+     * @param url URL loaded by the extension.
+     * @param navbarLocation Studio navigation location for the extension.
+     * @param requiredApiKeyRole 
+     * @param onlyAvailableInProjectId Required if \\\&quot;visibility\\\&quot; is \\\&quot;project\\\&quot;. If set, this extension is scoped to this specific project.
+     * @param repositoryUrl Optional source repository URL for the extension.
+     * @param logo Optional logo image for the extension.
+     * @param navbarIcon Optional Font Awesome icon class for the navigation item.
+     * @param visibility 
+     * @param publicProjectTierAvailability 
+     * @param indBlockNoLongerAvailable Whether this extension is no longer available.
+     * @param blockNoLongerAvailableReason Reason this extension is no longer available.
+     */
+    public async addOrganizationExtensionBlock (organizationId: number, params: addOrganizationExtensionBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/extension'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+        // verify required parameter 'name' is not null or undefined
+        if (params.name === null || params.name === undefined) {
+            throw new Error('Required parameter params.name was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        // verify required parameter 'description' is not null or undefined
+        if (params.description === null || params.description === undefined) {
+            throw new Error('Required parameter params.description was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        // verify required parameter 'url' is not null or undefined
+        if (params.url === null || params.url === undefined) {
+            throw new Error('Required parameter params.url was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        // verify required parameter 'navbarLocation' is not null or undefined
+        if (params.navbarLocation === null || params.navbarLocation === undefined) {
+            throw new Error('Required parameter params.navbarLocation was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        // verify required parameter 'requiredApiKeyRole' is not null or undefined
+        if (params.requiredApiKeyRole === null || params.requiredApiKeyRole === undefined) {
+            throw new Error('Required parameter params.requiredApiKeyRole was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        if (params.name !== undefined) {
+            if (params.name !== null && params.name !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'name', serializeFormDataValue(params.name, 'string'));
+            }
+        }
+        if (params.onlyAvailableInProjectId !== undefined) {
+            if (params.onlyAvailableInProjectId !== null && params.onlyAvailableInProjectId !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'onlyAvailableInProjectId', serializeFormDataValue(params.onlyAvailableInProjectId, 'number'));
+            }
+        }
+        if (params.description !== undefined) {
+            if (params.description !== null && params.description !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'description', serializeFormDataValue(params.description, 'string'));
+            }
+        }
+        if (params.url !== undefined) {
+            if (params.url !== null && params.url !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'url', serializeFormDataValue(params.url, 'string'));
+            }
+        }
+        if (params.repositoryUrl !== undefined) {
+            if (params.repositoryUrl !== null && params.repositoryUrl !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'repositoryUrl', serializeFormDataValue(params.repositoryUrl, 'string'));
+            }
+        }
+        if (params.logo !== undefined) {
+            localVarFormParams = ensureFormData(localVarFormParams);
+
+            const logoFiles = Array.isArray(params.logo) ? params.logo : [params.logo];
+
+            const Blob = globalThis.Blob || require('buffer').Blob;
+            for (const f of logoFiles) {
+                localVarFormParams.append('logo', new Blob([new Uint8Array(f.value)], {
+                    type: f.options.contentType
+                }), f.options.filename);
+            }
+        }
+        if (params.navbarIcon !== undefined) {
+            if (params.navbarIcon !== null && params.navbarIcon !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarIcon', serializeFormDataValue(params.navbarIcon, 'string'));
+            }
+        }
+        if (params.navbarLocation !== undefined) {
+            if (params.navbarLocation !== null && params.navbarLocation !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'string'));
+            }
+        }
+        if (params.requiredApiKeyRole !== undefined) {
+            if (params.requiredApiKeyRole !== null && params.requiredApiKeyRole !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'requiredApiKeyRole', serializeFormDataValue(params.requiredApiKeyRole, 'ProjectApiKeyRole'));
+            }
+        }
+        if (params.visibility !== undefined) {
+            if (params.visibility !== null && params.visibility !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'visibility', serializeFormDataValue(params.visibility, 'ExtensionVisibility'));
+            }
+        }
+        if (params.publicProjectTierAvailability !== undefined) {
+            if (params.publicProjectTierAvailability !== null && params.publicProjectTierAvailability !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'publicProjectTierAvailability', serializeFormDataValue(params.publicProjectTierAvailability, 'PublicProjectTierAvailability'));
+            }
+        }
+        if (params.indBlockNoLongerAvailable !== undefined) {
+            if (params.indBlockNoLongerAvailable !== null && params.indBlockNoLongerAvailable !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'indBlockNoLongerAvailable', serializeFormDataValue(params.indBlockNoLongerAvailable, 'boolean'));
+            }
+        }
+        if (params.blockNoLongerAvailableReason !== undefined) {
+            if (params.blockNoLongerAvailableReason !== null && params.blockNoLongerAvailableReason !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'blockNoLongerAvailableReason', serializeFormDataValue(params.blockNoLongerAvailableReason, 'string'));
+            }
+        }
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
 
 
         let requestOptions = localVarRequestOptions;
@@ -892,6 +1128,94 @@ export class OrganizationBlocksApi {
 
         if (dspId === null || dspId === undefined) {
             throw new Error('Required parameter dspId was null or undefined when calling deleteOrganizationDspBlock.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'DELETE',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Deletes an extension block.
+     * @summary Delete extension block
+     * @param organizationId Organization ID
+     * @param extensionId Extension ID
+     */
+    public async deleteOrganizationExtensionBlock (organizationId: number, extensionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/extension/{extensionId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling deleteOrganizationExtensionBlock.');
+        }
+
+        // verify required parameter 'extensionId' is not null or undefined
+
+
+        if (extensionId === null || extensionId === undefined) {
+            throw new Error('Required parameter extensionId was null or undefined when calling deleteOrganizationExtensionBlock.');
         }
 
         localVarHeaderParams = {
@@ -1736,6 +2060,94 @@ export class OrganizationBlocksApi {
     }
 
     /**
+     * Gets an extension block.
+     * @summary Get extension block
+     * @param organizationId Organization ID
+     * @param extensionId Extension ID
+     */
+    public async getOrganizationExtensionBlock (organizationId: number, extensionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationExtensionBlockResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/extension/{extensionId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getOrganizationExtensionBlock.');
+        }
+
+        // verify required parameter 'extensionId' is not null or undefined
+
+
+        if (extensionId === null || extensionId === undefined) {
+            throw new Error('Required parameter extensionId was null or undefined when calling getOrganizationExtensionBlock.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GetOrganizationExtensionBlockResponse'
+        );
+    }
+
+    /**
      * Gets a transfer learning block.
      * @summary Get transfer learning block
      * @param organizationId Organization ID
@@ -2154,6 +2566,85 @@ export class OrganizationBlocksApi {
         return this.handleResponse(
             response,
             'ListOrganizationDspBlocksResponse'
+        );
+    }
+
+    /**
+     * Retrieve all extension blocks for this organization.
+     * @summary Get extension blocks
+     * @param organizationId Organization ID
+     */
+    public async listOrganizationExtensionBlocks (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationExtensionBlocksResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/extension'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling listOrganizationExtensionBlocks.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'ListOrganizationExtensionBlocksResponse'
         );
     }
 
@@ -2830,6 +3321,179 @@ export class OrganizationBlocksApi {
         };
 
         localVarRequestOptions.body = JSON.stringify(updateOrganizationDspBlockRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+    }
+
+    /**
+     * Updates an extension block. Only values in the body will be updated.
+     * @summary Update extension block
+     * @param organizationId Organization ID
+     * @param extensionId Extension ID
+     * @param name Extension block name.
+     * @param onlyAvailableInProjectId Required if \\\&quot;visibility\\\&quot; is \\\&quot;project\\\&quot;. If set, this extension is scoped to this specific project.
+     * @param description Extension block description.
+     * @param url URL loaded by the extension.
+     * @param repositoryUrl Optional source repository URL for the extension.
+     * @param logo Optional logo image for the extension.
+     * @param navbarIcon Optional Font Awesome icon class for the navigation item.
+     * @param navbarLocation Studio navigation location for the extension.
+     * @param requiredApiKeyRole 
+     * @param visibility 
+     * @param publicProjectTierAvailability 
+     * @param indBlockNoLongerAvailable Whether this extension is no longer available.
+     * @param blockNoLongerAvailableReason Reason this extension is no longer available.
+     */
+    public async updateOrganizationExtensionBlock (organizationId: number, extensionId: number, params: updateOrganizationExtensionBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/extension/{extensionId}'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
+            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling updateOrganizationExtensionBlock.');
+        }
+
+        // verify required parameter 'extensionId' is not null or undefined
+
+
+        if (extensionId === null || extensionId === undefined) {
+            throw new Error('Required parameter extensionId was null or undefined when calling updateOrganizationExtensionBlock.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        if (params.name !== undefined) {
+            if (params.name !== null && params.name !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'name', serializeFormDataValue(params.name, 'string'));
+            }
+        }
+        if (params.onlyAvailableInProjectId !== undefined) {
+            if (params.onlyAvailableInProjectId !== null && params.onlyAvailableInProjectId !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'onlyAvailableInProjectId', serializeFormDataValue(params.onlyAvailableInProjectId, 'number'));
+            }
+        }
+        if (params.description !== undefined) {
+            if (params.description !== null && params.description !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'description', serializeFormDataValue(params.description, 'string'));
+            }
+        }
+        if (params.url !== undefined) {
+            if (params.url !== null && params.url !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'url', serializeFormDataValue(params.url, 'string'));
+            }
+        }
+        if (params.repositoryUrl !== undefined) {
+            if (params.repositoryUrl !== null && params.repositoryUrl !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'repositoryUrl', serializeFormDataValue(params.repositoryUrl, 'string'));
+            }
+        }
+        if (params.logo !== undefined) {
+            localVarFormParams = ensureFormData(localVarFormParams);
+
+            const logoFiles = Array.isArray(params.logo) ? params.logo : [params.logo];
+
+            const Blob = globalThis.Blob || require('buffer').Blob;
+            for (const f of logoFiles) {
+                localVarFormParams.append('logo', new Blob([new Uint8Array(f.value)], {
+                    type: f.options.contentType
+                }), f.options.filename);
+            }
+        }
+        if (params.navbarIcon !== undefined) {
+            if (params.navbarIcon !== null && params.navbarIcon !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarIcon', serializeFormDataValue(params.navbarIcon, 'string'));
+            }
+        }
+        if (params.navbarLocation !== undefined) {
+            if (params.navbarLocation !== null && params.navbarLocation !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'string'));
+            }
+        }
+        if (params.requiredApiKeyRole !== undefined) {
+            if (params.requiredApiKeyRole !== null && params.requiredApiKeyRole !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'requiredApiKeyRole', serializeFormDataValue(params.requiredApiKeyRole, 'ProjectApiKeyRole'));
+            }
+        }
+        if (params.visibility !== undefined) {
+            if (params.visibility !== null && params.visibility !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'visibility', serializeFormDataValue(params.visibility, 'ExtensionVisibility'));
+            }
+        }
+        if (params.publicProjectTierAvailability !== undefined) {
+            if (params.publicProjectTierAvailability !== null && params.publicProjectTierAvailability !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'publicProjectTierAvailability', serializeFormDataValue(params.publicProjectTierAvailability, 'PublicProjectTierAvailability'));
+            }
+        }
+        if (params.indBlockNoLongerAvailable !== undefined) {
+            if (params.indBlockNoLongerAvailable !== null && params.indBlockNoLongerAvailable !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'indBlockNoLongerAvailable', serializeFormDataValue(params.indBlockNoLongerAvailable, 'boolean'));
+            }
+        }
+        if (params.blockNoLongerAvailableReason !== undefined) {
+            if (params.blockNoLongerAvailableReason !== null && params.blockNoLongerAvailableReason !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'blockNoLongerAvailableReason', serializeFormDataValue(params.blockNoLongerAvailableReason, 'string'));
+            }
+        }
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
 
 
         let requestOptions = localVarRequestOptions;

@@ -225,6 +225,10 @@ export type ProjectInfoResponse = {
     versioningStorageSizeMib?: number;
     anomalyLabelsConfig?: AnomalyLabelsConfig;
     datasetSplitOptions?: DatasetSplitOptions;
+    /**
+    * Whether this project has a first-class validation dataset alongside training and testing.
+    */
+    explicitValidationEnabled?: boolean;
 };
 
 export type ProjectInfoResponseAllOfAcquisitionSettingsViewTypeEnum = 'list' | 'grid';

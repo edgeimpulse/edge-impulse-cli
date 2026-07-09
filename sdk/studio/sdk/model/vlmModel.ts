@@ -2,7 +2,6 @@
 
 import type { DSPGroup } from './dSPGroup';
 import type { VlmModelType } from './vlmModelType';
-import type { VlmPromptComponent } from './vlmPromptComponent';
 
 export type VlmModel = {
     modelId: number;
@@ -13,10 +12,5 @@ export type VlmModel = {
     * If true, the warmup endpoint may be called to prepare the model for inference
     */
     requiresWarmup?: boolean;
-    /**
-    * List of example prompt templates available for insertion. Each template is an array of components defining the
-    * prompt text and whether the component is user-editable.
-    */
-    availablePromptComponents?: VlmPromptComponent[][];
     defaultParameters: DSPGroup[];
 };

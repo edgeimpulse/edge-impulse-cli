@@ -5,8 +5,4 @@ export type VlmPromptComponent = {
     * The text content of the prompt.
     */
     text: string;
-    /**
-    * Indicates whether the prompt component can be edited by the user.
-    */
-    userEditable: boolean;
 };

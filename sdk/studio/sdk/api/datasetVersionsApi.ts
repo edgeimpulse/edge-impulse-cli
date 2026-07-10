@@ -25,6 +25,7 @@ else {
     FormData = undici.FormData;
 }
 
+import { CreateDatasetVersionResponse } from '../model/createDatasetVersionResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { StartJobResponse } from '../model/startJobResponse';
 import { GetDatasetVersionRawDataChangesResponse } from '../model/getDatasetVersionRawDataChangesResponse';
@@ -167,6 +168,85 @@ export class DatasetVersionsApi {
         this.authentications.OAuth2.accessToken = token;
     }
 
+
+    /**
+     * Trigger a manual snapshot of the current dataset. Snapshots are usually created automatically when dataset changes are detected, but this endpoint lets you control when one is created (for example, before a large update). The request returns immediately, and a background process typically creates the new dataset version within a few seconds. If a manual snapshot is already in progress, a null window is returned.
+     * @summary Create a new snapshot of the dataset
+     * @param projectId Project ID
+     */
+    public async createDatasetVersion (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateDatasetVersionResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/create'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling createDatasetVersion.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        return this.handleResponse(
+            response,
+            'CreateDatasetVersionResponse'
+        );
+    }
 
     /**
      * Get details of a specific dataset version for this project.

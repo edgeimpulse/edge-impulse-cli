@@ -142,6 +142,7 @@ export * from './cosineSimilarityIssue';
 export * from './countSamplesResponse';
 export * from './createCustomBlockUploadLinkRequest';
 export * from './createCustomBlockUploadLinkResponse';
+export * from './createDatasetVersionResponse';
 export * from './createDeveloperProfileResponse';
 export * from './createDeviceRequest';
 export * from './createEnterpriseTrialResponse';

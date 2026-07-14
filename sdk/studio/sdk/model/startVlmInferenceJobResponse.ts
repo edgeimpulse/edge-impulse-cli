@@ -9,6 +9,9 @@ export type StartVlmInferenceJobResponse = {
     * Optional error description (set if 'success' was false)
     */
     error?: string;
-    jobId: number;
+    /**
+    * Job identifier. Status updates will include this identifier.
+    */
+    id: number;
     configId: number;
 };

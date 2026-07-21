@@ -146,7 +146,10 @@ export class ThirdPartyAuthApi {
      * @param authId Auth ID
      * @param nextUrl The URL to redirect to after authorization is completed.
      */
-    public async authorizeThirdParty (projectId: number, authId: number, params: authorizeThirdPartyFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async authorizeThirdParty (projectId: number, authId: number, params: authorizeThirdPartyFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/{projectId}/third-party-auth/{authId}/authorize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
@@ -227,10 +230,18 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -238,7 +249,10 @@ export class ThirdPartyAuthApi {
      * @summary Create third party auth
      * @param createThirdPartyAuthRequest 
      */
-    public async createThirdPartyAuth (createThirdPartyAuthRequest: CreateThirdPartyAuthRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateThirdPartyAuthResponse> {
+    public async createThirdPartyAuth (createThirdPartyAuthRequest: CreateThirdPartyAuthRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateThirdPartyAuthResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -307,10 +321,18 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateThirdPartyAuthResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -319,7 +341,10 @@ export class ThirdPartyAuthApi {
      * @param authId Auth ID
      * @param createUserThirdPartyRequest 
      */
-    public async createUserThirdParty (authId: number, createUserThirdPartyRequest: CreateUserThirdPartyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateUserThirdPartyResponse> {
+    public async createUserThirdParty (authId: number, createUserThirdPartyRequest: CreateUserThirdPartyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateUserThirdPartyResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}/login'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let queryParameters: Record<string, string> = {};
@@ -396,10 +421,18 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateUserThirdPartyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -407,7 +440,10 @@ export class ThirdPartyAuthApi {
      * @summary Delete third party auth
      * @param authId Auth ID
      */
-    public async deleteThirdPartyAuth (authId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteThirdPartyAuth (authId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let queryParameters: Record<string, string> = {};
@@ -475,17 +511,28 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Get information about all third party authentication partners
      * @summary Get all third party auth
      */
-    public async getAllThirdPartyAuth (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllThirdPartyAuthResponse> {
+    public async getAllThirdPartyAuth (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllThirdPartyAuthResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -545,10 +592,18 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllThirdPartyAuthResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -556,7 +611,10 @@ export class ThirdPartyAuthApi {
      * @summary Get third party auth
      * @param authId Auth ID
      */
-    public async getThirdPartyAuth (authId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetThirdPartyAuthResponse> {
+    public async getThirdPartyAuth (authId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetThirdPartyAuthResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let queryParameters: Record<string, string> = {};
@@ -624,10 +682,18 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetThirdPartyAuthResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -636,7 +702,10 @@ export class ThirdPartyAuthApi {
      * @param authId Auth ID
      * @param updateThirdPartyAuthRequest 
      */
-    public async updateThirdPartyAuth (authId: number, updateThirdPartyAuthRequest: UpdateThirdPartyAuthRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateThirdPartyAuth (authId: number, updateThirdPartyAuthRequest: UpdateThirdPartyAuthRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/third-party-auth/{authId}'
             .replace('{' + 'authId' + '}', encodeURIComponent(String(authId)));
         let queryParameters: Record<string, string> = {};
@@ -713,9 +782,17 @@ export class ThirdPartyAuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

@@ -151,7 +151,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param organizationUpdatePipelineBody 
      */
-    public async createOrganizationPipeline (organizationId: number, organizationUpdatePipelineBody: OrganizationUpdatePipelineBody, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async createOrganizationPipeline (organizationId: number, organizationUpdatePipelineBody: OrganizationUpdatePipelineBody, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -228,10 +231,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -240,7 +251,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param pipelineId Pipeline ID
      */
-    public async deleteOrganizationPipeline (organizationId: number, pipelineId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationPipeline (organizationId: number, pipelineId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -316,10 +330,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -328,7 +350,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param pipelineId Pipeline ID
      */
-    public async getOrganizationPipeline (organizationId: number, pipelineId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationPipelinesResponse> {
+    public async getOrganizationPipeline (organizationId: number, pipelineId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -404,10 +429,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationPipelinesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -416,7 +449,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listArchivedOrganizationPipelines (organizationId: number, queryParams?: listArchivedOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listArchivedOrganizationPipelines (organizationId: number, queryParams?: listArchivedOrganizationPipelinesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/archived'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -487,10 +523,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationPipelinesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -499,7 +543,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param projectId If set, filters on pipelines which are attached to this project.
      */
-    public async listOrganizationPipelines (organizationId: number, queryParams?: listOrganizationPipelinesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPipelinesResponse> {
+    public async listOrganizationPipelines (organizationId: number, queryParams?: listOrganizationPipelinesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationPipelinesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -570,10 +617,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationPipelinesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -583,7 +638,10 @@ export class OrganizationPipelinesApi {
      * @param pipelineId Pipeline ID
      * @param ignoreLastSuccessfulRun If set then &#x60;EI_LAST_SUCCESSFUL_RUN&#x60; is not set. You can use this to re-run a pipeline from scratch.
      */
-    public async runOrganizationPipeline (organizationId: number, pipelineId: number, queryParams?: runOrganizationPipelineQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RunOrganizationPipelineResponse> {
+    public async runOrganizationPipeline (organizationId: number, pipelineId: number, queryParams?: runOrganizationPipelineQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<RunOrganizationPipelineResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}/run'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -662,10 +720,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'RunOrganizationPipelineResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -674,7 +740,10 @@ export class OrganizationPipelinesApi {
      * @param organizationId Organization ID
      * @param pipelineId Pipeline ID
      */
-    public async stopOrganizationPipeline (organizationId: number, pipelineId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async stopOrganizationPipeline (organizationId: number, pipelineId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}/stop'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -750,10 +819,18 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -763,7 +840,10 @@ export class OrganizationPipelinesApi {
      * @param pipelineId Pipeline ID
      * @param organizationUpdatePipelineBody 
      */
-    public async updateOrganizationPipeline (organizationId: number, pipelineId: number, organizationUpdatePipelineBody: OrganizationUpdatePipelineBody, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationPipeline (organizationId: number, pipelineId: number, organizationUpdatePipelineBody: OrganizationUpdatePipelineBody, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/pipelines/{pipelineId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'pipelineId' + '}', encodeURIComponent(String(pipelineId)));
@@ -848,9 +928,17 @@ export class OrganizationPipelinesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

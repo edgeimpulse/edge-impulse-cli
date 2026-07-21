@@ -123,7 +123,10 @@ export class MetricsApi {
      * Get information about number of projects, compute and data samples. Updated once per hour.
      * @summary Get public metrics
      */
-    public async getPublicMetrics (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPublicMetricsResponse> {
+    public async getPublicMetrics (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPublicMetricsResponse> {
         const localVarPath = this.basePath + '/api-metrics';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -167,10 +170,18 @@ export class MetricsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPublicMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -178,7 +189,10 @@ export class MetricsApi {
      * @summary Log analytics event
      * @param logAnalyticsEventRequest 
      */
-    public async logAnalyticsEvent (logAnalyticsEventRequest: LogAnalyticsEventRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async logAnalyticsEvent (logAnalyticsEventRequest: LogAnalyticsEventRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-metrics/events';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -231,10 +245,18 @@ export class MetricsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -242,7 +264,10 @@ export class MetricsApi {
      * @summary Log website pageview
      * @param logWebsitePageviewRequest 
      */
-    public async logWebsitePageview (logWebsitePageviewRequest: LogWebsitePageviewRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async logWebsitePageview (logWebsitePageviewRequest: LogWebsitePageviewRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-metrics/website/pageviews';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -295,9 +320,17 @@ export class MetricsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

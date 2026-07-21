@@ -220,7 +220,10 @@ export class DeploymentApi {
      * @param buildPublicDeploymentJobRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async buildPublicDeploymentJob (projectId: number, buildPublicDeploymentJobRequest: BuildPublicDeploymentJobRequest, queryParams?: buildPublicDeploymentJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<BuildPublicDeploymentJobResponse> {
+    public async buildPublicDeploymentJob (projectId: number, buildPublicDeploymentJobRequest: BuildPublicDeploymentJobRequest, queryParams?: buildPublicDeploymentJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<BuildPublicDeploymentJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/public/build'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -300,10 +303,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'BuildPublicDeploymentJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -315,7 +326,10 @@ export class DeploymentApi {
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async downloadBuild (projectId: number, queryParams: downloadBuildQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadBuild (projectId: number, queryParams: downloadBuildQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -402,10 +416,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -414,7 +436,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param deploymentVersion Deployment version ID
      */
-    public async downloadHistoricDeployment (projectId: number, deploymentVersion: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadHistoricDeployment (projectId: number, deploymentVersion: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/history/{deploymentVersion}/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deploymentVersion' + '}', encodeURIComponent(String(deploymentVersion)));
@@ -490,10 +515,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -507,7 +540,10 @@ export class DeploymentApi {
      * @param metaCsvFile 
      * @param deploymentTarget 
      */
-    public async findSyntiantPosterior (projectId: number, params: findSyntiantPosteriorFormParams, queryParams?: findSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async findSyntiantPosterior (projectId: number, params: findSyntiantPosteriorFormParams, queryParams?: findSyntiantPosteriorQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/find-syntiant-posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -638,10 +674,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -653,7 +697,10 @@ export class DeploymentApi {
      * @param engine Optional engine for the build (if not, it uses the default engine for the deployment target)
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getDeployment (projectId: number, queryParams: getDeploymentQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentResponse> {
+    public async getDeployment (projectId: number, queryParams: getDeploymentQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDeploymentResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -740,10 +787,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDeploymentResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -752,7 +807,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getEvaluateJobResult (projectId: number, queryParams?: getEvaluateJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
+    public async getEvaluateJobResult (projectId: number, queryParams?: getEvaluateJobResultQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EvaluateJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -823,10 +881,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EvaluateJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -835,7 +901,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getEvaluateJobResultCache (projectId: number, queryParams?: getEvaluateJobResultCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EvaluateJobResponse> {
+    public async getEvaluateJobResultCache (projectId: number, queryParams?: getEvaluateJobResultCacheQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EvaluateJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/evaluate/cache'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -906,10 +975,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EvaluateJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -918,7 +995,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param deploymentVersion Deployment version ID
      */
-    public async getHistoricDeployment (projectId: number, deploymentVersion: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeploymentHistoryResponse> {
+    public async getHistoricDeployment (projectId: number, deploymentVersion: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDeploymentHistoryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/history/{deploymentVersion}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deploymentVersion' + '}', encodeURIComponent(String(deploymentVersion)));
@@ -994,10 +1074,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDeploymentHistoryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1006,7 +1094,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getLastDeploymentBuild (projectId: number, queryParams?: getLastDeploymentBuildQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetLastDeploymentBuildResponse> {
+    public async getLastDeploymentBuild (projectId: number, queryParams?: getLastDeploymentBuildQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetLastDeploymentBuildResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/last'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1077,10 +1168,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetLastDeploymentBuildResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1089,7 +1188,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param startTimestamp 
      */
-    public async getModelMonitoringDeployments (projectId: number, queryParams?: getModelMonitoringDeploymentsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetModelMonitoringDeploymentsResponse> {
+    public async getModelMonitoringDeployments (projectId: number, queryParams?: getModelMonitoringDeploymentsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetModelMonitoringDeploymentsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/monitoring'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1160,10 +1262,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetModelMonitoringDeploymentsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1172,7 +1282,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param jobId Job ID
      */
-    public async getPublicDeploymentStatus (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPublicDeploymentStatusResponse> {
+    public async getPublicDeploymentStatus (projectId: number, jobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPublicDeploymentStatusResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/public/jobs/{jobId}/status'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1248,10 +1361,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPublicDeploymentStatusResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1260,7 +1381,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getSyntiantPosterior (projectId: number, queryParams?: getSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSyntiantPosteriorResponse> {
+    public async getSyntiantPosterior (projectId: number, queryParams?: getSyntiantPosteriorQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSyntiantPosteriorResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1331,17 +1455,28 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSyntiantPosteriorResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * List all deployment targets
      * @summary Deployment targets
      */
-    public async listAllDeploymentTargets (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
+    public async listAllDeploymentTargets (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/deployment/targets';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1401,10 +1536,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DeploymentTargetsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1416,7 +1559,10 @@ export class DeploymentApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listDeploymentHistory (projectId: number, queryParams?: listDeploymentHistoryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListDeploymentHistoryResponse> {
+    public async listDeploymentHistory (projectId: number, queryParams?: listDeploymentHistoryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListDeploymentHistoryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/history'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1496,10 +1642,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListDeploymentHistoryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1508,7 +1662,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDeploymentTargetsForProject (projectId: number, queryParams?: listDeploymentTargetsForProjectQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDeploymentTargetsResponse> {
+    public async listDeploymentTargetsForProject (projectId: number, queryParams?: listDeploymentTargetsForProjectQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectDeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1579,10 +1736,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectDeploymentTargetsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1591,7 +1756,10 @@ export class DeploymentApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDeploymentTargetsForProjectDataSources (projectId: number, queryParams?: listDeploymentTargetsForProjectDataSourcesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeploymentTargetsResponse> {
+    public async listDeploymentTargetsForProjectDataSources (projectId: number, queryParams?: listDeploymentTargetsForProjectDataSourcesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DeploymentTargetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/targets/data-sources'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1662,10 +1830,18 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DeploymentTargetsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1675,7 +1851,10 @@ export class DeploymentApi {
      * @param setSyntiantPosteriorRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async setSyntiantPosterior (projectId: number, setSyntiantPosteriorRequest: SetSyntiantPosteriorRequest, queryParams?: setSyntiantPosteriorQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSyntiantPosterior (projectId: number, setSyntiantPosteriorRequest: SetSyntiantPosteriorRequest, queryParams?: setSyntiantPosteriorQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/deployment/syntiant/posterior'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1755,9 +1934,17 @@ export class DeploymentApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

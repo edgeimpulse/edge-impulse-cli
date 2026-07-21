@@ -259,7 +259,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param addOrganizationBucketRequest 
      */
-    public async addOrganizationBucket (organizationId: number, addOrganizationBucketRequest: AddOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async addOrganizationBucket (organizationId: number, addOrganizationBucketRequest: AddOrganizationBucketRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -336,10 +339,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -349,7 +360,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param files 
      */
-    public async addOrganizationDataFile (organizationId: number, dataId: number, params: addOrganizationDataFileFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addOrganizationDataFile (organizationId: number, dataId: number, params: addOrganizationDataFileFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/add'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -444,10 +458,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -456,7 +478,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param organizationAddDataFolderRequest 
      */
-    public async addOrganizationDataFolder (organizationId: number, organizationAddDataFolderRequest: OrganizationAddDataFolderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async addOrganizationDataFolder (organizationId: number, organizationAddDataFolderRequest: OrganizationAddDataFolderRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/add-folder'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -533,10 +558,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -551,7 +584,10 @@ export class OrganizationDataApi {
      * @param bucketName Name of the bucket name (as an Edge Impulse name)
      * @param bucketPath Optional path in the bucket to create this data item (files are created under this path).
      */
-    public async addOrganizationDataItem (organizationId: number, params: addOrganizationDataItemFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async addOrganizationDataItem (organizationId: number, params: addOrganizationDataItemFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/add'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -689,10 +725,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -701,7 +745,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param organizationAddDatasetRequest 
      */
-    public async addOrganizationDataset (organizationId: number, organizationAddDatasetRequest: OrganizationAddDatasetRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async addOrganizationDataset (organizationId: number, organizationAddDatasetRequest: OrganizationAddDatasetRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -778,10 +825,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -793,7 +848,10 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async changeDatasetOrganizationDataItems (organizationId: number, setOrganizationDataDatasetRequest: SetOrganizationDataDatasetRequest, queryParams: changeDatasetOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async changeDatasetOrganizationDataItems (organizationId: number, setOrganizationDataDatasetRequest: SetOrganizationDataDatasetRequest, queryParams: changeDatasetOrganizationDataItemsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/change-dataset'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -886,10 +944,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -900,7 +966,10 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async clearChecklistOrganizationDataItems (organizationId: number, queryParams: clearChecklistOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async clearChecklistOrganizationDataItems (organizationId: number, queryParams: clearChecklistOrganizationDataItemsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/clear-checklist'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -984,10 +1053,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -996,7 +1073,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param createOrganizationBucketRequest 
      */
-    public async createOrganizationBucket (organizationId: number, createOrganizationBucketRequest: CreateOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateOrganizationBucketResponse> {
+    public async createOrganizationBucket (organizationId: number, createOrganizationBucketRequest: CreateOrganizationBucketRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/create'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1073,10 +1153,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1086,7 +1174,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param createSignedUploadLinkRequest 
      */
-    public async createSignedUploadLinkDataset (organizationId: number, dataset: string, createSignedUploadLinkRequest: CreateSignedUploadLinkRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateSignedUploadLinkResponse> {
+    public async createSignedUploadLinkDataset (organizationId: number, dataset: string, createSignedUploadLinkRequest: CreateSignedUploadLinkRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateSignedUploadLinkResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/upload-link'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -1171,10 +1262,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateSignedUploadLinkResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1184,7 +1283,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param deletePortalFileRequest 
      */
-    public async deleteDatasetFile (organizationId: number, dataset: string, deletePortalFileRequest: DeletePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteDatasetFile (organizationId: number, dataset: string, deletePortalFileRequest: DeletePortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/delete'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -1269,10 +1371,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1282,7 +1392,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async deleteOrganizationDataFile (organizationId: number, dataId: number, queryParams: deleteOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationDataFile (organizationId: number, dataId: number, queryParams: deleteOrganizationDataFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1368,10 +1481,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1380,7 +1501,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param dataId Data ID
      */
-    public async deleteOrganizationDataItem (organizationId: number, dataId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationDataItem (organizationId: number, dataId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1456,10 +1580,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1470,7 +1602,10 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async deleteOrganizationDataItems (organizationId: number, queryParams: deleteOrganizationDataItemsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async deleteOrganizationDataItems (organizationId: number, queryParams: deleteOrganizationDataItemsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/delete'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1554,10 +1689,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1567,7 +1710,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param downloadPortalFileRequest 
      */
-    public async downloadDatasetFile (organizationId: number, dataset: string, downloadPortalFileRequest: DownloadPortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DownloadPortalFileResponse> {
+    public async downloadDatasetFile (organizationId: number, dataset: string, downloadPortalFileRequest: DownloadPortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DownloadPortalFileResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -1652,10 +1798,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DownloadPortalFileResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1665,7 +1819,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param path Path, relative to dataset
      */
-    public async downloadDatasetFolder (organizationId: number, dataset: string, queryParams: downloadDatasetFolderQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDatasetFolder (organizationId: number, dataset: string, queryParams: downloadDatasetFolderQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/download-folder'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -1751,10 +1908,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1764,7 +1929,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async downloadOrganizationDataFile (organizationId: number, dataId: number, queryParams: downloadOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationDataFile (organizationId: number, dataId: number, queryParams: downloadOrganizationDataFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/files/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -1850,10 +2018,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1864,7 +2040,10 @@ export class OrganizationDataApi {
      * @param dataset Selected dataset
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationDataItem (organizationId: number, queryParams: downloadOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationDataItem (organizationId: number, queryParams: downloadOrganizationDataItemQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1948,10 +2127,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1961,7 +2148,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, queryParams?: downloadOrganizationSingleDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadOrganizationSingleDataItem (organizationId: number, dataId: number, queryParams?: downloadOrganizationSingleDataItemQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2040,10 +2230,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2052,7 +2250,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param bucketId Bucket ID
      */
-    public async getOrganizationBucket (organizationId: number, bucketId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationBucketResponse> {
+    public async getOrganizationBucket (organizationId: number, bucketId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/{bucketId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'bucketId' + '}', encodeURIComponent(String(bucketId)));
@@ -2128,10 +2329,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2141,7 +2350,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param filter Data filter in SQL WHERE format, where you can reference \&#39;dataset\&#39;, \&#39;bucket\&#39;, \&#39;name\&#39;, \&#39;total_file_count\&#39;, \&#39;total_file_size\&#39;, \&#39;created\&#39; and any metadata label through \&#39;metadata-&gt;\&#39; (dots are replaced by underscore).
      */
-    public async getOrganizationDataItem (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemResponse> {
+    public async getOrganizationDataItem (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataItemResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2220,10 +2432,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataItemResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2234,7 +2454,10 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getOrganizationDataItemTransformJobs (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemTransformJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataItemTransformJobsResponse> {
+    public async getOrganizationDataItemTransformJobs (organizationId: number, dataId: number, queryParams?: getOrganizationDataItemTransformJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataItemTransformJobsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/transformation-jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -2316,10 +2539,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataItemTransformJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2328,7 +2559,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param dataset Dataset name
      */
-    public async getOrganizationDataset (organizationId: number, dataset: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDatasetResponse> {
+    public async getOrganizationDataset (organizationId: number, dataset: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDatasetResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -2404,10 +2638,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDatasetResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2416,7 +2658,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param dataset Dataset name
      */
-    public async hideOrganizationDataset (organizationId: number, dataset: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async hideOrganizationDataset (organizationId: number, dataset: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/hide'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -2492,10 +2737,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2505,7 +2758,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param listPortalFilesInFolderRequest 
      */
-    public async listDatasetFilesInFolder (organizationId: number, dataset: string, listPortalFilesInFolderRequest: ListPortalFilesInFolderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async listDatasetFilesInFolder (organizationId: number, dataset: string, listPortalFilesInFolderRequest: ListPortalFilesInFolderRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -2590,10 +2846,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2601,7 +2865,10 @@ export class OrganizationDataApi {
      * @summary List storage buckets
      * @param organizationId Organization ID
      */
-    public async listOrganizationBuckets (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationBucketsResponse> {
+    public async listOrganizationBuckets (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationBucketsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -2669,10 +2936,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationBucketsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2684,7 +2959,10 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationData (organizationId: number, queryParams?: listOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
+    public async listOrganizationData (organizationId: number, queryParams?: listOrganizationDataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationDataResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -2764,10 +3042,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationDataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2779,7 +3065,10 @@ export class OrganizationDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async listOrganizationFiles (organizationId: number, queryParams?: listOrganizationFilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationFilesResponse> {
+    public async listOrganizationFiles (organizationId: number, queryParams?: listOrganizationFilesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationFilesResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/files'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -2859,10 +3148,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationFilesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2872,7 +3169,10 @@ export class OrganizationDataApi {
      * @param dataset 
      * @param csvFile 
      */
-    public async organizationBulkUpdateMetadata (organizationId: number, params: organizationBulkUpdateMetadataFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async organizationBulkUpdateMetadata (organizationId: number, params: organizationBulkUpdateMetadataFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/bulk-metadata'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -2971,10 +3271,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2984,7 +3292,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param previewDefaultFilesInFolderRequest 
      */
-    public async previewDefaultFilesInFolder (organizationId: number, dataset: string, previewDefaultFilesInFolderRequest: PreviewDefaultFilesInFolderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PreviewDefaultFilesInFolderResponse> {
+    public async previewDefaultFilesInFolder (organizationId: number, dataset: string, previewDefaultFilesInFolderRequest: PreviewDefaultFilesInFolderRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<PreviewDefaultFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/preview'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -3069,10 +3380,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'PreviewDefaultFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3082,7 +3401,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param fileName File name
      */
-    public async previewOrganizationDataFile (organizationId: number, dataId: number, queryParams: previewOrganizationDataFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async previewOrganizationDataFile (organizationId: number, dataId: number, queryParams: previewOrganizationDataFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}/files/preview'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -3168,10 +3490,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3180,7 +3510,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param dataset Selected dataset
      */
-    public async refreshOrganizationData (organizationId: number, queryParams: refreshOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async refreshOrganizationData (organizationId: number, queryParams: refreshOrganizationDataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/refresh'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -3258,10 +3591,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3270,7 +3611,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param bucketId Bucket ID
      */
-    public async removeOrganizationBucket (organizationId: number, bucketId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async removeOrganizationBucket (organizationId: number, bucketId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/{bucketId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'bucketId' + '}', encodeURIComponent(String(bucketId)));
@@ -3346,10 +3690,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3359,7 +3711,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param renamePortalFileRequest 
      */
-    public async renameDatasetFile (organizationId: number, dataset: string, renamePortalFileRequest: RenamePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async renameDatasetFile (organizationId: number, dataset: string, renamePortalFileRequest: RenamePortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/rename'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -3444,10 +3799,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3457,7 +3820,10 @@ export class OrganizationDataApi {
      * @param bucketId Bucket ID
      * @param updateOrganizationBucketRequest 
      */
-    public async updateOrganizationBucket (organizationId: number, bucketId: number, updateOrganizationBucketRequest: UpdateOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationBucket (organizationId: number, bucketId: number, updateOrganizationBucketRequest: UpdateOrganizationBucketRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/{bucketId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'bucketId' + '}', encodeURIComponent(String(bucketId)));
@@ -3542,10 +3908,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3555,7 +3929,10 @@ export class OrganizationDataApi {
      * @param dataId Data ID
      * @param updateOrganizationDataItemRequest 
      */
-    public async updateOrganizationDataItem (organizationId: number, dataId: number, updateOrganizationDataItemRequest: UpdateOrganizationDataItemRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationDataItem (organizationId: number, dataId: number, updateOrganizationDataItemRequest: UpdateOrganizationDataItemRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/data/{dataId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataId' + '}', encodeURIComponent(String(dataId)));
@@ -3640,10 +4017,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3653,7 +4038,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param updateOrganizationDatasetRequest 
      */
-    public async updateOrganizationDataset (organizationId: number, dataset: string, updateOrganizationDatasetRequest: UpdateOrganizationDatasetRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationDataset (organizationId: number, dataset: string, updateOrganizationDatasetRequest: UpdateOrganizationDatasetRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -3738,10 +4126,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3750,7 +4146,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param dataset Dataset name
      */
-    public async verifyDataset (organizationId: number, dataset: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyOrganizationBucketResponse> {
+    public async verifyDataset (organizationId: number, dataset: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/verify'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -3826,10 +4225,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3839,7 +4246,10 @@ export class OrganizationDataApi {
      * @param bucketId Bucket ID
      * @param verifyOrganizationExistingBucketRequest 
      */
-    public async verifyExistingOrganizationBucket (organizationId: number, bucketId: number, verifyOrganizationExistingBucketRequest: VerifyOrganizationExistingBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyOrganizationBucketResponse> {
+    public async verifyExistingOrganizationBucket (organizationId: number, bucketId: number, verifyOrganizationExistingBucketRequest: VerifyOrganizationExistingBucketRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/{bucketId}/verify'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'bucketId' + '}', encodeURIComponent(String(bucketId)));
@@ -3924,10 +4334,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3936,7 +4354,10 @@ export class OrganizationDataApi {
      * @param organizationId Organization ID
      * @param verifyOrganizationBucketRequest 
      */
-    public async verifyOrganizationBucket (organizationId: number, verifyOrganizationBucketRequest: VerifyOrganizationBucketRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyOrganizationBucketResponse> {
+    public async verifyOrganizationBucket (organizationId: number, verifyOrganizationBucketRequest: VerifyOrganizationBucketRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/buckets/verify'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4013,10 +4434,18 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4026,7 +4455,10 @@ export class OrganizationDataApi {
      * @param dataset Dataset name
      * @param path Path to file in portal
      */
-    public async viewDatasetFile (organizationId: number, dataset: string, queryParams: viewDatasetFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async viewDatasetFile (organizationId: number, dataset: string, queryParams: viewDatasetFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/dataset/{dataset}/files/view'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'dataset' + '}', encodeURIComponent(String(dataset)));
@@ -4112,9 +4544,17 @@ export class OrganizationDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

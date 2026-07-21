@@ -150,7 +150,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param addOrganizationDataCampaignRequest 
      */
-    public async addOrganizationDataCampaign (organizationId: number, addOrganizationDataCampaignRequest: AddOrganizationDataCampaignRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddOrganizationDataCampaignResponse> {
+    public async addOrganizationDataCampaign (organizationId: number, addOrganizationDataCampaignRequest: AddOrganizationDataCampaignRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AddOrganizationDataCampaignResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaigns'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -227,10 +230,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AddOrganizationDataCampaignResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -239,7 +250,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param addOrganizationDataCampaignDashboardRequest 
      */
-    public async addOrganizationDataCampaignDashboard (organizationId: number, addOrganizationDataCampaignDashboardRequest: AddOrganizationDataCampaignDashboardRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddOrganizationDataCampaignDashboardResponse> {
+    public async addOrganizationDataCampaignDashboard (organizationId: number, addOrganizationDataCampaignDashboardRequest: AddOrganizationDataCampaignDashboardRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AddOrganizationDataCampaignDashboardResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboards'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -316,10 +330,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AddOrganizationDataCampaignDashboardResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -328,7 +350,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param campaignId 
      */
-    public async deleteOrganizationDataCampaign (organizationId: number, campaignId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationDataCampaign (organizationId: number, campaignId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaigns/{campaignId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignId' + '}', encodeURIComponent(String(campaignId)));
@@ -404,10 +429,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -416,7 +449,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param campaignDashboardId 
      */
-    public async deleteOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboard/{campaignDashboardId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignDashboardId' + '}', encodeURIComponent(String(campaignDashboardId)));
@@ -492,10 +528,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -504,7 +548,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param campaignId 
      */
-    public async getOrganizationDataCampaign (organizationId: number, campaignId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataCampaignResponse> {
+    public async getOrganizationDataCampaign (organizationId: number, campaignId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataCampaignResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaigns/{campaignId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignId' + '}', encodeURIComponent(String(campaignId)));
@@ -580,10 +627,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataCampaignResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -592,7 +647,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param campaignDashboardId 
      */
-    public async getOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataCampaignDashboardResponse> {
+    public async getOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataCampaignDashboardResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboard/{campaignDashboardId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignDashboardId' + '}', encodeURIComponent(String(campaignDashboardId)));
@@ -668,10 +726,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataCampaignDashboardResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -679,7 +745,10 @@ export class OrganizationDataCampaignsApi {
      * @summary Get data campaign dashboards
      * @param organizationId Organization ID
      */
-    public async getOrganizationDataCampaignDashboards (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataCampaignDashboardsResponse> {
+    public async getOrganizationDataCampaignDashboards (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataCampaignDashboardsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboards'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -747,10 +816,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataCampaignDashboardsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -760,7 +837,10 @@ export class OrganizationDataCampaignsApi {
      * @param campaignId 
      * @param organizationDataCampaignDiffRequest 
      */
-    public async getOrganizationDataCampaignDiff (organizationId: number, campaignId: number, organizationDataCampaignDiffRequest: OrganizationDataCampaignDiffRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationDataCampaignDiffResponse> {
+    public async getOrganizationDataCampaignDiff (organizationId: number, campaignId: number, organizationDataCampaignDiffRequest: OrganizationDataCampaignDiffRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OrganizationDataCampaignDiffResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaigns/{campaignId}/diff'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignId' + '}', encodeURIComponent(String(campaignId)));
@@ -845,10 +925,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OrganizationDataCampaignDiffResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -857,7 +945,10 @@ export class OrganizationDataCampaignsApi {
      * @param organizationId Organization ID
      * @param campaignDashboardId 
      */
-    public async getOrganizationDataCampaignsForDashboard (organizationId: number, campaignDashboardId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataCampaignsResponse> {
+    public async getOrganizationDataCampaignsForDashboard (organizationId: number, campaignDashboardId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataCampaignsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboard/{campaignDashboardId}/campaigns'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignDashboardId' + '}', encodeURIComponent(String(campaignDashboardId)));
@@ -933,10 +1024,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataCampaignsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -946,7 +1045,10 @@ export class OrganizationDataCampaignsApi {
      * @param campaignId 
      * @param updateOrganizationDataCampaignRequest 
      */
-    public async updateOrganizationDataCampaign (organizationId: number, campaignId: number, updateOrganizationDataCampaignRequest: UpdateOrganizationDataCampaignRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationDataCampaign (organizationId: number, campaignId: number, updateOrganizationDataCampaignRequest: UpdateOrganizationDataCampaignRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaigns/{campaignId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignId' + '}', encodeURIComponent(String(campaignId)));
@@ -1031,10 +1133,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1044,7 +1154,10 @@ export class OrganizationDataCampaignsApi {
      * @param campaignDashboardId 
      * @param updateOrganizationDataCampaignDashboardRequest 
      */
-    public async updateOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, updateOrganizationDataCampaignDashboardRequest: UpdateOrganizationDataCampaignDashboardRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationDataCampaignDashboard (organizationId: number, campaignDashboardId: number, updateOrganizationDataCampaignDashboardRequest: UpdateOrganizationDataCampaignDashboardRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboard/{campaignDashboardId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignDashboardId' + '}', encodeURIComponent(String(campaignDashboardId)));
@@ -1129,10 +1242,18 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1142,7 +1263,10 @@ export class OrganizationDataCampaignsApi {
      * @param campaignDashboardId 
      * @param image 
      */
-    public async uploadDashboardScreenshot (organizationId: number, campaignDashboardId: number, params: uploadDashboardScreenshotFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadDashboardScreenshot (organizationId: number, campaignDashboardId: number, params: uploadDashboardScreenshotFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/campaign-dashboard/{campaignDashboardId}/screenshot'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'campaignDashboardId' + '}', encodeURIComponent(String(campaignDashboardId)));
@@ -1237,9 +1361,17 @@ export class OrganizationDataCampaignsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

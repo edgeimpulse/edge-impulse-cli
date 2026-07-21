@@ -128,7 +128,10 @@ export class CanaryApi {
      * @summary Get the decision to whether the requested URL goes on canary deployment or not
      * @param requestedUrl Full url (host included) that is requested
      */
-    public async shouldGoOnCanary (queryParams: shouldGoOnCanaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CanaryResponse> {
+    public async shouldGoOnCanary (queryParams: shouldGoOnCanaryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CanaryResponse> {
         const localVarPath = this.basePath + '/api/canary';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -186,9 +189,17 @@ export class CanaryApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CanaryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

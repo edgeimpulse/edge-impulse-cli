@@ -164,7 +164,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
-    public async clearOrganizationTransform (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearOrganizationTransform (organizationId: number, createProjectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/transform/clear'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -240,10 +243,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -252,7 +263,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param createCustomBlockUploadLinkRequest 
      */
-    public async createCustomBlockUploadLink (organizationId: number, createCustomBlockUploadLinkRequest: CreateCustomBlockUploadLinkRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateCustomBlockUploadLinkResponse> {
+    public async createCustomBlockUploadLink (organizationId: number, createCustomBlockUploadLinkRequest: CreateCustomBlockUploadLinkRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateCustomBlockUploadLinkResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block/upload-link'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -329,10 +343,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateCustomBlockUploadLinkResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -341,7 +363,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
-    public async deleteOrganizationCreateProject (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationCreateProject (organizationId: number, createProjectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -417,10 +442,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -430,7 +463,10 @@ export class OrganizationCreateProjectApi {
      * @param createProjectId Create project job ID.
      * @param createProjectFileId Create project job file ID.
      */
-    public async deleteOrganizationCreateProjectFile (organizationId: number, createProjectId: number, createProjectFileId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationCreateProjectFile (organizationId: number, createProjectId: number, createProjectFileId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/files/{createProjectFileId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)))
@@ -514,10 +550,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -526,7 +570,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param finalizeCustomBlockUploadRequest 
      */
-    public async finalizeCustomBlockUpload (organizationId: number, finalizeCustomBlockUploadRequest: FinalizeCustomBlockUploadRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async finalizeCustomBlockUpload (organizationId: number, finalizeCustomBlockUploadRequest: FinalizeCustomBlockUploadRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block/finalize'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -603,10 +650,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -618,7 +673,10 @@ export class OrganizationCreateProjectApi {
      * @param transformOffset Offset in results of transformation jobs, can be used in conjunction with TransformLimitResultsParameter to implement paging.
      * @param selection Type of selected rows, either \&#39;all\&#39;, \&#39;created\&#39;, \&#39;in-progress\&#39; or \&#39;failed\&#39; (defaults to \&#39;all\&#39;)
      */
-    public async getOrganizationCreateProjectStatus (organizationId: number, createProjectId: number, queryParams: getOrganizationCreateProjectStatusQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationCreateProjectStatusResponse> {
+    public async getOrganizationCreateProjectStatus (organizationId: number, createProjectId: number, queryParams: getOrganizationCreateProjectStatusQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OrganizationCreateProjectStatusResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -717,10 +775,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OrganizationCreateProjectStatusResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -731,7 +797,10 @@ export class OrganizationCreateProjectApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param includePipelineJobs If enabled, also includes jobs that are part of a pipeline
      */
-    public async getOrganizationCreateProjects (organizationId: number, queryParams?: getOrganizationCreateProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationGetCreateProjectsResponse> {
+    public async getOrganizationCreateProjects (organizationId: number, queryParams?: getOrganizationCreateProjectsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OrganizationGetCreateProjectsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -808,10 +877,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OrganizationGetCreateProjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -820,7 +897,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param updateOrganizationAddCollaboratorRequest 
      */
-    public async organizationAddCollaborator (organizationId: number, updateOrganizationAddCollaboratorRequest: UpdateOrganizationAddCollaboratorRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async organizationAddCollaborator (organizationId: number, updateOrganizationAddCollaboratorRequest: UpdateOrganizationAddCollaboratorRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/add-project-collaborator'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -897,10 +977,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -909,7 +997,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param updateOrganizationCreateEmptyProjectRequest 
      */
-    public async organizationCreateEmptyProject (organizationId: number, updateOrganizationCreateEmptyProjectRequest: UpdateOrganizationCreateEmptyProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+    public async organizationCreateEmptyProject (organizationId: number, updateOrganizationCreateEmptyProjectRequest: UpdateOrganizationCreateEmptyProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateProjectResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/new-project'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -986,10 +1077,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateProjectResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -998,7 +1097,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param organizationCreateProjectRequest 
      */
-    public async organizationCreateProject (organizationId: number, organizationCreateProjectRequest: OrganizationCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OrganizationCreateProjectResponse> {
+    public async organizationCreateProject (organizationId: number, organizationCreateProjectRequest: OrganizationCreateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OrganizationCreateProjectResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1075,10 +1177,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OrganizationCreateProjectResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1088,7 +1198,10 @@ export class OrganizationCreateProjectApi {
      * @param createProjectId Create project job ID.
      * @param createProjectFileId Create project job file ID.
      */
-    public async retryOrganizationCreateProjectFile (organizationId: number, createProjectId: number, createProjectFileId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async retryOrganizationCreateProjectFile (organizationId: number, createProjectId: number, createProjectFileId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/files/{createProjectFileId}/retry'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)))
@@ -1172,10 +1285,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1184,7 +1305,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
-    public async retryOrganizationTransform (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async retryOrganizationTransform (organizationId: number, createProjectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/transform/retry'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -1260,10 +1384,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1272,7 +1404,10 @@ export class OrganizationCreateProjectApi {
      * @param organizationId Organization ID
      * @param createProjectId Create project job ID.
      */
-    public async retryOrganizationUpload (organizationId: number, createProjectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async retryOrganizationUpload (organizationId: number, createProjectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}/upload/retry'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -1348,10 +1483,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1361,7 +1504,10 @@ export class OrganizationCreateProjectApi {
      * @param createProjectId Create project job ID.
      * @param updateOrganizationCreateProjectRequest 
      */
-    public async updateOrganizationCreateProject (organizationId: number, createProjectId: number, updateOrganizationCreateProjectRequest: UpdateOrganizationCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateOrganizationCreateProject (organizationId: number, createProjectId: number, updateOrganizationCreateProjectRequest: UpdateOrganizationCreateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/create-project/{createProjectId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'createProjectId' + '}', encodeURIComponent(String(createProjectId)));
@@ -1446,10 +1592,18 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1460,7 +1614,10 @@ export class OrganizationCreateProjectApi {
      * @param type 
      * @param blockId 
      */
-    public async uploadCustomBlock (organizationId: number, params: uploadCustomBlockFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async uploadCustomBlock (organizationId: number, params: uploadCustomBlockFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/custom-block'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1571,9 +1728,17 @@ export class OrganizationCreateProjectApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

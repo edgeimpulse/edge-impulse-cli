@@ -188,7 +188,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async clearDspBlock (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearDspBlock (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/clear'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -264,10 +267,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -277,7 +288,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param key DSP artifact file key
      */
-    public async downloadDspArtifact (projectId: number, dspId: number, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspArtifact (projectId: number, dspId: number, key: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/artifact/{key}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -361,10 +375,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -375,7 +397,10 @@ export class DSPApi {
      * @param category Which of the three acquisition categories to download data from
      * @param raw Whether to download raw data or processed data. Processed data is the default.
      */
-    public async downloadDspData (projectId: number, dspId: number, category: RawDataCategory, queryParams?: downloadDspDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspData (projectId: number, dspId: number, category: RawDataCategory, queryParams?: downloadDspDataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/x/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -462,10 +487,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -475,7 +508,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param category Which of the three acquisition categories to download data from
      */
-    public async downloadDspLabels (projectId: number, dspId: number, category: RawDataCategory, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDspLabels (projectId: number, dspId: number, category: RawDataCategory, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-data/{dspId}/y/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -559,10 +595,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -572,7 +616,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      */
-    public async dspGetFeaturesForSample (projectId: number, dspId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspSampleFeaturesResponse> {
+    public async dspGetFeaturesForSample (projectId: number, dspId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspSampleFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/get-graph/classification/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -656,10 +703,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspSampleFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -672,7 +727,10 @@ export class DSPApi {
      * @param featureAx3 Feature axis 3
      * @param category Which of the three acquisition categories to download data from
      */
-    public async dspSampleTrainedFeatures (projectId: number, dspId: number, category: RawDataCategory, queryParams: dspSampleTrainedFeaturesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspTrainedFeaturesResponse> {
+    public async dspSampleTrainedFeatures (projectId: number, dspId: number, category: RawDataCategory, queryParams: dspSampleTrainedFeaturesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspTrainedFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/get-graph/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -786,10 +844,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspTrainedFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -798,7 +864,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAutotunerResults (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspAutotunerResults> {
+    public async getAutotunerResults (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspAutotunerResults> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/get-autotuner-results'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -874,10 +943,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspAutotunerResults'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -886,7 +963,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async getDspConfig (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPConfigResponse> {
+    public async getDspConfig (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DSPConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -962,10 +1042,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DSPConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -974,7 +1062,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async getDspFeatureImportance (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspFeatureImportanceResponse> {
+    public async getDspFeatureImportance (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspFeatureImportanceResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/importance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1050,10 +1141,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspFeatureImportanceResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1062,7 +1161,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async getDspFeatureLabels (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspFeatureLabelsResponse> {
+    public async getDspFeatureLabels (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspFeatureLabelsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/features/labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1138,10 +1240,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspFeatureLabelsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1152,7 +1262,10 @@ export class DSPApi {
      * @param excludeIncludedSamples Whether to exclude \&#39;includedSamples\&#39; in the response (as these can slow down requests significantly).
      * @param category Which of the acquisition categories to get metadata from
      */
-    public async getDspMetadata (projectId: number, dspId: number, queryParams?: getDspMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DSPMetadataResponse> {
+    public async getDspMetadata (projectId: number, dspId: number, queryParams?: getDspMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DSPMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1234,10 +1347,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DSPMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1250,7 +1371,10 @@ export class DSPApi {
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      * @param useCachedUpsampledData If true, upsampled data will be fetched from cache, returning the original sample data when limitPayloadValues &gt; sample length.
      */
-    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
+    public async getDspRawSample (projectId: number, dspId: number, sampleId: number, queryParams?: getDspRawSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1343,10 +1467,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleDspResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1359,7 +1491,10 @@ export class DSPApi {
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
+    public async getDspSampleSlice (projectId: number, dspId: number, sampleId: number, queryParams: getDspSampleSliceQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1459,10 +1594,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleDspResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1471,7 +1614,10 @@ export class DSPApi {
      * @param projectId Project ID
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      */
-    public async getPerformanceAllVariants (projectId: number, dspId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspPerformanceAllVariantsResponse> {
+    public async getPerformanceAllVariants (projectId: number, dspId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspPerformanceAllVariantsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/performance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1547,10 +1693,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspPerformanceAllVariantsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1560,7 +1714,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param dspRunRequestWithFeatures 
      */
-    public async runDspOnFeaturesArray (projectId: number, dspId: number, dspRunRequestWithFeatures: DspRunRequestWithFeatures, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponse> {
+    public async runDspOnFeaturesArray (projectId: number, dspId: number, dspRunRequestWithFeatures: DspRunRequestWithFeatures, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspRunResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/run'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1645,10 +1802,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspRunResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1661,7 +1826,10 @@ export class DSPApi {
      * @param dspRunRequestWithoutFeatures 
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
-    public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, queryParams: runDspSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
+    public async runDspSampleSlice (projectId: number, dspId: number, sampleId: number, dspRunRequestWithoutFeatures: DspRunRequestWithoutFeatures, queryParams: runDspSampleSliceQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1767,10 +1935,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspRunResponseWithSample'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1782,7 +1958,10 @@ export class DSPApi {
      * @param sliceStart Begin index of the slice
      * @param sliceEnd End index of the slice. If not given, the sample will be sliced to the same length as the impulse input block window length.
      */
-    public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, queryParams: runDspSampleSliceReadOnlyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DspRunResponseWithSample> {
+    public async runDspSampleSliceReadOnly (projectId: number, dspId: number, sampleId: number, queryParams: runDspSampleSliceReadOnlyQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DspRunResponseWithSample> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/raw-data/{sampleId}/slice/run/readonly'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)))
@@ -1879,10 +2058,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DspRunResponseWithSample'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1892,7 +2079,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param dSPConfigRequest 
      */
-    public async setDspConfig (projectId: number, dspId: number, dSPConfigRequest: DSPConfigRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setDspConfig (projectId: number, dspId: number, dSPConfigRequest: DSPConfigRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -1977,10 +2167,18 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1990,7 +2188,10 @@ export class DSPApi {
      * @param dspId DSP Block ID, use the impulse functions to retrieve the ID
      * @param dspRunRequestWithoutFeaturesReadOnly 
      */
-    public async startProfileCustomDspBlock (projectId: number, dspId: number, dspRunRequestWithoutFeaturesReadOnly: DspRunRequestWithoutFeaturesReadOnly, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startProfileCustomDspBlock (projectId: number, dspId: number, dspRunRequestWithoutFeaturesReadOnly: DspRunRequestWithoutFeaturesReadOnly, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp/{dspId}/profile'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'dspId' + '}', encodeURIComponent(String(dspId)));
@@ -2075,9 +2276,17 @@ export class DSPApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

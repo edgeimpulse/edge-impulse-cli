@@ -136,7 +136,10 @@ export class IntegrationsApi {
      * @param projectId Project ID
      * @param resourceId Unique resource ID for an integration session. When an integration is launched we create a new session for it. Each session is uniquely identifiable by the project ID and resource ID. 
      */
-    public async getTensorBoardSessionStatus (projectId: number, resourceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetIntegrationSessionStatusResponse> {
+    public async getTensorBoardSessionStatus (projectId: number, resourceId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetIntegrationSessionStatusResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/integrations/tensorboard/{resourceId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'resourceId' + '}', encodeURIComponent(String(resourceId)));
@@ -212,10 +215,18 @@ export class IntegrationsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetIntegrationSessionStatusResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -224,7 +235,10 @@ export class IntegrationsApi {
      * @param projectId Project ID
      * @param startTensorBoardSessionRequest 
      */
-    public async startTensorBoardSession (projectId: number, startTensorBoardSessionRequest: StartTensorBoardSessionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartIntegrationSessionResponse> {
+    public async startTensorBoardSession (projectId: number, startTensorBoardSessionRequest: StartTensorBoardSessionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartIntegrationSessionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/integrations/tensorboard/start'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -301,9 +315,17 @@ export class IntegrationsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartIntegrationSessionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

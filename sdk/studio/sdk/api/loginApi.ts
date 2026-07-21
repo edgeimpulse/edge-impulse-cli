@@ -123,7 +123,10 @@ export class LoginApi {
      * @summary Get SSO settings for a user or email domain
      * @param usernameOrEmail Username or email
      */
-    public async getSSODomainIdPs (usernameOrEmail: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSSODomainIdPsResponse> {
+    public async getSSODomainIdPs (usernameOrEmail: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSSODomainIdPsResponse> {
         const localVarPath = this.basePath + '/api-sso/{usernameOrEmail}'
             .replace('{' + 'usernameOrEmail' + '}', encodeURIComponent(String(usernameOrEmail)));
         let queryParameters: Record<string, string> = {};
@@ -175,10 +178,18 @@ export class LoginApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSSODomainIdPsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -186,7 +197,10 @@ export class LoginApi {
      * @summary Get JWT token
      * @param getJWTRequest 
      */
-    public async login (getJWTRequest: GetJWTRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTResponse> {
+    public async login (getJWTRequest: GetJWTRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetJWTResponse> {
         const localVarPath = this.basePath + '/api-login';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -239,9 +253,17 @@ export class LoginApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetJWTResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

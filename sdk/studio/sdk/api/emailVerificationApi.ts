@@ -127,7 +127,10 @@ export class EmailVerificationApi {
      * @summary Get email verification status
      * @param emailId Unique identifier for an email verification request
      */
-    public async getEmailVerificationStatus (emailId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetEmailVerificationStatusResponse> {
+    public async getEmailVerificationStatus (emailId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetEmailVerificationStatusResponse> {
         const localVarPath = this.basePath + '/api/emails/{emailId}'
             .replace('{' + 'emailId' + '}', encodeURIComponent(String(emailId)));
         let queryParameters: Record<string, string> = {};
@@ -179,10 +182,18 @@ export class EmailVerificationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetEmailVerificationStatusResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -191,7 +202,10 @@ export class EmailVerificationApi {
      * @param email Email address
      * @param requestEmailVerificationRequest 
      */
-    public async requestEmailVerification (email: string, requestEmailVerificationRequest: RequestEmailVerificationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async requestEmailVerification (email: string, requestEmailVerificationRequest: RequestEmailVerificationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/emails/{email}/request-verification'
             .replace('{' + 'email' + '}', encodeURIComponent(String(email)));
         let queryParameters: Record<string, string> = {};
@@ -252,10 +266,18 @@ export class EmailVerificationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -263,7 +285,10 @@ export class EmailVerificationApi {
      * @summary Validate email for account sign-up
      * @param emailValidationRequest 
      */
-    public async validateEmail (emailValidationRequest: EmailValidationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ValidateEmailResponse> {
+    public async validateEmail (emailValidationRequest: EmailValidationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ValidateEmailResponse> {
         const localVarPath = this.basePath + '/api/emails/validate';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -316,10 +341,18 @@ export class EmailVerificationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ValidateEmailResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -327,7 +360,10 @@ export class EmailVerificationApi {
      * @summary Verify email
      * @param activateUserOrVerifyEmailRequest 
      */
-    public async verifyEmail (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyEmailResponse> {
+    public async verifyEmail (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyEmailResponse> {
         const localVarPath = this.basePath + '/api/emails/verify';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -380,9 +416,17 @@ export class EmailVerificationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyEmailResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

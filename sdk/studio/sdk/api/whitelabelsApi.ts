@@ -141,7 +141,10 @@ export class WhitelabelsApi {
      * @summary Create a new white label
      * @param createWhitelabelRequest 
      */
-    public async createWhitelabel (createWhitelabelRequest: CreateWhitelabelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateWhitelabelResponse> {
+    public async createWhitelabel (createWhitelabelRequest: CreateWhitelabelRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateWhitelabelResponse> {
         const localVarPath = this.basePath + '/api/whitelabels';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -210,10 +213,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateWhitelabelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -221,7 +232,10 @@ export class WhitelabelsApi {
      * @summary Deletes a white label
      * @param whitelabelIdentifier Whitelabel ID
      */
-    public async deleteWhitelabel (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteWhitelabel (whitelabelIdentifier: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -289,10 +303,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -300,7 +322,10 @@ export class WhitelabelsApi {
      * @summary Get impulse blocks
      * @param whitelabelIdentifier Whitelabel ID
      */
-    public async getAllImpulseBlocks (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseBlocksResponse> {
+    public async getAllImpulseBlocks (whitelabelIdentifier: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetImpulseBlocksResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/impulse/blocks'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -368,17 +393,28 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetImpulseBlocksResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Retrieve the list of registered white labels.
      * @summary List the registered white labels
      */
-    public async getAllWhitelabels (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllWhitelabelsResponse> {
+    public async getAllWhitelabels (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllWhitelabelsResponse> {
         const localVarPath = this.basePath + '/api/whitelabels';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -438,10 +474,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllWhitelabelsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -449,7 +493,10 @@ export class WhitelabelsApi {
      * @summary White label information
      * @param whitelabelIdentifier Whitelabel ID
      */
-    public async getWhitelabel (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWhitelabelResponse> {
+    public async getWhitelabel (whitelabelIdentifier: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetWhitelabelResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -517,10 +564,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetWhitelabelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -528,7 +583,10 @@ export class WhitelabelsApi {
      * @summary Get white label domain
      * @param whitelabelIdentifier Whitelabel ID
      */
-    public async getWhitelabelDomain (whitelabelIdentifier: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWhitelabelDomainResponse> {
+    public async getWhitelabelDomain (whitelabelIdentifier: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetWhitelabelDomainResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/domain'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -580,10 +638,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetWhitelabelDomainResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -592,7 +658,10 @@ export class WhitelabelsApi {
      * @param whitelabelIdentifier Whitelabel ID
      * @param updateWhitelabelDeploymentTargetsRequest 
      */
-    public async updateDeploymentTargets (whitelabelIdentifier: number, updateWhitelabelDeploymentTargetsRequest: UpdateWhitelabelDeploymentTargetsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateDeploymentTargets (whitelabelIdentifier: number, updateWhitelabelDeploymentTargetsRequest: UpdateWhitelabelDeploymentTargetsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}/deploymentTargets'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -669,10 +738,18 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -681,7 +758,10 @@ export class WhitelabelsApi {
      * @param whitelabelIdentifier Whitelabel ID
      * @param updateWhitelabelInternalRequest 
      */
-    public async updateWhitelabel (whitelabelIdentifier: number, updateWhitelabelInternalRequest: UpdateWhitelabelInternalRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateWhitelabel (whitelabelIdentifier: number, updateWhitelabelInternalRequest: UpdateWhitelabelInternalRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/whitelabel/{whitelabelIdentifier}'
             .replace('{' + 'whitelabelIdentifier' + '}', encodeURIComponent(String(whitelabelIdentifier)));
         let queryParameters: Record<string, string> = {};
@@ -758,9 +838,17 @@ export class WhitelabelsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

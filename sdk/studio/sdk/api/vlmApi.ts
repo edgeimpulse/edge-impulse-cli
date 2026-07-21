@@ -142,7 +142,10 @@ export class VlmApi {
      * @summary Get all VLMs
      * @param projectId Project ID
      */
-    public async getAllModels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmGetAllModelsResponse> {
+    public async getAllModels (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VlmGetAllModelsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/models'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -210,10 +213,18 @@ export class VlmApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VlmGetAllModelsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -222,7 +233,10 @@ export class VlmApi {
      * @param projectId Project ID
      * @param modelId The ID of the VLM model to retrieve
      */
-    public async getModelById (projectId: number, modelId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmGetModelResponse> {
+    public async getModelById (projectId: number, modelId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VlmGetModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/models/{modelId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'modelId' + '}', encodeURIComponent(String(modelId)));
@@ -298,10 +312,18 @@ export class VlmApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VlmGetModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -311,7 +333,10 @@ export class VlmApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param configId Optional VLM configuration ID
      */
-    public async getVlmInference (projectId: number, learnId: number, queryParams?: getVlmInferenceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmGetInferenceResultsResponse> {
+    public async getVlmInference (projectId: number, learnId: number, queryParams?: getVlmInferenceQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VlmGetInferenceResultsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}/inference-results'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -390,10 +415,18 @@ export class VlmApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VlmGetInferenceResultsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -403,7 +436,10 @@ export class VlmApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param vlmInferenceRequest 
      */
-    public async runVlmInference (projectId: number, learnId: number, vlmInferenceRequest: VlmInferenceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartVlmInferenceJobResponse> {
+    public async runVlmInference (projectId: number, learnId: number, vlmInferenceRequest: VlmInferenceRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartVlmInferenceJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}/run-inference'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -488,10 +524,18 @@ export class VlmApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartVlmInferenceJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -500,7 +544,10 @@ export class VlmApi {
      * @param projectId Project ID
      * @param modelId The ID of the VLM model to retrieve
      */
-    public async warmUpVlmModel (projectId: number, modelId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async warmUpVlmModel (projectId: number, modelId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/models/{modelId}/warm-up'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'modelId' + '}', encodeURIComponent(String(modelId)));
@@ -576,9 +623,17 @@ export class VlmApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

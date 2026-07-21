@@ -147,7 +147,10 @@ export class PostProcessingApi {
      * @param sampleId Sample ID
      * @param postProcessingFeaturesForSampleRequest 
      */
-    public async generatePostProcessingFeaturesForSample (projectId: number, postProcessingId: number, sampleId: number, postProcessingFeaturesForSampleRequest: PostProcessingFeaturesForSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPostProcessingFeaturesForSampleResponse | StartJobResponse> {
+    public async generatePostProcessingFeaturesForSample (projectId: number, postProcessingId: number, sampleId: number, postProcessingFeaturesForSampleRequest: PostProcessingFeaturesForSampleRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPostProcessingFeaturesForSampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/{postProcessingId}/samples/{sampleId}/classify'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'postProcessingId' + '}', encodeURIComponent(String(postProcessingId)))
@@ -240,10 +243,18 @@ export class PostProcessingApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPostProcessingFeaturesForSampleResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -254,7 +265,10 @@ export class PostProcessingApi {
      * @param sampleId Sample ID
      * @param frameIndex Frame number
      */
-    public async getFeaturesForPostProcessingSample (projectId: number, postProcessingId: number, sampleId: number, queryParams: getFeaturesForPostProcessingSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetFeaturesForPostProcessingSampleResponse> {
+    public async getFeaturesForPostProcessingSample (projectId: number, postProcessingId: number, sampleId: number, queryParams: getFeaturesForPostProcessingSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetFeaturesForPostProcessingSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/{postProcessingId}/samples/{sampleId}/features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'postProcessingId' + '}', encodeURIComponent(String(postProcessingId)))
@@ -348,10 +362,18 @@ export class PostProcessingApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetFeaturesForPostProcessingSampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -360,7 +382,10 @@ export class PostProcessingApi {
      * @param projectId Project ID
      * @param postProcessingId Post-processing Block ID, use the impulse functions to retrieve the ID
      */
-    public async getPostProcessingConfig (projectId: number, postProcessingId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PostProcessingConfigResponse> {
+    public async getPostProcessingConfig (projectId: number, postProcessingId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<PostProcessingConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/{postProcessingId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'postProcessingId' + '}', encodeURIComponent(String(postProcessingId)));
@@ -436,10 +461,18 @@ export class PostProcessingApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'PostProcessingConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -450,7 +483,10 @@ export class PostProcessingApi {
      * @param sampleId Sample ID
      * @param postProcessingFeaturesForSampleRequest 
      */
-    public async getPostProcessingResultsForSample (projectId: number, postProcessingId: number, sampleId: number, postProcessingFeaturesForSampleRequest: PostProcessingFeaturesForSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPostProcessingResultsForSampleResponse> {
+    public async getPostProcessingResultsForSample (projectId: number, postProcessingId: number, sampleId: number, postProcessingFeaturesForSampleRequest: PostProcessingFeaturesForSampleRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPostProcessingResultsForSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/{postProcessingId}/samples/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'postProcessingId' + '}', encodeURIComponent(String(postProcessingId)))
@@ -543,10 +579,18 @@ export class PostProcessingApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPostProcessingResultsForSampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -556,7 +600,10 @@ export class PostProcessingApi {
      * @param postProcessingId Post-processing Block ID, use the impulse functions to retrieve the ID
      * @param postProcessingConfigRequest 
      */
-    public async setPostProcessingConfig (projectId: number, postProcessingId: number, postProcessingConfigRequest: PostProcessingConfigRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setPostProcessingConfig (projectId: number, postProcessingId: number, postProcessingConfigRequest: PostProcessingConfigRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/{postProcessingId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'postProcessingId' + '}', encodeURIComponent(String(postProcessingId)));
@@ -641,9 +688,17 @@ export class PostProcessingApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

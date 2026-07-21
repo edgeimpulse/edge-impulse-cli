@@ -133,7 +133,10 @@ export class ExportApi {
      * @summary Download export
      * @param projectId Project ID
      */
-    public async downloadExport (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async downloadExport (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/{projectId}/export/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -194,10 +197,18 @@ export class ExportApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -205,7 +216,10 @@ export class ExportApi {
      * @summary Get URL of export
      * @param projectId Project ID
      */
-    public async getExportUrl (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ExportGetUrlResponse> {
+    public async getExportUrl (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ExportGetUrlResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/export/get-url'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -273,9 +287,17 @@ export class ExportApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ExportGetUrlResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

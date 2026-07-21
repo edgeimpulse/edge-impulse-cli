@@ -151,7 +151,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param createEventSubscriptionRequest 
      */
-    public async createEventSubscription (projectId: number, createEventSubscriptionRequest: CreateEventSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEventSubscriptionResponse> {
+    public async createEventSubscription (projectId: number, createEventSubscriptionRequest: CreateEventSubscriptionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateEventSubscriptionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/event-subscriptions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -228,10 +231,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateEventSubscriptionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -240,7 +251,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param createWebhookDestinationRequest 
      */
-    public async createWebhookDestination (projectId: number, createWebhookDestinationRequest: CreateWebhookDestinationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateWebhookDestinationResponse> {
+    public async createWebhookDestination (projectId: number, createWebhookDestinationRequest: CreateWebhookDestinationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateWebhookDestinationResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -317,10 +331,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateWebhookDestinationResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -329,7 +351,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param eventSubscriptionId Event subscription ID
      */
-    public async deleteEventSubscription (projectId: number, eventSubscriptionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteEventSubscription (projectId: number, eventSubscriptionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/event-subscriptions/{eventSubscriptionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'eventSubscriptionId' + '}', encodeURIComponent(String(eventSubscriptionId)));
@@ -405,10 +430,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -417,7 +450,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param webhookId Webhook destination ID
      */
-    public async deleteWebhookDestination (projectId: number, webhookId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteWebhookDestination (projectId: number, webhookId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks/{webhookId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'webhookId' + '}', encodeURIComponent(String(webhookId)));
@@ -493,10 +529,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -505,7 +549,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param eventSubscriptionId Event subscription ID
      */
-    public async getEventSubscription (projectId: number, eventSubscriptionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetEventSubscriptionResponse> {
+    public async getEventSubscription (projectId: number, eventSubscriptionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetEventSubscriptionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/event-subscriptions/{eventSubscriptionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'eventSubscriptionId' + '}', encodeURIComponent(String(eventSubscriptionId)));
@@ -581,10 +628,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetEventSubscriptionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -593,7 +648,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param webhookId Webhook destination ID
      */
-    public async getWebhookDestination (projectId: number, webhookId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetWebhookDestinationResponse> {
+    public async getWebhookDestination (projectId: number, webhookId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetWebhookDestinationResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks/{webhookId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'webhookId' + '}', encodeURIComponent(String(webhookId)));
@@ -669,10 +727,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetWebhookDestinationResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -680,7 +746,10 @@ export class MonitoringApi {
      * @summary List event subscriptions
      * @param projectId Project ID
      */
-    public async listEventSubscriptions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEventSubscriptionsResponse> {
+    public async listEventSubscriptions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListEventSubscriptionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/event-subscriptions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -748,10 +817,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListEventSubscriptionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -760,7 +837,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param limit Number of recent events to fetch. Maximum is 100. Defaults to 20.
      */
-    public async listMonitoringEvents (projectId: number, queryParams?: listMonitoringEventsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListMonitoringEventsResponse> {
+    public async listMonitoringEvents (projectId: number, queryParams?: listMonitoringEventsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListMonitoringEventsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/events'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -831,10 +911,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListMonitoringEventsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -842,7 +930,10 @@ export class MonitoringApi {
      * @summary List webhook destinations
      * @param projectId Project ID
      */
-    public async listWebhookDestinations (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListWebhookDestinationsResponse> {
+    public async listWebhookDestinations (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListWebhookDestinationsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -910,10 +1001,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListWebhookDestinationsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -922,7 +1021,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param webhookId Webhook destination ID
      */
-    public async rotateWebhookDestinationSecret (projectId: number, webhookId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RotateWebhookDestinationSecretResponse> {
+    public async rotateWebhookDestinationSecret (projectId: number, webhookId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<RotateWebhookDestinationSecretResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks/{webhookId}/rotate-secret'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'webhookId' + '}', encodeURIComponent(String(webhookId)));
@@ -998,10 +1100,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'RotateWebhookDestinationSecretResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1010,7 +1120,10 @@ export class MonitoringApi {
      * @param projectId Project ID
      * @param webhookId Webhook destination ID
      */
-    public async testWebhookDestination (projectId: number, webhookId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestWebhookDestinationResponse> {
+    public async testWebhookDestination (projectId: number, webhookId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<TestWebhookDestinationResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks/{webhookId}/test'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'webhookId' + '}', encodeURIComponent(String(webhookId)));
@@ -1086,10 +1199,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'TestWebhookDestinationResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1099,7 +1220,10 @@ export class MonitoringApi {
      * @param eventSubscriptionId Event subscription ID
      * @param updateEventSubscriptionRequest 
      */
-    public async updateEventSubscription (projectId: number, eventSubscriptionId: number, updateEventSubscriptionRequest: UpdateEventSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateEventSubscription (projectId: number, eventSubscriptionId: number, updateEventSubscriptionRequest: UpdateEventSubscriptionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/event-subscriptions/{eventSubscriptionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'eventSubscriptionId' + '}', encodeURIComponent(String(eventSubscriptionId)));
@@ -1184,10 +1308,18 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1197,7 +1329,10 @@ export class MonitoringApi {
      * @param webhookId Webhook destination ID
      * @param updateWebhookDestinationRequest 
      */
-    public async updateWebhookDestination (projectId: number, webhookId: string, updateWebhookDestinationRequest: UpdateWebhookDestinationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateWebhookDestination (projectId: number, webhookId: string, updateWebhookDestinationRequest: UpdateWebhookDestinationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/monitoring/webhooks/{webhookId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'webhookId' + '}', encodeURIComponent(String(webhookId)));
@@ -1282,9 +1417,17 @@ export class MonitoringApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

@@ -174,7 +174,10 @@ export class DatasetVersionsApi {
      * @summary Create a new snapshot of the dataset
      * @param projectId Project ID
      */
-    public async createDatasetVersion (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateDatasetVersionResponse> {
+    public async createDatasetVersion (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateDatasetVersionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/create'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -242,10 +245,18 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateDatasetVersionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -254,7 +265,10 @@ export class DatasetVersionsApi {
      * @param projectId Project ID
      * @param datasetVersionId Dataset version ID
      */
-    public async getDatasetVersion (projectId: number, datasetVersionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionResponse> {
+    public async getDatasetVersion (projectId: number, datasetVersionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDatasetVersionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
@@ -330,10 +344,18 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDatasetVersionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -366,7 +388,10 @@ export class DatasetVersionsApi {
      * @param maxDate Only include samples that were added before the date given
      * @param changeActions Only include changes with an action within the given list of actions, given as a JSON string
      */
-    public async getDatasetVersionRawDataChanges (projectId: number, datasetVersionId: number, queryParams: getDatasetVersionRawDataChangesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetVersionRawDataChangesResponse> {
+    public async getDatasetVersionRawDataChanges (projectId: number, datasetVersionId: number, queryParams: getDatasetVersionRawDataChangesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDatasetVersionRawDataChangesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/raw-data-changes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
@@ -521,10 +546,18 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDatasetVersionRawDataChangesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -536,7 +569,10 @@ export class DatasetVersionsApi {
      * @param search Search query
      * @param type Only include dataset versions with a type within the given list of types, given as a JSON string
      */
-    public async listDatasetVersions (projectId: number, queryParams?: listDatasetVersionsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListDatasetVersionsResponse> {
+    public async listDatasetVersions (projectId: number, queryParams?: listDatasetVersionsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListDatasetVersionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -616,10 +652,18 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListDatasetVersionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -628,7 +672,10 @@ export class DatasetVersionsApi {
      * @param projectId Project ID
      * @param datasetVersionId Dataset version ID
      */
-    public async restoreDatasetVersion (projectId: number, datasetVersionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async restoreDatasetVersion (projectId: number, datasetVersionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}/restore'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
@@ -704,10 +751,18 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -717,7 +772,10 @@ export class DatasetVersionsApi {
      * @param datasetVersionId Dataset version ID
      * @param updateDatasetVersionRequest 
      */
-    public async updateDatasetVersion (projectId: number, datasetVersionId: number, updateDatasetVersionRequest: UpdateDatasetVersionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateDatasetVersion (projectId: number, datasetVersionId: number, updateDatasetVersionRequest: UpdateDatasetVersionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dataset-versions/{datasetVersionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'datasetVersionId' + '}', encodeURIComponent(String(datasetVersionId)));
@@ -802,9 +860,17 @@ export class DatasetVersionsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

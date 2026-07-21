@@ -216,7 +216,10 @@ export class ClassifyApi {
      * @param image 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async classifyImage (projectId: number, params: classifyImageFormParams, queryParams?: classifyImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+    public async classifyImage (projectId: number, params: classifyImageFormParams, queryParams?: classifyImageQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<TestPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -306,10 +309,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'TestPretrainedModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -320,7 +331,10 @@ export class ClassifyApi {
      * @param includeDebugInfo Whether to return the debug information from FOMO classification.
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async classifySample (projectId: number, sampleId: number, queryParams?: classifySampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
+    public async classifySample (projectId: number, sampleId: number, queryParams?: classifySampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifySampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -402,10 +416,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifySampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -415,7 +437,10 @@ export class ClassifyApi {
      * @param sampleId Sample ID
      * @param blockId Block ID
      */
-    public async classifySampleByLearnBlock (projectId: number, sampleId: number, blockId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse> {
+    public async classifySampleByLearnBlock (projectId: number, sampleId: number, blockId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifySampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/anomaly-gmm/{blockId}/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -499,10 +524,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifySampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -514,7 +547,10 @@ export class ClassifyApi {
      * @param variant Keras model variant
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams?: classifySampleByLearnBlockV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+    public async classifySampleByLearnBlockV2 (projectId: number, sampleId: number, blockId: number, queryParams?: classifySampleByLearnBlockV2QueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/anomaly-gmm/v2/{blockId}/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -604,10 +640,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifySampleResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -620,7 +664,10 @@ export class ClassifyApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async classifySampleForVariants (projectId: number, sampleId: number, queryParams: classifySampleForVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponseMultipleVariants | StartJobResponse> {
+    public async classifySampleForVariants (projectId: number, sampleId: number, queryParams: classifySampleForVariantsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifySampleResponseMultipleVariants | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/variants'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -715,10 +762,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifySampleResponseMultipleVariants | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -731,7 +786,10 @@ export class ClassifyApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async classifySampleV2 (projectId: number, sampleId: number, queryParams?: classifySampleV2QueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifySampleResponse | StartJobResponse> {
+    public async classifySampleV2 (projectId: number, sampleId: number, queryParams?: classifySampleV2QueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifySampleResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -819,10 +877,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifySampleResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -834,7 +900,10 @@ export class ClassifyApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getClassifyJobResult (projectId: number, queryParams?: getClassifyJobResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponse> {
+    public async getClassifyJobResult (projectId: number, queryParams?: getClassifyJobResultQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifyJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -914,10 +983,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifyJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -946,7 +1023,10 @@ export class ClassifyApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ClassifyJobResponsePage> {
+    public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ClassifyJobResponsePage> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/result/page'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1077,10 +1157,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ClassifyJobResponsePage'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1089,7 +1177,10 @@ export class ClassifyApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getClassifyMetricsAllVariants (projectId: number, queryParams?: getClassifyMetricsAllVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<MetricsAllVariantsResponse> {
+    public async getClassifyMetricsAllVariants (projectId: number, queryParams?: getClassifyMetricsAllVariantsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<MetricsAllVariantsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/all/metrics'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1160,10 +1251,18 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'MetricsAllVariantsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1176,7 +1275,10 @@ export class ClassifyApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
+    public async getSampleWindowFromCache (projectId: number, sampleId: number, windowIndex: number, queryParams?: getSampleWindowFromCacheQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/classify/v2/{sampleId}/raw-data/{windowIndex}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)))
@@ -1269,9 +1371,17 @@ export class ClassifyApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleDspResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

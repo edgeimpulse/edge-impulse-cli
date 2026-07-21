@@ -154,7 +154,10 @@ export class OptimizationApi {
      * @param jobId Job ID
      * @param tunerCompleteSearch 
      */
-    public async completeSearch (projectId: number, jobId: number, tunerCompleteSearch: TunerCompleteSearch, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async completeSearch (projectId: number, jobId: number, tunerCompleteSearch: TunerCompleteSearch, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/{jobId}/complete-search'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -239,10 +242,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -252,7 +263,10 @@ export class OptimizationApi {
      * @param jobId Job ID
      * @param tunerCreateTrialImpulse 
      */
-    public async createTrial (projectId: number, jobId: number, tunerCreateTrialImpulse: TunerCreateTrialImpulse, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async createTrial (projectId: number, jobId: number, tunerCreateTrialImpulse: TunerCreateTrialImpulse, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/{jobId}/create-trial'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -337,10 +351,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -348,7 +370,10 @@ export class OptimizationApi {
      * @summary Delete EON tuner state
      * @param projectId Project ID
      */
-    public async deleteState (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteState (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/state'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -416,10 +441,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -429,7 +462,10 @@ export class OptimizationApi {
      * @param jobId Job ID
      * @param trialId trial ID
      */
-    public async endTrial (projectId: number, jobId: number, trialId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async endTrial (projectId: number, jobId: number, trialId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize//{jobId}/trial/{trialId}/end-trial'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)))
@@ -513,10 +549,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -524,7 +568,10 @@ export class OptimizationApi {
      * @summary Get impulse blocks
      * @param projectId Project ID
      */
-    public async getAllBlocks (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AllBlocksResponse> {
+    public async getAllBlocks (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AllBlocksResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/all-blocks'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -592,10 +639,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AllBlocksResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -603,7 +658,10 @@ export class OptimizationApi {
      * @summary Get all available learn blocks
      * @param projectId Project ID
      */
-    public async getAllLearnBlocks (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AllLearnBlocksResponse> {
+    public async getAllLearnBlocks (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AllLearnBlocksResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/all-learn-blocks'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -671,10 +729,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AllLearnBlocksResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -682,7 +748,10 @@ export class OptimizationApi {
      * @summary Get config
      * @param projectId Project ID
      */
-    public async getConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeConfigResponse> {
+    public async getConfig (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/config'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -750,10 +819,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -763,7 +840,10 @@ export class OptimizationApi {
      * @param organizationId Organization ID
      * @param organizationDspId Organization DSP ID
      */
-    public async getDspParameters (projectId: number, queryParams: getDspParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeDSPParametersResponse> {
+    public async getDspParameters (projectId: number, queryParams: getDspParametersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeDSPParametersResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/dsp-parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -851,10 +931,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeDSPParametersResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -862,7 +950,10 @@ export class OptimizationApi {
      * @summary Search space
      * @param projectId Project ID
      */
-    public async getSpace (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeSpaceResponse> {
+    public async getSpace (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeSpaceResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/space'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -930,10 +1021,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeSpaceResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -941,7 +1040,10 @@ export class OptimizationApi {
      * @summary Retrieves the EON tuner state
      * @param projectId Project ID
      */
-    public async getState (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeStateResponse> {
+    public async getState (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeStateResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/state'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1009,10 +1111,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeStateResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1020,7 +1130,10 @@ export class OptimizationApi {
      * @summary Retrieves available transfer learning models
      * @param projectId Project ID
      */
-    public async getTransferLearningModels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeTransferLearningModelsResponse> {
+    public async getTransferLearningModels (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeTransferLearningModelsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/transfer-learning-models'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1088,10 +1201,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeTransferLearningModelsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1100,7 +1221,10 @@ export class OptimizationApi {
      * @param projectId Project ID
      * @param trialId trial ID
      */
-    public async getTrialLogs (projectId: number, trialId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getTrialLogs (projectId: number, trialId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/trial/{trialId}/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'trialId' + '}', encodeURIComponent(String(trialId)));
@@ -1176,10 +1300,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'LogStdoutResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1188,7 +1320,10 @@ export class OptimizationApi {
      * @param projectId Project ID
      * @param tunerCoordinatorJobId Tuner coordinator job ID
      */
-    public async getTunerRunState (projectId: number, tunerCoordinatorJobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<OptimizeStateResponse> {
+    public async getTunerRunState (projectId: number, tunerCoordinatorJobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<OptimizeStateResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/{tunerCoordinatorJobId}/state'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'tunerCoordinatorJobId' + '}', encodeURIComponent(String(tunerCoordinatorJobId)));
@@ -1264,10 +1399,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'OptimizeStateResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1275,7 +1418,10 @@ export class OptimizationApi {
      * @summary Get window settings
      * @param projectId Project ID
      */
-    public async getWindowSettings (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<WindowSettingsResponse> {
+    public async getWindowSettings (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<WindowSettingsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/window-settings'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1343,10 +1489,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'WindowSettingsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1354,7 +1508,10 @@ export class OptimizationApi {
      * @summary List all tuner runs
      * @param projectId Project ID
      */
-    public async listTunerRuns (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListTunerRunsResponse> {
+    public async listTunerRuns (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListTunerRunsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/runs'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1422,10 +1579,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListTunerRunsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1434,7 +1599,10 @@ export class OptimizationApi {
      * @param projectId Project ID
      * @param optimizeConfig 
      */
-    public async updateConfig (projectId: number, optimizeConfig: OptimizeConfig, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateConfig (projectId: number, optimizeConfig: OptimizeConfig, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/config'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1511,10 +1679,18 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1524,7 +1700,10 @@ export class OptimizationApi {
      * @param tunerCoordinatorJobId Tuner coordinator job ID
      * @param updateTunerRunRequest 
      */
-    public async updateTunerRun (projectId: number, tunerCoordinatorJobId: number, updateTunerRunRequest: UpdateTunerRunRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateTunerRun (projectId: number, tunerCoordinatorJobId: number, updateTunerRunRequest: UpdateTunerRunRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/optimize/{tunerCoordinatorJobId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'tunerCoordinatorJobId' + '}', encodeURIComponent(String(tunerCoordinatorJobId)));
@@ -1609,9 +1788,17 @@ export class OptimizationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

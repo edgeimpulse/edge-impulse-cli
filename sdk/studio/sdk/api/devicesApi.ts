@@ -174,7 +174,10 @@ export class DevicesApi {
      * @param projectId Project ID
      * @param createDeviceRequest 
      */
-    public async createDevice (projectId: number, createDeviceRequest: CreateDeviceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async createDevice (projectId: number, createDeviceRequest: CreateDeviceRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/create'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -251,10 +254,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -263,7 +274,10 @@ export class DevicesApi {
      * @param projectId Project ID
      * @param deviceId Device ID
      */
-    public async deleteDevice (projectId: number, deviceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteDevice (projectId: number, deviceId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -339,10 +353,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -355,7 +377,10 @@ export class DevicesApi {
      * @param format Data export format
      * @param devices Optional list of devices to filter by, given as a JSON string
      */
-    public async downloadInferenceHistoryExport (projectId: number, queryParams: downloadInferenceHistoryExportQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadInferenceHistoryExport (projectId: number, queryParams: downloadInferenceHistoryExportQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/download-export'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -466,10 +491,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -478,7 +511,10 @@ export class DevicesApi {
      * @param projectId Project ID
      * @param deviceId Device ID
      */
-    public async getDevice (projectId: number, deviceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDeviceResponse> {
+    public async getDevice (projectId: number, deviceId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDeviceResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -554,10 +590,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDeviceResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -567,7 +611,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param getImpulseRecordsRequest 
      */
-    public async getImpulseRecords (projectId: number, deviceId: string, getImpulseRecordsRequest: GetImpulseRecordsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async getImpulseRecords (projectId: number, deviceId: string, getImpulseRecordsRequest: GetImpulseRecordsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/get-impulse-records'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -652,10 +699,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -667,7 +722,10 @@ export class DevicesApi {
      * @param endTimestamp 
      * @param devices Optional list of devices to filter by, given as a JSON string
      */
-    public async getInferenceHistory (projectId: number, queryParams: getInferenceHistoryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetInferenceHistoryResponse> {
+    public async getInferenceHistory (projectId: number, queryParams: getInferenceHistoryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetInferenceHistoryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -754,10 +812,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetInferenceHistoryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -769,7 +835,10 @@ export class DevicesApi {
      * @param deploymentId 
      * @param endTimestamp 
      */
-    public async getInferenceMetrics (projectId: number, getInferenceMetricsRequest: GetInferenceMetricsRequest, queryParams: getInferenceMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetInferenceMetricsResponse> {
+    public async getInferenceMetrics (projectId: number, getInferenceMetricsRequest: GetInferenceMetricsRequest, queryParams: getInferenceMetricsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetInferenceMetricsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/metrics'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -862,10 +931,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetInferenceMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -875,7 +952,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param keepDeviceDebugStreamAliveRequest 
      */
-    public async keepDeviceDebugStreamAlive (projectId: number, deviceId: string, keepDeviceDebugStreamAliveRequest: KeepDeviceDebugStreamAliveRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async keepDeviceDebugStreamAlive (projectId: number, deviceId: string, keepDeviceDebugStreamAliveRequest: KeepDeviceDebugStreamAliveRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/debug-stream/keep-alive'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -960,10 +1040,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -971,7 +1059,10 @@ export class DevicesApi {
      * @summary Lists devices
      * @param projectId Project ID
      */
-    public async listDevices (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListDevicesResponse> {
+    public async listDevices (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListDevicesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1039,10 +1130,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListDevicesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1052,7 +1151,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param renameDeviceRequest 
      */
-    public async renameDevice (projectId: number, deviceId: string, renameDeviceRequest: RenameDeviceRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async renameDevice (projectId: number, deviceId: string, renameDeviceRequest: RenameDeviceRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/rename'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1137,10 +1239,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1149,7 +1259,10 @@ export class DevicesApi {
      * @param projectId Project ID
      * @param deviceId Device ID
      */
-    public async requestDeviceModelUpdate (projectId: number, deviceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async requestDeviceModelUpdate (projectId: number, deviceId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/request-model-update'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1225,10 +1338,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1237,7 +1358,10 @@ export class DevicesApi {
      * @param projectId Project ID
      * @param deviceId Device ID
      */
-    public async startDeviceInferenceDebugStream (projectId: number, deviceId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartDeviceDebugStreamResponse> {
+    public async startDeviceInferenceDebugStream (projectId: number, deviceId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartDeviceDebugStreamResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/debug-stream/inference/start'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1313,10 +1437,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartDeviceDebugStreamResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1326,7 +1458,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param startDeviceSnapshotDebugStreamRequest 
      */
-    public async startDeviceSnapshotDebugStream (projectId: number, deviceId: string, startDeviceSnapshotDebugStreamRequest: StartDeviceSnapshotDebugStreamRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartDeviceDebugStreamResponse> {
+    public async startDeviceSnapshotDebugStream (projectId: number, deviceId: string, startDeviceSnapshotDebugStreamRequest: StartDeviceSnapshotDebugStreamRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartDeviceDebugStreamResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/debug-stream/snapshot/start'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1411,10 +1546,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartDeviceDebugStreamResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1424,7 +1567,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param startSamplingRequest 
      */
-    public async startSampling (projectId: number, deviceId: string, startSamplingRequest: StartSamplingRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartSamplingResponse> {
+    public async startSampling (projectId: number, deviceId: string, startSamplingRequest: StartSamplingRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartSamplingResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/start-sampling'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1509,10 +1655,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartSamplingResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1522,7 +1676,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param stopDeviceDebugStreamRequest 
      */
-    public async stopDeviceDebugStream (projectId: number, deviceId: string, stopDeviceDebugStreamRequest: StopDeviceDebugStreamRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async stopDeviceDebugStream (projectId: number, deviceId: string, stopDeviceDebugStreamRequest: StopDeviceDebugStreamRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/device/{deviceId}/debug-stream/stop'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1607,10 +1764,18 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1621,7 +1786,10 @@ export class DevicesApi {
      * @param deviceId Device ID
      * @param storeInferenceHistoryRequest 
      */
-    public async storeInferenceHistory (projectId: number, deviceId: string, storeInferenceHistoryRequest: StoreInferenceHistoryRequest, queryParams: storeInferenceHistoryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async storeInferenceHistory (projectId: number, deviceId: string, storeInferenceHistoryRequest: StoreInferenceHistoryRequest, queryParams: storeInferenceHistoryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devices/inference-history/{deviceId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
@@ -1716,9 +1884,17 @@ export class DevicesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

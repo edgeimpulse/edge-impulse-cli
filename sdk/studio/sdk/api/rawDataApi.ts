@@ -581,7 +581,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchAddMetadata (projectId: number, batchAddMetadataRequest: BatchAddMetadataRequest, queryParams: batchAddMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/add-metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -725,10 +728,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -757,7 +768,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchBackToLabeling (projectId: number, backToLabelingRequest: BackToLabelingRequest, queryParams: batchBackToLabelingQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchBackToLabeling (projectId: number, backToLabelingRequest: BackToLabelingRequest, queryParams: batchBackToLabelingQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/back-to-labeling'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -901,10 +915,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -932,7 +954,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchClearMetadata (projectId: number, queryParams: batchClearMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async batchClearMetadata (projectId: number, queryParams: batchClearMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1067,10 +1092,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1099,7 +1132,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchClearMetadataByKey (projectId: number, batchClearMetadataByKeyRequest: BatchClearMetadataByKeyRequest, queryParams: batchClearMetadataByKeyQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/clear-metadata-by-key'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1243,10 +1279,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1274,7 +1318,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchDelete (projectId: number, queryParams: batchDeleteQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/delete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1409,10 +1456,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1440,7 +1495,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchDisable (projectId: number, queryParams: batchDisableQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/disable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1575,10 +1633,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1607,7 +1673,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchEditBoundingBoxes (projectId: number, batchEditBoundingBoxesRequest: BatchEditBoundingBoxesRequest, queryParams: batchEditBoundingBoxesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchEditBoundingBoxes (projectId: number, batchEditBoundingBoxesRequest: BatchEditBoundingBoxesRequest, queryParams: batchEditBoundingBoxesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-bounding-boxes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1751,10 +1820,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1783,7 +1860,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchEditLabels (projectId: number, editSampleLabelRequest: EditSampleLabelRequest, queryParams: batchEditLabelsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/edit-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1927,10 +2007,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1958,7 +2046,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchEnable (projectId: number, queryParams: batchEnableQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/enable-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2093,10 +2184,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2125,7 +2224,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async batchMove (projectId: number, moveRawDataRequest: MoveRawDataRequest, queryParams: batchMoveQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/batch/moveSamples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2269,10 +2371,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2282,7 +2392,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param objectDetectionAutoLabelRequest 
      */
-    public async classifyUsingAutolabel (projectId: number, sampleId: number, objectDetectionAutoLabelRequest: ObjectDetectionAutoLabelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ObjectDetectionAutoLabelResponse> {
+    public async classifyUsingAutolabel (projectId: number, sampleId: number, objectDetectionAutoLabelRequest: ObjectDetectionAutoLabelRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ObjectDetectionAutoLabelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/autolabel'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2367,10 +2480,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ObjectDetectionAutoLabelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2378,7 +2499,10 @@ export class RawDataApi {
      * @summary Clear all object detection labels
      * @param projectId Project ID
      */
-    public async clearAllObjectDetectionLabels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearAllObjectDetectionLabels (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/clear-all-object-detection-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2446,10 +2570,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2457,7 +2589,10 @@ export class RawDataApi {
      * @summary Clear data explorer
      * @param projectId Project ID
      */
-    public async clearDataExplorer (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearDataExplorer (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/clear'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2525,10 +2660,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2554,7 +2697,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CountSamplesResponse> {
+    public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CountSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2683,10 +2829,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CountSamplesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2697,7 +2851,10 @@ export class RawDataApi {
      * @param cropSampleRequest 
      * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, queryParams?: cropSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CropSampleResponse> {
+    public async cropSample (projectId: number, sampleId: number, cropSampleRequest: CropSampleRequest, queryParams?: cropSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CropSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/crop'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -2785,10 +2942,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CropSampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2796,7 +2961,10 @@ export class RawDataApi {
      * @summary Remove all samples
      * @param projectId Project ID
      */
-    public async deleteAllSamples (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteAllSamples (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/delete-all'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2864,10 +3032,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2876,7 +3052,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to download data from
      */
-    public async deleteAllSamplesByCategory (projectId: number, category: RawDataCategory, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteAllSamplesByCategory (projectId: number, category: RawDataCategory, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/delete-all/{category}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'category' + '}', encodeURIComponent(String(category)));
@@ -2952,10 +3131,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2964,7 +3151,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async deleteSample (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteSample (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3040,10 +3230,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3052,7 +3250,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async disableSample (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async disableSample (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/disable'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3128,10 +3329,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3141,7 +3350,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param editSampleLabelRequest 
      */
-    public async editLabel (projectId: number, sampleId: number, editSampleLabelRequest: EditSampleLabelRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async editLabel (projectId: number, sampleId: number, editSampleLabelRequest: EditSampleLabelRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/edit-label'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3226,10 +3438,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3238,7 +3458,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async enableSample (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async enableSample (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/enable'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3314,10 +3537,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3328,7 +3559,10 @@ export class RawDataApi {
      * @param findSegmentSampleRequest 
      * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async findSegmentsInSample (projectId: number, sampleId: number, findSegmentSampleRequest: FindSegmentSampleRequest, queryParams?: findSegmentsInSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<FindSegmentSampleResponse> {
+    public async findSegmentsInSample (projectId: number, sampleId: number, findSegmentSampleRequest: FindSegmentSampleRequest, queryParams?: findSegmentsInSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<FindSegmentSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/find-segments'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -3416,10 +3650,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'FindSegmentSampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3428,7 +3670,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param jobId Job ID
      */
-    public async getAIActionsProposedChanges (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionsProposedChangesResponse> {
+    public async getAIActionsProposedChanges (projectId: number, jobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAIActionsProposedChangesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/ai-actions-preview/{jobId}/proposed-changes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -3504,10 +3749,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAIActionsProposedChangesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3517,7 +3770,10 @@ export class RawDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getAllImportedFrom (projectId: number, queryParams?: getAllImportedFromQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImportedFromResponse> {
+    public async getAllImportedFrom (projectId: number, queryParams?: getAllImportedFromQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllImportedFromResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/imported-from'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3591,10 +3847,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllImportedFromResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3602,7 +3866,10 @@ export class RawDataApi {
      * @summary Get data explorer features
      * @param projectId Project ID
      */
-    public async getDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDataExplorerFeaturesResponse> {
+    public async getDataExplorerFeatures (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDataExplorerFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3670,10 +3937,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDataExplorerFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3681,7 +3956,10 @@ export class RawDataApi {
      * @summary Get data explorer predictions
      * @param projectId Project ID
      */
-    public async getDataExplorerPredictions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DataExplorerPredictionsResponse> {
+    public async getDataExplorerPredictions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DataExplorerPredictionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/predictions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3749,10 +4027,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DataExplorerPredictionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3760,7 +4046,10 @@ export class RawDataApi {
      * @summary Get data explorer settings
      * @param projectId Project ID
      */
-    public async getDataExplorerSettings (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDataExplorerSettingsResponse> {
+    public async getDataExplorerSettings (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDataExplorerSettingsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/settings'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3828,10 +4117,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDataExplorerSettingsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3839,7 +4136,10 @@ export class RawDataApi {
      * @summary Get dataset ratio
      * @param projectId Project ID
      */
-    public async getDatasetRatio (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDatasetRatioResponse> {
+    public async getDatasetRatio (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDatasetRatioResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/ratio'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3907,10 +4207,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDatasetRatioResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3918,7 +4226,10 @@ export class RawDataApi {
      * @summary Get diversity metrics data
      * @param projectId Project ID
      */
-    public async getDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDiversityDataResponse> {
+    public async getDiversityData (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDiversityDataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3986,10 +4297,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDiversityDataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3997,7 +4316,10 @@ export class RawDataApi {
      * @summary Get label noise data
      * @param projectId Project ID
      */
-    public async getLabelNoiseData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetLabelNoiseDataResponse> {
+    public async getLabelNoiseData (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetLabelNoiseDataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/label-noise'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4065,10 +4387,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetLabelNoiseDataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4076,7 +4406,10 @@ export class RawDataApi {
      * @summary Object detection label queue
      * @param projectId Project ID
      */
-    public async getObjectDetectionLabelQueue (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ObjectDetectionLabelQueueResponse> {
+    public async getObjectDetectionLabelQueue (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ObjectDetectionLabelQueueResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/label-object-detection-queue'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4144,10 +4477,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ObjectDetectionLabelQueueResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4155,7 +4496,10 @@ export class RawDataApi {
      * @summary Object detection label queue count
      * @param projectId Project ID
      */
-    public async getObjectDetectionLabelQueueCount (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ObjectDetectionLabelQueueCountResponse> {
+    public async getObjectDetectionLabelQueueCount (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ObjectDetectionLabelQueueCountResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/label-object-detection-queue/count'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4223,10 +4567,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ObjectDetectionLabelQueueCountResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4241,7 +4593,10 @@ export class RawDataApi {
      * @param normalize Controls how normalizedMatrix is computed. Use none to disable normalization (normalizedMatrix omitted), or global to return percentages across all matrix cells.
      * @param excludeDisabledSamples Whether to exclude samples that are marked as disabled.
      */
-    public async getRawDataMetadataCooccurrence (projectId: number, queryParams: getRawDataMetadataCooccurrenceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataCooccurrenceResponse> {
+    public async getRawDataMetadataCooccurrence (projectId: number, queryParams: getRawDataMetadataCooccurrenceQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetRawDataMetadataCooccurrenceResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-cooccurrence'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4351,10 +4706,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetRawDataMetadataCooccurrenceResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4368,7 +4731,10 @@ export class RawDataApi {
      * @param groupByLabel Include per-label breakdown for each bucket
      * @param excludeDisabledSamples Whether to exclude samples that are marked as disabled.
      */
-    public async getRawDataMetadataDistribution (projectId: number, queryParams: getRawDataMetadataDistributionQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataMetadataDistributionResponse> {
+    public async getRawDataMetadataDistribution (projectId: number, queryParams: getRawDataMetadataDistributionQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetRawDataMetadataDistributionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-distribution'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4468,10 +4834,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetRawDataMetadataDistributionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4481,7 +4855,10 @@ export class RawDataApi {
      * @param datasetVersionId Dataset version ID. If not set, the current dataset version is used
      * @param includeDisabled Whether to include enabled-only samples, or both enabled and disabled samples (defaults to both).
      */
-    public async getRawDataProjectMetadata (projectId: number, queryParams?: getRawDataProjectMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetRawDataProjectMetadataResponse> {
+    public async getRawDataProjectMetadata (projectId: number, queryParams?: getRawDataProjectMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetRawDataProjectMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/project-metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4555,10 +4932,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetRawDataProjectMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4572,7 +4957,10 @@ export class RawDataApi {
      * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleResponse> {
+    public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -4663,10 +5051,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4679,7 +5075,10 @@ export class RawDataApi {
      * @param sliceEnd End index of the slice. If not given, the whole sample is used.
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      */
-    public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -4774,10 +5173,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4790,7 +5197,10 @@ export class RawDataApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -4878,10 +5288,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4890,7 +5308,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async getSampleAsRaw (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsRaw (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/raw'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -4966,10 +5387,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4982,7 +5411,10 @@ export class RawDataApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
      */
-    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -5070,10 +5502,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5082,7 +5522,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param category Which of the three acquisition categories to retrieve data from
      */
-    public async getSampleMetadata (projectId: number, queryParams: getSampleMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleMetadataResponse> {
+    public async getSampleMetadata (projectId: number, queryParams: getSampleMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5160,10 +5603,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5174,7 +5625,10 @@ export class RawDataApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async getSampleMetadataFilterOptions (projectId: number, queryParams: getSampleMetadataFilterOptionsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleMetadataFilterOptionsResponse> {
+    public async getSampleMetadataFilterOptions (projectId: number, queryParams: getSampleMetadataFilterOptionsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleMetadataFilterOptionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/metadata-filter-options'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5258,10 +5712,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleMetadataFilterOptionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5275,7 +5737,10 @@ export class RawDataApi {
      * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
+    public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/slice'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -5373,10 +5838,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleDspResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5384,7 +5857,10 @@ export class RawDataApi {
      * @summary Get split preview results
      * @param projectId Project ID
      */
-    public async getSplitPreviewResults (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DatasetSplitPreviewResponse> {
+    public async getSplitPreviewResults (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DatasetSplitPreviewResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/get-split-preview-results'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5452,10 +5928,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DatasetSplitPreviewResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5470,7 +5954,10 @@ export class RawDataApi {
      * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
      */
-    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSampleDspResponse> {
+    public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSampleDspResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -5564,10 +6051,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSampleDspResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5575,7 +6070,10 @@ export class RawDataApi {
      * @summary Check data explorer features
      * @param projectId Project ID
      */
-    public async hasDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+    public async hasDataExplorerFeatures (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<HasDataExplorerFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/has-features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5643,10 +6141,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'HasDataExplorerFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5654,7 +6160,10 @@ export class RawDataApi {
      * @summary Check if data diversity metrics exist
      * @param projectId Project ID
      */
-    public async hasDiversityData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+    public async hasDiversityData (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<HasDataExplorerFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/diversity/exists'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5722,10 +6231,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'HasDataExplorerFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5733,7 +6250,10 @@ export class RawDataApi {
      * @summary Check if label noise metrics exist
      * @param projectId Project ID
      */
-    public async hasLabelNoiseData (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<HasDataExplorerFeaturesResponse> {
+    public async hasLabelNoiseData (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<HasDataExplorerFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-quality/label-noise/exists'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5801,10 +6321,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'HasDataExplorerFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5836,7 +6364,10 @@ export class RawDataApi {
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
      */
-    public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
+    public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5983,10 +6514,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListSamplesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5996,7 +6535,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param moveRawDataRequest 
      */
-    public async moveSample (projectId: number, sampleId: number, moveRawDataRequest: MoveRawDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async moveSample (projectId: number, sampleId: number, moveRawDataRequest: MoveRawDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/move'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6081,10 +6623,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6093,7 +6643,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async moveToLabelingQueue (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async moveToLabelingQueue (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/to-labeling-queue'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6169,10 +6722,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6180,7 +6741,10 @@ export class RawDataApi {
      * @summary Rebalance dataset
      * @param projectId Project ID
      */
-    public async rebalanceDataset (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RebalanceDatasetResponse> {
+    public async rebalanceDataset (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<RebalanceDatasetResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/rebalance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6248,10 +6812,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'RebalanceDatasetResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6259,7 +6831,10 @@ export class RawDataApi {
      * @summary Rebalance dataset
      * @param projectId Project ID
      */
-    public async rebalanceDatasetV2 (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async rebalanceDatasetV2 (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/v2/rebalance'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6327,10 +6902,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6340,7 +6923,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param renameSampleRequest 
      */
-    public async renameSample (projectId: number, sampleId: number, renameSampleRequest: RenameSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async renameSample (projectId: number, sampleId: number, renameSampleRequest: RenameSampleRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/rename'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6425,10 +7011,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6437,7 +7031,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param sampleId Sample ID
      */
-    public async retryProcessing (projectId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async retryProcessing (projectId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/retry-processing'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6513,10 +7110,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6526,7 +7131,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param segmentSampleRequest 
      */
-    public async segmentSample (projectId: number, sampleId: number, segmentSampleRequest: SegmentSampleRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async segmentSample (projectId: number, sampleId: number, segmentSampleRequest: SegmentSampleRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/segment'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6611,10 +7219,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6623,7 +7239,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param dataExplorerSettings 
      */
-    public async setDataExplorerSettings (projectId: number, dataExplorerSettings: DataExplorerSettings, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setDataExplorerSettings (projectId: number, dataExplorerSettings: DataExplorerSettings, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/settings'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6700,10 +7319,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6713,7 +7340,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param sampleBoundingBoxesRequest 
      */
-    public async setSampleBoundingBoxes (projectId: number, sampleId: number, sampleBoundingBoxesRequest: SampleBoundingBoxesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleBoundingBoxes (projectId: number, sampleId: number, sampleBoundingBoxesRequest: SampleBoundingBoxesRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/bounding-boxes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6798,10 +7428,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6811,7 +7449,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param sampleLabelMapRequest 
      */
-    public async setSampleLabelMap (projectId: number, sampleId: number, sampleLabelMapRequest: SampleLabelMapRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleLabelMap (projectId: number, sampleId: number, sampleLabelMapRequest: SampleLabelMapRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/label-map-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6896,10 +7537,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6909,7 +7558,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param setSampleMetadataRequest 
      */
-    public async setSampleMetadata (projectId: number, sampleId: number, setSampleMetadataRequest: SetSampleMetadataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleMetadata (projectId: number, sampleId: number, setSampleMetadataRequest: SetSampleMetadataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -6994,10 +7646,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7007,7 +7667,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param setSampleProposedChangesRequest 
      */
-    public async setSampleProposedChanges (projectId: number, sampleId: number, setSampleProposedChangesRequest: SetSampleProposedChangesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleProposedChanges (projectId: number, sampleId: number, setSampleProposedChangesRequest: SetSampleProposedChangesRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/propose-changes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -7092,10 +7755,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7105,7 +7776,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param setSampleStructuredLabelsRequest 
      */
-    public async setSampleStructuredLabels (projectId: number, sampleId: number, setSampleStructuredLabelsRequest: SetSampleStructuredLabelsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleStructuredLabels (projectId: number, sampleId: number, setSampleStructuredLabelsRequest: SetSampleStructuredLabelsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/structured-labels'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -7190,10 +7864,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7203,7 +7885,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param setSampleVideoDimensionsRequest 
      */
-    public async setSampleVideoDimensions (projectId: number, sampleId: number, setSampleVideoDimensionsRequest: SetSampleVideoDimensionsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setSampleVideoDimensions (projectId: number, sampleId: number, setSampleVideoDimensionsRequest: SetSampleVideoDimensionsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/video-dimensions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -7288,10 +7973,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7300,7 +7993,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param datasetSplitOptions 
      */
-    public async splitDataset (projectId: number, datasetSplitOptions: DatasetSplitOptions, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async splitDataset (projectId: number, datasetSplitOptions: DatasetSplitOptions, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/split'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7377,10 +8073,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7389,7 +8093,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param datasetSplitOptions 
      */
-    public async splitDatasetPreview (projectId: number, datasetSplitOptions: DatasetSplitOptions, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DatasetSplitPreviewResponse | StartJobResponse> {
+    public async splitDatasetPreview (projectId: number, datasetSplitOptions: DatasetSplitOptions, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DatasetSplitPreviewResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/split-preview'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7466,10 +8173,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DatasetSplitPreviewResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7479,7 +8194,10 @@ export class RawDataApi {
      * @param sampleId Sample ID
      * @param splitSampleInFramesRequest 
      */
-    public async splitSampleInFrames (projectId: number, sampleId: number, splitSampleInFramesRequest: SplitSampleInFramesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse | StartJobResponse> {
+    public async splitSampleInFrames (projectId: number, sampleId: number, splitSampleInFramesRequest: SplitSampleInFramesRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse | StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/{sampleId}/split'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'sampleId' + '}', encodeURIComponent(String(sampleId)));
@@ -7564,10 +8282,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse | StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7576,7 +8302,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param storeSegmentLengthRequest 
      */
-    public async storeSegmentLength (projectId: number, storeSegmentLengthRequest: StoreSegmentLengthRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async storeSegmentLength (projectId: number, storeSegmentLengthRequest: StoreSegmentLengthRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/store-segment-length'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7653,10 +8382,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7665,7 +8402,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param trackObjectsRequest 
      */
-    public async trackObjects (projectId: number, trackObjectsRequest: TrackObjectsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TrackObjectsResponse> {
+    public async trackObjects (projectId: number, trackObjectsRequest: TrackObjectsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<TrackObjectsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/track-objects'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7742,10 +8482,18 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'TrackObjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7754,7 +8502,10 @@ export class RawDataApi {
      * @param projectId Project ID
      * @param image 
      */
-    public async uploadDataExplorerScreenshot (projectId: number, params: uploadDataExplorerScreenshotFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadDataExplorerScreenshot (projectId: number, params: uploadDataExplorerScreenshotFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/raw-data/data-explorer/screenshot'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7841,9 +8592,17 @@ export class RawDataApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

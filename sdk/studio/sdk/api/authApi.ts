@@ -138,7 +138,10 @@ export class AuthApi {
      * @param sso Single sign-on token
      * @param sig Verification signature
      */
-    public async discourse (queryParams: discourseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async discourse (queryParams: discourseQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/auth/discourse';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -211,9 +214,17 @@ export class AuthApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

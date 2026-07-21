@@ -253,7 +253,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param autotuneDspRequest 
      */
-    public async autotuneDspJob (projectId: number, autotuneDspRequest: AutotuneDspRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async autotuneDspJob (projectId: number, autotuneDspRequest: AutotuneDspRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/autotune-dsp'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -330,10 +333,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -344,7 +355,10 @@ export class JobsApi {
      * @param buildOnDeviceModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async buildOnDeviceModelJob (projectId: number, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, queryParams: buildOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<BuildOnDeviceModelResponse> {
+    public async buildOnDeviceModelJob (projectId: number, buildOnDeviceModelRequest: BuildOnDeviceModelRequest, queryParams: buildOnDeviceModelJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<BuildOnDeviceModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -434,10 +448,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'BuildOnDeviceModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -447,7 +469,10 @@ export class JobsApi {
      * @param buildOrganizationOnDeviceModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async buildOrganizationOnDeviceModelJob (projectId: number, buildOrganizationOnDeviceModelRequest: BuildOrganizationOnDeviceModelRequest, queryParams?: buildOrganizationOnDeviceModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<BuildOnDeviceModelResponse> {
+    public async buildOrganizationOnDeviceModelJob (projectId: number, buildOrganizationOnDeviceModelRequest: BuildOrganizationOnDeviceModelRequest, queryParams?: buildOrganizationOnDeviceModelJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<BuildOnDeviceModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/build-ondevice-model/organization'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -527,10 +552,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'BuildOnDeviceModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -539,7 +572,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param calculateDataQualityMetricsRequest 
      */
-    public async calculateDataQualityMetrics (projectId: number, calculateDataQualityMetricsRequest: CalculateDataQualityMetricsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async calculateDataQualityMetrics (projectId: number, calculateDataQualityMetricsRequest: CalculateDataQualityMetricsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/data-quality-metrics'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -616,10 +652,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -629,7 +673,10 @@ export class JobsApi {
      * @param jobId Job ID
      * @param forceCancel If set to \&#39;true\&#39;, we won\&#39;t wait for the job cluster to cancel the job, and will mark the job as finished.
      */
-    public async cancelJob (projectId: number, jobId: number, queryParams?: cancelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async cancelJob (projectId: number, jobId: number, queryParams?: cancelJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/cancel'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -708,10 +755,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -720,7 +775,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param actionId AI Action ID
      */
-    public async createAIActionsJob (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async createAIActionsJob (projectId: number, actionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/ai-actions/{actionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -796,10 +854,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -809,7 +875,10 @@ export class JobsApi {
      * @param actionId AI Action ID
      * @param createPreviewAIActionsJobRequest 
      */
-    public async createPreviewAIActionsJob (projectId: number, actionId: number, createPreviewAIActionsJobRequest: CreatePreviewAIActionsJobRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async createPreviewAIActionsJob (projectId: number, actionId: number, createPreviewAIActionsJobRequest: CreatePreviewAIActionsJobRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/ai-actions/{actionId}/preview'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -894,10 +963,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -906,7 +983,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param createSyntheticDataRequest 
      */
-    public async createSyntheticDataJob (projectId: number, createSyntheticDataRequest: CreateSyntheticDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async createSyntheticDataJob (projectId: number, createSyntheticDataRequest: CreateSyntheticDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/synthetic-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -983,10 +1063,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -997,7 +1085,10 @@ export class JobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async downloadJobsLogs (projectId: number, jobId: number, queryParams?: downloadJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<string> {
+    public async downloadJobsLogs (projectId: number, jobId: number, queryParams?: downloadJobsLogsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<string> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/stdout/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1079,10 +1170,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'string'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1091,7 +1190,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param exportInferenceHistoryDataRequest 
      */
-    public async exportInferenceHistoryDataJob (projectId: number, exportInferenceHistoryDataRequest: ExportInferenceHistoryDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async exportInferenceHistoryDataJob (projectId: number, exportInferenceHistoryDataRequest: ExportInferenceHistoryDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/export-inference-history'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1168,10 +1270,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1180,7 +1290,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async exportKerasBlock (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async exportKerasBlock (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/train/keras/{learnId}/export'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1256,10 +1369,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1269,7 +1390,10 @@ export class JobsApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param exportKerasBlockDataRequest 
      */
-    public async exportKerasBlockData (projectId: number, learnId: number, exportKerasBlockDataRequest: ExportKerasBlockDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async exportKerasBlockData (projectId: number, learnId: number, exportKerasBlockDataRequest: ExportKerasBlockDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/train/keras/{learnId}/data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1354,10 +1478,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1365,7 +1497,10 @@ export class JobsApi {
      * @summary Generate data explorer features
      * @param projectId Project ID
      */
-    public async generateDataExplorerFeatures (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async generateDataExplorerFeatures (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/data-explorer-features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1433,10 +1568,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1445,7 +1588,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param generateFeaturesRequest 
      */
-    public async generateFeaturesJob (projectId: number, generateFeaturesRequest: GenerateFeaturesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async generateFeaturesJob (projectId: number, generateFeaturesRequest: GenerateFeaturesRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/generate-features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1522,10 +1668,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1533,7 +1687,10 @@ export class JobsApi {
      * @summary Get impulse migration status
      * @param projectId Project ID
      */
-    public async getImpulseMigrationJobStatus (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJobResponse> {
+    public async getImpulseMigrationJobStatus (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/impulse-migration/status'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1601,10 +1758,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1614,7 +1779,10 @@ export class JobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getImpulseMigrationJobsLogs (projectId: number, queryParams?: getImpulseMigrationJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getImpulseMigrationJobsLogs (projectId: number, queryParams?: getImpulseMigrationJobsLogsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/impulse-migration/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1688,10 +1856,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'LogStdoutResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1700,7 +1876,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param jobId Job ID
      */
-    public async getJobStatus (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJobResponse> {
+    public async getJobStatus (projectId: number, jobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/status'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1776,10 +1955,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1790,7 +1977,10 @@ export class JobsApi {
      * @param limit Maximum number of results
      * @param logLevel Log level (error, warn, info, debug)
      */
-    public async getJobsLogs (projectId: number, jobId: number, queryParams?: getJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LogStdoutResponse> {
+    public async getJobsLogs (projectId: number, jobId: number, queryParams?: getJobsLogsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<LogStdoutResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/stdout'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -1872,10 +2062,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'LogStdoutResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1885,7 +2083,10 @@ export class JobsApi {
      * @param startDate Start date
      * @param endDate End date
      */
-    public async getJobsSummary (projectId: number, queryParams: getJobsSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobSummaryResponse> {
+    public async getJobsSummary (projectId: number, queryParams: getJobsSummaryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<JobSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/summary'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1973,10 +2174,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'JobSummaryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1985,7 +2194,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param jobId Job ID
      */
-    public async getProfileTfliteJobResult (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProfileTfLiteResponse> {
+    public async getProfileTfliteJobResult (projectId: number, jobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProfileTfLiteResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/profile-tflite/{jobId}/result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -2061,10 +2273,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProfileTfLiteResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2073,7 +2293,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param jobId Job ID
      */
-    public async getProfileTfliteJobResultViaPostRequest (projectId: number, jobId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProfileTfLiteResponse> {
+    public async getProfileTfliteJobResultViaPostRequest (projectId: number, jobId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProfileTfLiteResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/profile-tflite/{jobId}/result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -2149,10 +2372,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProfileTfLiteResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2161,7 +2392,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listActiveJobs (projectId: number, queryParams?: listActiveJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listActiveJobs (projectId: number, queryParams?: listActiveJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2232,10 +2466,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2251,7 +2493,10 @@ export class JobsApi {
      * @param category Job category to filter on
      * @param finished Job finish status to filter on
      */
-    public async listAllJobs (projectId: number, queryParams?: listAllJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listAllJobs (projectId: number, queryParams?: listAllJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/all'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2343,10 +2588,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2359,7 +2612,10 @@ export class JobsApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param rootOnly Whether to exclude jobs with a parent ID (so jobs started as part of another job)
      */
-    public async listFinishedJobs (projectId: number, queryParams?: listFinishedJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async listFinishedJobs (projectId: number, queryParams?: listFinishedJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/history'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2442,10 +2698,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2454,7 +2718,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param extendedFromJobId Tuner coordinator job ID for the direct descendant job to extend this search from
      */
-    public async optimizeJob (projectId: number, queryParams?: optimizeJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async optimizeJob (projectId: number, queryParams?: optimizeJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/optimize'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2525,10 +2792,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2536,7 +2811,10 @@ export class JobsApi {
      * @summary Retry impulse migration
      * @param projectId Project ID
      */
-    public async retryImpulseMigration (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async retryImpulseMigration (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/retry-migrate-impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2604,10 +2882,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2617,7 +2903,10 @@ export class JobsApi {
      * @param trialId trial ID
      * @param setTunerPrimaryJobRequest 
      */
-    public async setTunerPrimaryJob (projectId: number, setTunerPrimaryJobRequest: SetTunerPrimaryJobRequest, queryParams: setTunerPrimaryJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async setTunerPrimaryJob (projectId: number, setTunerPrimaryJobRequest: SetTunerPrimaryJobRequest, queryParams: setTunerPrimaryJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/set-tuner-primary-job'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2648,6 +2937,13 @@ export class JobsApi {
             throw new Error('Required parameter queryParams.trialId was null or undefined when calling setTunerPrimaryJob.');
         }
 
+
+        // verify required parameter 'setTunerPrimaryJobRequest' is not null or undefined
+
+
+        if (setTunerPrimaryJobRequest === null || setTunerPrimaryJobRequest === undefined) {
+            throw new Error('Required parameter setTunerPrimaryJobRequest was null or undefined when calling setTunerPrimaryJob.');
+        }
 
         if (typeof queryParams?.trialId !== 'undefined' && queryParams?.trialId !== null) {
             queryParameters['trialId'] = <string><any>queryParams.trialId;
@@ -2697,10 +2993,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2710,7 +3014,10 @@ export class JobsApi {
      * @param startClassifyJobRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startClassifyJob (projectId: number, startClassifyJobRequest: StartClassifyJobRequest, queryParams?: startClassifyJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startClassifyJob (projectId: number, startClassifyJobRequest: StartClassifyJobRequest, queryParams?: startClassifyJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/classify'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2790,10 +3097,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2803,7 +3118,10 @@ export class JobsApi {
      * @param deployPretrainedModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startDeployPretrainedModelJob (projectId: number, deployPretrainedModelRequest: DeployPretrainedModelRequest, queryParams?: startDeployPretrainedModelJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startDeployPretrainedModelJob (projectId: number, deployPretrainedModelRequest: DeployPretrainedModelRequest, queryParams?: startDeployPretrainedModelJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/deploy-pretrained-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2883,10 +3201,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2895,7 +3221,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startEvaluateJob (projectId: number, queryParams?: startEvaluateJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startEvaluateJob (projectId: number, queryParams?: startEvaluateJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/evaluate'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2966,10 +3295,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2978,7 +3315,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param importDataFromAnotherProjectJobRequest 
      */
-    public async startImportDataFromProjectJob (projectId: number, importDataFromAnotherProjectJobRequest: ImportDataFromAnotherProjectJobRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startImportDataFromProjectJob (projectId: number, importDataFromAnotherProjectJobRequest: ImportDataFromAnotherProjectJobRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/import-data-from-project'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3055,10 +3395,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3066,7 +3414,10 @@ export class JobsApi {
      * @summary Add keywords and noise
      * @param projectId Project ID
      */
-    public async startKeywordsNoiseJob (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startKeywordsNoiseJob (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/keywords-noise'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3134,10 +3485,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3146,7 +3505,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param versionId Version ID
      */
-    public async startMakeVersionPublicJob (projectId: number, versionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startMakeVersionPublicJob (projectId: number, versionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/versions/{versionId}/make-public'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
@@ -3222,10 +3584,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3234,7 +3604,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param exportOriginalDataRequest 
      */
-    public async startOriginalExportJob (projectId: number, exportOriginalDataRequest: ExportOriginalDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startOriginalExportJob (projectId: number, exportOriginalDataRequest: ExportOriginalDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/export/original'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3311,10 +3684,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3324,7 +3705,10 @@ export class JobsApi {
      * @param startPerformanceCalibrationRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startPerformanceCalibrationJob (projectId: number, startPerformanceCalibrationRequest: StartPerformanceCalibrationRequest, queryParams?: startPerformanceCalibrationJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startPerformanceCalibrationJob (projectId: number, startPerformanceCalibrationRequest: StartPerformanceCalibrationRequest, queryParams?: startPerformanceCalibrationJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/performance-calibration'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3404,10 +3788,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3417,7 +3809,10 @@ export class JobsApi {
      * @param startPostProcessingRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startPostProcessingJob (projectId: number, startPostProcessingRequest: StartPostProcessingRequest, queryParams?: startPostProcessingJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startPostProcessingJob (projectId: number, startPostProcessingRequest: StartPostProcessingRequest, queryParams?: startPostProcessingJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/post-processing'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3497,10 +3892,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3509,7 +3912,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param profileTfLiteRequest 
      */
-    public async startProfileTfliteJob (projectId: number, profileTfLiteRequest: ProfileTfLiteRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startProfileTfliteJob (projectId: number, profileTfLiteRequest: ProfileTfLiteRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/profile-tflite'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3586,10 +3992,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3598,7 +4012,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param restoreProjectRequest 
      */
-    public async startRestoreJob (projectId: number, restoreProjectRequest: RestoreProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async startRestoreJob (projectId: number, restoreProjectRequest: RestoreProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/restore'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3675,10 +4092,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3687,7 +4112,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param restoreProjectFromPublicRequest 
      */
-    public async startRestoreJobFromPublic (projectId: number, restoreProjectFromPublicRequest: RestoreProjectFromPublicRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async startRestoreJobFromPublic (projectId: number, restoreProjectFromPublicRequest: RestoreProjectFromPublicRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/restore/from-public'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3764,10 +4192,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3776,7 +4212,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async startRetrainJob (projectId: number, queryParams?: startRetrainJobQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startRetrainJob (projectId: number, queryParams?: startRetrainJobQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/retrain'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3847,10 +4286,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3859,7 +4306,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param projectVersionRequest 
      */
-    public async startVersionJob (projectId: number, projectVersionRequest: ProjectVersionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startVersionJob (projectId: number, projectVersionRequest: ProjectVersionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/version'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3936,10 +4386,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3948,7 +4406,10 @@ export class JobsApi {
      * @param projectId Project ID
      * @param exportWavDataRequest 
      */
-    public async startWavExportJob (projectId: number, exportWavDataRequest: ExportWavDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async startWavExportJob (projectId: number, exportWavDataRequest: ExportWavDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/export/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4025,10 +4486,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4038,7 +4507,10 @@ export class JobsApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param startTrainingRequestAnomaly 
      */
-    public async trainAnomalyJob (projectId: number, learnId: number, startTrainingRequestAnomaly: StartTrainingRequestAnomaly, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async trainAnomalyJob (projectId: number, learnId: number, startTrainingRequestAnomaly: StartTrainingRequestAnomaly, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/train/anomaly/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -4123,10 +4595,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4136,7 +4616,10 @@ export class JobsApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param setKerasParameterRequest 
      */
-    public async trainKerasJob (projectId: number, learnId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async trainKerasJob (projectId: number, learnId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/train/keras/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -4221,10 +4704,18 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4234,7 +4725,10 @@ export class JobsApi {
      * @param jobId Job ID
      * @param updateJobRequest 
      */
-    public async updateJob (projectId: number, jobId: number, updateJobRequest: UpdateJobRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateJob (projectId: number, jobId: number, updateJobRequest: UpdateJobRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/jobs/{jobId}/update'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
@@ -4319,9 +4813,17 @@ export class JobsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

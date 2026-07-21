@@ -147,7 +147,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param createSignedUploadLinkRequest 
      */
-    public async createSignedUploadLink (portalId: number, createSignedUploadLinkRequest: CreateSignedUploadLinkRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateSignedUploadLinkResponse> {
+    public async createSignedUploadLink (portalId: number, createSignedUploadLinkRequest: CreateSignedUploadLinkRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateSignedUploadLinkResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/upload-link'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -224,10 +227,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateSignedUploadLinkResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -236,7 +247,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param deletePortalFileRequest 
      */
-    public async deletePortalFile (portalId: number, deletePortalFileRequest: DeletePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deletePortalFile (portalId: number, deletePortalFileRequest: DeletePortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/delete'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -313,10 +327,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -325,7 +347,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param downloadPortalFileRequest 
      */
-    public async downloadPortalFile (portalId: number, downloadPortalFileRequest: DownloadPortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DownloadPortalFileResponse> {
+    public async downloadPortalFile (portalId: number, downloadPortalFileRequest: DownloadPortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DownloadPortalFileResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/download'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -402,10 +427,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DownloadPortalFileResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -413,7 +446,10 @@ export class UploadPortalApi {
      * @summary Portal info
      * @param portalId Portal ID
      */
-    public async getPortalInfo (portalId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PortalInfoResponse> {
+    public async getPortalInfo (portalId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<PortalInfoResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -481,10 +517,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'PortalInfoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -493,7 +537,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param listPortalFilesInFolderRequest 
      */
-    public async listPortalFilesInFolder (portalId: number, listPortalFilesInFolderRequest: ListPortalFilesInFolderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async listPortalFilesInFolder (portalId: number, listPortalFilesInFolderRequest: ListPortalFilesInFolderRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -570,10 +617,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -582,7 +637,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param renamePortalFileRequest 
      */
-    public async renamePortalFile (portalId: number, renamePortalFileRequest: RenamePortalFileRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async renamePortalFile (portalId: number, renamePortalFileRequest: RenamePortalFileRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/rename'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -659,10 +717,18 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -671,7 +737,10 @@ export class UploadPortalApi {
      * @param portalId Portal ID
      * @param path Path to file in portal
      */
-    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async viewPortalFile (portalId: number, queryParams: viewPortalFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/portals/{portalId}/files/view'
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
         let queryParameters: Record<string, string> = {};
@@ -749,9 +818,17 @@ export class UploadPortalApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

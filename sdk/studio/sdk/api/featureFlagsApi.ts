@@ -120,7 +120,10 @@ export class FeatureFlagsApi {
      * Get the current global feature flags and whether they are enabled
      * @summary Get the current global feature flags and whether they are enabled
      */
-    public async getFeatureFlags (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetFeatureFlagsResponse> {
+    public async getFeatureFlags (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetFeatureFlagsResponse> {
         const localVarPath = this.basePath + '/api-feature-flags';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -164,9 +167,17 @@ export class FeatureFlagsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetFeatureFlagsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

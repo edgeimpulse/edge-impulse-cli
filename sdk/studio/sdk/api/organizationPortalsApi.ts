@@ -140,7 +140,10 @@ export class OrganizationPortalsApi {
      * @param organizationId Organization ID
      * @param createOrganizationPortalRequest 
      */
-    public async createOrganizationPortal (organizationId: number, createOrganizationPortalRequest: CreateOrganizationPortalRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateOrganizationPortalResponse> {
+    public async createOrganizationPortal (organizationId: number, createOrganizationPortalRequest: CreateOrganizationPortalRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateOrganizationPortalResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/create'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -217,10 +220,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateOrganizationPortalResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -229,7 +240,10 @@ export class OrganizationPortalsApi {
      * @param organizationId Organization ID
      * @param portalId Portal ID
      */
-    public async deleteOrganizationPortal (organizationId: number, portalId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteOrganizationPortal (organizationId: number, portalId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/{portalId}/delete'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
@@ -305,10 +319,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -317,7 +339,10 @@ export class OrganizationPortalsApi {
      * @param organizationId Organization ID
      * @param portalId Portal ID
      */
-    public async getOrganizationPortal (organizationId: number, portalId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationPortalResponse> {
+    public async getOrganizationPortal (organizationId: number, portalId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationPortalResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/{portalId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
@@ -393,10 +418,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationPortalResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -404,7 +437,10 @@ export class OrganizationPortalsApi {
      * @summary List upload portals
      * @param organizationId Organization ID
      */
-    public async listOrganizationPortals (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationPortalsResponse> {
+    public async listOrganizationPortals (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationPortalsResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -472,10 +508,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationPortalsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -484,7 +528,10 @@ export class OrganizationPortalsApi {
      * @param organizationId Organization ID
      * @param portalId Portal ID
      */
-    public async rotateOrganizationPortalToken (organizationId: number, portalId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async rotateOrganizationPortalToken (organizationId: number, portalId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/{portalId}/rotate-token'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
@@ -560,10 +607,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -573,7 +628,10 @@ export class OrganizationPortalsApi {
      * @param portalId Portal ID
      * @param createOrganizationPortalRequest 
      */
-    public async updateOrganizationPortal (organizationId: number, portalId: number, createOrganizationPortalRequest: CreateOrganizationPortalRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UpdateOrganizationPortalResponse> {
+    public async updateOrganizationPortal (organizationId: number, portalId: number, createOrganizationPortalRequest: CreateOrganizationPortalRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UpdateOrganizationPortalResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/{portalId}/update'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
@@ -658,10 +716,18 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UpdateOrganizationPortalResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -670,7 +736,10 @@ export class OrganizationPortalsApi {
      * @param organizationId Organization ID
      * @param portalId Portal ID
      */
-    public async verifyOrganizationPortal (organizationId: number, portalId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyOrganizationBucketResponse> {
+    public async verifyOrganizationPortal (organizationId: number, portalId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyOrganizationBucketResponse> {
         const localVarPath = this.basePath + '/api/organizations/{organizationId}/portals/{portalId}/verify'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'portalId' + '}', encodeURIComponent(String(portalId)));
@@ -746,9 +815,17 @@ export class OrganizationPortalsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyOrganizationBucketResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

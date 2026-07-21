@@ -182,7 +182,10 @@ export class ImpulseApi {
      * @param impulseId Impulse ID
      * @param cloneImpulseRequest 
      */
-    public async cloneImpulseComplete (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async cloneImpulseComplete (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/clone/complete'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
@@ -267,10 +270,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -280,7 +291,10 @@ export class ImpulseApi {
      * @param impulseId Impulse ID
      * @param cloneImpulseRequest 
      */
-    public async cloneImpulseStructure (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateImpulseResponse> {
+    public async cloneImpulseStructure (projectId: number, impulseId: number, cloneImpulseRequest: CloneImpulseRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/clone/structure'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
@@ -365,10 +379,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateImpulseResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -378,7 +400,10 @@ export class ImpulseApi {
      * @param createImpulseRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async createImpulse (projectId: number, createImpulseRequest: CreateImpulseRequest, queryParams?: createImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateImpulseResponse> {
+    public async createImpulse (projectId: number, createImpulseRequest: CreateImpulseRequest, queryParams?: createImpulseQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -458,10 +483,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateImpulseResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -470,7 +503,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param createNewEmptyImpulseRequest 
      */
-    public async createNewEmptyImpulse (projectId: number, createNewEmptyImpulseRequest?: CreateNewEmptyImpulseRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateNewEmptyImpulseResponse> {
+    public async createNewEmptyImpulse (projectId: number, createNewEmptyImpulseRequest?: CreateNewEmptyImpulseRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateNewEmptyImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/new'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -540,10 +576,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateNewEmptyImpulseResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -552,7 +596,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async deleteImpulse (projectId: number, queryParams?: deleteImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteImpulse (projectId: number, queryParams?: deleteImpulseQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -623,10 +670,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -635,7 +690,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param format Format of the detailed impulses response, either \&#39;json\&#39; or \&#39;csv\&#39;. If not set, defaults to \&#39;json\&#39;.
      */
-    public async downloadDetailedImpulses (projectId: number, queryParams?: downloadDetailedImpulsesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadDetailedImpulses (projectId: number, queryParams?: downloadDetailedImpulsesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/download-impulses-detailed'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -706,10 +764,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -717,7 +783,10 @@ export class ImpulseApi {
      * @summary Get all impulses (incl. metrics)
      * @param projectId Project ID
      */
-    public async getAllDetailedImpulses (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllDetailedImpulsesResponse> {
+    public async getAllDetailedImpulses (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllDetailedImpulsesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulses-detailed'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -785,10 +854,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllDetailedImpulsesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -796,7 +873,10 @@ export class ImpulseApi {
      * @summary Get all impulses
      * @param projectId Project ID
      */
-    public async getAllImpulses (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllImpulsesResponse> {
+    public async getAllImpulses (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllImpulsesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulses'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -864,10 +944,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllImpulsesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -875,7 +963,10 @@ export class ImpulseApi {
      * @summary Get all transfer learning models
      * @param projectId Project ID
      */
-    public async getAllTransferLearningModels (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAllTransferLearningModelsResponse> {
+    public async getAllTransferLearningModels (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAllTransferLearningModelsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/transfer-learning-models'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -943,10 +1034,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAllTransferLearningModelsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -955,7 +1054,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getImpulse (projectId: number, queryParams?: getImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
+    public async getImpulse (projectId: number, queryParams?: getImpulseQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1026,10 +1128,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetImpulseResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1038,7 +1148,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getImpulseAll (projectId: number, queryParams?: getImpulseAllQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseResponse> {
+    public async getImpulseAll (projectId: number, queryParams?: getImpulseAllQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetImpulseResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/all'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1109,10 +1222,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetImpulseResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1120,7 +1241,10 @@ export class ImpulseApi {
      * @summary Get impulse blocks
      * @param projectId Project ID
      */
-    public async getImpulseBlocks (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetImpulseBlocksResponse> {
+    public async getImpulseBlocks (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetImpulseBlocksResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/blocks'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1188,10 +1312,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetImpulseBlocksResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1199,7 +1331,10 @@ export class ImpulseApi {
      * @summary Get new block ID
      * @param projectId Project ID
      */
-    public async getNewBlockId (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetNewBlockIdResponse> {
+    public async getNewBlockId (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetNewBlockIdResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/get-new-block-id'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1267,10 +1402,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetNewBlockIdResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1279,7 +1422,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID
      */
-    public async regenerateModelTestingSummary (projectId: number, impulseId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async regenerateModelTestingSummary (projectId: number, impulseId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/regenerate-model-testing-summary'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
@@ -1355,10 +1501,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1368,7 +1522,10 @@ export class ImpulseApi {
      * @param impulseId Impulse ID
      * @param setImpulseThresholdsRequest 
      */
-    public async setImpulseThresholds (projectId: number, impulseId: number, setImpulseThresholdsRequest: SetImpulseThresholdsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SetImpulseThresholdsResponse> {
+    public async setImpulseThresholds (projectId: number, impulseId: number, setImpulseThresholdsRequest: SetImpulseThresholdsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<SetImpulseThresholdsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/{impulseId}/set-thresholds'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'impulseId' + '}', encodeURIComponent(String(impulseId)));
@@ -1453,10 +1610,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'SetImpulseThresholdsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1467,7 +1632,10 @@ export class ImpulseApi {
      * @param impulse 
      * @param config 
      */
-    public async setLegacyImpulseStateInternal (projectId: number, params: setLegacyImpulseStateInternalFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setLegacyImpulseStateInternal (projectId: number, params: setLegacyImpulseStateInternalFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/legacy-set-impulse'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1592,10 +1760,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1605,7 +1781,10 @@ export class ImpulseApi {
      * @param updateImpulseRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async updateImpulse (projectId: number, updateImpulseRequest: UpdateImpulseRequest, queryParams?: updateImpulseQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateImpulse (projectId: number, updateImpulseRequest: UpdateImpulseRequest, queryParams?: updateImpulseQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/impulse/update'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1685,10 +1864,18 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1697,7 +1884,10 @@ export class ImpulseApi {
      * @param projectId Project ID
      * @param verifyDspBlockUrlRequest 
      */
-    public async verifyDspBlockUrl (projectId: number, verifyDspBlockUrlRequest: VerifyDspBlockUrlRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifyDspBlockUrlResponse> {
+    public async verifyDspBlockUrl (projectId: number, verifyDspBlockUrlRequest: VerifyDspBlockUrlRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifyDspBlockUrlResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/verify-dsp-block/url'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1774,9 +1964,17 @@ export class ImpulseApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifyDspBlockUrlResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

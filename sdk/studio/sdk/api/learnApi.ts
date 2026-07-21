@@ -212,7 +212,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param zip 
      */
-    public async addKerasFiles (projectId: number, learnId: number, params: addKerasFilesFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addKerasFiles (projectId: number, learnId: number, params: addKerasFilesFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/addFiles'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -307,10 +310,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -321,7 +332,10 @@ export class LearnApi {
      * @param featureAx1 Feature axis 1
      * @param featureAx2 Feature axis 2
      */
-    public async anomalyTrainedFeatures (projectId: number, learnId: number, queryParams: anomalyTrainedFeaturesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyTrainedFeaturesResponse> {
+    public async anomalyTrainedFeatures (projectId: number, learnId: number, queryParams: anomalyTrainedFeaturesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AnomalyTrainedFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/features/get-graph'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -417,10 +431,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AnomalyTrainedFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -430,7 +452,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param sampleId Sample ID
      */
-    public async anomalyTrainedFeaturesPerSample (projectId: number, learnId: number, sampleId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyTrainedFeaturesResponse> {
+    public async anomalyTrainedFeaturesPerSample (projectId: number, learnId: number, sampleId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AnomalyTrainedFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/features/get-graph/classification/{sampleId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
@@ -514,10 +539,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AnomalyTrainedFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -526,7 +559,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async downloadKerasData (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadKerasData (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/download-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -602,10 +638,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -614,7 +658,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async downloadKerasExport (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadKerasExport (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/download-export'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -690,10 +737,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -703,7 +758,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param modelDownloadId Model download ID, which can be obtained from the project information
      */
-    public async downloadLearnModel (projectId: number, learnId: number, modelDownloadId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadLearnModel (projectId: number, learnId: number, modelDownloadId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/learn-data/{learnId}/model/{modelDownloadId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)))
@@ -787,10 +845,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -800,7 +866,10 @@ export class LearnApi {
      * @param pretrainedModelDownloadType 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async downloadPretrainedModel (projectId: number, pretrainedModelDownloadType: 'tflite_float32' | 'tflite_int8' | 'onnx' | 'saved_model', queryParams?: downloadPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadPretrainedModel (projectId: number, pretrainedModelDownloadType: 'tflite_float32' | 'tflite_int8' | 'onnx' | 'saved_model', queryParams?: downloadPretrainedModelQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/download/{pretrainedModelDownloadType}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'pretrainedModelDownloadType' + '}', encodeURIComponent(String(pretrainedModelDownloadType)));
@@ -879,10 +948,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -891,7 +968,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAnomaly (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyConfigResponse> {
+    public async getAnomaly (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AnomalyConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -967,10 +1047,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AnomalyConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -979,7 +1067,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getAnomalyMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyModelMetadataResponse> {
+    public async getAnomalyMetadata (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AnomalyModelMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1055,10 +1146,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AnomalyModelMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1067,7 +1166,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getGmmMetadata (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AnomalyGmmMetadataResponse> {
+    public async getGmmMetadata (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AnomalyGmmMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/gmm/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1143,10 +1245,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AnomalyGmmMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1155,7 +1265,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getKeras (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<KerasResponse> {
+    public async getKeras (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<KerasResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1231,10 +1344,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'KerasResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1243,7 +1364,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getKerasDataExplorerFeatures (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetDataExplorerFeaturesResponse> {
+    public async getKerasDataExplorerFeatures (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetDataExplorerFeaturesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/data-explorer/features'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1319,10 +1443,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetDataExplorerFeaturesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1332,7 +1464,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param excludeLabels If set to \&quot;true\&quot;, the \&quot;labels\&quot; field is left empty (which can be big on e.g. regression projects).
      */
-    public async getKerasMetadata (projectId: number, learnId: number, queryParams?: getKerasMetadataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<KerasModelMetadataResponse> {
+    public async getKerasMetadata (projectId: number, learnId: number, queryParams?: getKerasMetadataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<KerasModelMetadataResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/metadata'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1411,10 +1546,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'KerasModelMetadataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1423,7 +1566,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getLearnXData (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getLearnXData (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/training/{learnId}/x'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1499,10 +1645,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1511,7 +1665,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getLearnYData (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getLearnYData (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/training/{learnId}/y'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1587,10 +1744,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1599,7 +1764,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPretrainedModelInfo (projectId: number, queryParams?: getPretrainedModelInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPretrainedModelResponse> {
+    public async getPretrainedModelInfo (projectId: number, queryParams?: getPretrainedModelInfoQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1670,10 +1838,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPretrainedModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1682,7 +1858,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async getVlmConfig (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmConfigResponse> {
+    public async getVlmConfig (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VlmConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -1758,10 +1937,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VlmConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1770,7 +1957,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async profilePretrainedModel (projectId: number, queryParams?: profilePretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async profilePretrainedModel (projectId: number, queryParams?: profilePretrainedModelQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/profile'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1841,10 +2031,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1854,7 +2052,10 @@ export class LearnApi {
      * @param savePretrainedModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async savePretrainedModelParameters (projectId: number, savePretrainedModelRequest: SavePretrainedModelRequest, queryParams?: savePretrainedModelParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async savePretrainedModelParameters (projectId: number, savePretrainedModelRequest: SavePretrainedModelRequest, queryParams?: savePretrainedModelParametersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/save'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1934,10 +2135,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1947,7 +2156,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param setAnomalyParameterRequest 
      */
-    public async setAnomaly (projectId: number, learnId: number, setAnomalyParameterRequest: SetAnomalyParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setAnomaly (projectId: number, learnId: number, setAnomalyParameterRequest: SetAnomalyParameterRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2032,10 +2244,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2045,7 +2265,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param setKerasParameterRequest 
      */
-    public async setKeras (projectId: number, learnId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setKeras (projectId: number, learnId: number, setKerasParameterRequest: SetKerasParameterRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2130,10 +2353,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2143,7 +2374,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param vlmConfigurationBase 
      */
-    public async setVlmConfig (projectId: number, learnId: number, vlmConfigurationBase: VlmConfigurationBase, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VlmSetConfigResponse> {
+    public async setVlmConfig (projectId: number, learnId: number, vlmConfigurationBase: VlmConfigurationBase, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VlmSetConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/vlm/{learnId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2228,10 +2462,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VlmSetConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2240,7 +2482,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async startAnomalyProfileJob (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async startAnomalyProfileJob (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/anomaly/{learnId}/profile'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2316,10 +2561,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2328,7 +2581,10 @@ export class LearnApi {
      * @param projectId Project ID
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      */
-    public async startKerasProfileJob (projectId: number, learnId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async startKerasProfileJob (projectId: number, learnId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/profile'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2404,10 +2660,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2417,7 +2681,10 @@ export class LearnApi {
      * @param testPretrainedModelRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async testPretrainedModel (projectId: number, testPretrainedModelRequest: TestPretrainedModelRequest, queryParams?: testPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+    public async testPretrainedModel (projectId: number, testPretrainedModelRequest: TestPretrainedModelRequest, queryParams?: testPretrainedModelQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<TestPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/test'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2497,10 +2764,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'TestPretrainedModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2510,7 +2785,10 @@ export class LearnApi {
      * @param testPretrainedModelImagesRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async testPretrainedModelImages (projectId: number, testPretrainedModelImagesRequest: TestPretrainedModelImagesRequest, queryParams?: testPretrainedModelImagesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<TestPretrainedModelResponse> {
+    public async testPretrainedModelImages (projectId: number, testPretrainedModelImagesRequest: TestPretrainedModelImagesRequest, queryParams?: testPretrainedModelImagesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<TestPretrainedModelResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/test-image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2590,10 +2868,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'TestPretrainedModelResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2603,7 +2889,10 @@ export class LearnApi {
      * @param learnId Learn Block ID, use the impulse functions to retrieve the ID
      * @param zip 
      */
-    public async uploadKerasFiles (projectId: number, learnId: number, params: uploadKerasFilesFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadKerasFiles (projectId: number, learnId: number, params: uploadKerasFilesFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/training/keras/{learnId}/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'learnId' + '}', encodeURIComponent(String(learnId)));
@@ -2698,10 +2987,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2716,7 +3013,10 @@ export class LearnApi {
      * @param device MCU used for calculating latency, query &#x60;latencyDevices&#x60; in &#x60;listProject&#x60; for a list of supported devices (and use the \\\&quot;mcu\\\&quot; property here). If this is kept empty then we\\\&#39;ll show an overview of multiple devices.
      * @param overrideInputShape Optional for ONNX files: overrides the input shape of the model. This is highly suggested if the model has dynamic dimensions. If this field is not set, then all dynamic dimensions will be set to \&#39;1\&#39;.
      */
-    public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, queryParams?: uploadPretrainedModelQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, queryParams?: uploadPretrainedModelQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/upload'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2859,10 +3159,18 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2872,7 +3180,10 @@ export class LearnApi {
      * @param uploadPretrainedModelByUrlRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async uploadPretrainedModelByUrl (projectId: number, uploadPretrainedModelByUrlRequest: UploadPretrainedModelByUrlRequest, queryParams?: uploadPretrainedModelByUrlQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async uploadPretrainedModelByUrl (projectId: number, uploadPretrainedModelByUrlRequest: UploadPretrainedModelByUrlRequest, queryParams?: uploadPretrainedModelByUrlQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/pretrained-model/upload-by-url'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2952,9 +3263,17 @@ export class LearnApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

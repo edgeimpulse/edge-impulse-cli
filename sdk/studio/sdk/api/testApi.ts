@@ -142,7 +142,10 @@ export class TestApi {
      * @summary Create a test user
      * @param createTestUserRequest 
      */
-    public async createTestUser (createTestUserRequest: CreateTestUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateTestUserResponse> {
+    public async createTestUser (createTestUserRequest: CreateTestUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateTestUserResponse> {
         const localVarPath = this.basePath + '/api/test/users';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -211,10 +214,18 @@ export class TestApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateTestUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -222,7 +233,10 @@ export class TestApi {
      * @summary Delete a test user
      * @param deleteTestUserRequest 
      */
-    public async deleteTestUser (deleteTestUserRequest: DeleteTestUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DeleteTestUserResponse> {
+    public async deleteTestUser (deleteTestUserRequest: DeleteTestUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DeleteTestUserResponse> {
         const localVarPath = this.basePath + '/api/test/users';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -291,10 +305,18 @@ export class TestApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DeleteTestUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -303,7 +325,10 @@ export class TestApi {
      * @param projectId Project ID
      * @param testAddMockModelMonitoringDataRequest 
      */
-    public async testAddMockModelMonitoringData (projectId: number, testAddMockModelMonitoringDataRequest: TestAddMockModelMonitoringDataRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async testAddMockModelMonitoringData (projectId: number, testAddMockModelMonitoringDataRequest: TestAddMockModelMonitoringDataRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/test/{projectId}/model-monitoring/add-mock-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -380,10 +405,18 @@ export class TestApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -393,7 +426,10 @@ export class TestApi {
      * @param versionId Version ID
      * @param zip 
      */
-    public async uploadVersionArchive (projectId: number, versionId: number, params: uploadVersionArchiveFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadVersionArchive (projectId: number, versionId: number, params: uploadVersionArchiveFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/test/{projectId}/versioning/{versionId}/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
@@ -488,9 +524,17 @@ export class TestApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

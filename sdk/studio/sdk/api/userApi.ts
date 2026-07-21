@@ -184,7 +184,10 @@ export class UserApi {
      * @summary Accept End-User License Agreement
      * @param acceptEulaRequest 
      */
-    public async acceptEula (acceptEulaRequest: AcceptEulaRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async acceptEula (acceptEulaRequest: AcceptEulaRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/accept-eula';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -253,17 +256,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Accept Terms of Service.
      * @summary Accept Terms of Service
      */
-    public async acceptTermsOfService (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async acceptTermsOfService (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/accept-tos';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -323,10 +337,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -334,7 +356,10 @@ export class UserApi {
      * @summary Activate current user
      * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateCurrentUser (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateCurrentUser (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/activate';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -403,10 +428,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -415,7 +448,10 @@ export class UserApi {
      * @param userId User ID
      * @param activateUserOrVerifyEmailRequest 
      */
-    public async activateUser (userId: number, activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async activateUser (userId: number, activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/activate'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -492,10 +528,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -503,7 +547,10 @@ export class UserApi {
      * @summary Activate user by third party activation code
      * @param activateUserByThirdPartyActivationCodeRequest 
      */
-    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetJWTResponse> {
+    public async activateUserByThirdPartyActivationCode (activateUserByThirdPartyActivationCodeRequest: ActivateUserByThirdPartyActivationCodeRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetJWTResponse> {
         const localVarPath = this.basePath + '/api/user/activate-by-third-party-activation-code';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -572,10 +619,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetJWTResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -583,7 +638,10 @@ export class UserApi {
      * @summary Change password current user
      * @param changePasswordRequest 
      */
-    public async changePasswordCurrentUser (changePasswordRequest: ChangePasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async changePasswordCurrentUser (changePasswordRequest: ChangePasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/change-password';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -652,10 +710,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -664,7 +730,10 @@ export class UserApi {
      * @param userId User ID
      * @param changePasswordRequest 
      */
-    public async changePasswordUser (userId: number, changePasswordRequest: ChangePasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async changePasswordUser (userId: number, changePasswordRequest: ChangePasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/change-password'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -741,10 +810,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -752,7 +829,10 @@ export class UserApi {
      * @summary Convert current evaluation user
      * @param convertUserRequest 
      */
-    public async convertCurrentUser (convertUserRequest: ConvertUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async convertCurrentUser (convertUserRequest: ConvertUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/convert';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -821,17 +901,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Create a developer profile for the current active user.
      * @summary Create developer profile
      */
-    public async createDeveloperProfile (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateDeveloperProfileResponse> {
+    public async createDeveloperProfile (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateDeveloperProfileResponse> {
         const localVarPath = this.basePath + '/api/user/create-developer-profile';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -891,10 +982,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateDeveloperProfileResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -902,7 +1001,10 @@ export class UserApi {
      * @summary Create enterprise trial user
      * @param createEnterpriseTrialUserRequest Trial request
      */
-    public async createEnterpriseTrialUser (createEnterpriseTrialUserRequest: CreateEnterpriseTrialUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+    public async createEnterpriseTrialUser (createEnterpriseTrialUserRequest: CreateEnterpriseTrialUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateEnterpriseTrialResponse> {
         const localVarPath = this.basePath + '/api-user-create-enterprise-trial';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -955,10 +1057,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateEnterpriseTrialResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -966,7 +1076,10 @@ export class UserApi {
      * @summary Create Professional Tier user
      * @param createProTierUserRequest 
      */
-    public async createProTierUser (createProTierUserRequest: CreateProTierUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateUserResponse> {
+    public async createProTierUser (createProTierUserRequest: CreateProTierUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateUserResponse> {
         const localVarPath = this.basePath + '/api-create-pro-user';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1019,10 +1132,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1030,7 +1151,10 @@ export class UserApi {
      * @summary Create user
      * @param createUserRequest 
      */
-    public async createUser (createUserRequest: CreateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateUserResponse> {
+    public async createUser (createUserRequest: CreateUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateUserResponse> {
         const localVarPath = this.basePath + '/api-user-create';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1083,10 +1207,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1094,7 +1226,10 @@ export class UserApi {
      * @summary Delete current user
      * @param deleteUserRequest 
      */
-    public async deleteCurrentUser (deleteUserRequest: DeleteUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteCurrentUser (deleteUserRequest: DeleteUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1163,17 +1298,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Delete user profile photo. This function is only available through a JWT token.
      * @summary Delete photo
      */
-    public async deletePhotoCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deletePhotoCurrentUser (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/photo';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1233,10 +1379,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1245,7 +1399,10 @@ export class UserApi {
      * @param userId User ID
      * @param deleteUserRequest 
      */
-    public async deleteUser (userId: number, deleteUserRequest: DeleteUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteUser (userId: number, deleteUserRequest: DeleteUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -1322,10 +1479,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1333,7 +1498,10 @@ export class UserApi {
      * @summary Get current user
      * @param excludeProjects If set to \&quot;true\&quot;, the \&quot;projects\&quot; field is left empty (will be faster if you call this function a lot). Use &#x60;getCurrentUserProjects&#x60; to get the project list in a separate call.
      */
-    public async getCurrentUser (queryParams?: getCurrentUserQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
+    public async getCurrentUser (queryParams?: getCurrentUserQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/user';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1396,17 +1564,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Get projects for the current user. This returns all projects regardless of whitelabel. This function is only available through a JWT token.
      * @summary Get current user projects
      */
-    public async getCurrentUserProjects (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserProjectsResponse> {
+    public async getCurrentUserProjects (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetUserProjectsResponse> {
         const localVarPath = this.basePath + '/api/user/projects';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1466,10 +1645,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetUserProjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1477,7 +1664,10 @@ export class UserApi {
      * @summary Get user
      * @param userId User ID
      */
-    public async getUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
+    public async getUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -1545,10 +1735,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1556,7 +1754,10 @@ export class UserApi {
      * @summary Get user by third party activation code
      * @param userByThirdPartyActivationRequest 
      */
-    public async getUserByThirdPartyActivationCode (userByThirdPartyActivationRequest: UserByThirdPartyActivationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserResponse> {
+    public async getUserByThirdPartyActivationCode (userByThirdPartyActivationRequest: UserByThirdPartyActivationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetUserResponse> {
         const localVarPath = this.basePath + '/api/user/by-third-party-activation-code';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1625,10 +1826,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1636,7 +1845,10 @@ export class UserApi {
      * @summary Get user registration state
      * @param usernameOrEmail Username or email
      */
-    public async getUserNeedToSetPassword (usernameOrEmail: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetUserNeedToSetPasswordResponse> {
+    public async getUserNeedToSetPassword (usernameOrEmail: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetUserNeedToSetPasswordResponse> {
         const localVarPath = this.basePath + '/api-user-need-to-set-password/{usernameOrEmail}'
             .replace('{' + 'usernameOrEmail' + '}', encodeURIComponent(String(usernameOrEmail)));
         let queryParameters: Record<string, string> = {};
@@ -1688,17 +1900,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetUserNeedToSetPasswordResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Get a list of all emails sent by Edge Impulse to the current user. This function is only available through a JWT token, and is not available for all users.
      * @summary List emails
      */
-    public async listEmailsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEmailResponse> {
+    public async listEmailsCurrentUser (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListEmailResponse> {
         const localVarPath = this.basePath + '/api/user/emails';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1758,10 +1981,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListEmailResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1769,7 +2000,10 @@ export class UserApi {
      * @summary List emails
      * @param userId User ID
      */
-    public async listEmailsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEmailResponse> {
+    public async listEmailsUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListEmailResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/emails'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -1837,10 +2071,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListEmailResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1848,7 +2090,10 @@ export class UserApi {
      * @summary Get enterprise trials
      * @param userId User ID
      */
-    public async listEnterpriseTrialsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEnterpriseTrialsResponse> {
+    public async listEnterpriseTrialsUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListEnterpriseTrialsResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/trials'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -1916,17 +2161,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListEnterpriseTrialsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * List all organizational storage buckets that the current user has access to. This function is only available through a JWT token.
      * @summary Get buckets current user
      */
-    public async listOrganizationBucketsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationBucketsUserResponse> {
+    public async listOrganizationBucketsCurrentUser (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationBucketsUserResponse> {
         const localVarPath = this.basePath + '/api/users/buckets';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1986,10 +2242,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationBucketsUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1997,7 +2261,10 @@ export class UserApi {
      * @summary Get buckets
      * @param userId User ID
      */
-    public async listOrganizationBucketsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationBucketsUserResponse> {
+    public async listOrganizationBucketsUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationBucketsUserResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/buckets'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2065,17 +2332,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationBucketsUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * List all organizations that the current user is a member of. This function is only available through a JWT token.
      * @summary Get organizations
      */
-    public async listOrganizationsCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationsResponse> {
+    public async listOrganizationsCurrentUser (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/user/organizations';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2135,10 +2413,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2146,7 +2432,10 @@ export class UserApi {
      * @summary Get organizations
      * @param userId User ID
      */
-    public async listOrganizationsUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationsResponse> {
+    public async listOrganizationsUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/organizations'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2214,17 +2503,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Request a new activation code for the current user. This function is only available through a JWT token.
      * @summary Request activation code
      */
-    public async requestActivationCodeCurrentUser (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async requestActivationCodeCurrentUser (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/request-activation';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2284,10 +2584,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2295,7 +2603,10 @@ export class UserApi {
      * @summary Request activation code
      * @param userId User ID
      */
-    public async requestActivationCodeUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async requestActivationCodeUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/request-activation'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2363,10 +2674,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2374,7 +2693,10 @@ export class UserApi {
      * @summary Request reset password
      * @param requestResetPasswordRequest 
      */
-    public async requestResetPassword (requestResetPasswordRequest: RequestResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async requestResetPassword (requestResetPasswordRequest: RequestResetPasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-request-reset-password';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2427,10 +2749,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2438,7 +2768,10 @@ export class UserApi {
      * @summary Reset password
      * @param resetPasswordRequest 
      */
-    public async resetPassword (resetPasswordRequest: ResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async resetPassword (resetPasswordRequest: ResetPasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-reset-password';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2491,10 +2824,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2503,7 +2844,10 @@ export class UserApi {
      * @param userId User ID
      * @param sendUserFeedbackRequest 
      */
-    public async sendUserFeedback (userId: number, sendUserFeedbackRequest: SendUserFeedbackRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async sendUserFeedback (userId: number, sendUserFeedbackRequest: SendUserFeedbackRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/feedback'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2580,10 +2924,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2592,7 +2944,10 @@ export class UserApi {
      * @param userId User ID
      * @param enterpriseUpgradeOrTrialExtensionRequest 
      */
-    public async sendUserUpgradeRequest (userId: number, enterpriseUpgradeOrTrialExtensionRequest: EnterpriseUpgradeOrTrialExtensionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async sendUserUpgradeRequest (userId: number, enterpriseUpgradeOrTrialExtensionRequest: EnterpriseUpgradeOrTrialExtensionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/upgrade'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2669,10 +3024,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2681,7 +3044,10 @@ export class UserApi {
      * @param userId User ID
      * @param setUserPasswordRequest 
      */
-    public async setUserPassword (userId: number, setUserPasswordRequest: SetUserPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setUserPassword (userId: number, setUserPasswordRequest: SetUserPasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/set-password'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2742,10 +3108,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2753,7 +3127,10 @@ export class UserApi {
      * @summary Start enterprise trial
      * @param startEnterpriseTrialRequest 
      */
-    public async startEnterpriseTrial (startEnterpriseTrialRequest: StartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateEnterpriseTrialResponse> {
+    public async startEnterpriseTrial (startEnterpriseTrialRequest: StartEnterpriseTrialRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateEnterpriseTrialResponse> {
         const localVarPath = this.basePath + '/api/user/trial';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2822,10 +3199,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateEnterpriseTrialResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2833,7 +3218,10 @@ export class UserApi {
      * @summary Update current user
      * @param updateUserRequest 
      */
-    public async updateCurrentUser (updateUserRequest: UpdateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateCurrentUser (updateUserRequest: UpdateUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2902,10 +3290,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2914,7 +3310,10 @@ export class UserApi {
      * @param userId User ID
      * @param updateUserRequest 
      */
-    public async updateUser (userId: number, updateUserRequest: UpdateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateUser (userId: number, updateUserRequest: UpdateUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2991,10 +3390,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3002,7 +3409,10 @@ export class UserApi {
      * @summary Upload photo
      * @param photo 
      */
-    public async uploadPhotoCurrentUser (params: uploadPhotoCurrentUserFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
+    public async uploadPhotoCurrentUser (params: uploadPhotoCurrentUserFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UploadUserPhotoResponse> {
         const localVarPath = this.basePath + '/api/user/photo';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3081,10 +3491,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UploadUserPhotoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3093,7 +3511,10 @@ export class UserApi {
      * @param userId User ID
      * @param photo 
      */
-    public async uploadPhotoUser (userId: number, params: uploadPhotoUserFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadUserPhotoResponse> {
+    public async uploadPhotoUser (userId: number, params: uploadPhotoUserFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UploadUserPhotoResponse> {
         const localVarPath = this.basePath + '/api/users/{userId}/photo'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -3180,10 +3601,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UploadUserPhotoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3191,7 +3620,10 @@ export class UserApi {
      * @summary Cancel subscription
      * @param downgradeSubscriptionRequest 
      */
-    public async userCancelSubscription (downgradeSubscriptionRequest: DowngradeSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async userCancelSubscription (downgradeSubscriptionRequest: DowngradeSubscriptionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/subscription/cancel';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3260,10 +3692,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3271,7 +3711,10 @@ export class UserApi {
      * @summary Remove TOTP MFA key
      * @param userDeleteTotpMfaKeyRequest 
      */
-    public async userDeleteTotpMfaKey (userDeleteTotpMfaKeyRequest: UserDeleteTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async userDeleteTotpMfaKey (userDeleteTotpMfaKeyRequest: UserDeleteTotpMfaKeyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/mfa/totp/clear';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3340,10 +3783,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3351,7 +3802,10 @@ export class UserApi {
      * @summary Dismiss a notification
      * @param userDismissNotificationRequest 
      */
-    public async userDismissNotification (userDismissNotificationRequest: UserDismissNotificationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async userDismissNotification (userDismissNotificationRequest: UserDismissNotificationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/dismiss-notification';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3420,17 +3874,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Creates a new MFA key, only allowed if the user has no MFA configured. TOTP tokens use SHA-1 algorithm.
      * @summary Generate a new TOTP MFA key
      */
-    public async userGenerateNewTotpMfaKey (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserGenerateNewMfaKeyResponse> {
+    public async userGenerateNewTotpMfaKey (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UserGenerateNewMfaKeyResponse> {
         const localVarPath = this.basePath + '/api/user/mfa/totp/create-key';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3490,17 +3955,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UserGenerateNewMfaKeyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Get billable compute metrics for a user. This function is only available to users with an active subscription.
      * @summary Get user billable compute metrics
      */
-    public async userGetSubscriptionMetrics (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserSubscriptionMetricsResponse> {
+    public async userGetSubscriptionMetrics (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UserSubscriptionMetricsResponse> {
         const localVarPath = this.basePath + '/api/user/subscription/metrics';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3560,10 +4036,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UserSubscriptionMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3571,7 +4055,10 @@ export class UserApi {
      * @summary Set TOTP MFA key
      * @param userSetTotpMfaKeyRequest 
      */
-    public async userSetTotpMfaKey (userSetTotpMfaKeyRequest: UserSetTotpMfaKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UserSetTotpMfaKeyResponse> {
+    public async userSetTotpMfaKey (userSetTotpMfaKeyRequest: UserSetTotpMfaKeyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UserSetTotpMfaKeyResponse> {
         const localVarPath = this.basePath + '/api/user/mfa/totp/set-key';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3640,17 +4127,28 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UserSetTotpMfaKeyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Stop a pending cancellation. If you schedule a subscription to be canceled, and the subscription hasn\'t yet reached the end of the billing period, you can stop the cancellation. After a subscription has been canceled, you can\'t reactivate it. 
      * @summary Undo subscription cancellation
      */
-    public async userUndoCancelSubscription (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async userUndoCancelSubscription (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/user/subscription/undo-cancel';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3710,10 +4208,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3721,7 +4227,10 @@ export class UserApi {
      * @summary Upgrade subscription
      * @param upgradeSubscriptionRequest 
      */
-    public async userUpgradeSubscription (upgradeSubscriptionRequest: UpgradeSubscriptionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async userUpgradeSubscription (upgradeSubscriptionRequest: UpgradeSubscriptionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/user/subscription/upgrade';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3783,10 +4292,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3794,7 +4311,10 @@ export class UserApi {
      * @summary Verify reset password code
      * @param verifyResetPasswordRequest 
      */
-    public async verifyResetPassword (verifyResetPasswordRequest: VerifyResetPasswordRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async verifyResetPassword (verifyResetPasswordRequest: VerifyResetPasswordRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api-user-verify-reset-password-code';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3847,10 +4367,18 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3858,7 +4386,10 @@ export class UserApi {
      * @summary Verify signup approval
      * @param activateUserOrVerifyEmailRequest 
      */
-    public async verifySignupApproval (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<VerifySignupApprovalResponse> {
+    public async verifySignupApproval (activateUserOrVerifyEmailRequest: ActivateUserOrVerifyEmailRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<VerifySignupApprovalResponse> {
         const localVarPath = this.basePath + '/api/signup-approval/verify';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3911,9 +4442,17 @@ export class UserApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'VerifySignupApprovalResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

@@ -141,7 +141,10 @@ export class ThemesApi {
      * @summary Delete theme by ID
      * @param themeId Theme ID
      */
-    public async deleteTheme (themeId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteTheme (themeId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let queryParameters: Record<string, string> = {};
@@ -209,10 +212,18 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -220,7 +231,10 @@ export class ThemesApi {
      * @summary Get theme by ID
      * @param themeId Theme ID
      */
-    public async getTheme (themeId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetThemeResponse> {
+    public async getTheme (themeId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetThemeResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let queryParameters: Record<string, string> = {};
@@ -288,17 +302,28 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetThemeResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Get all available Studio themes.
      * @summary Get themes
      */
-    public async getThemes (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetThemesResponse> {
+    public async getThemes (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetThemesResponse> {
         const localVarPath = this.basePath + '/api/themes';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -358,10 +383,18 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetThemesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -370,7 +403,10 @@ export class ThemesApi {
      * @param themeId Theme ID
      * @param updateThemeColorsRequest 
      */
-    public async updateThemeColors (themeId: number, updateThemeColorsRequest: UpdateThemeColorsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateThemeColors (themeId: number, updateThemeColorsRequest: UpdateThemeColorsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}/colors'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let queryParameters: Record<string, string> = {};
@@ -447,10 +483,18 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -459,7 +503,10 @@ export class ThemesApi {
      * @param themeId Theme ID
      * @param image 
      */
-    public async updateThemeFavicon (themeId: number, params: updateThemeFaviconFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateThemeFavicon (themeId: number, params: updateThemeFaviconFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}/favicon'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let queryParameters: Record<string, string> = {};
@@ -546,10 +593,18 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -558,7 +613,10 @@ export class ThemesApi {
      * @param themeId Theme ID
      * @param updateThemeLogosRequest 
      */
-    public async updateThemeLogos (themeId: number, updateThemeLogosRequest: UpdateThemeLogosRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateThemeLogos (themeId: number, updateThemeLogosRequest: UpdateThemeLogosRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/themes/{themeId}/logos'
             .replace('{' + 'themeId' + '}', encodeURIComponent(String(themeId)));
         let queryParameters: Record<string, string> = {};
@@ -635,9 +693,17 @@ export class ThemesApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

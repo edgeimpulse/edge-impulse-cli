@@ -41,6 +41,7 @@ import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetAIActionResponse } from '../model/getAIActionResponse';
 import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
 import { GetCurrentApiKeyInfoResponse } from '../model/getCurrentApiKeyInfoResponse';
+import { GetExtensionSharedStateListResponse } from '../model/getExtensionSharedStateListResponse';
 import { GetHmacDevkeyResponse } from '../model/getHmacDevkeyResponse';
 import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
 import { GetProjectActiveExtensionsResponse } from '../model/getProjectActiveExtensionsResponse';
@@ -69,6 +70,7 @@ import { ProjectTrainingDataSummaryResponse } from '../model/projectTrainingData
 import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
 import { RemoveProjectActiveExtensionResponse } from '../model/removeProjectActiveExtensionResponse';
 import { SetAIActionsOrderRequest } from '../model/setAIActionsOrderRequest';
+import { SetExtensionSharedStateResponse } from '../model/setExtensionSharedStateResponse';
 import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
 import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
 import { SocketTokenResponse } from '../model/socketTokenResponse';
@@ -103,6 +105,14 @@ export type convertParquetToCsvFormParams = {
     file: RequestFile,
 };
 
+type deleteExtensionSharedStateQueryParams = {
+    key: string,
+};
+
+type getExtensionSharedStateQueryParams = {
+    key: string,
+};
+
 type getModelVariantsQueryParams = {
     impulseId?: number,
 };
@@ -131,6 +141,15 @@ type listPublicProjectsQueryParams = {
     project?: string,
     projectTypes?: string,
     sort?: string,
+};
+
+export type setExtensionSharedStateFormParams = {
+    currentVersion: number,
+    state: RequestFile,
+};
+
+type setExtensionSharedStateQueryParams = {
+    key: string,
 };
 
 export type uploadCsvWizardUploadedFileFormParams = {
@@ -229,7 +248,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addCollaboratorRequest 
      */
-    public async addCollaborator (projectId: number, addCollaboratorRequest: AddCollaboratorRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async addCollaborator (projectId: number, addCollaboratorRequest: AddCollaboratorRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/collaborators/add'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -306,10 +328,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -318,7 +348,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addProjectActiveExtensionRequest 
      */
-    public async addProjectActiveExtension (projectId: number, addProjectActiveExtensionRequest: AddProjectActiveExtensionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async addProjectActiveExtension (projectId: number, addProjectActiveExtensionRequest: AddProjectActiveExtensionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/extensions/active/add'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -395,10 +428,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -407,7 +448,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addProjectApiKeyRequest 
      */
-    public async addProjectApiKey (projectId: number, addProjectApiKeyRequest: AddProjectApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddApiKeyResponse> {
+    public async addProjectApiKey (projectId: number, addProjectApiKeyRequest: AddProjectApiKeyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AddApiKeyResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -484,10 +528,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AddApiKeyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -496,7 +548,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addHmacKeyRequest 
      */
-    public async addProjectHmacKey (projectId: number, addHmacKeyRequest: AddHmacKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async addProjectHmacKey (projectId: number, addHmacKeyRequest: AddHmacKeyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -573,10 +628,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -585,7 +648,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addIngestionOnlyProjectApiKeyRequest 
      */
-    public async addProjectIngestionOnlyApiKey (projectId: number, addIngestionOnlyProjectApiKeyRequest: AddIngestionOnlyProjectApiKeyRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AddApiKeyResponse> {
+    public async addProjectIngestionOnlyApiKey (projectId: number, addIngestionOnlyProjectApiKeyRequest: AddIngestionOnlyProjectApiKeyRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AddApiKeyResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys/ingestiononly'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -662,10 +728,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AddApiKeyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -674,7 +748,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param actionId AI Action ID
      */
-    public async clearAIActionsProposedChanges (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearAIActionsProposedChanges (projectId: number, actionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}/clear-proposed-changes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -750,10 +827,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -762,7 +847,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param file 
      */
-    public async convertParquetToCsv (projectId: number, params: convertParquetToCsvFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ConvertParquetToCsvResponse> {
+    public async convertParquetToCsv (projectId: number, params: convertParquetToCsvFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ConvertParquetToCsvResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/parquet-to-csv'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -849,10 +937,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ConvertParquetToCsvResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -860,7 +956,10 @@ export class ProjectsApi {
      * @summary Create AI Action
      * @param projectId Project ID
      */
-    public async createAIAction (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async createAIAction (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/create'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -928,10 +1027,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -939,7 +1046,10 @@ export class ProjectsApi {
      * @summary Create new project
      * @param createProjectRequest 
      */
-    public async createProject (createProjectRequest: CreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+    public async createProject (createProjectRequest: CreateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateProjectResponse> {
         const localVarPath = this.basePath + '/api/projects/create';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1008,10 +1118,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateProjectResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1020,7 +1138,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param actionId AI Action ID
      */
-    public async deleteAIAction (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteAIAction (projectId: number, actionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -1096,10 +1217,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1107,7 +1236,10 @@ export class ProjectsApi {
      * @summary Delete CSV Wizard config
      * @param projectId Project ID
      */
-    public async deleteCsvWizardConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteCsvWizardConfig (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/delete-config'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1175,10 +1307,119 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Removes extension shared state. This API is only accessible with an API key that is attached to an extensionId.
+     * @summary Delete shared state
+     * @param projectId Project ID
+     * @param key Shared state key (required).
+     */
+    public async deleteExtensionSharedState (projectId: number, queryParams: deleteExtensionSharedStateQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/shared-state'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling deleteExtensionSharedState.');
+        }
+
+        // verify required parameter 'key' is not null or undefined
+
+        if (queryParams.key === null || queryParams.key === undefined) {
+            throw new Error('Required parameter queryParams.key was null or undefined when calling deleteExtensionSharedState.');
+        }
+
+
+        if (typeof queryParams?.key !== 'undefined' && queryParams?.key !== null) {
+            queryParameters['key'] = <string><any>queryParams.key;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'DELETE',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1186,7 +1427,10 @@ export class ProjectsApi {
      * @summary Remove project
      * @param projectId Project ID
      */
-    public async deleteProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteProject (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1254,10 +1498,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1266,7 +1518,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param versionId Version ID
      */
-    public async deleteVersion (projectId: number, versionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deleteVersion (projectId: number, versionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/versions/{versionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
@@ -1342,10 +1597,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1353,7 +1616,10 @@ export class ProjectsApi {
      * @summary Download CSV Wizard config
      * @param projectId Project ID
      */
-    public async downloadCsvWizardConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadCsvWizardConfig (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/download-config'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1421,10 +1687,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1432,7 +1706,10 @@ export class ProjectsApi {
      * @summary Download CSV Wizard uploaded file
      * @param projectId Project ID
      */
-    public async downloadCsvWizardUploadedFile (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async downloadCsvWizardUploadedFile (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file/download'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1500,10 +1777,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1512,7 +1797,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param actionId AI Action ID
      */
-    public async getAIAction (projectId: number, actionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionResponse> {
+    public async getAIAction (projectId: number, actionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAIActionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -1588,10 +1876,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAIActionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1599,7 +1895,10 @@ export class ProjectsApi {
      * @summary Get CSV Wizard uploaded file info
      * @param projectId Project ID
      */
-    public async getCsvWizardUploadedFileInfo (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetCsvWizardUploadedFileInfo> {
+    public async getCsvWizardUploadedFileInfo (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetCsvWizardUploadedFileInfo> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1667,17 +1966,28 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetCsvWizardUploadedFileInfo'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Only available when authenticating with a project API key. Returns the current role and project ID that you\'re authenticated with.
      * @summary Get info about current API key
      */
-    public async getCurrentApiKeyInfo (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetCurrentApiKeyInfoResponse> {
+    public async getCurrentApiKeyInfo (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetCurrentApiKeyInfoResponse> {
         const localVarPath = this.basePath + '/api/projects/api-key-info';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1737,18 +2047,319 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetCurrentApiKeyInfoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Retrieve the HMAC development key for a project. This key are specifically marked to be used during development. This key can be `undefined` if no development keys are set.
+     * Retrieves extension shared state. This API is only accessible with an API key that is attached to an extensionId. This also returns an x-version header with the current version of the state. If no state is available, an empty body is returned with x-version: 0.
+     * @summary Get shared state
+     * @param projectId Project ID
+     * @param key Shared state key (required).
+     */
+    public async getExtensionSharedState (projectId: number, queryParams: getExtensionSharedStateQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/shared-state'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/octet-stream'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getExtensionSharedState.');
+        }
+
+        // verify required parameter 'key' is not null or undefined
+
+        if (queryParams.key === null || queryParams.key === undefined) {
+            throw new Error('Required parameter queryParams.key was null or undefined when calling getExtensionSharedState.');
+        }
+
+
+        if (typeof queryParams?.key !== 'undefined' && queryParams?.key !== null) {
+            queryParameters['key'] = <string><any>queryParams.key;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'Buffer'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Retrieve list of shared state keys and their latest version. This API is only accessible with an API key that is attached to an extensionId.
+     * @summary List shared state keys
+     * @param projectId Project ID
+     */
+    public async getExtensionSharedStateList (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetExtensionSharedStateListResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/shared-state/list'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getExtensionSharedStateList.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GetExtensionSharedStateListResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Retrieve list of shared state keys and their latest version.
+     * @summary List shared state keys for extension
+     * @param projectId Project ID
+     * @param extensionId Extension ID
+     */
+    public async getExtensionSharedStateListForExtension (projectId: number, extensionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetExtensionSharedStateListResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/{extensionId}/shared-state/list'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getExtensionSharedStateListForExtension.');
+        }
+
+        // verify required parameter 'extensionId' is not null or undefined
+
+
+        if (extensionId === null || extensionId === undefined) {
+            throw new Error('Required parameter extensionId was null or undefined when calling getExtensionSharedStateListForExtension.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GetExtensionSharedStateListResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Retrieve the HMAC development key for a project. This key is specifically marked to be used during development. This key can be `undefined` if no development keys are set. 
      * @summary Get HMAC development key
      * @param projectId Project ID
      */
-    public async getHmacDevkey (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetHmacDevkeyResponse> {
+    public async getHmacDevkey (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetHmacDevkeyResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devkeys/hmac'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1816,10 +2427,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetHmacDevkeyResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1828,7 +2447,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getModelVariants (projectId: number, queryParams?: getModelVariantsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetModelVariantsResponse> {
+    public async getModelVariants (projectId: number, queryParams?: getModelVariantsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetModelVariantsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/model-variants'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1899,10 +2521,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetModelVariantsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1910,7 +2540,10 @@ export class ProjectsApi {
      * @summary Get new AI Actions config
      * @param projectId Project ID
      */
-    public async getNewAIAction (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetAIActionResponse> {
+    public async getNewAIAction (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetAIActionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/new'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1978,10 +2611,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetAIActionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1989,7 +2630,10 @@ export class ProjectsApi {
      * @summary List active extensions
      * @param projectId Project ID
      */
-    public async getProjectActiveExtensions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetProjectActiveExtensionsResponse> {
+    public async getProjectActiveExtensions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetProjectActiveExtensionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/extensions/active'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2057,10 +2701,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetProjectActiveExtensionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2070,7 +2722,10 @@ export class ProjectsApi {
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
      */
-    public async getProjectDataAxesSummary (projectId: number, queryParams?: getProjectDataAxesSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataAxesSummaryResponse> {
+    public async getProjectDataAxesSummary (projectId: number, queryParams?: getProjectDataAxesSummaryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectDataAxesSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-axes'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2144,10 +2799,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectDataAxesSummaryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2156,7 +2819,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getProjectInfo (projectId: number, queryParams?: getProjectInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectInfoResponse> {
+    public async getProjectInfo (projectId: number, queryParams?: getProjectInfoQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectInfoResponse> {
         const localVarPath = this.basePath + '/api/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2227,10 +2893,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectInfoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2238,7 +2912,10 @@ export class ProjectsApi {
      * @summary Public project information
      * @param projectId Project ID
      */
-    public async getProjectInfoSummary (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectInfoSummaryResponse> {
+    public async getProjectInfoSummary (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectInfoSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/public-info'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2306,10 +2983,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectInfoSummaryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2317,7 +3002,10 @@ export class ProjectsApi {
      * @summary Last modification
      * @param projectId Project ID
      */
-    public async getProjectLastModificationDate (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<LastModificationDateResponse> {
+    public async getProjectLastModificationDate (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<LastModificationDateResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/last-modification'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2385,18 +3073,29 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'LastModificationDateResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Get the interval of the training data; if multiple intervals are present, the interval of the longest data item is returned. This only takes data in your _training_ set into account.
+     * Get the interval of the training data; if multiple intervals are present, the interval of the longest data item is returned. This only takes data in your _training_ set into account. 
      * @summary Get the interval (in ms) of the training data
      * @param projectId Project ID
      */
-    public async getProjectRecommendedDataInterval (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDataIntervalResponse> {
+    public async getProjectRecommendedDataInterval (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectDataIntervalResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-interval'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2464,20 +3163,31 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectDataIntervalResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Get summary of all data present in the training set. This returns the number of data items, the total length of all data, and the labels. This is similar to `dataSummary` in `ProjectInfoResponse` but allows you to exclude disabled items or items that are still processing.
+     * Get summary of all data present in the training set. This returns the number of data items, the total length of all data, and the labels. This is similar to `dataSummary` in `ProjectInfoResponse` but allows you to exclude disabled items or items that are still processing. 
      * @summary Get data summary
      * @param projectId Project ID
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
      */
-    public async getProjectTrainingDataSummary (projectId: number, queryParams?: getProjectTrainingDataSummaryQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectTrainingDataSummaryResponse> {
+    public async getProjectTrainingDataSummary (projectId: number, queryParams?: getProjectTrainingDataSummaryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectTrainingDataSummaryResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/data-summary'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2551,10 +3261,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectTrainingDataSummaryResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2562,7 +3280,10 @@ export class ProjectsApi {
      * @summary Get socket token
      * @param projectId Project ID
      */
-    public async getSocketToken (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<SocketTokenResponse> {
+    public async getSocketToken (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<SocketTokenResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/socket-token'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2630,10 +3351,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'SocketTokenResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2641,7 +3370,10 @@ export class ProjectsApi {
      * @summary Get synthetic data config
      * @param projectId Project ID
      */
-    public async getSyntheticDataConfig (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetSyntheticDataConfigResponse> {
+    public async getSyntheticDataConfig (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetSyntheticDataConfigResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/synthetic-data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2709,10 +3441,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetSyntheticDataConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2720,7 +3460,10 @@ export class ProjectsApi {
      * @summary Get target constraints
      * @param projectId Project ID
      */
-    public async getTargetConstraints (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetTargetConstraintsResponse> {
+    public async getTargetConstraints (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetTargetConstraintsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/target-constraints'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2788,10 +3531,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetTargetConstraintsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2799,7 +3550,10 @@ export class ProjectsApi {
      * @summary Launch getting started wizard
      * @param projectId Project ID
      */
-    public async launchGettingStartedWizard (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async launchGettingStartedWizard (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/launch-getting-started'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2867,10 +3621,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2878,7 +3640,10 @@ export class ProjectsApi {
      * @summary List AI Actions
      * @param projectId Project ID
      */
-    public async listAIActions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListAIActionsResponse> {
+    public async listAIActions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListAIActionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2946,10 +3711,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListAIActionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2957,7 +3730,10 @@ export class ProjectsApi {
      * @summary Development boards
      * @param projectId Project ID
      */
-    public async listDevelopmentBoards (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DevelopmentBoardsResponse> {
+    public async listDevelopmentBoards (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DevelopmentBoardsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/development-boards'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3025,18 +3801,29 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DevelopmentBoardsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Retrieve the development API and HMAC keys for a project. These keys are specifically marked to be used during development. These keys can be `undefined` if no development keys are set. Only available through JWT token authentication, if you authenticate with an API key then all keys will return undefined (this is changed behavior since 28 January 2026).
+     * Retrieve the development API and HMAC keys for a project. These keys are specifically marked to be used during development. These keys can be `undefined` if no development keys are set. Only available through JWT token authentication, if you authenticate with an API key then all keys will return undefined (this is changed behavior since 28 January 2026). 
      * @summary Get development keys
      * @param projectId Project ID
      */
-    public async listDevkeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<DevelopmentKeysResponse> {
+    public async listDevkeys (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<DevelopmentKeysResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/devkeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3104,10 +3891,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'DevelopmentKeysResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3116,7 +3911,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async listDownloads (projectId: number, queryParams?: listDownloadsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ProjectDownloadsResponse> {
+    public async listDownloads (projectId: number, queryParams?: listDownloadsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ProjectDownloadsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/downloads'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3187,10 +3985,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ProjectDownloadsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3198,7 +4004,10 @@ export class ProjectsApi {
      * @summary List emails
      * @param projectId Project ID
      */
-    public async listEmails (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListEmailResponse> {
+    public async listEmails (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListEmailResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/emails'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3266,10 +4075,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListEmailResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3277,7 +4094,10 @@ export class ProjectsApi {
      * @summary Get API keys
      * @param projectId Project ID
      */
-    public async listProjectApiKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListApiKeysResponse> {
+    public async listProjectApiKeys (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListApiKeysResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3345,10 +4165,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListApiKeysResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3356,7 +4184,10 @@ export class ProjectsApi {
      * @summary List available extensions
      * @param projectId Project ID
      */
-    public async listProjectAvailableExtensions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListProjectAvailableExtensionsResponse> {
+    public async listProjectAvailableExtensions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListProjectAvailableExtensionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/extensions/available'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3424,10 +4255,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListProjectAvailableExtensionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3435,7 +4274,10 @@ export class ProjectsApi {
      * @summary Get HMAC keys
      * @param projectId Project ID
      */
-    public async listProjectHmacKeys (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListHmacKeysResponse> {
+    public async listProjectHmacKeys (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListHmacKeysResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3503,17 +4345,28 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListHmacKeysResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Retrieve list of active projects. If authenticating using JWT token this lists all the projects the user has access to, if authenticating using an API key, this only lists that project.
      * @summary List active projects
      */
-    public async listProjects (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListProjectsResponse> {
+    public async listProjects (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListProjectsResponse> {
         const localVarPath = this.basePath + '/api/projects';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3573,17 +4426,28 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListProjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Retrieve the list of available public project types. You don\'t need any authentication for this method.
      * @summary List public project types
      */
-    public async listPublicProjectTypes (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectTypesResponse> {
+    public async listPublicProjectTypes (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPublicProjectTypesResponse> {
         const localVarPath = this.basePath + '/api/projects/types';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3627,10 +4491,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPublicProjectTypesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3642,7 +4514,10 @@ export class ProjectsApi {
      * @param projectTypes Comma separated list of project types to filter on. Supported values are \&#39;audio\&#39;, \&#39;object-detection\&#39;, \&#39;image\&#39;, \&#39;accelerometer\&#39;, \&#39;other\&#39;.
      * @param sort Fields and order to sort query by
      */
-    public async listPublicProjects (queryParams?: listPublicProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicProjectsResponse> {
+    public async listPublicProjects (queryParams?: listPublicProjectsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPublicProjectsResponse> {
         const localVarPath = this.basePath + '/api/projects/public';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3701,10 +4576,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPublicProjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3712,7 +4595,10 @@ export class ProjectsApi {
      * @summary List public versions
      * @param projectId Project ID
      */
-    public async listPublicVersions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPublicVersionsResponse> {
+    public async listPublicVersions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPublicVersionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/versions/public'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3764,10 +4650,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPublicVersionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3775,7 +4669,10 @@ export class ProjectsApi {
      * @summary List versions
      * @param projectId Project ID
      */
-    public async listVersions (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListVersionsResponse> {
+    public async listVersions (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListVersionsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/versions'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -3843,10 +4740,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListVersionsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3855,7 +4760,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param versionId Version ID
      */
-    public async makeVersionPrivate (projectId: number, versionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async makeVersionPrivate (projectId: number, versionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/versions/{versionId}/make-private'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
@@ -3931,10 +4839,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3944,7 +4860,10 @@ export class ProjectsApi {
      * @param actionId AI Action ID
      * @param previewAIActionsSamplesRequest 
      */
-    public async previewAIActionsSamples (projectId: number, actionId: number, previewAIActionsSamplesRequest: PreviewAIActionsSamplesRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
+    public async previewAIActionsSamples (projectId: number, actionId: number, previewAIActionsSamplesRequest: PreviewAIActionsSamplesRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}/preview-samples'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -4029,10 +4948,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListSamplesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4041,7 +4968,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param projectDismissNotificationRequest 
      */
-    public async projectDismissNotification (projectId: number, projectDismissNotificationRequest: ProjectDismissNotificationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async projectDismissNotification (projectId: number, projectDismissNotificationRequest: ProjectDismissNotificationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dismiss-notification'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4118,10 +5048,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4130,7 +5068,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param removeCollaboratorRequest 
      */
-    public async removeCollaborator (projectId: number, removeCollaboratorRequest: RemoveCollaboratorRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async removeCollaborator (projectId: number, removeCollaboratorRequest: RemoveCollaboratorRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/collaborators/remove'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4207,10 +5148,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4219,7 +5168,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param extensionId Extension ID
      */
-    public async removeProjectActiveExtension (projectId: number, extensionId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<RemoveProjectActiveExtensionResponse> {
+    public async removeProjectActiveExtension (projectId: number, extensionId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<RemoveProjectActiveExtensionResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/extensions/active/{extensionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
@@ -4295,19 +5247,30 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'RemoveProjectActiveExtensionResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Revoke an API key. Note that if you revoke the development API key some services (such as automatic provisioning of devices through the serial daemon) will no longer work.
+     * Revoke an API key. Note that if you revoke the development API key some services (such as automatic provisioning of devices through the serial daemon) will no longer work. 
      * @summary Revoke API key
      * @param projectId Project ID
      * @param apiKeyId API key ID
      */
-    public async revokeProjectApiKey (projectId: number, apiKeyId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async revokeProjectApiKey (projectId: number, apiKeyId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys/{apiKeyId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'apiKeyId' + '}', encodeURIComponent(String(apiKeyId)));
@@ -4383,10 +5346,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4395,7 +5366,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param hmacId Hmac key ID
      */
-    public async revokeProjectHmacKey (projectId: number, hmacId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async revokeProjectHmacKey (projectId: number, hmacId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/hmackeys/{hmacId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'hmacId' + '}', encodeURIComponent(String(hmacId)));
@@ -4471,10 +5445,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4483,7 +5465,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param apiKeyId API key ID
      */
-    public async revokeProjectIngestionOnlyApiKey (projectId: number, apiKeyId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async revokeProjectIngestionOnlyApiKey (projectId: number, apiKeyId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/apikeys/ingestiononly/{apiKeyId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'apiKeyId' + '}', encodeURIComponent(String(apiKeyId)));
@@ -4559,10 +5544,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4571,7 +5564,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param setAIActionsOrderRequest 
      */
-    public async setAIActionsOrder (projectId: number, setAIActionsOrderRequest: SetAIActionsOrderRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setAIActionsOrder (projectId: number, setAIActionsOrderRequest: SetAIActionsOrderRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/order'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4648,19 +5644,164 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
-     * Change the job compute time limit for the project. This function is only available through a JWT token, and is not available to all users.
+     * Stores extension shared state. This API is only accessible with an API key that is attached to an extensionId. State has a limit of 100MB per key.
+     * @summary Set shared state
+     * @param projectId Project ID
+     * @param key Shared state key (required).
+     * @param currentVersion 
+     * @param state 
+     */
+    public async setExtensionSharedState (projectId: number, params: setExtensionSharedStateFormParams, queryParams: setExtensionSharedStateQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<SetExtensionSharedStateResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/shared-state'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling setExtensionSharedState.');
+        }
+
+        // verify required parameter 'key' is not null or undefined
+
+        if (queryParams.key === null || queryParams.key === undefined) {
+            throw new Error('Required parameter queryParams.key was null or undefined when calling setExtensionSharedState.');
+        }
+
+
+        // verify required parameter 'currentVersion' is not null or undefined
+        if (params.currentVersion === null || params.currentVersion === undefined) {
+            throw new Error('Required parameter params.currentVersion was null or undefined when calling setExtensionSharedState.');
+        }
+
+
+
+        // verify required parameter 'state' is not null or undefined
+        if (params.state === null || params.state === undefined) {
+            throw new Error('Required parameter params.state was null or undefined when calling setExtensionSharedState.');
+        }
+
+
+
+        if (typeof queryParams?.key !== 'undefined' && queryParams?.key !== null) {
+            queryParameters['key'] = <string><any>queryParams.key;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        if (params.currentVersion !== undefined) {
+            if (params.currentVersion !== null && params.currentVersion !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'currentVersion', serializeFormDataValue(params.currentVersion, 'number'));
+            }
+        }
+        if (params.state !== undefined) {
+            localVarFormParams = ensureFormData(localVarFormParams);
+
+            const stateFiles = Array.isArray(params.state) ? params.state : [params.state];
+
+            const Blob = globalThis.Blob || require('buffer').Blob;
+            for (const f of stateFiles) {
+                localVarFormParams.append('state', new Blob([new Uint8Array(f.value)], {
+                    type: f.options.contentType
+                }), f.options.filename);
+            }
+        }
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'SetExtensionSharedStateResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Change the job compute time limit for the project. This function is only available through a JWT token, and is not available to all users. 
      * @summary Set compute time limit
      * @param projectId Project ID
      * @param setProjectComputeTimeRequest 
      */
-    public async setProjectComputeTimeLimit (projectId: number, setProjectComputeTimeRequest: SetProjectComputeTimeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setProjectComputeTimeLimit (projectId: number, setProjectComputeTimeRequest: SetProjectComputeTimeRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/compute-time-limit'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4737,10 +5878,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4749,7 +5898,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param setProjectDspFileSizeRequest 
      */
-    public async setProjectFileSizeLimit (projectId: number, setProjectDspFileSizeRequest: SetProjectDspFileSizeRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setProjectFileSizeLimit (projectId: number, setProjectDspFileSizeRequest: SetProjectDspFileSizeRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/dsp-file-size-limit'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4826,10 +5978,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4838,7 +5998,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param targetConstraints 
      */
-    public async setTargetConstraints (projectId: number, targetConstraints: TargetConstraints, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setTargetConstraints (projectId: number, targetConstraints: TargetConstraints, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/target-constraints'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -4915,10 +6078,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4927,7 +6098,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param addCollaboratorRequest 
      */
-    public async transferOwnership (projectId: number, addCollaboratorRequest: AddCollaboratorRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async transferOwnership (projectId: number, addCollaboratorRequest: AddCollaboratorRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/collaborators/transfer-ownership'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5004,10 +6178,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5016,7 +6198,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param transferOwnershipOrganizationRequest 
      */
-    public async transferOwnershipOrganization (projectId: number, transferOwnershipOrganizationRequest: TransferOwnershipOrganizationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async transferOwnershipOrganization (projectId: number, transferOwnershipOrganizationRequest: TransferOwnershipOrganizationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/collaborators/transfer-ownership-org'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5093,10 +6278,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5106,7 +6299,10 @@ export class ProjectsApi {
      * @param actionId AI Action ID
      * @param updateAIActionRequest 
      */
-    public async updateAIAction (projectId: number, actionId: number, updateAIActionRequest: UpdateAIActionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateAIAction (projectId: number, actionId: number, updateAIActionRequest: UpdateAIActionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/ai-actions/{actionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'actionId' + '}', encodeURIComponent(String(actionId)));
@@ -5191,10 +6387,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5203,7 +6407,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param updateProjectRequest 
      */
-    public async updateProject (projectId: number, updateProjectRequest: UpdateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateProject (projectId: number, updateProjectRequest: UpdateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5280,10 +6487,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5292,7 +6507,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param updateProjectTagsRequest 
      */
-    public async updateProjectTags (projectId: number, updateProjectTagsRequest: UpdateProjectTagsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateProjectTags (projectId: number, updateProjectTagsRequest: UpdateProjectTagsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/tags'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5369,10 +6587,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5382,7 +6608,10 @@ export class ProjectsApi {
      * @param versionId Version ID
      * @param updateVersionRequest 
      */
-    public async updateVersion (projectId: number, versionId: number, updateVersionRequest: UpdateVersionRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async updateVersion (projectId: number, versionId: number, updateVersionRequest: UpdateVersionRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/versions/{versionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'versionId' + '}', encodeURIComponent(String(versionId)));
@@ -5467,10 +6696,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5479,7 +6716,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param file 
      */
-    public async uploadCsvWizardUploadedFile (projectId: number, params: uploadCsvWizardUploadedFileFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async uploadCsvWizardUploadedFile (projectId: number, params: uploadCsvWizardUploadedFileFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/csv-wizard/uploaded-file'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5566,10 +6806,18 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5578,7 +6826,10 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param image 
      */
-    public async uploadReadmeImage (projectId: number, params: uploadReadmeImageFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<UploadReadmeImageResponse> {
+    public async uploadReadmeImage (projectId: number, params: uploadReadmeImageFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<UploadReadmeImageResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/readme/upload-image'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5665,9 +6916,17 @@ export class ProjectsApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'UploadReadmeImageResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

@@ -190,7 +190,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async clearPerformanceCalibrationState (projectId: number, queryParams?: clearPerformanceCalibrationStateQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async clearPerformanceCalibrationState (projectId: number, queryParams?: clearPerformanceCalibrationStateQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/clear'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -261,10 +264,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -273,7 +284,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async deletePerformanceCalibrationSavedParameters (projectId: number, queryParams?: deletePerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async deletePerformanceCalibrationSavedParameters (projectId: number, queryParams?: deletePerformanceCalibrationSavedParametersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -344,10 +358,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -356,7 +378,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationGroundTruth (projectId: number, queryParams?: getPerformanceCalibrationGroundTruthQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationGroundTruthResponse> {
+    public async getPerformanceCalibrationGroundTruth (projectId: number, queryParams?: getPerformanceCalibrationGroundTruthQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPerformanceCalibrationGroundTruthResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/ground-truth'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -427,10 +452,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPerformanceCalibrationGroundTruthResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -439,7 +472,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationParameterSets (projectId: number, queryParams?: getPerformanceCalibrationParameterSetsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParameterSetsResponse> {
+    public async getPerformanceCalibrationParameterSets (projectId: number, queryParams?: getPerformanceCalibrationParameterSetsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPerformanceCalibrationParameterSetsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameter-sets'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -510,10 +546,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPerformanceCalibrationParameterSetsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -522,7 +566,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationRawResult (projectId: number, queryParams?: getPerformanceCalibrationRawResultQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationRawResultResponse> {
+    public async getPerformanceCalibrationRawResult (projectId: number, queryParams?: getPerformanceCalibrationRawResultQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPerformanceCalibrationRawResultResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/raw-result'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -593,10 +640,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPerformanceCalibrationRawResultResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -605,7 +660,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationSavedParameters (projectId: number, queryParams?: getPerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationParametersResponse> {
+    public async getPerformanceCalibrationSavedParameters (projectId: number, queryParams?: getPerformanceCalibrationSavedParametersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPerformanceCalibrationParametersResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -676,10 +734,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPerformanceCalibrationParametersResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -688,7 +754,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPerformanceCalibrationStatus (projectId: number, queryParams?: getPerformanceCalibrationStatusQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPerformanceCalibrationStatusResponse> {
+    public async getPerformanceCalibrationStatus (projectId: number, queryParams?: getPerformanceCalibrationStatusQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPerformanceCalibrationStatusResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/status'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -759,10 +828,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPerformanceCalibrationStatusResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -771,7 +848,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getPostProcessingResults (projectId: number, queryParams?: getPostProcessingResultsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetPostProcessingResultsResponse> {
+    public async getPostProcessingResults (projectId: number, queryParams?: getPostProcessingResultsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetPostProcessingResultsResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/post-processing/results'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -842,10 +922,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetPostProcessingResultsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -854,7 +942,10 @@ export class PerformanceCalibrationApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async getWavFile (projectId: number, queryParams?: getWavFileQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<Buffer> {
+    public async getWavFile (projectId: number, queryParams?: getWavFileQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<Buffer> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/wav'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -925,10 +1016,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'Buffer'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -938,7 +1037,10 @@ export class PerformanceCalibrationApi {
      * @param performanceCalibrationSaveParameterSetRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async setPerformanceCalibrationSavedParameters (projectId: number, performanceCalibrationSaveParameterSetRequest: PerformanceCalibrationSaveParameterSetRequest, queryParams?: setPerformanceCalibrationSavedParametersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async setPerformanceCalibrationSavedParameters (projectId: number, performanceCalibrationSaveParameterSetRequest: PerformanceCalibrationSaveParameterSetRequest, queryParams?: setPerformanceCalibrationSavedParametersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/parameters'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1018,10 +1120,18 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1031,7 +1141,10 @@ export class PerformanceCalibrationApi {
      * @param zip 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      */
-    public async uploadLabeledAudio (projectId: number, params: uploadLabeledAudioFormParams, queryParams?: uploadLabeledAudioQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
+    public async uploadLabeledAudio (projectId: number, params: uploadLabeledAudioFormParams, queryParams?: uploadLabeledAudioQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<PerformanceCalibrationUploadLabeledAudioResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/performance-calibration/files'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -1121,9 +1234,17 @@ export class PerformanceCalibrationApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'PerformanceCalibrationUploadLabeledAudioResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

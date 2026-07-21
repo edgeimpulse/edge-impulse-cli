@@ -371,7 +371,10 @@ export class AdminApi {
      * @summary Add a disallowed email domain
      * @param adminAddDisallowedEmailDomainRequest 
      */
-    public async adminAddDisallowedEmailDomain (adminAddDisallowedEmailDomainRequest: AdminAddDisallowedEmailDomainRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddDisallowedEmailDomain (adminAddDisallowedEmailDomainRequest: AdminAddDisallowedEmailDomainRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/disallowedEmailDomains';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -440,10 +443,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -452,7 +463,10 @@ export class AdminApi {
      * @param domainName Email domain name
      * @param adminAddOrUpdateSSODomainIdPsRequest 
      */
-    public async adminAddOrUpdateSSODomainIdPs (domainName: string, adminAddOrUpdateSSODomainIdPsRequest: AdminAddOrUpdateSSODomainIdPsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddOrUpdateSSODomainIdPs (domainName: string, adminAddOrUpdateSSODomainIdPsRequest: AdminAddOrUpdateSSODomainIdPsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/sso/{domainName}'
             .replace('{' + 'domainName' + '}', encodeURIComponent(String(domainName)));
         let queryParameters: Record<string, string> = {};
@@ -529,10 +543,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -541,7 +563,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param adminAddOrganizationUserRequest 
      */
-    public async adminAddUserToOrganization (organizationId: number, adminAddOrganizationUserRequest: AdminAddOrganizationUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddUserToOrganization (organizationId: number, adminAddOrganizationUserRequest: AdminAddOrganizationUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/members'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -618,10 +643,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -630,7 +663,10 @@ export class AdminApi {
      * @param projectId Project ID
      * @param adminAddProjectUserRequest 
      */
-    public async adminAddUserToProject (projectId: number, adminAddProjectUserRequest: AdminAddProjectUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddUserToProject (projectId: number, adminAddProjectUserRequest: AdminAddProjectUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/members'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -707,10 +743,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -718,7 +762,10 @@ export class AdminApi {
      * @summary Add current user to a project
      * @param projectId Project ID
      */
-    public async adminAddUserToProjectDeprecated (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminAddUserToProjectDeprecated (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/add'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -786,10 +833,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -798,7 +853,10 @@ export class AdminApi {
      * @param startDate Start date
      * @param endDate End date
      */
-    public async adminCreateMetricsReport (queryParams: adminCreateMetricsReportQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminCreateMetricsReport (queryParams: adminCreateMetricsReportQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/metrics/reports';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -878,10 +936,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -889,7 +955,10 @@ export class AdminApi {
      * @summary Register a new OAuth client
      * @param adminCreateOauthClientRequest 
      */
-    public async adminCreateOauthClient (adminCreateOauthClientRequest: AdminCreateOauthClientRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminCreateOauthClientResponse> {
+    public async adminCreateOauthClient (adminCreateOauthClientRequest: AdminCreateOauthClientRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminCreateOauthClientResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -958,10 +1027,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminCreateOauthClientResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -969,7 +1046,10 @@ export class AdminApi {
      * @summary Create a new organization
      * @param adminCreateOrganizationRequest 
      */
-    public async adminCreateOrganization (adminCreateOrganizationRequest: AdminCreateOrganizationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateOrganizationResponse> {
+    public async adminCreateOrganization (adminCreateOrganizationRequest: AdminCreateOrganizationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateOrganizationResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1038,10 +1118,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateOrganizationResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1050,7 +1138,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param adminCreateOrganizationDataExportRequest 
      */
-    public async adminCreateOrganizationDataExport (organizationId: number, adminCreateOrganizationDataExportRequest: AdminCreateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminCreateOrganizationDataExport (organizationId: number, adminCreateOrganizationDataExportRequest: AdminCreateOrganizationDataExportRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1127,10 +1218,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1139,7 +1238,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param adminCreateProjectRequest 
      */
-    public async adminCreateOrganizationProject (organizationId: number, adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+    public async adminCreateOrganizationProject (organizationId: number, adminCreateProjectRequest: AdminCreateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateProjectResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/projects'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1216,10 +1318,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateProjectResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1229,7 +1339,10 @@ export class AdminApi {
      * @param startDate Start date
      * @param endDate End date
      */
-    public async adminCreateOrganizationUsageReport (organizationId: number, queryParams: adminCreateOrganizationUsageReportQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminCreateOrganizationUsageReport (organizationId: number, queryParams: adminCreateOrganizationUsageReportQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1317,10 +1430,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1328,7 +1449,10 @@ export class AdminApi {
      * @summary Create a new project
      * @param adminCreateProjectRequest 
      */
-    public async adminCreateProject (adminCreateProjectRequest: AdminCreateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<CreateProjectResponse> {
+    public async adminCreateProject (adminCreateProjectRequest: AdminCreateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<CreateProjectResponse> {
         const localVarPath = this.basePath + '/api/admin/projects';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1397,10 +1521,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'CreateProjectResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1409,7 +1541,10 @@ export class AdminApi {
      * @param userId User ID
      * @param adminCreateSignupApprovalRequest 
      */
-    public async adminCreateSignupApprovalRequest (userId: number, adminCreateSignupApprovalRequest: AdminCreateSignupApprovalRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async adminCreateSignupApprovalRequest (userId: number, adminCreateSignupApprovalRequest: AdminCreateSignupApprovalRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}/signup-approval-request'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -1486,10 +1621,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1497,7 +1640,10 @@ export class AdminApi {
      * @summary Create user enterprise trial
      * @param adminStartEnterpriseTrialRequest 
      */
-    public async adminCreateTrial (adminStartEnterpriseTrialRequest: AdminStartEnterpriseTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<EntityCreatedResponse> {
+    public async adminCreateTrial (adminStartEnterpriseTrialRequest: AdminStartEnterpriseTrialRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/admin/trials';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -1566,10 +1712,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'EntityCreatedResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1577,7 +1731,10 @@ export class AdminApi {
      * @summary Delete disallowed email domain
      * @param domainName Email domain name
      */
-    public async adminDeleteDisallowedEmailDomain (domainName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteDisallowedEmailDomain (domainName: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/disallowedEmailDomains/{domainName}'
             .replace('{' + 'domainName' + '}', encodeURIComponent(String(domainName)));
         let queryParameters: Record<string, string> = {};
@@ -1645,10 +1802,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1656,7 +1821,10 @@ export class AdminApi {
      * @summary Delete global metrics report
      * @param reportId Report ID
      */
-    public async adminDeleteMetricsReport (reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteMetricsReport (reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/metrics/reports/{reportId}'
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
         let queryParameters: Record<string, string> = {};
@@ -1724,10 +1892,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1735,7 +1911,10 @@ export class AdminApi {
      * @summary Deactivate OAuth client
      * @param clientId Client ID
      */
-    public async adminDeleteOauthClient (clientId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteOauthClient (clientId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -1803,10 +1982,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1814,7 +2001,10 @@ export class AdminApi {
      * @summary Delete OAuth client logo
      * @param clientId Client ID
      */
-    public async adminDeleteOauthClientLogo (clientId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteOauthClientLogo (clientId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}/logo'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -1882,10 +2072,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1894,7 +2092,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param fullDeletion Set to true to schedule permanent deletion
      */
-    public async adminDeleteOrganization (organizationId: number, queryParams?: adminDeleteOrganizationQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminDeleteOrganization (organizationId: number, queryParams?: adminDeleteOrganizationQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -1965,10 +2166,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -1977,7 +2186,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param exportId Export ID
      */
-    public async adminDeleteOrganizationDataExport (organizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteOrganizationDataExport (organizationId: number, exportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
@@ -2053,10 +2265,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2065,7 +2285,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param reportId Report ID
      */
-    public async adminDeleteOrganizationUsageReport (organizationId: number, reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteOrganizationUsageReport (organizationId: number, reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{reportId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
@@ -2141,10 +2364,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2153,7 +2384,10 @@ export class AdminApi {
      * @param projectId Project ID
      * @param fullDeletion Set to true to schedule permanent deletion
      */
-    public async adminDeleteProject (projectId: number, queryParams?: adminDeleteProjectQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteProject (projectId: number, queryParams?: adminDeleteProjectQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2224,10 +2458,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2235,7 +2477,10 @@ export class AdminApi {
      * @summary Delete SSO settings for a domain
      * @param domainName Email domain name
      */
-    public async adminDeleteSSODomainIdPs (domainName: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteSSODomainIdPs (domainName: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/sso/{domainName}'
             .replace('{' + 'domainName' + '}', encodeURIComponent(String(domainName)));
         let queryParameters: Record<string, string> = {};
@@ -2303,10 +2548,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2314,7 +2567,10 @@ export class AdminApi {
      * @summary Delete a studio config item
      * @param configKey Config Key
      */
-    public async adminDeleteStudioConfig (configKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteStudioConfig (configKey: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/config/{configKey}'
             .replace('{' + 'configKey' + '}', encodeURIComponent(String(configKey)));
         let queryParameters: Record<string, string> = {};
@@ -2382,10 +2638,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2393,7 +2657,10 @@ export class AdminApi {
      * @summary Delete enterprise trial
      * @param enterpriseTrialId Enterprise trial ID
      */
-    public async adminDeleteTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDeleteTrial (enterpriseTrialId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
             .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let queryParameters: Record<string, string> = {};
@@ -2461,10 +2728,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2474,7 +2749,10 @@ export class AdminApi {
      * @param fullDeletion Set to true to schedule permanent deletion
      * @param skipUserNotification If set to true, skips sending email notifications to users about their account/entity deletion. This is typically used for maintenance activities where notification is not needed or desired. 
      */
-    public async adminDeleteUser (userId: number, queryParams?: adminDeleteUserQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminDeleteUser (userId: number, queryParams?: adminDeleteUserQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -2548,10 +2826,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2559,7 +2845,10 @@ export class AdminApi {
      * @summary Set a feature flag OFF
      * @param featureId Feature ID.
      */
-    public async adminDisableFeature (featureId: Feature, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminDisableFeature (featureId: Feature, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/featureFlags/{featureId}'
             .replace('{' + 'featureId' + '}', encodeURIComponent(String(featureId)));
         let queryParameters: Record<string, string> = {};
@@ -2627,10 +2916,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2638,7 +2935,10 @@ export class AdminApi {
      * @summary Download global metrics report
      * @param reportId Report ID
      */
-    public async adminDownloadMetricsReport (reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async adminDownloadMetricsReport (reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/admin/metrics/reports/{reportId}/download'
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
         let queryParameters: Record<string, string> = {};
@@ -2699,10 +2999,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2711,7 +3019,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param reportId Report ID
      */
-    public async adminDownloadOrganizationUsageReport (organizationId: number, reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<any> {
+    public async adminDownloadOrganizationUsageReport (organizationId: number, reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<any> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{reportId}/download'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
@@ -2780,17 +3091,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             undefined
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * ⚠️ DANGER: This is a highly destructive maintenance endpoint that forcefully deletes all content from the trash bin, regardless of grace period status. This should only be used for: - Internal testing purposes - Manual maintenance tasks - Emergency cleanup operations  Unlike the normal automatic deletion process which respects the 30-day grace period, this endpoint: - Immediately and permanently deletes ALL data in the trash bin - Bypasses the standard grace period checks - Cannot be undone - May delete data that would otherwise be recoverable  The normal trash bin system works as follows: 1. When users/organizations are deleted with `fullDelete=true`: - Their data is moved to the trash bin - A 30-day grace period begins - The data remains recoverable during this period  2. During the 30-day grace period: - Data is preserved in its original structure - Administrators can recover data if needed - The deletion can be cancelled - Storage costs continue to accrue  ⚠️ WARNING: - This endpoint bypasses all safety mechanisms - Data deletion is immediate and irreversible - Should not be used in normal operations - Requires explicit admin permissions - Consider using targeted deletion endpoints instead (i.e. /api/admin/trashbin/organizations/:id)  Note: The system runs automated cleanup jobs periodically for normal maintenance. This endpoint should only be used in exceptional circumstances by authorized administrators. 
      * @summary Empty all trashbin content
      */
-    public async adminEmptyTrashbin (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminEmptyTrashbin (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -2850,10 +3172,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2861,7 +3191,10 @@ export class AdminApi {
      * @summary Set a feature flag ON
      * @param featureId Feature ID.
      */
-    public async adminEnableFeature (featureId: Feature, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminEnableFeature (featureId: Feature, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/featureFlags/{featureId}'
             .replace('{' + 'featureId' + '}', encodeURIComponent(String(featureId)));
         let queryParameters: Record<string, string> = {};
@@ -2929,10 +3262,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -2940,7 +3281,10 @@ export class AdminApi {
      * @summary Find a user
      * @param query Part of e-mail address or username
      */
-    public async adminFindUser (queryParams: adminFindUserQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<FindUserResponse> {
+    public async adminFindUser (queryParams: adminFindUserQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<FindUserResponse> {
         const localVarPath = this.basePath + '/api/admin/find-user';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3010,17 +3354,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'FindUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * DEPRECATED. Admin-only API to get list of all users that have been active in the past 30 days.
      * @summary Get all user IDs (active last 30 days)
      */
-    public async adminGetAllActiveUserIds (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUserIdsResponse> {
+    public async adminGetAllActiveUserIds (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetUserIdsResponse> {
         const localVarPath = this.basePath + '/api/admin/users-ids/active';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3080,17 +3435,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetUserIdsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * DEPRECATED. Admin-only API to get list of all users.
      * @summary Get all user IDs
      */
-    public async adminGetAllUserIds (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUserIdsResponse> {
+    public async adminGetAllUserIds (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetUserIdsResponse> {
         const localVarPath = this.basePath + '/api/admin/users-ids';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3150,10 +3516,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetUserIdsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3161,7 +3535,10 @@ export class AdminApi {
      * @summary Get data migration
      * @param migrationId Data migration ID
      */
-    public async adminGetDataMigration (migrationId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetDataMigrationResponse> {
+    public async adminGetDataMigration (migrationId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetDataMigrationResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/migrations/{migrationId}'
             .replace('{' + 'migrationId' + '}', encodeURIComponent(String(migrationId)));
         let queryParameters: Record<string, string> = {};
@@ -3229,17 +3606,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetDataMigrationResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get data migrations.
      * @summary Get data migrations
      */
-    public async adminGetDataMigrations (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetDataMigrationsResponse> {
+    public async adminGetDataMigrations (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetDataMigrationsResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/migrations';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3299,17 +3687,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetDataMigrationsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get the list of disallowed email domains.
      * @summary Get the list of disallowed email domains
      */
-    public async adminGetDisallowedEmailDomains (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetDisallowedEmailDomainsResponse> {
+    public async adminGetDisallowedEmailDomains (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetDisallowedEmailDomainsResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/disallowedEmailDomains';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3369,10 +3768,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetDisallowedEmailDomainsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3380,7 +3787,10 @@ export class AdminApi {
      * @summary Get enterprise trial email verification code
      * @param email Email address
      */
-    public async adminGetEmailVerificationCode (email: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetEmailVerificationCodeResponse> {
+    public async adminGetEmailVerificationCode (email: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetEmailVerificationCodeResponse> {
         const localVarPath = this.basePath + '/api/admin/emails/{email}/verification-code'
             .replace('{' + 'email' + '}', encodeURIComponent(String(email)));
         let queryParameters: Record<string, string> = {};
@@ -3448,17 +3858,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetEmailVerificationCodeResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get all feature flags.
      * @summary Get all feature flags
      */
-    public async adminGetFeatureFlags (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetFeatureFlagsResponse> {
+    public async adminGetFeatureFlags (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetFeatureFlagsResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/featureFlags';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3518,10 +3939,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetFeatureFlagsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3531,7 +3960,10 @@ export class AdminApi {
      * @param parentType Job parent type (project, organization, or standalone)
      * @param includeChildrenJobs Include the details of each of the children jobs (recursively)
      */
-    public async adminGetJobDetails (jobId: number, queryParams: adminGetJobDetailsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobDetailsResponse> {
+    public async adminGetJobDetails (jobId: number, queryParams: adminGetJobDetailsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<JobDetailsResponse> {
         const localVarPath = this.basePath + '/api/admin/jobs/{jobId}/details'
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let queryParameters: Record<string, string> = {};
@@ -3612,10 +4044,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'JobDetailsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3626,7 +4066,10 @@ export class AdminApi {
      * @param limit Maximum number of logs
      * @param offset Start fetching logs from this offset
      */
-    public async adminGetJobsLogs (jobId: number, queryParams: adminGetJobsLogsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobLogsResponse> {
+    public async adminGetJobsLogs (jobId: number, queryParams: adminGetJobsLogsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<JobLogsResponse> {
         const localVarPath = this.basePath + '/api/admin/jobs/{jobId}/logs'
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let queryParameters: Record<string, string> = {};
@@ -3724,10 +4167,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'JobLogsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3736,7 +4187,10 @@ export class AdminApi {
      * @param jobId Job ID
      * @param parentType Job parent type (project, organization, or standalone)
      */
-    public async adminGetJobsMetrics (jobId: number, queryParams: adminGetJobsMetricsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<JobMetricsResponse> {
+    public async adminGetJobsMetrics (jobId: number, queryParams: adminGetJobsMetricsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<JobMetricsResponse> {
         const localVarPath = this.basePath + '/api/admin/jobs/{jobId}/metrics'
             .replace('{' + 'jobId' + '}', encodeURIComponent(String(jobId)));
         let queryParameters: Record<string, string> = {};
@@ -3814,17 +4268,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'JobMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get global metrics.
      * @summary Get global metrics
      */
-    public async adminGetMetrics (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetMetricsResponse> {
+    public async adminGetMetrics (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetMetricsResponse> {
         const localVarPath = this.basePath + '/api/admin/metrics';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -3884,10 +4349,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3895,7 +4368,10 @@ export class AdminApi {
      * @summary Get global metrics report
      * @param reportId Report ID
      */
-    public async adminGetMetricsReport (reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetReportResponse> {
+    public async adminGetMetricsReport (reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetReportResponse> {
         const localVarPath = this.basePath + '/api/admin/metrics/reports/{reportId}'
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
         let queryParameters: Record<string, string> = {};
@@ -3963,10 +4439,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetReportResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -3975,7 +4459,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetMetricsReports (queryParams?: adminGetMetricsReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetReportsResponse> {
+    public async adminGetMetricsReports (queryParams?: adminGetMetricsReportsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetReportsResponse> {
         const localVarPath = this.basePath + '/api/admin/metrics/reports';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -4041,10 +4528,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetReportsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4052,7 +4547,10 @@ export class AdminApi {
      * @summary Get OAuth client details
      * @param clientId Client ID
      */
-    public async adminGetOauthClient (clientId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOauthClientResponse> {
+    public async adminGetOauthClient (clientId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetOauthClientResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -4120,10 +4618,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetOauthClientResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4135,7 +4641,10 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetOauthClients (queryParams?: adminGetOauthClientsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOauthClientsResponse> {
+    public async adminGetOauthClients (queryParams?: adminGetOauthClientsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetOauthClientsResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -4210,10 +4719,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetOauthClientsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4223,7 +4740,10 @@ export class AdminApi {
      * @param startDate Start date
      * @param endDate End date
      */
-    public async adminGetOrganizationComputeTimeUsage (organizationId: number, queryParams: adminGetOrganizationComputeTimeUsageQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationComputeTimeUsageResponse> {
+    public async adminGetOrganizationComputeTimeUsage (organizationId: number, queryParams: adminGetOrganizationComputeTimeUsageQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetOrganizationComputeTimeUsageResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/computeTime'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4311,10 +4831,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetOrganizationComputeTimeUsageResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4323,7 +4851,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param exportId Export ID
      */
-    public async adminGetOrganizationDataExport (organizationId: number, exportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportResponse> {
+    public async adminGetOrganizationDataExport (organizationId: number, exportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataExportResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
@@ -4399,10 +4930,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataExportResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4412,7 +4951,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetOrganizationDataExports (organizationId: number, queryParams?: adminGetOrganizationDataExportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetOrganizationDataExportsResponse> {
+    public async adminGetOrganizationDataExports (organizationId: number, queryParams?: adminGetOrganizationDataExportsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetOrganizationDataExportsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4486,10 +5028,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetOrganizationDataExportsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4498,7 +5048,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param includeDeleted Whether to include deleted entities (users, projects, orgs)
      */
-    public async adminGetOrganizationInfo (organizationId: number, queryParams?: adminGetOrganizationInfoQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminOrganizationInfoResponse> {
+    public async adminGetOrganizationInfo (organizationId: number, queryParams?: adminGetOrganizationInfoQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminOrganizationInfoResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4569,10 +5122,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminOrganizationInfoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4582,7 +5143,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetOrganizationJobs (organizationId: number, queryParams?: adminGetOrganizationJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async adminGetOrganizationJobs (organizationId: number, queryParams?: adminGetOrganizationJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/jobs'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4656,10 +5220,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4668,7 +5240,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param reportId Report ID
      */
-    public async adminGetOrganizationUsageReport (organizationId: number, reportId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetReportResponse> {
+    public async adminGetOrganizationUsageReport (organizationId: number, reportId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetReportResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports/{reportId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'reportId' + '}', encodeURIComponent(String(reportId)));
@@ -4744,10 +5319,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetReportResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4757,7 +5340,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetOrganizationUsageReports (organizationId: number, queryParams?: adminGetOrganizationUsageReportsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetReportsResponse> {
+    public async adminGetOrganizationUsageReports (organizationId: number, queryParams?: adminGetOrganizationUsageReportsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetReportsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/usage/reports'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -4831,10 +5417,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetReportsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4848,7 +5442,10 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetOrganizations (queryParams?: adminGetOrganizationsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetOrganizationsResponse> {
+    public async adminGetOrganizations (queryParams?: adminGetOrganizationsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetOrganizationsResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -4929,10 +5526,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetOrganizationsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -4940,7 +5545,10 @@ export class AdminApi {
      * @summary Get project
      * @param projectId Project ID
      */
-    public async adminGetProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminProjectInfoResponse> {
+    public async adminGetProject (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminProjectInfoResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5008,10 +5616,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminProjectInfoResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5021,7 +5637,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetProjectDataSamples (projectId: number, queryParams?: adminGetProjectDataSamplesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListSamplesResponse> {
+    public async adminGetProjectDataSamples (projectId: number, queryParams?: adminGetProjectDataSamplesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListSamplesResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/data'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5095,10 +5714,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListSamplesResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5108,7 +5735,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetProjectJobs (projectId: number, queryParams?: adminGetProjectJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async adminGetProjectJobs (projectId: number, queryParams?: adminGetProjectJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/jobs'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -5182,10 +5812,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5198,7 +5836,10 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetProjects (queryParams?: adminGetProjectsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminListProjectsResponse> {
+    public async adminGetProjects (queryParams?: adminGetProjectsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminListProjectsResponse> {
         const localVarPath = this.basePath + '/api/admin/projects';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -5276,17 +5917,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminListProjectsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get the SSO settings.
      * @summary Get SSO settings
      */
-    public async adminGetSSOSettings (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetSSOSettingsResponse> {
+    public async adminGetSSOSettings (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetSSOSettingsResponse> {
         const localVarPath = this.basePath + '/api/admin/sso';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -5346,10 +5998,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetSSOSettingsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5357,7 +6017,10 @@ export class AdminApi {
      * @summary Get signup approval request
      * @param userId User ID
      */
-    public async adminGetSignupApprovalRequest (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetSignupApprovalRequestResponse> {
+    public async adminGetSignupApprovalRequest (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetSignupApprovalRequestResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}/signup-approval-request'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -5425,17 +6088,28 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetSignupApprovalRequestResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
      * Admin-only API to get all studio config.
      * @summary Get all studio config
      */
-    public async adminGetStudioConfig (options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetStudioConfigResponse> {
+    public async adminGetStudioConfig (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetStudioConfigResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/config';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -5495,10 +6169,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetStudioConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5506,7 +6188,10 @@ export class AdminApi {
      * @summary Get a studio config item
      * @param configKey Config Key
      */
-    public async adminGetStudioConfigKey (configKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GetStudioConfigResponse> {
+    public async adminGetStudioConfigKey (configKey: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetStudioConfigResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/config/{configKey}'
             .replace('{' + 'configKey' + '}', encodeURIComponent(String(configKey)));
         let queryParameters: Record<string, string> = {};
@@ -5574,10 +6259,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GetStudioConfigResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5589,7 +6282,10 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetTrashbin (queryParams?: adminGetTrashbinQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetTrashBinResponse> {
+    public async adminGetTrashbin (queryParams?: adminGetTrashbinQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetTrashBinResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -5664,10 +6360,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetTrashBinResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5680,7 +6384,10 @@ export class AdminApi {
      * @param sort Fields and order to sort query by
      * @param key Job key to filter on
      */
-    public async adminGetTrashbinJobs (queryParams?: adminGetTrashbinJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async adminGetTrashbinJobs (queryParams?: adminGetTrashbinJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/jobs';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -5758,10 +6465,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5769,7 +6484,10 @@ export class AdminApi {
      * @summary Get enterprise trial
      * @param enterpriseTrialId Enterprise trial ID
      */
-    public async adminGetTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetTrialResponse> {
+    public async adminGetTrial (enterpriseTrialId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetTrialResponse> {
         const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
             .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let queryParameters: Record<string, string> = {};
@@ -5837,10 +6555,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetTrialResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5848,7 +6574,10 @@ export class AdminApi {
      * @summary Get user
      * @param userId User ID
      */
-    public async adminGetUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUserResponse> {
+    public async adminGetUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetUserResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -5916,10 +6645,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetUserResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -5929,7 +6666,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminGetUserJobs (userId: number, queryParams?: adminGetUserJobsQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListJobsResponse> {
+    public async adminGetUserJobs (userId: number, queryParams?: adminGetUserJobsQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListJobsResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}/jobs'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -6003,10 +6743,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListJobsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6014,7 +6762,10 @@ export class AdminApi {
      * @summary Get user metrics
      * @param userId User ID
      */
-    public async adminGetUserMetrics (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUserMetricsResponse> {
+    public async adminGetUserMetrics (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetUserMetricsResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}/metrics'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -6082,10 +6833,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetUserMetricsResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6100,7 +6859,10 @@ export class AdminApi {
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      * @param search Search query
      */
-    public async adminGetUsers (queryParams?: adminGetUsersQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminGetUsersResponse> {
+    public async adminGetUsers (queryParams?: adminGetUsersQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminGetUsersResponse> {
         const localVarPath = this.basePath + '/api/admin/users';
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
@@ -6184,10 +6946,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminGetUsersResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6198,7 +6968,10 @@ export class AdminApi {
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
      */
-    public async adminListOrganizationData (organizationId: number, queryParams?: adminListOrganizationDataQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListOrganizationDataResponse> {
+    public async adminListOrganizationData (organizationId: number, queryParams?: adminListOrganizationDataQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListOrganizationDataResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/data'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -6275,10 +7048,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListOrganizationDataResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6286,7 +7067,10 @@ export class AdminApi {
      * @summary List organization FSx files in the trash bin
      * @param organizationId Organization ID
      */
-    public async adminListTrashbinOrganizationFSxFiles (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinOrganizationFSxFiles (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/organizations/{organizationId}/fsx'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -6354,10 +7138,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6368,7 +7160,10 @@ export class AdminApi {
      * @param prefix Directory path prefix to filter results. For example: - Empty string or \&quot;/\&quot; lists files in the root directory - \&quot;docs/\&quot; lists files in the docs directory - \&quot;docs/images/\&quot; lists files in the docs/images subdirectory 
      * @param continuationToken Token for paginating through results. When a list operation returns more results than can fit in a single response, the response will include a continuationToken. Pass this token in your next request to get the next page of results.  If not provided, returns the first page of results. When there are no more results, the response will not include a continuationToken.  Note: When backed by S3, this maps directly to S3\&#39;s NextContinuationToken. 
      */
-    public async adminListTrashbinOrganizationS3Files (organizationId: number, queryParams: adminListTrashbinOrganizationS3FilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinOrganizationS3Files (organizationId: number, queryParams: adminListTrashbinOrganizationS3FilesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/organizations/{organizationId}/s3'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -6452,10 +7247,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6463,7 +7266,10 @@ export class AdminApi {
      * @summary List project FSx files in the trash bin
      * @param projectId Project ID
      */
-    public async adminListTrashbinProjectFSxFiles (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinProjectFSxFiles (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/projects/{projectId}/fsx'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6531,10 +7337,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6545,7 +7359,10 @@ export class AdminApi {
      * @param prefix Directory path prefix to filter results. For example: - Empty string or \&quot;/\&quot; lists files in the root directory - \&quot;docs/\&quot; lists files in the docs directory - \&quot;docs/images/\&quot; lists files in the docs/images subdirectory 
      * @param continuationToken Token for paginating through results. When a list operation returns more results than can fit in a single response, the response will include a continuationToken. Pass this token in your next request to get the next page of results.  If not provided, returns the first page of results. When there are no more results, the response will not include a continuationToken.  Note: When backed by S3, this maps directly to S3\&#39;s NextContinuationToken. 
      */
-    public async adminListTrashbinProjectS3Files (projectId: number, queryParams: adminListTrashbinProjectS3FilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinProjectS3Files (projectId: number, queryParams: adminListTrashbinProjectS3FilesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/projects/{projectId}/s3'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6629,10 +7446,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6640,7 +7465,10 @@ export class AdminApi {
      * @summary List user FSx files in the trash bin
      * @param userId User ID
      */
-    public async adminListTrashbinUserFSxFiles (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinUserFSxFiles (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/users/{userId}/fsx'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -6708,10 +7536,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6722,7 +7558,10 @@ export class AdminApi {
      * @param prefix Directory path prefix to filter results. For example: - Empty string or \&quot;/\&quot; lists files in the root directory - \&quot;docs/\&quot; lists files in the docs directory - \&quot;docs/images/\&quot; lists files in the docs/images subdirectory 
      * @param continuationToken Token for paginating through results. When a list operation returns more results than can fit in a single response, the response will include a continuationToken. Pass this token in your next request to get the next page of results.  If not provided, returns the first page of results. When there are no more results, the response will not include a continuationToken.  Note: When backed by S3, this maps directly to S3\&#39;s NextContinuationToken. 
      */
-    public async adminListTrashbinUserS3Files (userId: number, queryParams: adminListTrashbinUserS3FilesQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<ListPortalFilesInFolderResponse> {
+    public async adminListTrashbinUserS3Files (userId: number, queryParams: adminListTrashbinUserS3FilesQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListPortalFilesInFolderResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/users/{userId}/s3'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -6806,10 +7645,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'ListPortalFilesInFolderResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6817,7 +7664,10 @@ export class AdminApi {
      * @summary Permanently delete an organization
      * @param organizationId Organization ID
      */
-    public async adminPermanentlyDeleteOrganization (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminPermanentlyDeleteOrganization (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -6885,10 +7735,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6896,7 +7754,10 @@ export class AdminApi {
      * @summary Permanently delete a project
      * @param projectId Project ID
      */
-    public async adminPermanentlyDeleteProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminPermanentlyDeleteProject (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/projects/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -6964,10 +7825,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -6975,7 +7844,10 @@ export class AdminApi {
      * @summary Permanently delete a user
      * @param userId User ID
      */
-    public async adminPermanentlyDeleteUser (userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminPermanentlyDeleteUser (userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -7043,10 +7915,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7055,7 +7935,10 @@ export class AdminApi {
      * @param projectId Project ID
      * @param skipRevokeApiKeys Set to true to avoid revoking project API keys.
      */
-    public async adminProjectKillSwitch (projectId: number, queryParams?: adminProjectKillSwitchQueryParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminProjectKillSwitchResponse> {
+    public async adminProjectKillSwitch (projectId: number, queryParams?: adminProjectKillSwitchQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminProjectKillSwitchResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/kill-switch'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7126,10 +8009,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminProjectKillSwitchResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7138,7 +8029,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param userId User ID
      */
-    public async adminRemoveUserFromOrganization (organizationId: number, userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminRemoveUserFromOrganization (organizationId: number, userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/members/{userId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
@@ -7214,10 +8108,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7226,7 +8128,10 @@ export class AdminApi {
      * @param projectId Project ID
      * @param userId User ID
      */
-    public async adminRemoveUserFromProject (projectId: number, userId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminRemoveUserFromProject (projectId: number, userId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/members/{userId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
@@ -7302,10 +8207,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7313,7 +8226,10 @@ export class AdminApi {
      * @summary Remove current user from a project
      * @param projectId Project ID
      */
-    public async adminRemoveUserFromProjectDeprecated (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminRemoveUserFromProjectDeprecated (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/remove'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7381,10 +8297,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7392,7 +8316,10 @@ export class AdminApi {
      * @summary Restore an organization
      * @param organizationId Organization ID
      */
-    public async adminRestoreOrganization (organizationId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminRestoreOrganization (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/restore'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -7460,10 +8387,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7471,7 +8406,10 @@ export class AdminApi {
      * @summary Restore a soft-deleted project
      * @param projectId Project ID
      */
-    public async adminRestoreProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminRestoreProject (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}/restore'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7539,10 +8477,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7550,7 +8496,10 @@ export class AdminApi {
      * @summary Restore a project that has been moved to the trash bin and is scheduled for deletion
      * @param projectId Project ID
      */
-    public async adminRestoreTrashbinProject (projectId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<StartJobResponse> {
+    public async adminRestoreTrashbinProject (projectId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/trashbin/projects/{projectId}/restore'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -7618,10 +8567,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'StartJobResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7629,7 +8586,10 @@ export class AdminApi {
      * @summary Rotate OAuth client secret
      * @param clientId Client ID
      */
-    public async adminRotateOauthClientSecret (clientId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<AdminRotateOauthClientSecretResponse> {
+    public async adminRotateOauthClientSecret (clientId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<AdminRotateOauthClientSecretResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}/secret'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -7697,10 +8657,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'AdminRotateOauthClientSecretResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7709,7 +8677,10 @@ export class AdminApi {
      * @param configKey Config Key
      * @param adminUpdateConfigRequest 
      */
-    public async adminSetStudioConfig (configKey: string, adminUpdateConfigRequest: AdminUpdateConfigRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminSetStudioConfig (configKey: string, adminUpdateConfigRequest: AdminUpdateConfigRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/config/{configKey}'
             .replace('{' + 'configKey' + '}', encodeURIComponent(String(configKey)));
         let queryParameters: Record<string, string> = {};
@@ -7786,10 +8757,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7798,7 +8777,10 @@ export class AdminApi {
      * @param migrationId Data migration ID
      * @param adminToggleDataMigrationRequest 
      */
-    public async adminToggleDataMigration (migrationId: string, adminToggleDataMigrationRequest: AdminToggleDataMigrationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminToggleDataMigration (migrationId: string, adminToggleDataMigrationRequest: AdminToggleDataMigrationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/infra/migrations/{migrationId}'
             .replace('{' + 'migrationId' + '}', encodeURIComponent(String(migrationId)));
         let queryParameters: Record<string, string> = {};
@@ -7875,10 +8857,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7887,7 +8877,10 @@ export class AdminApi {
      * @param clientId Client ID
      * @param adminUpdateOauthClientRequest 
      */
-    public async adminUpdateOauthClient (clientId: number, adminUpdateOauthClientRequest: AdminUpdateOauthClientRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateOauthClient (clientId: number, adminUpdateOauthClientRequest: AdminUpdateOauthClientRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -7964,10 +8957,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -7976,7 +8977,10 @@ export class AdminApi {
      * @param organizationId Organization ID
      * @param adminUpdateOrganizationRequest 
      */
-    public async adminUpdateOrganization (organizationId: number, adminUpdateOrganizationRequest: AdminUpdateOrganizationRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateOrganization (organizationId: number, adminUpdateOrganizationRequest: AdminUpdateOrganizationRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
         let queryParameters: Record<string, string> = {};
@@ -8053,10 +9057,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8066,7 +9078,10 @@ export class AdminApi {
      * @param exportId Export ID
      * @param adminUpdateOrganizationDataExportRequest 
      */
-    public async adminUpdateOrganizationDataExport (organizationId: number, exportId: number, adminUpdateOrganizationDataExportRequest: AdminUpdateOrganizationDataExportRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateOrganizationDataExport (organizationId: number, exportId: number, adminUpdateOrganizationDataExportRequest: AdminUpdateOrganizationDataExportRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/exports/{exportId}'
             .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)))
             .replace('{' + 'exportId' + '}', encodeURIComponent(String(exportId)));
@@ -8151,10 +9166,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8163,7 +9186,10 @@ export class AdminApi {
      * @param projectId Project ID
      * @param updateProjectRequest 
      */
-    public async adminUpdateProject (projectId: number, updateProjectRequest: UpdateProjectRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateProject (projectId: number, updateProjectRequest: UpdateProjectRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -8240,10 +9266,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8252,7 +9286,10 @@ export class AdminApi {
      * @param enterpriseTrialId Enterprise trial ID
      * @param adminUpdateTrialRequest 
      */
-    public async adminUpdateTrial (enterpriseTrialId: number, adminUpdateTrialRequest: AdminUpdateTrialRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateTrial (enterpriseTrialId: number, adminUpdateTrialRequest: AdminUpdateTrialRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}'
             .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let queryParameters: Record<string, string> = {};
@@ -8329,10 +9366,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8341,7 +9386,10 @@ export class AdminApi {
      * @param userId User ID
      * @param adminUpdateUserRequest 
      */
-    public async adminUpdateUser (userId: number, adminUpdateUserRequest: AdminUpdateUserRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateUser (userId: number, adminUpdateUserRequest: AdminUpdateUserRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -8418,10 +9466,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8430,7 +9486,10 @@ export class AdminApi {
      * @param userId User ID
      * @param adminUpdateUserPermissionsRequest 
      */
-    public async adminUpdateUserPermissions (userId: number, adminUpdateUserPermissionsRequest: AdminUpdateUserPermissionsRequest, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpdateUserPermissions (userId: number, adminUpdateUserPermissionsRequest: AdminUpdateUserPermissionsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/users/{userId}/permissions'
             .replace('{' + 'userId' + '}', encodeURIComponent(String(userId)));
         let queryParameters: Record<string, string> = {};
@@ -8507,10 +9566,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8518,7 +9585,10 @@ export class AdminApi {
      * @summary Upgrade enterprise trial to a full enterprise account
      * @param enterpriseTrialId Enterprise trial ID
      */
-    public async adminUpgradeTrial (enterpriseTrialId: number, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUpgradeTrial (enterpriseTrialId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/trials/{enterpriseTrialId}/upgrade'
             .replace('{' + 'enterpriseTrialId' + '}', encodeURIComponent(String(enterpriseTrialId)));
         let queryParameters: Record<string, string> = {};
@@ -8586,10 +9656,18 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 
     /**
@@ -8598,7 +9676,10 @@ export class AdminApi {
      * @param clientId Client ID
      * @param image 
      */
-    public async adminUploadOauthClientLogo (clientId: number, params: adminUploadOauthClientLogoFormParams, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<GenericApiResponse> {
+    public async adminUploadOauthClientLogo (clientId: number, params: adminUploadOauthClientLogoFormParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
         const localVarPath = this.basePath + '/api/admin/oauth/clients/{clientId}/logo'
             .replace('{' + 'clientId' + '}', encodeURIComponent(String(clientId)));
         let queryParameters: Record<string, string> = {};
@@ -8685,9 +9766,17 @@ export class AdminApi {
         applyFormParams(requestOptions, localVarFormParams);
 
         const response = await fetch(url, requestOptions);
-        return this.handleResponse(
+        const resp = this.handleResponse(
             response,
             'GenericApiResponse'
         );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
     }
 }

@@ -9,5 +9,8 @@ export type ProjectDataSummary = {
     * Labels in the training set
     */
     labels: string[];
+    /**
+    * Number of files in the training set
+    */
     dataCount: number;
 };

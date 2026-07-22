@@ -26,6 +26,10 @@ export type TransferLearningModel = {
     * URL to the source code of this custom learn block.
     */
     repositoryUrl?: string;
+    /**
+    * Unique stable string key used to create and find this custom block.
+    */
+    customBlockRef?: string;
     author: string;
     blockType: BlockType;
     customParameters?: DSPGroupItem[];

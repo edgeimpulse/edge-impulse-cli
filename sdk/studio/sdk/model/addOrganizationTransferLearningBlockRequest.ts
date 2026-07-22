@@ -29,6 +29,10 @@ export type AddOrganizationTransferLearningBlockRequest = {
     */
     repositoryUrl?: string;
     /**
+    * Unique stable string key used to create and find this custom block.
+    */
+    customBlockRef?: string;
+    /**
     * List of parameters, spec'ed according to
     * https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
     */

@@ -43,9 +43,48 @@ export type ProjectInfoResponse = {
     dataSummary: ProjectDataSummary;
     dataSummaryPerCategory: {
         training: ProjectDataSummary;
-        testing: ProjectDataSummary;
-        validation: ProjectDataSummary;
-        postProcessing: ProjectDataSummary;
+        testing: ProjectDataSummary & {
+            /**
+            * Total length (in ms.) of all data in the testing set
+            */
+            totalLengthMs: number;
+            /**
+            * Labels in the testing set
+            */
+            labels: string[];
+            /**
+            * Number of files in the testing set
+            */
+            dataCount: number;
+        };
+        validation: ProjectDataSummary & {
+            /**
+            * Total length (in ms.) of all data in the validation set
+            */
+            totalLengthMs: number;
+            /**
+            * Labels in the validation set
+            */
+            labels: string[];
+            /**
+            * Number of files in the validation set
+            */
+            dataCount: number;
+        };
+        postProcessing: ProjectDataSummary & {
+            /**
+            * Total length (in ms.) of all data in the post-processing set
+            */
+            totalLengthMs: number;
+            /**
+            * Labels in the post-processing set
+            */
+            labels: string[];
+            /**
+            * Number of files in the post-processing set
+            */
+            dataCount: number;
+        };
     };
     computeTime: {
         /**

@@ -611,6 +611,8 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         indBlockNoLongerAvailable: undefined,
                         blockNoLongerAvailableReason: undefined,
                         sourceCodeDownloadStaffOnly: info.sourceCodeDownloadStaffOnly || undefined,
+                        // only set for CI-managed first-party blocks; left undefined for cli publishes
+                        customBlockRef: undefined,
                     };
                     newResponse = await config.api.organizationBlocks.addOrganizationTransferLearningBlock(
                         organizationId, newObj);

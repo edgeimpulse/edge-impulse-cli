@@ -2,6 +2,7 @@
 
 import type { ProjectLabelingMethod } from './projectLabelingMethod';
 import type { VlmCandidateLabelMap } from './vlmCandidateLabelMap';
+import type { VlmConfigurationBaseImageResize } from './vlmConfigurationBaseImageResize';
 import type { VlmPromptComponentConfig } from './vlmPromptComponentConfig';
 import type { VlmPromptConfigParameters } from './vlmPromptConfigParameters';
 
@@ -12,4 +13,5 @@ export type VlmConfigurationBase = {
     promptComponents?: VlmPromptComponentConfig;
     parameters?: VlmPromptConfigParameters;
     labelingMethod: ProjectLabelingMethod;
+    imageResize?: VlmConfigurationBaseImageResize;
 };

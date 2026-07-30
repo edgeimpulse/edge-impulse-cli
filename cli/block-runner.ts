@@ -1323,7 +1323,6 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         learnId: number,
         targetDir: string,
     ): Promise<void> {
-        console.log('downloadFiles', { projectId, learnId });
 
         let overrideImageInputScaling: models.ImageInputScaling | undefined;
 
@@ -1386,6 +1385,17 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         console.log(CON_PREFIX, 'Download completed, unzipping...');
         await extractFiles(zipFile, targetDir);
         await fs.unlink(zipFile);
+
+        // [JJ] if you're running this from a folder that already has a train_input.json
+        // (eg earlier exported block), and the export contains a train_input.json file ->
+        // replace it. I'm not a fan of updating files outside out of the specified targetDir,
+        // but not sure how to properly fix this otherwise (we place it in the root, rather than
+        // the 'data' directory as it should have been).
+        if (await fileExists(Path.join(process.cwd(), 'train_input.json'))) {
+            if (await fileExists(Path.join(targetDir, 'train_input.json'))) {
+                await fs.rename(Path.join(targetDir, 'train_input.json'), Path.join(process.cwd(), 'train_input.json'));
+            }
+        }
     }
 
     private async checkFilesPresent(projectId: number): Promise<boolean> {

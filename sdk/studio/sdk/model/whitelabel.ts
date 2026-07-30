@@ -79,6 +79,10 @@ export type Whitelabel = {
     */
     disablePublicEntities?: boolean;
     /**
+    * Whether adding collaborators to projects requires collaborators to already be members of this whitelabel instance.
+    */
+    requireCollaboratorsInWhitelabel?: boolean;
+    /**
     * Whether marketing features (marketing cookies, HubSpot tracking, etc.) are disabled for this whitelabel instance.
     */
     disableMarketingFeatures?: boolean;

@@ -29,7 +29,6 @@ export enum PageType {
     Evaluate = 27,
     Tuner = 28,
     LabelObjectDetection = 29,
-    SelectProjectThirdParty = 30,
     PerformanceCalibration = 31,
     Jobs = 32,
     ActivationRequired = 33,

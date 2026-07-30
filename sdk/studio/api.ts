@@ -15,7 +15,6 @@ import {
     ThemesApi, UploadPortalApi,
     UserApi,
     WhitelabelsApi,
-    ThirdPartyAuthApi,
     AdminApi,
     PerformanceCalibrationApi,
     MetricsApi,
@@ -80,7 +79,6 @@ export class EdgeImpulseApi {
     projects: ProjectsApi;
     rawData: RawDataApi;
     themes: ThemesApi;
-    thirdPartyAuth: ThirdPartyAuthApi;
     uploadPortal: UploadPortalApi;
     user: UserApi;
     vlm: VlmApi;
@@ -163,8 +161,6 @@ export class EdgeImpulseApi {
             { extraHeaders: this._opts.extraHeaders });
         this.themes = new ThemesApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
-        this.thirdPartyAuth = new ThirdPartyAuthApi(this._opts.endpoint + '/v1',
-            { extraHeaders: this._opts.extraHeaders });
         this.uploadPortal = new UploadPortalApi(this._opts.endpoint + '/v1',
             { extraHeaders: this._opts.extraHeaders });
         this.user = new UserApi(this._opts.endpoint + '/v1',
@@ -226,7 +222,6 @@ export class EdgeImpulseApi {
             this.projects.setApiKey(apiKeyAuthId, opts.apiKey);
             this.rawData.setApiKey(apiKeyAuthId, opts.apiKey);
             this.themes.setApiKey(apiKeyAuthId, opts.apiKey);
-            this.thirdPartyAuth.setApiKey(apiKeyAuthId, opts.apiKey);
             this.uploadPortal.setApiKey(apiKeyAuthId, opts.apiKey);
             this.user.setApiKey(apiKeyAuthId, opts.apiKey);
             this.vlm.setApiKey(apiKeyAuthId, opts.apiKey);
@@ -258,7 +253,6 @@ export class EdgeImpulseApi {
             this.projects.setApiKey(jwtTokenAuthId, undefined);
             this.rawData.setApiKey(jwtTokenAuthId, undefined);
             this.themes.setApiKey(jwtTokenAuthId, undefined);
-            this.thirdPartyAuth.setApiKey(jwtTokenAuthId, undefined);
             this.uploadPortal.setApiKey(jwtTokenAuthId, undefined);
             this.user.setApiKey(jwtTokenAuthId, undefined);
             this.vlm.setApiKey(jwtTokenAuthId, undefined);
@@ -293,7 +287,6 @@ export class EdgeImpulseApi {
             this.projects.setApiKey(jwtTokenAuthId, jwtToken);
             this.rawData.setApiKey(jwtTokenAuthId, jwtToken);
             this.themes.setApiKey(jwtTokenAuthId, jwtToken);
-            this.thirdPartyAuth.setApiKey(jwtTokenAuthId, jwtToken);
             this.uploadPortal.setApiKey(jwtTokenAuthId, jwtToken);
             this.user.setApiKey(jwtTokenAuthId, jwtToken);
             this.vlm.setApiKey(jwtTokenAuthId, jwtToken);
@@ -325,7 +318,6 @@ export class EdgeImpulseApi {
             this.projects.setApiKey(apiKeyAuthId, undefined);
             this.rawData.setApiKey(apiKeyAuthId, undefined);
             this.themes.setApiKey(apiKeyAuthId, undefined);
-            this.thirdPartyAuth.setApiKey(apiKeyAuthId, undefined);
             this.uploadPortal.setApiKey(apiKeyAuthId, undefined);
             this.user.setApiKey(apiKeyAuthId, undefined);
             this.vlm.setApiKey(apiKeyAuthId, undefined);

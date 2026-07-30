@@ -10,6 +10,11 @@ export type UpdateWhitelabelInternalRequest = {
     */
     disablePublicEntities?: boolean;
     /**
+    * Controls whether adding collaborators to projects requires collaborators to already be members of this whitelabel
+    * instance.
+    */
+    requireCollaboratorsInWhitelabel?: boolean;
+    /**
     * Controls whether marketing features (marketing cookies, HubSpot tracking, etc.) are disabled for this whitelabel
     * instance.
     */

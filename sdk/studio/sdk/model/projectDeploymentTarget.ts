@@ -53,6 +53,7 @@ export type ProjectDeploymentTarget = {
     * Preferably use supportedEngines / preferredEngine
     */
     hasNordicAxon: boolean;
+    hasQaic: boolean;
     hideOptimizations: boolean;
     badge?: DeploymentTargetBadge;
     uiSection: ProjectDeploymentTargetUiSectionEnum;

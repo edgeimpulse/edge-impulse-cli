@@ -50,6 +50,8 @@ export * from './organizationDataCampaignsApi';
 import { OrganizationDataCampaignsApi } from './organizationDataCampaignsApi';
 export * from './organizationJobsApi';
 import { OrganizationJobsApi } from './organizationJobsApi';
+export * from './organizationOAuthClientsApi';
+import { OrganizationOAuthClientsApi } from './organizationOAuthClientsApi';
 export * from './organizationPipelinesApi';
 import { OrganizationPipelinesApi } from './organizationPipelinesApi';
 export * from './organizationPortalsApi';
@@ -96,4 +98,4 @@ export interface RequestDetailedFile {
 
 export type RequestFile = RequestDetailedFile;
 
-export const APIS = [AdminApi, AuthApi, CDNApi, CanaryApi, ClassifyApi, DSPApi, DatasetVersionsApi, DeploymentApi, DevicesApi, EmailVerificationApi, ExportApi, FeatureFlagsApi, HealthApi, ImpulseApi, IntegrationsApi, JobsApi, LearnApi, LoginApi, MetricsApi, MonitoringApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationsApi, PerformanceCalibrationApi, PostProcessingApi, ProjectsApi, RawDataApi, TestApi, ThemesApi, UploadPortalApi, UserApi, VlmApi, WhitelabelsApi];
+export const APIS = [AdminApi, AuthApi, CDNApi, CanaryApi, ClassifyApi, DSPApi, DatasetVersionsApi, DeploymentApi, DevicesApi, EmailVerificationApi, ExportApi, FeatureFlagsApi, HealthApi, ImpulseApi, IntegrationsApi, JobsApi, LearnApi, LoginApi, MetricsApi, MonitoringApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationOAuthClientsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationsApi, PerformanceCalibrationApi, PostProcessingApi, ProjectsApi, RawDataApi, TestApi, ThemesApi, UploadPortalApi, UserApi, VlmApi, WhitelabelsApi];

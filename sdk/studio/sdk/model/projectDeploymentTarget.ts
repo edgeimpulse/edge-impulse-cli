@@ -53,6 +53,9 @@ export type ProjectDeploymentTarget = {
     * Preferably use supportedEngines / preferredEngine
     */
     hasNordicAxon: boolean;
+    /**
+    * Preferably use supportedEngines / preferredEngine
+    */
     hasQaic: boolean;
     hideOptimizations: boolean;
     badge?: DeploymentTargetBadge;

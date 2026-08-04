@@ -55,4 +55,17 @@ export type ClassifySampleResponseClassification = {
     * Frequency of the windows in "expectedLabels"
     */
     frequencyHz: number;
+    /**
+    * Structured classification results, one item per window
+    */
+    labelMapResult?: { [key: string]: string; }[];
+    /**
+    * Structured classification scores, one item per window
+    */
+    labelMapScores?: { [key: string]: { [key: string]: number; }; }[];
+    /**
+    * Number of classification result windows for this block. For structured outputs this can be greater than the length
+    * of "result".
+    */
+    resultCount: number;
 };

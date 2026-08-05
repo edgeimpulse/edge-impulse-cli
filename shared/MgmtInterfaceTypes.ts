@@ -54,6 +54,7 @@ export interface MgmtInterfaceHelloV4 {
     hello: {
         version: 4;
         apiKey: string;
+        authorization?: string;
         deviceId: string;
         deviceType: string;
         connection: ClientConnectionType;

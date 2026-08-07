@@ -1244,10 +1244,8 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         }
         catch (ex) {
             let ex2 = <Error>ex;
-            console.error(CON_PREFIX,
-                "Failed to download files for transfer learning block",
-                ex2.message || ex2.toString()
-            );
+            console.error(CON_PREFIX, "Failed to download files for transfer learning block");
+            console.error(ex2);
 
             process.exit(1);
         }

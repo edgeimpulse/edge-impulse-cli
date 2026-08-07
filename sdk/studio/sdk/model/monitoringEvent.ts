@@ -31,5 +31,5 @@ export type MonitoringEvent = {
     processedAt?: Date | null;
 };
 
-export type MonitoringEventStatusEnum = 'pending' | 'processing' | 'delivered' | 'failed';
-export const MonitoringEventStatusEnumValues: string[] = [ 'pending', 'processing', 'delivered', 'failed' ];
+export type MonitoringEventStatusEnum = 'pending' | 'processing' | 'delivered' | 'failed' | 'cancelled';
+export const MonitoringEventStatusEnumValues: string[] = [ 'pending', 'processing', 'delivered', 'failed', 'cancelled' ];

@@ -963,7 +963,20 @@ export class VoidAuth implements Authentication {
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // Loop over all potential ISO Date strings and convert them into Date objects
 export const convertISODateStringsOnObj = (obj: any) => {
+    if (Array.isArray(obj)) {
+        for (let ix = 0; ix < obj.length; ix++) {
+            obj[ix] = convertISODateStringsOnObj(obj[ix]);
+        }
+
+        return obj;
+    }
+
     if (typeof obj !== 'object' || !obj /* typeof null === 'object' */) {
+        return obj;
+    }
+
+    const prototype = Object.getPrototypeOf(obj);
+    if (prototype !== Object.prototype && prototype !== null) {
         return obj;
     }
 

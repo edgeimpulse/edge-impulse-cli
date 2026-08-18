@@ -35,6 +35,7 @@ import { GetWebhookDestinationResponse } from '../model/getWebhookDestinationRes
 import { ListEventSubscriptionsResponse } from '../model/listEventSubscriptionsResponse';
 import { ListMonitoringEventsResponse } from '../model/listMonitoringEventsResponse';
 import { ListWebhookDestinationsResponse } from '../model/listWebhookDestinationsResponse';
+import { MonitoringEventType } from '../model/monitoringEventType';
 import { RotateWebhookDestinationSecretResponse } from '../model/rotateWebhookDestinationSecretResponse';
 import { TestWebhookDestinationResponse } from '../model/testWebhookDestinationResponse';
 import { UpdateEventSubscriptionRequest } from '../model/updateEventSubscriptionRequest';
@@ -61,6 +62,12 @@ export enum MonitoringApiApiKeys {
 
 type listMonitoringEventsQueryParams = {
     limit?: number,
+    offset?: number,
+    startTimestamp?: number,
+    endTimestamp?: number,
+    eventType?: MonitoringEventType,
+    status?: 'pending' | 'processing' | 'delivered' | 'failed' | 'cancelled',
+    alertSubscriptionIds?: string,
 };
 
 
@@ -832,10 +839,16 @@ export class MonitoringApi {
     }
 
     /**
-     * List recent monitoring events generated for this project.
-     * @summary List recent monitoring events
+     * List monitoring events generated for this project.
+     * @summary List monitoring events
      * @param projectId Project ID
-     * @param limit Number of recent events to fetch. Maximum is 100. Defaults to 20.
+     * @param limit Maximum number of events to return. Maximum is 100. Defaults to 20.
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param startTimestamp 
+     * @param endTimestamp 
+     * @param eventType Only include events with this event type.
+     * @param status Only include events with this computed delivery status.
+     * @param alertSubscriptionIds Only include events matching these alert subscription IDs (comma-separated list).
      */
     public async listMonitoringEvents (projectId: number, queryParams?: listMonitoringEventsQueryParams, options: {
         headers: { [name: string]: string },
@@ -867,6 +880,24 @@ export class MonitoringApi {
 
         if (typeof queryParams?.limit !== 'undefined' && queryParams?.limit !== null) {
             queryParameters['limit'] = <string><any>queryParams.limit;
+        }
+        if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
+            queryParameters['offset'] = <string><any>queryParams.offset;
+        }
+        if (typeof queryParams?.startTimestamp !== 'undefined' && queryParams?.startTimestamp !== null) {
+            queryParameters['startTimestamp'] = <string><any>queryParams.startTimestamp;
+        }
+        if (typeof queryParams?.endTimestamp !== 'undefined' && queryParams?.endTimestamp !== null) {
+            queryParameters['endTimestamp'] = <string><any>queryParams.endTimestamp;
+        }
+        if (typeof queryParams?.eventType !== 'undefined' && queryParams?.eventType !== null) {
+            queryParameters['eventType'] = <string><any>queryParams.eventType;
+        }
+        if (typeof queryParams?.status !== 'undefined' && queryParams?.status !== null) {
+            queryParameters['status'] = <string><any>queryParams.status;
+        }
+        if (typeof queryParams?.alertSubscriptionIds !== 'undefined' && queryParams?.alertSubscriptionIds !== null) {
+            queryParameters['alertSubscriptionIds'] = <string><any>queryParams.alertSubscriptionIds;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

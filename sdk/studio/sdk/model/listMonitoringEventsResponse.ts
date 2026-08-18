@@ -12,4 +12,16 @@ export type ListMonitoringEventsResponse = {
     */
     error?: string;
     events: MonitoringEvent[];
+    /**
+    * Total number of matching events across all pages.
+    */
+    totalCount: number;
+    /**
+    * Applied page size.
+    */
+    limit: number;
+    /**
+    * Applied result offset.
+    */
+    offset: number;
 };

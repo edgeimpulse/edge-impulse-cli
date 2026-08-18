@@ -511,6 +511,7 @@ export * from './modelPrediction';
 export * from './modelResult';
 export * from './modelVariantStats';
 export * from './monitoringEvent';
+export * from './monitoringEventType';
 export * from './moveRawDataRequest';
 export * from './neighborsData';
 export * from './neighborsScore';

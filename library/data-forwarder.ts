@@ -24,6 +24,8 @@ export class DataForwarder {
         hmacKey?: string;
         apiKey: string;
     }) {
+        const hostWasPassed = typeof options.host !== 'undefined';
+
         this._options = {
             deviceId: options.deviceId,
             deviceType: options.deviceType,
@@ -37,13 +39,16 @@ export class DataForwarder {
         if (typeof options.frequency === 'undefined' && typeof options.intervalMs === 'undefined') {
             throw new Error('Either "frequency" or "intervalMs" is required');
         }
-        if (typeof options.host === 'undefined') {
+        if (!hostWasPassed) {
             if (process.env.EI_HOST) {
                 options.host = process.env.EI_HOST;
             }
             else {
                 options.host = 'edgeimpulse.com';
             }
+        }
+        if (typeof options.host === 'undefined') {
+            throw new Error('"host" is required');
         }
 
         if (options.host === 'localhost') {
@@ -54,6 +59,14 @@ export class DataForwarder {
         }
         else {
             this._options.ingestionHost = 'https://ingestion.' + options.host;
+        }
+        if (!hostWasPassed && process.env.EI_CLI_INGESTION_ENDPOINT) {
+            const ingestionEndpointOverride = process.env.EI_CLI_INGESTION_ENDPOINT;
+            const ingestionEndpointUrl = new URL(ingestionEndpointOverride);
+            if (ingestionEndpointUrl.protocol !== 'http:' && ingestionEndpointUrl.protocol !== 'https:') {
+                throw new Error('EI_CLI_INGESTION_ENDPOINT should start with "http://" or "https://"');
+            }
+            this._options.ingestionHost = ingestionEndpointOverride;
         }
         if (typeof options.apiKey !== 'string') {
             throw new Error('"apiKey" is required');

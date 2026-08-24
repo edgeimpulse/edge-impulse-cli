@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p ./",
     "lint": "eslint . -c .eslintrc.json --quiet --ext .ts",
-    "test": "tsc -b . && NODE_OPTIONS=\"${NODE_OPTIONS:+$NODE_OPTIONS }--no-experimental-strip-types\" TS_NODE_PROJECT=./tsconfig.json mocha --config ./test/.mocharc.js",
+    "test": "tsc -b . && NODE_OPTIONS=\"${NODE_OPTIONS:+$NODE_OPTIONS }--no-experimental-strip-types --preserve-symlinks\" TS_NODE_PROJECT=./tsconfig.json mocha --config ./test/.mocharc.js",
     "verify-build": "echo \"import { EdgeImpulseApi } from './build/sdk/studio/index.js'\" | node --input-type=module && [ $(find ./build/sdk -type f | wc -l) -gt 50 ]"
   },
   "bin": {

@@ -14,7 +14,7 @@ describe("block config migration (deploy)", () => {
             let config = <EdgeImpulseConfig><unknown>{ };
             config.host = '211.212.213.214';
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -99,7 +99,7 @@ describe("block config migration (deploy)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -171,7 +171,7 @@ describe("block config migration (deploy)", () => {
             let config = <EdgeImpulseConfig><unknown>{ };
             config.host = '211.212.213.214';
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 2,
                 "config": {
@@ -239,7 +239,7 @@ describe("block config migration (deploy)", () => {
             let config = <EdgeImpulseConfig><unknown>{ };
             config.host = '211.212.213.214';
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 2,
                 "config": {

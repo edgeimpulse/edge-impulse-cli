@@ -26,7 +26,7 @@ describe("block config migration (ML)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 name: 'Custom MLP Hello world',
                 type: 'transferLearning',
@@ -94,7 +94,7 @@ describe("block config migration (ML)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -173,7 +173,7 @@ describe("block config migration (ML)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -255,7 +255,7 @@ describe("block config migration (ML)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -367,7 +367,7 @@ describe("block config migration (ML)", () => {
                 },
             };
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 1,
                 "config": {
@@ -474,7 +474,7 @@ describe("block config migration (ML)", () => {
             config.host = '211.212.213.214';
             // no api needed here
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 2,
                 "config": {
@@ -575,7 +575,7 @@ describe("block config migration (ML)", () => {
             config.host = '211.212.213.214';
             // no api needed here
 
-            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir() + '-ei-'));
+            let folder = await fs.promises.mkdtemp(Path.join(os.tmpdir(), 'ei-'));
             let eiBlockConfig = {
                 "version": 2,
                 "config": {

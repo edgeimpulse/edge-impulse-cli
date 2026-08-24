@@ -267,8 +267,8 @@ export class Config {
 
         // so... we have internal endpoints (used by the daemon) and external endpoints (used by the device)
         // the device does not have TLS configured right now... So we need to always use the HTTP/WS endpoints there...
-        const wsEndpointExternal = hostIsIP ? `ws://${host}:4802` : `ws://remote-mgmt.${host}`;
-        const ingestionEndpointExternal = hostIsIP ? `http://${host}:4810` : `http://ingestion.${host}`;
+        let wsEndpointExternal = hostIsIP ? `ws://${host}:4802` : `ws://remote-mgmt.${host}`;
+        let ingestionEndpointExternal = hostIsIP ? `http://${host}:4810` : `http://ingestion.${host}`;
         // api endpoint is not called from device, so use HTTPS there
         let apiEndpointExternal = hostIsIP ? `${httpProtocol}://${host}:4800` : `${httpProtocol}://studio.${host}`;
         let apiWspointExternal = hostIsIP ? `${wsProtocol}://${host}:4800` : `${wsProtocol}://studio.${host}`;
@@ -276,12 +276,54 @@ export class Config {
         // internal endpoints
         let apiEndpointInternal = isLocalhost ? 'http://localhost:4800' : apiEndpointExternal;
         let apiWsEndpointInternal = isLocalhost ? 'ws://localhost:4800' : apiWspointExternal;
-        const wsEndpointInternal = isLocalhost
+        let wsEndpointInternal = isLocalhost
             ? 'ws://localhost:4802'
             : (hostIsIP ? `${wsProtocol}://${host}:4802` : `${wsProtocol}://remote-mgmt.${host}`);
-        const ingestionEndpointInternal = isLocalhost ?
+        let ingestionEndpointInternal = isLocalhost ?
             'http://localhost:4810'
             : hostIsIP ? `${httpProtocol}://${host}:4810` : `${httpProtocol}://ingestion.${host}`;
+
+        const studioEndpointOverride = process.env.EI_CLI_STUDIO_ENDPOINT;
+        if (studioEndpointOverride) {
+            const studioEndpointUrl = new URL(studioEndpointOverride);
+            if (studioEndpointUrl.protocol !== 'http:' && studioEndpointUrl.protocol !== 'https:') {
+                throw new Error('EI_CLI_STUDIO_ENDPOINT should start with "http://" or "https://"');
+            }
+            apiEndpointExternal = studioEndpointOverride;
+            apiEndpointInternal = studioEndpointOverride;
+            const studioWsEndpointOverride = studioEndpointOverride.replace(/^http:/, 'ws:').replace(/^https:/, 'wss:');
+            apiWspointExternal = studioWsEndpointOverride;
+            apiWsEndpointInternal = studioWsEndpointOverride;
+        }
+
+        const ingestionEndpointOverride = process.env.EI_CLI_INGESTION_ENDPOINT;
+        if (ingestionEndpointOverride) {
+            const ingestionEndpointUrl = new URL(ingestionEndpointOverride);
+            if (ingestionEndpointUrl.protocol !== 'http:' && ingestionEndpointUrl.protocol !== 'https:') {
+                throw new Error('EI_CLI_INGESTION_ENDPOINT should start with "http://" or "https://"');
+            }
+            ingestionEndpointExternal = ingestionEndpointOverride;
+            ingestionEndpointInternal = ingestionEndpointOverride;
+        }
+
+        const remoteMgmtEndpointOverride = process.env.EI_CLI_REMOTE_MGMT_ENDPOINT;
+        if (remoteMgmtEndpointOverride) {
+            const remoteMgmtEndpointUrl = new URL(remoteMgmtEndpointOverride);
+            if (![ 'http:', 'https:', 'ws:', 'wss:' ].includes(remoteMgmtEndpointUrl.protocol)) {
+                throw new Error('EI_CLI_REMOTE_MGMT_ENDPOINT should start with "ws://", "wss://", "http://" or "https://"');
+            }
+            if (remoteMgmtEndpointUrl.protocol === 'http:') {
+                remoteMgmtEndpointUrl.protocol = 'ws:';
+            }
+            else if (remoteMgmtEndpointUrl.protocol === 'https:') {
+                remoteMgmtEndpointUrl.protocol = 'wss:';
+            }
+            const remoteMgmtWsEndpointOverride = remoteMgmtEndpointOverride
+                .replace(/^http:/, 'ws:')
+                .replace(/^https:/, 'wss:');
+            wsEndpointExternal = remoteMgmtWsEndpointOverride;
+            wsEndpointInternal = remoteMgmtWsEndpointOverride;
+        }
 
         this._api = new EdgeImpulseApi({
             endpoint: apiEndpointInternal,

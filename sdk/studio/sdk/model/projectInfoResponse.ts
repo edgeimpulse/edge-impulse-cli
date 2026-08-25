@@ -49,9 +49,25 @@ export type ProjectInfoResponse = {
             */
             totalLengthMs: number;
             /**
-            * Labels in the testing set
+            * Labels in the testing set.
             */
             labels: string[];
+            /**
+            * Total number of distinct labels in the testing set.
+            */
+            totalLabels: number;
+            /**
+            * Minimum regression value. Only set for regression datasets.
+            */
+            min?: number;
+            /**
+            * Maximum regression value. Only set for regression datasets.
+            */
+            max?: number;
+            /**
+            * Mean regression value. Only set for regression datasets.
+            */
+            mean?: number;
             /**
             * Number of files in the testing set
             */
@@ -63,9 +79,25 @@ export type ProjectInfoResponse = {
             */
             totalLengthMs: number;
             /**
-            * Labels in the validation set
+            * Labels in the validation set.
             */
             labels: string[];
+            /**
+            * Total number of distinct labels in the validation set.
+            */
+            totalLabels: number;
+            /**
+            * Minimum regression value. Only set for regression datasets.
+            */
+            min?: number;
+            /**
+            * Maximum regression value. Only set for regression datasets.
+            */
+            max?: number;
+            /**
+            * Mean regression value. Only set for regression datasets.
+            */
+            mean?: number;
             /**
             * Number of files in the validation set
             */
@@ -77,9 +109,25 @@ export type ProjectInfoResponse = {
             */
             totalLengthMs: number;
             /**
-            * Labels in the post-processing set
+            * Labels in the post-processing set.
             */
             labels: string[];
+            /**
+            * Total number of distinct labels in the post-processing set.
+            */
+            totalLabels: number;
+            /**
+            * Minimum regression value. Only set for regression datasets.
+            */
+            min?: number;
+            /**
+            * Maximum regression value. Only set for regression datasets.
+            */
+            max?: number;
+            /**
+            * Mean regression value. Only set for regression datasets.
+            */
+            mean?: number;
             /**
             * Number of files in the post-processing set
             */

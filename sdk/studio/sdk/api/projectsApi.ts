@@ -124,11 +124,13 @@ type getProjectDataAxesSummaryQueryParams = {
 
 type getProjectInfoQueryParams = {
     impulseId?: number,
+    truncateLabels?: boolean,
 };
 
 type getProjectTrainingDataSummaryQueryParams = {
     includeDisabled?: boolean,
     includeNotProcessed?: boolean,
+    truncateLabels?: boolean,
 };
 
 type listDownloadsQueryParams = {
@@ -2818,6 +2820,7 @@ export class ProjectsApi {
      * @summary Project information
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param truncateLabels If true, only a slice of labels will be returned.
      */
     public async getProjectInfo (projectId: number, queryParams?: getProjectInfoQueryParams, options: {
         headers: { [name: string]: string },
@@ -2849,6 +2852,9 @@ export class ProjectsApi {
 
         if (typeof queryParams?.impulseId !== 'undefined' && queryParams?.impulseId !== null) {
             queryParameters['impulseId'] = <string><any>queryParams.impulseId;
+        }
+        if (typeof queryParams?.truncateLabels !== 'undefined' && queryParams?.truncateLabels !== null) {
+            queryParameters['truncateLabels'] = <string><any>queryParams.truncateLabels;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -3183,6 +3189,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
+     * @param truncateLabels If true, only a slice of labels will be returned.
      */
     public async getProjectTrainingDataSummary (projectId: number, queryParams?: getProjectTrainingDataSummaryQueryParams, options: {
         headers: { [name: string]: string },
@@ -3217,6 +3224,9 @@ export class ProjectsApi {
         }
         if (typeof queryParams?.includeNotProcessed !== 'undefined' && queryParams?.includeNotProcessed !== null) {
             queryParameters['includeNotProcessed'] = <string><any>queryParams.includeNotProcessed;
+        }
+        if (typeof queryParams?.truncateLabels !== 'undefined' && queryParams?.truncateLabels !== null) {
+            queryParameters['truncateLabels'] = <string><any>queryParams.truncateLabels;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

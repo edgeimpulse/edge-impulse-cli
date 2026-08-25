@@ -30,6 +30,10 @@ export type ProjectDatasetMetadataRegressionCategory = {
     maxLabel: number;
     valueGroups: RawDataLabelDistributionRegressionValueGroup[];
     groupsPerLabelMapKey?: { [key: string]: RawDataLabelDistributionRegressionValueGroupsPerKey; };
+    fullLabelCount: number;
+    fullLabelMax?: number;
+    fullLabelMin?: number;
+    fullLabelMean?: number;
 };
 
 export type ProjectDatasetMetadataRegressionCategoryTypeEnum = 'regression';

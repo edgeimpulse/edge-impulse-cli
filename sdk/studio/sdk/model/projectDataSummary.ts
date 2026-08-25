@@ -6,9 +6,25 @@ export type ProjectDataSummary = {
     */
     totalLengthMs: number;
     /**
-    * Labels in the training set
+    * Labels in the training set.
     */
     labels: string[];
+    /**
+    * Total number of distinct labels in the training set.
+    */
+    totalLabels: number;
+    /**
+    * Minimum regression value. Only set for regression datasets.
+    */
+    min?: number;
+    /**
+    * Maximum regression value. Only set for regression datasets.
+    */
+    max?: number;
+    /**
+    * Mean regression value. Only set for regression datasets.
+    */
+    mean?: number;
     /**
     * Number of files in the training set
     */

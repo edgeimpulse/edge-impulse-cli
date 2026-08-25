@@ -14,6 +14,22 @@ export type ProjectTrainingDataSummaryResponse = {
         * Labels in the training set
         */
         labels: string[];
+        /**
+        * Total number of distinct labels in the training set.
+        */
+        totalLabels: number;
+        /**
+        * Minimum regression value. Only set for regression datasets.
+        */
+        min?: number;
+        /**
+        * Maximum regression value. Only set for regression datasets.
+        */
+        max?: number;
+        /**
+        * Mean regression value. Only set for regression datasets.
+        */
+        mean?: number;
         dataCount: number;
         /**
         * Whether there are samples in the training dataset that are both time-series data and have multiple labels

@@ -80,6 +80,9 @@ export type RunnerOptions = {
         skipDownload?: boolean;
     } | {
         type: "machine-learning";
+        projectId?: string;
+        impulseId?: string;
+        learnId?: string;
         epochs?: string;
         learningRate?: string;
         validationSetSize?: string;
@@ -1060,6 +1063,25 @@ export class BlockRunnerTransferLearning extends BlockRunner {
     private _impulseId: number = -1;
     private _learnBlockId: number = -1;
 
+    private getOptionalNumberOption(name: 'projectId' | 'impulseId' | 'learnId'): number | undefined {
+        if (this._runnerOpts.type !== 'machine-learning') {
+            return undefined;
+        }
+
+        const value = this._runnerOpts[name];
+        if (!value) {
+            return undefined;
+        }
+
+        const parsed = Number(value);
+        if (!Number.isInteger(parsed) || parsed <= 0) {
+            throw new Error(`Invalid value for --${name.replace(/[A-Z]/g, x => '-' + x.toLowerCase())} ` +
+                `(should be an integer, was "${value}")`);
+        }
+
+        return parsed;
+    }
+
     async setup(): Promise<void> {
         if (this._runnerOpts.type !== 'machine-learning') {
             throw new Error(
@@ -1070,8 +1092,19 @@ export class BlockRunnerTransferLearning extends BlockRunner {
         await super.setup();
 
         let runner = await this._cliConfig.getRunner();
+        const projectIdOption = this.getOptionalNumberOption('projectId');
+        const impulseIdOption = this.getOptionalNumberOption('impulseId');
+        const learnIdOption = this.getOptionalNumberOption('learnId');
 
         let projectList = (await this._eiConfig.api.projects.listProjects());
+
+        if (projectIdOption) {
+            const project = projectList.projects.find(p => p.id === projectIdOption);
+            if (!project) {
+                throw new Error(`Unable to find project with id ${projectIdOption} (from --project-id)`);
+            }
+            runner.projectId = projectIdOption;
+        }
 
         if (runner.projectId) {
             // is this a valid project? do we have access to it?
@@ -1129,7 +1162,17 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             }
         }
 
-        if (!runner.impulseIdsForProjectId
+        if (impulseIdOption) {
+            if (!impulsesRes.impulses.find(x => x.id === impulseIdOption)) {
+                console.error(CON_PREFIX,
+                    `Unable to find impulse with ID '${impulseIdOption}' ` +
+                        `for project ID '${this._projectId}' (from --impulse-id)`
+                );
+                process.exit(1);
+            }
+            this._impulseId = impulseIdOption;
+        }
+        else if (!runner.impulseIdsForProjectId
             || !runner.impulseIdsForProjectId[projectIdStr]
             || !runner.impulseIdsForProjectId[projectIdStr].impulseId) {
             const impulses = impulsesRes.impulses;
@@ -1141,31 +1184,37 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             this._impulseId = runner.impulseIdsForProjectId[projectIdStr].impulseId;
         }
 
-        const impulseName = impulsesRes.impulses.find(x => x.id === this._impulseId)?.name;
-        if (!impulseName) {
+        const impulse = impulsesRes.impulses.find(x => x.id === this._impulseId);
+        if (!impulse) {
             console.error(CON_PREFIX,
-                `Unable to get impulse name impulse id '${this._impulseId}'.`
+                `Failed to find impulse with ID '${this._impulseId}' for project ID '${this._projectId}'.`
             );
             process.exit(1);
         }
-        else {
-            console.log(CON_PREFIX, `Loading data from impulse "${impulseName}" (ID: ${this._impulseId}) ` +
-                `(run with --clean to switch impulses)`);
-        }
 
+        console.log(CON_PREFIX, `Loading data from impulse "${impulse.name}" (ID: ${this._impulseId}) ` +
+            `(run with --clean to switch impulses)`);
 
         // https://github.com/edgeimpulse/edgeimpulse/issues/7799
         // if the learn block is deleted then set blockId back to undefined
         // so we ask about the block again...
         if (runner.blockId) {
-            const impulse = impulsesRes.impulses.find(x => x.id === this._impulseId);
-            let block = impulse?.learnBlocks.find(l => l.id === runner.blockId);
+            let block = impulse.learnBlocks.find(l => l.id === runner.blockId);
             if (!block) {
                 runner.blockId = undefined;
             }
         }
 
-        if (!runner.blockId) {
+        if (learnIdOption) {
+            const block = impulse.learnBlocks.find(l => l.id === learnIdOption);
+            if (!block) {
+                console.log(CON_PREFIX, `You passed --learn-id ${learnIdOption}, but this impulse (${impulse.name}, ID: ${this._impulseId}) ` +
+                    `does not have a learn block with this ID (found: [ ${impulse.learnBlocks.map(x => x.id).join(', ')} ])`);
+                process.exit(1);
+            }
+            this._learnBlockId = learnIdOption;
+        }
+        else if (!runner.blockId) {
             let learnBlocks = impulsesRes.impulses.find(x => x.id === this._impulseId)?.learnBlocks;
             if (!learnBlocks) {
                 console.error(CON_PREFIX,
@@ -1328,7 +1377,13 @@ export class BlockRunnerTransferLearning extends BlockRunner {
             throw new Error('Block config is null');
         }
 
-        if (this._blockConfig.config.id) {
+        overrideImageInputScaling = this._blockConfig.type === 'machine-learning' ?
+            this._blockConfig.parameters.info.imageInputScaling : undefined;
+        if (overrideImageInputScaling) {
+            console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
+                '(read from parameters.json)');
+        }
+        else if (this._blockConfig.config.id) {
             const blocks = (await this._eiConfig.api.organizationBlocks.listOrganizationTransferLearningBlocks(
                 this._blockConfig.config.organizationId)).transferLearningBlocks;
             let block = blocks.find(x => x.id === this._blockConfig.config!.id);
@@ -1338,22 +1393,6 @@ export class BlockRunnerTransferLearning extends BlockRunner {
                     console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
                         `(read from block "${block.name}" (ID: ${block.id}) in Edge Impulse)`);
                 }
-            }
-            else {
-                overrideImageInputScaling = this._blockConfig.type === 'machine-learning' ?
-                    this._blockConfig.parameters.info.imageInputScaling : undefined;
-                if (overrideImageInputScaling) {
-                    console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
-                        '(read from parameters.json)');
-                }
-            }
-        }
-        else {
-            overrideImageInputScaling = this._blockConfig.type === 'machine-learning' ?
-                this._blockConfig.parameters.info.imageInputScaling : undefined;
-            if (overrideImageInputScaling) {
-                console.log(CON_PREFIX, 'Using image input scaling:', overrideImageInputScaling,
-                    '(read from parameters.json)');
             }
         }
 

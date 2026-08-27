@@ -53,6 +53,8 @@ const init = program.command('init')
             .description('Initialize the current folder as a new block');
 
 const push = program.command('push')
+            .option('--dont-prompt-for-config-change',
+                'Override remote block parameters and config when they differ from local parameters.json')
             .description('Push the current block to Edge Impulse');
 
 const runner = program.command('runner')
@@ -60,6 +62,9 @@ const runner = program.command('runner')
                .option('--dataset <dataset>', 'Tranformation block: Name of dataset')
                .option('--data-item <dataItem>', 'Tranformation block: Name of data item')
                .option('--file <filename>', 'File tranformation block: Name of file in data item')
+               .option('--project-id <projectId>', 'Transfer learning: Project ID to use')
+               .option('--impulse-id <impulseId>', 'Transfer learning: Impulse ID to use')
+               .option('--learn-id <learnId>', 'Transfer learning: Learn block ID to use')
                .option('--epochs <number>', 'Transfer learning: # of epochs to train')
                .option('--learning-rate <learningRate>', 'Transfer learning: Learning rate while training')
                .option('--validation-set-size <size>', 'Transfer learning: Size of validation set')
@@ -79,7 +84,9 @@ const devArgv = !!program.dev;
 const apiKeyArgv = program.apiKey ? <string>program.apiKey : undefined;
 
 const initOpts = init.opts();
+const pushOpts = push.opts();
 const runnerOpts = runner.opts();
+const overwriteRemoteConfigArgv = !!pushOpts.dontPromptForConfigChange;
 
 const dockerfilePath = Path.join(process.cwd(), 'Dockerfile');
 const dockerignorePath = Path.join(process.cwd(), '.dockerignore');
@@ -692,7 +699,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                             console.log(JSON.stringify(currentBlockConfig.parameters.parameters, null, 4)
                                 .split('\n').map(x => '    ' + x).join('\n'));
                             console.log('');
-                            shouldOverwrite = <boolean>(await inquirer.prompt([{
+                            shouldOverwrite = overwriteRemoteConfigArgv ? true : <boolean>(await inquirer.prompt([{
                                 type: 'confirm',
                                 name: 'overwrite',
                                 message: 'Do you want to override the parameters?',
@@ -755,11 +762,13 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                         console.log(`    ${prop.prop}: remote=${oldValStr}, local=${newValStr}`);
                     }
                     console.log('');
-                    shouldOverwriteConfigAfterPush = <boolean>(await inquirer.prompt([{
-                        type: 'confirm',
-                        name: 'overwrite',
-                        message: 'Do you want to override the remote config with your local values?',
-                    }])).overwrite;
+                    shouldOverwriteConfigAfterPush = overwriteRemoteConfigArgv ?
+                        true :
+                        <boolean>(await inquirer.prompt([{
+                            type: 'confirm',
+                            name: 'overwrite',
+                            message: 'Do you want to override the remote config with your local values?',
+                        }])).overwrite;
                 }
             }
 

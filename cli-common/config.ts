@@ -211,9 +211,19 @@ export class Config {
         : Promise<EdgeImpulseConfig> {
         let config = await this.load();
 
+        // EI_HOST is set (e.g. in Selenium we set it to branch.test.edgeimpulse.com)
         if (process.env.EI_HOST && config.host !== process.env.EI_HOST) {
             config.host = process.env.EI_HOST;
             config.jwtToken = '';
+        }
+        // EI_CLI_STUDIO_ENDPOINT is set, set the host to the hostname of that env var
+        // ideally I'd like to have port number here too; but not sure what'll break if we do that...
+        else if (process.env.EI_CLI_STUDIO_ENDPOINT) {
+            const eiCliStudioHost = new URL(process.env.EI_CLI_STUDIO_ENDPOINT).hostname;
+            if (config.host !== eiCliStudioHost) {
+                config.host = eiCliStudioHost;
+                config.jwtToken = '';
+            }
         }
 
         let setDeviceUpload = true;

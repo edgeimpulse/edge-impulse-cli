@@ -68,10 +68,31 @@ describe("endpoint config", () => {
             ingestion: "http://host.docker.internal:14810",
         });
     });
+
+    it("uses the studio endpoint override as host when EI_HOST is unset", async () => {
+        process.env.EI_CLI_STUDIO_ENDPOINT = "http://host.docker.internal:14800";
+        process.env.EI_CLI_INGESTION_ENDPOINT = "http://host.docker.internal:14810";
+        process.env.EI_CLI_REMOTE_MGMT_ENDPOINT = "http://host.docker.internal:14802";
+
+        const eiConfig = await verifyEndpoints(undefined);
+
+        assert.strictEqual(eiConfig.host, "host.docker.internal");
+        assert.deepStrictEqual(eiConfig.endpoints.internal, {
+            ws: "ws://host.docker.internal:14802",
+            api: "http://host.docker.internal:14800",
+            apiWs: "ws://host.docker.internal:14800",
+            ingestion: "http://host.docker.internal:14810",
+        });
+    });
 });
 
-async function verifyEndpoints(host: string): Promise<EdgeImpulseConfig> {
-    process.env.EI_HOST = host;
+async function verifyEndpoints(host: string | undefined): Promise<EdgeImpulseConfig> {
+    if (host) {
+        process.env.EI_HOST = host;
+    }
+    else {
+        delete process.env.EI_HOST;
+    }
 
     const configFactory = new Config();
     Object.defineProperty(configFactory, "load", {

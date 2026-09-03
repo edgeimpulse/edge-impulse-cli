@@ -57,6 +57,14 @@ To override the baud rate, use:
 $ edge-impulse-data-forwarder --baud-rate 460800
 ```
 
+### Sending a start/stop message
+
+If your device only starts sending sensor data after receiving a command, use `--start-msg` to have the data forwarder send `AT+STARTDATAFWD` over serial when no data is detected, and `AT+STOPDATAFWD` when the forwarder exits:
+
+```
+$ edge-impulse-data-forwarder --start-msg
+```
+
 ## Protocol
 
 The protocol is very simple. The device should send data on baud rate 115,200 with one line per reading, and individual sensor data should be split with either a `,` or a `TAB`. For example, this is data from a 3-axis accelerometer:

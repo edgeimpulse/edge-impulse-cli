@@ -34,6 +34,7 @@ const baudRateArgvIx = process.argv.indexOf('--baud-rate');
 const baudRateArgv = baudRateArgvIx !== -1 ? process.argv[baudRateArgvIx + 1] : undefined;
 const whichDeviceArgvIx = process.argv.indexOf('--which-device');
 const whichDeviceArgv = whichDeviceArgvIx !== -1 ? Number(process.argv[whichDeviceArgvIx + 1]) : undefined;
+const startMsgArgv = process.argv.indexOf('--start-msg') > -1;
 
 const cliOptions = {
     appName: 'Edge Impulse data forwarder',
@@ -82,7 +83,7 @@ let configFactory: Config;
         console.log('');
 
         let serialPath = await findSerial(whichDeviceArgv);
-        await connectToSerial(config, serialPath, baudRate, (cleanArgv || apiKeyArgv) ? true : false);
+        await connectToSerial(config, serialPath, baudRate, (cleanArgv || apiKeyArgv) ? true : false, startMsgArgv);
     }
     catch (ex) {
         console.error('Failed to set up serial daemon', ex);
@@ -93,9 +94,11 @@ function sleep(ms: number) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
-async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, baudRate: number, clean: boolean) {
+async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string,
+                                baudRate: number, clean: boolean, startMsg: boolean) {
     // if this is set we have a connection to the server
     let ws: WebSocket | undefined;
+    let goodConnectionEstablished = false;
     let dataForwarderConfig: {
         projectId: number,
         hmacKey: string,
@@ -155,7 +158,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         if (!apiKeyArgv && fromConfig) {
             dataForwarderConfig = fromConfig;
 
-            let sensorInfo = await getSensorInfo(serial, frequencyArgv);
+            let sensorInfo = await getSensorInfo(serial, frequencyArgv, startMsg);
             if (Math.abs(sensorInfo.samplingFreq - dataForwarderConfig.samplingFreq) > 10) {
                 console.log(SERIAL_PREFIX, 'Sampling frequency seems to have changed (was ' +
                     dataForwarderConfig.samplingFreq + 'Hz, but is now ' +
@@ -175,7 +178,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         }
 
         if (!dataForwarderConfig) {
-            let a = await getAndConfigureProject(eiConfig, serial);
+            let a = await getAndConfigureProject(eiConfig, serial, startMsg);
             dataForwarderConfig = a;
             await configFactory.storeDataForwarderDevice(macAddress, a);
         }
@@ -249,6 +252,7 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
                 console.log(TCP_PREFIX,
                     `Go to ${studioUrl}/studio/${dataForwarderConfig.projectId}/acquisition/training ` +
                     `to build your machine learning model!`);
+                goodConnectionEstablished = true;
             }
         });
         ws.send(cbor.encode(req));
@@ -498,6 +502,21 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
         });
     }
 
+    if (startMsg) {
+        const sendStopMsg = () => {
+            if (goodConnectionEstablished && serial.isConnected()) {
+                console.log(SERIAL_PREFIX, 'Sending AT+STOPDATAFWD...');
+                serial.write(Buffer.from('AT+STOPDATAFWD\r\n', 'ascii'))
+                    .catch(() => { /* ignore */ })
+                    .finally(() => process.exit(0));
+                return true;
+            }
+            return false;
+        };
+        process.once('SIGINT', () => { if (!sendStopMsg()) process.exit(0); });
+        process.once('SIGTERM', () => { if (!sendStopMsg()) process.exit(0); });
+    }
+
     // ping-pong logic to detect disconnects
     setInterval(() => {
         let myws = ws;
@@ -532,12 +551,12 @@ async function connectToSerial(eiConfig: EdgeImpulseConfig, serialPath: string, 
     }
 }
 
-async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: SerialConnector) {
+async function getAndConfigureProject(eiConfig: EdgeImpulseConfig, serial: SerialConnector, startMsg: boolean = false) {
     const { projectId, devKeys } = await setupCliApp(configFactory, eiConfig, cliOptions,
         (await serial.getMACAddress()) || undefined);
 
     // check what the sampling freq is for this device and how many sensors there are?
-    const sensorInfo = await getSensorInfo(serial, frequencyArgv);
+    const sensorInfo = await getSensorInfo(serial, frequencyArgv, startMsg);
 
     let axes = '';
     while (axes.split(',').filter(f => !!f.trim()).length !== sensorInfo.sensorCount) {
@@ -602,15 +621,7 @@ async function getProjectName(eiConfig: EdgeImpulseConfig, projectId: number) {
     }
 }
 
-async function getSensorInfo(serial: SerialConnector, desiredFrequency: number | undefined) {
-    let dataBuffers: { ts: number, buffer: Buffer }[] = [];
-    const onData = (b: Buffer) => {
-        dataBuffers.push({
-            ts: Date.now(),
-            buffer: b
-        });
-    };
-
+async function getSensorInfo(serial: SerialConnector, desiredFrequency: number | undefined, startMsg: boolean = false) {
     console.log(SERIAL_PREFIX, 'Detecting data frequency...');
 
     let sleepTime = typeof desiredFrequency === 'undefined' ?
@@ -620,23 +631,45 @@ async function getSensorInfo(serial: SerialConnector, desiredFrequency: number |
         sleepTime = 1000;
     }
 
-    let validReadings = {
-        start: Date.now(),
-        end: Date.now() + sleepTime
+    const collectLines = async () => {
+        let dataBuffers: { ts: number, buffer: Buffer }[] = [];
+        const onData = (b: Buffer) => {
+            dataBuffers.push({
+                ts: Date.now(),
+                buffer: b
+            });
+        };
+
+        let validReadings = {
+            start: Date.now(),
+            end: Date.now() + sleepTime
+        };
+
+        serial.on('data', onData);
+        await sleep(sleepTime + 100);
+        serial.off('data', onData);
+
+        dataBuffers = dataBuffers.filter(d => d.ts >= validReadings.start && d.ts < validReadings.end);
+
+        const data = Buffer.concat(dataBuffers.map(d => d.buffer));
+        return data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => !!d);
     };
 
-    serial.on('data', onData);
-    await sleep(sleepTime + 100);
-    serial.off('data', onData);
-
-    dataBuffers = dataBuffers.filter(d => d.ts >= validReadings.start && d.ts < validReadings.end);
-
-    const data = Buffer.concat(dataBuffers.map(d => d.buffer));
-    let lines = data.toString('utf-8').split('\n').map(d => d.trim()).filter(d => !!d);
+    let lines = await collectLines();
 
     let errLine = lines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
     if (errLine) {
         throw new Error(errLine);
+    }
+
+    if (!lines[1] && startMsg) {
+        console.log(SERIAL_PREFIX, 'No sensor data detected, sending AT+STARTDATAFWD...');
+        await serial.write(Buffer.from('AT+STARTDATAFWD\r\n', 'ascii'));
+        lines = await collectLines();
+        errLine = lines.find(x => x.toUpperCase().startsWith('ERR') || x.toUpperCase().startsWith('<ERR'));
+        if (errLine) {
+            throw new Error(errLine);
+        }
     }
 
     let l = lines[1]; // we take 1 here because 0 could have been truncated

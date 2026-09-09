@@ -379,6 +379,8 @@ export class InitCLIBlock {
 
         let existingBlocks = (
             await api.organizationBlocks.listOrganizationTransferLearningBlocks(organizationId)).transferLearningBlocks;
+        // Exclude Edge Impulse-managed blocks from manual CLI updates
+        existingBlocks = existingBlocks.filter(block => !block.customBlockRef);
 
         let createOrUpdateInqRes = await this.createOrUpdate(existingBlocks);
 

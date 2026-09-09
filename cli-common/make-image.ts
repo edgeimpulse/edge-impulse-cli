@@ -38,6 +38,7 @@ export async function upload(opts: {
     addDateId: boolean,
     attachments: ({ filename: string, buffer: Buffer }[]) | undefined,
     configFactory: Config,
+    onRetry?: (retriesLeft: number, error: string) => Promise<void>,
 }) {
     let ext = Path.extname(opts.filename).toLowerCase();
 
@@ -167,14 +168,25 @@ export async function upload(opts: {
 
     const url = opts.config.endpoints.internal.ingestion + '/api/' + category + '/files';
     try {
-        let res = await fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: form,
-            dispatcher: new Agent({
-                headersTimeout: 20 * 60_000,
-                bodyTimeout: 20 * 60_000,
-            }),
+        // we want to retry 'fetch' ops (so the actual fetch command fails, not just error from ingestion).
+        // It prevents errors like:
+        // TypeError: fetch failed, cause: ConnectTimeoutError (Connect Timeout Error), code: UND_ERR_CONNECT_TIMEOUT
+        let res = await retry(async () => {
+            return fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: form,
+                dispatcher: new Agent({
+                    headersTimeout: 20 * 60_000,
+                    bodyTimeout: 20 * 60_000,
+                }),
+            });
+        }, {
+            maxAttempts: 3,
+            onRetry: async (retriesLeft, error) => {
+                if (!opts.onRetry) return;
+                return opts.onRetry(retriesLeft, formatFetchError(url, error));
+            },
         });
 
         let body = await res.text();
@@ -250,4 +262,35 @@ function formatFetchError(url: string, err: unknown): string {
     }
 
     return `Request to ${url} failed: ${err.message || err.toString()}`;
+}
+
+async function retry<T>(fn: () => Promise<T>, opts: {
+    maxAttempts: number,
+    onRetry?: (retriesLeft: number, error: Error) => Promise<void>,
+}): Promise<T> {
+    const {
+        maxAttempts,
+    } = opts;
+
+    let retriesLeft = maxAttempts;
+
+    while (1) {
+        try {
+            return await fn();
+        }
+        catch (ex) {
+            retriesLeft--;
+            if (retriesLeft === 0) {
+                throw ex;
+            }
+
+            if (opts.onRetry) {
+                await opts.onRetry(retriesLeft, <Error>ex);
+            }
+        }
+    }
+
+    // need to have this, otherwise Promise<T> is not satisfied
+    // eslint-disable-next-line no-unreachable
+    throw new Error(`Outside while loop`);
 }

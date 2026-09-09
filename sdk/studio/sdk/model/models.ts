@@ -292,6 +292,7 @@ export * from './exportKerasBlockDataRequest';
 export * from './exportOriginalDataRequest';
 export * from './exportWavDataRequest';
 export * from './extension';
+export * from './extensionNavbarLocation';
 export * from './extensionVisibility';
 export * from './feature';
 export * from './finalizeCustomBlockUploadRequest';

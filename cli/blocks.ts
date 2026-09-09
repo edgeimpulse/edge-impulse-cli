@@ -661,8 +661,14 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
                 ) {
                     let currParams: { }[] | undefined;
                     if (currentBlockConfig.type === 'machine-learning') {
-                        currParams = (await config.api.organizationBlocks.getOrganizationTransferLearningBlock(
-                            organizationId, currentBlockConfig.config.id)).transferLearningBlock.parameters;
+                        const currBlock = (await config.api.organizationBlocks.getOrganizationTransferLearningBlock(
+                            organizationId, currentBlockConfig.config.id)).transferLearningBlock;
+                        if (currBlock.customBlockRef) {
+                            console.error('This block is managed by Edge Impulse and ' +
+                                'cannot be updated with edge-impulse-blocks.');
+                            process.exit(1);
+                        }
+                        currParams = currBlock.parameters;
                     }
                     else if (currentBlockConfig.type === 'transform' ||
                              currentBlockConfig.type === 'synthetic-data' ||

@@ -31,6 +31,7 @@ import { AddOrganizationTransferLearningBlockRequest } from '../model/addOrganiz
 import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { ExportBlockResponse } from '../model/exportBlockResponse';
+import { ExtensionNavbarLocation } from '../model/extensionNavbarLocation';
 import { ExtensionVisibility } from '../model/extensionVisibility';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetOrganizationDeployBlockResponse } from '../model/getOrganizationDeployBlockResponse';
@@ -99,7 +100,7 @@ export type addOrganizationExtensionBlockFormParams = {
     repositoryUrl?: string,
     logo?: RequestFile,
     navbarIcon?: string,
-    navbarLocation: string,
+    navbarLocation: ExtensionNavbarLocation,
     requiredApiKeyRole: ProjectApiKeyRole,
     visibility?: ExtensionVisibility,
     publicProjectTierAvailability?: PublicProjectTierAvailability,
@@ -135,7 +136,7 @@ export type updateOrganizationExtensionBlockFormParams = {
     repositoryUrl?: string,
     logo?: RequestFile,
     navbarIcon?: string,
-    navbarLocation?: string,
+    navbarLocation?: ExtensionNavbarLocation,
     requiredApiKeyRole?: ProjectApiKeyRole,
     visibility?: ExtensionVisibility,
     publicProjectTierAvailability?: PublicProjectTierAvailability,
@@ -566,7 +567,7 @@ export class OrganizationBlocksApi {
      * @param name Extension block name.
      * @param description Extension block description.
      * @param url URL loaded by the extension.
-     * @param navbarLocation Studio navigation location for the extension.
+     * @param navbarLocation 
      * @param requiredApiKeyRole 
      * @param onlyAvailableInProjectId Required if \\\&quot;visibility\\\&quot; is \\\&quot;project\\\&quot;. If set, this extension is scoped to this specific project.
      * @param repositoryUrl Optional source repository URL for the extension.
@@ -690,7 +691,7 @@ export class OrganizationBlocksApi {
         }
         if (params.navbarLocation !== undefined) {
             if (params.navbarLocation !== null && params.navbarLocation !== undefined) {
-                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'string'));
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'ExtensionNavbarLocation'));
             }
         }
         if (params.requiredApiKeyRole !== undefined) {
@@ -3817,7 +3818,7 @@ export class OrganizationBlocksApi {
      * @param repositoryUrl Optional source repository URL for the extension.
      * @param logo Optional logo image for the extension.
      * @param navbarIcon Optional Font Awesome icon class for the navigation item.
-     * @param navbarLocation Studio navigation location for the extension.
+     * @param navbarLocation 
      * @param requiredApiKeyRole 
      * @param visibility 
      * @param publicProjectTierAvailability 
@@ -3910,7 +3911,7 @@ export class OrganizationBlocksApi {
         }
         if (params.navbarLocation !== undefined) {
             if (params.navbarLocation !== null && params.navbarLocation !== undefined) {
-                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'string'));
+                localVarFormParams = appendFormField(localVarFormParams, 'navbarLocation', serializeFormDataValue(params.navbarLocation, 'ExtensionNavbarLocation'));
             }
         }
         if (params.requiredApiKeyRole !== undefined) {

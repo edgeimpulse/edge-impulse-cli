@@ -12,4 +12,8 @@ export type GetAllImpulsesResponse = {
     */
     error?: string;
     impulses: Impulse[];
+    /**
+    * The maximum number of impulses that you can create in this project. If unlimited, then this value is set to -1.
+    */
+    maxImpulseCount: number;
 };

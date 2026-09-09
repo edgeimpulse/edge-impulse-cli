@@ -499,6 +499,9 @@ const logAllAnnotationFormats = () => {
                 boundingBoxes = file.boundingBoxes;
             }
 
+            let ix: number | undefined;
+            let ixS: string | undefined;
+
             try {
                 let hrstart = Date.now();
 
@@ -535,10 +538,24 @@ const logAllAnnotationFormats = () => {
                         undefined,
                     configFactory: configFactory,
                     projectId: projectId,
+                    onRetry: async (retriesLeft, error) => {
+                        if (typeof ix === 'undefined') {
+                            ix = ++fileIx;
+                            ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
+                        }
+
+                        if (!progressIvArgv) {
+                            console.log(`[${ixS}/${totalFilesLength}] WARN: Failed to upload ${file.path}`,
+                                `(${error}, retries_left=${retriesLeft})`);
+                        }
+                    },
                 });
 
-                let ix = ++fileIx;
-                let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
+                if (typeof ix === 'undefined') {
+                    ix = ++fileIx;
+                    ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
+                }
+
                 if (!progressIvArgv) {
                     console.log(`[${ixS}/${totalFilesLength}] Uploading`, file.path,
                         'OK (' + (Date.now() - hrstart) + ' ms)');
@@ -550,8 +567,10 @@ const logAllAnnotationFormats = () => {
             }
             catch (ex2) {
                 let ex = <Error>ex2;
-                let ix = ++fileIx;
-                let ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
+                if (typeof ix === 'undefined') {
+                    ix = ++fileIx;
+                    ixS = ix.toString().padStart(totalFilesLength.toString().length, ' ');
+                }
                 console.log(`[${ixS}/${totalFilesLength}] Failed to upload`, file.path,
                     ex.message || ex.toString());
                 failed++;

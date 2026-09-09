@@ -399,6 +399,9 @@ class SerialDevice extends (EventEmitter as new () => TypedEmitter<{
                 attachments: undefined,
                 projectId: this._projectId,
                 configFactory: configFactory,
+                onRetry: async (retriesLeft, error) => {
+                    console.log(SERIAL_PREFIX, 'WARN: Failed to upload to', url, `(${error}, retries_left=${retriesLeft})`);
+                },
             });
 
             console.log(SERIAL_PREFIX, 'Uploading to', url, 'OK');

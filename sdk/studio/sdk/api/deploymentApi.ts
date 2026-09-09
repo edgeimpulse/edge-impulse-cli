@@ -214,7 +214,7 @@ export class DeploymentApi {
 
 
     /**
-     * Create a deployment job for a _public_ project. You can only create deployments for \"wasm\" and \"wasm-browser-simd\" deployment types. If a deployment already exists, jobId is null. If a deployment did not exist, or a job is created, jobId is set to an integer, and you can get updates via `getPublicDeploymentStatus`. When this step is complete use `downloadHistoricDeployment` to download the artefacts using deploymentVersion. Updates are _NOT_ streamed over the websocket API (for security reasons); but can be obtained via `getPublicDeploymentStatus`.
+     * Create a deployment job for a _public_ project. If a deployment already exists, jobId is null. If a deployment did not exist, or a job is created, jobId is set to an integer, and you can get updates via `getPublicDeploymentStatus`. When this step is complete use `downloadHistoricDeployment` to download the artefacts using deploymentVersion. Updates are _NOT_ streamed over the websocket API (for security reasons); but can be obtained via `getPublicDeploymentStatus`.
      * @summary Build deployment (public)
      * @param projectId Project ID
      * @param buildPublicDeploymentJobRequest 

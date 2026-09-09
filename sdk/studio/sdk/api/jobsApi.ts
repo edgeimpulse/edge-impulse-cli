@@ -4301,7 +4301,7 @@ export class JobsApi {
     }
 
     /**
-     * Create a new version of the project. This stores all data and configuration offsite. If you have access to the enterprise version of Edge Impulse you can store your data in your own storage buckets (only through JWT token authentication).
+     * Create a new version of the project. This stores all data and configuration offsite. If you have access to the enterprise version of Edge Impulse you can store your data in your own storage buckets (only through JWT token authentication). OAuth requests that set makePublic to true also require the projects:versions:public:create scope.
      * @summary Version project
      * @param projectId Project ID
      * @param projectVersionRequest 

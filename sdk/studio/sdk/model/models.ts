@@ -461,6 +461,7 @@ export * from './listEnterpriseTrialsResponse';
 export * from './listEventSubscriptionsResponse';
 export * from './listHmacKeysResponse';
 export * from './listJobsResponse';
+export * from './listLearnBlockFilesResponse';
 export * from './listModelsResponse';
 export * from './listMonitoringEventsResponse';
 export * from './listOrganizationApiKeysResponse';

@@ -8,7 +8,8 @@ import type { ProjectVisibility } from './projectVisibility';
 import type { TutorialType } from './tutorialType';
 
 /**
-* Only fields set in this object will be updated.
+* Only fields set in this object will be updated. "projectVisibility" can only be changed when authenticating with JWT
+* token authentication.
 */
 export type UpdateProjectRequest = {
     /**

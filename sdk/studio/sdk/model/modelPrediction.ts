@@ -10,6 +10,12 @@ export type ModelPrediction = {
     prediction: string;
     predictionCorrect?: boolean;
     /**
+    * Only set for anomaly detection projects. The expected anomaly outcome for this window — either “anomaly” or “no
+    * anomaly”. The outcome is determined by which labels are marked as anomalous in the project setup, or by the sample
+    * label if no such configuration is defined.
+    */
+    expectedAnomalyOutcome?: string;
+    /**
     * Only set for object detection projects
     */
     f1Score?: number;

@@ -2258,15 +2258,15 @@ export class ProjectsApi {
      * Retrieve list of shared state keys and their latest version.
      * @summary List shared state keys for extension
      * @param projectId Project ID
-     * @param extensionId Extension ID
+     * @param projectExtensionId Project Extension ID
      */
-    public async getExtensionSharedStateListForExtension (projectId: number, extensionId: number, options: {
+    public async getExtensionSharedStateListForExtension (projectId: number, projectExtensionId: number, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
     } = {headers: { } }) : Promise<GetExtensionSharedStateListResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/extensions/{extensionId}/shared-state/list'
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/{projectExtensionId}/shared-state/list'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+            .replace('{' + 'projectExtensionId' + '}', encodeURIComponent(String(projectExtensionId)));
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
             'User-Agent': 'edgeimpulse-api nodejs',
@@ -2289,11 +2289,11 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling getExtensionSharedStateListForExtension.');
         }
 
-        // verify required parameter 'extensionId' is not null or undefined
+        // verify required parameter 'projectExtensionId' is not null or undefined
 
 
-        if (extensionId === null || extensionId === undefined) {
-            throw new Error('Required parameter extensionId was null or undefined when calling getExtensionSharedStateListForExtension.');
+        if (projectExtensionId === null || projectExtensionId === undefined) {
+            throw new Error('Required parameter projectExtensionId was null or undefined when calling getExtensionSharedStateListForExtension.');
         }
 
         localVarHeaderParams = {
@@ -4100,7 +4100,7 @@ export class ProjectsApi {
     }
 
     /**
-     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes). The development key will be returned in full, as it\'ll be set in devices and is thus not private.
+     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes). The development key will be returned in full, as it\'ll be set in devices and is thus not private. This API returns an empty array when not authenticating with JWT token authentication.
      * @summary Get API keys
      * @param projectId Project ID
      */
@@ -5176,15 +5176,15 @@ export class ProjectsApi {
      * Removes an existing extension from a project.
      * @summary Remove extension from project
      * @param projectId Project ID
-     * @param extensionId Extension ID
+     * @param projectExtensionId Project Extension ID
      */
-    public async removeProjectActiveExtension (projectId: number, extensionId: number, options: {
+    public async removeProjectActiveExtension (projectId: number, projectExtensionId: number, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
     } = {headers: { } }) : Promise<RemoveProjectActiveExtensionResponse> {
-        const localVarPath = this.basePath + '/api/{projectId}/extensions/active/{extensionId}'
+        const localVarPath = this.basePath + '/api/{projectId}/extensions/active/{projectExtensionId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
-            .replace('{' + 'extensionId' + '}', encodeURIComponent(String(extensionId)));
+            .replace('{' + 'projectExtensionId' + '}', encodeURIComponent(String(projectExtensionId)));
         let queryParameters: Record<string, string> = {};
         let localVarHeaderParams: Record<string, string> = {
             'User-Agent': 'edgeimpulse-api nodejs',
@@ -5207,11 +5207,11 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling removeProjectActiveExtension.');
         }
 
-        // verify required parameter 'extensionId' is not null or undefined
+        // verify required parameter 'projectExtensionId' is not null or undefined
 
 
-        if (extensionId === null || extensionId === undefined) {
-            throw new Error('Required parameter extensionId was null or undefined when calling removeProjectActiveExtension.');
+        if (projectExtensionId === null || projectExtensionId === undefined) {
+            throw new Error('Required parameter projectExtensionId was null or undefined when calling removeProjectActiveExtension.');
         }
 
         localVarHeaderParams = {

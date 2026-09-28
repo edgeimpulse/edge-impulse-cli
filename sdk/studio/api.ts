@@ -179,6 +179,41 @@ export class EdgeImpulseApi {
             if (!opts.apiKey || typeof opts.apiKey !== 'string') {
                 throw new Error('Missing "auth.apiKey"');
             }
+
+            if (opts.apiKey === '__POSTMESSAGE__' && typeof window !== 'undefined') {
+                const expectedOrigin = new URL(this._opts.endpoint).origin;
+                opts.apiKey = await new Promise<string>((resolve, reject) => {
+                    const cleanup = () => {
+                        clearTimeout(timeout);
+                        window.removeEventListener('message', onMessage);
+                    };
+
+                    const timeout = setTimeout(() => {
+                        cleanup();
+                        reject('No "set_api_key" message received via postMessage within 10 seconds');
+                    }, 10000);
+
+                    const onMessage = (ev: MessageEvent) => {
+                        if (ev.source !== window.parent || ev.origin !== expectedOrigin) {
+                            return;
+                        }
+
+                        if (!ev.data || typeof ev.data !== 'object') {
+                            return;
+                        }
+
+                        const data = <{ type?: unknown, apiKey?: unknown }>ev.data;
+                        if (data.type === 'set_api_key' && typeof data.apiKey === 'string') {
+                            cleanup();
+                            resolve(data.apiKey);
+                        }
+                    };
+
+                    window.addEventListener('message', onMessage);
+                    window.parent.postMessage({ type: 'REQUEST_API_KEY' }, expectedOrigin);
+                });
+            }
+
             if (!opts.apiKey.startsWith('ei_')) {
                 throw new Error('"auth.apiKey" should start with "ei_"');
             }

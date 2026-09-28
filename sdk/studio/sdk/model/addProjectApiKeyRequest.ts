@@ -24,5 +24,5 @@ export type AddProjectApiKeyRequest = {
     /**
     * Optional: extension ID when this API key is created for a project extension.
     */
-    extensionId?: number;
+    projectExtensionId?: number;
 };

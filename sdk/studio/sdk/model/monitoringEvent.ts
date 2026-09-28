@@ -17,6 +17,10 @@ export type MonitoringEvent = {
     */
     payload: { [key: string]: object; };
     /**
+    * Structured context about the event.
+    */
+    context?: { [key: string]: object; };
+    /**
     * Processing status for this event.
     */
     status: MonitoringEventStatusEnum;

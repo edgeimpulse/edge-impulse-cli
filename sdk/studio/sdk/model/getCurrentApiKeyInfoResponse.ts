@@ -14,4 +14,8 @@ export type GetCurrentApiKeyInfoResponse = {
     apiKeyId: number;
     projectId: number;
     role: ProjectApiKeyRole;
+    /**
+    * The expiration date of the API key. Only present when the key has a TTL set.
+    */
+    expires?: Date;
 };

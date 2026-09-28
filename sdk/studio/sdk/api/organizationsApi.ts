@@ -291,7 +291,7 @@ export class OrganizationsApi {
 
 
     /**
-     * Add an API key.
+     * Add an API key. This API is only available through JWT token authentication.
      * @summary Add API key
      * @param organizationId Organization ID
      * @param addOrganizationApiKeyRequest 
@@ -1448,7 +1448,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes).
+     * Retrieve all API keys. This does **not** return the full API key, but only a portion (for security purposes). This API returns an empty array when not authenticating with JWT token authentication.
      * @summary Get API keys
      * @param organizationId Organization ID
      */
@@ -2198,7 +2198,7 @@ export class OrganizationsApi {
     }
 
     /**
-     * Revoke an API key.
+     * Revoke an API key. This API is only available through JWT token authentication.
      * @summary Revoke API key
      * @param organizationId Organization ID
      * @param apiKeyId API key ID

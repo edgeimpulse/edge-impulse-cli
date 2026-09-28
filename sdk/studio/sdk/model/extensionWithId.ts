@@ -7,7 +7,7 @@ import type { ExtensionVisibility } from './extensionVisibility';
 import type { ProjectApiKeyRole } from './projectApiKeyRole';
 import type { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
-export type ProjectExtension = {
+export type ExtensionWithId = {
     ownerOrganizationId: number;
     ownerOrganizationName: string;
     onlyAvailableInProjectId?: number;
@@ -35,12 +35,9 @@ export type ProjectExtension = {
     navbarIcon?: string;
     requiredApiKeyRole: ProjectApiKeyRole;
     authMethod: ExtensionAuthMethod;
-    badge: ProjectExtensionBadgeEnum;
-    extensionId: number;
-    projectExtensionId: number;
-    addedToProject: Date;
-    addedToProjectByUser?: CreatedUpdatedByUser;
+    badge: ExtensionWithIdBadgeEnum;
+    id: number;
 };
 
-export type ProjectExtensionBadgeEnum = 'official' | 'enterprise' | 'personal' | 'community';
-export const ProjectExtensionBadgeEnumValues: string[] = [ 'official', 'enterprise', 'personal', 'community' ];
+export type ExtensionWithIdBadgeEnum = 'official' | 'enterprise' | 'personal' | 'community';
+export const ExtensionWithIdBadgeEnumValues: string[] = [ 'official', 'enterprise', 'personal', 'community' ];

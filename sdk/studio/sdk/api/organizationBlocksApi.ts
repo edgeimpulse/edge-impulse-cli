@@ -31,6 +31,7 @@ import { AddOrganizationTransferLearningBlockRequest } from '../model/addOrganiz
 import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
 import { EntityCreatedResponse } from '../model/entityCreatedResponse';
 import { ExportBlockResponse } from '../model/exportBlockResponse';
+import { ExtensionAuthMethod } from '../model/extensionAuthMethod';
 import { ExtensionNavbarLocation } from '../model/extensionNavbarLocation';
 import { ExtensionVisibility } from '../model/extensionVisibility';
 import { GenericApiResponse } from '../model/genericApiResponse';
@@ -106,6 +107,7 @@ export type addOrganizationExtensionBlockFormParams = {
     publicProjectTierAvailability?: PublicProjectTierAvailability,
     indBlockNoLongerAvailable?: boolean,
     blockNoLongerAvailableReason?: string,
+    authMethod: ExtensionAuthMethod,
 };
 
 export type updateOrganizationDeployBlockFormParams = {
@@ -142,6 +144,7 @@ export type updateOrganizationExtensionBlockFormParams = {
     publicProjectTierAvailability?: PublicProjectTierAvailability,
     indBlockNoLongerAvailable?: boolean,
     blockNoLongerAvailableReason?: string,
+    authMethod?: ExtensionAuthMethod,
 };
 
 
@@ -569,6 +572,7 @@ export class OrganizationBlocksApi {
      * @param url URL loaded by the extension.
      * @param navbarLocation 
      * @param requiredApiKeyRole 
+     * @param authMethod 
      * @param onlyAvailableInProjectId Required if \\\&quot;visibility\\\&quot; is \\\&quot;project\\\&quot;. If set, this extension is scoped to this specific project.
      * @param repositoryUrl Optional source repository URL for the extension.
      * @param logo Optional logo image for the extension.
@@ -637,6 +641,13 @@ export class OrganizationBlocksApi {
         // verify required parameter 'requiredApiKeyRole' is not null or undefined
         if (params.requiredApiKeyRole === null || params.requiredApiKeyRole === undefined) {
             throw new Error('Required parameter params.requiredApiKeyRole was null or undefined when calling addOrganizationExtensionBlock.');
+        }
+
+
+
+        // verify required parameter 'authMethod' is not null or undefined
+        if (params.authMethod === null || params.authMethod === undefined) {
+            throw new Error('Required parameter params.authMethod was null or undefined when calling addOrganizationExtensionBlock.');
         }
 
 
@@ -717,6 +728,11 @@ export class OrganizationBlocksApi {
         if (params.blockNoLongerAvailableReason !== undefined) {
             if (params.blockNoLongerAvailableReason !== null && params.blockNoLongerAvailableReason !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'blockNoLongerAvailableReason', serializeFormDataValue(params.blockNoLongerAvailableReason, 'string'));
+            }
+        }
+        if (params.authMethod !== undefined) {
+            if (params.authMethod !== null && params.authMethod !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'authMethod', serializeFormDataValue(params.authMethod, 'ExtensionAuthMethod'));
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -3824,6 +3840,7 @@ export class OrganizationBlocksApi {
      * @param publicProjectTierAvailability 
      * @param indBlockNoLongerAvailable Whether this extension is no longer available.
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
+     * @param authMethod 
      */
     public async updateOrganizationExtensionBlock (organizationId: number, extensionId: number, params: updateOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -3937,6 +3954,11 @@ export class OrganizationBlocksApi {
         if (params.blockNoLongerAvailableReason !== undefined) {
             if (params.blockNoLongerAvailableReason !== null && params.blockNoLongerAvailableReason !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'blockNoLongerAvailableReason', serializeFormDataValue(params.blockNoLongerAvailableReason, 'string'));
+            }
+        }
+        if (params.authMethod !== undefined) {
+            if (params.authMethod !== null && params.authMethod !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'authMethod', serializeFormDataValue(params.authMethod, 'ExtensionAuthMethod'));
             }
         }
         const queryString = Object.entries(queryParameters)

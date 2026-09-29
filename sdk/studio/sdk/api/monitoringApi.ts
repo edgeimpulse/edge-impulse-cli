@@ -31,6 +31,7 @@ import { CreateWebhookDestinationRequest } from '../model/createWebhookDestinati
 import { CreateWebhookDestinationResponse } from '../model/createWebhookDestinationResponse';
 import { GenericApiResponse } from '../model/genericApiResponse';
 import { GetEventSubscriptionResponse } from '../model/getEventSubscriptionResponse';
+import { GetMonitoringEventDetailsResponse } from '../model/getMonitoringEventDetailsResponse';
 import { GetWebhookDestinationResponse } from '../model/getWebhookDestinationResponse';
 import { ListEventSubscriptionsResponse } from '../model/listEventSubscriptionsResponse';
 import { ListMonitoringEventsResponse } from '../model/listMonitoringEventsResponse';
@@ -638,6 +639,105 @@ export class MonitoringApi {
         const resp = this.handleResponse(
             response,
             'GetEventSubscriptionResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Get details about a monitoring event, including evaluation context and contributing inference summaries.
+     * @summary Get monitoring event details
+     * @param projectId Project ID
+     * @param monitoringEventId Public monitoring event ID
+     */
+    public async getMonitoringEventDetails (projectId: number, monitoringEventId: string, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetMonitoringEventDetailsResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/monitoring/events/{monitoringEventId}/details'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'monitoringEventId' + '}', encodeURIComponent(String(monitoringEventId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling getMonitoringEventDetails.');
+        }
+
+        // verify required parameter 'monitoringEventId' is not null or undefined
+
+
+        if (monitoringEventId === null || monitoringEventId === undefined) {
+            throw new Error('Required parameter monitoringEventId was null or undefined when calling getMonitoringEventDetails.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GetMonitoringEventDetailsResponse'
         );
         if (options?.responseHeadersCallback) {
             const headerCb = options.responseHeadersCallback;

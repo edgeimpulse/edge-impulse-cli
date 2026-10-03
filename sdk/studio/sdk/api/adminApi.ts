@@ -2387,7 +2387,7 @@ export class AdminApi {
     public async adminDeleteProject (projectId: number, queryParams?: adminDeleteProjectQueryParams, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
-    } = {headers: { } }) : Promise<GenericApiResponse> {
+    } = {headers: { } }) : Promise<StartJobResponse> {
         const localVarPath = this.basePath + '/api/admin/projects/{projectId}'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -2460,7 +2460,7 @@ export class AdminApi {
         const response = await fetch(url, requestOptions);
         const resp = this.handleResponse(
             response,
-            'GenericApiResponse'
+            'StartJobResponse'
         );
         if (options?.responseHeadersCallback) {
             const headerCb = options.responseHeadersCallback;

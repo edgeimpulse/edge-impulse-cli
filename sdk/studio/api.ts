@@ -18,14 +18,13 @@ import {
     AdminApi,
     PerformanceCalibrationApi,
     MetricsApi,
-    GetJobResponse,
-    SocketTokenResponse,
     OrganizationDataCampaignsApi,
     PostProcessingApi,
     DatasetVersionsApi,
     VlmApi,
     IntegrationsApi,
 } from './sdk/api';
+import * as models from './sdk/model/models';
 import WebSocket from 'ws';
 
 const JOB_CONNECTION_TIMEOUT = 60000;
@@ -368,6 +367,9 @@ export class EdgeImpulseApi {
         type: 'organization',
         organizationId: number,
         jobId: number,
+    } | {
+        type: 'standalone',
+        jobId: number,
     }, dataCallback?: (ev: string) => void) {
         if (typeof opts !== 'object') {
             throw new Error('Missing options object');
@@ -378,6 +380,9 @@ export class EdgeImpulseApi {
         }
         else if (opts.type === 'organization') {
             return this.runOrgJobUntilCompletion(opts, dataCallback);
+        }
+        else if (opts.type === 'standalone') {
+            return this.runStandaloneJobUntilCompletion(opts, dataCallback);
         }
         else {
             throw new Error('options.type should be either "project" or "organization"');
@@ -404,14 +409,17 @@ export class EdgeImpulseApi {
         return this.waitForJobImpl(
             jobId,
             dataCallback,
-            () => this.getProjectWebsocket(projectId),
+            {
+                type: 'websocket',
+                getWebsocketFn: () => this.getProjectWebsocket(projectId),
+            },
             async () => {
                 const d = await this.jobs.getJobStatus(projectId, jobId);
                 if (this._opts.debug) {
                     console.log(DEBUG_PREFIX, 'runJobUntilCompletion', 'projectId', projectId, 'jobId', jobId,
                         'status', d);
                 }
-                return d;
+                return d.job;
             }
         );
     }
@@ -446,7 +454,10 @@ export class EdgeImpulseApi {
         return this.waitForJobImpl(
             jobId,
             dataCallback,
-            () => this.getOrgWebsocket(organizationId),
+            {
+                type: 'websocket',
+                getWebsocketFn: () => this.getOrgWebsocket(organizationId),
+            },
             async () => {
                 const d = await this.organizationJobs.getOrganizationJobStatus(organizationId, jobId);
                 if (this._opts.debug) {
@@ -454,7 +465,41 @@ export class EdgeImpulseApi {
                         'jobId', jobId,
                         'status', d);
                 }
-                return d;
+                return d.job;
+            }
+        );
+    }
+
+    private async runStandaloneJobUntilCompletion(opts: {
+        jobId: number,
+    }, dataCallback?: (ev: string) => void) {
+
+        if (typeof opts !== 'object') {
+            throw new Error('Missing options object');
+        }
+        if (typeof opts.jobId !== 'number') {
+            throw new Error('Missing "jobId"');
+        }
+
+        const { jobId } = opts;
+
+        return this.waitForJobImpl(
+            jobId,
+            dataCallback,
+            {
+                type: 'poll',
+                getDataFn: () => this.admin.adminGetJobsLogs(jobId, { offset: 0, limit: 1000, parentType: 'standalone' }),
+            },
+            async () => {
+                const d = await this.admin.adminGetJobDetails(jobId, {
+                    parentType: 'standalone',
+                });
+                if (this._opts.debug) {
+                    console.log(DEBUG_PREFIX, 'runJobUntilCompletion',
+                        'jobId', jobId,
+                        'status', d);
+                }
+                return { finishedSuccessful: d.jobs && d.jobs.length > 0 ? d.jobs[0].finishedSuccessful : undefined };
             }
         );
     }
@@ -470,18 +515,26 @@ export class EdgeImpulseApi {
 
     private async waitForJobImpl(jobId: number,
                                  dataCallback: ((ev: string) => void) | undefined,
-                                 getWebsocketFn: () => Promise<WebSocket>,
-                                 getJobStatusFn: () => Promise<GetJobResponse>) {
+                                 dataMethod: {
+                                    type: 'websocket',
+                                    getWebsocketFn: () => Promise<WebSocket>,
+                                 } | {
+                                    type: 'poll',
+                                    getDataFn: () => Promise<models.JobLogsResponse>,
+                                 },
+                                 getJobStatusFn: () => Promise<{ finishedSuccessful?: boolean | undefined }>) {
         let terminated = false;
 
         const connectToSocket = async () => {
+            if (dataMethod.type !== 'websocket') return;
+
             let socket!: WebSocket;
 
             // Get a websocket (max 60 sec timeout)
             let getWebsocketTimeout = Date.now() + JOB_CONNECTION_TIMEOUT;
             while (1) {
                 try {
-                    socket = await getWebsocketFn();
+                    socket = await dataMethod.getWebsocketFn();
                     if (dataCallback) {
                         dataCallback('Connected to job\n');
                     }
@@ -553,49 +606,108 @@ export class EdgeImpulseApi {
 
         let s = await connectToSocket();
 
-        let lastJobStatusReqSucceeded = Date.now();
+        let pollIv: NodeJS.Timeout | undefined;
 
-        while (1) {
-            await this.sleep(5000);
+        try {
+            if (!s) {
+                // poll instead
+                let lastMsgReceived = 0;
+                const fetchNewData = async () => {
+                    try {
+                        if (dataMethod.type !== 'poll') return;
 
-            let jobHasFailed = false;
+                        const data = await dataMethod.getDataFn();
+                        let logs = data.logs.filter(x => new Date(x.created) > new Date(lastMsgReceived));
+                        if (logs.length > 0) {
+                            lastMsgReceived = Math.max(...logs.map(l => +l.created));
+                        }
 
-            try {
-                const d = await getJobStatusFn();
-                lastJobStatusReqSucceeded = Date.now();
+                        logs = logs.sort((a, b) => +a.created - +b.created);
+                        for (const log of logs) {
+                            if (dataCallback) {
+                                dataCallback(log.data);
+                            }
+                        }
+                    }
+                    catch (ex2) {
+                        if (this._opts.debug) {
+                            const ex = <Error>ex2;
+                            console.log(DEBUG_PREFIX, 'getDataFn() failed', 'jobId', jobId, 'error:', ex.message || ex.toString());
+                        }
+                    }
+                    finally {
+                        // next tick...
+                        pollIv = setTimeout(fetchNewData, 2000);
+                    }
+                };
+                pollIv = setTimeout(fetchNewData, 2000);
+            }
 
-                let job = d.job || { finishedSuccessful: undefined };
-                if (job.finishedSuccessful === true) {
-                    break;
+            let lastJobStatusReqSucceeded = Date.now();
+
+            while (1) {
+                await this.sleep(5000);
+
+                let jobHasFailed = false;
+
+                try {
+                    const job = await getJobStatusFn();
+                    lastJobStatusReqSucceeded = Date.now();
+
+                    if (job.finishedSuccessful === true) {
+                        break;
+                    }
+                    else if (job.finishedSuccessful === false) {
+                        jobHasFailed = true;
+                    }
                 }
-                else if (job.finishedSuccessful === false) {
-                    jobHasFailed = true;
+                catch (ex2) {
+                    let ex = <Error>ex2;
+
+                    if (this._opts.debug) {
+                        console.log(DEBUG_PREFIX, 'Failed to check job status', ex.message || ex.toString());
+                    }
+
+                    if (Date.now() - lastJobStatusReqSucceeded > JOB_CONNECTION_TIMEOUT) {
+                        throw new Error('Failed to check job status for 60 seconds: ' +
+                            (ex.message || ex.toString()));
+                    }
+                }
+
+                if (jobHasFailed) {
+                    throw new Error('Job failed');
                 }
             }
-            catch (ex2) {
-                let ex = <Error>ex2;
 
-                if (this._opts.debug) {
-                    console.log(DEBUG_PREFIX, 'Failed to check job status', ex.message || ex.toString());
-                }
+            terminated = true;
 
-                if (Date.now() - lastJobStatusReqSucceeded > JOB_CONNECTION_TIMEOUT) {
-                    throw new Error('Failed to check job status for 60 seconds: ' +
-                        (ex.message || ex.toString()));
-                }
-            }
-
-            if (jobHasFailed) {
-                throw new Error('Job failed');
+            if (s) {
+                s.terminate();
             }
         }
-
-        terminated = true;
-
-        s.terminate();
+        finally {
+            if (pollIv) {
+                // wait for next tick (so we are sure we have the data?), or until 3 sec.
+                await new Promise<void>(async (resolve, reject) => {
+                    const start = Date.now();
+                    const pollIvAtStart = pollIv;
+                    while (1) {
+                        if (pollIv !== pollIvAtStart) {
+                            break;
+                        }
+                        if (Date.now() > start + 3000) {
+                            break;
+                        }
+                        await new Promise<void>(resolve2 => setTimeout(resolve2, 100));
+                    }
+                    resolve();
+                });
+                clearTimeout(pollIv);
+            }
+        }
     }
 
-    private async getWebsocketImpl(tokenRes: SocketTokenResponse) {
+    private async getWebsocketImpl(tokenRes: models.SocketTokenResponse) {
         const wsHost = this._opts.endpoint.replace('http', 'ws');
 
         let tokenData = {

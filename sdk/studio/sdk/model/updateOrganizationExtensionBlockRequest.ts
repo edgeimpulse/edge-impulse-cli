@@ -48,4 +48,8 @@ export type UpdateOrganizationExtensionBlockRequest = {
     */
     blockNoLongerAvailableReason?: string;
     authMethod?: ExtensionAuthMethod;
+    /**
+    * Whether only organization administrators may install this extension on projects.
+    */
+    requireAdminInstall?: boolean;
 };

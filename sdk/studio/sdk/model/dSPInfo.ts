@@ -9,6 +9,10 @@ export type DSPInfo = {
     windowLength: number;
     type: string;
     classes: string[];
+    /**
+    * Per-key class info for DSP blocks operating on label map datasets
+    */
+    classesPerKey?: { [key: string]: string[]; };
     features: {
         /**
         * Whether this block has generated features

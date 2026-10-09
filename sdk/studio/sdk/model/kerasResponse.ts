@@ -114,6 +114,10 @@ export type KerasResponse = {
     * List of configurable thresholds for this block.
     */
     thresholds: BlockThreshold[];
+    /**
+    * Whether this model is configured for multi-head outputs.
+    */
+    isMultiHead?: boolean;
 };
 
 export type KerasResponseModeEnum = 'visual' | 'expert';

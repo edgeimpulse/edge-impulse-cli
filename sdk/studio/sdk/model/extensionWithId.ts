@@ -35,8 +35,16 @@ export type ExtensionWithId = {
     navbarIcon?: string;
     requiredApiKeyRole: ProjectApiKeyRole;
     authMethod: ExtensionAuthMethod;
+    /**
+    * Whether only organization administrators may install this extension on projects.
+    */
+    requireAdminInstall?: boolean;
     badge: ExtensionWithIdBadgeEnum;
     id: number;
+    /**
+    * If set, the extension is shown but cannot be installed in this project.
+    */
+    installationDisabledReason?: string;
 };
 
 export type ExtensionWithIdBadgeEnum = 'official' | 'enterprise' | 'personal' | 'community';

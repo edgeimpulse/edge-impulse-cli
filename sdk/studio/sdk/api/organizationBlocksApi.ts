@@ -108,6 +108,7 @@ export type addOrganizationExtensionBlockFormParams = {
     indBlockNoLongerAvailable?: boolean,
     blockNoLongerAvailableReason?: string,
     authMethod: ExtensionAuthMethod,
+    requireAdminInstall?: boolean,
 };
 
 export type updateOrganizationDeployBlockFormParams = {
@@ -145,6 +146,7 @@ export type updateOrganizationExtensionBlockFormParams = {
     indBlockNoLongerAvailable?: boolean,
     blockNoLongerAvailableReason?: string,
     authMethod?: ExtensionAuthMethod,
+    requireAdminInstall?: boolean,
 };
 
 
@@ -581,6 +583,7 @@ export class OrganizationBlocksApi {
      * @param publicProjectTierAvailability 
      * @param indBlockNoLongerAvailable Whether this extension is no longer available.
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
+     * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
      */
     public async addOrganizationExtensionBlock (organizationId: number, params: addOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -733,6 +736,11 @@ export class OrganizationBlocksApi {
         if (params.authMethod !== undefined) {
             if (params.authMethod !== null && params.authMethod !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'authMethod', serializeFormDataValue(params.authMethod, 'ExtensionAuthMethod'));
+            }
+        }
+        if (params.requireAdminInstall !== undefined) {
+            if (params.requireAdminInstall !== null && params.requireAdminInstall !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'requireAdminInstall', serializeFormDataValue(params.requireAdminInstall, 'boolean'));
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -3841,6 +3849,7 @@ export class OrganizationBlocksApi {
      * @param indBlockNoLongerAvailable Whether this extension is no longer available.
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
      * @param authMethod 
+     * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
      */
     public async updateOrganizationExtensionBlock (organizationId: number, extensionId: number, params: updateOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -3959,6 +3968,11 @@ export class OrganizationBlocksApi {
         if (params.authMethod !== undefined) {
             if (params.authMethod !== null && params.authMethod !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'authMethod', serializeFormDataValue(params.authMethod, 'ExtensionAuthMethod'));
+            }
+        }
+        if (params.requireAdminInstall !== undefined) {
+            if (params.requireAdminInstall !== null && params.requireAdminInstall !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'requireAdminInstall', serializeFormDataValue(params.requireAdminInstall, 'boolean'));
             }
         }
         const queryString = Object.entries(queryParameters)

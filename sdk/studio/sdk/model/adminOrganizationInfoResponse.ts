@@ -2,6 +2,7 @@
 
 import type { DailyMetricsRecord } from './dailyMetricsRecord';
 import type { EntitlementLimits } from './entitlementLimits';
+import type { OrganizationExtensionSettings } from './organizationExtensionSettings';
 
 export type AdminOrganizationInfoResponse = {
     /**
@@ -39,4 +40,9 @@ export type AdminOrganizationInfoResponse = {
     * Metrics for the last 365 days
     */
     dailyMetrics?: DailyMetricsRecord[] | null;
+    extensionBlocks?: {
+        id: number;
+        name: string;
+    }[];
+    extensionSettings?: OrganizationExtensionSettings;
 };

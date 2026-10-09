@@ -5,6 +5,10 @@ export type DependencyData = {
     * Set of all labels present in data feeding into this model
     */
     classes: string[];
+    /**
+    * Per-key class info for DSP blocks operating on label map datasets
+    */
+    classesPerKey?: { [key: string]: string[]; };
     blockNames: string[];
     featureCount: number;
     sampleCount: number;

@@ -64,6 +64,7 @@ import { AdminToggleDataMigrationRequest } from '../model/adminToggleDataMigrati
 import { AdminUpdateConfigRequest } from '../model/adminUpdateConfigRequest';
 import { AdminUpdateOauthClientRequest } from '../model/adminUpdateOauthClientRequest';
 import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
+import { AdminUpdateOrganizationExtensionSettingsRequest } from '../model/adminUpdateOrganizationExtensionSettingsRequest';
 import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
 import { AdminUpdateTrialRequest } from '../model/adminUpdateTrialRequest';
 import { AdminUpdateUserPermissionsRequest } from '../model/adminUpdateUserPermissionsRequest';
@@ -83,6 +84,7 @@ import { JobDetailsResponse } from '../model/jobDetailsResponse';
 import { JobLogsResponse } from '../model/jobLogsResponse';
 import { JobMetricsResponse } from '../model/jobMetricsResponse';
 import { JobParentTypeEnum } from '../model/jobParentTypeEnum';
+import { ListFirstPartyExtensionsResponse } from '../model/listFirstPartyExtensionsResponse';
 import { ListJobsResponse } from '../model/listJobsResponse';
 import { ListOrganizationDataResponse } from '../model/listOrganizationDataResponse';
 import { ListPortalFilesInFolderResponse } from '../model/listPortalFilesInFolderResponse';
@@ -6961,6 +6963,87 @@ export class AdminApi {
     }
 
     /**
+     * Admin-only API to retrieve Edge Impulse first-party extensions.
+     * @summary Get first-party extensions
+     */
+    public async adminListFirstPartyExtensions (options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListFirstPartyExtensionsResponse> {
+        const localVarPath = this.basePath + '/api/admin/first-party-extensions';
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'ListFirstPartyExtensionsResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
      * Admin-only API to list all data items from an organization. The response is paginated and returns up to 1000 samples per request. To retrieve additional pages: 1. Use the `limit` parameter to specify how many samples to return (max 1000) 2. Use the `offset` parameter to skip a number of samples 3. Make subsequent requests with increasing offset values to retrieve all samples  For example: - First request: limit=1000, offset=0 (samples 1-1000) - Second request: limit=1000, offset=1000 (samples 1001-2000) - And so on 
      * @summary List organization data
      * @param organizationId Organization ID
@@ -9229,6 +9312,106 @@ export class AdminApi {
         };
 
         localVarRequestOptions.body = JSON.stringify(adminUpdateOrganizationDataExportRequest);
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Updates extension settings for an organization.
+     * @summary Update organization extension settings
+     * @param organizationId Organization ID
+     * @param adminUpdateOrganizationExtensionSettingsRequest 
+     */
+    public async adminUpdateOrganizationExtensionSettings (organizationId: number, adminUpdateOrganizationExtensionSettingsRequest: AdminUpdateOrganizationExtensionSettingsRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/admin/organizations/{organizationId}/extension-settings'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling adminUpdateOrganizationExtensionSettings.');
+        }
+
+        // verify required parameter 'adminUpdateOrganizationExtensionSettingsRequest' is not null or undefined
+
+
+        if (adminUpdateOrganizationExtensionSettingsRequest === null || adminUpdateOrganizationExtensionSettingsRequest === undefined) {
+            throw new Error('Required parameter adminUpdateOrganizationExtensionSettingsRequest was null or undefined when calling adminUpdateOrganizationExtensionSettings.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(adminUpdateOrganizationExtensionSettingsRequest);
 
 
         let requestOptions = localVarRequestOptions;

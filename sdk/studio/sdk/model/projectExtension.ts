@@ -35,6 +35,10 @@ export type ProjectExtension = {
     navbarIcon?: string;
     requiredApiKeyRole: ProjectApiKeyRole;
     authMethod: ExtensionAuthMethod;
+    /**
+    * Whether only organization administrators may install this extension on projects.
+    */
+    requireAdminInstall?: boolean;
     badge: ProjectExtensionBadgeEnum;
     extensionId: number;
     projectExtensionId: number;

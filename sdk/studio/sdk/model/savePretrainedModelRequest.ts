@@ -22,4 +22,10 @@ export type SavePretrainedModelRequest = {
         | DeployPretrainedModelModelFreeform
         | DeployPretrainedModelModelAnomaly
         | DeployPretrainedModelModelVisualAnomaly;
+    /**
+    * EXPERIMENTAL. Test your pretrained model against an immutable dataset snapshot when supplied, or omit to use your
+    * current mutable dataset instead. This property is supported only when the dataset versioning experiment is enabled
+    * and may change in the future.
+    */
+    datasetVersionId?: number;
 };

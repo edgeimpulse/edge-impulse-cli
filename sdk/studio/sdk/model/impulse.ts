@@ -32,4 +32,10 @@ export type Impulse = {
     */
     postProcessingBlocks: ImpulsePostProcessingBlock[];
     type: ImpulseType;
+    /**
+    * EXPERIMENTAL. The dataset snapshot used in the impulse. Feature generation, model training, and deployment from
+    * this impulse will always use that snapshot, ensuring reproducible results. This property is experimental, is only
+    * supported when the dataset versioning experiment is enabled, and may change in the future.
+    */
+    datasetVersionId?: number;
 };

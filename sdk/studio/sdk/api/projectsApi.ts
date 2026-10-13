@@ -120,16 +120,23 @@ type getModelVariantsQueryParams = {
 type getProjectDataAxesSummaryQueryParams = {
     includeDisabled?: boolean,
     includeNotProcessed?: boolean,
+    datasetVersionId?: number,
 };
 
 type getProjectInfoQueryParams = {
     impulseId?: number,
     truncateLabels?: boolean,
+    datasetVersionId?: number,
+};
+
+type getProjectRecommendedDataIntervalQueryParams = {
+    datasetVersionId?: number,
 };
 
 type getProjectTrainingDataSummaryQueryParams = {
     includeDisabled?: boolean,
     includeNotProcessed?: boolean,
+    datasetVersionId?: number,
     truncateLabels?: boolean,
 };
 
@@ -2723,6 +2730,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getProjectDataAxesSummary (projectId: number, queryParams?: getProjectDataAxesSummaryQueryParams, options: {
         headers: { [name: string]: string },
@@ -2757,6 +2765,9 @@ export class ProjectsApi {
         }
         if (typeof queryParams?.includeNotProcessed !== 'undefined' && queryParams?.includeNotProcessed !== null) {
             queryParameters['includeNotProcessed'] = <string><any>queryParams.includeNotProcessed;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -2821,6 +2832,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateLabels If true, only a slice of labels will be returned.
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getProjectInfo (projectId: number, queryParams?: getProjectInfoQueryParams, options: {
         headers: { [name: string]: string },
@@ -2855,6 +2867,9 @@ export class ProjectsApi {
         }
         if (typeof queryParams?.truncateLabels !== 'undefined' && queryParams?.truncateLabels !== null) {
             queryParameters['truncateLabels'] = <string><any>queryParams.truncateLabels;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -3097,8 +3112,9 @@ export class ProjectsApi {
      * Get the interval of the training data; if multiple intervals are present, the interval of the longest data item is returned. This only takes data in your _training_ set into account. 
      * @summary Get the interval (in ms) of the training data
      * @param projectId Project ID
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
-    public async getProjectRecommendedDataInterval (projectId: number, options: {
+    public async getProjectRecommendedDataInterval (projectId: number, queryParams?: getProjectRecommendedDataIntervalQueryParams, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
     } = {headers: { } }) : Promise<ProjectDataIntervalResponse> {
@@ -3126,6 +3142,9 @@ export class ProjectsApi {
             throw new Error('Required parameter projectId was null or undefined when calling getProjectRecommendedDataInterval.');
         }
 
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
+        }
         localVarHeaderParams = {
             ...localVarHeaderParams,
             ...options.headers,
@@ -3189,6 +3208,7 @@ export class ProjectsApi {
      * @param projectId Project ID
      * @param includeDisabled Whether to include disabled samples. Defaults to true
      * @param includeNotProcessed Whether to include non-processed samples. Defaults to true
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      * @param truncateLabels If true, only a slice of labels will be returned.
      */
     public async getProjectTrainingDataSummary (projectId: number, queryParams?: getProjectTrainingDataSummaryQueryParams, options: {
@@ -3224,6 +3244,9 @@ export class ProjectsApi {
         }
         if (typeof queryParams?.includeNotProcessed !== 'undefined' && queryParams?.includeNotProcessed !== null) {
             queryParameters['includeNotProcessed'] = <string><any>queryParams.includeNotProcessed;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         if (typeof queryParams?.truncateLabels !== 'undefined' && queryParams?.truncateLabels !== null) {
             queryParameters['truncateLabels'] = <string><any>queryParams.truncateLabels;

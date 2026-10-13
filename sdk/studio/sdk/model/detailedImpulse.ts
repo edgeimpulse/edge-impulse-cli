@@ -6,6 +6,7 @@ import type { AnomalyModelMetadata } from './anomalyModelMetadata';
 import type { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import type { DSPConfig } from './dSPConfig';
 import type { DSPMetadata } from './dSPMetadata';
+import type { DatasetVersion } from './datasetVersion';
 import type { DetailedImpulseMetric } from './detailedImpulseMetric';
 import type { Impulse } from './impulse';
 import type { KerasConfig } from './kerasConfig';
@@ -60,4 +61,5 @@ export type DetailedImpulse = {
     */
     createdFromTunerTrialId?: number;
     createdByUser?: CreatedUpdatedByUser;
+    datasetVersion?: DatasetVersion;
 };

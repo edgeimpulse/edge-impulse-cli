@@ -347,6 +347,7 @@ type countSamplesQueryParams = {
     metadata?: string,
     minDate?: Date,
     maxDate?: Date,
+    datasetVersionId?: number,
 };
 
 type cropSampleQueryParams = {
@@ -393,6 +394,7 @@ type getSampleQueryParams = {
     impulseId?: number,
     proposedActionsJobId?: number,
     truncateStructuredLabels?: boolean,
+    datasetVersionId?: number,
 };
 
 type getSampleAsAudioQueryParams = {
@@ -400,6 +402,7 @@ type getSampleAsAudioQueryParams = {
     sliceStart?: number,
     sliceEnd?: number,
     cacheKey?: string,
+    datasetVersionId?: number,
 };
 
 type getSampleAsImageQueryParams = {
@@ -407,6 +410,11 @@ type getSampleAsImageQueryParams = {
     cacheKey?: string,
     impulseId?: number,
     datastreamIndex?: number,
+    datasetVersionId?: number,
+};
+
+type getSampleAsRawQueryParams = {
+    datasetVersionId?: number,
 };
 
 type getSampleAsVideoQueryParams = {
@@ -414,6 +422,7 @@ type getSampleAsVideoQueryParams = {
     cacheKey?: string,
     impulseId?: number,
     datastreamIndex?: number,
+    datasetVersionId?: number,
 };
 
 type getSampleMetadataQueryParams = {
@@ -424,6 +433,7 @@ type getSampleMetadataFilterOptionsQueryParams = {
     category: RawDataFilterCategory,
     limit?: number,
     offset?: number,
+    datasetVersionId?: number,
 };
 
 type getSampleSliceQueryParams = {
@@ -432,6 +442,7 @@ type getSampleSliceQueryParams = {
     impulseId?: number,
     datastreamIndex?: number,
     truncateStructuredLabels?: boolean,
+    datasetVersionId?: number,
 };
 
 type getUncroppedDownsampledSampleQueryParams = {
@@ -441,6 +452,7 @@ type getUncroppedDownsampledSampleQueryParams = {
     impulseId?: number,
     datastreamIndex?: number,
     truncateStructuredLabels?: boolean,
+    datasetVersionId?: number,
 };
 
 type listSamplesQueryParams = {
@@ -468,6 +480,7 @@ type listSamplesQueryParams = {
     metadata?: string,
     minDate?: Date,
     maxDate?: Date,
+    datasetVersionId?: number,
 };
 
 export type uploadDataExplorerScreenshotFormParams = {
@@ -2697,6 +2710,7 @@ export class RawDataApi {
      * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async countSamples (projectId: number, queryParams: countSamplesQueryParams, options: {
         headers: { [name: string]: string },
@@ -2786,6 +2800,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.maxDate !== 'undefined' && queryParams?.maxDate !== null) {
             queryParameters['maxDate'] = queryParams.maxDate.toISOString();
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -4853,7 +4870,7 @@ export class RawDataApi {
      * Get the raw data metadata for this project
      * @summary Get project dataset metadata
      * @param projectId Project ID
-     * @param datasetVersionId Dataset version ID. If not set, the current dataset version is used
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      * @param truncateLabels If true, only a slice of labels will be returned.
      * @param includeDisabled Whether to include enabled-only samples, or both enabled and disabled samples (defaults to both).
      */
@@ -4961,6 +4978,7 @@ export class RawDataApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param proposedActionsJobId Pass this parameter when querying samples from inside an AI Action job. If you pass this parameter in a multi-stage AI Action, previous proposed changes (from an earlier step) will be applied to the returned dataset.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSample (projectId: number, sampleId: number, queryParams?: getSampleQueryParams, options: {
         headers: { [name: string]: string },
@@ -5012,6 +5030,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.truncateStructuredLabels !== 'undefined' && queryParams?.truncateStructuredLabels !== null) {
             queryParameters['truncateStructuredLabels'] = <string><any>queryParams.truncateStructuredLabels;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5079,6 +5100,7 @@ export class RawDataApi {
      * @param sliceStart Begin index of the slice. If not given, the whole sample is used.
      * @param sliceEnd End index of the slice. If not given, the whole sample is used.
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSampleAsAudio (projectId: number, sampleId: number, queryParams: getSampleAsAudioQueryParams, options: {
         headers: { [name: string]: string },
@@ -5134,6 +5156,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.cacheKey !== 'undefined' && queryParams?.cacheKey !== null) {
             queryParameters['cacheKey'] = <string><any>queryParams.cacheKey;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5201,6 +5226,7 @@ export class RawDataApi {
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSampleAsImage (projectId: number, sampleId: number, queryParams?: getSampleAsImageQueryParams, options: {
         headers: { [name: string]: string },
@@ -5249,6 +5275,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.datastreamIndex !== 'undefined' && queryParams?.datastreamIndex !== null) {
             queryParameters['datastreamIndex'] = <string><any>queryParams.datastreamIndex;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5312,8 +5341,9 @@ export class RawDataApi {
      * @summary Download file
      * @param projectId Project ID
      * @param sampleId Sample ID
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
-    public async getSampleAsRaw (projectId: number, sampleId: number, options: {
+    public async getSampleAsRaw (projectId: number, sampleId: number, queryParams?: getSampleAsRawQueryParams, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
     } = {headers: { } }) : Promise<Buffer> {
@@ -5349,6 +5379,9 @@ export class RawDataApi {
             throw new Error('Required parameter sampleId was null or undefined when calling getSampleAsRaw.');
         }
 
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
+        }
         localVarHeaderParams = {
             ...localVarHeaderParams,
             ...options.headers,
@@ -5415,6 +5448,7 @@ export class RawDataApi {
      * @param cacheKey If set, then a long cache header is sent. If this is omitted then a no-cache header is sent. You can use this if you f.e. know the last modified date of a sample. Stick the last modified date in the cache key, so the sample can be stored in browser cache (and will automatically be invalidated if the modified date changes).
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSampleAsVideo (projectId: number, sampleId: number, queryParams?: getSampleAsVideoQueryParams, options: {
         headers: { [name: string]: string },
@@ -5463,6 +5497,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.datastreamIndex !== 'undefined' && queryParams?.datastreamIndex !== null) {
             queryParameters['datastreamIndex'] = <string><any>queryParams.datastreamIndex;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5629,6 +5666,7 @@ export class RawDataApi {
      * @param category Which of the three acquisition categories to retrieve data from
      * @param limit Maximum number of results
      * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSampleMetadataFilterOptions (projectId: number, queryParams: getSampleMetadataFilterOptionsQueryParams, options: {
         headers: { [name: string]: string },
@@ -5673,6 +5711,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
             queryParameters['offset'] = <string><any>queryParams.offset;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5741,6 +5782,7 @@ export class RawDataApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getSampleSlice (projectId: number, sampleId: number, queryParams: getSampleSliceQueryParams, options: {
         headers: { [name: string]: string },
@@ -5799,6 +5841,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.truncateStructuredLabels !== 'undefined' && queryParams?.truncateStructuredLabels !== null) {
             queryParameters['truncateStructuredLabels'] = <string><any>queryParams.truncateStructuredLabels;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -5958,6 +6003,7 @@ export class RawDataApi {
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param datastreamIndex Datastream index (defaults to 0)
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async getUncroppedDownsampledSample (projectId: number, sampleId: number, queryParams?: getUncroppedDownsampledSampleQueryParams, options: {
         headers: { [name: string]: string },
@@ -6012,6 +6058,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.truncateStructuredLabels !== 'undefined' && queryParams?.truncateStructuredLabels !== null) {
             queryParameters['truncateStructuredLabels'] = <string><any>queryParams.truncateStructuredLabels;
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -6368,6 +6417,7 @@ export class RawDataApi {
      * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
+     * @param datasetVersionId Dataset version ID. If not set, the current mutable dataset is used
      */
     public async listSamples (projectId: number, queryParams: listSamplesQueryParams, options: {
         headers: { [name: string]: string },
@@ -6475,6 +6525,9 @@ export class RawDataApi {
         }
         if (typeof queryParams?.maxDate !== 'undefined' && queryParams?.maxDate !== null) {
             queryParameters['maxDate'] = queryParams.maxDate.toISOString();
+        }
+        if (typeof queryParams?.datasetVersionId !== 'undefined' && queryParams?.datasetVersionId !== null) {
+            queryParameters['datasetVersionId'] = <string><any>queryParams.datasetVersionId;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

@@ -28,4 +28,12 @@ export type CreateImpulseRequest = {
     */
     postProcessingBlocks?: ImpulsePostProcessingBlock[];
     type?: ImpulseType;
+    /**
+    * EXPERIMENTAL. Lock an impulse to an immutable snapshot of a dataset. Feature generation, model training, and
+    * deployment from this impulse will always use that snapshot, ensuring reproducible results. If omitted, your
+    * current mutable dataset is used instead which doesn't provide the same reproducibility guarantees. This property
+    * is experimental, is only supported when the dataset versioning experiment is enabled, and may change in the
+    * future.
+    */
+    datasetVersionId?: number;
 };

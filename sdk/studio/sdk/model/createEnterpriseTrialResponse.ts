@@ -20,5 +20,5 @@ export type CreateEnterpriseTrialResponse = {
     /**
     * URL to redirect the user to in order to access the enterprise trial.
     */
-    redirectUrl?: string;
+    redirectUrl: string;
 };

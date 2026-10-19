@@ -39,6 +39,10 @@ export type Extension = {
     * Whether only organization administrators may install this extension on projects.
     */
     requireAdminInstall?: boolean;
+    /**
+    * Whether to hide the Studio side menu while this extension is open.
+    */
+    hideSideMenu?: boolean;
     badge: ExtensionBadgeEnum;
 };
 

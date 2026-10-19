@@ -1,4 +1,4 @@
-import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as UndiciResponse } from 'undici-types';
+import type { FormData as UndiciFormData, Response as UndiciResponse } from 'undici-types';
 
 export * from './aIAction';
 export * from './aIActionLastPreviewStateProposedChanges';
@@ -1026,7 +1026,8 @@ export async function parseResponse(res: Response | UndiciResponse): Promise<any
     if (ct.includes('application/json')) return res.json();
 
     if (/^(image|video|audio)\/|application\/(octet-stream|zip|x-tar|cbor)/.test(ct)) {
-        return Buffer.from(await res.arrayBuffer());
+        const arrayBuffer = await res.arrayBuffer();
+        return typeof Buffer !== 'undefined' ? Buffer.from(arrayBuffer) : arrayBuffer;
     }
 
     return res.text();

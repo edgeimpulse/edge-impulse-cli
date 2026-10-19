@@ -78,11 +78,8 @@ export * from './vlmApi';
 import { VlmApi } from './vlmApi';
 export * from './whitelabelsApi';
 import { WhitelabelsApi } from './whitelabelsApi';
-import * as fs from 'fs';
-import * as http from 'http';
-
 export class HttpError extends Error {
-    constructor (public response: http.IncomingMessage, public body: any, public statusCode?: number) {
+    constructor (public response: Response, public body: any, public statusCode?: number) {
         super('HTTP request failed');
         this.name = 'HttpError';
     }
@@ -96,6 +93,6 @@ export interface RequestDetailedFile {
     }
 }
 
-export type RequestFile = RequestDetailedFile;
+export type RequestFile = RequestDetailedFile | Blob | File | ArrayBuffer | Uint8Array | string;
 
 export const APIS = [AdminApi, AuthApi, CDNApi, CanaryApi, ClassifyApi, DSPApi, DatasetVersionsApi, DeploymentApi, DevicesApi, EmailVerificationApi, ExportApi, FeatureFlagsApi, HealthApi, ImpulseApi, IntegrationsApi, JobsApi, LearnApi, LoginApi, MetricsApi, MonitoringApi, OptimizationApi, OrganizationBlocksApi, OrganizationCreateProjectApi, OrganizationDataApi, OrganizationDataCampaignsApi, OrganizationJobsApi, OrganizationOAuthClientsApi, OrganizationPipelinesApi, OrganizationPortalsApi, OrganizationsApi, PerformanceCalibrationApi, PostProcessingApi, ProjectsApi, RawDataApi, TestApi, ThemesApi, UploadPortalApi, UserApi, VlmApi, WhitelabelsApi];

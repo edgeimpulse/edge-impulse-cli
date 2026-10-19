@@ -14,80 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { AddApiKeyResponse } from '../model/addApiKeyResponse';
-import { AddCollaboratorRequest } from '../model/addCollaboratorRequest';
-import { AddHmacKeyRequest } from '../model/addHmacKeyRequest';
-import { AddIngestionOnlyProjectApiKeyRequest } from '../model/addIngestionOnlyProjectApiKeyRequest';
-import { AddProjectActiveExtensionRequest } from '../model/addProjectActiveExtensionRequest';
-import { AddProjectApiKeyRequest } from '../model/addProjectApiKeyRequest';
-import { ConvertParquetToCsvResponse } from '../model/convertParquetToCsvResponse';
-import { CreateProjectRequest } from '../model/createProjectRequest';
-import { CreateProjectResponse } from '../model/createProjectResponse';
-import { DevelopmentBoardsResponse } from '../model/developmentBoardsResponse';
-import { DevelopmentKeysResponse } from '../model/developmentKeysResponse';
-import { EntityCreatedResponse } from '../model/entityCreatedResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetAIActionResponse } from '../model/getAIActionResponse';
-import { GetCsvWizardUploadedFileInfo } from '../model/getCsvWizardUploadedFileInfo';
-import { GetCurrentApiKeyInfoResponse } from '../model/getCurrentApiKeyInfoResponse';
-import { GetExtensionSharedStateListResponse } from '../model/getExtensionSharedStateListResponse';
-import { GetHmacDevkeyResponse } from '../model/getHmacDevkeyResponse';
-import { GetModelVariantsResponse } from '../model/getModelVariantsResponse';
-import { GetProjectActiveExtensionsResponse } from '../model/getProjectActiveExtensionsResponse';
-import { GetSyntheticDataConfigResponse } from '../model/getSyntheticDataConfigResponse';
-import { GetTargetConstraintsResponse } from '../model/getTargetConstraintsResponse';
-import { LastModificationDateResponse } from '../model/lastModificationDateResponse';
-import { ListAIActionsResponse } from '../model/listAIActionsResponse';
-import { ListApiKeysResponse } from '../model/listApiKeysResponse';
-import { ListEmailResponse } from '../model/listEmailResponse';
-import { ListHmacKeysResponse } from '../model/listHmacKeysResponse';
-import { ListProjectAvailableExtensionsResponse } from '../model/listProjectAvailableExtensionsResponse';
-import { ListProjectsResponse } from '../model/listProjectsResponse';
-import { ListPublicProjectTypesResponse } from '../model/listPublicProjectTypesResponse';
-import { ListPublicProjectsResponse } from '../model/listPublicProjectsResponse';
-import { ListPublicVersionsResponse } from '../model/listPublicVersionsResponse';
-import { ListSamplesResponse } from '../model/listSamplesResponse';
-import { ListVersionsResponse } from '../model/listVersionsResponse';
-import { PreviewAIActionsSamplesRequest } from '../model/previewAIActionsSamplesRequest';
-import { ProjectDataAxesSummaryResponse } from '../model/projectDataAxesSummaryResponse';
-import { ProjectDataIntervalResponse } from '../model/projectDataIntervalResponse';
-import { ProjectDismissNotificationRequest } from '../model/projectDismissNotificationRequest';
-import { ProjectDownloadsResponse } from '../model/projectDownloadsResponse';
-import { ProjectInfoResponse } from '../model/projectInfoResponse';
-import { ProjectInfoSummaryResponse } from '../model/projectInfoSummaryResponse';
-import { ProjectTrainingDataSummaryResponse } from '../model/projectTrainingDataSummaryResponse';
-import { RemoveCollaboratorRequest } from '../model/removeCollaboratorRequest';
-import { RemoveProjectActiveExtensionResponse } from '../model/removeProjectActiveExtensionResponse';
-import { SetAIActionsOrderRequest } from '../model/setAIActionsOrderRequest';
-import { SetExtensionSharedStateResponse } from '../model/setExtensionSharedStateResponse';
-import { SetProjectComputeTimeRequest } from '../model/setProjectComputeTimeRequest';
-import { SetProjectDspFileSizeRequest } from '../model/setProjectDspFileSizeRequest';
-import { SocketTokenResponse } from '../model/socketTokenResponse';
-import { TargetConstraints } from '../model/targetConstraints';
-import { TransferOwnershipOrganizationRequest } from '../model/transferOwnershipOrganizationRequest';
-import { UpdateAIActionRequest } from '../model/updateAIActionRequest';
-import { UpdateProjectRequest } from '../model/updateProjectRequest';
-import { UpdateProjectTagsRequest } from '../model/updateProjectTagsRequest';
-import { UpdateVersionRequest } from '../model/updateVersionRequest';
-import { UploadReadmeImageResponse } from '../model/uploadReadmeImageResponse';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { AddApiKeyResponse, AddCollaboratorRequest, AddHmacKeyRequest, AddIngestionOnlyProjectApiKeyRequest, AddProjectActiveExtensionRequest, AddProjectApiKeyRequest, ConvertParquetToCsvResponse, CreateProjectRequest, CreateProjectResponse, DevelopmentBoardsResponse, DevelopmentKeysResponse, EntityCreatedResponse, GenericApiResponse, GetAIActionResponse, GetCsvWizardUploadedFileInfo, GetCurrentApiKeyInfoResponse, GetExtensionSharedStateListResponse, GetHmacDevkeyResponse, GetModelVariantsResponse, GetProjectActiveExtensionsResponse, GetSyntheticDataConfigResponse, GetTargetConstraintsResponse, LastModificationDateResponse, ListAIActionsResponse, ListApiKeysResponse, ListEmailResponse, ListHmacKeysResponse, ListProjectAvailableExtensionsResponse, ListProjectsResponse, ListPublicProjectTypesResponse, ListPublicProjectsResponse, ListPublicVersionsResponse, ListSamplesResponse, ListVersionsResponse, PreviewAIActionsSamplesRequest, ProjectDataAxesSummaryResponse, ProjectDataIntervalResponse, ProjectDismissNotificationRequest, ProjectDownloadsResponse, ProjectInfoResponse, ProjectInfoSummaryResponse, ProjectTrainingDataSummaryResponse, RemoveCollaboratorRequest, RemoveProjectActiveExtensionResponse, SetAIActionsOrderRequest, SetExtensionSharedStateResponse, SetProjectComputeTimeRequest, SetProjectDspFileSizeRequest, SocketTokenResponse, TargetConstraints, TransferOwnershipOrganizationRequest, UpdateAIActionRequest, UpdateProjectRequest, UpdateProjectTagsRequest, UpdateVersionRequest, UploadReadmeImageResponse } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -902,11 +876,11 @@ export class ProjectsApi {
 
             const fileFiles = Array.isArray(params.file) ? params.file : [params.file];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of fileFiles) {
-                localVarFormParams.append('file', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('file', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -5767,11 +5741,11 @@ export class ProjectsApi {
 
             const stateFiles = Array.isArray(params.state) ? params.state : [params.state];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of stateFiles) {
-                localVarFormParams.append('state', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('state', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -6795,11 +6769,11 @@ export class ProjectsApi {
 
             const fileFiles = Array.isArray(params.file) ? params.file : [params.file];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of fileFiles) {
-                localVarFormParams.append('file', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('file', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -6905,11 +6879,11 @@ export class ProjectsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

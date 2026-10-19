@@ -14,80 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { AddApiKeyResponse } from '../model/addApiKeyResponse';
-import { AddMemberRequest } from '../model/addMemberRequest';
-import { AddOrganizationApiKeyRequest } from '../model/addOrganizationApiKeyRequest';
-import { AdminCreateOrganizationDataExportRequest } from '../model/adminCreateOrganizationDataExportRequest';
-import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
-import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
-import { AdminGetOrganizationComputeTimeUsageResponse } from '../model/adminGetOrganizationComputeTimeUsageResponse';
-import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
-import { AdminGetReportResponse } from '../model/adminGetReportResponse';
-import { AdminGetReportsResponse } from '../model/adminGetReportsResponse';
-import { AdminGetUserMetricsResponse } from '../model/adminGetUserMetricsResponse';
-import { AdminGetUserResponse } from '../model/adminGetUserResponse';
-import { AdminGetUsersResponse } from '../model/adminGetUsersResponse';
-import { AdminListProjectsResponse } from '../model/adminListProjectsResponse';
-import { AdminOrganizationInfoResponse } from '../model/adminOrganizationInfoResponse';
-import { AdminProjectInfoResponse } from '../model/adminProjectInfoResponse';
-import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
-import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
-import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
-import { CreateMultiProjectDeploymentRequest } from '../model/createMultiProjectDeploymentRequest';
-import { CreateOrganizationRequest } from '../model/createOrganizationRequest';
-import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
-import { CreateProjectResponse } from '../model/createProjectResponse';
-import { DevelopmentBoardRequest } from '../model/developmentBoardRequest';
-import { DevelopmentBoardRequestUpdate } from '../model/developmentBoardRequestUpdate';
-import { EnterpriseLimitsIncreaseRequest } from '../model/enterpriseLimitsIncreaseRequest';
-import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
-import { EntityCreatedResponse } from '../model/entityCreatedResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetOrganizationDataExportResponse } from '../model/getOrganizationDataExportResponse';
-import { GetOrganizationDataExportsResponse } from '../model/getOrganizationDataExportsResponse';
-import { GetWhitelabelResponse } from '../model/getWhitelabelResponse';
-import { InviteOrganizationMemberRequest } from '../model/inviteOrganizationMemberRequest';
-import { ListJobsResponse } from '../model/listJobsResponse';
-import { ListOrganizationApiKeysResponse } from '../model/listOrganizationApiKeysResponse';
-import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
-import { ListProjectsResponse } from '../model/listProjectsResponse';
-import { OrganizationInfoResponse } from '../model/organizationInfoResponse';
-import { OrganizationMetricsResponse } from '../model/organizationMetricsResponse';
-import { ProjectVisibility } from '../model/projectVisibility';
-import { RemoveMemberRequest } from '../model/removeMemberRequest';
-import { SetMemberDatasetsRequest } from '../model/setMemberDatasetsRequest';
-import { SetMemberRoleRequest } from '../model/setMemberRoleRequest';
-import { StartJobResponse } from '../model/startJobResponse';
-import { UpdateOrganizationRequest } from '../model/updateOrganizationRequest';
-import { UpdateProjectRequest } from '../model/updateProjectRequest';
-import { UpdateThemeColorsRequest } from '../model/updateThemeColorsRequest';
-import { UpdateWhitelabelDefaultDeploymentTargetRequest } from '../model/updateWhitelabelDefaultDeploymentTargetRequest';
-import { UpdateWhitelabelDeploymentOptionsOrderRequest } from '../model/updateWhitelabelDeploymentOptionsOrderRequest';
-import { UpdateWhitelabelDeploymentTargetsRequest } from '../model/updateWhitelabelDeploymentTargetsRequest';
-import { UpdateWhitelabelLearningBlocksRequest } from '../model/updateWhitelabelLearningBlocksRequest';
-import { UpdateWhitelabelRequest } from '../model/updateWhitelabelRequest';
-import { UploadAssetResponse } from '../model/uploadAssetResponse';
-import { UploadReadmeImageResponse } from '../model/uploadReadmeImageResponse';
-import { UserTierEnum } from '../model/userTierEnum';
-import { WhitelabelAdminCreateOrganizationRequest } from '../model/whitelabelAdminCreateOrganizationRequest';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { AddApiKeyResponse, AddMemberRequest, AddOrganizationApiKeyRequest, AdminCreateOrganizationDataExportRequest, AdminCreateProjectRequest, AdminGetMetricsResponse, AdminGetOrganizationComputeTimeUsageResponse, AdminGetOrganizationsResponse, AdminGetReportResponse, AdminGetReportsResponse, AdminGetUserMetricsResponse, AdminGetUserResponse, AdminGetUsersResponse, AdminListProjectsResponse, AdminOrganizationInfoResponse, AdminProjectInfoResponse, AdminUpdateOrganizationDataExportRequest, AdminUpdateOrganizationRequest, AdminUpdateUserRequest, CreateMultiProjectDeploymentRequest, CreateOrganizationRequest, CreateOrganizationResponse, CreateProjectResponse, DevelopmentBoardRequest, DevelopmentBoardRequestUpdate, EnterpriseLimitsIncreaseRequest, EnterpriseUpgradeOrTrialExtensionRequest, EntityCreatedResponse, GenericApiResponse, GetOrganizationDataExportResponse, GetOrganizationDataExportsResponse, GetWhitelabelResponse, InviteOrganizationMemberRequest, ListJobsResponse, ListOrganizationApiKeysResponse, ListOrganizationsResponse, ListProjectsResponse, OrganizationInfoResponse, OrganizationMetricsResponse, ProjectVisibility, RemoveMemberRequest, SetMemberDatasetsRequest, SetMemberRoleRequest, StartJobResponse, UpdateOrganizationRequest, UpdateProjectRequest, UpdateThemeColorsRequest, UpdateWhitelabelDefaultDeploymentTargetRequest, UpdateWhitelabelDeploymentOptionsOrderRequest, UpdateWhitelabelDeploymentTargetsRequest, UpdateWhitelabelLearningBlocksRequest, UpdateWhitelabelRequest, UploadAssetResponse, UploadReadmeImageResponse, UserTierEnum, WhitelabelAdminCreateOrganizationRequest } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -2749,11 +2723,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -2852,11 +2826,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -2962,11 +2936,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -6740,11 +6714,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -7479,11 +7453,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -7589,11 +7563,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -7692,11 +7666,11 @@ export class OrganizationsApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

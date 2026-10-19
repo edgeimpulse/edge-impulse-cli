@@ -11,7 +11,7 @@ export type VerifyDspBlockUrlResponse = {
     * Optional error description (set if 'success' was false)
     */
     error?: string;
-    block?: {
+    block: {
         title: string;
         author: string;
         description: string;

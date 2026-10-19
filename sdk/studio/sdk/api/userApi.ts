@@ -14,64 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { AcceptEulaRequest } from '../model/acceptEulaRequest';
-import { ActivateUserByThirdPartyActivationCodeRequest } from '../model/activateUserByThirdPartyActivationCodeRequest';
-import { ActivateUserOrVerifyEmailRequest } from '../model/activateUserOrVerifyEmailRequest';
-import { ChangePasswordRequest } from '../model/changePasswordRequest';
-import { ConvertUserRequest } from '../model/convertUserRequest';
-import { CreateDeveloperProfileResponse } from '../model/createDeveloperProfileResponse';
-import { CreateEnterpriseTrialResponse } from '../model/createEnterpriseTrialResponse';
-import { CreateEnterpriseTrialUserRequest } from '../model/createEnterpriseTrialUserRequest';
-import { CreateProTierUserRequest } from '../model/createProTierUserRequest';
-import { CreateUserRequest } from '../model/createUserRequest';
-import { CreateUserResponse } from '../model/createUserResponse';
-import { DeleteUserRequest } from '../model/deleteUserRequest';
-import { DowngradeSubscriptionRequest } from '../model/downgradeSubscriptionRequest';
-import { EnterpriseUpgradeOrTrialExtensionRequest } from '../model/enterpriseUpgradeOrTrialExtensionRequest';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetJWTResponse } from '../model/getJWTResponse';
-import { GetUserNeedToSetPasswordResponse } from '../model/getUserNeedToSetPasswordResponse';
-import { GetUserProjectsResponse } from '../model/getUserProjectsResponse';
-import { GetUserResponse } from '../model/getUserResponse';
-import { ListEmailResponse } from '../model/listEmailResponse';
-import { ListEnterpriseTrialsResponse } from '../model/listEnterpriseTrialsResponse';
-import { ListOrganizationBucketsUserResponse } from '../model/listOrganizationBucketsUserResponse';
-import { ListOrganizationsResponse } from '../model/listOrganizationsResponse';
-import { RequestResetPasswordRequest } from '../model/requestResetPasswordRequest';
-import { ResetPasswordRequest } from '../model/resetPasswordRequest';
-import { SendUserFeedbackRequest } from '../model/sendUserFeedbackRequest';
-import { SetUserPasswordRequest } from '../model/setUserPasswordRequest';
-import { StartEnterpriseTrialRequest } from '../model/startEnterpriseTrialRequest';
-import { UpdateUserRequest } from '../model/updateUserRequest';
-import { UpgradeSubscriptionRequest } from '../model/upgradeSubscriptionRequest';
-import { UploadUserPhotoResponse } from '../model/uploadUserPhotoResponse';
-import { UserByThirdPartyActivationRequest } from '../model/userByThirdPartyActivationRequest';
-import { UserDeleteTotpMfaKeyRequest } from '../model/userDeleteTotpMfaKeyRequest';
-import { UserDismissNotificationRequest } from '../model/userDismissNotificationRequest';
-import { UserGenerateNewMfaKeyResponse } from '../model/userGenerateNewMfaKeyResponse';
-import { UserSetTotpMfaKeyRequest } from '../model/userSetTotpMfaKeyRequest';
-import { UserSetTotpMfaKeyResponse } from '../model/userSetTotpMfaKeyResponse';
-import { UserSubscriptionMetricsResponse } from '../model/userSubscriptionMetricsResponse';
-import { VerifyResetPasswordRequest } from '../model/verifyResetPasswordRequest';
-import { VerifySignupApprovalResponse } from '../model/verifySignupApprovalResponse';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { AcceptEulaRequest, ActivateUserByThirdPartyActivationCodeRequest, ActivateUserOrVerifyEmailRequest, ChangePasswordRequest, ConvertUserRequest, CreateDeveloperProfileResponse, CreateEnterpriseTrialResponse, CreateEnterpriseTrialUserRequest, CreateProTierUserRequest, CreateUserRequest, CreateUserResponse, DeleteUserRequest, DowngradeSubscriptionRequest, EnterpriseUpgradeOrTrialExtensionRequest, GenericApiResponse, GetJWTResponse, GetUserNeedToSetPasswordResponse, GetUserProjectsResponse, GetUserResponse, ListEmailResponse, ListEnterpriseTrialsResponse, ListOrganizationBucketsUserResponse, ListOrganizationsResponse, RequestResetPasswordRequest, ResetPasswordRequest, SendUserFeedbackRequest, SetUserPasswordRequest, StartEnterpriseTrialRequest, UpdateUserRequest, UpgradeSubscriptionRequest, UploadUserPhotoResponse, UserByThirdPartyActivationRequest, UserDeleteTotpMfaKeyRequest, UserDismissNotificationRequest, UserGenerateNewMfaKeyResponse, UserSetTotpMfaKeyRequest, UserSetTotpMfaKeyResponse, UserSubscriptionMetricsResponse, VerifyResetPasswordRequest, VerifySignupApprovalResponse } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -3447,11 +3437,11 @@ export class UserApi {
 
             const photoFiles = Array.isArray(params.photo) ? params.photo : [params.photo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                localVarFormParams.append('photo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('photo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -3557,11 +3547,11 @@ export class UserApi {
 
             const photoFiles = Array.isArray(params.photo) ? params.photo : [params.photo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                localVarFormParams.append('photo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('photo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

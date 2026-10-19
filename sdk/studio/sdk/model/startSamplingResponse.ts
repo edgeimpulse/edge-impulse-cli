@@ -9,5 +9,5 @@ export type StartSamplingResponse = {
     * Optional error description (set if 'success' was false)
     */
     error?: string;
-    id?: number;
+    id: number;
 };

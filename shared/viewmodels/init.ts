@@ -88,6 +88,7 @@ export enum PageType {
     OrganizationAiActionsList = 114,
     OrganizationMultiProjectDeployment = 115,
     OrganizationExtensions = 116,
+    OrganizationExtensionFrame = 117,
     UploadPortal = 200,
     Announcement = 201,
     TensorBoardIntegration = 202,

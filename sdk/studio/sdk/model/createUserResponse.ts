@@ -12,9 +12,9 @@ export type CreateUserResponse = {
     /**
     * URL to redirect user to.
     */
-    redirectUrl?: string;
+    redirectUrl: string;
     /**
     * User unique identifier
     */
-    id?: number;
+    id: number;
 };

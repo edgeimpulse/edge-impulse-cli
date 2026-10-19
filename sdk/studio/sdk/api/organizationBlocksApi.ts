@@ -14,52 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { AddOrganizationDspBlockRequest } from '../model/addOrganizationDspBlockRequest';
-import { AddOrganizationSecretRequest } from '../model/addOrganizationSecretRequest';
-import { AddOrganizationTransferLearningBlockRequest } from '../model/addOrganizationTransferLearningBlockRequest';
-import { AddOrganizationTransformationBlockRequest } from '../model/addOrganizationTransformationBlockRequest';
-import { EntityCreatedResponse } from '../model/entityCreatedResponse';
-import { ExportBlockResponse } from '../model/exportBlockResponse';
-import { ExtensionAuthMethod } from '../model/extensionAuthMethod';
-import { ExtensionNavbarLocation } from '../model/extensionNavbarLocation';
-import { ExtensionVisibility } from '../model/extensionVisibility';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetOrganizationDeployBlockResponse } from '../model/getOrganizationDeployBlockResponse';
-import { GetOrganizationDspBlockResponse } from '../model/getOrganizationDspBlockResponse';
-import { GetOrganizationExtensionBlockResponse } from '../model/getOrganizationExtensionBlockResponse';
-import { GetOrganizationTransferLearningBlockResponse } from '../model/getOrganizationTransferLearningBlockResponse';
-import { GetOrganizationTransformationBlockResponse } from '../model/getOrganizationTransformationBlockResponse';
-import { GetPublicOrganizationTransformationBlockResponse } from '../model/getPublicOrganizationTransformationBlockResponse';
-import { ListOrganizationDeployBlocksResponse } from '../model/listOrganizationDeployBlocksResponse';
-import { ListOrganizationDspBlocksResponse } from '../model/listOrganizationDspBlocksResponse';
-import { ListOrganizationExtensionBlocksResponse } from '../model/listOrganizationExtensionBlocksResponse';
-import { ListOrganizationSecretsResponse } from '../model/listOrganizationSecretsResponse';
-import { ListOrganizationTransferLearningBlocksResponse } from '../model/listOrganizationTransferLearningBlocksResponse';
-import { ListOrganizationTransformationBlocksResponse } from '../model/listOrganizationTransformationBlocksResponse';
-import { ListPublicOrganizationTransformationBlocksResponse } from '../model/listPublicOrganizationTransformationBlocksResponse';
-import { ProjectApiKeyRole } from '../model/projectApiKeyRole';
-import { PublicProjectTierAvailability } from '../model/publicProjectTierAvailability';
-import { UpdateOrganizationDspBlockRequest } from '../model/updateOrganizationDspBlockRequest';
-import { UpdateOrganizationTransferLearningBlockRequest } from '../model/updateOrganizationTransferLearningBlockRequest';
-import { UpdateOrganizationTransformationBlockRequest } from '../model/updateOrganizationTransformationBlockRequest';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { AddOrganizationDspBlockRequest, AddOrganizationSecretRequest, AddOrganizationTransferLearningBlockRequest, AddOrganizationTransformationBlockRequest, EntityCreatedResponse, ExportBlockResponse, ExtensionAuthMethod, ExtensionNavbarLocation, ExtensionVisibility, GenericApiResponse, GetOrganizationDeployBlockResponse, GetOrganizationDspBlockResponse, GetOrganizationExtensionBlockResponse, GetOrganizationTransferLearningBlockResponse, GetOrganizationTransformationBlockResponse, GetPublicOrganizationTransformationBlockResponse, ListOrganizationDeployBlocksResponse, ListOrganizationDspBlocksResponse, ListOrganizationExtensionBlocksResponse, ListOrganizationSecretsResponse, ListOrganizationTransferLearningBlocksResponse, ListOrganizationTransformationBlocksResponse, ListPublicOrganizationTransformationBlocksResponse, ProjectApiKeyRole, PublicProjectTierAvailability, UpdateOrganizationDspBlockRequest, UpdateOrganizationTransferLearningBlockRequest, UpdateOrganizationTransformationBlockRequest } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -95,7 +97,7 @@ export type addOrganizationDeployBlockFormParams = {
 
 export type addOrganizationExtensionBlockFormParams = {
     name: string,
-    onlyAvailableInProjectId?: number,
+    onlyAvailableInProjectId?: number | null,
     description: string,
     url: string,
     repositoryUrl?: string,
@@ -109,6 +111,7 @@ export type addOrganizationExtensionBlockFormParams = {
     blockNoLongerAvailableReason?: string,
     authMethod: ExtensionAuthMethod,
     requireAdminInstall?: boolean,
+    hideSideMenu?: boolean,
 };
 
 export type updateOrganizationDeployBlockFormParams = {
@@ -133,7 +136,7 @@ export type updateOrganizationDeployBlockFormParams = {
 
 export type updateOrganizationExtensionBlockFormParams = {
     name?: string,
-    onlyAvailableInProjectId?: number,
+    onlyAvailableInProjectId?: number | null,
     description?: string,
     url?: string,
     repositoryUrl?: string,
@@ -360,11 +363,11 @@ export class OrganizationBlocksApi {
 
             const photoFiles = Array.isArray(params.photo) ? params.photo : [params.photo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                localVarFormParams.append('photo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('photo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.integrateUrl !== undefined) {
@@ -584,6 +587,7 @@ export class OrganizationBlocksApi {
      * @param indBlockNoLongerAvailable Whether this extension is no longer available.
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
      * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
+     * @param hideSideMenu Whether to hide the Studio side menu while this extension is open.
      */
     public async addOrganizationExtensionBlock (organizationId: number, params: addOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -691,11 +695,11 @@ export class OrganizationBlocksApi {
 
             const logoFiles = Array.isArray(params.logo) ? params.logo : [params.logo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of logoFiles) {
-                localVarFormParams.append('logo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('logo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.navbarIcon !== undefined) {
@@ -741,6 +745,11 @@ export class OrganizationBlocksApi {
         if (params.requireAdminInstall !== undefined) {
             if (params.requireAdminInstall !== null && params.requireAdminInstall !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'requireAdminInstall', serializeFormDataValue(params.requireAdminInstall, 'boolean'));
+            }
+        }
+        if (params.hideSideMenu !== undefined) {
+            if (params.hideSideMenu !== null && params.hideSideMenu !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'hideSideMenu', serializeFormDataValue(params.hideSideMenu, 'boolean'));
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -3616,11 +3625,11 @@ export class OrganizationBlocksApi {
 
             const photoFiles = Array.isArray(params.photo) ? params.photo : [params.photo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of photoFiles) {
-                localVarFormParams.append('photo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('photo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.integrateUrl !== undefined) {
@@ -3923,11 +3932,11 @@ export class OrganizationBlocksApi {
 
             const logoFiles = Array.isArray(params.logo) ? params.logo : [params.logo];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of logoFiles) {
-                localVarFormParams.append('logo', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('logo', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.navbarIcon !== undefined) {

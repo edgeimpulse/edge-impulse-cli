@@ -14,40 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { CreateEventSubscriptionRequest } from '../model/createEventSubscriptionRequest';
-import { CreateEventSubscriptionResponse } from '../model/createEventSubscriptionResponse';
-import { CreateWebhookDestinationRequest } from '../model/createWebhookDestinationRequest';
-import { CreateWebhookDestinationResponse } from '../model/createWebhookDestinationResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetEventSubscriptionResponse } from '../model/getEventSubscriptionResponse';
-import { GetMonitoringEventDetailsResponse } from '../model/getMonitoringEventDetailsResponse';
-import { GetWebhookDestinationResponse } from '../model/getWebhookDestinationResponse';
-import { ListEventSubscriptionsResponse } from '../model/listEventSubscriptionsResponse';
-import { ListMonitoringEventsResponse } from '../model/listMonitoringEventsResponse';
-import { ListWebhookDestinationsResponse } from '../model/listWebhookDestinationsResponse';
-import { MonitoringEventType } from '../model/monitoringEventType';
-import { RotateWebhookDestinationSecretResponse } from '../model/rotateWebhookDestinationSecretResponse';
-import { TestWebhookDestinationResponse } from '../model/testWebhookDestinationResponse';
-import { UpdateEventSubscriptionRequest } from '../model/updateEventSubscriptionRequest';
-import { UpdateWebhookDestinationRequest } from '../model/updateWebhookDestinationRequest';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { CreateEventSubscriptionRequest, CreateEventSubscriptionResponse, CreateWebhookDestinationRequest, CreateWebhookDestinationResponse, GenericApiResponse, GetEventSubscriptionResponse, GetMonitoringEventDetailsResponse, GetWebhookDestinationResponse, ListEventSubscriptionsResponse, ListMonitoringEventsResponse, ListWebhookDestinationsResponse, MonitoringEventType, RotateWebhookDestinationSecretResponse, TestWebhookDestinationResponse, UpdateEventSubscriptionRequest, UpdateWebhookDestinationRequest } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 

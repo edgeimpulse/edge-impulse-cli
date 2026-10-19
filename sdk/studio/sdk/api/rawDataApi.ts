@@ -14,77 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { BackToLabelingRequest } from '../model/backToLabelingRequest';
-import { BatchAddMetadataRequest } from '../model/batchAddMetadataRequest';
-import { BatchClearMetadataByKeyRequest } from '../model/batchClearMetadataByKeyRequest';
-import { BatchEditBoundingBoxesRequest } from '../model/batchEditBoundingBoxesRequest';
-import { CountSamplesResponse } from '../model/countSamplesResponse';
-import { CropSampleRequest } from '../model/cropSampleRequest';
-import { CropSampleResponse } from '../model/cropSampleResponse';
-import { DataExplorerPredictionsResponse } from '../model/dataExplorerPredictionsResponse';
-import { DataExplorerSettings } from '../model/dataExplorerSettings';
-import { DatasetSplitOptions } from '../model/datasetSplitOptions';
-import { DatasetSplitPreviewResponse } from '../model/datasetSplitPreviewResponse';
-
-import { EditSampleLabelRequest } from '../model/editSampleLabelRequest';
-import { FindSegmentSampleRequest } from '../model/findSegmentSampleRequest';
-import { FindSegmentSampleResponse } from '../model/findSegmentSampleResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { StartJobResponse } from '../model/startJobResponse';
-import { GetAIActionsProposedChangesResponse } from '../model/getAIActionsProposedChangesResponse';
-import { GetAllImportedFromResponse } from '../model/getAllImportedFromResponse';
-import { GetDataExplorerFeaturesResponse } from '../model/getDataExplorerFeaturesResponse';
-import { GetDataExplorerSettingsResponse } from '../model/getDataExplorerSettingsResponse';
-import { GetDatasetRatioResponse } from '../model/getDatasetRatioResponse';
-import { GetDiversityDataResponse } from '../model/getDiversityDataResponse';
-import { GetLabelNoiseDataResponse } from '../model/getLabelNoiseDataResponse';
-import { GetRawDataMetadataCooccurrenceResponse } from '../model/getRawDataMetadataCooccurrenceResponse';
-import { GetRawDataMetadataDistributionResponse } from '../model/getRawDataMetadataDistributionResponse';
-import { GetRawDataProjectMetadataResponse } from '../model/getRawDataProjectMetadataResponse';
-import { GetSampleDspResponse } from '../model/getSampleDspResponse';
-import { GetSampleMetadataFilterOptionsResponse } from '../model/getSampleMetadataFilterOptionsResponse';
-import { GetSampleMetadataResponse } from '../model/getSampleMetadataResponse';
-import { GetSampleResponse } from '../model/getSampleResponse';
-import { HasDataExplorerFeaturesResponse } from '../model/hasDataExplorerFeaturesResponse';
-import { ListSamplesResponse } from '../model/listSamplesResponse';
-import { MoveRawDataRequest } from '../model/moveRawDataRequest';
-import { ObjectDetectionAutoLabelRequest } from '../model/objectDetectionAutoLabelRequest';
-import { ObjectDetectionAutoLabelResponse } from '../model/objectDetectionAutoLabelResponse';
-import { ObjectDetectionLabelQueueCountResponse } from '../model/objectDetectionLabelQueueCountResponse';
-import { ObjectDetectionLabelQueueResponse } from '../model/objectDetectionLabelQueueResponse';
-import { RawDataCategory } from '../model/rawDataCategory';
-import { RawDataFilterCategory } from '../model/rawDataFilterCategory';
-import { RebalanceDatasetResponse } from '../model/rebalanceDatasetResponse';
-import { RenameSampleRequest } from '../model/renameSampleRequest';
-import { SampleBoundingBoxesRequest } from '../model/sampleBoundingBoxesRequest';
-import { SampleLabelMapRequest } from '../model/sampleLabelMapRequest';
-import { SegmentSampleRequest } from '../model/segmentSampleRequest';
-import { SetSampleMetadataRequest } from '../model/setSampleMetadataRequest';
-import { SetSampleProposedChangesRequest } from '../model/setSampleProposedChangesRequest';
-import { SetSampleStructuredLabelsRequest } from '../model/setSampleStructuredLabelsRequest';
-import { SetSampleVideoDimensionsRequest } from '../model/setSampleVideoDimensionsRequest';
-import { SplitSampleInFramesRequest } from '../model/splitSampleInFramesRequest';
-import { StoreSegmentLengthRequest } from '../model/storeSegmentLengthRequest';
-import { TrackObjectsRequest } from '../model/trackObjectsRequest';
-import { TrackObjectsResponse } from '../model/trackObjectsResponse';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { BackToLabelingRequest, BatchAddMetadataRequest, BatchClearMetadataByKeyRequest, BatchEditBoundingBoxesRequest, CountSamplesResponse, CropSampleRequest, CropSampleResponse, DataExplorerPredictionsResponse, DataExplorerSettings, DatasetSplitOptions, DatasetSplitPreviewResponse, EditSampleLabelRequest, FindSegmentSampleRequest, FindSegmentSampleResponse, GenericApiResponse, GetAIActionsProposedChangesResponse, GetAllImportedFromResponse, GetDataExplorerFeaturesResponse, GetDataExplorerSettingsResponse, GetDatasetRatioResponse, GetDiversityDataResponse, GetLabelNoiseDataResponse, GetRawDataMetadataCooccurrenceResponse, GetRawDataMetadataDistributionResponse, GetRawDataProjectMetadataResponse, GetSampleDspResponse, GetSampleMetadataFilterOptionsResponse, GetSampleMetadataResponse, GetSampleResponse, HasDataExplorerFeaturesResponse, ListSamplesResponse, MoveRawDataRequest, ObjectDetectionAutoLabelRequest, ObjectDetectionAutoLabelResponse, ObjectDetectionLabelQueueCountResponse, ObjectDetectionLabelQueueResponse, RawDataCategory, RawDataFilterCategory, RebalanceDatasetResponse, RenameSampleRequest, SampleBoundingBoxesRequest, SampleLabelMapRequest, SegmentSampleRequest, SetSampleMetadataRequest, SetSampleProposedChangesRequest, SetSampleStructuredLabelsRequest, SetSampleVideoDimensionsRequest, SplitSampleInFramesRequest, StartJobResponse, StoreSegmentLengthRequest, TrackObjectsRequest, TrackObjectsResponse } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -8606,11 +8583,11 @@ export class RawDataApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

@@ -12,7 +12,7 @@ export type VerifyEmailResponse = {
     /**
     * Email address that was verified.
     */
-    email?: string;
+    email: string;
     /**
     * ID of the user associated with the verified email address, if any.
     */
@@ -20,5 +20,5 @@ export type VerifyEmailResponse = {
     /**
     * URL to redirect the user to after email verification.
     */
-    redirectUrl?: string;
+    redirectUrl: string;
 };

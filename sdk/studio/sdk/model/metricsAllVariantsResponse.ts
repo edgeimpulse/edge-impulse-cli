@@ -11,5 +11,5 @@ export type MetricsAllVariantsResponse = {
     * Optional error description (set if 'success' was false)
     */
     error?: string;
-    metrics?: MetricsForModelVariant[];
+    metrics: MetricsForModelVariant[];
 };

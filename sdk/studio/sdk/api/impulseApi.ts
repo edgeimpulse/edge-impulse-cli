@@ -14,42 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { CloneImpulseRequest } from '../model/cloneImpulseRequest';
-import { CreateImpulseRequest } from '../model/createImpulseRequest';
-import { CreateImpulseResponse } from '../model/createImpulseResponse';
-import { CreateNewEmptyImpulseRequest } from '../model/createNewEmptyImpulseRequest';
-import { CreateNewEmptyImpulseResponse } from '../model/createNewEmptyImpulseResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetAllDetailedImpulsesResponse } from '../model/getAllDetailedImpulsesResponse';
-import { GetAllImpulsesResponse } from '../model/getAllImpulsesResponse';
-import { GetAllTransferLearningModelsResponse } from '../model/getAllTransferLearningModelsResponse';
-import { GetImpulseBlocksResponse } from '../model/getImpulseBlocksResponse';
-import { GetImpulseResponse } from '../model/getImpulseResponse';
-import { GetNewBlockIdResponse } from '../model/getNewBlockIdResponse';
-import { SetImpulseThresholdsRequest } from '../model/setImpulseThresholdsRequest';
-import { SetImpulseThresholdsResponse } from '../model/setImpulseThresholdsResponse';
-import { StartJobResponse } from '../model/startJobResponse';
-import { UpdateImpulseRequest } from '../model/updateImpulseRequest';
-import { VerifyDspBlockUrlRequest } from '../model/verifyDspBlockUrlRequest';
-import { VerifyDspBlockUrlResponse } from '../model/verifyDspBlockUrlResponse';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { CloneImpulseRequest, CreateImpulseRequest, CreateImpulseResponse, CreateNewEmptyImpulseRequest, CreateNewEmptyImpulseResponse, GenericApiResponse, GetAllDetailedImpulsesResponse, GetAllImpulsesResponse, GetAllTransferLearningModelsResponse, GetImpulseBlocksResponse, GetImpulseResponse, GetNewBlockIdResponse, SetImpulseThresholdsRequest, SetImpulseThresholdsResponse, StartJobResponse, UpdateImpulseRequest, VerifyDspBlockUrlRequest, VerifyDspBlockUrlResponse } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -1692,11 +1704,11 @@ export class ImpulseApi {
 
             const zipFiles = Array.isArray(params.zip) ? params.zip : [params.zip];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of zipFiles) {
-                localVarFormParams.append('zip', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('zip', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.impulse !== undefined) {
@@ -1704,11 +1716,11 @@ export class ImpulseApi {
 
             const impulseFiles = Array.isArray(params.impulse) ? params.impulse : [params.impulse];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of impulseFiles) {
-                localVarFormParams.append('impulse', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('impulse', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.config !== undefined) {
@@ -1716,11 +1728,11 @@ export class ImpulseApi {
 
             const configFiles = Array.isArray(params.config) ? params.config : [params.config];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of configFiles) {
-                localVarFormParams.append('config', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('config', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

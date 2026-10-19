@@ -14,92 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { AdminAddDisallowedEmailDomainRequest } from '../model/adminAddDisallowedEmailDomainRequest';
-import { AdminAddOrUpdateSSODomainIdPsRequest } from '../model/adminAddOrUpdateSSODomainIdPsRequest';
-import { AdminAddOrganizationUserRequest } from '../model/adminAddOrganizationUserRequest';
-import { AdminAddProjectUserRequest } from '../model/adminAddProjectUserRequest';
-import { AdminAddUserRequest } from '../model/adminAddUserRequest';
-import { AdminCreateOauthClientRequest } from '../model/adminCreateOauthClientRequest';
-import { AdminCreateOauthClientResponse } from '../model/adminCreateOauthClientResponse';
-import { AdminCreateOrganizationDataExportRequest } from '../model/adminCreateOrganizationDataExportRequest';
-import { AdminCreateOrganizationRequest } from '../model/adminCreateOrganizationRequest';
-import { AdminCreateProjectRequest } from '../model/adminCreateProjectRequest';
-import { AdminCreateSignupApprovalRequest } from '../model/adminCreateSignupApprovalRequest';
-import { AdminGetDataMigrationResponse } from '../model/adminGetDataMigrationResponse';
-import { AdminGetDataMigrationsResponse } from '../model/adminGetDataMigrationsResponse';
-import { AdminGetDisallowedEmailDomainsResponse } from '../model/adminGetDisallowedEmailDomainsResponse';
-import { AdminGetMetricsResponse } from '../model/adminGetMetricsResponse';
-import { AdminGetOauthClientResponse } from '../model/adminGetOauthClientResponse';
-import { AdminGetOauthClientsResponse } from '../model/adminGetOauthClientsResponse';
-import { AdminGetOrganizationComputeTimeUsageResponse } from '../model/adminGetOrganizationComputeTimeUsageResponse';
-import { AdminGetOrganizationsResponse } from '../model/adminGetOrganizationsResponse';
-import { AdminGetReportResponse } from '../model/adminGetReportResponse';
-import { AdminGetReportsResponse } from '../model/adminGetReportsResponse';
-import { AdminGetSSOSettingsResponse } from '../model/adminGetSSOSettingsResponse';
-import { AdminGetSignupApprovalRequestResponse } from '../model/adminGetSignupApprovalRequestResponse';
-import { AdminGetTrashBinResponse } from '../model/adminGetTrashBinResponse';
-import { AdminGetTrialResponse } from '../model/adminGetTrialResponse';
-import { AdminGetUserIdsResponse } from '../model/adminGetUserIdsResponse';
-import { AdminGetUserMetricsResponse } from '../model/adminGetUserMetricsResponse';
-import { AdminGetUserResponse } from '../model/adminGetUserResponse';
-import { AdminGetUsersResponse } from '../model/adminGetUsersResponse';
-import { AdminListProjectsResponse } from '../model/adminListProjectsResponse';
-import { AdminOrganizationInfoResponse } from '../model/adminOrganizationInfoResponse';
-import { AdminProjectInfoResponse } from '../model/adminProjectInfoResponse';
-import { AdminProjectKillSwitchResponse } from '../model/adminProjectKillSwitchResponse';
-import { AdminRotateOauthClientSecretResponse } from '../model/adminRotateOauthClientSecretResponse';
-import { AdminStartEnterpriseTrialRequest } from '../model/adminStartEnterpriseTrialRequest';
-import { AdminToggleDataMigrationRequest } from '../model/adminToggleDataMigrationRequest';
-import { AdminUpdateConfigRequest } from '../model/adminUpdateConfigRequest';
-import { AdminUpdateOauthClientRequest } from '../model/adminUpdateOauthClientRequest';
-import { AdminUpdateOrganizationDataExportRequest } from '../model/adminUpdateOrganizationDataExportRequest';
-import { AdminUpdateOrganizationExtensionSettingsRequest } from '../model/adminUpdateOrganizationExtensionSettingsRequest';
-import { AdminUpdateOrganizationRequest } from '../model/adminUpdateOrganizationRequest';
-import { AdminUpdateTrialRequest } from '../model/adminUpdateTrialRequest';
-import { AdminUpdateUserPermissionsRequest } from '../model/adminUpdateUserPermissionsRequest';
-import { AdminUpdateUserRequest } from '../model/adminUpdateUserRequest';
-import { CreateOrganizationResponse } from '../model/createOrganizationResponse';
-import { CreateProjectResponse } from '../model/createProjectResponse';
-import { EntityCreatedResponse } from '../model/entityCreatedResponse';
-import { Feature } from '../model/feature';
-import { FindUserResponse } from '../model/findUserResponse';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { GetEmailVerificationCodeResponse } from '../model/getEmailVerificationCodeResponse';
-import { GetFeatureFlagsResponse } from '../model/getFeatureFlagsResponse';
-import { GetOrganizationDataExportResponse } from '../model/getOrganizationDataExportResponse';
-import { GetOrganizationDataExportsResponse } from '../model/getOrganizationDataExportsResponse';
-import { GetStudioConfigResponse } from '../model/getStudioConfigResponse';
-import { JobDetailsResponse } from '../model/jobDetailsResponse';
-import { JobLogsResponse } from '../model/jobLogsResponse';
-import { JobMetricsResponse } from '../model/jobMetricsResponse';
-import { JobParentTypeEnum } from '../model/jobParentTypeEnum';
-import { ListFirstPartyExtensionsResponse } from '../model/listFirstPartyExtensionsResponse';
-import { ListJobsResponse } from '../model/listJobsResponse';
-import { ListOrganizationDataResponse } from '../model/listOrganizationDataResponse';
-import { ListPortalFilesInFolderResponse } from '../model/listPortalFilesInFolderResponse';
-import { ListSamplesResponse } from '../model/listSamplesResponse';
-import { OauthClientProperties } from '../model/oauthClientProperties';
-import { StartJobResponse } from '../model/startJobResponse';
-import { UpdateProjectRequest } from '../model/updateProjectRequest';
-import { UserTierEnum } from '../model/userTierEnum';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { AdminAddDisallowedEmailDomainRequest, AdminAddOrUpdateSSODomainIdPsRequest, AdminAddOrganizationUserRequest, AdminAddProjectUserRequest, AdminAddUserRequest, AdminCreateOauthClientRequest, AdminCreateOauthClientResponse, AdminCreateOrganizationDataExportRequest, AdminCreateOrganizationRequest, AdminCreateProjectRequest, AdminCreateSignupApprovalRequest, AdminGetDataMigrationResponse, AdminGetDataMigrationsResponse, AdminGetDisallowedEmailDomainsResponse, AdminGetMetricsResponse, AdminGetOauthClientResponse, AdminGetOauthClientsResponse, AdminGetOrganizationComputeTimeUsageResponse, AdminGetOrganizationsResponse, AdminGetReportResponse, AdminGetReportsResponse, AdminGetSSOSettingsResponse, AdminGetSignupApprovalRequestResponse, AdminGetTrashBinResponse, AdminGetTrialResponse, AdminGetUserIdsResponse, AdminGetUserMetricsResponse, AdminGetUserResponse, AdminGetUsersResponse, AdminListProjectsResponse, AdminOrganizationInfoResponse, AdminProjectInfoResponse, AdminProjectKillSwitchResponse, AdminRotateOauthClientSecretResponse, AdminStartEnterpriseTrialRequest, AdminToggleDataMigrationRequest, AdminUpdateConfigRequest, AdminUpdateOauthClientRequest, AdminUpdateOrganizationDataExportRequest, AdminUpdateOrganizationExtensionSettingsRequest, AdminUpdateOrganizationRequest, AdminUpdateTrialRequest, AdminUpdateUserPermissionsRequest, AdminUpdateUserRequest, CreateOrganizationResponse, CreateProjectResponse, EntityCreatedResponse, Feature, FindUserResponse, GenericApiResponse, GetEmailVerificationCodeResponse, GetFeatureFlagsResponse, GetOrganizationDataExportResponse, GetOrganizationDataExportsResponse, GetStudioConfigResponse, JobDetailsResponse, JobLogsResponse, JobMetricsResponse, JobParentTypeEnum, ListFirstPartyExtensionsResponse, ListJobsResponse, ListOrganizationDataResponse, ListPortalFilesInFolderResponse, ListSamplesResponse, OauthClientProperties, StartJobResponse, UpdateProjectRequest, UserTierEnum } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -9995,11 +9957,11 @@ export class AdminApi {
 
             const imageFiles = Array.isArray(params.image) ? params.image : [params.image];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of imageFiles) {
-                localVarFormParams.append('image', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('image', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

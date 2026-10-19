@@ -14,37 +14,54 @@ import type { fetch as UndiciFetch, FormData as UndiciFormData, Response as Undi
 
 let fetch: typeof globalThis.fetch | typeof UndiciFetch;
 let FormData: typeof globalThis.FormData | typeof UndiciFormData;
+let BlobCtor: typeof Blob;
 
 if (globalThis.fetch && globalThis.FormData) {
     fetch = globalThis.fetch;
     FormData = globalThis.FormData;
+    BlobCtor = globalThis.Blob;
 }
 else {
     const undici = require('undici');
     fetch = undici.fetch;
     FormData = undici.FormData;
+    BlobCtor = (globalThis.Blob || require('buffer').Blob);
 }
 
-import { CreateCustomBlockUploadLinkRequest } from '../model/createCustomBlockUploadLinkRequest';
-import { CreateCustomBlockUploadLinkResponse } from '../model/createCustomBlockUploadLinkResponse';
-import { CreateProjectResponse } from '../model/createProjectResponse';
-import { FinalizeCustomBlockUploadRequest } from '../model/finalizeCustomBlockUploadRequest';
-import { GenericApiResponse } from '../model/genericApiResponse';
-import { OrganizationCreateProjectRequest } from '../model/organizationCreateProjectRequest';
-import { OrganizationCreateProjectResponse } from '../model/organizationCreateProjectResponse';
-import { OrganizationCreateProjectStatusResponse } from '../model/organizationCreateProjectStatusResponse';
-import { OrganizationGetCreateProjectsResponse } from '../model/organizationGetCreateProjectsResponse';
-import { StartJobResponse } from '../model/startJobResponse';
-import { UpdateOrganizationAddCollaboratorRequest } from '../model/updateOrganizationAddCollaboratorRequest';
-import { UpdateOrganizationCreateEmptyProjectRequest } from '../model/updateOrganizationCreateEmptyProjectRequest';
-import { UpdateOrganizationCreateProjectRequest } from '../model/updateOrganizationCreateProjectRequest';
 
 import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnObj, parseResponse,
     serializeFormDataValue, isFormData, ensureFormData, appendFormField, applyFormParams, LocalFormParams,
     COLLECTION_FORMATS } from '../model/models';
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
-import { HttpError, RequestFile } from './apis';
+import { HttpError, RequestDetailedFile, RequestFile } from './apis';
+import type { CreateCustomBlockUploadLinkRequest, CreateCustomBlockUploadLinkResponse, CreateProjectResponse, FinalizeCustomBlockUploadRequest, GenericApiResponse, OrganizationCreateProjectRequest, OrganizationCreateProjectResponse, OrganizationCreateProjectStatusResponse, OrganizationGetCreateProjectsResponse, StartJobResponse, UpdateOrganizationAddCollaboratorRequest, UpdateOrganizationCreateEmptyProjectRequest, UpdateOrganizationCreateProjectRequest } from '../model/models';
+
+function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
+    return typeof file === 'object' && file !== null && 'value' in file;
+}
+
+function toBlobPart(file: RequestFile): { value: any; type?: string; filename?: string } {
+    if (isDetailedRequestFile(file)) {
+        return {
+            value: file.value,
+            type: file.options.contentType,
+            filename: file.options.filename,
+        };
+    }
+
+    if (file instanceof Blob) {
+        return {
+            value: file,
+            type: file.type,
+            filename: 'name' in file && typeof file.name === 'string' ? file.name : 'blob',
+        };
+    }
+
+    return {
+        value: file,
+    };
+}
 
 let defaultBasePath = 'https://studio.edgeimpulse.com/v1';
 
@@ -1674,11 +1691,11 @@ export class OrganizationCreateProjectApi {
 
             const tarFiles = Array.isArray(params.tar) ? params.tar : [params.tar];
 
-            const Blob = globalThis.Blob || require('buffer').Blob;
             for (const f of tarFiles) {
-                localVarFormParams.append('tar', new Blob([new Uint8Array(f.value)], {
-                    type: f.options.contentType
-                }), f.options.filename);
+                const file = toBlobPart(f);
+                localVarFormParams.append('tar', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         if (params.type !== undefined) {

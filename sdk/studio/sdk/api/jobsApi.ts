@@ -141,6 +141,7 @@ type setTunerPrimaryJobQueryParams = {
 
 type startClassifyJobQueryParams = {
     impulseId?: number,
+    category?: 'training' | 'testing',
 };
 
 type startDeployPretrainedModelJobQueryParams = {
@@ -149,6 +150,7 @@ type startDeployPretrainedModelJobQueryParams = {
 
 type startEvaluateJobQueryParams = {
     impulseId?: number,
+    category?: 'training' | 'testing',
 };
 
 type startPerformanceCalibrationJobQueryParams = {
@@ -3006,11 +3008,12 @@ export class JobsApi {
     }
 
     /**
-     * Classifies all items in the testing dataset against the current impulse. Updates are streamed over the websocket API.
+     * Classifies all items in the dataset against the current impulse. Updates are streamed over the websocket API.
      * @summary Classify
      * @param projectId Project ID
      * @param startClassifyJobRequest 
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
     public async startClassifyJob (projectId: number, startClassifyJobRequest: StartClassifyJobRequest, queryParams?: startClassifyJobQueryParams, options: {
         headers: { [name: string]: string },
@@ -3049,6 +3052,9 @@ export class JobsApi {
 
         if (typeof queryParams?.impulseId !== 'undefined' && queryParams?.impulseId !== null) {
             queryParameters['impulseId'] = <string><any>queryParams.impulseId;
+        }
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -3218,6 +3224,7 @@ export class JobsApi {
      * @summary Evaluate
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
     public async startEvaluateJob (projectId: number, queryParams?: startEvaluateJobQueryParams, options: {
         headers: { [name: string]: string },
@@ -3249,6 +3256,9 @@ export class JobsApi {
 
         if (typeof queryParams?.impulseId !== 'undefined' && queryParams?.impulseId !== null) {
             queryParameters['impulseId'] = <string><any>queryParams.impulseId;
+        }
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

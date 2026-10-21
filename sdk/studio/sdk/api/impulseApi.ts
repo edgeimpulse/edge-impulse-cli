@@ -95,6 +95,10 @@ type getImpulseAllQueryParams = {
     impulseId?: number,
 };
 
+type regenerateModelTestingSummaryQueryParams = {
+    category?: 'training' | 'testing',
+};
+
 export type setLegacyImpulseStateInternalFormParams = {
     zip: RequestFile,
     impulse: RequestFile,
@@ -1433,8 +1437,9 @@ export class ImpulseApi {
      * @summary Regenerate model testing summary
      * @param projectId Project ID
      * @param impulseId Impulse ID
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
-    public async regenerateModelTestingSummary (projectId: number, impulseId: number, options: {
+    public async regenerateModelTestingSummary (projectId: number, impulseId: number, queryParams?: regenerateModelTestingSummaryQueryParams, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
     } = {headers: { } }) : Promise<StartJobResponse> {
@@ -1470,6 +1475,9 @@ export class ImpulseApi {
             throw new Error('Required parameter impulseId was null or undefined when calling regenerateModelTestingSummary.');
         }
 
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
+        }
         localVarHeaderParams = {
             ...localVarHeaderParams,
             ...options.headers,

@@ -151,6 +151,7 @@ export type updateOrganizationExtensionBlockFormParams = {
     blockNoLongerAvailableReason?: string,
     authMethod?: ExtensionAuthMethod,
     requireAdminInstall?: boolean,
+    hideSideMenu?: boolean,
     showOnLearnBlockTypes?: Array<LearnBlockType>,
 };
 
@@ -3874,6 +3875,7 @@ export class OrganizationBlocksApi {
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
      * @param authMethod 
      * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
+     * @param hideSideMenu Whether to hide the Studio side menu while this extension is open.
      * @param showOnLearnBlockTypes Only applies to navbarLocation \&quot;learn_block\&quot; or \&quot;learn_block_top_navbar\&quot;. The learn block types that this is extension is shown on. If set to an empty array, this will show on all learn blocks.
      */
     public async updateOrganizationExtensionBlock (organizationId: number, extensionId: number, params: updateOrganizationExtensionBlockFormParams, options: {
@@ -3998,6 +4000,11 @@ export class OrganizationBlocksApi {
         if (params.requireAdminInstall !== undefined) {
             if (params.requireAdminInstall !== null && params.requireAdminInstall !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'requireAdminInstall', serializeFormDataValue(params.requireAdminInstall, 'boolean'));
+            }
+        }
+        if (params.hideSideMenu !== undefined) {
+            if (params.hideSideMenu !== null && params.hideSideMenu !== undefined) {
+                localVarFormParams = appendFormField(localVarFormParams, 'hideSideMenu', serializeFormDataValue(params.hideSideMenu, 'boolean'));
             }
         }
         if (params.showOnLearnBlockTypes !== undefined) {

@@ -112,6 +112,7 @@ type getClassifyJobResultQueryParams = {
     variant?: KerasModelVariantEnum,
     impulseId?: number,
     truncateStructuredLabels?: boolean,
+    category?: 'training' | 'testing',
 };
 
 type getClassifyJobResultPageQueryParams = {
@@ -136,10 +137,12 @@ type getClassifyJobResultPageQueryParams = {
     metadata?: string,
     minDate?: Date,
     maxDate?: Date,
+    category?: 'training' | 'testing',
 };
 
 type getClassifyMetricsAllVariantsQueryParams = {
     impulseId?: number,
+    category?: 'training' | 'testing',
 };
 
 type getSampleWindowFromCacheQueryParams = {
@@ -913,13 +916,14 @@ export class ClassifyApi {
     }
 
     /**
-     * Get classify job result, containing the result for the complete testing dataset.
+     * Get classify job result, containing the result for the complete dataset.
      * @summary Classify job result
      * @param projectId Project ID
      * @param featureExplorerOnly Whether to get only the classification results relevant to the feature explorer.
      * @param variant Keras model variant
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
      * @param truncateStructuredLabels If true, only a slice of labels will be returned for samples with multiple labels.
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
     public async getClassifyJobResult (projectId: number, queryParams?: getClassifyJobResultQueryParams, options: {
         headers: { [name: string]: string },
@@ -960,6 +964,9 @@ export class ClassifyApi {
         }
         if (typeof queryParams?.truncateStructuredLabels !== 'undefined' && queryParams?.truncateStructuredLabels !== null) {
             queryParameters['truncateStructuredLabels'] = <string><any>queryParams.truncateStructuredLabels;
+        }
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,
@@ -1043,6 +1050,7 @@ export class ClassifyApi {
      * @param metadata Filter samples by metadata key-value pairs, provided as a JSON string. Each item in the filter list is an object with the following properties:     - \&quot;key\&quot;: Metadata key to filter on.     - \&quot;op\&quot;: Operator (\&quot;eq\&quot; for positive match, \&quot;neq\&quot; for negative match).     - \&quot;values\&quot;: (optional) Array of values to match/exclude. If omitted or empty, matches/excludes all values for the key. In addition to filter objects, the following option objects can be specified:     - { \&quot;no_metadata\&quot;: boolean } - If true, include samples without any metadata     - { \&quot;filters_combinator\&quot;: (\&quot;and\&quot; | \&quot;or\&quot;) } - Specifies the combinator and matching mode:         - \&quot;and\&quot;: All filter items must match (logical AND).         - \&quot;or\&quot;: Any filter item may match (logical OR); samples with metadata keys not present in the filters are included. 
      * @param minDate Only include samples that where added after the date given
      * @param maxDate Only include samples that were added before the date given
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
     public async getClassifyJobResultPage (projectId: number, queryParams?: getClassifyJobResultPageQueryParams, options: {
         headers: { [name: string]: string },
@@ -1135,6 +1143,9 @@ export class ClassifyApi {
         if (typeof queryParams?.maxDate !== 'undefined' && queryParams?.maxDate !== null) {
             queryParameters['maxDate'] = queryParams.maxDate.toISOString();
         }
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
+        }
         localVarHeaderParams = {
             ...localVarHeaderParams,
             ...options.headers,
@@ -1197,6 +1208,7 @@ export class ClassifyApi {
      * @summary Get metrics for all available model variants
      * @param projectId Project ID
      * @param impulseId Impulse ID. If this is unset then the default impulse is used.
+     * @param category Category to run model testing, or to retrieve results. If not provided, this will default to \&#39;testing\&#39;.
      */
     public async getClassifyMetricsAllVariants (projectId: number, queryParams?: getClassifyMetricsAllVariantsQueryParams, options: {
         headers: { [name: string]: string },
@@ -1228,6 +1240,9 @@ export class ClassifyApi {
 
         if (typeof queryParams?.impulseId !== 'undefined' && queryParams?.impulseId !== null) {
             queryParameters['impulseId'] = <string><any>queryParams.impulseId;
+        }
+        if (typeof queryParams?.category !== 'undefined' && queryParams?.category !== null) {
+            queryParameters['category'] = <string><any>queryParams.category;
         }
         localVarHeaderParams = {
             ...localVarHeaderParams,

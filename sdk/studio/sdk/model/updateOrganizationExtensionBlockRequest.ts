@@ -3,6 +3,7 @@
 import type { ExtensionAuthMethod } from './models';
 import type { ExtensionNavbarLocation } from './models';
 import type { ExtensionVisibility } from './models';
+import type { LearnBlockType } from './models';
 import type { ProjectApiKeyRole } from './models';
 import type { PublicProjectTierAvailability } from './models';
 
@@ -52,4 +53,9 @@ export type UpdateOrganizationExtensionBlockRequest = {
     * Whether only organization administrators may install this extension on projects.
     */
     requireAdminInstall?: boolean;
+    /**
+    * Only applies to navbarLocation "learn_block" or "learn_block_top_navbar". The learn block types that this is
+    * extension is shown on. If set to an empty array, this will show on all learn blocks.
+    */
+    showOnLearnBlockTypes?: LearnBlockType[];
 };

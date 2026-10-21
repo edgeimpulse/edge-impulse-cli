@@ -4,5 +4,5 @@
 * Studio navigation location for the extension.
 */
 
-export type ExtensionNavbarLocation = 'project' | 'devices' | 'data_acquisition' | 'experiments' | 'create_impulse' | 'upload_model' | 'dsp_block' | 'learn_block' | 'live_classification' | 'model_testing' | 'deployment' | 'impulse' | 'versioning' | 'organization_dashboard';
-export const ExtensionNavbarLocationValues: string[] = [ 'project', 'devices', 'data_acquisition', 'experiments', 'create_impulse', 'upload_model', 'dsp_block', 'learn_block', 'live_classification', 'model_testing', 'deployment', 'impulse', 'versioning', 'organization_dashboard' ];
+export type ExtensionNavbarLocation = 'project' | 'devices' | 'data_acquisition' | 'data_acquisition_top_navbar' | 'experiments' | 'create_impulse' | 'upload_model' | 'dsp_block' | 'dsp_block_top_navbar' | 'learn_block' | 'learn_block_top_navbar' | 'live_classification' | 'model_testing' | 'deployment' | 'impulse' | 'versioning' | 'organization_dashboard';
+export const ExtensionNavbarLocationValues: string[] = [ 'project', 'devices', 'data_acquisition', 'data_acquisition_top_navbar', 'experiments', 'create_impulse', 'upload_model', 'dsp_block', 'dsp_block_top_navbar', 'learn_block', 'learn_block_top_navbar', 'live_classification', 'model_testing', 'deployment', 'impulse', 'versioning', 'organization_dashboard' ];

@@ -334,7 +334,7 @@ export class ProjectsApi {
     public async addProjectActiveExtension (projectId: number, addProjectActiveExtensionRequest: AddProjectActiveExtensionRequest, options: {
         headers: { [name: string]: string },
         responseHeadersCallback?: (headers: { [name: string]: string }) => void
-    } = {headers: { } }) : Promise<GenericApiResponse> {
+    } = {headers: { } }) : Promise<EntityCreatedResponse> {
         const localVarPath = this.basePath + '/api/{projectId}/extensions/active/add'
             .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
         let queryParameters: Record<string, string> = {};
@@ -413,7 +413,7 @@ export class ProjectsApi {
         const response = await fetch(url, requestOptions);
         const resp = this.handleResponse(
             response,
-            'GenericApiResponse'
+            'EntityCreatedResponse'
         );
         if (options?.responseHeadersCallback) {
             const headerCb = options.responseHeadersCallback;

@@ -4,6 +4,7 @@ import type { CreatedUpdatedByUser } from './createdUpdatedByUser';
 import type { ExtensionAuthMethod } from './extensionAuthMethod';
 import type { ExtensionNavbarLocation } from './extensionNavbarLocation';
 import type { ExtensionVisibility } from './extensionVisibility';
+import type { LearnBlockType } from './learnBlockType';
 import type { ProjectApiKeyRole } from './projectApiKeyRole';
 import type { PublicProjectTierAvailability } from './publicProjectTierAvailability';
 
@@ -44,6 +45,11 @@ export type Extension = {
     */
     hideSideMenu?: boolean;
     badge: ExtensionBadgeEnum;
+    /**
+    * Only applies to navbarLocation "learn_block" or "learn_block_top_navbar". The learn block types that this is
+    * extension is shown on. If not set, this will show on all learn blocks.
+    */
+    showOnLearnBlockTypes?: LearnBlockType[];
 };
 
 export type ExtensionBadgeEnum = 'official' | 'enterprise' | 'personal' | 'community';

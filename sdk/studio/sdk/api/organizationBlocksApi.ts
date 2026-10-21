@@ -35,7 +35,7 @@ import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnOb
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
 import { HttpError, RequestDetailedFile, RequestFile } from './apis';
-import type { AddOrganizationDspBlockRequest, AddOrganizationSecretRequest, AddOrganizationTransferLearningBlockRequest, AddOrganizationTransformationBlockRequest, EntityCreatedResponse, ExportBlockResponse, ExtensionAuthMethod, ExtensionNavbarLocation, ExtensionVisibility, GenericApiResponse, GetOrganizationDeployBlockResponse, GetOrganizationDspBlockResponse, GetOrganizationExtensionBlockResponse, GetOrganizationTransferLearningBlockResponse, GetOrganizationTransformationBlockResponse, GetPublicOrganizationTransformationBlockResponse, ListOrganizationDeployBlocksResponse, ListOrganizationDspBlocksResponse, ListOrganizationExtensionBlocksResponse, ListOrganizationSecretsResponse, ListOrganizationTransferLearningBlocksResponse, ListOrganizationTransformationBlocksResponse, ListPublicOrganizationTransformationBlocksResponse, ProjectApiKeyRole, PublicProjectTierAvailability, UpdateOrganizationDspBlockRequest, UpdateOrganizationTransferLearningBlockRequest, UpdateOrganizationTransformationBlockRequest } from '../model/models';
+import type { AddOrganizationDspBlockRequest, AddOrganizationSecretRequest, AddOrganizationTransferLearningBlockRequest, AddOrganizationTransformationBlockRequest, EntityCreatedResponse, ExportBlockResponse, ExtensionAuthMethod, ExtensionNavbarLocation, ExtensionVisibility, GenericApiResponse, GetOrganizationDeployBlockResponse, GetOrganizationDspBlockResponse, GetOrganizationExtensionBlockResponse, GetOrganizationTransferLearningBlockResponse, GetOrganizationTransformationBlockResponse, GetPublicOrganizationTransformationBlockResponse, LearnBlockType, ListOrganizationDeployBlocksResponse, ListOrganizationDspBlocksResponse, ListOrganizationExtensionBlocksResponse, ListOrganizationSecretsResponse, ListOrganizationTransferLearningBlocksResponse, ListOrganizationTransformationBlocksResponse, ListPublicOrganizationTransformationBlocksResponse, ProjectApiKeyRole, PublicProjectTierAvailability, UpdateOrganizationDspBlockRequest, UpdateOrganizationTransferLearningBlockRequest, UpdateOrganizationTransformationBlockRequest } from '../model/models';
 
 function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
     return typeof file === 'object' && file !== null && 'value' in file;
@@ -112,6 +112,7 @@ export type addOrganizationExtensionBlockFormParams = {
     authMethod: ExtensionAuthMethod,
     requireAdminInstall?: boolean,
     hideSideMenu?: boolean,
+    showOnLearnBlockTypes?: Array<LearnBlockType>,
 };
 
 export type updateOrganizationDeployBlockFormParams = {
@@ -150,6 +151,7 @@ export type updateOrganizationExtensionBlockFormParams = {
     blockNoLongerAvailableReason?: string,
     authMethod?: ExtensionAuthMethod,
     requireAdminInstall?: boolean,
+    showOnLearnBlockTypes?: Array<LearnBlockType>,
 };
 
 
@@ -588,6 +590,7 @@ export class OrganizationBlocksApi {
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
      * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
      * @param hideSideMenu Whether to hide the Studio side menu while this extension is open.
+     * @param showOnLearnBlockTypes Only applies to navbarLocation \&quot;learn_block\&quot; or \&quot;learn_block_top_navbar\&quot;. The learn block types that this is extension is shown on. If not set (or set to an empty array), this will show on all learn blocks.
      */
     public async addOrganizationExtensionBlock (organizationId: number, params: addOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -750,6 +753,18 @@ export class OrganizationBlocksApi {
         if (params.hideSideMenu !== undefined) {
             if (params.hideSideMenu !== null && params.hideSideMenu !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'hideSideMenu', serializeFormDataValue(params.hideSideMenu, 'boolean'));
+            }
+        }
+        if (params.showOnLearnBlockTypes !== undefined) {
+            if (params.showOnLearnBlockTypes) {
+                const isParametersField = ("showOnLearnBlockTypes" as string) === "parameters";
+                const serializableParams = isParametersField && params && ("parameters" in params);
+
+                const showOnLearnBlockTypesSerialized = serializableParams
+                    ? JSON.stringify((params as any).parameters)
+                    : serializeFormDataValue(params.showOnLearnBlockTypes, 'Array<LearnBlockType>');
+
+                localVarFormParams = appendFormField(localVarFormParams, 'showOnLearnBlockTypes', showOnLearnBlockTypesSerialized);
             }
         }
         const queryString = Object.entries(queryParameters)
@@ -3859,6 +3874,7 @@ export class OrganizationBlocksApi {
      * @param blockNoLongerAvailableReason Reason this extension is no longer available.
      * @param authMethod 
      * @param requireAdminInstall Whether only organization administrators may install this extension on projects.
+     * @param showOnLearnBlockTypes Only applies to navbarLocation \&quot;learn_block\&quot; or \&quot;learn_block_top_navbar\&quot;. The learn block types that this is extension is shown on. If set to an empty array, this will show on all learn blocks.
      */
     public async updateOrganizationExtensionBlock (organizationId: number, extensionId: number, params: updateOrganizationExtensionBlockFormParams, options: {
         headers: { [name: string]: string },
@@ -3982,6 +3998,18 @@ export class OrganizationBlocksApi {
         if (params.requireAdminInstall !== undefined) {
             if (params.requireAdminInstall !== null && params.requireAdminInstall !== undefined) {
                 localVarFormParams = appendFormField(localVarFormParams, 'requireAdminInstall', serializeFormDataValue(params.requireAdminInstall, 'boolean'));
+            }
+        }
+        if (params.showOnLearnBlockTypes !== undefined) {
+            if (params.showOnLearnBlockTypes) {
+                const isParametersField = ("showOnLearnBlockTypes" as string) === "parameters";
+                const serializableParams = isParametersField && params && ("parameters" in params);
+
+                const showOnLearnBlockTypesSerialized = serializableParams
+                    ? JSON.stringify((params as any).parameters)
+                    : serializeFormDataValue(params.showOnLearnBlockTypes, 'Array<LearnBlockType>');
+
+                localVarFormParams = appendFormField(localVarFormParams, 'showOnLearnBlockTypes', showOnLearnBlockTypesSerialized);
             }
         }
         const queryString = Object.entries(queryParameters)

@@ -6,6 +6,7 @@ import type { AugmentationPolicyImageEnum } from './augmentationPolicyImageEnum'
 import type { AugmentationPolicySpectrogram } from './augmentationPolicySpectrogram';
 import type { BlockParameters } from './blockParameters';
 import type { ExperimentalImpulseSpecificGpuTrainingProcessor } from './experimentalImpulseSpecificGpuTrainingProcessor';
+import type { KFoldsValidationConfig } from './kFoldsValidationConfig';
 import type { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import type { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import type { KerasVisualLayer } from './kerasVisualLayer';
@@ -88,6 +89,7 @@ export type SetKerasParameterRequest = {
     lastShownModelVariant?: KerasModelVariantEnum;
     blockParameters?: BlockParameters;
     trainingProcessor?: ExperimentalImpulseSpecificGpuTrainingProcessor;
+    kFoldsValidationConfig?: KFoldsValidationConfig | null;
     /**
     * EXPERIMENTAL. When set, max GPU utilization will be checked against this threshold after training. Used for
     * testing purposes.

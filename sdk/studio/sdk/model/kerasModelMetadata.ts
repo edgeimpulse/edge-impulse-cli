@@ -2,6 +2,7 @@
 
 import type { BlockThreshold } from './blockThreshold';
 import type { ImageInputScaling } from './imageInputScaling';
+import type { KFoldsMetadata } from './kFoldsMetadata';
 import type { KerasModelLayer } from './kerasModelLayer';
 import type { KerasModelMetadataGraph } from './kerasModelMetadataGraph';
 import type { KerasModelMetadataMetrics } from './kerasModelMetadataMetrics';
@@ -44,4 +45,5 @@ export type KerasModelMetadata = {
     */
     thresholds: BlockThreshold[];
     tensorboardGraphs?: KerasModelMetadataGraph[];
+    kFoldsMetadata?: KFoldsMetadata;
 };

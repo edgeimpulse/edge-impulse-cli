@@ -7,6 +7,7 @@ import type { AugmentationPolicySpectrogram } from './augmentationPolicySpectrog
 import type { BlockParameters } from './blockParameters';
 import type { BlockThreshold } from './blockThreshold';
 import type { DependencyData } from './dependencyData';
+import type { KFoldsValidationConfig } from './kFoldsValidationConfig';
 import type { KerasModelTypeEnum } from './kerasModelTypeEnum';
 import type { KerasModelVariantEnum } from './kerasModelVariantEnum';
 import type { KerasVisualLayer } from './kerasVisualLayer';
@@ -114,6 +115,7 @@ export type KerasResponse = {
     * List of configurable thresholds for this block.
     */
     thresholds: BlockThreshold[];
+    kFoldsValidationConfig?: KFoldsValidationConfig;
     /**
     * Whether this model is configured for multi-head outputs.
     */

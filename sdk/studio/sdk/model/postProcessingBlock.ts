@@ -2,9 +2,10 @@
 
 import type { BlockType } from './blockType';
 import type { DSPGroupItem } from './dSPGroupItem';
+import type { PostProcessingBlockType } from './postProcessingBlockType';
 
 export type PostProcessingBlock = {
-    type: string;
+    type: PostProcessingBlockType;
     title: string;
     author: string;
     description: string;

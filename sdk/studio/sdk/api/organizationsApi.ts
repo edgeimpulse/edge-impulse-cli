@@ -35,7 +35,7 @@ import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnOb
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
 import { HttpError, RequestDetailedFile, RequestFile } from './apis';
-import type { AddApiKeyResponse, AddMemberRequest, AddOrganizationApiKeyRequest, AdminCreateOrganizationDataExportRequest, AdminCreateProjectRequest, AdminGetMetricsResponse, AdminGetOrganizationComputeTimeUsageResponse, AdminGetOrganizationsResponse, AdminGetReportResponse, AdminGetReportsResponse, AdminGetUserMetricsResponse, AdminGetUserResponse, AdminGetUsersResponse, AdminListProjectsResponse, AdminOrganizationInfoResponse, AdminProjectInfoResponse, AdminUpdateOrganizationDataExportRequest, AdminUpdateOrganizationRequest, AdminUpdateUserRequest, CreateMultiProjectDeploymentRequest, CreateOrganizationRequest, CreateOrganizationResponse, CreateProjectResponse, DevelopmentBoardRequest, DevelopmentBoardRequestUpdate, EnterpriseLimitsIncreaseRequest, EnterpriseUpgradeOrTrialExtensionRequest, EntityCreatedResponse, GenericApiResponse, GetOrganizationDataExportResponse, GetOrganizationDataExportsResponse, GetWhitelabelResponse, InviteOrganizationMemberRequest, ListJobsResponse, ListOrganizationApiKeysResponse, ListOrganizationsResponse, ListProjectsResponse, OrganizationInfoResponse, OrganizationMetricsResponse, ProjectVisibility, RemoveMemberRequest, SetMemberDatasetsRequest, SetMemberRoleRequest, StartJobResponse, UpdateOrganizationRequest, UpdateProjectRequest, UpdateThemeColorsRequest, UpdateWhitelabelDefaultDeploymentTargetRequest, UpdateWhitelabelDeploymentOptionsOrderRequest, UpdateWhitelabelDeploymentTargetsRequest, UpdateWhitelabelLearningBlocksRequest, UpdateWhitelabelRequest, UploadAssetResponse, UploadReadmeImageResponse, UserTierEnum, WhitelabelAdminCreateOrganizationRequest } from '../model/models';
+import type { AddApiKeyResponse, AddMemberRequest, AddOrganizationApiKeyRequest, AdminCreateOrganizationDataExportRequest, AdminCreateProjectRequest, AdminGetMetricsResponse, AdminGetOrganizationComputeTimeUsageResponse, AdminGetOrganizationsResponse, AdminGetReportResponse, AdminGetReportsResponse, AdminGetUserMetricsResponse, AdminGetUserResponse, AdminGetUsersResponse, AdminListProjectsResponse, AdminOrganizationInfoResponse, AdminProjectInfoResponse, AdminUpdateOrganizationDataExportRequest, AdminUpdateOrganizationRequest, AdminUpdateUserRequest, CreateMultiProjectDeploymentRequest, CreateOrganizationRequest, CreateOrganizationResponse, CreateProjectResponse, DevelopmentBoardRequest, DevelopmentBoardRequestUpdate, EnterpriseLimitsIncreaseRequest, EnterpriseUpgradeOrTrialExtensionRequest, EntityCreatedResponse, GenericApiResponse, GetCurrentOrganizationApiKeyInfoResponse, GetOrganizationDataExportResponse, GetOrganizationDataExportsResponse, GetWhitelabelResponse, InviteOrganizationMemberRequest, ListJobsResponse, ListOrganizationApiKeysResponse, ListOrganizationsResponse, ListProjectsResponse, OrganizationInfoResponse, OrganizationMetricsResponse, ProjectVisibility, RemoveMemberRequest, SetMemberDatasetsRequest, SetMemberRoleRequest, StartJobResponse, UpdateOrganizationRequest, UpdateProjectRequest, UpdateThemeColorsRequest, UpdateWhitelabelDefaultDeploymentTargetRequest, UpdateWhitelabelDeploymentOptionsOrderRequest, UpdateWhitelabelDeploymentTargetsRequest, UpdateWhitelabelLearningBlocksRequest, UpdateWhitelabelRequest, UploadAssetResponse, UploadReadmeImageResponse, UserTierEnum, WhitelabelAdminCreateOrganizationRequest } from '../model/models';
 
 function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
     return typeof file === 'object' && file !== null && 'value' in file;
@@ -925,6 +925,96 @@ export class OrganizationsApi {
         const resp = this.handleResponse(
             response,
             undefined
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Only available when authenticating with an organization API key. Returns the current role and organization ID that you\'re authenticated with.
+     * @summary Get info about current API key
+     * @param organizationId Organization ID
+     */
+    public async getCurrentOrganizationApiKeyInfo (organizationId: number, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GetCurrentOrganizationApiKeyInfoResponse> {
+        const localVarPath = this.basePath + '/api/organizations/{organizationId}/api-key-info'
+            .replace('{' + 'organizationId' + '}', encodeURIComponent(String(organizationId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'organizationId' is not null or undefined
+
+
+        if (organizationId === null || organizationId === undefined) {
+            throw new Error('Required parameter organizationId was null or undefined when calling getCurrentOrganizationApiKeyInfo.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GetCurrentOrganizationApiKeyInfoResponse'
         );
         if (options?.responseHeadersCallback) {
             const headerCb = options.responseHeadersCallback;

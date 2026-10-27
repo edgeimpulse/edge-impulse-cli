@@ -18,4 +18,11 @@ export type GetCurrentApiKeyInfoResponse = {
     * The expiration date of the API key. Only present when the key has a TTL set.
     */
     expires?: Date;
+    /**
+    * Only present when the API key was created for an extension. An anonymized, but stable ID for the user that granted
+    * the extension access. The ID is unique per extension (same across projects), and does not reveal any information
+    * about the user. Extensions can use this to keep sessions or per-user state. This matches the `anonymousUserId`
+    * query parameter that is passed to the extension.
+    */
+    anonymousUserId?: string;
 };

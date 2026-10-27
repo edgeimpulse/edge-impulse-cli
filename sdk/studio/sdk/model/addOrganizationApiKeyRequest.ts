@@ -15,6 +15,10 @@ export type AddOrganizationApiKeyRequest = {
     * Optional: time to live in seconds.
     */
     ttl?: number;
+    /**
+    * Optional: organization extension ID when this API key is created for an organization extension.
+    */
+    organizationExtensionId?: number;
 };
 
 export type AddOrganizationApiKeyRequestRoleEnum = 'admin' | 'member';

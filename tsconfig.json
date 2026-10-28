@@ -6,6 +6,7 @@
         "outDir": "./build",
         "strict": true,
         "sourceMap": true,
+        "declaration": true,
         "allowJs": true,
         "skipLibCheck": true,
         "noFallthroughCasesInSwitch": true,

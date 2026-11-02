@@ -15,6 +15,7 @@ export type UploadPretrainedModelRequest = {
     * dimensions. If this field is not set, then all dynamic dimensions will be set to '1'.
     */
     overrideInputShape?: number[];
+    additionalFiles?: { fieldname: string, originalname: string, encoding: string, mimetype: string, buffer: Buffer, size: number }[];
 };
 
 export type UploadPretrainedModelRequestModelFileTypeEnum = 'tflite' | 'onnx' | 'saved_model';

@@ -3,6 +3,7 @@
 export type DeployPretrainedModelModelClassification = {
     modelType: DeployPretrainedModelModelClassificationModelTypeEnum;
     labels: string[];
+    addSoftmax?: boolean;
 };
 
 export type DeployPretrainedModelModelClassificationModelTypeEnum = 'classification';

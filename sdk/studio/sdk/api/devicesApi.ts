@@ -35,7 +35,7 @@ import { Authentication, VoidAuth, RequestOptionsType, convertISODateStringsOnOb
 import { HttpBasicAuth, ApiKeyAuth, OAuth } from '../model/models';
 
 import { HttpError, RequestDetailedFile, RequestFile } from './apis';
-import type { CreateDeviceRequest, GenericApiResponse, GetDeviceResponse, GetImpulseRecordsRequest, GetInferenceHistoryResponse, GetInferenceMetricsRequest, GetInferenceMetricsResponse, KeepDeviceDebugStreamAliveRequest, ListDevicesResponse, RenameDeviceRequest, StartDeviceDebugStreamResponse, StartDeviceSnapshotDebugStreamRequest, StartSamplingRequest, StartSamplingResponse, StopDeviceDebugStreamRequest, StoreInferenceHistoryRequest } from '../model/models';
+import type { CreateDeviceRequest, DeviceModelDeploymentRequest, GenericApiResponse, GetDeviceResponse, GetImpulseRecordsRequest, GetInferenceHistoryResponse, GetInferenceMetricsRequest, GetInferenceMetricsResponse, KeepDeviceDebugStreamAliveRequest, ListDeviceDeploymentHistoryResponse, ListDeviceTelemetryResponse, ListDevicesResponse, ListLatestDeviceTelemetryResponse, RenameDeviceRequest, StartDeviceDebugStreamResponse, StartDeviceSnapshotDebugStreamRequest, StartSamplingRequest, StartSamplingResponse, StopDeviceDebugStreamRequest, StoreInferenceHistoryRequest } from '../model/models';
 
 function isDetailedRequestFile(file: RequestFile): file is RequestDetailedFile {
     return typeof file === 'object' && file !== null && 'value' in file;
@@ -94,6 +94,22 @@ type getInferenceMetricsQueryParams = {
     deploymentId?: number,
     startTimestamp: number,
     endTimestamp?: number,
+};
+
+type listDeviceDeploymentHistoryQueryParams = {
+    since?: number,
+    limit?: number,
+    offset?: number,
+};
+
+type listDeviceTelemetryQueryParams = {
+    since?: number,
+    limit?: number,
+    offset?: number,
+};
+
+type listLatestDeviceTelemetryQueryParams = {
+    since?: number,
 };
 
 type storeInferenceHistoryQueryParams = {
@@ -340,6 +356,115 @@ export class DevicesApi {
             method: 'DELETE',
             headers: { ...localVarHeaderParams },
         };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Request that a device connected in inference mode deploys a specific project deployment version.
+     * @summary Deploy a model version to a device
+     * @param projectId Project ID
+     * @param deviceId Device ID
+     * @param deviceModelDeploymentRequest 
+     */
+    public async deployDeviceModel (projectId: number, deviceId: string, deviceModelDeploymentRequest: DeviceModelDeploymentRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/deploy-model'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling deployDeviceModel.');
+        }
+
+        // verify required parameter 'deviceId' is not null or undefined
+
+
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling deployDeviceModel.');
+        }
+
+        // verify required parameter 'deviceModelDeploymentRequest' is not null or undefined
+
+
+        if (deviceModelDeploymentRequest === null || deviceModelDeploymentRequest === undefined) {
+            throw new Error('Required parameter deviceModelDeploymentRequest was null or undefined when calling deployDeviceModel.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(deviceModelDeploymentRequest);
 
 
         let requestOptions = localVarRequestOptions;
@@ -1069,6 +1194,228 @@ export class DevicesApi {
     }
 
     /**
+     * Lists model deployment and rollback events reported by this device, newest first.
+     * @summary List device deployment events
+     * @param projectId Project ID
+     * @param deviceId Device ID
+     * @param since Inclusive Unix timestamp in milliseconds based on Studio\&#39;s server receive time.
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async listDeviceDeploymentHistory (projectId: number, deviceId: string, queryParams?: listDeviceDeploymentHistoryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListDeviceDeploymentHistoryResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/deployment-events'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listDeviceDeploymentHistory.');
+        }
+
+        // verify required parameter 'deviceId' is not null or undefined
+
+
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling listDeviceDeploymentHistory.');
+        }
+
+        if (typeof queryParams?.since !== 'undefined' && queryParams?.since !== null) {
+            queryParameters['since'] = <string><any>queryParams.since;
+        }
+        if (typeof queryParams?.limit !== 'undefined' && queryParams?.limit !== null) {
+            queryParameters['limit'] = <string><any>queryParams.limit;
+        }
+        if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
+            queryParameters['offset'] = <string><any>queryParams.offset;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'ListDeviceDeploymentHistoryResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Lists one device\'s telemetry reports in newest-first order. Each item represents one device-reported time window and contains metrics for the device and every workload included in that report.
+     * @summary List device telemetry history
+     * @param projectId Project ID
+     * @param deviceId Device ID
+     * @param since Inclusive Unix timestamp in milliseconds based on Studio\&#39;s server receive time.
+     * @param limit Maximum number of results
+     * @param offset Offset in results, can be used in conjunction with LimitResultsParameter to implement paging.
+     */
+    public async listDeviceTelemetry (projectId: number, deviceId: string, queryParams?: listDeviceTelemetryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListDeviceTelemetryResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/telemetry'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listDeviceTelemetry.');
+        }
+
+        // verify required parameter 'deviceId' is not null or undefined
+
+
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling listDeviceTelemetry.');
+        }
+
+        if (typeof queryParams?.since !== 'undefined' && queryParams?.since !== null) {
+            queryParameters['since'] = <string><any>queryParams.since;
+        }
+        if (typeof queryParams?.limit !== 'undefined' && queryParams?.limit !== null) {
+            queryParameters['limit'] = <string><any>queryParams.limit;
+        }
+        if (typeof queryParams?.offset !== 'undefined' && queryParams?.offset !== null) {
+            queryParameters['offset'] = <string><any>queryParams.offset;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'ListDeviceTelemetryResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
      * List all devices for this project. Devices get included here if they connect to the remote management API or if they have sent data to the ingestion API and had the `device_id` field set.
      * @summary Lists devices
      * @param projectId Project ID
@@ -1147,6 +1494,100 @@ export class DevicesApi {
         const resp = this.handleResponse(
             response,
             'ListDevicesResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Lists the most recently received telemetry report for every device in the project. Each item contains the device metrics and all workload metrics from the original device-reported time window; devices that have not reported telemetry are omitted.
+     * @summary List latest device telemetry
+     * @param projectId Project ID
+     * @param since Inclusive Unix timestamp in milliseconds based on Studio\&#39;s server receive time.
+     */
+    public async listLatestDeviceTelemetry (projectId: number, queryParams?: listLatestDeviceTelemetryQueryParams, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<ListLatestDeviceTelemetryResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/telemetry/latest'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling listLatestDeviceTelemetry.');
+        }
+
+        if (typeof queryParams?.since !== 'undefined' && queryParams?.since !== null) {
+            queryParameters['since'] = <string><any>queryParams.since;
+        }
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'GET',
+            headers: { ...localVarHeaderParams },
+        };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'ListLatestDeviceTelemetryResponse'
         );
         if (options?.responseHeadersCallback) {
             const headerCb = options.responseHeadersCallback;
@@ -1325,6 +1766,115 @@ export class DevicesApi {
             method: 'POST',
             headers: { ...localVarHeaderParams },
         };
+
+
+        let requestOptions = localVarRequestOptions;
+        let url = localVarUrl;
+        const auth_ApiKeyAuthentication = await this.authentications.ApiKeyAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_ApiKeyAuthentication.requestOptions;
+        url = auth_ApiKeyAuthentication.url;
+
+        const auth_JWTAuthentication = await this.authentications.JWTAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTAuthentication.requestOptions;
+        url = auth_JWTAuthentication.url;
+
+        const auth_JWTHttpHeaderAuthentication = await this.authentications.JWTHttpHeaderAuthentication.applyToRequest(requestOptions, url);
+        requestOptions = auth_JWTHttpHeaderAuthentication.requestOptions;
+        url = auth_JWTHttpHeaderAuthentication.url;
+
+        const auth_OAuth2 = await this.authentications.OAuth2.applyToRequest(requestOptions, url);
+        requestOptions = auth_OAuth2.requestOptions;
+        url = auth_OAuth2.url;
+
+        const authDefault = await this.authentications.default.applyToRequest(requestOptions, url);
+        requestOptions = authDefault.requestOptions;
+        url = authDefault.url;
+
+        applyFormParams(requestOptions, localVarFormParams);
+
+        const response = await fetch(url, requestOptions);
+        const resp = this.handleResponse(
+            response,
+            'GenericApiResponse'
+        );
+        if (options?.responseHeadersCallback) {
+            const headerCb = options.responseHeadersCallback;
+            // on next tick, so we have time to handle the response
+            setTimeout(() => {
+                headerCb(Object.fromEntries(response.headers.entries()));
+            }, 0);
+        }
+        return resp;
+    }
+
+    /**
+     * Request that a device connected in inference mode rolls back to a specific project deployment version that it still holds.
+     * @summary Roll back a model version on a device
+     * @param projectId Project ID
+     * @param deviceId Device ID
+     * @param deviceModelDeploymentRequest 
+     */
+    public async rollbackDeviceModel (projectId: number, deviceId: string, deviceModelDeploymentRequest: DeviceModelDeploymentRequest, options: {
+        headers: { [name: string]: string },
+        responseHeadersCallback?: (headers: { [name: string]: string }) => void
+    } = {headers: { } }) : Promise<GenericApiResponse> {
+        const localVarPath = this.basePath + '/api/{projectId}/devices/{deviceId}/rollback-model'
+            .replace('{' + 'projectId' + '}', encodeURIComponent(String(projectId)))
+            .replace('{' + 'deviceId' + '}', encodeURIComponent(String(deviceId)));
+        let queryParameters: Record<string, string> = {};
+        let localVarHeaderParams: Record<string, string> = {
+            'User-Agent': 'edgeimpulse-api nodejs',
+            'Content-Type': 'application/json',
+            ...this.defaultHeaders,
+        };
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: LocalFormParams | undefined;
+
+        // verify required parameter 'projectId' is not null or undefined
+
+
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling rollbackDeviceModel.');
+        }
+
+        // verify required parameter 'deviceId' is not null or undefined
+
+
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling rollbackDeviceModel.');
+        }
+
+        // verify required parameter 'deviceModelDeploymentRequest' is not null or undefined
+
+
+        if (deviceModelDeploymentRequest === null || deviceModelDeploymentRequest === undefined) {
+            throw new Error('Required parameter deviceModelDeploymentRequest was null or undefined when calling rollbackDeviceModel.');
+        }
+
+        localVarHeaderParams = {
+            ...localVarHeaderParams,
+            ...options.headers,
+            ...this.opts.extraHeaders,
+        };
+
+        const queryString = Object.entries(queryParameters)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+            .join('&');
+
+        let localVarUrl = localVarPath + (queryString ? `?${queryString}` : '');
+        let localVarRequestOptions: RequestOptionsType = {
+            method: 'POST',
+            headers: { ...localVarHeaderParams },
+        };
+
+        localVarRequestOptions.body = JSON.stringify(deviceModelDeploymentRequest);
 
 
         let requestOptions = localVarRequestOptions;

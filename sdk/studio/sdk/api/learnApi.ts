@@ -127,6 +127,7 @@ export type uploadPretrainedModelFormParams = {
     representativeFeatures?: RequestFile,
     device?: string,
     overrideInputShape?: Array<number>,
+    additionalFiles?: Array<RequestFile>,
 };
 
 type uploadPretrainedModelQueryParams = {
@@ -3235,6 +3236,7 @@ export class LearnApi {
      * @param representativeFeatures 
      * @param device MCU used for calculating latency, query &#x60;latencyDevices&#x60; in &#x60;listProject&#x60; for a list of supported devices (and use the \\\&quot;mcu\\\&quot; property here). If this is kept empty then we\\\&#39;ll show an overview of multiple devices.
      * @param overrideInputShape Optional for ONNX files: overrides the input shape of the model. This is highly suggested if the model has dynamic dimensions. If this field is not set, then all dynamic dimensions will be set to \&#39;1\&#39;.
+     * @param additionalFiles 
      */
     public async uploadPretrainedModel (projectId: number, params: uploadPretrainedModelFormParams, queryParams?: uploadPretrainedModelQueryParams, options: {
         headers: { [name: string]: string },
@@ -3343,6 +3345,18 @@ export class LearnApi {
                     : serializeFormDataValue(params.overrideInputShape, 'Array<number>');
 
                 localVarFormParams = appendFormField(localVarFormParams, 'overrideInputShape', overrideInputShapeSerialized);
+            }
+        }
+        if (params.additionalFiles !== undefined) {
+            localVarFormParams = ensureFormData(localVarFormParams);
+
+            const additionalFilesFiles = Array.isArray(params.additionalFiles) ? params.additionalFiles : [params.additionalFiles];
+
+            for (const f of additionalFilesFiles) {
+                const file = toBlobPart(f);
+                localVarFormParams.append('additionalFiles', new BlobCtor([file.value], {
+                    type: file.type
+                }), file.filename);
             }
         }
         const queryString = Object.entries(queryParameters)

@@ -31,4 +31,9 @@ export type DeploymentHistory = {
     */
     createdByBuildPublicDeploymentJob: boolean;
     datasetVersion?: DatasetVersion;
+    /**
+    * SHA-256 digest of the exact artifact returned by downloadHistoricDeployment. Omitted for deployments created
+    * before artifact digests were recorded.
+    */
+    artifactDigest?: string;
 };

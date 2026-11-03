@@ -10,7 +10,7 @@ export type DatasetSplitOptions = {
     */
     testingSplitRatio: number;
     /**
-    * Proportion of the dataset to use for validation. This is experimental and may change in the future.
+    * Proportion of the dataset to use for validation.
     */
     validationSplitRatio?: number;
     /**

@@ -16,8 +16,7 @@ export type OrganizationCreateProjectRequest = {
     */
     filter?: string;
     /**
-    * Set of paths to apply the transformation to, used for creating transformation jobs on default datasets. This
-    * option is experimental and may change in the future.
+    * Set of paths to apply the transformation to, used for creating transformation jobs on default datasets.
     */
     pathFilters?: OrganizationCreateProjectPathFilter[];
     uploadType?: OrganizationCreateProjectRequestUploadTypeEnum;

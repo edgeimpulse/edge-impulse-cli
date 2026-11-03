@@ -6,7 +6,7 @@ export type DatasetRatioDataRatio = {
     */
     training?: number;
     /**
-    * Number of validation samples after rebalance. This is experimental and may change in the future.
+    * Number of validation samples after rebalance.
     */
     validation?: number;
     /**

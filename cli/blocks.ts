@@ -786,7 +786,7 @@ let pushingBlockJobId: { organizationId: number, jobId: number } | undefined;
             console.log(`Archiving '${cwd}'...`);
 
             // read dockerignore file
-            const ignore = dockerignore().add([ '.git/', '.hg/' ]);
+            const ignore = dockerignore().add([ '.git/', '.hg/', '.venv/' ]);
 
             // Check to see if there is an ignore file
             if (await pathExists(dockerignorePath)) {

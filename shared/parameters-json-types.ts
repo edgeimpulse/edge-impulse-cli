@@ -37,7 +37,8 @@ export type DSPParameters = {
     items: DSPParameterItem[];
 }[];
 
-export type DSPParameterItemType = 'string' | 'int' | 'float' | 'select' | 'boolean' | 'bucket' | 'dataset' | 'flag' | 'secret';
+export type DSPParameterItemType = 'string' | 'int' | 'float' | 'select' | 'boolean' | 'bucket' |
+    'dataset' | 'flag' | 'secret' | 'project' | 'code_editor';
 
 // If you change this, also update https://docs.edgeimpulse.com/docs/tips-and-tricks/adding-parameters-to-custom-blocks
 export type DSPParameterItem = {
@@ -95,6 +96,8 @@ export type DSPParameterItem = {
     placeholder?: string;
     // Disables empty checking, only valid for type: string
     allowEmpty?: boolean;
+    // Only available for type 'code_editor'
+    codeEditorLanguage?: 'python' | 'javascript';
 };
 
 export type DSPParameterResponse = {

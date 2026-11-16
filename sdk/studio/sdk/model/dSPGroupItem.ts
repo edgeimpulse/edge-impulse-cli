@@ -4,7 +4,7 @@ export type DSPGroupItem = {
     name: string;
     value?: string;
     defaultValue: string;
-    type: string;
+    type: DSPGroupItemTypeEnum;
     help?: string;
     param: string;
     selectOptions?: {
@@ -79,10 +79,20 @@ export type DSPGroupItem = {
     * Maximum value for parameters of type 'int' or 'float'.
     */
     maxVal?: number;
+    /**
+    * Only valid for type "code_editor"
+    */
+    codeEditorLanguage?: DSPGroupItemCodeEditorLanguageEnum;
 };
+
+export type DSPGroupItemTypeEnum = 'string' | 'int' | 'float' | 'select' | 'boolean' | 'bucket' | 'dataset' | 'flag' | 'secret' | 'project' | 'code_editor' | 'object';
+export const DSPGroupItemTypeEnumValues: string[] = [ 'string', 'int', 'float', 'select', 'boolean', 'bucket', 'dataset', 'flag', 'secret', 'project', 'code_editor', 'object' ];
 
 export type DSPGroupItemShowIfOperatorEnum = 'eq' | 'neq';
 export const DSPGroupItemShowIfOperatorEnumValues: string[] = [ 'eq', 'neq' ];
 
 export type DSPGroupItemSectionEnum = 'advanced' | 'augmentation' | 'modelProfiling';
 export const DSPGroupItemSectionEnumValues: string[] = [ 'advanced', 'augmentation', 'modelProfiling' ];
+
+export type DSPGroupItemCodeEditorLanguageEnum = 'python' | 'javascript';
+export const DSPGroupItemCodeEditorLanguageEnumValues: string[] = [ 'python', 'javascript' ];

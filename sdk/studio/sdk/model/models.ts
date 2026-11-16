@@ -34,6 +34,7 @@ export * from './addOrganizationTransformationBlockRequest';
 export * from './addProjectActiveExtensionRequest';
 export * from './addProjectApiKeyRequest';
 export * from './additionalMetric';
+export * from './additionalMetricOptionalFullPrecisionValue';
 export * from './adminAddDisallowedEmailDomainRequest';
 export * from './adminAddOrUpdateSSODomainIdPsRequest';
 export * from './adminAddOrganizationUserRequest';
